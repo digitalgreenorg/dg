@@ -138,7 +138,7 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender', 'district.id'],
+        'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -216,7 +216,7 @@ function() {
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/api/v1/video/',
         'entity_name': 'video',
-        'unique_togther_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
             'mediator': {
@@ -381,7 +381,7 @@ function() {
         'rest_api_url': '/api/v1/group/',
         'entity_name': 'group',
         'inc_table_name': 'persongroups',
-        'unique_togther_fields': ['group_name', 'village.id'],
+        'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
         'foreign_entities': {
             'village': {
@@ -470,7 +470,7 @@ function() {
         'rest_api_url': '/api/v1/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
-        'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;
@@ -680,7 +680,7 @@ function() {
         'rest_api_url': '/api/v1/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'unique_togther_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
             highlight: function(element, errorClass, validClass) {
@@ -821,7 +821,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
+        'unique_together_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
