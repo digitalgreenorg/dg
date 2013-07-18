@@ -9,10 +9,7 @@ def farmerfunda(request):
     return redirect('https://docs.google.com/a/digitalgreen.org/forms/d/1vrg0WObCuJLfLjdV44JnpIFX-ggZk4fCh7di0I8md9w/viewform') 
 
 def home(request):
-    if request.get_host() == "sandbox.digitalgreen.org":
-        return HttpResponseRedirect('/coco/home.html')
-    else:
-        return home_with_analytics()
+    return home_with_analytics()
     
 def wondervillage(request):
    
