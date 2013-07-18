@@ -1,0 +1,17 @@
+/* ---------------------------------------------------------------------
+Original Author: Susan Robertson
+Contributors: N/A
+
+Target Browsers: IE9
+Media Type: Screen, Projection
+Width: All Sizes
+------------------------------------------------------------------------ */
+
+.comment-btn,
+.gradientBg {
+    filter: none;
+}
+
+.gradientBg-ft-btn {
+    left: 770px;
+}

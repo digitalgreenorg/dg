@@ -3,6 +3,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 import coco.urls
+import social_website.urls
 from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
@@ -15,6 +16,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^coco/', include(coco.urls)),
+    (r'^social/', include(social_website.urls)),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^feeds/', include('dashboard.urls_feeds')),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),

@@ -80,11 +80,13 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
     os.path.join(PROJECT_PATH, 'media/coco/app'),
+    os.path.join(PROJECT_PATH, 'templates/social_website'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth'
+    'django.core.context_processors.static',
+    'django.contrib.auth.context_processors.auth',  
 )
 
 INSTALLED_APPS = (
@@ -105,6 +107,7 @@ INSTALLED_APPS = (
     'path',
     'fbconnect',
     'tastypie',
+    'social_website',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript

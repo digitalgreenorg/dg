@@ -1,0 +1,92 @@
+ /* -----------------------------------------------------------------------------
+    Carousel Styles
+    -------------------------------------------------------------------------- */
+    
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-loading {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 999;
+}
+
+.carousel-container > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.carousel-container > ul:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.carousel-container > ul > .carousel-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-container > ul.advance-on-click > .carousel-item:hover {
+    cursor: pointer;
+}
+
+
+.carousel-horizontal .carousel-container > ul > .carousel-item {
+    float: left;
+    overflow: hidden;
+}
+
+.carousel-navigation-disabled * {
+    cursor: progress !important;
+}
+
+.carousel-nav {
+    z-index: 9;
+}
+
+.carousel-next-slide,
+.carousel-previous-slide,
+.carousel-nav .carousel-nav-item {
+    cursor: pointer;
+    z-index: 999;
+}
+
+.carousel-next-slide.disabled {
+    display: none !important;
+}
+
+.carousel-previous-slide.disabled {
+    display: none !important;
+}
+
+
+
+/* Default Carousel Nav */
+.generic-carousel-nav {
+    text-align: center;
+}
+
+.generic-carousel-nav .carousel-nav-item {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: url('../images/carousel/generic-carousel-nav.png') top left no-repeat;
+    cursor: pointer;
+}
+
+.generic-carousel-nav .carousel-nav-item:hover {
+    background-position: 0 -15px;
+}
+
+.generic-carousel-nav .carousel-nav-item-active {
+    background-position: 0 -30px !important;
+    cursor: default;
+}

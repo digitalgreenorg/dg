@@ -1,0 +1,54 @@
+                        <li class="vidDrawer-wrapper {{_videoDrawerClasses}}">
+                            <div class="vidDrawer-container js-video-container">
+                                {{#_videoDrawers}}
+                                <div class="vidDrawer-wrapper-inner js-video-drawer" data-parent-collection-item-index="{{_index}}">
+                                    <div class="collection-video-carousel carousel-wrapper js-carousel-wrapper">
+                                        <div class="carousel-container js-carousel-container">
+                                            <ul class="carousel-list">
+                                                <!-- Each slide will be in a li here -->
+                                                {{#carouselSlides}}
+                                                <li>
+                                                    <ul class="vidDrawer clearfix">
+                                                        {{#videos}}
+                                                        <!-- Implementation Note: -->
+                                                        <!-- The "show-playing" and "show-progress" classes toggle display of the respective overlays -->
+                                                        <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->
+                                                        <!-- <li class="vidDrawer-video show-playing js-vidDrawer-video"> -->
+                                                        <li class="vidDrawer-video show-progress js-vidDrawer-video">
+                                                        <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
+                                                            <div class="vidDrawer-image">
+                                                                <a href="{{videoURL}}">
+                                                                    <img src="{{thumbnailURL}}" alt="" />
+                                                                    <!--<div class="overlay now-playing">
+                                                                        Now Playing
+                                                                    </div>
+                                                                    <div class="overlay progress">
+                                                                        <div class="progress-inner">
+                                                                            <span class="amount">{{percentWatched}}</span>
+                                                                            <span class="percent">%</span>
+                                                                            <div class="watched">watched</div>
+                                                                        </div>
+                                                                    </div>-->
+                                                                </a>
+                                                            </div>
+                                                            <div class="vidDrawer-flag copy-white">
+                                                                {{_time}}
+                                                            </div>
+                                                            <div class="vidDrawer-hd copy-dk">
+                                                                {{_videoIndex}}. <a href="{{videoURL}}">{{title}}</a>
+                                                            </div>
+                                                        </li>
+                                                        {{/videos}}
+                                                    </ul>
+                                                </li>
+                                                {{/carouselSlides}}
+                                            </ul>
+                                        </div>
+                                        <div class="arrow-left carousel-previous-slide js-carousel-previous-slide">Previous</div>
+                                        <div class="arrow-right carousel-next-slide js-carousel-next-slide">Next</div>
+                                    </div>
+                                </div>
+                                {{/_videoDrawers}}
+                                <div class="pointer js-pointer"></div>
+                            </div>
+                        </li>

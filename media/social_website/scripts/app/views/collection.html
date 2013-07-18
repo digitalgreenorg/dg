@@ -1,0 +1,31 @@
+                            <li class="js-collection-item" data-collection-item-index="{{_index}}">
+                                <div class="vid-cat-selected">
+                                    <div class="vid-cat">
+                                        <a href="/social/collections/?id={{uid}}&video=1">
+                                            <img height=124  width=217  src="{{thumbnailURL}}" />
+                                        </a>
+                                        <div class="vid-flag">
+                                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                <li>{{videos.length}} Video{{#_plural}}s{{/_plural}}</li>
+                                                <li>{{_collectionStats.time}}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="vid-cat-inner">
+                                            <div class="vid-cat-hd">
+                                                <h3 class="hdg-green hdg-f hdg-bold hdg-trunc">{{title}}</h3>
+                                            </div>
+                                            <div class="vid-cat-bd">
+                                                <p class="copy copy-sm layout-vr-tiny">{{state}} | {{language}}</p>
+                                                <p class="copy copy-sm">By: {{partner}}</p>
+                                            </div>
+                                            <div class="vid-cat-ft">
+                                                <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
+                                                    <li class="like"><span class="text-hide">Likes</span> {{_collectionStats.likes}}</li>
+                                                    <li class="view"><span class="text-hide">Viewed</span> {{_collectionStats.views}}</li>
+                                                    <li class="check"><span class="text-hide">Adopted</span> {{_collectionStats.adoptions}}</li>
+                                                </ul>
+                                            </div>
+                                        </div> <!-- End .vid-inner -->
+                                    </div> <!-- End .vid-cat -->
+                                </div>
+                            </li>
