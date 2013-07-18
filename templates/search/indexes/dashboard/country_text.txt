@@ -1,2 +1,0 @@
-{{ object.start_date }}
-{{ object.country_name }}

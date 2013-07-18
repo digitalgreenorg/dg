@@ -1,4 +1,0 @@
-{{ object.start_date }}
-{{ object.district_name }}
-{{ object.state }}
-{{ object.partner }}
