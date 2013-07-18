@@ -110,5 +110,5 @@ class Activity(models.Model):
     farmer = models.ForeignKey(Person, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
     video = models.ForeignKey(Video, null=True, blank=True)
-    newsfeeed = models.BooleanField()
+    newsFeed = models.BooleanField()
 

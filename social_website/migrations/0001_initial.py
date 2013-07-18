@@ -141,7 +141,7 @@ class Migration(SchemaMigration):
             ('farmer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Person'], null=True, blank=True)),
             ('collection', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Collection'], null=True, blank=True)),
             ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Video'], null=True, blank=True)),
-            ('newsfeeed', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('newsFeed', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('social_website', ['Activity'])
 
