@@ -94,7 +94,7 @@ define(function(require) {
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
             state.updateVideoWatchedTimeInterval = undefined;
-            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoID')-1)/5),{stopAutoPlay: false});
+            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
         },
 
         _initVideoStats: function() {
@@ -167,7 +167,7 @@ define(function(require) {
             videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
             
             // The id that is shown in the URL. Below functionality will autoplay the youtube video on all video pages except for the first video in a collection
-            var videoId = jQuery('.video-wrapper').attr('data-videoID');
+            var videoId = jQuery('.video-wrapper').attr('data-videoid');
             if (videoId != 1){
             	videoPlayer.playVideo();
             }
@@ -179,7 +179,7 @@ define(function(require) {
                 case 0:
                 // playback paused:
                 	var collection_count = jQuery(".featured-ft-videoDetails").attr('data-collection-count');
-                	var current_video = jQuery('.video-wrapper').attr('data-videoID');
+                	var current_video = jQuery('.video-wrapper').attr('data-videoid');
                 	var current_collection = jQuery(".featured-ft-videoDetails").attr('data-collection-id');
                 	window.location.href = '/social/collections/?id='+current_collection+'&video='+parseInt(current_video%collection_count+1)+'#collection-view';	
                 case 2:

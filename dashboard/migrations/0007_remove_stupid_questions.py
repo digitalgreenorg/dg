@@ -5,9 +5,11 @@ from south.v2 import DataMigration
 from django.db import models
 
 class Migration(DataMigration):
-
+    
     def forwards(self, orm):
-        question_list = ['How','1','do','Methods','Time','Yes']         # Add more stupid questions if you find.
+        # Feel free to add more stupid questions if you like.
+        question_list = ["'","\\","0","1","3","c","hai","yes","Y","do","Yes"]
+        question_list.extend(['How','Dry','ITK','kya','kyu','Pea','WHS','Methods','Time'])
         for question in question_list:
             count = 0
             for pma in orm['dashboard.PersonMeetingAttendance'].objects.exclude(expressed_question = '').filter(expressed_question = question):
