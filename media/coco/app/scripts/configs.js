@@ -7,7 +7,7 @@ function() {
         //string = key of this object in all_config, name of objectstore in IDB
         //for - accessing this object 
         
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         //string - the rest url for this entity
     
         'dashboard_display': {
@@ -121,7 +121,7 @@ function() {
         'page_header': 'Village',
         'list_table_header_template': 'village_table_template', 
         'list_table_row_template': 'village_list_item_template',
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         'entity_name': 'village',
         'dashboard_display': {
             listing: false,
@@ -136,7 +136,7 @@ function() {
         'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
-        'rest_api_url': '/api/v1/mediator/',
+        'rest_api_url': '/coco/api/v1/mediator/',
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
@@ -214,7 +214,7 @@ function() {
         'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
-        'rest_api_url': '/api/v1/video/',
+        'rest_api_url': '/coco/api/v1/video/',
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
@@ -353,7 +353,7 @@ function() {
     };
 
     var language_configs = {
-        'rest_api_url': '/api/v1/language/',
+        'rest_api_url': '/coco/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
         'dashboard_display': {
@@ -363,7 +363,7 @@ function() {
     };
 
     var district_configs = {
-        'rest_api_url': '/api/v1/district/',
+        'rest_api_url': '/coco/api/v1/district/',
         'entity_name': 'district',
         'sort_field': 'district_name',
         'dashboard_display': {
@@ -378,7 +378,7 @@ function() {
         'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
-        'rest_api_url': '/api/v1/group/',
+        'rest_api_url': '/coco/api/v1/group/',
         'entity_name': 'group',
         'inc_table_name': 'persongroups',
         'unique_together_fields': ['group_name', 'village.id'],
@@ -467,7 +467,7 @@ function() {
         'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
-        'rest_api_url': '/api/v1/screening/',
+        'rest_api_url': '/coco/api/v1/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
@@ -667,7 +667,7 @@ function() {
         'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
-        'rest_api_url': '/api/v1/adoption/',
+        'rest_api_url': '/coco/api/v1/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
@@ -795,7 +795,7 @@ function() {
         'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
-        'rest_api_url': '/api/v1/person/',
+        'rest_api_url': '/coco/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities': {
             'village': {

@@ -152,7 +152,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('id'):
-        bundle.data[field_name] = "/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
+        bundle.data[field_name] = "/coco/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict.get('id')))
     else:
         bundle.data[field_name] = None
@@ -163,7 +163,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+            resource_uri_list.append("/coco/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
         except:
             return bundle
     bundle.data[field_name] = resource_uri_list
@@ -295,7 +295,7 @@ class MediatorResource(BaseResource):
     def hydrate_partner(self, bundle):
         partner_id = get_user_partner_id(bundle.request)
         if partner_id:
-            bundle.data['partner'] ="/api/v1/partner/"+str(partner_id)+"/"
+            bundle.data['partner'] ="/coco/api/v1/partner/"+str(partner_id)+"/"
         return bundle
 
 class VillageResource(ModelResource):
@@ -381,7 +381,7 @@ class PersonGroupsResource(BaseResource):
         if village and not hasattr(bundle,'village_flag'):
             try:
                 village_id = village.get('id')
-                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
+                bundle.data['village'] = "/coco/api/v1/village/"+str(village_id)+"/"
                 bundle.village_flag = True
             except:
                 bundle.data['village'] = None
