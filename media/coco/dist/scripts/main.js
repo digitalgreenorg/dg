@@ -22,7 +22,7 @@ function() {
         //string = key of this object in all_config, name of objectstore in IDB
         //for - accessing this object 
         
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         //string - the rest url for this entity
     
         'dashboard_display': {
@@ -136,7 +136,7 @@ function() {
         'page_header': 'Village',
         'list_table_header_template': 'village_table_template', 
         'list_table_row_template': 'village_list_item_template',
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         'entity_name': 'village',
         'dashboard_display': {
             listing: false,
@@ -151,9 +151,9 @@ function() {
         'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
-        'rest_api_url': '/api/v1/mediator/',
+        'rest_api_url': '/coco/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender', 'district.id'],
+        'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -229,9 +229,9 @@ function() {
         'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
-        'rest_api_url': '/api/v1/video/',
+        'rest_api_url': '/coco/api/v1/video/',
         'entity_name': 'video',
-        'unique_togther_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
             'mediator': {
@@ -368,7 +368,7 @@ function() {
     };
 
     var language_configs = {
-        'rest_api_url': '/api/v1/language/',
+        'rest_api_url': '/coco/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
         'dashboard_display': {
@@ -378,7 +378,7 @@ function() {
     };
 
     var district_configs = {
-        'rest_api_url': '/api/v1/district/',
+        'rest_api_url': '/coco/api/v1/district/',
         'entity_name': 'district',
         'sort_field': 'district_name',
         'dashboard_display': {
@@ -393,10 +393,10 @@ function() {
         'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
-        'rest_api_url': '/api/v1/group/',
+        'rest_api_url': '/coco/api/v1/group/',
         'entity_name': 'group',
         'inc_table_name': 'persongroups',
-        'unique_togther_fields': ['group_name', 'village.id'],
+        'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
         'foreign_entities': {
             'village': {
@@ -482,10 +482,10 @@ function() {
         'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
-        'rest_api_url': '/api/v1/screening/',
+        'rest_api_url': '/coco/api/v1/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
-        'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;
@@ -498,23 +498,13 @@ function() {
                     dfd.reject();
                 });
             return dfd.promise();
-            
+
             function update_attendees(){
-                var update_dfd = new $.Deferred();
-                
                 var all_update_dfds = [];
                 $.each(off_json.farmers_attendance, function(index, per){
                     all_update_dfds.push(update_attendee(per));    
                 });
-                
-                $.when.apply($,all_update_dfds)
-                    .done(function(){
-                        update_dfd.resolve();
-                    })
-                    .fail(function(){
-                        update_dfd.reject();
-                    });
-                return update_dfd;    
+                return $.when.apply($,all_update_dfds);
             }
             
             function update_attendee(per){
@@ -662,7 +652,7 @@ function() {
 					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
-				animator: "Animator is required",
+				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
 			},
@@ -692,10 +682,10 @@ function() {
         'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
-        'rest_api_url': '/api/v1/adoption/',
+        'rest_api_url': '/coco/api/v1/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'unique_togther_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
             highlight: function(element, errorClass, validClass) {
@@ -820,7 +810,7 @@ function() {
         'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
-        'rest_api_url': '/api/v1/person/',
+        'rest_api_url': '/coco/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities': {
             'village': {
@@ -836,7 +826,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
+        'unique_together_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
@@ -960,7 +950,7 @@ var idb = {
                     autoIncrement: true,keyPath: "id"
                 });    
                 entity_store.createIndex("onlineIndex", "online_id", { unique: true });
-                var uniques = configs[member].unique_togther_fields;
+                var uniques = configs[member].unique_together_fields;
                 if(uniques&&uniques.length)
                 {
                     entity_store.createIndex("uniquesindex", uniques, { unique: true });    
@@ -4251,7 +4241,7 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
             {
                 off_model = this.create_b_model(entity_name);
             }
-            
+            var that = this;
             this.check_login_wrapper()
                 .done(function(){
                     off_model.save(json,{
@@ -4263,8 +4253,13 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                             console.log(error);
                             //format error object to match the format of error sent by online save
                             var err_json = {};
+							//get unique together fields
+							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); //to copy by value
+							var utStr = that.beautify(ut);
+							cap_entity_name = entity_name.charAt(0).toUpperCase() + entity_name.slice(1);
+							var newerr = cap_entity_name + " with this " + utStr + " already exists";
                             err_json[entity_name] = {
-                                __all__: [error.target.error.name]
+                                __all__: [newerr]
                             }
                             return dfd.reject(JSON.stringify(err_json));
                         }
@@ -4272,6 +4267,15 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                 })
             return dfd;
         },
+		
+		beautify: function(ut){
+			for (var i=0; i< ut.length; i++){
+				ut[i] = ut[i].charAt(0).toUpperCase() + ut[i].slice(1)
+				ut[i] = ut[i].replace("_"," ");
+				ut[i] = ut[i].replace(".id","");
+			}
+			return ut.join(", ");
+		},
         
         /*
         creates a offline model
@@ -6736,24 +6740,26 @@ define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone
             console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             this.field_dfds = [];
             this.iterate_foreign_fields(conv_json, f_entities);
-            var off_json = on_json = null;
+            
+            var object_jsons = null;
             switch(this.which_to_which){
-                case "onlinetooffline":
-                    off_json = conv_json;
-                    on_json = json;
+                case "onlinetooffline": 
+                    object_jsons = {
+                        off_json : conv_json,
+                        on_json : json
+                    }
                     break;
                 default:
-                    off_json = json;
-                    on_json = conv_json;
+                    object_jsons = {
+                        off_json : json,
+                        on_json : conv_json
+                    }
             }
             if(this.field_dfds.length)
             {
                 $.when.apply($, this.field_dfds)
                     .done(function(){
-                        return dfd.resolve({
-                            on_json:on_json, 
-                            off_json:off_json
-                        });
+                        return dfd.resolve(object_jsons);
                     })
                     .fail(function(){
                         return dfd.reject();
@@ -6762,11 +6768,9 @@ define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone
             else
             {
                 console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
-                return dfd.resolve({
-                    on_json:on_json, 
-                    off_json:off_json
-                });
+                return dfd.resolve(object_jsons);
             }
+            
             return dfd.promise();
         },
         

@@ -27,24 +27,26 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
             console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             this.field_dfds = [];
             this.iterate_foreign_fields(conv_json, f_entities);
-            var off_json = on_json = null;
+            
+            var object_jsons = null;
             switch(this.which_to_which){
-                case "onlinetooffline":
-                    off_json = conv_json;
-                    on_json = json;
+                case "onlinetooffline": 
+                    object_jsons = {
+                        off_json : conv_json,
+                        on_json : json
+                    }
                     break;
                 default:
-                    off_json = json;
-                    on_json = conv_json;
+                    object_jsons = {
+                        off_json : json,
+                        on_json : conv_json
+                    }
             }
             if(this.field_dfds.length)
             {
                 $.when.apply($, this.field_dfds)
                     .done(function(){
-                        return dfd.resolve({
-                            on_json:on_json, 
-                            off_json:off_json
-                        });
+                        return dfd.resolve(object_jsons);
                     })
                     .fail(function(){
                         return dfd.reject();
@@ -53,11 +55,9 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
             else
             {
                 console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
-                return dfd.resolve({
-                    on_json:on_json, 
-                    off_json:off_json
-                });
+                return dfd.resolve(object_jsons);
             }
+            
             return dfd.promise();
         },
         
