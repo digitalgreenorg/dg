@@ -11,7 +11,7 @@ def social_home(request):
     context= {
         'header': {
             'jsController':'Home',
-             'loggedIn':False
+            'loggedIn':False
              },
         'language':language,
         }
@@ -60,7 +60,7 @@ def partner_view(request):
             'loggedIn':False},
         'partner': partner
         }
-    return render_to_response('profile.html' , context,context_instance = RequestContext(request))
+    return render_to_response('profile.html' , context, context_instance = RequestContext(request))
 
 def search_view(request):
     searchString = request.GET.get('searchString')
@@ -121,7 +121,6 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'language', language, facet_dict)
 
     data = json.dumps({"categories" : filters})
-    print data
     return HttpResponse(data)
 
 
@@ -132,7 +131,6 @@ def featuredCollection(request):
         featured_collection = FeaturedCollection.objects.get(collection__language=language_name)
     except FeaturedCollection.DoesNotExist:
         featured_collection = FeaturedCollection.objects.get(collection__language="Mundari")
-    print featured_collection.collageURL
     collection= featured_collection.collection
     collage_url = featured_collection.collageURL
     time = 0

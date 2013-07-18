@@ -1,6 +1,7 @@
 import datetime, json, urllib2
 from django.http import HttpResponse
 from pyes import ES
+from social_website.models import Partner
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
@@ -72,8 +73,12 @@ def get_collections_from_elasticsearch(request):
     params = request.GET
     language_name = params.get('language__name', None)
     searchString = params.get('searchString', 'None')
+    partner_uid = params.get('uid', None)
     if searchString != 'None':
         match_query = {"match" : {"_all":{"query":searchString}}}
+    elif partner_uid:
+        partner_name = Partner.objects.get(uid = partner_uid).name
+        match_query = {"match" : {"partner" :{ "query" : partner_name}}}
     else:
         match_query = {"match_all" : {}}
     query = []
@@ -81,10 +86,9 @@ def get_collections_from_elasticsearch(request):
     if language_name == 'All Languages':
         language_name = None
     query = create_query(params, language_name)
-    print query
     if query:
         filter = {"and" : query}
-    order_by = params.get('order_by')
+    order_by = params.get('order_by','-likes')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
@@ -111,7 +115,6 @@ def get_collections_from_elasticsearch(request):
         "size" : MAX_RESULT_SIZE
         }
     result_list = []
-    print q
     try :
         query = json.dumps(q)
         response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
