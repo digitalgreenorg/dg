@@ -8,4 +8,5 @@ python-cjson==1.0.5
 wadofstuff-django-serializers==1.1.0
 wsgiref==0.1.2
 yolk==0.4.1
-raven
+oauth2==1.5.211
+twython==3.0.0
