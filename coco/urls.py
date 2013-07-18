@@ -23,5 +23,5 @@ urlpatterns = patterns('',
     (r'^login/', login),
     (r'^logout/', logout),
     (r'^debug/', debug),
-    (r'^$', coco_v2),
+    (r'^v2/$', coco_v2),
 )
