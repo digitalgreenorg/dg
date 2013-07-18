@@ -151,3 +151,10 @@ def populate_farmers(person):
     website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                             thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
     website_farmer.save()
+    
+def update_questions_asked(pma):
+    if pma.expressed_question != '':
+        try:
+            person = Person.objects.get(coco_id = str(pma.person.id)
+        comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False,
+                          person = pma.,video =Video.objects.get(uid=str(k.id)) 
