@@ -2911,18 +2911,18 @@ textarea.comment-text {
 }
 
 /* Modal Styles e.g. login modal */
-.modal-style {
+.modal-login {
     background-color: #f3f2eb;
-    padding: 30px 30px;
-    margin-left: -280px;
+    padding: 30px 40px;
+    margin-left: -111px;
+    width: 142px;
 }
-
-.modal-style .close {
-    float:right;
-}
-
-.modal-style .btn {
+.modal-login .btn {
     width: 102px;
+}
+
+.modal-login .close {
+    float:right;
 }
 
 body {
@@ -2932,7 +2932,7 @@ body {
 .hide {
     display: none;
 }
-
+/********************************/
 /* Copied from bootstrap modals */
 .hide-text {
   font: 0/0 a;
@@ -2971,9 +2971,11 @@ body {
   top: 10%;
   left: 50%;
   z-index: 1050;
-  width: 560px;
-  margin-left: -280px;
-  background-color: #ffffff;
+  /*** Commenting for custom-style ***/
+  * width: 560px;
+  * margin-left: -280px;
+  * background-color: #ffffff;
+  ************************************/
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
   *border: 1px solid #999;

@@ -60,7 +60,7 @@
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f">and our approach</span></a></li>
                                 <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="/social/donate">Donate</a></li>
                                 {% if not header.loggedIn %}
-                                <li><a class="btn-sign-in" data-toggle="modal" href="#login-modal">Sign in</a></li>
+                                <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
                                 {% else %}
                                 <li>
                                     <a class="btn-sign-in btn-signed" href="#">
@@ -80,7 +80,7 @@
                     </div>  <!-- End .wrapper -->
                 </header> <!-- End .global-nav -->
             </div>
-            <div id="login-modal" class="modal-style modal hide" >
+            <div id="login_modal" class="modal-login modal hide" >
 				<a href="#" class="close" data-dismiss="modal">&times;</a>
 				<h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
 				<div class="layout-vr-sm">
