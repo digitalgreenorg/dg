@@ -23,7 +23,7 @@ def save_log(sender, **kwargs ):
         instance.get_village()
     except Exception as e:
         print type(e), e
-    
+    ServerLog = get_model('dashboard','ServerLog')
     log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
                     model_id = instance.id, partner = instance.get_partner())
     log.save()
