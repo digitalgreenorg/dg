@@ -117,11 +117,10 @@ class ActivityResource(BaseResource):
                    }
 
 class CommentResource(BaseResource):
-    farmer = fields.ForeignKey(PersonResource, 'farmer',full=True, null=True)
-    video = fields.ForeignKey(VideoResource, 'video', full=True, null=True)
-    user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
-    activityURI = fields.ForeignKey(ActivityResource, 'activityURI', null=True)
-    inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
+    person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
+    video = fields.ForeignKey(VideoResource, 'video', null=True)
+    #user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
+    #inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
     #in videoID out Comment
     #in activityID out Comment
     class Meta:
@@ -129,5 +128,4 @@ class CommentResource(BaseResource):
         resource_name = 'comment'
         filtering={
                    'video':ALL_WITH_RELATIONS,
-                   'activityURI':ALL_WITH_RELATIONS,
                    }

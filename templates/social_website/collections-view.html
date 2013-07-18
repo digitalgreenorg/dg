@@ -12,7 +12,7 @@
                         </div>
                         <div class="grid-col grid-size1of3">
                             <div class="push-top-sm">
-                                <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
+                                <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
                                        <li>{{ collection.videos.all|length }} Videos</li>
                                        <li>{{ duration|seconds_to_duration }}</li>
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="media layout-vr-md">
-                        <div class="video-wrapper" data-videoID="{{video.videoID}}">
+                        <div class="video-wrapper" data-videoID="{{video_index}}">
                             <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
                             <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
                                 You need Flash player 8+ and JavaScript enabled to view this video.
