@@ -104,14 +104,12 @@ class ActivityResource(BaseResource):
     #comments = fields.ToManyField('website.api.CommentResource', 'comment_activity')
     partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
     farmer = fields.ForeignKey(PersonResource, 'farmer', null=True)
-    user = fields.ForeignKey('website.user_api.UserResource', 'user', null=True)
     video = fields.ForeignKey(VideoResource, 'video', null=True)
     collection = fields.ForeignKey(CollectionResource, 'collection', null=True, full=True)
     class Meta:
         queryset = Activity.objects.all().order_by('-date')
         resource_name = 'activity'
         filtering={
-                   'user':ALL_WITH_RELATIONS,
                    'farmer':ALL_WITH_RELATIONS,
                    'partner':ALL_WITH_RELATIONS,
                    'newsFeed':ALL
