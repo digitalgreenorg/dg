@@ -4,23 +4,25 @@ get_countries_online, save_country_offline, save_region_online, get_regions_onli
 save_region_offline, save_state_online, get_states_online, save_state_offline, \
 save_fieldofficer_online, get_fieldofficers_online, save_fieldofficer_offline, save_practice_online, \
 get_practices_online, save_practice_offline, get_practices_seen_for_person, save_language_online, \
-get_languages_online, save_language_offline, save_partner_online, get_partners_online,
-save_partner_offline, save_video_online, get_videos_online, get_videos_seen_for_person,
+get_languages_online, save_language_offline, save_partner_online, get_partners_online, \
+save_partner_offline, save_video_online, get_videos_online, get_videos_seen_for_person, \
 save_video_offline, save_personshowninvideo_online, get_personshowninvideo_online, save_personshowninvideo_offline, \
 save_developmentmanager_online, get_developmentmanagers_online, save_developmentmanager_offline, \
 save_equipment_online, get_equipments_online, save_equipment_offline, save_district_online, get_districts_online, \
 save_district_offline, save_block_online, get_blocks_online, get_blocks_for_district_online, \
 save_block_offline, save_village_online, get_villages_online, get_villages_for_blocks_online, \
-save_village_offline, save_animator_online, get_animators_online, save_animator_offline, \ save_animatorassignedvillage_online, get_animatorassignedvillages_online, save_animatorassignedvillage_offline, \
+save_village_offline, save_animator_online, get_animators_online, save_animator_offline, \
+save_animatorassignedvillage_online, get_animatorassignedvillages_online, save_animatorassignedvillage_offline, \
 save_persongroup_online, get_persongroups_online, get_persongroups_for_village_online, save_persongroup_offline, \
-save_person_online, get_persons_online, get_person_for_village_and_no_person_group_online, 
+save_person_online, get_persons_online, get_person_for_village_and_no_person_group_online, \
 get_person_for_person_group_online, save_person_offline, save_screening_online, get_screenings_online, \
 save_screening_offline, get_attendance, get_groupstargetedinscreening_online, save_groupstargetedinscreening_offline, \
 save_videosscreenedinscreening_online, get_videosscreenedinscreening_online, save_videosscreenedinscreening_offline, \
 save_training_online, get_trainings_online, save_training_offline, save_traininganimatorstrained_online, \
 get_traininganimatorstrained_online, save_traininganimatorstrained_offline, save_monthlycostpervillage_online, \
 get_monthlycostpervillages_online, save_monthlycostpervillage_offline, save_animatorsalarypermonth_online, \
-get_animatorsalarypermonths_online, save_animatorsalarypermonth_offline, save_personrelation_online, get_personrelations_online, save_personrelation_offline, \
+get_animatorsalarypermonths_online, save_animatorsalarypermonth_offline, save_personrelation_online, \
+get_personrelations_online, save_personrelation_offline, \
 get_personmeetingattendances_online, save_personmeetingattendance_offline, \
 save_personadoptpractice_online, get_personadoptpractices_online, save_personadoptpractice_offline, \
 save_equipmentholder_online, get_equipmentholders_online, save_equipmentholder_offline, save_reviewer_online, \
@@ -48,7 +50,7 @@ urlpatterns = patterns('',
     (r'^savepracticeonline/((?P<id>\d*)/)?$', save_practice_online),
     (r'^getpracticesonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_practices_online),
     (r'^savepracticeoffline/((?P<id>\d*)/)?$', save_practice_offline),
-    (r'^getpracticesseenforperson/((?P<person_id>\d*)/)?$',get_practices_seen_for_person),
+    (r'^getpracticesseenforperson/((?P<person_id>\d*)/)?$', get_practices_seen_for_person),
     (r'^savelanguageonline/((?P<id>\d*)/)?$', save_language_online),
     (r'^getlanguagesonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_languages_online),
     (r'^savelanguageoffline/((?P<id>\d*)/)?$', save_language_offline),
@@ -98,8 +100,8 @@ urlpatterns = patterns('',
     (r'^getscreeningsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_screenings_online),
     (r'^savescreeningoffline/((?P<id>\d*)/)?$', save_screening_offline),
     (r'^getattendance/((?P<id>\d*)/)?$', get_attendance),
-    (r'^getscreeningfarmergroupstargetedsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$',get_groupstargetedinscreening_online),
-    (r'^savescreeningfarmergroupstargetedsoffline/((?P<id>\d*)/)?$',save_groupstargetedinscreening_offline),
+    (r'^getscreeningfarmergroupstargetedsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_groupstargetedinscreening_online),
+    (r'^savescreeningfarmergroupstargetedsoffline/((?P<id>\d*)/)?$', save_groupstargetedinscreening_offline),
     (r'^savescreeningvideosscreenedsonline/$', save_videosscreenedinscreening_online),
     (r'^getscreeningvideosscreenedsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_videosscreenedinscreening_online),
     (r'^savescreeningvideosscreenedsoffline/((?P<id>\d*)/)?$', save_videosscreenedinscreening_offline),
@@ -132,13 +134,13 @@ urlpatterns = patterns('',
     (r'^savetargetonline/((?P<id>\d*)/)?$', save_target_online),
     (r'^gettargetsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_targets_online),
     (r'^savetargetoffline/((?P<id>\d*)/)?$', save_target_offline),
-    (r'^geterrorsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$',get_dashboard_errors_online),
-    (r'^notanerror/((?P<offset>\d*)/(?P<limit>\d*)/)?$',mark_error_as_not_error),
-    (r'^getindexdata/$',index_template_data),
+    (r'^geterrorsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_dashboard_errors_online),
+    (r'^notanerror/((?P<offset>\d*)/(?P<limit>\d*)/)?$', mark_error_as_not_error),
+    (r'^getindexdata/$', index_template_data),
     (r'^personsingroup/$',farmers_in_groups),
-    (r'^personsinscreening/((?P<screening_id>\d*)/)?$',persons_in_screening),
+    (r'^personsinscreening/((?P<screening_id>\d*)/)?$', persons_in_screening),
     (r'^personmeetingattendance/(?P<person_id>\d*)/(?P<screening_id>\d*)', person_meeting_attendance_data),
-    (r'^screeningsinvillage/((?P<village_id>\d*)/)?$',screenings_in_village),
+    (r'^screeningsinvillage/((?P<village_id>\d*)/)?$', screenings_in_village),
     (r'^filtereddataforvillage/((?P<village_id>\d*)/)?$', filters_for_village),
     (r'^practicesforperson/((?P<person_id>\d*)/)?$', practices_seen_by_farmer),
     (r'^practicesinvideos/$', practices_in_videos),

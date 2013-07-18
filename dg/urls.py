@@ -1,16 +1,10 @@
 from django.conf import settings
+from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
 from dashboard.data_log import send_updated_log
-import dashboard.urls
-import dashboard.urls_feeds
-from dashboard.views import get_person, feed_animators, search
+from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
-import fbconnect.urls
-import output.urls
-import path.urls
 from static_site_views import *
-import video_practice_map.urls
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,14 +13,14 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^feeds/', include(dashboard.urls_feeds)),
+    (r'^feeds/', include('dashboard.urls_feeds')),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     # Imports from dashboard
     (r'^animators-by-village-id/(\d+)/$', feed_animators),
     (r'/search/', search),
-    (r'^dashboard/', include(dashboard.urls)),
+    (r'^dashboard/', include('dashboard.urls')),
     (r'^get/person/$', get_person),
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
@@ -40,7 +34,7 @@ urlpatterns = patterns('',
     (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
-    (r'^videotask/', include(video_practice_map.urls)),
+    (r'^videotask/', include('video_practice_map.urls')),
     # Imports from static_site_views
     (r'^$', home),
     (r'^home/?$',home),
@@ -118,9 +112,9 @@ urlpatterns = patterns('',
     (r'^update/?$',update),
     (r'^latestupdate/?$',latestupdate),
     (r'^nexus/?$',nexus),
-    (r'^analytics/', include(output.urls)),
-    (r'^path/', include(path.urls)),
-    (r'^fbconnect/', include(fbconnect.urls)),
+    (r'^analytics/', include('output.urls')),
+    (r'^path/', include('path.urls')),
+    (r'^fbconnect/', include('fbconnect.urls')),
 )
 
 # Static files serving locally
