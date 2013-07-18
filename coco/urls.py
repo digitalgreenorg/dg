@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from tastypie.api import Api
-from dashboard.api import *
+from coco.api import *
+from views import coco_v2, debug, login, logout
 
 v1_api = Api(api_name='v1')
 
@@ -24,5 +25,9 @@ v1_api.register(DistrictResource())
 v1_api.register(PersonMeetingAttendanceResource())
 
 urlpatterns = patterns('',
-    (r'', include(v1_api.urls)),
+    (r'^api/', include(v1_api.urls)),
+    (r'^login/', login),
+    (r'^logout/', logout),
+    (r'^debug/', debug),
+    (r'^v2/', coco_v2),        
 )
