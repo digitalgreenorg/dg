@@ -174,7 +174,7 @@ public class PersonsTemplate extends BaseTemplate{
 													"</div>" +
 													"<div class='form-row father_name  '>" +
 														"<div>" +
-															"<label for='id_father_name'>Father name:</label><input id='id_father_name' type='text' class='vTextField' name='father_name' maxlength='100' />" +
+															"<label for='id_father_name' class='required'>Father name:</label><input id='id_father_name' type='text' class='vTextField' name='father_name' maxlength='100' />" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row age  '>" +

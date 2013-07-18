@@ -22,7 +22,7 @@ function() {
         //string = key of this object in all_config, name of objectstore in IDB
         //for - accessing this object 
         
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         //string - the rest url for this entity
     
         'dashboard_display': {
@@ -136,7 +136,7 @@ function() {
         'page_header': 'Village',
         'list_table_header_template': 'village_table_template', 
         'list_table_row_template': 'village_list_item_template',
-        'rest_api_url': '/api/v1/village/',
+        'rest_api_url': '/coco/api/v1/village/',
         'entity_name': 'village',
         'dashboard_display': {
             listing: false,
@@ -151,9 +151,9 @@ function() {
         'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
-        'rest_api_url': '/api/v1/mediator/',
+        'rest_api_url': '/coco/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender', 'district.id'],
+        'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -229,9 +229,9 @@ function() {
         'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
-        'rest_api_url': '/api/v1/video/',
+        'rest_api_url': '/coco/api/v1/video/',
         'entity_name': 'video',
-        'unique_togther_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
             'mediator': {
@@ -368,7 +368,7 @@ function() {
     };
 
     var language_configs = {
-        'rest_api_url': '/api/v1/language/',
+        'rest_api_url': '/coco/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
         'dashboard_display': {
@@ -378,7 +378,7 @@ function() {
     };
 
     var district_configs = {
-        'rest_api_url': '/api/v1/district/',
+        'rest_api_url': '/coco/api/v1/district/',
         'entity_name': 'district',
         'sort_field': 'district_name',
         'dashboard_display': {
@@ -393,10 +393,10 @@ function() {
         'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
-        'rest_api_url': '/api/v1/group/',
+        'rest_api_url': '/coco/api/v1/group/',
         'entity_name': 'group',
         'inc_table_name': 'persongroups',
-        'unique_togther_fields': ['group_name', 'village.id'],
+        'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
         'foreign_entities': {
             'village': {
@@ -482,10 +482,65 @@ function() {
         'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
-        'rest_api_url': '/api/v1/screening/',
+        'rest_api_url': '/coco/api/v1/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
-        'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        afterSave: function(off_json, Offline){
+            var dfd = new $.Deferred();
+            var videos_shown = off_json.videoes_screened;
+            console.log("recvd off_json in afterSave - "+JSON.stringify(off_json));
+            update_attendees()
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                    dfd.reject();
+                });
+            return dfd.promise();
+
+            function update_attendees(){
+                var all_update_dfds = [];
+                $.each(off_json.farmers_attendance, function(index, per){
+                    all_update_dfds.push(update_attendee(per));    
+                });
+                return $.when.apply($,all_update_dfds);
+            }
+            
+            function update_attendee(per){
+                var p_dfd = new $.Deferred();
+                Offline.fetch_object("person", "id", parseInt(per.person_id))
+                    .done(function(p_model){
+                        console.log("old p -"+JSON.stringify(p_model));
+                        var videos_seen = p_model.get("videos_seen");
+                        if(videos_seen)
+                        {
+                            var videos_seen_ids = _.pluck(videos_seen, 'id');
+                            $.each(videos_shown, function(index, vid){
+                                if($.inArray(vid.id, videos_seen_ids)==-1)
+                                    videos_seen.push(vid);
+                            });
+                        }
+                        else
+                            videos_seen = videos_shown;
+                        p_model.set("videos_seen", videos_seen);
+                        Offline.save(p_model, "person", p_model.toJSON())
+                            .done(function(p_model){
+                                console.log("new p -"+JSON.stringify(p_model));
+                                p_dfd.resolve();
+                            })
+                            .fail(function(error){
+                                console.log("error updating person in after save - "+error);
+                                p_dfd.reject(error);
+                            });
+                    })
+                    .fail(function(error){
+                        console.log("error fetching person in after save - "+error);
+                        p_dfd.reject(error);
+                    });
+                return p_dfd;    
+            };
+        },
         'foreign_entities': {
             'village': {
                 'village': {
@@ -597,7 +652,7 @@ function() {
 					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
-				animator: "Animator is required",
+				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
 			},
@@ -627,10 +682,10 @@ function() {
         'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
-        'rest_api_url': '/api/v1/adoption/',
+        'rest_api_url': '/coco/api/v1/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'unique_togther_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
             highlight: function(element, errorClass, validClass) {
@@ -755,7 +810,7 @@ function() {
         'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
-        'rest_api_url': '/api/v1/person/',
+        'rest_api_url': '/coco/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities': {
             'village': {
@@ -771,7 +826,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
+        'unique_together_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
@@ -895,7 +950,7 @@ var idb = {
                     autoIncrement: true,keyPath: "id"
                 });    
                 entity_store.createIndex("onlineIndex", "online_id", { unique: true });
-                var uniques = configs[member].unique_togther_fields;
+                var uniques = configs[member].unique_together_fields;
                 if(uniques&&uniques.length)
                 {
                     entity_store.createIndex("uniquesindex", uniques, { unique: true });    
@@ -4186,7 +4241,7 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
             {
                 off_model = this.create_b_model(entity_name);
             }
-            
+            var that = this;
             this.check_login_wrapper()
                 .done(function(){
                     off_model.save(json,{
@@ -4198,8 +4253,13 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                             console.log(error);
                             //format error object to match the format of error sent by online save
                             var err_json = {};
+							//get unique together fields
+							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); //to copy by value
+							var utStr = that.beautify(ut);
+							cap_entity_name = entity_name.charAt(0).toUpperCase() + entity_name.slice(1);
+							var newerr = cap_entity_name + " with this " + utStr + " already exists";
                             err_json[entity_name] = {
-                                __all__: [error.target.error.name]
+                                __all__: [newerr]
                             }
                             return dfd.reject(JSON.stringify(err_json));
                         }
@@ -4207,6 +4267,15 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                 })
             return dfd;
         },
+		
+		beautify: function(ut){
+			for (var i=0; i< ut.length; i++){
+				ut[i] = ut[i].charAt(0).toUpperCase() + ut[i].slice(1)
+				ut[i] = ut[i].replace("_"," ");
+				ut[i] = ut[i].replace(".id","");
+			}
+			return ut.join(", ");
+		},
         
         /*
         creates a offline model
@@ -6667,28 +6736,41 @@ define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone
             if(which_to_which)
                 this.which_to_which = which_to_which;
             var that = this;
-            var online_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
+            var conv_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
             console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             this.field_dfds = [];
-            this.iterate_foreign_fields(online_json, f_entities);
+            this.iterate_foreign_fields(conv_json, f_entities);
             
+            var object_jsons = null;
+            switch(this.which_to_which){
+                case "onlinetooffline": 
+                    object_jsons = {
+                        off_json : conv_json,
+                        on_json : json
+                    }
+                    break;
+                default:
+                    object_jsons = {
+                        off_json : json,
+                        on_json : conv_json
+                    }
+            }
             if(this.field_dfds.length)
             {
                 $.when.apply($, this.field_dfds)
                     .done(function(){
-                        // console.log("FORMCONTROLLER:convert_namespace: Converted to this: "+JSON.stringify(online_json));
-                        return dfd.resolve( {on_json:online_json, off_json:json} );
+                        return dfd.resolve(object_jsons);
                     })
                     .fail(function(){
-                        // console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
                         return dfd.reject();
                     });
             }
             else
             {
                 console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
-                return dfd.resolve( {on_json:online_json, off_json:json} );
+                return dfd.resolve(object_jsons);
             }
+            
             return dfd.promise();
         },
         
@@ -9050,7 +9132,7 @@ define('views/form_controller',[
         /*
         Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
-        After Save is finished calls an after_save function
+        After Save is finished calls an after_form_save function
         */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
@@ -9079,7 +9161,7 @@ define('views/form_controller',[
                 if(this.form.inline)
                 {
                     console.log("FORMCONTROLLER: separating inlines from final json");
-                    this.inline_models = $.extend(null,this.form.final_json.inlines);
+                    this.inline_models = this.form.final_json.inlines;
                     delete this.form.final_json.inlines;
                     var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
@@ -9089,9 +9171,9 @@ define('views/form_controller',[
                     .done(function(off_json){
                         if(that.form.inline)
                             that.save_inlines(that.inline_models, off_json, that.form.inline)
-                                .done(function(){
+                                .done(function(all_inlines){
                                     console.log("ALL INLINED SAVED");
-                                    inlines_dfd.resolve();
+                                    inlines_dfd.resolve(all_inlines);
                                 })
                                 .fail(function(){
                                     console.log("FAILED AT INLINES SAVE");
@@ -9109,7 +9191,7 @@ define('views/form_controller',[
             $.when.apply(null, save_complete_dfds)
                 .done(function(){
                     console.log("Everything saved");
-                    that.after_save(that.form.entity_name);
+                    that.after_form_save(that.form.entity_name);
                 })
                 .fail(function(){
                     if(that.form.bulk)
@@ -9146,29 +9228,35 @@ define('views/form_controller',[
         save_inlines: function(inlines, parent_off_json, inline_config){
             var dfd = new $.Deferred();
             var that = this;
-            console.log("Gotta save inlines now - ");
-            console.log(JSON.stringify(inlines));
-            console.log(JSON.stringify(parent_off_json));
             this.complete_inlines(inlines, parent_off_json, inline_config); 
-            var inline_dfds = [];
-            _.each(inlines, function(inl, index){
+            iterate_inlines();
+            return dfd;
+            
+            function iterate_inlines(){
+                if(!inlines.length)
+                    return dfd.resolve();
+                save_inline(inlines.shift())    
+                    .done(function(){
+                        iterate_inlines();
+                    })
+                    .fail(function(){
+                        dfd.reject();
+                    });
+            };
+            function save_inline(inl){
+                var inl_dfd = $.Deferred();
                 var inl_index = inl.index;
                 delete inl.index;
-                var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
-                inl_save_dfd
+                that.save_object(inl, inline_config.foreign_entities, inline_config.entity)
                     .fail(function(error){
                         that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                        return inl_dfd.reject();
+                    })
+                    .done(function(){
+                       return inl_dfd.resolve(); 
                     });
-                inline_dfds.push(inl_save_dfd);           
-            }, this);
-            $.when.apply($, inline_dfds)
-                .done(function(){
-                    dfd.resolve();
-                })
-                .fail(function(){
-                    dfd.reject();
-                })
-            return dfd;
+                return inl_dfd.promise();
+            };
         },
         
         //put in the borrowed attributes and the joining attribute in inlines
@@ -9202,8 +9290,14 @@ define('views/form_controller',[
                     .done(function(on_off_jsons){
                         that.save_when_online(entity_name, on_off_jsons)
                             .done(function(off_json){
-                                show_suc_notif();
-                                dfd.resolve(off_json);
+                                call_after_save(off_json)
+                                    .done(function(){
+                                        show_suc_notif();
+                                        dfd.resolve(off_json);
+                                    })
+                                    .fail(function(error){
+                                        alert("afterSave failed for entity - "+entity_name+" - "+error);
+                                    });
                             })
                             .fail(function(error){
                                 show_err_notif();
@@ -9220,14 +9314,35 @@ define('views/form_controller',[
                 //Offline mode
                 this.save_when_offline(entity_name, json)
                     .done(function(off_json){
-                        show_suc_notif();
-                        return dfd.resolve(off_json);
+                        call_after_save(off_json)
+                            .done(function(){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
+                            })
+                            .fail(function(error){
+                                alert("afterSave failed for entity - "+entity_name+" - "+error);
+                            });
                     })
                     .fail(function(error){
                         show_err_notif();
                         return dfd.reject(error);
                     });
             }
+            
+            function call_after_save(saved_off_json){
+                var dfd = new $.Deferred();
+                var afterSave = configs[entity_name].afterSave;
+                if(afterSave)
+                    afterSave(saved_off_json, Offline)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
+                else dfd.resolve();    
+                return dfd.promise();    
+            };
             
             function show_suc_notif(){
                 notifs_view.add_alert({
@@ -9329,7 +9444,7 @@ define('views/form_controller',[
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save: function(entity_name){
+        after_form_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
