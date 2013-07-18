@@ -27,13 +27,14 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/newsFeed/');
+            this.base('api/activity/');
 
             // prepare data model
             this._dataModel.addSubModel('newsItems', true);
 
             this.addInputParam('offset', false, 0);
             this.addInputParam('limit', false, 10);
+            this.addInputParam('newsFeed',false,1);
         },
 
         fetch: function(page, countPerPage) {
@@ -45,8 +46,9 @@ define(function(require) {
                 countPerPage = 12;
             }
 
-            this.setInputParam('offset', page, true);
+            this.setInputParam('offset', page*countPerPage, true);
             this.setInputParam('limit', countPerPage, true);
+            this.setInputParam('newsFeed', 1, true)
 
             // perform the fetch
             this.base();
@@ -60,15 +62,15 @@ define(function(require) {
             var newsItemsModel = dataModel.get('newsItems');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.limit;
-            var page = unprocessedData.requestParameters.offset;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
 
             // import news from data
-            var newsItemsToAdd = unprocessedData.newsItems;
-            var startingCacheId = page * countPerPage;
+            var newsItemsToAdd = unprocessedData.objects;
+            var startingCacheId = page;
 
             newsItemsModel.addSubset(newsItemsToAdd, startingCacheId);
         },

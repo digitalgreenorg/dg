@@ -30,7 +30,7 @@ class Migration(SchemaMigration):
         db.create_table('social_website_video', (
             ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('coco_id', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('thumbnailURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('thumbnailURL16by9', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
@@ -123,9 +123,9 @@ class Migration(SchemaMigration):
         # Adding model 'ImageSpec'
         db.create_table('social_website_imagespec', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('imageURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
+            ('imageURL', self.gf('django.db.models.fields.URLField')(max_length=400)),
             ('altString', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('imageLinkURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
+            ('imageLinkURL', self.gf('django.db.models.fields.URLField')(max_length=400)),
         ))
         db.send_create_signal('social_website', ['ImageSpec'])
 
@@ -133,12 +133,15 @@ class Migration(SchemaMigration):
         db.create_table('social_website_activity', (
             ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateField')()),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('textContent', self.gf('django.db.models.fields.TextField')()),
+            ('facebookID', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('avatarURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'], null=True, blank=True)),
             ('farmer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Person'], null=True, blank=True)),
             ('collection', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Collection'], null=True, blank=True)),
-            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Video'])),
+            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Video'], null=True, blank=True)),
+            ('newsFeed', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('social_website', ['Activity'])
 
@@ -192,12 +195,15 @@ class Migration(SchemaMigration):
             'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']", 'null': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
+            'facebookID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'farmer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
             'images': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['social_website.ImageSpec']", 'null': 'True', 'blank': 'True'}),
+            'newsfeeed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'null': 'True', 'blank': 'True'}),
             'textContent': ('django.db.models.fields.TextField', [], {}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
         'social_website.collection': {
             'Meta': {'object_name': 'Collection'},
@@ -236,8 +242,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ImageSpec'},
             'altString': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'})
+            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
+            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '400'})
         },
         'social_website.partner': {
             'Meta': {'object_name': 'Partner'},
@@ -292,7 +298,7 @@ class Migration(SchemaMigration):
             'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'thumbnailURL16by9': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})

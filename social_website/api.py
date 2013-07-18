@@ -66,11 +66,11 @@ class PersonResource(BaseResource):
 
 class PartnerFarmerResource(BaseResource):
     farmer = fields.ToManyField('social_website.api.PersonResource', 'person_set', full=True)
-    dehydrate_farmer = partial(many_to_many_to_subfield, field_name='person_set',sub_field_names=['uid','name','thumbnailURL'])
+    dehydrate_farmer = partial(many_to_many_to_subfield, field_name='person_set',sub_field_names=['uid','coco_id','name','thumbnailURL'])
     class Meta:
         queryset = Partner.objects.all()
         resource_name = 'partnerFarmers'
-        fields=['person','name','uid']
+        fields=['person','name','uid','coco_id']
         filtering={
                    'uid':ALL
                    }
@@ -100,28 +100,26 @@ class CollectionResource(BaseCorsResource):
     
 class ActivityResource(BaseResource):
     # page,count -> send order by descding date
-    images = fields.ManyToManyField(ImageSpecResource, 'images', null=True)
-    comments = fields.ToManyField('website.api.CommentResource', 'comment_activity')
-    partner = fields.ForeignKey(PartnerResource,'partner',null=True)
-    farmer = fields.ForeignKey(PersonResource,'farmer',null=True)
-    user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
-    video = fields.ForeignKey(VideoResource,'video',null=True)
-    collection = fields.ForeignKey(CollectionResource,'collection',null=True)
+    images = fields.ManyToManyField(ImageSpecResource, 'images', null=True, full=True)
+    #comments = fields.ToManyField('website.api.CommentResource', 'comment_activity')
+    partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
+    farmer = fields.ForeignKey(PersonResource, 'farmer', null=True)
+    video = fields.ForeignKey(VideoResource, 'video', null=True)
+    collection = fields.ForeignKey(CollectionResource, 'collection', null=True, full=True)
     class Meta:
-        queryset = Activity.objects.all()
+        queryset = Activity.objects.all().order_by('-date')
         resource_name = 'activity'
         filtering={
-                   'user':ALL_WITH_RELATIONS,
                    'farmer':ALL_WITH_RELATIONS,
-                   'partner':ALL_WITH_RELATIONS
+                   'partner':ALL_WITH_RELATIONS,
+                   'newsFeed':ALL
                    }
 
 class CommentResource(BaseResource):
-    farmer = fields.ForeignKey(PersonResource, 'farmer',full=True, null=True)
-    video = fields.ForeignKey(VideoResource, 'video', full=True, null=True)
-    user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
-    activityURI = fields.ForeignKey(ActivityResource, 'activityURI', null=True)
-    inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
+    person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
+    video = fields.ForeignKey(VideoResource, 'video', null=True)
+    #user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
+    #inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
     #in videoID out Comment
     #in activityID out Comment
     class Meta:
@@ -129,5 +127,4 @@ class CommentResource(BaseResource):
         resource_name = 'comment'
         filtering={
                    'video':ALL_WITH_RELATIONS,
-                   'activityURI':ALL_WITH_RELATIONS,
                    }

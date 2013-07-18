@@ -21,7 +21,7 @@ class Partner(models.Model):
 class Video(models.Model):
     uid = models.AutoField(primary_key=True)
     coco_id = models.CharField(max_length=20)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     thumbnailURL16by9 = models.URLField(max_length=200)
     description = models.TextField(blank=True)
@@ -94,18 +94,21 @@ class FeaturedCollection(models.Model):
     collageURL = models.URLField(max_length=200)
 
 class ImageSpec(models.Model):
-    imageURL = models.URLField(max_length=200) 
+    imageURL = models.URLField(max_length=400) 
     altString = models.CharField(max_length=200)
-    imageLinkURL = models.URLField(max_length=200)
+    imageLinkURL = models.URLField(max_length=400)
     
 class Activity(models.Model):
     uid = models.AutoField(primary_key=True)
     date = models.DateField()
+    title = models.CharField(max_length=200)
     textContent = models.TextField()
+    facebookID = models.CharField(max_length=50, null=True, blank=True)
     avatarURL = models.URLField(max_length=200)
     images = models.ManyToManyField(ImageSpec, null=True, blank=True)
     partner = models.ForeignKey(Partner, null=True, blank=True)
     farmer = models.ForeignKey(Person, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
-    video = models.ForeignKey(Video)
+    video = models.ForeignKey(Video, null=True, blank=True)
+    newsFeed = models.BooleanField()
 

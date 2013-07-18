@@ -82,6 +82,12 @@ define(function(require) {
             var newOpenCategoryId = $newOpenFilterCategory.data('categoryId');
 
             if (filterCategories[newOpenCategoryId].categoryOpen) {
+            	$newOpenFilterCategory.find('.js-subcategory-wrapper')
+                .stop(true)
+                .animate({
+                    height: '0px'
+                }, 1000);
+            	$newOpenFilterCategory.removeClass('open');
                 return;
             }
 

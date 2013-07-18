@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 import gdata.youtube.service
-from social_website.models import  Collection, Partner, Person, PersonVideoRecord, Video
+from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
@@ -56,9 +56,7 @@ def get_online_stats(yt_entry):
 
 def populate_adoptions(pap):
     person_id = pap.person.id
-    print person_id
     video_id = pap.video.id
-    print video_id
     try:
         person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
         person_vid_obj.adopted += 1
@@ -151,3 +149,18 @@ def populate_farmers(person):
     website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                             thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
     website_farmer.save()
+    
+def update_questions_asked(pma):
+    if pma.expressed_question != '':
+        videos = [video for video in pma.screening.videoes_screened.all()]
+        for dashboard_video in videos:
+            try:
+                video = Video.objects.get(coco_id = str(dashboard_video.id))
+                if Comment.objects.filter(video = video, text = pma.expressed_question):
+                    return 
+                person = Person.objects.get(coco_id = str(pma.person_id))
+                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
+                comment.save()
+            except Exception as ex:
+                # this means either person or video does not exist on website DB
+                pass

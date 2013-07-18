@@ -91,7 +91,7 @@ define(function(require) {
             // get user id
             // get video id
             state.userID = jQuery('body').data('userId');
-            state.videoUID = this._references.$videoTarget.data('videoUid');
+            state.videoUID = this._references.$videoTarget.data('video-uid');
 
             state.updateVideoWatchedTimeInterval = undefined;
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});

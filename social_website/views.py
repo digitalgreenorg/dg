@@ -24,12 +24,11 @@ def collection_view(request):
         collection = Collection.objects.get(uid=id)
     except Collection.DoesNotExist:
         collection = Collection.objects.get(uid=1)
-    videos=collection.videos.all()
     try:
         video = collection.videos.all()[video_index - 1]
     except IndexError:
         video = collection.videos.all()[0]    
-    tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not '']
+    tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
     related_collection_dict = get_related_collections(collection)
     context= {
@@ -42,7 +41,6 @@ def collection_view(request):
               'video' : video,
               'video_index' : video_index,
               'tags' : tags,
-              'slides': range(((len(videos)-1)/5)+1),
               'related_collections' : related_collection_dict[:4], # restricting to 4 related collections for now
               }
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request))
@@ -58,7 +56,7 @@ def partner_view(request):
         'header': {
             'jsController':'Profile',
             'loggedIn':False},
-        'partner': partner
+        'partner': partner,
         }
     return render_to_response('profile.html' , context, context_instance = RequestContext(request))
 

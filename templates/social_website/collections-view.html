@@ -12,7 +12,7 @@
                         </div>
                         <div class="grid-col grid-size1of3">
                             <div class="push-top-sm">
-                                <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
+                                <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
                                        <li>{{ collection.videos.all|length }} Videos</li>
                                        <li>{{ duration|seconds_to_duration }}</li>
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="media layout-vr-md">
-                        <div class="video-wrapper" data-videoID="{{video.videoID}}">
+                        <div class="video-wrapper" data-videoid="{{video_index}}">
                             <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
                             <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
                                 You need Flash player 8+ and JavaScript enabled to view this video.
@@ -109,13 +109,17 @@
                         <div id="collection-videos-carousel" class="collection-video-carousel carousel-wrapper">
                             <div class="carousel-container js-carousel-container">
                                 <ul class="carousel-list">
-                                    
-                                    <!-- Each carousel slide will be in a li here -->
-                                    {% for i in slides %}
-                                    <li>
+                                	 <!-- Each carousel slide will be in a li here -->
+                                    <li class="carousel-item carousel-item-1" style="width: 882px;">
+                                    	<ul class="h-list h-list-xlg clearfix">
+                                {% for video in collection.videos.all %}
+                                    {% cycle 1 0 0 0 0 as new_slide silent %}
+                                    {% if forloop.counter > 5 and new_slide %}
+                                      	</ul>
+                                    </li>
+                                    <li class="carousel-item carousel-item-1" style="width: 882px;">
                                         <ul class="h-list h-list-xlg clearfix">
-                                        {% for video in collection.videos.all %}
-                                            {% if forloop.counter <= forloop.parentloop.counter|custom_multiply and forloop.counter > forloop.parentloop.counter|add:'-1'|custom_multiply    %}
+                                     {% endif %}
                                             <!-- The "show-playing" and "show-progress" classes toggle display of the respective overlays -->
                                             <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->                                            
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
@@ -134,12 +138,10 @@
                                                     {{forloop.counter}}. <span class="copy-extra-lt">{{ video.title }}</span>
                                                 </div>
                                             </li>
-                                            {% endif %}
-                                     	{% endfor %}
-                                        </ul>
-                                    </li>
-                                    {% endfor %}
                                     <!-- End carousel slides -->
+                                {% endfor %}
+                                		</ul>
+                                	</li>
                                 </ul>
                             </div>
                             <div class="arrow-left carousel-previous-slide js-carousel-previous-slide">
