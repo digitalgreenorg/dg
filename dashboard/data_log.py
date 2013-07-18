@@ -4,7 +4,7 @@ from django.core import serializers
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from dashboard.models import ServerLog, User
+from models import User
 
 class TimestampException(Exception):
     pass
@@ -85,6 +85,6 @@ def send_updated_log(request):
         return HttpResponse("0")
 
 def get_latest_timestamp():
-    from dashboard.models import ServerLog
+    from models import ServerLog
     timestamp = ServerLog.objects.latest('id')
     return timestamp.timestamp
