@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
+from output.views import video_analytics
 from static_site_views import *
 
 # Uncomment the next two lines to enable the admin:
@@ -113,6 +114,7 @@ urlpatterns = patterns('',
     (r'^latestupdate/?$',latestupdate),
     (r'^nexus/?$',nexus),
     (r'^analytics/', include('output.urls')),
+    (r'^video/?$',video_analytics.video),
     (r'^path/', include('path.urls')),
     (r'^fbconnect/', include('fbconnect.urls')),
 )
