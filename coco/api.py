@@ -242,8 +242,8 @@ class BaseResource(ModelResource):
 class MediatorResource(BaseResource):
     mediator_label = fields.CharField()
     assigned_villages = fields.ListField()
-    partner = fields.ForeignKey('dashboard.api.PartnerResource', 'partner')
-    district = fields.ForeignKey('dashboard.api.DistrictResource', 'district', null=True)
+    partner = fields.ForeignKey('coco.api.PartnerResource', 'partner')
+    district = fields.ForeignKey('coco.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
         authentication = SessionAuthentication()
@@ -329,8 +329,8 @@ class VideoResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     cameraoperator = fields.ForeignKey(MediatorResource, 'cameraoperator')
     facilitator = fields.ForeignKey(MediatorResource, 'facilitator')
-    farmers_shown = fields.ToManyField('dashboard.api.PersonResource', 'farmers_shown')
-    language = fields.ForeignKey('dashboard.api.LanguageResource', 'language')
+    farmers_shown = fields.ToManyField('coco.api.PersonResource', 'farmers_shown')
+    language = fields.ForeignKey('coco.api.LanguageResource', 'language')
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
@@ -393,8 +393,8 @@ class PersonGroupResource(BaseResource):
 class ScreeningResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
-    videoes_screened = fields.ToManyField('dashboard.api.VideoResource', 'videoes_screened', related_name='screening')
-    farmer_groups_targeted = fields.ToManyField('dashboard.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
+    videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
+    farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])

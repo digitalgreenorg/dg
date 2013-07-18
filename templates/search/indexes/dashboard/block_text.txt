@@ -1,2 +1,0 @@
-{{ object.start_date }}
-{{ object.block_name }}{{ object.district }}
