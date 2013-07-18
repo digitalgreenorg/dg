@@ -647,7 +647,7 @@ function() {
 					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
-				animator: "Animator is required",
+				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
 			},
