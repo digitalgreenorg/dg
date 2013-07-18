@@ -7,8 +7,8 @@ import urllib2
 from twython import Twython
 
 from django.core.management import setup_environ
-import settings
-setup_environ(settings)
+import dg.settings
+setup_environ(dg.settings)
 
 from settings import APP_KEY_TWITTER, APP_SECRET_TWITTER, OAUTH_TOKEN_TWITTER, OAUTH_TOKEN_SECRET_TWITTER
 from settings import APP_KEY_LINKEDIN, APP_SECRET_LINKEDIN, OAUTH_TOKEN_LINKEDIN, OAUTH_SECRET_LINKEDIN
