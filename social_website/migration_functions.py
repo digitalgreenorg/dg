@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 import gdata.youtube.service
-from social_website.models import  Collection,Comment, Partner, Person, PersonVideoRecord, Video
+from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
@@ -158,7 +158,7 @@ def update_questions_asked(pma):
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
                 if Comment.objects.filter(video = video, text = pma.expressed_question):
                     return 
-                person = Person.objects.get(coco_id = str(pma.person.id))
+                person = Person.objects.get(coco_id = str(pma.person_id))
                 comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
                 comment.save()
             except Exception as ex:
