@@ -7,7 +7,7 @@
                             <div class="bd">
                                 <div class="bd-text layout-vr-sm">
                                     <div class="copy copy-lt layout-vr-sm">{{date}}</div>
-                                    <h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3>
+                                    <a href="https://www.facebook.com/digitalgreenorg/posts/{{facebookID}}"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3></a>
                                     <p class="copy">
                                         {{textContent}}
                                     </p>
@@ -16,11 +16,11 @@
 
                                     {{#_hasImages}}
                                     <ul class="h-list layout-vr-md">
-                                        {{#images}}
+                                        {{#_images}}
                                         <li>
-                                            <a href="{{imageLinkURL}}"><img src="{{imageURL}}" alt="{{altString}}" /></a>
+                                            <a href="{{imageLinkURL}}"><img src="{{imageURL}}" height="112px" width="170px" alt="{{altString}}" /></a>
                                         </li>
-                                        {{/images}}
+                                        {{/_images}}
                                     </ul>
                                     {{/_hasImages}}
 
