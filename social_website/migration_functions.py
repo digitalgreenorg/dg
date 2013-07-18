@@ -56,9 +56,7 @@ def get_online_stats(yt_entry):
 
 def populate_adoptions(pap):
     person_id = pap.person.id
-    print person_id
     video_id = pap.video.id
-    print video_id
     try:
         person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
         person_vid_obj.adopted += 1

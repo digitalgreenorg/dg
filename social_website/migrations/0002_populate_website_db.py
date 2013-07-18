@@ -4,27 +4,32 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from social_website.migration_functions import add_partner_info, create_collections, populate_adoptions, populate_collection_stats, populate_farmers, \
-                                               populate_partner_stats, update_person_video_record, update_website_video
+                                               populate_partner_stats, update_person_video_record, update_questions_asked, update_website_video
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         # Fill up the PersonVideoRecord
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()[:50000]:
+        for pma in orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()[:20000]:
             update_person_video_record(pma)
-        for pap in orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()[:20000]:
+        print "Pma bit done"
+        
+        for pap in orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()[:10000]:
             populate_adoptions(pap)
+        print "Pap bit done"
         
         # Initial Partner information
         for partner in orm['dashboard.Partners'].objects.exclude(date_of_association = None):
             add_partner_info(partner)
+        print "Partner initial done"
         
         # Videos migrations    
         for vid in orm['dashboard.Video'].objects.prefetch_related('language','village__block__district__partner','related_practice__practice_sector',
                                                                     'related_practice__practice_subsector','related_practice__practice_topic',
                                                                     'related_practice__practice_subtopic','related_practice__practice_subject').all():
             update_website_video(vid)    
-            
+        print "Videos done "    
+        
         # Generate collections from Video     
         create_collections()
         
@@ -35,11 +40,52 @@ class Migration(DataMigration):
         # Fill up Partner aggregated stats     
         for partner in orm['social_website.Partner'].objects.all():
             populate_partner_stats(partner)
+        print "collection and partner done"
         
         # Person table migration    
         for person in orm['dashboard.Person'].objects.filter(image_exists = True):
             populate_farmers(person)
+        print "Person done"
+                
+        # Thumbnail migrations 
+        for video in orm['social_website.Video'].objects.all():
+            video.thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(video.coco_id)
+            video.thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(video.coco_id)
+            video.save()
+                
+        for collection in orm['social_website.Collection'].objects.all():
+            video = collection.videos.all()[0]
+            collection.thumbnailURL = video.thumbnailURL16by9
+            collection.save()
+            
+        # ONLY INITIALLY IT SHOULD BE DONE LIKE THIS
+        featured_collection_dict = {
+                            'Bhili': 114,
+                            'Gondi': 122,
+                            'Hindi': 31,
+                            'Ho': 57,
+                            'Kannada': 43,
+                            'Mundari': 39,
+                            'Narsinghpuria': 116,
+                            'Neemadi': 73,
+                            'Oriya': 104,
+                            'Sadri': 126,
+                            'Santhali': 174,
+                            'Telugu': 97,
+                            'Thethi': 89,
+                            }
+        for key in featured_collection_dict:
+            collection = orm['social_website.Collection'].objects.get(uid = featured_collection_dict[key])
+            fc_object = orm['social_website.FeaturedCollection'](collection = collection,
+                                                                 collageURL='/media/assets/images/Collage/Collection ' + collection.language + '.jpg')
+            fc_object.save()
+        print "thumbnails done"
         
+        for pma in orm['dashboard.PersonMeetingAttendance'].objects.exclude(expressed_question='').prefetch_related('screening__videoes_screened').all()[:10000]:
+            update_questions_asked(pma)
+        print "comments done"
+
+
     def backwards(self, orm):
         "Write your backwards methods here."
 
@@ -677,12 +723,15 @@ class Migration(DataMigration):
             'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']", 'null': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
+            'facebookID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'farmer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
             'images': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['social_website.ImageSpec']", 'null': 'True', 'blank': 'True'}),
+            'newsfeeed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'null': 'True', 'blank': 'True'}),
             'textContent': ('django.db.models.fields.TextField', [], {}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
         'social_website.collection': {
             'Meta': {'object_name': 'Collection'},
@@ -721,8 +770,8 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'ImageSpec'},
             'altString': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'})
+            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
+            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '400'})
         },
         'social_website.partner': {
             'Meta': {'object_name': 'Partner'},
@@ -777,7 +826,7 @@ class Migration(DataMigration):
             'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'thumbnailURL16by9': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
