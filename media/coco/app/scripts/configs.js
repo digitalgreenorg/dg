@@ -483,23 +483,13 @@ function() {
                     dfd.reject();
                 });
             return dfd.promise();
-            
+
             function update_attendees(){
-                var update_dfd = new $.Deferred();
-                
                 var all_update_dfds = [];
                 $.each(off_json.farmers_attendance, function(index, per){
                     all_update_dfds.push(update_attendee(per));    
                 });
-                
-                $.when.apply($,all_update_dfds)
-                    .done(function(){
-                        update_dfd.resolve();
-                    })
-                    .fail(function(){
-                        update_dfd.reject();
-                    });
-                return update_dfd;    
+                return $.when.apply($,all_update_dfds);
             }
             
             function update_attendee(per){
