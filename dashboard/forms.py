@@ -1,7 +1,7 @@
-from dashboard.models import *
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
+from models import *
 
 # function for saving formsets with user information
 def save_all(instances, user, id):
