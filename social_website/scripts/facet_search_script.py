@@ -2,7 +2,6 @@ import site, sys
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from settings import BASE_URL
 
 from pyes import *
 from social_website.models import Collection
@@ -72,7 +71,7 @@ for obj in Collection.objects.all():
     time = 0
     for index, vid in enumerate(obj.videos.all()):
         vid_id = index+1 
-        url = BASE_URL + "social/collections/?id=" + str(obj.uid) + "&video=" + str(vid_id)
+        url = "/social/collections/?id=" + str(obj.uid) + "&video=" + str(vid_id)
         vid_data.append({"title" : vid.title, 
                          "subcategory" : vid.subcategory, 
                          "description" : vid.description,

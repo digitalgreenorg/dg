@@ -13,6 +13,7 @@ yolk==0.4.1
 oauth2==1.5.211
 twython==3.0.0
 pytz==2013b
+pyes=0.20.0
 
 wsgiref==0.1.2
 newrelic==1.12.0.56

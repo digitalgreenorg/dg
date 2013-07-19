@@ -5,7 +5,6 @@ setup_environ(dg.settings)
 import json, urllib2
 from pyes import *
 from social_website.models import Collection, Video, Partner
-from settings import BASE_URL
 
 conn = ES(['127.0.0.1:9200'])
 try:
@@ -80,7 +79,7 @@ for video in Video.objects.all():
         for index, vid in enumerate(collection.videos.all()):
             if vid.uid == video.uid:
                 vid_id = index+1 
-        url = BASE_URL + "social/collections/?id=" + str(collection.uid) + "&video=" + str(vid_id) 
+        url = "/social/collections/?id=" + str(collection.uid) + "&video=" + str(vid_id) 
         data = json.dumps({"searchTerm":video.title, 
                            "targetURL" : url,
                            "type" : "Videos"})
@@ -90,7 +89,7 @@ print i
         
 # Partner
 for partner in Partner.objects.all():
-    url = BASE_URL  + "social/connect/?id=" + str(partner.uid)
+    url = "/social/connect/?id=" + str(partner.uid)
     data = json.dumps({"searchTerm" : partner.name,
                        "targetURL" : url, 
                        "type" : "Partners"}) 

@@ -10,13 +10,22 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         # Fill up the PersonVideoRecord
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()[:20000]:
-            update_person_video_record(pma)
-        print "Pma bit done"
+        chunk = 10000
+        pmas = orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()
+        for i in range(0, pmas.count()/chunk + 1):
+            pma_slice = pmas[i*chunk:(i+1)*chunk]
+            print "Pma chunk %d" % (i*chunk)
+            for pma in pma_slice:
+                update_person_video_record(pma)
+            del pma_slice
         
-        for pap in orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()[:10000]:
-            populate_adoptions(pap)
-        print "Pap bit done"
+        paps = orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()
+        for i in range(0, paps.count()/chunk + 1):
+            pap_slice = paps[i*chunk:(i+1)*chunk]
+            print "Pap chunk %d" % (i*chunk)
+            for pap in pap_slice:
+                populate_adoptions(pap)
+            del pap_slice
         
         # Initial Partner information
         for partner in orm['dashboard.Partners'].objects.exclude(date_of_association = None):
@@ -81,11 +90,14 @@ class Migration(DataMigration):
             fc_object.save()
         print "thumbnails done"
         
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.exclude(expressed_question='').prefetch_related('screening__videoes_screened').all()[:10000]:
-            update_questions_asked(pma)
-        print "comments done"
-
-
+        pmas_question = pmas.exclude(expressed_question='')
+        for i in range(0, pmas_question.count()/chunk + 1):
+            pma_slice = pmas_question[i*chunk:(i+1)*chunk]
+            print "Pma questions chunk %d" % (i*chunk)
+            for pma in pma_slice:
+                update_questions_asked(pma)
+            del pma_slice
+    
     def backwards(self, orm):
         "Write your backwards methods here."
 
