@@ -1,15 +1,7 @@
-import site, sys
-##For local migrations uncomment below lines
-#sys.path.append('C:\Users\sreenu\Documents\gitdg')
-##for server side testing
-sys.path.append('/home/ubuntu/code/dg_coco_test/dg')
-site.addsitedir('/home/ubuntu/.virtualenvs/dg_coco_testbed/lib/python2.7/site-packages/')
-
+import site
 from django.core.management import setup_environ
-import settings
-
-
-setup_environ(settings)
+import dg.settings
+setup_environ(dg.settings)
 
 from dashboard.models import *
 
