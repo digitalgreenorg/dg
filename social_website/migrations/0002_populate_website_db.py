@@ -3,29 +3,14 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from social_website.migration_functions import add_partner_info, create_collections, populate_adoptions, populate_collection_stats, populate_farmers, \
+from social_website.migration_functions import add_partner_info, create_collections, initial_personvideorecord, populate_adoptions, populate_collection_stats, populate_farmers, \
                                                populate_partner_stats, update_person_video_record, update_questions_asked, update_website_video
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         # Fill up the PersonVideoRecord
-        chunk = 10000
-        pmas = orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()
-        for i in range(0, pmas.count()/chunk + 1):
-            pma_slice = pmas[i*chunk:(i+1)*chunk]
-            print "Pma chunk %d" % (i*chunk)
-            for pma in pma_slice:
-                update_person_video_record(pma)
-            del pma_slice
-        
-        paps = orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()
-        for i in range(0, paps.count()/chunk + 1):
-            pap_slice = paps[i*chunk:(i+1)*chunk]
-            print "Pap chunk %d" % (i*chunk)
-            for pap in pap_slice:
-                populate_adoptions(pap)
-            del pap_slice
+        initial_personvideorecord()
         
         # Initial Partner information
         for partner in orm['dashboard.Partners'].objects.exclude(date_of_association = None):
@@ -90,7 +75,8 @@ class Migration(DataMigration):
             fc_object.save()
         print "thumbnails done"
         
-        pmas_question = pmas.exclude(expressed_question='')
+        chunk = 10000
+        pmas_question = orm['dashboard.PersonMeetingAttendance'].objects.exclude(expressed_question='')
         for i in range(0, pmas_question.count()/chunk + 1):
             pma_slice = pmas_question[i*chunk:(i+1)*chunk]
             print "Pma questions chunk %d" % (i*chunk)
