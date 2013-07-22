@@ -1,0 +1,30 @@
+#header{
+	height:60px;
+	background-color:#0088cc;
+	width:100%;
+	margin-bottom:20px;
+}
+
+#heading{
+	font-size: 40px;
+	color: white;
+	margin-left:70px;
+}
+
+ul{
+    list-style-type: none;
+}
+
+li{
+	width: 850px;
+	word-wrap: normal;
+}
+
+h3{
+	color:#8f8e8d;
+	margin-left:23px;
+}
+
+hr{
+	width:850px;
+}

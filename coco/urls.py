@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from tastypie.api import Api
+from django.views.generic.simple import direct_to_template
 
 from api import DistrictResource, LanguageResource, MediatorResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource
 from views import coco_v2, debug, login, logout
@@ -24,4 +25,5 @@ urlpatterns = patterns('',
     (r'^logout/', logout),
     (r'^debug/', debug),
     (r'^$', coco_v2),
+    (r'^faq/$', direct_to_template, {'template': 'faq.html'}),
 )
