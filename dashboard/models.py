@@ -186,11 +186,6 @@ class OfflineUser(CocoModel):
     offline_pk_id = PositiveBigIntegerField()
     objects = OfflineUserManager()
     
-class FullDownloadStats(CocoModel):
-    user = models.ForeignKey(User)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    
 class RegionTest(CocoModel):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
