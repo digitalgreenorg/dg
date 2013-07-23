@@ -1,17 +1,17 @@
 #heading{
 	font-size: 32px;
-	margin-left: 30px;
+	margin-left: 10%;
 }
 
 #sidepanel{
-	width:250px;
-	margin-left:70px;
-	margin-top:25px;
+	width:18%;
+	margin-left:5%;
+	margin-top:2%;
 }
 
 #coco_faq{
-	margin-bottom:40px;
-	margin-top:20px;
+	margin-bottom:10%;
+	margin-top:10%;
 }
 
 .affix{
@@ -19,19 +19,15 @@
 }
 
 .faq-wrap{
-	width: 850px;
+	width: 85%;
 	word-wrap: normal;
 }
 
 .topic{
 	color:#0088cc;
-	margin-left:23px;
+	margin-left:2.4%;
 }
 
 ul{
     list-style-type: none;
-}
-
-hr{
-	width:850px;
 }
