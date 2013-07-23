@@ -3,7 +3,7 @@
 		<section id="annualreport10-11" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Annual Report 2010-2011</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2010-2011</h2>
                     <div class="media layout-vr-xlg">
                         <iframe src="http://www.scribd.com/embeds/79824595/content?start_page=1&amp;view_mode=list&amp;access_key=2o3sj0xp50qyqozod4bi" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_98872" width="944" height="500" frameborder="0" seamless=""></iframe>
                     </div>
@@ -14,25 +14,21 @@
         <section id="annualreport09-10" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Annual Report 2009-2010</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2009-2010</h2>
                     <div class="media layout-vr-xlg">
                         <div class="img img-marginLg-rt img-effects">
-                            <a href="/social/reports/1/">
-                            	<img class="imgDim" src="/media/Output/Images/annualreportlinkimg2.jpg" alt="" />
-                            </a>
+                            <a href="{% url annualreport09 %}"><img class="imgDim" src="/media/Output/Images/annualreportlinkimg2.jpg" alt="" /></a>
                         </div>
                         <div class="bd">
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Letter from the CEO</h3>
-                            <p class="copy copy-margin">
-                            	Digital Green works to build technologies and to serve as a resource agency to maximize the potential of the partners and the communities that we work with. The last year has been one of great learning and progress in the field and as a team.
-    		                </p>
-    		                <a href="/social/reports/1/">Read More ...</a>
+                            <p class="copy copy-para">Digital Green works to build technologies and to serve as a resource agency to maximize the potential of the partners and the communities that we work with. The last year has been one of great learning and progress in the field and as a team.</p>
+                            <a href="{% url annualreport09 %}">Read More ...</a>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-        
+		
 		<section id="keyfacts" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
@@ -43,7 +39,7 @@
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-        
+		
 		<section id="sop" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper">
@@ -55,7 +51,7 @@
             </div> <!-- End .wrapper -->
         </section>
 		
-        <section id="qaf" class="about-bg about-bg-white">
+		<section id="qaf" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Quality Assurance Framework</h2>
@@ -65,6 +61,5 @@
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-		
-		
+
 {% include "includes/footer.html" %}
