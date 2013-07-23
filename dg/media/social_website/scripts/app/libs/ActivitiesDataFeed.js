@@ -30,7 +30,7 @@ define(function(require) {
             // prepare data model
             var activitiesSubModel = this._dataModel.addSubModel('activities', true);
 
-            this.addInputParam('partnerUID', false, undefined, true, activitiesSubModel);
+            this.addInputParam('partner', false, undefined, true, activitiesSubModel);
             this.addInputParam('farmerID', false, undefined, true, activitiesSubModel);
             this.addInputParam('userUID', false, undefined, true, activitiesSubModel);
             this.addInputParamCacheClear('language__name', activitiesSubModel);
@@ -45,10 +45,11 @@ define(function(require) {
             }
 
             if (countPerPage == undefined) {
-                countPerPage = 5;
+                countPerPage = 10;
             }
 
-            this.setInputParam('offset', page, true);
+            this.setInputParam('partner', $(".js-partner-farmers-pages-container").attr('data-partnerID'), true);
+            this.setInputParam('offset', page*countPerPage, true);
             this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
@@ -69,8 +70,8 @@ define(function(require) {
             // store total count
             dataModel.set('totalCount', unprocessedData.meta.total_count);
             // import
-            var dataToAdd = unprocessedData.activities;
-            var startingCacheId = page * countPerPage;
+            var dataToAdd = unprocessedData.objects;
+            var startingCacheId = page;
 
             model.addSubset(dataToAdd, startingCacheId);
         },
