@@ -8564,7 +8564,6 @@ define('views/full_download',[
                         .fail(function(error){
                             dfd.reject(error);
                         });
-                    record_on_server();
                 })
                 .fail(function(model, error){
                     that.set_timestamp(model, that.start_time)
