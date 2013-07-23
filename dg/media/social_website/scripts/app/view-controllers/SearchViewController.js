@@ -215,7 +215,7 @@ define(function(require) {
         _selectItem: function() {
             var $currentActive = this._references.$searchItemsContainer.find('.js-search-completion-item.hover');
             if ($currentActive.length==0){
-            	var searchString = this._references.dataFeed._state.inputParams.searchString.value
+            	var searchString = this._references.$searchInputBox.val();
             	currentURL = "/social/discover/?searchString=" + searchString;
             }
             else{

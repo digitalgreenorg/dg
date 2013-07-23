@@ -128,7 +128,11 @@ define(function(require) {
             var dataFeed = this._references.dataFeed;
             dataFeed.setInputParam('offset', page, true)
             dataFeed.setInputParam('limit', collectionsPerPage, true);
-
+		    
+			if ($(".js-collections-wrapper").attr('data-searchstring') != ""){
+				dataFeed.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
+			}
+            
             var collectionsArray = dataFeed.getCollections();
             var totalCount = dataFeed.getTotalCount();
             if (collectionsArray == false) {

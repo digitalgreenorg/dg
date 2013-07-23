@@ -72,8 +72,10 @@ def create_query(params, language_name):
 def get_collections_from_elasticsearch(request):
     params = request.GET
     language_name = params.get('language__name', None)
+    # TODO: Change this from 'None'?
     searchString = params.get('searchString', 'None')
     partner_uid = params.get('uid', None)
+    # TODO: Change this from 'None'?
     if searchString != 'None':
         match_query = {"match" : {"_all":{"query":searchString}}}
     elif partner_uid:

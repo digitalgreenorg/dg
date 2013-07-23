@@ -58,11 +58,7 @@ define(function(require) {
 
 					this.setInputParam('offset', page * countPerPage, true);
 					this.setInputParam('limit', countPerPage, true);
-					if ($(".js-collections-wrapper").attr('data-searchstring') != undefined){
-						this.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
-					}
-				
-
+                    
 					// perform the fetch
 					this.base();
 				},
@@ -170,7 +166,7 @@ define(function(require) {
 					return this._dataModel.get('totalCount');
 				},
 
-				getCollections : function(searchString) {
+				getCollections : function() {
 
 					var page = this.getInputParam('offset');
 					var countPerPage = this.getInputParam('limit');
@@ -180,7 +176,7 @@ define(function(require) {
 
 					
 					if (!collections) {
-						this.fetch(page, countPerPage, searchString);
+						this.fetch(page, countPerPage);
 						return false;
 					} 
 
