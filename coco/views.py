@@ -1,9 +1,9 @@
 # Create your views here.
 from django.contrib import auth
 from django.core import urlresolvers
-from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from django.shortcuts import render
+from coco.models import FullDownloadStats
+from django.shortcuts import render_to_response, render
 
 def coco_v2(request):
     return render(request,'dashboard.html')
@@ -25,6 +25,13 @@ def logout(request):
     auth.logout(request)    
     return HttpResponse("1")
    
+def record_full_download_time(request):
+    if not(request.user and request.POST["start_time"] and request.POST["end_time"]):
+        return HttpResponse("0")
+    stat = FullDownloadStats(user = request.user, start_time = request.POST["start_time"], end_time = request.POST["end_time"])
+    stat.save()
+    return HttpResponse("1")
+       
 def html_decorator(func):
     """
     This decorator wraps the output in html.

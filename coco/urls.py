@@ -3,7 +3,7 @@ from tastypie.api import Api
 from django.views.generic.simple import direct_to_template
 
 from api import DistrictResource, LanguageResource, MediatorResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource
-from views import coco_v2, debug, login, logout
+from views import coco_v2, debug, login, logout, record_full_download_time
 
 v1_api = Api(api_name='v1')
 
@@ -26,4 +26,5 @@ urlpatterns = patterns('',
     (r'^debug/', debug),
     (r'^$', coco_v2),
     (r'^faq/$', direct_to_template, {'template': 'faq.html'}),
+    (r'^record_full_download_time/', record_full_download_time),
 )
