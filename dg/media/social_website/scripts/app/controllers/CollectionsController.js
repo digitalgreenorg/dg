@@ -89,6 +89,9 @@ define(function(require) {
         	set_filters.setInputParam('facets', facets, true);
         	this._references.collectionFiltersViewController._fetchFilters();
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
+            if ($(".js-collections-wrapper").attr('data-partner') != 'None'){
+				this._references.collectionFiltersViewController._setFilterStatus('partner', $(".js-collections-wrapper").attr('data-partner'), true)
+			}
         },
 
         _onOrderChanged: function(orderCriteria) {
