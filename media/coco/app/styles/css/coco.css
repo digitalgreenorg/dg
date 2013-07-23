@@ -100,6 +100,12 @@
 	margin-top:10px;
 }
 
+#faq{
+	clear: both;
+	padding-top: 40px;
+	font-size: 11px;
+}
+
 div.dataTables_length label {
     width: 460px;
     float: left;
