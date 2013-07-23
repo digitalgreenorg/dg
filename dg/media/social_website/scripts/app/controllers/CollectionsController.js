@@ -92,6 +92,13 @@ define(function(require) {
             if ($(".js-collections-wrapper").attr('data-partner') != 'None'){
 				this._references.collectionFiltersViewController._setFilterStatus('partner', $(".js-collections-wrapper").attr('data-partner'), true)
 			}
+            if ($(".js-collections-wrapper").attr('data-title') != 'None'){
+				this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true)
+				this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true)
+			}
+            if ($(".js-collections-wrapper").attr('data-state') != 'None'){
+				this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true)
+			}
         },
 
         _onOrderChanged: function(orderCriteria) {

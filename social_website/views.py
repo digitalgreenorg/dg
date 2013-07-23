@@ -63,6 +63,8 @@ def partner_view(request):
 def search_view(request):
     searchString = request.GET.get('searchString', None)
     partner = request.GET.get('partner', None)
+    title = request.GET.get('title', None)
+    state = request.GET.get('state', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -71,6 +73,8 @@ def search_view(request):
                          },
               'searchString' : searchString,
               'partner' : partner,
+              'title' : title,
+              'state' : state,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
