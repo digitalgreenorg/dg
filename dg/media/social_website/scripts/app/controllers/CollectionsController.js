@@ -35,7 +35,6 @@ define(function(require) {
 
             // set the active filter to be Most Liked to init the collections
             references.collectionMostFiltersViewController.setActiveFilter('-_score');
-
             return this;
         },
 
@@ -78,17 +77,30 @@ define(function(require) {
         },
 
         _onCollectionDataProcessed: function(broadcastData) {
-        	var set_filters = this._references.collectionFiltersViewController._references.dataFeed;
-        	var filter_object = this._references.collectionViewController._references.dataFeed._state.inputParams.filters.value;
-        	var facets = this._references.collectionViewController._references.dataFeed._dataModel._data.facets;
-        	if (filter_object){
-        	set_filters.addInputParam('filters', true, 0, true);
-        	set_filters.setInputParam('filters', filter_object, true);
-        	}
-        	set_filters.addInputParam('facets', true, 0, true);
-        	set_filters.setInputParam('facets', facets, true);
-        	this._references.collectionFiltersViewController._fetchFilters();
+            var set_filters = this._references.collectionFiltersViewController._references.dataFeed;
+            var filter_object = this._references.collectionViewController._references.dataFeed._state.inputParams.filters.value;
+            var facets = this._references.collectionViewController._references.dataFeed._dataModel._data.facets;
+            if (filter_object){
+                set_filters.addInputParam('filters', true, 0, true);
+                set_filters.setInputParam('filters', filter_object, true);
+            }
+            set_filters.addInputParam('facets', true, 0, true);
+            set_filters.setInputParam('facets', facets, true);
+            this._references.collectionFiltersViewController._fetchFilters();
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
+            // Only if data attributes are to be used, go inside this loop
+            if (this._references.collectionFiltersViewController._references.filters_cleared == 0){
+                if ($(".js-collections-wrapper").attr('data-partner') != 'None' ){
+                    this._references.collectionFiltersViewController._setFilterStatus('partner', $(".js-collections-wrapper").attr('data-partner'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-title') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true);
+                    this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-state') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
+                }
+            }
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -100,10 +112,11 @@ define(function(require) {
         },
 
         _onFiltersCleared: function() {
-            this._references.collectionViewController._references.dataFeed.setInputParam('filters',0,true)
-            this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true)
-            this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None')
-            this._references.collectionViewController._references.dataFeed._fetch()
+            this._references.collectionFiltersViewController._references.filters_cleared = 1; // remove usage of data-attributes
+            this._references.collectionViewController._references.dataFeed.setInputParam('filters',0,true);
+            this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true);
+            this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None');
+            this._references.collectionViewController._references.dataFeed._fetch();
             this._references.collectionViewController.clearFilters();
             
         },

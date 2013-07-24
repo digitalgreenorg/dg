@@ -61,14 +61,20 @@ def partner_view(request):
     return render_to_response('profile.html' , context, context_instance = RequestContext(request))
 
 def search_view(request):
-    searchString = request.GET.get('searchString')
+    searchString = request.GET.get('searchString', None)
+    partner = request.GET.get('partner', None)
+    title = request.GET.get('title', None)
+    state = request.GET.get('state', None)
     context= {
               'header': {
                          'jsController':'Collections',
                          'currentPage':'Discover',
                          'loggedIn'    : False
                          },
-              'searchString': searchString
+              'searchString' : searchString,
+              'partner' : partner,
+              'title' : title,
+              'state' : state,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
@@ -80,7 +86,7 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
     filters[field]['options'] = []
     for obj in set(Collection.objects.exclude(**kwargs).values_list(field, flat=True)): #works same as .exclude(field = '')
         facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
-        if facet_count:
+        if facet_count or facet_dict == {}:
             filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
     return filters
 
@@ -108,7 +114,7 @@ def searchFilters(request):
     filters['partner']['options'] = []
     for obj in Partner.objects.all():
         facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
-        if facet_count:
+        if facet_count or facet_dict == {}:
             filters['partner']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in partner, "count" : facet_count })
         
     filters = make_sub_filter(filters, 'category', category, facet_dict)

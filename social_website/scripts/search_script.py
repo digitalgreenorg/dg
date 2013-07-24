@@ -74,8 +74,8 @@ conn.indices.put_mapping(doc_type = "test-index", mapping = mappings, indices = 
 # Video
 i = 0
 for video in Video.objects.all():
-    if len(video.video_collections.all()):
-        collection = video.video_collections.all()[0]  # choosing the first collection
+    if len(video.collection_set.all()):
+        collection = video.collection_set.all()[0]  # choosing the first collection
         for index, vid in enumerate(collection.videos.all()):
             if vid.uid == video.uid:
                 vid_id = index+1 
@@ -86,7 +86,25 @@ for video in Video.objects.all():
         conn.index(data, "test-index", "test-index",i+1)
         i+= 1
 print i 
-        
+
+# Collections        
+for collection in Collection.objects.all():
+    if collection.subject != '':
+        url = "/social/discover/?title=%s" % str(collection.subject)
+        data = json.dumps({"searchTerm" : collection.subject,
+                           "targetURL" : url, 
+                           "type" : "Collections"}) 
+        conn.index(data, "test-index", "test-index",i+1)
+        i+= 1
+    if collection.topic != '':
+        url = "/social/discover/?title=%s" % str(collection.topic)
+        data = json.dumps({"searchTerm" : collection.topic,
+                           "targetURL" : url, 
+                           "type" : "Collections"}) 
+        conn.index(data, "test-index", "test-index",i+1)
+        i+= 1
+print i
+
 # Partner
 for partner in Partner.objects.all():
     url = "/social/connect/?id=" + str(partner.uid)
