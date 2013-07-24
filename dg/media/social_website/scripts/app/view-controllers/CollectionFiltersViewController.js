@@ -41,6 +41,7 @@ define(function(require) {
             var references = this._references;
 
             references.dataFeed = new SearchFiltersDataFeed();
+            references.filters_cleared = 0;		// Initially clear filters is 0, so if any data-attributes present, use them
 
             references.$filtersWrapper = $referenceBase;
             references.$filtersContainer = $referenceBase.find('.js-filters-container');
@@ -152,6 +153,7 @@ define(function(require) {
 
         _onBreadcrumbsRemoveFilterClick: function(e) {
             e.preventDefault();
+            this._references.filters_cleared = 1; // on removal of any breadcrumb, remove usage of data-attributes
 
             var $breadcrumbItem = jQuery(e.currentTarget);
 

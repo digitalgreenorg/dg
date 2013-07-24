@@ -35,7 +35,6 @@ define(function(require) {
 
             // set the active filter to be Most Liked to init the collections
             references.collectionMostFiltersViewController.setActiveFilter('-_score');
-
             return this;
         },
 
@@ -89,16 +88,19 @@ define(function(require) {
         	set_filters.setInputParam('facets', facets, true);
         	this._references.collectionFiltersViewController._fetchFilters();
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
-            if ($(".js-collections-wrapper").attr('data-partner') != 'None'){
-				this._references.collectionFiltersViewController._setFilterStatus('partner', $(".js-collections-wrapper").attr('data-partner'), true)
-			}
-            if ($(".js-collections-wrapper").attr('data-title') != 'None'){
-				this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true)
-				this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true)
-			}
-            if ($(".js-collections-wrapper").attr('data-state') != 'None'){
-				this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true)
-			}
+            // Only if data attributes are to be used, go inside this loop
+            if (this._references.collectionFiltersViewController._references.filters_cleared == 0){
+	            if ($(".js-collections-wrapper").attr('data-partner') != 'None' ){
+					this._references.collectionFiltersViewController._setFilterStatus('partner', $(".js-collections-wrapper").attr('data-partner'), true);
+				}
+	            if ($(".js-collections-wrapper").attr('data-title') != 'None'){
+					this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true);
+					this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true);
+				}
+	            if ($(".js-collections-wrapper").attr('data-state') != 'None'){
+					this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
+				}
+            }
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -110,6 +112,7 @@ define(function(require) {
         },
 
         _onFiltersCleared: function() {
+        	this._references.collectionFiltersViewController._references.filters_cleared = 1; // remove usage of data-attributes
             this._references.collectionViewController._references.dataFeed.setInputParam('filters',0,true)
             this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true)
             this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None')
