@@ -807,7 +807,11 @@ function() {
             'group': {
                 'group': {
                     'placeholder': 'id_group',
-                    'name_field': 'group_name'
+                    'name_field': 'group_name',
+					'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 }
             }
         },
