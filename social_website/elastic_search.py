@@ -166,7 +166,10 @@ def searchCompletions(request):
         result_list = []
         done_list = []
         for res in result['hits']['hits']:
-            if res['_source']['searchTerm'] not in done_list:
+            if res['_source']['type'] != "Collections":
+                result_list.append(res['_source'])
+                res['_source']['count'] = 0
+            elif res['_source']['searchTerm'] not in done_list:
                 val = str(res['_source']['searchTerm']).lower()
                 for term in result['facets']['facet']['terms']:
                     if val == term['term'] :

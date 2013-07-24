@@ -12,11 +12,11 @@ SETTINGS = {
                },
                "analyzer":{
                   "full_name":{
-#                     "filter":[
-#                        "standard",
-#                        "lowercase",
-#                        "asciifolding"
-#                     ],
+                     "filter":[
+                        "standard",
+                        "lowercase",
+                        "asciifolding"
+                     ],
                      "type":"custom",
                      "tokenizer":"keyword"
                   },

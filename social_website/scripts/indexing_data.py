@@ -52,7 +52,7 @@ def enter_data_into_completion_search(conn, index_name):
             data = json.dumps({"searchTerm":video.title, 
                                "targetURL" : url,
                                "type" : "Videos"})
-            conn.index(data, "test-index", "test-index",i+1)
+            conn.index(data, index_name, index_name, i+1)
             i+= 1
     
     # Collections        
@@ -62,14 +62,14 @@ def enter_data_into_completion_search(conn, index_name):
             data = json.dumps({"searchTerm" : collection.subject,
                                "targetURL" : url, 
                                "type" : "Collections"}) 
-            conn.index(data, "test-index", "test-index",i+1)
+            conn.index(data, index_name, index_name, i+1)
             i+= 1
         if collection.topic != '':
             url = "/social/discover/?title=%s" % str(collection.topic)
             data = json.dumps({"searchTerm" : collection.topic,
                                "targetURL" : url, 
                                "type" : "Collections"}) 
-            conn.index(data, "test-index", "test-index",i+1)
+            conn.index(data, index_name, index_name, i+1)
             i+= 1
     
     # Partners
@@ -78,6 +78,6 @@ def enter_data_into_completion_search(conn, index_name):
         data = json.dumps({"searchTerm" : partner.name,
                            "targetURL" : url, 
                            "type" : "Partners"}) 
-        conn.index(data, "test-index", "test-index",i+1)
+        conn.index(data, index_name, index_name, i+1)
         i+= 1
     print "%s objects of Videos, Collections and Partners added" % i
