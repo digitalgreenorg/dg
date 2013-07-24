@@ -274,7 +274,7 @@ define(function(require) {
         	}
         	
             if (filterOptionData == undefined){
-            	return
+            	return;
             }
             // update value
             filterOptionData.filterActive = value;
