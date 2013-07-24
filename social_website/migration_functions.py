@@ -2,11 +2,58 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 import gdata.youtube.service
 from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
+from collections import defaultdict 
+import gc
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
 
+
+def initial_personvideorecord():
+    from dashboard.models import PersonAdoptPractice, PersonMeetingAttendance
+    person_video_adoption_dict = defaultdict(dict)
+    paps = PersonAdoptPractice.objects.all().values('person_id', 'video_id')
+    for pap_row in paps:
+        if pap_row['video_id'] in person_video_adoption_dict[pap_row['person_id']]:
+            person_video_adoption_dict[pap_row['person_id']][pap_row['video_id']] += 1
+        else:
+            person_video_adoption_dict[pap_row['person_id']][pap_row['video_id']] = 1
+    del paps
+    
+    person_screening_dict = defaultdict(list)        
+    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened', 'interested')
+    for pma_row in pmas:
+        if pma_row['screening__videoes_screened']:
+            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened'], 'interested' : pma_row['interested']})
+    del pmas
+    gc.collect()
+    record_list = []
+    chunk = 20000
+    i = 0
+    for person_id, videos_info in person_screening_dict.iteritems():
+        vid_dict = defaultdict(dict)
+        for row in videos_info:
+            if row['vid'] in vid_dict:
+                vid_dict[row['vid']]['views'] += 1
+                if row['interested']:
+                    vid_dict[row['vid']]['interested'] = 1
+            else:
+                vid_dict[row['vid']]['views'] = 1
+                vid_dict[row['vid']]['interested'] = 1 if row['interested'] else 0
+            
+        for vid_id, vals in vid_dict.iteritems():
+            adopted = person_video_adoption_dict[person_id][vid_id] if vid_id in person_video_adoption_dict[person_id] else 0 
+            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], like =  vals['interested'], adopted = adopted))
+            i += 1
+            if i%chunk == 0:
+                PersonVideoRecord.objects.bulk_create(record_list)
+                print "%s" % (i)
+                del record_list
+                record_list = []
+    if record_list:
+        PersonVideoRecord.objects.bulk_create(record_list)
+        
 def add_partner_info(partner):
     website_partner = Partner(coco_id = str(partner.id), joinDate = partner.date_of_association, name = partner.partner_name,
                               logoURL = '', description = '')

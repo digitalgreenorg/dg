@@ -989,9 +989,29 @@ a {
     margin-left: 10px;
 }
 
+.media .img-size-xxlg img{
+	width:1024px;
+	height:424px;
+}
+
 .media .img-size-lg img{
 	width: 463px;
 	height: 283px;	
+}
+
+.media .img-size-md img{
+	width: 220px;
+	height: 155px;
+}
+
+.media .img-size-sm img{
+	width: 147px;
+	height: 125px;
+}
+
+.media .img-size-sq img{
+	width: 100px;
+	height: 100px;
 }
 
 .media .img-marginLg-lt {
@@ -1097,7 +1117,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .search {
     position: relative;
-    z-index: 1;
+    z-index: 200;
 }
 
 .search label {
