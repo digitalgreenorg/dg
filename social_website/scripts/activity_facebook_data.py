@@ -110,16 +110,18 @@ def read_data(entry):
     date = entry['created_time'].split('T')[0]
     avatarURL = '\\media\\assets\\images\\favicon-white.png'
     newsFeed = 1
-    store_data(title, date, textContent, avatarURL, newsFeed, image_url, altString, imageLinkURL, facebookID, has_image)
+    activity_type = 0
+    titleURL = 'https://www.facebook.com/digitalgreenorg/posts/' + facebookID
+    store_data(title, date, textContent, avatarURL, newsFeed, image_url, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL)
     return False
 
-def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altString, imageLinkURL, facebookID, has_image):
+def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL):
     activity = None
     if title not in ["Digital Green", "Timeline Photos"] and Activity.objects.filter(title=title).count() > 0:
-        activity = Activity.objects.get(title=title)
+        activity = Activity.objects.get(title=unicode(title))
         # TODO: What if MultipleObjectsReturned?
     else:
-        activity = Activity(title=title, date=date, textContent=textContent, avatarURL=avatarURL, newsFeed=newsFeed, facebookID=facebookID)
+        activity = Activity(title=title, date=date, textContent=textContent, avatarURL=avatarURL, newsFeed=newsFeed, facebookID=facebookID, type=activity_type, titleURL=titleURL)
         activity.save()
     if has_image and activity is not None:
         image_spec_entry = ImageSpec(imageURL=imageURL, altString=altString, imageLinkURL=imageLinkURL)
