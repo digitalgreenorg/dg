@@ -10,27 +10,28 @@ class TimestampException(Exception):
     pass
 
 def save_log(sender, **kwargs ):
-    instance = kwargs["instance"]
-    action  = kwargs["created"]
-    sender = sender.__name__    # get the name of the table which sent the request
-    model_dict = model_to_dict(instance)
-    previous_time_stamp = get_latest_timestamp()
-    try:
-        user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
-    except Exception, ex:
-        user = None
-    try:
-        instance.get_village()
-    except Exception as e:
-        print type(e), e
-    ServerLog = get_model('dashboard','ServerLog')
-    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
-                    model_id = instance.id, partner = instance.get_partner())
-    log.save()
-    ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-    if previous_time_stamp > log.timestamp:
-        raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-    
+    pass
+#    instance = kwargs["instance"]
+#    action  = kwargs["created"]
+#    sender = sender.__name__    # get the name of the table which sent the request
+#    model_dict = model_to_dict(instance)
+#    previous_time_stamp = get_latest_timestamp()
+#    try:
+#        user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
+#    except Exception, ex:
+#        user = None
+#    try:
+#        instance.get_village()
+#    except Exception as e:
+#        print type(e), e
+#    ServerLog = get_model('dashboard','ServerLog')
+#    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
+#                    model_id = instance.id, partner = instance.get_partner())
+#    log.save()
+#    ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
+#    if previous_time_stamp > log.timestamp:
+#        raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
+#    
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request
