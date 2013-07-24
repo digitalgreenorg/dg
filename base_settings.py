@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'path',
     'fbconnect',
     'tastypie',
-    'coco'
+    'coco',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript

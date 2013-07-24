@@ -2,8 +2,8 @@
 from django.contrib import auth
 from django.core import urlresolvers
 from django.http import HttpResponse
-from coco.models import FullDownloadStats
 from django.shortcuts import render_to_response, render
+from coco.models import FullDownloadStats
 
 def coco_v2(request):
     return render(request,'dashboard.html')
