@@ -8,12 +8,11 @@ from PIL import Image
 import urllib
 import urllib2
 
-from dg.settings import APP_ID_FACEBOOK, APP_SECRET_FACEBOOK, PROJECT_PATH
+from dg.settings import APP_ID_FACEBOOK, APP_SECRET_FACEBOOK, PROJECT_PATH, STATIC_URL
 from social_website.models import Activity, ImageSpec
 
 
 def create_thumbnail(url, image_url, new_width, new_height):
-    print "creating thumbnail"
     filepath = PROJECT_PATH + image_url
     urllib.urlretrieve(url, filepath)
     img = Image.open(filepath)
@@ -72,7 +71,7 @@ def read_data(entry):
                 picture = entry['picture'].replace("_s", "_n")
                 # TODO: what if there is more than one _s??
                 # Can we upload to s3 here
-                image_url = ''.join(["\\media\\social_website\\images\\facebook_uploads\\", facebookID, ".", picture.split('.')[-1]])
+                image_url = ''.join([STATIC_URL, "social_website\\uploads\\facebook\\", facebookID, ".", picture.split('.')[-1]])
                 # TODO: don't use explicit path here.
                 create_thumbnail(picture, image_url, 170, 112)
                 altString = "Image from Facebook"
@@ -96,10 +95,9 @@ def read_data(entry):
         if 'picture' in entry:
             try:
                 picture = urllib2.unquote(entry['picture']).split('url=')[-1]
-                image_url = ''.join(["\\media\\social_website\\images\\facebook_uploads\\", facebookID, ".", (picture.split('.')[-1])[:3]])
+                image_url = ''.join([STATIC_URL, "social_website\\uploads\\facebook\\", facebookID, ".", (picture.split('.')[-1])[:3]])
                 # TODO: don't use explicit path here.
                 create_thumbnail(picture, image_url, 170, 112)
-                print "image saved 2"
                 altString = "Image from Facebook"
                 imageLinkURL = entry['link'] if 'link' in entry else ''
                 has_image = True
@@ -108,7 +106,7 @@ def read_data(entry):
     else:
         return False
     date = entry['created_time'].split('T')[0]
-    avatarURL = '\\media\\assets\\images\\favicon-white.png'
+    avatarURL = "".join([STATIC_URL, 'assets\\images\\favicon-white.png'])
     newsFeed = 1
     activity_type = 0
     titleURL = 'https://www.facebook.com/digitalgreenorg/posts/' + facebookID
@@ -131,7 +129,6 @@ def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altStrin
 
 
 def get_facebook_feed():
-    print "Called again"
     TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + APP_ID_FACEBOOK + '&client_secret=' + APP_SECRET_FACEBOOK
     response = urllib2.urlopen(TOKEN_URL)
     TOKEN = response.read()
