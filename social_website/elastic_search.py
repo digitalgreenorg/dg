@@ -142,6 +142,14 @@ def searchCompletions(request):
                                     "query" : searchString
                                     }
                     },
+         "facets" : {
+                    "facet" :{
+                              "terms": {
+                                        "fields" : [ "searchTerm"], 
+                                        "size" : MAX_RESULT_SIZE
+                                        }
+                              }
+                    },
          "size" : maxCount
         }
     try:
@@ -149,8 +157,15 @@ def searchCompletions(request):
         response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
         result = json.loads(response.read())
         result_list = []
+        done_list = []
         for res in result['hits']['hits']:
-            result_list.append(res['_source'])
+            if res['_source']['searchTerm'] not in done_list:
+                val = str(res['_source']['searchTerm']).lower()
+                for term in result['facets']['facet']['terms']:
+                    if val == term['term'] :
+                        res['_source']['count'] = term['count']
+                        done_list.append(res['_source']['searchTerm'])
+                result_list.append(res['_source'])
         if len(result_list) == 0:
             result_list.append({"searchTerm" : "No Results"})    # for now just displaying no results when nothing is found in completion
         resp = json.dumps({"responseCode":"OK","requestParameters":{"searchString":searchString,"maxCount":unicode(maxCount)},"completions": result_list, "totalCount": unicode(maxCount)})
