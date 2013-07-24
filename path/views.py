@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 
 from dashboard.models import Person
-from settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+from dg.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from path.models import *
 import gdata.spreadsheet.service
 

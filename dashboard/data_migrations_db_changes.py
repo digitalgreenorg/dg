@@ -1,6 +1,6 @@
 from django.core.management import setup_environ
-import settings
-setup_environ(settings)
+import dg.settings
+setup_environ(dg.settings)
 from dashboard.models import *
             
 def  merge_pmas(scr1,scr2):

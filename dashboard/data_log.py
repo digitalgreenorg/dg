@@ -1,19 +1,15 @@
-from dashboard.models import User
-from datetime import datetime
-from django.db.models import get_model
-from django.core import serializers
 import json
-from django.utils import simplejson
+from datetime import datetime
+from django.core import serializers
+from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from django.utils.simplejson import JSONEncoder
-#from dashboard.api import VideoResource
+from models import User
 
 class TimestampException(Exception):
     pass
 
 def save_log(sender, **kwargs ):
-    from dashboard.models import ServerLog
     instance = kwargs["instance"]
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
@@ -27,7 +23,7 @@ def save_log(sender, **kwargs ):
         instance.get_village()
     except Exception as e:
         print type(e), e
-    
+    ServerLog = get_model('dashboard','ServerLog')
     log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
                     model_id = instance.id, partner = instance.get_partner())
     log.save()
@@ -65,7 +61,7 @@ def send_updated_log(request):
         partner_id = None
         villages = Village.objects.all().values_list('id', flat=True)
     else:
-        coco_user = CocoUser.objects.get(user_id= request.user.id)
+        coco_user = CocoUser.objects.get(user_id=request.user.id)
         partner_id = coco_user.partner_id
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
     if timestamp:
@@ -89,6 +85,6 @@ def send_updated_log(request):
         return HttpResponse("0")
 
 def get_latest_timestamp():
-    from dashboard.models import ServerLog
+    from models import ServerLog
     timestamp = ServerLog.objects.latest('id')
     return timestamp.timestamp

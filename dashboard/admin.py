@@ -518,7 +518,7 @@ class PracticesAdmin(admin.ModelAdmin):
     search_fields = ['practice_name']
 
 class UserPermissionAdmin(admin.ModelAdmin):
-    list_display = ('username','role','region_operated','district_operated')
+	list_display = ('username','role','region_operated','district_operated')
 
 class TargetAdmin(admin.ModelAdmin):
 

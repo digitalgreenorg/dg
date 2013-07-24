@@ -1,0 +1,95 @@
+{% include "includes/header.html" %}
+    {% include "includes/partials/search.html" %}
+        
+        <div id="main" role="main" class="wrapper">
+            <div class="inner-wrapper">
+                <div class="media layout-vr-md">
+                    <div class="img img-lg">
+                        <img src="http://placehold.it/302x222" alt="" />
+                    </div>
+                    <div class="bd">
+                        <div class="grid">
+                            <div class="grid-col grid-size2of3">
+                                <div class="media">
+                                    <div class="img">
+                                        <img src="{{partner.logoURL}}" alt="" height='61' width='61'"/>
+                                    </div>
+                                    <div class="bd">
+                                        <h1 class="hdg-b hdg-bold push-top-sm">{{partner.name}}</h1>
+                                    </div>
+                                </div>
+                                <h2 class="copy hdg-bold layout-vr-tiny">{{partner.location}}</h2>
+                                <h3 class="layout-vr-sm copy">Member since {{partner.joinDate}}</h3>
+                                <p class="copy">{{partner.description}}</p>
+                            </div>
+                            <div class="grid-col grid-size1of3">
+                                <div class="borderLt grid-margin-lt-lg">
+                                    <ul class="v-list-md stats-list">
+                                        <li><a class="hdg-c hdg-bold hdg-lt stats-watch" href="#" title="Videos"><span class="text-hide">Videos</span> {{partner.video_count}}</a></li>
+                                        <li><a class="hdg-c hdg-bold hdg-lt stats-view" href="#" title="Viewers"><span class="text-hide">Viewed</span> {{partner.views}}</a></li>
+                                        <li><a class="hdg-c hdg-bold hdg-lt stats-like" href="#" title="Likes"><span class="text-hide">Liked</span> {{partner.likes}}</a></li>
+                                        <li><a class="hdg-c hdg-bold hdg-lt stats-adopt" href="#" title="Adoptions"><span class="text-hide">Adopted</span> {{partner.adoptions}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> <!-- End .grid -->
+                    </div> <!-- End .bd -->
+                </div> <!-- End .media -->
+                <h3 class="hdg-upper hdg-source-semibold hdg-upper hdg-extra-lt hdg-f layout-vr-sm">Farmers</h3>
+                <div class="box-list partner-farmers js-partner-farmers-carousel-container layout-vr-xlg">
+                    <ul class="js-partner-farmers-pages-container" data-partnerID="{{partner.uid}}">
+                        <!-- dynamic farmer content here-->
+                    </ul>
+                    <a href="#" class="arrow-left js-prev-partner-farmers-page">Previous</a>
+                    <a href="#" class="arrow-right js-next-partner-farmers-page">Next</a>
+                </div>
+            </div> <!-- End .inner-wrapper -->
+        </div> <!-- End .wrapper -->
+        
+    <section class="gradientBg">
+        <div class="wrapper">
+            <div class="inner-wrapper js-collections-wrapper">
+                <header class="clearfix layout-vr-lg">
+                    <div class="grid-col">
+                        <h1 class="hdg-a hdg-source-lt">Collections</h1>
+                    </div>
+                    <div class="grid-rt">
+                        {% include "includes/partials/mostFilters.html"%}
+                    </div>
+                </header> <!-- End .clearfix -->
+                <ul class="blocks blocks-4-up clearfix js-collections-container">
+
+                        <!-- Dynamic Collections Content Here -->
+
+                </ul>
+                <div class="gradientBg-ft">
+                    <div class="pagination-wrapper js-pagination">
+
+                            <!-- Dynamic Pagination Here -->
+
+                    </div>
+                </div>
+                <!--  
+                <div class="centered layout-vr-lg profile-buttons">
+                       <a href="#" class="btn js-show-more">Show More</a>
+                       <a href="#" class="arrow-up js-hide-collections">Remove</a>
+                </div>
+                 -->
+            </div> <!-- End .inner-wrapper -->
+        </div> <!-- End .wrapper -->
+    </section>
+        
+        <section class="wrapper layout-vr-lg">
+            <div class="activities-wrapper inner-wrapper">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Activities</h2>
+                <ul class="js-activities-container">
+                    
+                    <!-- Dynamic activities content here -->
+
+                </ul>
+                <div class="timeline-fade"></div>
+            </div> <!-- End .inner-wrapper -->
+
+        </section> <!-- End .wrapper -->
+
+{% include "includes/footer.html"%}
