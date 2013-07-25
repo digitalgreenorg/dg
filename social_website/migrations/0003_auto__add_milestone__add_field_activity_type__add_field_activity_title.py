@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'Milestone'
         db.create_table('social_website_milestone', (
             ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'])),
+            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'], unique=True)),
             ('videoNumber', self.gf('django.db.models.fields.IntegerField')()),
             ('villageNumber', self.gf('django.db.models.fields.IntegerField')()),
             ('screeningNumber', self.gf('django.db.models.fields.IntegerField')()),
@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Activity.type'
         db.add_column('social_website_activity', 'type',
-                      self.gf('django.db.models.fields.SmallIntegerField')(default=0),
+                      self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0),
                       keep_default=False)
 
         # Adding field 'Activity.titleURL'
@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
             'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'titleURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'type': ('django.db.models.fields.SmallIntegerField', [], {}),
+            'type': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
@@ -101,7 +101,7 @@ class Migration(SchemaMigration):
         },
         'social_website.milestone': {
             'Meta': {'object_name': 'Milestone'},
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'unique': 'True'}),
             'screeningNumber': ('django.db.models.fields.IntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'videoNumber': ('django.db.models.fields.IntegerField', [], {}),
