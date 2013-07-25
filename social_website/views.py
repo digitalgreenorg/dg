@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 import ast, datetime, json, urllib2
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
@@ -17,17 +18,17 @@ def social_home(request):
         }
     return render_to_response('home.html', context, context_instance = RequestContext(request))
 
-def collection_view(request):
-    id = request.GET.get('id', 1)
-    video_index = int(request.GET.get('video', 1))
+def collection_view(request, partner, state, language, title, video=1):
     try:
-        collection = Collection.objects.get(uid=id)
+        collection = Collection.objects.get(partner__name__iexact=partner, state__iexact=state, language__iexact=language, title__iexact=title)
     except Collection.DoesNotExist:
-        collection = Collection.objects.get(uid=1)
+        return HttpResponseRedirect(reverse('discover'))
     try:
+        video_index = int(video)
         video = collection.videos.all()[video_index - 1]
-    except IndexError:
-        video = collection.videos.all()[0]    
+    except (IndexError, AssertionError):
+        video_index = 1
+        video = collection.videos.all()[video_index - 1]    
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
     related_collection_dict = get_related_collections(collection)
