@@ -63,6 +63,7 @@ define(function(require) {
 
             searchCompletionsModel.clear();
             searchCompletionsModel.addSubset(searchCompletionsToAdd, 0);
+            return searchCompletionsToAdd;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {

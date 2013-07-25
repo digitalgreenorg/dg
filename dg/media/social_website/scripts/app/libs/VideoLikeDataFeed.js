@@ -36,6 +36,7 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
+            return unprocessedData;
         }
     });
 
