@@ -9,11 +9,11 @@
                                 <div class="event-box">
                                     <div class="media">
                                         <div class="img">
-                                            <img src="{{avatarURL}}" alt="" />
+                                            <img src="{{avatarURL}}" height="62px" width="62px" alt="" />
                                         </div>
                                         <div class="bd">
                                             <div class="bd-text-event">
-                                                <h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3>
+                                                <a href="{{titleURL}}"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3></a>
                                                 <p class="copy copy">
                                                     {{textContent}}
                                                 </p>
@@ -37,11 +37,11 @@
                                         <div class="grid-col">
                                             <div class="vid-cat-selected">
                                                 <div class="vid-cat">
-                                                    <img src="{{collection.thumbnailURL}}" />
+                                                    <a href="{{titleURL}}"><img src="{{collection.thumbnailURL}} " width="217px" /></a>
                                                     <div class="vid-flag">
                                                         <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                                                             <li>{{collection.videos.length}} Videos</li>
-                                                            <li>{{collection._collectionStats._totalDuration}}</li>
+                                                            <li>{{collection._collectionStats.totalDuration}}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="vid-cat-inner">
@@ -74,7 +74,7 @@
                                                                 <ul class="h-list">
                                                                     {{#videos}}
                                                                     <li>
-                                                                        <a href="{{videoURL}}"><img src="{{thumbnailURL}}" alt="{{title}}" /></a>
+                                                                        <a href="{{titleURL}}"><img src="{{thumbnailURL16by9}}" alt="{{title}}" width="115px" height="64px" /></a>
                                                                     </li>
                                                                     {{/videos}}
                                                                 </ul>
@@ -91,7 +91,7 @@
                                     <!-- End Video Collection -->
                                     {{/collection}}
 
-                                    <ul class="h-list h-list-divided copy copy list-icons-green layout-vr-md">
+                                    <!-- <ul class="h-list h-list-divided copy copy list-icons-green layout-vr-md">
                                         <li class="like"><a href="#"><span class="copy-dk">{{_likes}}</span> Likes</a></li>
                                         <li class="comment"><a href="#">Comment</a></li>
                                         <li>
@@ -107,8 +107,8 @@
                                             </a>
                                         </li>
 
-                                    </ul>
-                                    <div class="commentBox commentBox-arrow">
+                                    </ul> -->
+                                    <!-- <div class="commentBox commentBox-arrow">
 
                                         {{#_hasComments}}
                                         <div class="comments-left">
@@ -139,7 +139,7 @@
                                                 <input type="submit" class="btn" value="Submit" />
                                             </form>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

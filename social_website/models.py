@@ -97,7 +97,7 @@ class ImageSpec(models.Model):
     imageURL = models.URLField(max_length=400) 
     altString = models.CharField(max_length=200)
     imageLinkURL = models.URLField(max_length=400)
-    
+
 class Activity(models.Model):
     uid = models.AutoField(primary_key=True)
     date = models.DateField()
@@ -111,4 +111,13 @@ class Activity(models.Model):
     collection = models.ForeignKey(Collection, null=True, blank=True)
     video = models.ForeignKey(Video, null=True, blank=True)
     newsFeed = models.BooleanField()
+    type = models.PositiveSmallIntegerField()
+    titleURL = models.URLField(max_length=400)
 
+class Milestone(models.Model):
+    uid = models.AutoField(primary_key=True)
+    partner = models.ForeignKey(Partner, unique=True)
+    videoNumber = models.IntegerField()
+    villageNumber = models.IntegerField()
+    screeningNumber = models.IntegerField()
+    viewerNumber = models.IntegerField()
