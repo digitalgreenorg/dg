@@ -6,29 +6,32 @@
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
                     <div class="media layout-vr-xlg">
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">We drive change by building on the social networks of the world’s most vulnerable
-                        </h3>
                         <div class="imgExt img-marginLg-lt img-effects img-size-lg">
-                            <img src="http://placehold.it/463x283" alt="" />
+                            <img src="{{STATIC_URL}}social_website/content/about.jpg" alt="" />
                         </div>
                         <div class='bd'>
-                            <p class="copy copy-para">We use an innovative digital platform that brings together technology with global development efforts to enable everyone to live a life of dignity.
-                            </p>
+							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our mission is to transform the lives of rural communities around the world by leveraging technology with social organization.
+							</h3>
                             <p class="copy copy-para"> Learn more about our organization
                             </p>
-                            <ul class="link-list">
-                                <li><a href="#mission">Our mission and values</a></li>
-                                <li><a href="{% url ourwork %}">Our work</a></li>
-                                <li><a href="#keyfacts">Key facts</a></li>
-                                <li><a href="{% url resources %}#annualreport10-11">Annual report</a></li>
-                                <li><a href="{% url connect %}">Our partners</a></li>
-                                <li><a href="{% url board %}">Our board</a></li>
-                                <li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
-                                <li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
-                                <li><a href="{% url resources %}">Resources</a></li>
-                                <li><a href="{% url contact %}">Contact Us</a></li>
-                                <li><a href="{% url career %}">Join Us</a></li>
-                            </ul>
+							<div style="float:left; width:50%">
+								<ul class="link-list">
+									<li><a href="#mission">Our values</a></li>
+									<li><a href="{% url ourwork %}">Our work</a></li>
+									<li><a href="{% url connect %}">Our partners</a></li>
+									<li><a href="{% url board %}">Our board</a></li>
+									<li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
+								</ul>
+							</div>
+							<div style="float:right; width:50%">
+								<ul class="link-list">
+									<li><a href="#keyfacts">Key facts</a></li>
+									<li><a href="{% url resources %}#annualreport10-11">Annual report</a></li>
+									<li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
+									<li><a href="{% url resources %}">Resources</a></li>
+									<li><a href="{% url contact %}">Contact Us</a></li>
+								</ul>
+							</div>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
@@ -38,11 +41,8 @@
         <section id="mission" class='about-bg about-bg-white'>
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Mission and Values</h2>    
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Values</h2>    
                     <div class='layout-vr-xlg'>
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our Mission</h3>
-                        <p class="copy copy-para">To transform the lives of rural communities around the world by leveraging technology with social organization
-                        </p>
                         <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our Values</h3>
                         <ul class="copy bullet-list">
                             <li>Humility: We imbue humility in all that we do. We maintain our pride about who we are, about our achievements, about our worth – but without arrogance. It's about a quiet confidence without the need for a meretricious selling of our wares. We are content and allow others discover the layers of our talents without having to boast about them. It's a lack of arrogance, not a lack of aggressiveness in the pursuit of achievement.
@@ -68,25 +68,6 @@
                     <div class="layout-vr-xlg">
                         <iframe src="http://www.scribd.com/embeds/154431570/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless>
                         </iframe>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-
-        <section id='annualreports' class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Reports</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="imgExt img-marginLg-lt img-effects img-size-lg">
-                            <img src="http://placehold.it/463x283" alt="" />
-                        </div>
-                        <div>
-                            <ul class="link-list">
-                                <li><a href="{% url resources %}#annualreport10-11">Annual Report 2010-2011</a></li>
-                                <li><a href="{% url resources %}#annualreport09-10">Annual Report 2009-2010</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
