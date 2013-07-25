@@ -26,7 +26,7 @@ class Migration(DataMigration):
                 add_collection(collection)
             #Adding Video Added Activities for each partner
             for video in orm['social_website.Video'].objects.filter(partner=partner):
-                add_video(video, partner)
+                add_video(video)
             #Adding Milestone Activities for each partner
             add_milestone(partner)
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
