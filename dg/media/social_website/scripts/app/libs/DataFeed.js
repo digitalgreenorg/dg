@@ -306,7 +306,8 @@ define(function(require) {
          * @return {void}
          */
         _afterProcessData: function(processedData) {
-            this.trigger('dataProcessed', processedData);
+            if(Object.keys(processedData).length)
+                this.trigger('dataProcessed', processedData);
         },
 
         /**

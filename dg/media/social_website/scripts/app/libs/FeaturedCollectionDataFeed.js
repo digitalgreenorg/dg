@@ -47,6 +47,7 @@ define(function(require) {
             var featuredCollectionModel = dataModel.get('featuredCollection');
             
             featuredCollectionModel.set('featuredCollectionObj', unprocessedData.featured_collection);
+            return unprocessedData.featured_collection;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {

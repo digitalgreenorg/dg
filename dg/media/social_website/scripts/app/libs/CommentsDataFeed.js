@@ -73,6 +73,7 @@ define(function(require) {
             var startingCacheId = page * countPerPage;
 
             commentsModel.addSubset(commentsToAdd, startingCacheId);
+            return commentsToAdd;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {

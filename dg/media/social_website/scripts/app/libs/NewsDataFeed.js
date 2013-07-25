@@ -73,6 +73,7 @@ define(function(require) {
             var startingCacheId = page;
 
             newsItemsModel.addSubset(newsItemsToAdd, startingCacheId);
+            return newsItemsToAdd;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {
