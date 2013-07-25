@@ -1,72 +1,33 @@
 # -*- coding: utf-8 -*-
-import datetime
 from django.db.models import get_app, get_models
 from south.db import db
 from south.v2 import DataMigration
-from dashboard.models import AnimatorAssignedVillage, Block, PersonAdoptPractice, User, UserPermission, Village
+from dashboard.models import Block, User, UserPermission, Village
 
-def get_user_id(model, obj):
-    user_id = None
-    db_table_name = model._meta.db_table
+def get_user_id_for_village(village_id):
     #print 'table name', db_table_name
-    if db_table_name == "person" or db_table_name == "person_groups" or db_table_name == "video" or db_table_name == "screening":
-        district_id = Block.objects.filter(village = obj.village).values_list('district__id', flat=True)[0]
-        if district_id:
-           user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-           if user_ids:
-               user_id = user_ids[0]
-           else:
-                user_id = None
-           #print 'user id in func', user_id
-        else:
-            user_id = None
-    if db_table_name == "village":
-        #print 'in village', obj.id
-        district_id = Village.objects.filter(id = obj.id).values_list('block__district__id', flat=True)[0]
-        #print 'district id',district_id
-        if district_id:
-           user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-           if user_ids:
-               user_id = user_ids[0]
-           else:
-                user_id = None
-           #print 'user id in func', user_id
-        else:
-            user_id = None
+    vil_data = Block.objects.filter(village__id = village_id).values_list('id','district__id')
+    ###IF BLOCK IS MANDLA, RETURN asa_mandla user id
+    if vil_data[0][0] == [10000000000091]:
+        return 53
+    ###IF BLOCK IS MOHAGAON AND NARAYANGUNJ, RETURN pradan_mandla user id
+    elif vil_data[0][0] in [10000000000003, 10000000000178]:
+        return 45
+    district_id = vil_data[0][1]
+    ###IF DISTRICT IS PURNIA, RETURN asa_purnia user id
+    if district_id == 10000000000029:
+        return 44
     
-    if db_table_name == "animator":
-        village_ids = AnimatorAssignedVillage.objects.filter(animator__id = obj.id).values_list('village__id', flat=True)
-        if village_ids:
-            village_id = village_ids[0]
-        else:
-            village_id = None
-        district_id = Village.objects.filter(id = village_id).values_list('id', flat=True)[0]
-        if district_id:
-           user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-           if user_ids:
-               user_id = user_ids[0]
-           else:
-                user_id = None
+    if district_id:
+        user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
+        if user_ids:
+            user_id = user_ids[0]
         else:
             user_id = None
-    if db_table_name == "person_adopt_practice":
-        village_ids = PersonAdoptPractice.objects.filter(person = obj.person).values_list('person__village__id', flat=True)
-        if village_ids:
-            village_id = village_ids[0]
-        else:
-            village_id = None
-        district_id = Village.objects.filter(id = village_id).values_list('block__district__id', flat=True)[0]
-        if district_id:
-           user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-           if user_ids:
-               user_id = user_ids[0]
-           else:
-                user_id = None
-        else:
-            user_id = None
-        
+        #print 'user id in func', user_id
+    else:
+        user_id = None
     return user_id
-
 
 class Migration(DataMigration):
 
@@ -74,17 +35,21 @@ class Migration(DataMigration):
         "Write your forwards methods here."
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
         coco_model_list = ['person', 'village', 'person_groups', 'animator', 'animator_assigned_village', 'video', 'screening', 'person_adopt_practice']
+        vils = Village.objects.all().values_list('id', flat=True)
         for model in get_models(get_app('dashboard')):
             if model._meta.db_table in coco_model_list:
                 objs = model.objects.filter(user_created__isnull = True)
-                print 'before', model._meta.db_table, objs.count()
-                for obj in objs:
-                    user_id = get_user_id(model, obj)
-                    #print 'user id',user_id
-                    #print obj.user_created
-                    if not obj.user_created and user_id:
-                        obj.user_created = User.objects.get(id = user_id)
-                        obj.save()
+                print 'Before', model._meta.db_table, objs.count()
+                for vil in vils:
+                    user_id = get_user_id_for_village(vil)
+                    if user_id:
+                        user = User.objects.get(id = user_id)
+                        if model._meta.db_table in ['person', 'animator', 'person_groups', 'animator_assigned_village', 'video', 'screening']:
+                            objs = model.objects.filter(user_created__isnull = True, village_id = vil).update(user_created = user)
+                        elif model._meta.db_table == 'person_adopt_practice':
+                            objs = model.objects.filter(user_created__isnull = True, person__village_id = vil).update(user_created = user)
+                        elif model._meta.db_table == 'village':
+                            objs = model.objects.filter(user_created__isnull = True, id = vil).update(user_created = user)
                 objs = model.objects.filter(user_created__isnull = True)
                 print 'after',model._meta.db_table, objs.count()
 
