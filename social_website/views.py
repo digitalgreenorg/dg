@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 import ast, datetime, json, urllib2
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
-from social_website.absolute_urls import get_absolute_url_for_collection
 
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
@@ -39,7 +38,6 @@ def collection_view(request, partner, state, language, title, video=1):
                          'loggedIn':False
                          },
               'collection': collection,
-              'collection_url' : get_absolute_url_for_collection(collection),
               'duration' : duration,
               'video' : video,
               'video_index' : video_index,
@@ -150,9 +148,9 @@ def featuredCollection(request):
         'language': collection.language,
         'partner_name': collection.partner.name,
         'partner_logo': '' if collection.partner.logoURL._file is None else collection.partner.logoURL,
-        'partner_url': '/social/connect/?id='+str(collection.partner.uid),
+        'partner_url': collection.partner.get_absolute_url(),
         'video_count': collection.videos.all().count(),
-        'link': '/social/collections/?id=' + str(collection.uid) +'&video=1',
+        'link': collection.get_absolute_url(),
         'collageURL': collage_url,
         'duration': str(datetime.timedelta(seconds=time)),
     }

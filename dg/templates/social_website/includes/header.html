@@ -53,7 +53,7 @@
                         <nav class="inner-nav" role="navigation">
                             <ul class="nav">
                                 <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                <li class="logo"><a href="/social">Green Digital</a></li>
+                                <li class="logo"><a href="{% url home%}">Green Digital</a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url discover%}">Discover <span class="nav-sub hdg-f">great videos</span></a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url connect %}">Connect <span class="nav-sub hdg-f">with your community</span></a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f">to catalyze change</span></a></li>

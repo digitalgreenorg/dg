@@ -1,6 +1,9 @@
+from django.core.urlresolvers import reverse
 import json
 from social_website.models import Collection, Video, Partner
-from social_website.absolute_urls import get_absolute_url_for_collection, get_absolute_url_for_completion, get_absolute_url_for_partner, get_absolute_url_for_video
+
+def get_absolute_url_for_completion(self):
+    return reverse('social_website.views.search_view')
 
 def enter_data_into_facet_search(conn, index_name):
     i = 0
@@ -9,7 +12,7 @@ def enter_data_into_facet_search(conn, index_name):
         time = 0
         for index, vid in enumerate(obj.videos.all()):
             vid_id = index+1 
-            url = get_absolute_url_for_video(obj, vid_id)
+            url = obj.get_absolute_url_for_video(vid_id)
             vid_data.append({"title" : vid.title, 
                              "subcategory" : vid.subcategory, 
                              "description" : vid.description,
@@ -20,7 +23,7 @@ def enter_data_into_facet_search(conn, index_name):
             time += vid.duration
         
         data = json.dumps({"title" : obj.title,
-                           "url" : get_absolute_url_for_collection(obj), 
+                           "url" : obj.get_absolute_url(), 
                            "language" : obj.language,
                            "partner" : obj.partner.name,
                            "state" : obj.state,
@@ -49,7 +52,7 @@ def enter_data_into_completion_search(conn, index_name):
             for index, vid in enumerate(collection.videos.all()):
                 if vid.uid == video.uid:
                     vid_id = index+1 
-            url = get_absolute_url_for_video(collection, vid_id)
+            url = collection.get_absolute_url_for_video(vid_id)
             data = json.dumps({"searchTerm":video.title, 
                                "targetURL" : url,
                                "type" : "Videos"})
@@ -75,7 +78,7 @@ def enter_data_into_completion_search(conn, index_name):
     
     # Partners
     for partner in Partner.objects.all():
-        url = get_absolute_url_for_partner(partner)
+        url = partner.get_absolute_url()
         data = json.dumps({"searchTerm" : partner.name,
                            "targetURL" : url, 
                            "type" : "Partners"}) 

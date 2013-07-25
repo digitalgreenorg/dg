@@ -3,9 +3,9 @@ from django.views.generic.simple import direct_to_template
 from views import social_home, collection_view, partner_view, search_view
 
 urlpatterns = patterns('',
-    url(r'^$', social_home), 
-    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view), 
-    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view), 
+    url(r'^$', social_home, name="home"), 
+    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
+    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"), 
     url(r'^discover/?$', search_view, name='search'),
     url(r'^discover/$', direct_to_template, {'template': 'collections.html', 'extra_context': {'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}}, name='discover'),
     url(r'^about/$', direct_to_template, {'template':'about.html', 'extra_context':{'header':{'currentPage':'About'}}}, name='about'),
