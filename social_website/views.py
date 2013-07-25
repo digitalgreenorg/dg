@@ -20,7 +20,7 @@ def social_home(request):
 
 def collection_view(request, partner, state, language, title, video=1):
     try:
-        collection = Collection.objects.get(partner__name__iexact=partner, state__iexact=state, language__iexact=language, title__iexact=title)
+        collection = Collection.objects.get(partner__name__iexact = partner, state__iexact = state, language__iexact = language, title__iexact = title)
     except Collection.DoesNotExist:
         return HttpResponseRedirect(reverse('discover'))
     try:
@@ -44,15 +44,13 @@ def collection_view(request, partner, state, language, title, video=1):
               'tags' : tags,
               'related_collections' : related_collection_dict[:4], # restricting to 4 related collections for now
               }
-    return render_to_response('collections-view.html' , context, context_instance = RequestContext(request))
+    return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
-def partner_view(request):
-    id = request.GET.get('id', None)
+def partner_view(request, partner):
     try:
-        partner = Partner.objects.get(uid=int(id))
+        partner = Partner.objects.get(name__iexact = partner)
     except Partner.DoesNotExist:
-        partner = Partner.objects.all()[0]
-
+        return HttpResponseRedirect(reverse('connect'))
     context= {
         'header': {
             'jsController':'Profile',
