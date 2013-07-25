@@ -124,7 +124,7 @@
                                             <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->                                            
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
                                                 <div class="vidDrawer-image">
-                                                    <a href="/social/collections/?id={{ collection.uid }}&video={{forloop.counter}}" ><img src="{{ video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="video.title" /> </a>
+                                                    <a href="{{collection_url}}{{forloop.counter}}" ><img src="{{ video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="video.title" /> </a>
                                                   	{% if forloop.counter == video_index %}
                                                   	<div class="overlay now-playing">
                                                         Now Playing
@@ -226,7 +226,7 @@
                                     <li>
                                         <div class="vid-cat-selected">
                                             <div class="vid-cat">
-                                            <a href="/social/collections/?id={{related.uid}}&video=1">
+                                            <a href="{{related.url}}">
                                                 <img height=124  width=217 src={{related.thumbnailURL}} />
                                               </a>
                                                 <div class="vid-flag">

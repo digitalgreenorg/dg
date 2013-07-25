@@ -1,16 +1,6 @@
-from django.core.urlresolvers import reverse
 import json
 from social_website.models import Collection, Video, Partner
-
-def get_absolute_url_for_collection(self, video_index = 1):
-    return reverse('social_website.views.collection_view', 
-                    args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
-
-def get_absolute_url_for_completion(self):
-    return reverse('social_website.views.search_view', args=[str(self.title)])
-
-def get_absolute_url_for_partner(self):
-    return reverse('social_website.views.partner_view', args=[str(self.name)])
+from social_website.absolute_urls import get_absolute_url_for_collection, get_absolute_url_for_completion, get_absolute_url_for_partner, get_absolute_url_for_video
 
 def enter_data_into_facet_search(conn, index_name):
     i = 0
@@ -19,7 +9,7 @@ def enter_data_into_facet_search(conn, index_name):
         time = 0
         for index, vid in enumerate(obj.videos.all()):
             vid_id = index+1 
-            url = get_absolute_url_for_collection(obj, vid_id)
+            url = get_absolute_url_for_video(obj, vid_id)
             vid_data.append({"title" : vid.title, 
                              "subcategory" : vid.subcategory, 
                              "description" : vid.description,
@@ -59,7 +49,7 @@ def enter_data_into_completion_search(conn, index_name):
             for index, vid in enumerate(collection.videos.all()):
                 if vid.uid == video.uid:
                     vid_id = index+1 
-            url = get_absolute_url_for_collection(collection, vid_id)
+            url = get_absolute_url_for_video(collection, vid_id)
             data = json.dumps({"searchTerm":video.title, 
                                "targetURL" : url,
                                "type" : "Videos"})
@@ -69,14 +59,14 @@ def enter_data_into_completion_search(conn, index_name):
     # Collections        
     for collection in Collection.objects.all():
         if collection.subject != '':
-            url = get_absolute_url_for_completion(collection)
+            url = '%s/?title=%s' % (get_absolute_url_for_completion(collection), collection.subject)
             data = json.dumps({"searchTerm" : collection.subject,
                                "targetURL" : url, 
                                "type" : "Collections"}) 
             conn.index(data, index_name, index_name, i+1)
             i+= 1
         if collection.topic != '':
-            url = get_absolute_url_for_completion(collection)
+            url = '%s/?title=%s' % (get_absolute_url_for_completion(collection), collection.topic)
             data = json.dumps({"searchTerm" : collection.topic,
                                "targetURL" : url, 
                                "type" : "Collections"}) 
