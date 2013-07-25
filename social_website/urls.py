@@ -1,47 +1,8 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import include, patterns, url
 from django.views.generic.simple import direct_to_template
-from views import social_home, collection_view, partner_view, searchFilters, search_view, featuredCollection
-from elastic_search import get_collections_from_elasticsearch, searchCompletions
-from django.conf import settings
-from social_website.api import VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
-
-video_resource = VideoResource()
-farmer_resource = PersonResource()
-activity_resource = ActivityResource()
-collection_resource = CollectionResource()
-partner_resource = PartnerResource()
-comment_resource = CommentResource()
-partnerfarmer_resource = PartnerFarmerResource()
-
-## following added for user based information
-#signin_resource = SignInResource()
-#usercollectionhistory_resource = UserCollectionHistoryResource()
-#videolike_resource = VideoLikeResource()
-#commentlike_resource = CommentLikeResource()
-#user_resource = UserResource()
+from views import social_home, collection_view, partner_view, search_view
 
 urlpatterns = patterns('',
-    (r'^api/', include(video_resource.urls)),
-    (r'^api/', include(farmer_resource.urls)),
-    (r'^api/', include(activity_resource.urls)),
-    (r'^api/', include(collection_resource.urls)),
-    (r'^api/', include(partner_resource.urls)),
-    (r'^api/', include(comment_resource.urls)),
-    (r'^api/', include(partnerfarmer_resource.urls)),
-    (r'^api/searchCompletions?$',searchCompletions),
-    (r'^api/searchFilters$', searchFilters),
-    (r'^api/elasticSearch/$', get_collections_from_elasticsearch),
-    (r'^api/featuredCollection/$', featuredCollection),
-        
-#    (r'', include(signin_resource.urls)),
-#    (r'', include(usercollectionhistory_resource.urls)),
-#    (r'', include(videolike_resource.urls)),
-#    (r'', include(commentlike_resource.urls)),
-#    (r'', include(user_resource.urls)),
-#    (r'', include(partnerfarmer_resource.urls)),
-#)
-
-#urlpatterns = patterns('',
     url(r'^$', social_home), 
     url(r'^collections/?$', collection_view, name='collections'),
     url(r'^discover/?$', search_view, name='search'),
@@ -62,6 +23,4 @@ urlpatterns = patterns('',
     url(r'^reports/1/learning$', direct_to_template,{'template': 'learnings-09.html'}),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
-    
-
 )
