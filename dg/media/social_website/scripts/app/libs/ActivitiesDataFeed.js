@@ -48,7 +48,6 @@ define(function(require) {
                 countPerPage = 10;
             }
 
-            this.setInputParam('partner', $(".js-partner-farmers-pages-container").attr('data-partnerID'), true);
             this.setInputParam('offset', page*countPerPage, true);
             this.setInputParam('limit', countPerPage, true);
 

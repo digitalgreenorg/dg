@@ -8,9 +8,20 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Milestone'
+        db.create_table('social_website_milestone', (
+            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'])),
+            ('videoNumber', self.gf('django.db.models.fields.IntegerField')()),
+            ('villageNumber', self.gf('django.db.models.fields.IntegerField')()),
+            ('screeningNumber', self.gf('django.db.models.fields.IntegerField')()),
+            ('viewerNumber', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal('social_website', ['Milestone'])
+
         # Adding field 'Activity.type'
         db.add_column('social_website_activity', 'type',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=2),
+                      self.gf('django.db.models.fields.SmallIntegerField')(default=0),
                       keep_default=False)
 
         # Adding field 'Activity.titleURL'
@@ -20,6 +31,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'Milestone'
+        db.delete_table('social_website_milestone')
+
         # Deleting field 'Activity.type'
         db.delete_column('social_website_activity', 'type')
 
@@ -41,7 +55,7 @@ class Migration(SchemaMigration):
             'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'titleURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'type': ('django.db.models.fields.SmallIntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
@@ -88,11 +102,11 @@ class Migration(SchemaMigration):
         'social_website.milestone': {
             'Meta': {'object_name': 'Milestone'},
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'screeningNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'screeningNumber': ('django.db.models.fields.IntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videoNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'viewerNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'villageNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'videoNumber': ('django.db.models.fields.IntegerField', [], {}),
+            'viewerNumber': ('django.db.models.fields.IntegerField', [], {}),
+            'villageNumber': ('django.db.models.fields.IntegerField', [], {})
         },
         'social_website.partner': {
             'Meta': {'object_name': 'Partner'},

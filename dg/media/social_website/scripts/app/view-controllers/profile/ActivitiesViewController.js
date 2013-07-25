@@ -110,6 +110,7 @@ define(function(require) {
             var dataFeed = this._references.dataFeed;
             dataFeed.setInputParam('offset', page, true)
             dataFeed.setInputParam('limit', activitiesPerPage, true);
+            dataFeed.setInputParam('partner', this._references.$activitiesWrapper.attr('data-partnerID'), true);
 
             var activitiesData = dataFeed.getActivities();
             var totalCount = dataFeed.getTotalCount();
@@ -212,11 +213,6 @@ define(function(require) {
             this.getActivities(this.getCurrentPageNumber() + 1)
         },
         
-        setInputParam: function(key, value, disableCacheClearing) {
-            if (!this._references.dataFeed.setInputParam(key, value, disableCacheClearing)) {
-                return;
-            }
-        },
         /**
          * Controller destructor
          * @return {void}
