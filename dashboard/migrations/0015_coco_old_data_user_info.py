@@ -5,15 +5,14 @@ from south.v2 import DataMigration
 from dashboard.models import Block, User, UserPermission, Village
 
 def get_user_id_for_village(village_id):
-    #print 'table name', db_table_name
-    vil_data = Block.objects.filter(village__id = village_id).values_list('id','district__id')
+    block_data = Block.objects.get(village__id = village_id)
     ###IF BLOCK IS MANDLA, RETURN asa_mandla user id
-    if vil_data[0][0] == [10000000000091]:
+    if block_data.id == [10000000000091]:
         return 53
     ###IF BLOCK IS MOHAGAON AND NARAYANGUNJ, RETURN pradan_mandla user id
-    elif vil_data[0][0] in [10000000000003, 10000000000178]:
+    elif block_data.id in [10000000000003, 10000000000178]:
         return 45
-    district_id = vil_data[0][1]
+    district_id = block_data.district.id
     ###IF DISTRICT IS PURNIA, RETURN asa_purnia user id
     if district_id == 10000000000029:
         return 44
@@ -24,7 +23,6 @@ def get_user_id_for_village(village_id):
             user_id = user_ids[0]
         else:
             user_id = None
-        #print 'user id in func', user_id
     else:
         user_id = None
     return user_id
