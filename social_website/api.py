@@ -79,13 +79,15 @@ class VideoResource(BaseResource):
     class Meta:
         queryset = Video.objects.all()
         resource_name = 'video'
-        excludes = ['sector','subsector','topic','subtopic','subject','state']
+        excludes = ['category','subcategory','topic','subtopic','subject','state']
         filtering={
                    'uid':ALL
                    }
 
     def dehydrate(self, bundle):
-        bundle.data['tags'] = Video.objects.get(uid=bundle.data.get('uid')).sector+";"+Video.objects.get(uid=bundle.data.get('uid')).subsector+";"+Video.objects.get(uid=bundle.data.get('uid')).topic+";"+Video.objects.get(uid=bundle.data.get('uid')).subtopic+";"+Video.objects.get(uid=bundle.data.get('uid')).subject 
+        video = bundle.obj
+        tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
+        bundle.data['tags'] = ','.join(tags)
         return bundle
  
 class CollectionResource(BaseCorsResource):

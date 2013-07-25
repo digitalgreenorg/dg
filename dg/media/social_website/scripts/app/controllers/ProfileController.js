@@ -54,8 +54,8 @@ define(function(require) {
             references.collectionViewController = new CollectionViewController($collectionsContainer);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
 
-            var $activitiesContainer = jQuery('.js-activities-container');
-            references.activitiesViewController = new ActivitiesViewController($activitiesContainer);
+            var $activitiesWrapper = jQuery('.js-activities-wrapper');
+            references.activitiesViewController = new ActivitiesViewController($activitiesWrapper);
             
             var $partnerFarmersCarouselContainer = jQuery(".js-partner-farmers-carousel-container");
             references.partnerFarmersViewController = new PartnerFarmersViewController($partnerFarmersCarouselContainer);
