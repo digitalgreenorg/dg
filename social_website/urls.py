@@ -4,7 +4,6 @@ from views import social_home, collection_view, partner_view, search_view
 
 urlpatterns = patterns('',
     url(r'^$', social_home), 
-    url(r'^collections/?$', collection_view, name='collections'),
     url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view), 
     url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view), 
     url(r'^discover/?$', search_view, name='search'),
