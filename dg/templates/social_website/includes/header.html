@@ -58,7 +58,7 @@
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url connect %}">Connect <span class="nav-sub hdg-f">with your community</span></a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f">to catalyze change</span></a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f">and our approach</span></a></li>
-                                <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="/social/donate">Donate</a></li>
+                                <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url donate %}">Donate</a></li>
                                 {% if not header.loggedIn %}
                                 <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
                                 {% else %}
