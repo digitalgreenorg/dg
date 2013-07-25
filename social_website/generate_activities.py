@@ -74,10 +74,9 @@ def add_video_collection(video_collection):
     activity.save()
 
 
-def add_village(village):
-    screenings = dashboard.models.Screening.objects.filter(village=village.id).order_by('date')
+def add_village(village, partner):
+    screenings = dashboard.models.Screening.objects.filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     if (len(screenings) > 0):
-        partner = Partner.objects.get(coco_id=village.block.district.partner.id)
         title = partner.name
         date = screenings[0].date
         newsFeed = 0
@@ -140,9 +139,8 @@ def add_milestone(partner):
         next_video_milestone = milestone_video_village[milestone_video_village.index(videoNumber) + 1]
 
     #village milestone
-    villages = dashboard.models.Village.objects.exclude(start_date__isnull=True).filter(block__district__partner__id = partner.coco_id).order_by('start_date')
-    dashboard_partner_obj = dashboard.models.Partners.objects.get(id=partner.coco_id)
-    dashboard_partner_states = dashboard_partner_obj.district_set.values_list('state__state_name', flat=True).distinct()
+    villages = dashboard.models.Village.objects.exclude(start_date__isnull=True).filter(user_created__cocouser__partner_id=partner.coco_id).order_by('start_date')
+    dashboard_partner_states = villages.values_list('block__state__state_name', flat=True).distinct()
     next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
     while (len(villages) >= next_village_milestone):
         village = villages[next_village_milestone - 1]
@@ -164,7 +162,7 @@ def add_milestone(partner):
         next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
 
     #screening milestone
-    screenings = dashboard.models.Screening.objects.filter(village__block__district__partner__id=partner.coco_id).order_by('date')
+    screenings = dashboard.models.Screening.objects.filter(user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     next_screening_milestone = milestone_screening_viewer[milestone_screening_viewer.index(screeningNumber) + 1]
     while (len(screenings) >= next_screening_milestone):
         screening = screenings[next_screening_milestone - 1]
@@ -185,7 +183,7 @@ def add_milestone(partner):
         next_screening_milestone = milestone_screening_viewer[milestone_screening_viewer.index(screeningNumber) + 1]
 
     #viwer milestone
-    viewers = dashboard.models.PersonMeetingAttendance.objects.prefetch_related('screening').filter(screening__village__block__district__partner__id = partner.coco_id).order_by('screening__date')
+    viewers = dashboard.models.PersonMeetingAttendance.objects.prefetch_related('screening').filter(screening__user_created__cocouser__partner_id=partner.coco_id).order_by('screening__date')
     next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
     while (len(viewers) >= next_viewer_milestone):
         viewer = viewers[next_viewer_milestone - 1]
