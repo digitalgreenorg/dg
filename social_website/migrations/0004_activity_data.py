@@ -5,36 +5,33 @@ from south.v2 import DataMigration
 from django.db import models
 from social_website.generate_activities import add_collection, add_milestone, add_video, add_village
 
+
 class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
+        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
         # cleaning up all the entries in the activity table
         for activity in orm['social_website.Activity'].objects.all():
             activity.delete()
 
         for partner in orm['social_website.Partner'].objects.all():
             #Initial entry for milestone table
-            milestone_object = orm['social_website.Milestone'](partner=partner, videoNumber='0',
-                                                                villageNumber='0', screeningNumber='0', viewerNumber='0')
+            milestone_object = orm['social_website.Milestone'](partner=partner, videoNumber=0,
+                                                                villageNumber=0, screeningNumber=0, viewerNumber=0)
             milestone_object.save()
 
             #Adding Village Added Activities for each partner
             for village in orm['dashboard.Village'].objects.exclude(start_date__isnull = True).filter(block__district__partner__id = partner.coco_id).order_by('-start_date')[:10]:
                 add_village(village)
-
             #Adding Collection Added Activities for each partner
             for collection in orm['social_website.Collection'].objects.filter(partner=partner):
                 add_collection(collection)
-
             #Adding Video Added Activities for each partner
             for video in orm['social_website.Video'].objects.filter(partner=partner):
                 add_video(video)
-
             #Adding Milestone Activities for each partner
             add_milestone(partner)
-
-        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
 
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -681,7 +678,7 @@ class Migration(DataMigration):
             'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'titleURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'type': ('django.db.models.fields.SmallIntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
@@ -728,11 +725,11 @@ class Migration(DataMigration):
         'social_website.milestone': {
             'Meta': {'object_name': 'Milestone'},
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'screeningNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'screeningNumber': ('django.db.models.fields.IntegerField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videoNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'viewerNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'villageNumber': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'videoNumber': ('django.db.models.fields.IntegerField', [], {}),
+            'viewerNumber': ('django.db.models.fields.IntegerField', [], {}),
+            'villageNumber': ('django.db.models.fields.IntegerField', [], {})
         },
         'social_website.partner': {
             'Meta': {'object_name': 'Partner'},

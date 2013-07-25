@@ -85,7 +85,9 @@ class VideoResource(BaseResource):
                    }
 
     def dehydrate(self, bundle):
-        bundle.data['tags'] = Video.objects.get(uid=bundle.data.get('uid')).category+";"+Video.objects.get(uid=bundle.data.get('uid')).subcategory+";"+Video.objects.get(uid=bundle.data.get('uid')).topic+";"+Video.objects.get(uid=bundle.data.get('uid')).subtopic+";"+Video.objects.get(uid=bundle.data.get('uid')).subject 
+        video = bundle.obj
+        tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
+        bundle.data['tags'] = ','.join(tags)
         return bundle
  
 class CollectionResource(BaseCorsResource):
