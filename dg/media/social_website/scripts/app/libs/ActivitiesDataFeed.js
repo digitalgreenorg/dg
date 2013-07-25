@@ -73,6 +73,7 @@ define(function(require) {
             var startingCacheId = page;
 
             model.addSubset(dataToAdd, startingCacheId);
+            return dataToAdd;
         },
 
         clearCollectionCache: function() {
