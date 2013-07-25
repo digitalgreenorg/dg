@@ -216,7 +216,7 @@ define(function(require) {
             var $currentActive = this._references.$searchItemsContainer.find('.js-search-completion-item.hover');
             if ($currentActive.length==0){
             	var searchString = this._references.$searchInputBox.val();
-            	currentURL = "/social/discover/?searchString=" + searchString;
+            	currentURL = "/discover/?searchString=" + searchString;
             }
             else{
             var currentURL = $currentActive.attr('href');
