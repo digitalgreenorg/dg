@@ -114,7 +114,7 @@ class ActivityResource(BaseResource):
         filtering={
                    'farmer':ALL_WITH_RELATIONS,
                    'partner':ALL_WITH_RELATIONS,
-                   'newsFeed':ALL
+                   'newsFeed':'exact',
                    }
 
 class CommentResource(BaseResource):
