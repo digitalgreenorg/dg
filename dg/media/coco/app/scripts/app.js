@@ -12,13 +12,13 @@ define([
                   xhr.setRequestHeader("X-CSRFToken", get_csrf());
               }
           },
-          error: function(xhr, status, error){
-              if(xhr.status == 401)
-              {
-                  window.Router.navigate("login",{trigger:true});
-              }
-          }
       });
+      
+      $(document).ajaxError(function(event, jqxhr, settings, exception) {
+          if(jqxhr.status==401)
+              window.Router.navigate("login",{trigger:true});               
+      });
+      
       $("#app").empty().append(AppLayout.el);
       AppLayout.render();
   };
