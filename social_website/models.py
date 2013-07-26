@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.urlresolvers import reverse
 #===============================================================================
 # Linked to COCO
 #===============================================================================
@@ -17,6 +17,8 @@ class Partner(models.Model):
     views = models.BigIntegerField(default=0)
     likes = models.BigIntegerField(default=0)
     adoptions = models.BigIntegerField(default=0)
+    def get_absolute_url(self):
+        return reverse('partner', args=[str(self.name)])
     
 class Video(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -87,6 +89,12 @@ class Collection(models.Model):
     likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
+    def get_absolute_url(self):
+        return reverse('collection_page', 
+                       args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
+    def get_absolute_url_for_video(self, video_index = 1):
+        return reverse('collection_video_page', 
+                       args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
