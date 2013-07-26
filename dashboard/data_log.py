@@ -9,6 +9,10 @@ from models import User
 class TimestampException(Exception):
     pass
 
+class UserDoesNotExist(Exception):
+    pass
+
+
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
@@ -30,7 +34,7 @@ def save_log(sender, **kwargs ):
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
     if previous_time_stamp > log.timestamp:
         raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-    
+#    
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request
@@ -49,40 +53,25 @@ def delete_log(sender, **kwargs ):
 
 def send_updated_log(request):
     timestamp = request.GET.get('timestamp', None)
-    if not timestamp:
-        #for testing purpose
-        timestamp = '2012-03-10 12:06:04'
-    CocoUser = get_model('dashboard','CocoUser')
-    CocoUserVillages = get_model('dashboard','CocoUser_villages')
-    ServerLog = get_model('dashboard','ServerLog')
-    Village = get_model('dashboard', 'village')
-    if request.user.id == 1:
-        #admin account
-        partner_id = None
-        villages = Village.objects.all().values_list('id', flat=True)
-    else:
-        coco_user = CocoUser.objects.get(user_id=request.user.id)
+    if timestamp:
+        CocoUser = get_model('dashboard','CocoUser')
+        CocoUserVillages = get_model('dashboard','CocoUser_villages')
+        ServerLog = get_model('dashboard','ServerLog')
+        try:
+            coco_user = CocoUser.objects.get(user_id=request.user.id)
+        except Exception as e:
+            raise UserDoesNotExist('User with id: '+str(request.user.id) + 'does not exist')
         partner_id = coco_user.partner_id
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
-    if timestamp:
-        if partner_id:  
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
-        else:
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
-    ####Not necessary..need to remove it..####
-    else:
+        rows = ServerLog.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Animator', 'Video'])
         if partner_id:
-            rows = ServerLog.objects.filter(village__in = villages, partner = partner_id )
+            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
         else:
-            rows = ServerLog.objects.filter(village__in = villages)
-            
-    print len(rows)
-    if rows:
-        from django.core import serializers
-        data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-        return HttpResponse(data, mimetype="application/json")
-    else:
-        return HttpResponse("0")
+            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
+        if rows:
+            data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
+            return HttpResponse(data, mimetype="application/json")
+    return HttpResponse("0")
 
 def get_latest_timestamp():
     from models import ServerLog

@@ -807,7 +807,11 @@ function() {
             'group': {
                 'group': {
                     'placeholder': 'id_group',
-                    'name_field': 'group_name'
+                    'name_field': 'group_name',
+					'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 }
             }
         },
@@ -896,7 +900,17 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         background_download_interval: 5 * 60 * 1000,
-        inc_download_url: "/get_log/"
+        inc_download_url: "/get_log/",
+        afterFullDownload: function(start_time, download_status){
+            return saveTimeTaken();
+            function saveTimeTaken(){
+                var record_endpoint = "/coco/record_full_download_time/"; 
+                return $.post(record_endpoint, {
+                    start_time : start_time,
+                    end_time : new Date().toJSON().replace("Z", "")
+                })    
+            }
+        } 
     };
 
     return {

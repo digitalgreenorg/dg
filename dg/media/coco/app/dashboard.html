@@ -158,126 +158,141 @@
 				</td>
 			</tr>
 		</table>
-                <div id="coco_brand">
-                    <a href="#">COCO</a>
-                </div>
-                <div id="coco_sync" class="row">
-                    <button class="btn pull-left" id= "sync">Sync
-					<span class="badge" id="upload_num"><%=upload_entries%></span>
-					</button>
-                </div>
-				<p id="helptext">
-				Please download the database<br>
-				by clicking on the sync button
-				</p>
-                <div id="coco_nav" class="pull-left">
-                    <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
-                        
-                    </ul>
-                </div>
-                
-                <div id="coco_nav_add" class="pull-right">
-                    <ul id = "dashboard_items_add" class="nav nav-list" title= "Click to add data">
-                        
-                    </ul>
-                </div>
-            </div>
+        <div id="coco_brand">
+            <a href="#">COCO</a>
+        </div>
+        <div id="coco_sync" class="row">
+            <button class="btn pull-left" id= "sync">Sync
+			<span class="badge" id="upload_num"><%=upload_entries%></span>
+			</button>
+        </div>
+		<p id="helptext">
+		Please download the database<br>
+		by clicking on the sync button
+		</p>
+        <div id="coco_nav" class="pull-left">
+            <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
+        
+            </ul>
+        </div>
+        <div id="coco_nav_add" class="pull-right">
+            <ul id = "dashboard_items_add" class="nav nav-list" title= "Click to add data">
+        
+            </ul>
+        </div>
+		<div id="faq">
+			Need Help? Check out the <a href="{% url faq %}">FAQ</a>
+		</div>
+    </div>
 </script>
+
 <script type="text/template" id="page_layout">
     <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
     <div id = "content" class="span10" ></div>
 </script>
+
 <script type="text/template" id="status">
     <div id="modal"></div>
 	<div class="page-header">
-	<h1 style = "color:#0088cc;"> Welcome to COCO!
-	<br><small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small></br></h1>
+	    <h1 style = "color:#0088cc;"> Welcome to COCO!
+            <br>
+                <small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small>
+            </br>
+        </h1>
 	</div>
-		<div class="media">
-			<a class="pull-left">
-			<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
-			</a>
-			<div class="media-body">
-			<h5 class="media-heading">Add data</h5>
-			To add some data, click on (+) sign next to the type of data that you want to add.
-			</div>
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading">Add data</h5>
+		To add some data, click on (+) sign next to the type of data that you want to add.
 		</div>
+	</div>
 
-		<div class="media">
-			<a class="pull-left">
-			<img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
-			</a>
-			<div class="media-body">
-			<h5 class="media-heading">View Data</h5>
-			To view, sort and search through your data, click on the data link in the sidebar.
-			</div>
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading">View Data</h5>
+		To view, sort and search through your data, click on the data link in the sidebar.
 		</div>
+	</div>
 
-		<div class="media">
-			<a class="pull-left">
-			<img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
-			</a>
-			<div class="media-body">
-			<h5 class="media-heading"> Sync data</h5>
-			To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server,
-			you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.
-			The number in the button shows how many entries are yet to be uploaded.
-			Clicking on the sync button will also download the database if it is not completely downloaded.
-			</div>
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading"> Sync data</h5>
+		To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server,
+		you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.
+		The number in the button shows how many entries are yet to be uploaded.
+		Clicking on the sync button will also download the database if it is not completely downloaded.
 		</div>
+	</div>
 
-		<div class="media">
-			<a class="pull-left">
-			<img class="media-object" src="/media/coco/app/images/feedback.png" style = "width:70px;">
-			</a>
-			<div class="media-body">
-			<h5 class="media-heading"> We value your feedback</h5>
-			Do share your feedback by mailing us at system@digitalgreen.org
-			</div>
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/feedback.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading"> We value your feedback</h5>
+		Do share your feedback by mailing us at system@digitalgreen.org
 		</div>
+	</div>
 
-   
-   <div style = "color:#999999; margin-top:25px;"><b>Database last deleted and downloaded at </b><%=full_d_timestamp%></div><br>
-   <div style = "color:#999999; margin-top:-15px;"><b>Database last synced at </b><%=inc_d_timestamp%></div><br>
-   <div style = "color:#999999; margin-top:-15px;"><b>Current database version</b> <%=db_version%></div><br>
-   <div class="row pull-left" style="margin-left:0px; margin-right:10px; margin-top:-15px;color:#999999;"><b>Entries to upload </div></b>
-  <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style = "margin-top:-20px;">
-        <i class="icon-chevron-down"></i>
-      </a>
+    <div style = "color:#999999; margin-top:25px;">
+        <b>Database last deleted and downloaded at </b><%=full_d_timestamp%>
+    </div><br>
+    <div style = "color:#999999; margin-top:-15px;">
+        <b>Database last synced at </b><%=inc_d_timestamp%>
+    </div><br>
+    <div style = "color:#999999; margin-top:-15px;">
+        <b>Current database version</b> <%=db_version%>
+    </div><br>
+    <div class="row pull-left" style="margin-left:0px; margin-right:10px; margin-top:-15px;color:#999999;">
+        <b>Entries to upload </b>
     </div>
-    <div id="collapseOne" class="accordion-body collapse" >
-      <div class="accordion-inner" style="height:300px;overflow-y:auto">
-        <table class="table">
-		    <th> Id </th>
-            <th> Type</th>
-			<th> Add/Edit </th>
-			<th> Data </th>
-            <tbody>
-                <% $.each(upload_collection, function(index, obj){%>
-        			<tr>
-                        <td>
-                            <%=obj.id%>
-                        </td>
-                        <td>
-                            <%=obj.entity_name%>
-                        </td>
-                        <td>
-                            <%=obj.action%>
-                        </td>
-                        <td>
-                            <%=JSON.stringify(obj.data)%>
-                        </td>
-                    </tr>    
-                <%})%>
-			</tbody>
-		</table>
-      </div>
-      </div>
-	</div>
+    <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style = "margin-top:-20px;">
+                <i class="icon-chevron-down"></i>
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse" >
+            <div class="accordion-inner" style="height:300px;overflow-y:auto">
+                <table class="table">
+        		    <th> Id </th>
+                    <th> Type</th>
+        			<th> Add/Edit </th>
+        			<th> Data </th>
+                    <tbody>
+                        <% $.each(upload_collection, function(index, obj){%>
+                			<tr>
+                                <td>
+                                    <%=obj.id%>
+                                </td>
+                                <td>
+                                    <%=obj.entity_name%>
+                                </td>
+                                <td>
+                                    <%=obj.action%>
+                                </td>
+                                <td>
+                                    <%=JSON.stringify(obj.data)%>
+                                </td>
+                            </tr>    
+                        <%})%>
+        			</tbody>
+        		</table>
+            </div>
+        </div>
+    </div>
     <button id="reset_database" class="btn btn-small btn-primary" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
 </script>
+
 <script type="text/template" id="form_template">
     <div id = "form_div">
         <form name="<%=entity_name%>" class="">
@@ -305,12 +320,15 @@
 	
     </div>
 </script>
+
 <script type="text/template" id="dashboard_breadcrumb">
 	<li class='active' >Dashboard</li>
 </script>
+
 <script type="text/template" id="list_breadcrumb">
 	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
 </script>
+
 <script type="text/template" id="add_edit_breadcrumb">
 <li><a href="#">Dashboard</a> <span class="divider">/</span></li>
 <li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>

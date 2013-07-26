@@ -102,7 +102,10 @@ define([
         },
         
         reset: function(){
-            Offline.reset_database();
+            var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
+			if(val==true){
+				Offline.reset_database();
+			}
         }    
     
           
