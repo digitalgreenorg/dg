@@ -140,7 +140,7 @@ def add_milestone(partner):
 
     #village milestone
     villages = dashboard.models.Village.objects.exclude(start_date__isnull=True).filter(user_created__cocouser__partner_id=partner.coco_id).order_by('start_date')
-    dashboard_partner_states = villages.values_list('block__state__state_name', flat=True).distinct()
+    dashboard_partner_states = set(villages.values_list('block__state__state_name', flat=True))
     next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
     while (len(villages) >= next_village_milestone):
         village = villages[next_village_milestone - 1]
