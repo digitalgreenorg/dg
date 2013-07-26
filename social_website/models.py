@@ -18,7 +18,7 @@ class Partner(models.Model):
     likes = models.BigIntegerField(default=0)
     adoptions = models.BigIntegerField(default=0)
     def get_absolute_url(self):
-        return reverse('social_website.views.partner_view', args=[str(self.name)])
+        return reverse('partner', args=[str(self.name)])
     
 class Video(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -90,10 +90,10 @@ class Collection(models.Model):
     views = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
     def get_absolute_url(self):
-        return reverse('social_website.views.collection_view', 
+        return reverse('collection_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
     def get_absolute_url_for_video(self, video_index = 1):
-        return reverse('social_website.views.collection_view', 
+        return reverse('collection_video_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
 
 class FeaturedCollection(models.Model):

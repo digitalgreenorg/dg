@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^board/$', direct_to_template, {'template': 'board.html'}, name='board'),
     url(r'^careers/$', direct_to_template, {'template': 'career.html'}, name='career'),
     # TODO: Connect needs to be fixed.
-    url(r'^connect/(?P<partner>.+)/$', partner_view),
+    url(r'^connect/(?P<partner>.+)/$', partner_view, name='partner'),
     url(r'^connect/$', partner_view, name='connect'),
     url(r'^contact/$', direct_to_template, {'template': 'contact.html'}, name='contact'),
     url(r'^donate/$', direct_to_template, {'template': 'donate.html'}, name='donate'),
