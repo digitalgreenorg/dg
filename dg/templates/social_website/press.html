@@ -1,0 +1,47 @@
+{% include "includes/header.html" %}
+                                
+        <section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper ">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Media Coverage</h2>        
+                    <ul class="v-list-lg v-list-divided v-list-divided-dk">
+                    {% for med in media %}
+                        <li>
+                            <div class="media layout-vr-md">
+                                <div class="img img-lg">
+                                    <img src="{{STATIC_URL}}assets/images/favicon-white.png" alt="" />
+                                </div>
+                                <div class="bd">
+                                    <div class="layout-vr-sm">
+                                        <div class="copy copy-lt layout-vr-sm">
+                                            {{med.pub_date|date:"D"}}, {{med.pub_date|date:"d F Y"}}
+                                        </div>
+                                        <a href={{med.link}}><h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{med.title}}</h3></a>
+                                        <p class="copy">
+                                            {{med.content}}
+                                        </p>
+                                    </div>
+                                </div> <!-- End .bd -->
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    <div class="centered layout-vr-xlg">
+                        <span>
+                            {% if media.has_previous %}
+                                <a class="hdg-bold hdg-green" href="?page={{ media.previous_page_number }}">Previous  
+                                </a>
+                            {% endif %}
+                            <span>
+                                Page {{ media.number }} of {{ media.paginator.num_pages }}
+                            </span>    
+                            {% if media.has_next %}
+                                <a class="hdg-bold hdg-green" href="?page={{ media.next_page_number }}">  Next</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div>
+        </section>    
+    
+{% include "includes/footer.html" %}

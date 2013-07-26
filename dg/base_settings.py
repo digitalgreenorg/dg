@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'tastypie',
     'coco',
     'social_website',
+    'communications',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
