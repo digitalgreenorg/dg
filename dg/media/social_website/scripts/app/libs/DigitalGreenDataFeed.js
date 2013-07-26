@@ -43,15 +43,24 @@ define(function(require) {
         },
 
         _processData: function(unprocessedData) {
+        	var success= false;
+        	// following if loops are to find out whether success is true or false
+        	// success should be true when (1)user clicks LIKE or (2)the user/video query is present id DB
+        	if (unprocessedData != undefined){
+        		if (unprocessedData.id != undefined){
+        			success = true;
+        		}
+        		else if (unprocessedData.objects.length > 0){
+        			success = true;
+        		}
+        	}
             this._state.responseStatus = {
                 // data provided by the api
                 responseCode: unprocessedData.responseCode,
                 requestParameters: unprocessedData.requestParameters,
                 errorCode: unprocessedData.errorCode,
                 errorDescription: unprocessedData.errorDescription,
-
-                // evaluated measure of success
-                success: (unprocessedData.responseCode == 'OK')
+                success: success
             };
 
             // ENHANCEMENT: upon a response code of "ERROR", implement

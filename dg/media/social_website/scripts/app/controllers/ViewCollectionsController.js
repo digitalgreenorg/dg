@@ -93,6 +93,9 @@ define(function(require) {
             state.userID = jQuery('body').data('userId');
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
+            this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID, this._onVideoLikedCallback.bind(this));
+            state.videoLiked = this._state.videoLiked;
+            
             state.updateVideoWatchedTimeInterval = undefined;
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
         },
@@ -245,7 +248,7 @@ define(function(require) {
                 throw new Error('ViewCollectionsController._onVideoLikeButtonClick: videoUID and userID are required parameters');
             }
 
-            this._references.videoLikeDataFeed.fetch(videoUID, userID, this._onVideoLikedCallback.bind(this));
+            this._references.videoLikeDataFeed.fetch(videoUID, userID, this._onVideoLikedCallback.bind(this), 'POST');
         },
 
         _onCommentLikeButtonClick: function(e) {
