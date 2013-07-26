@@ -8,8 +8,8 @@ from PIL import Image
 import urllib
 import urllib2
 
-from dg.settings import APP_ID_FACEBOOK, APP_SECRET_FACEBOOK, PROJECT_PATH, STATIC_URL
-from social_website.generate_activities import ActivityType
+from dg.settings import FACEBOOK_APP_ID, FACEBOOK_API_SECRET, PROJECT_PATH, STATIC_URL
+from social_website.scripts.generate_activities import ActivityType
 from social_website.models import Activity, ImageSpec
 
 
@@ -130,7 +130,7 @@ def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altStrin
 
 
 def get_facebook_feed():
-    TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + APP_ID_FACEBOOK + '&client_secret=' + APP_SECRET_FACEBOOK
+    TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + FACEBOOK_APP_ID + '&client_secret=' + FACEBOOK_API_SECRET
     response = urllib2.urlopen(TOKEN_URL)
     TOKEN = response.read()
     RESPONSE_URL = 'https://graph.facebook.com/digitalgreenorg/feed?' + TOKEN
