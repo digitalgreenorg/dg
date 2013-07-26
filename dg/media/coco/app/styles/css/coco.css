@@ -64,7 +64,8 @@
 }
 
 #coco_nav_add {
-    width:18px;
+    width:10%;
+	padding-right:15%;
 }
 
 #helptext{
@@ -98,6 +99,12 @@
 	font-size: 12px;
 	cursor: pointer;
 	margin-top:10px;
+}
+
+#faq{
+	clear: both;
+	padding-top: 40px;
+	font-size: 11px;
 }
 
 div.dataTables_length label {

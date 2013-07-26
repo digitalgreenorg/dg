@@ -185,7 +185,7 @@ class OfflineUser(CocoModel):
     user = models.ForeignKey(User)
     offline_pk_id = PositiveBigIntegerField()
     objects = OfflineUserManager()
-
+    
 class RegionTest(CocoModel):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)

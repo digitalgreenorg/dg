@@ -12,7 +12,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        xmldoc = minidom.parse(os.path.join(PROJECT_PATH, 'media\Output\press.xml'))
+        xmldoc = minidom.parse(os.path.join(PROJECT_PATH, 'media/Output/press.xml'))
         itemlist = xmldoc.getElementsByTagName('TEAM')
         for item in itemlist:
             source = item.getElementsByTagName('TITLE')[0].childNodes[0].nodeValue

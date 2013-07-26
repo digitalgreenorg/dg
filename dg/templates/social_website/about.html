@@ -1,92 +1,72 @@
 {% include "includes/header.html" %}
         {% include "includes/partials/mainCarousel.html" %}
         
-        <section id="about" role="main" class="about-bg">
+        <section id="about" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
                     <div class="media layout-vr-xlg">
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">We drive change by building on the social networks of the world’s most vulnerable
-                        </h3>
                         <div class="imgExt img-marginLg-lt img-effects img-size-lg">
-                            <img src="http://placehold.it/463x283" alt="" />
+                            <img src="{{STATIC_URL}}social_website/content/about.jpg" alt="" />
                         </div>
                         <div class='bd'>
-                            <p class="copy copy-para">We use an innovative digital platform that brings together technology with global development efforts to enable everyone to live a life of dignity.
-                            </p>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our mission is to transform the lives of rural communities around the world by leveraging technology with social organization.
+                            </h3>
                             <p class="copy copy-para"> Learn more about our organization
                             </p>
-                            <ul class="link-list">
-                                <li><a href="#mission">Our mission and values</a></li>
-                                <li><a href="{% url ourwork %}">Our work</a></li>
-                                <li><a href="#keyfacts">Key facts</a></li>
-                                <li><a href="{% comment %}{% url resources %}#annualreport10-11{% endcomment %}">Annual report</a></li>
-                                <li><a href="{% url connect %}">Our partners</a></li>
-                                <li><a href="{% url board %}">Our board</a></li>
-                                <li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
-                                <li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
-                                <li><a href="{% comment %}{% url resources %}{% endcomment %}">Resources</a></li>
-                                <li><a href="{% url contact %}">Contact Us</a></li>
-                                <li><a href="{% comment %}{% url careers %}{% endcomment %}">Join Us</a></li>
-                            </ul>
+                            <div class="grid-col grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#values">Our values</a></li>
+                                    <li><a href="{% url ourwork %}">Our work</a></li>
+                                    <li><a href="{% url connect %}">Our partners</a></li>
+                                    <li><a href="{% url board %}">Our board</a></li>
+                                    <li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
+                                </ul>
+                            </div>
+                            <div class="grid-rt grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#keyfacts">Key facts</a></li>
+                                    <li><a href="{% url resources %}#annualreport10-11">Annual report</a></li>
+                                    <li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
+                                    <li><a href="{% url resources %}">Resources</a></li>
+                                    <li><a href="{% url contact %}">Contact Us</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-		
-        <section id="mission" class='about-bg about-bg-white'>
+
+        <section id="values" class='about-bg'>
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Mission and Values</h2>    
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Values</h2>    
                     <div class='layout-vr-xlg'>
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our Mission</h3>
-                        <p class="copy copy-para">To transform the lives of rural communities around the world by leveraging technology with social organization
-                        </p>
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our Values</h3>
                         <ul class="copy bullet-list">
-                            <li>Humility: We imbue humility in all that we do. We maintain our pride about who we are, about our achievements, about our worth – but without arrogance. It's about a quiet confidence without the need for a meretricious selling of our wares. We are content and allow others discover the layers of our talents without having to boast about them. It's a lack of arrogance, not a lack of aggressiveness in the pursuit of achievement.
+                            <li>Humility: We imbue humility in all that we do, while maintaining our pride about who we are, our achievements, and our worth.
                             </li>
-                            <li>Excellence: All of our work is guided by the firm conviction that success can only be achieved through constantly raising the bar and respecting complete ownership.  We embody these values in all of our projects through responsible risk-taking and uncompromising standards of excellence. At the same time, we anticipate that we will not succeed in every undertaking, and we pledge to learn from any failure we may encounter.
+                            <li>Excellence: We are guided by the firm conviction that success can only be achieved by constantly raising the bar and respecting complete ownership.
                             </li>
-                            <li>Accountability: Out of respect to our staff, donors, partners, and those affected by our work, we will use our resources in an economical, responsible way and ask our partners to do the same.  We will proactively discuss our intentions, accomplishments, and failures.  Where issues are complicated or liable to be misunderstood, we will treat these issues as challenges to be overcome, not as barriers to transparency. We take personal responsibility for our commitments, actions and results. We accept ownership, and accept the consequences, of our decisions.
+                            <li>Accountability: We take responsibility and ownership for our commitments, actions and results.
                             </li>
-                            <li>Empathy: We respect the dignity of each individual, and recognize each person‟s merit and contribution to our mission.  We strive for open and honest communication, constructive conflict resolution, and just and ethical management policies. We are committed to developing a civil, collegial, supportive work environment, where employees develop and share their skills and, are free to make suggestions. We admire diversity within our organization. We will strive to recruit and retain people from a wide variety of backgrounds, experience, and countries.  We seek and value contributions from and partnerships with the groups, communities, and countries and we strive to have these voices represented in every aspect of our work.
+                            <li>Empathy: We respect the dignity of each individual, and recognize each person’s merit and contribution to our mission.
                             </li>
-                            <li>Integrity: We demonstrate honesty, respect for others and trustworthiness in all our work. We demonstrate ethical behavior in all of our interactions with our stakeholders. We are passionate about what we do and are open, honest and trustworthy in dealing with customers, suppliers, co-workers and the communities where we have an impact.
+                            <li>Integrity: We demonstrate honesty, respect for others and trustworthiness in our work and interactions with stakeholders, including the communities we engage with.
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
-		
-        <section id="keyfacts" class="about-bg">
+        
+        <section id="keyfacts" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Key Facts</h2>
                     <div class="layout-vr-xlg">
                         <iframe src="http://www.scribd.com/embeds/154431570/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless>
                         </iframe>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-
-        <section id='annualreports' class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Reports</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="imgExt img-marginLg-lt img-effects img-size-lg">
-                            <img src="http://placehold.it/463x283" alt="" />
-                        </div>
-                        <div>
-                            <ul class="link-list">
-                                <li><a href="{% comment %}{% url resources %}#annualreport10-11{% endcomment %}">Annual Report 2010-2011</a></li>
-                                <li><a href="{% comment %}{% url resources %}#annualreport09-10{% endcomment %}">Annual Report 2009-2010</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->

@@ -57,7 +57,6 @@ define([
         Stores the start time for download
         */    
         initialize_download: function(){
-            var dfd = new $.Deferred();
             //Django complains when Z is present in timestamp bcoz timezone capab is off
             this.start_time = new Date().toJSON().replace("Z", "");
             if(!this.internet_connected())
@@ -78,7 +77,15 @@ define([
             this.network_requests = [];
             /////////////////////////////////////////
             
-            // fetching the full_download_info collection to be used for resuming download
+            var already_downloaded_chunks_dfd = this.get_already_downloaded_chunks();
+            var start_time_dfd = this.fetch_or_set_download_start_time();
+            
+            return $.when.apply($, [already_downloaded_chunks_dfd, start_time_dfd]);
+        },
+
+        // fetching the full_download_info collection to be used for resuming download
+        get_already_downloaded_chunks: function(){
+            var dfd = new $.Deferred();
             var that = this;
             Offline.fetch_collection("full_download_info")
                 .done(function(coll){
@@ -88,8 +95,34 @@ define([
                 .fail(function(error){
                     dfd.reject(error);
                 });
-            //////////////////////////////////////////    
-            return dfd;
+            return dfd; 
+           
+        },
+
+        //if download resumes then get the original start time other wise record current time as start time
+        fetch_or_set_download_start_time: function(){
+            var dfd = new $.Deferred();
+            var that = this;
+            Offline.fetch_object("meta_data", "key", "last_full_download_start")
+                .fail(function(model, error){
+                    that.set_timestamp(model, that.start_time)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
+                })
+                .done(function(model){
+                    that.start_time = model.get("timestamp");    
+                    dfd.resolve();
+                });
+            return dfd;    
+        },
+
+        set_timestamp: function(model, timestamp){
+            model.set('timestamp',timestamp);
+            return model.save();    //returns a promise
         },
         
         remove_ui: function(){
@@ -107,8 +140,15 @@ define([
                         .done(function(){
                             that.finish_download()
                                 .done(function(){
-                                    that.remove_ui();
-                                    that.full_download_dfd.resolve();
+                                    that.call_after_download()
+                                        .done(function(){
+                                            that.remove_ui();
+                                            that.full_download_dfd.resolve();
+                                        })
+                                        .fail(function(error){
+                                            that.remove_ui();
+                                            that.full_download_dfd.reject(error);
+                                        });
                                 })
                                 .fail(function(error){
                                     that.remove_ui();
@@ -126,6 +166,13 @@ define([
                 });
                 
             return this.full_download_dfd;    
+        },
+        
+        call_after_download: function(){
+            if(all_configs.misc.afterFullDownload)
+                return all_configs.misc.afterFullDownload(this.start_time, this.download_status) //must return a promise
+            else
+                return new $.Deferred().resolve();
         },
         
         /* Starts download for all tables defined in config object. Rejects when any of them fails, Resolves when all are 
@@ -414,24 +461,24 @@ define([
 			
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
-                    set_timestamp(model);
+                    that.set_timestamp(model, that.start_time)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
                 })
                 .fail(function(model, error){
-                    set_timestamp(model);
+                    that.set_timestamp(model, that.start_time)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
                 });
-            
-            function set_timestamp(model){
-                model.set('timestamp',that.start_time);
-                model.save(null,{
-                    success: function(){
-                        dfd.resolve();
-                    },
-                    error: function(model,error){
-                        dfd.reject("error updating last_full_download in meta_data objectStore");
-                    }
-                });
-            };
-            
+                        
             return dfd;
         },
 
