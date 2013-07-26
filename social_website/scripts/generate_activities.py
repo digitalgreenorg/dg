@@ -1,11 +1,9 @@
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-
 from django.db.models import Max
-
 import dashboard.models
-from social_website.models import Activity, ImageSpec, Milestone, Partner, Video
+from social_website.models import Activity, Collection, ImageSpec, Milestone, Partner, Video
 
 
 class ActivityType:
@@ -30,7 +28,7 @@ def add_collection(collection):
     textContent = "Watch our new collection on %s with %s videos, produced in %s, %s." % (collection_name, video_number, state_name, country_name)
     date = collection.videos.aggregate(Max('date'))['date__max']
     newsFeed = 0
-    titleURL = "".join(["/social/collections/?id=", str(collection.uid), "&video=1"])
+    titleURL = collection.get_absolute_url()
     activity_type = ActivityType.new_collection
     activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, titleURL=titleURL, type=activity_type)
     activity.save()
@@ -68,7 +66,7 @@ def add_video_collection(video_collection):
     textContent = "We've added a new video to %s titled %s." % (collection_name, video_title)
     date = video.date
     newsFeed = 0
-    titleURL = "".join(["/social/collections/?id=", str(collection.uid), "&video=1"])
+    titleURL = collection.get_absolute_url()
     activity_type = ActivityType.new_video_collection
     activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, video_id = video.id, titleURL=titleURL, type=activity_type)
     activity.save()
@@ -80,7 +78,7 @@ def add_village(village, partner):
         title = partner.name
         date = screenings[0].date
         newsFeed = 0
-        titleURL = "".join(['/social/connect/?id=', str(partner.uid)])
+        titleURL = partner.get_absolute_url()
         activity_type = ActivityType.new_village
         videos = screenings[0].videoes_screened.all()
         video_title = videos[0].title
@@ -140,7 +138,7 @@ def add_milestone(partner):
 
     #village milestone
     villages = dashboard.models.Village.objects.exclude(start_date__isnull=True).filter(user_created__cocouser__partner_id=partner.coco_id).order_by('start_date')
-    dashboard_partner_states = set(villages.values_list('block__state__state_name', flat=True))
+    dashboard_partner_states = list(set(villages.values_list('block__district__state__state_name', flat=True)))
     next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
     while (len(villages) >= next_village_milestone):
         village = villages[next_village_milestone - 1]
@@ -152,7 +150,7 @@ def add_milestone(partner):
             textContent = "We have reached %s+ villages in the state of %s in partnership with Digital Green." % (next_village_milestone, dashboard_partner_states[0])
         date = village.start_date
         newsFeed = 0
-        titleURL = "".join(['/social/connect/?id=', str(partner.uid)])
+        titleURL = partner.get_absolute_url()
         activity_type = ActivityType.village_milestone
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
@@ -173,7 +171,7 @@ def add_milestone(partner):
                                                                                  screenings[0].date.strftime('%d %B %Y'))
         date = screening.date
         newsFeed = 0
-        titleURL = "".join(['/social/connect/?id=', str(partner.uid)])
+        titleURL = partner.get_absolute_url()
         activity_type = ActivityType.screening_milestone
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
@@ -193,7 +191,7 @@ def add_milestone(partner):
                                                                           viewer.screening.village.block.district.state.state_name)
         date = viewer.screening.date
         newsFeed = 0
-        titleURL = "".join(['/social/connect/?id=', str(partner.uid)])
+        titleURL = partner.get_absolute_url()
         activity_type = ActivityType.viewer_milestone
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
@@ -201,3 +199,23 @@ def add_milestone(partner):
         milestone.viewerNumber = viewerNumber
         milestone.save()
         next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
+
+# Do this only if making afresh, NOT IN CRON !!
+Activity.objects.all().delete()
+Milestone.objects.all().delete()
+    
+for partner in Partner.objects.all():
+    #Initial entry for milestone table
+    milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
+    milestone_object.save()
+    #Adding Village Added Activities for each partner
+    for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
+        add_village(village, partner)
+    #Adding Collection Added Activities for each partner
+    for collection in Collection.objects.filter(partner=partner):
+        add_collection(collection)
+    #Adding Video Added Activities for each partner
+    for video in Video.objects.filter(partner=partner):
+        add_video(video)
+    #Adding Milestone Activities for each partner
+    add_milestone(partner)
