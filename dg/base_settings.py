@@ -56,12 +56,12 @@ STATICFILES_DIRS = (
 )
 
 MIDDLEWARE_CLASSES = (
-	'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware'
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'coco',
     'social_website',
     'communications',
+    'human_resources',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript

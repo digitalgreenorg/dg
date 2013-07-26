@@ -1,0 +1,228 @@
+{% include "includes/header.html" %}    
+        
+        <section id="team" role="main" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Executive Leadership Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.team == "Executive Leadership Team" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Technology Team, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.team == "Technology Team" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Program Team, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.team == "Program Team" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Support Team, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.team == "Support Team" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Bangalore Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.location == "Bangalore" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Bhopal Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.location == "Bhopal" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Bhubaneswar Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.location == "Bhubaneswar" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Hyderabad Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.location == "Hyderabad" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Patna Team</h2>
+                    <div class="media  ">
+                        {% for mem in member_list %}
+							{% if mem.location == "Patna" %}
+								<div class="grid grid-col grid-size1of3 layout-vr-md">
+									<div class="grid-pad-lt-sm">
+										<div class="img img-effects img-size-sq">
+											<img src={{mem.image}} alt={{mem.name}} title={{mem.name}}>
+										</div>
+										<div class="copy">
+											<p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+											<p>{{mem.designation}}</p>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+{% include "includes/footer.html" %}
