@@ -36,7 +36,25 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
-            return unprocessedData;
+            if (unprocessedData.objects == undefined) {
+                if (unprocessedData.id != undefined) {
+                    return [{
+                      'liked': true
+                    }];
+                }
+                return [{
+                  'liked': false
+                }];
+            }
+            var likedEntries = unprocessedData.objects;
+            if (likedEntries.length > 0) {
+                return [{
+                  'liked': true
+                }];
+            }
+            return [{
+              'liked': false
+            }];
         }
     });
 

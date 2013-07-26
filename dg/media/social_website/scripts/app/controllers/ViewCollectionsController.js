@@ -77,6 +77,9 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
+            
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.videoLikeDataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
 
             boundFunctions.onLikeButtonClick = this._onVideoLikeButtonClick.bind(this);
             references.$likeButton.on('click', boundFunctions.onLikeButtonClick);
@@ -100,7 +103,7 @@ define(function(require) {
             state.userID = jQuery('body').data('userId');
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
-            this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID, this._onVideoLikedCallback.bind(this));
+            this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
             state.videoLiked = this._state.videoLiked;
             
             state.updateVideoWatchedTimeInterval = undefined;
@@ -238,7 +241,16 @@ define(function(require) {
         _getComments: function() {
             this._references.commentsFeedViewController.getComments();
         },
+        
+        
 
+        _onDataProcessed: function(likedEntries) {
+            this._state.videoLiked = likedEntries[0].liked;
+            if (this._state.videoLiked) {
+                this._references.$likeButton.addClass('liked');
+            }
+        },
+        
         _onVideoLikeButtonClick: function(e) {
             e.preventDefault();
 
@@ -255,7 +267,7 @@ define(function(require) {
                 throw new Error('ViewCollectionsController._onVideoLikeButtonClick: videoUID and userID are required parameters');
             }
 
-            this._references.videoLikeDataFeed.fetch(videoUID, userID, this._onVideoLikedCallback.bind(this), 'POST');
+            this._references.videoLikeDataFeed.fetch(videoUID, userID, function(){}, 'POST');
         },
 
         _onCommentButtonClick: function(e) {
