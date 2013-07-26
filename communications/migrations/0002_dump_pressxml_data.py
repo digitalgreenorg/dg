@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import unicodedata
+from communications.models import Article
+from django.db import models
 from south.db import db
 from south.v2 import DataMigration
-from django.db import models
-from xml.dom import minidom
-from communications.models import Article
 from time import strptime
-import unicodedata
+from xml.dom import minidom
 
 class Migration(DataMigration):
 
@@ -24,12 +24,11 @@ class Migration(DataMigration):
             day = format[0]
             month=format[1]
             year=format[2]            
-            month_no1=strptime(month, '%b').tm_mon
-            year1 = unicodedata.normalize('NFKD', year).encode('ascii','ignore')
-            day1 = unicodedata.normalize('NFKD', day).encode('ascii','ignore')            
-            pub_date2="%s-%s-%s" % (year1,unicode(month_no1),day1)            
+            month_no=strptime(month, '%b').tm_mon
+            pub_date="%s-%s-%s" % (year,unicode(month_no),day)            
             content = item.getElementsByTagName('DESC')[0].childNodes[0].nodeValue
-            article = Article(title=title,pub_date=pub_date2,source=source,location=location,content=content,link=link)
+            location = item.getElementsByTagName('PLACE')[0].childNodes[0].nodeValue
+            article = Article(title=title,pub_date=pub_date,source=source,location=location,content=content,link=link)
             article.save()
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
 
