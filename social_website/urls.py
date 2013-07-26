@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     # TODO: There are no names used below
     url(r'^reports/1/field$', direct_to_template,{'template': 'field-developments-09.html'}),
     url(r'^reports/1/learning$', direct_to_template,{'template': 'learnings-09.html'}),
-    url(r'^press/$', media_view),
+    url(r'^press/$', media_view, name='press'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
 )
