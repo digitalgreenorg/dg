@@ -1344,15 +1344,16 @@ def get_animators_online(request, offset, limit):
     else:
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        count = Animator.objects.filter(village__in = villages).distinct().count()
-        animators = Animator.objects.filter(village__in = villages).distinct()
+        districts = get_user_districts(request)
+        count = Animator.objects.filter(district__in = districts).distinct().count()
+        animators = Animator.objects.filter(district__in = districts).distinct()
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
             partners = Partners.objects.filter(partner_name__icontains = searchText)
             count = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).count()
             animators = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).distinct().order_by("name")[offset:limit]
         else:
-            animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+            animators = Animator.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
         if(animators):
             json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
         else:
