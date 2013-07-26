@@ -57,7 +57,7 @@ def partner_view(request, partner):
             'loggedIn':False},
         'partner': partner,
         }
-    return render_to_response('profile.html' , context, context_instance = RequestContext(request))
+    return render_to_response('profile.html', context, context_instance = RequestContext(request))
 
 def search_view(request):
     searchString = request.GET.get('searchString', None)
