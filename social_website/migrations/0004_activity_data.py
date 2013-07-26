@@ -19,8 +19,8 @@ class Migration(DataMigration):
             milestone_object.save()
 
             #Adding Village Added Activities for each partner
-            for village in orm['dashboard.Village'].objects.exclude(start_date__isnull = True).filter(block__district__partner__id = partner.coco_id).order_by('-start_date')[:10]:
-                add_village(village)
+            for village in orm['dashboard.Village'].objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
+                add_village(village, partner)
             #Adding Collection Added Activities for each partner
             for collection in orm['social_website.Collection'].objects.filter(partner=partner):
                 add_collection(collection)
