@@ -5,13 +5,13 @@ from django.core.urlresolvers import reverse
 #===============================================================================
 class Partner(models.Model):
     uid = models.AutoField(primary_key=True)
-    coco_id = models.CharField(max_length=20)
+    coco_id = models.CharField(max_length=20, default='')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     joinDate = models.DateField()
-    logoURL = models.ImageField(upload_to='partner')
-    websiteURL = models.URLField(max_length=100, blank=True)
+    logoURL = models.ImageField(upload_to='partner', null=True, blank=True)
+    websiteURL = models.URLField(max_length=100, default='')
     collection_count = models.PositiveIntegerField(default=0)
     video_count = models.PositiveIntegerField(default=0)
     views = models.BigIntegerField(default=0)
@@ -26,7 +26,7 @@ class Video(models.Model):
     title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     thumbnailURL16by9 = models.URLField(max_length=200)
-    description = models.TextField(blank=True)
+    description = models.TextField(default='')
     youtubeID = models.CharField(max_length=20)
     duration = models.IntegerField(null=True, blank=True)
     date = models.DateField()
@@ -58,9 +58,9 @@ class PersonVideoRecord(models.Model):
     uid = models.AutoField(primary_key=True)
     personID = models.CharField(max_length=20)
     videoID = models.CharField(max_length=20)
-    views = models.PositiveSmallIntegerField(default = 0)
+    views = models.PositiveSmallIntegerField(default=0)
     like = models.BooleanField(default=False)
-    adopted = models.PositiveSmallIntegerField(default = 0)
+    adopted = models.PositiveSmallIntegerField(default=0)
     
 class Comment(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -68,8 +68,8 @@ class Comment(models.Model):
     text = models.TextField()
     isOnline = models.BooleanField()
     video = models.ForeignKey(Video)
-    person = models.ForeignKey(Person)
-
+    person = models.ForeignKey(Person, null=True, blank=True)
+    
 #===============================================================================
 # Website Models
 #===============================================================================
@@ -129,3 +129,4 @@ class Milestone(models.Model):
     villageNumber = models.IntegerField()
     screeningNumber = models.IntegerField()
     viewerNumber = models.IntegerField()
+    
