@@ -79,9 +79,9 @@ def get_collections_from_elasticsearch(request):
     partner_uid = params.get('uid', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"multi_match" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
-                                        "query" : searchString
-                                        }
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+                                "like_text" : searchString
+                                }
                        }
     elif partner_uid:
         partner_name = Partner.objects.get(uid = partner_uid).name
