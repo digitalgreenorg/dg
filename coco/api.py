@@ -211,12 +211,19 @@ class VillageLevelAuthorization(Authorization):
 
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):
-        districts = get_user_districts(bundle.request)
-        screened_vids = list(Screening.objects.filter(village__block__district__in=districts).distinct().values_list('videoes_screened__id',flat=True))
-        produced_vids = list(Video.objects.filter(village__block__district__in = districts).values_list('id', flat=True))
-        #doing set of two lists avoid merging duplicates in the final merged list
-        vids = list(set(screened_vids + produced_vids))
-        return object_list.filter(id__in= vids)
+        ###Videos produced by partner with in the same state
+        print bundle.request.user.id
+        coco_user = CocoUser.objects.get(user_id=bundle.request.user.id)
+        print coco_user
+        user_states = State.objects.filter(district__block__village__in = coco_user.get_villages()).distinct().values_list('id', flat=True)
+        ###FIRST GET VIDEOS PRODUCED IN STATE
+        videos = Video.objects.filter(village__block__district__state__in = user_states)
+        ###FILTER IT FOR SAME PARTNER.
+        users_with_same_partner = CocoUser.objects.filter(partner_id = coco_user.partner_id).values_list('user_id', flat=True)
+        videos_with_user = videos.exclude(user_created = None).filter(user_created_id__in = users_with_same_partner).values_list('id', flat = True)
+        districts_assigned_to_partner = District.objects.filter(partner_id = coco_user.partner_id, state__in = user_states).values_list('id', flat = True)
+        videos_with_out_user = videos.filter(user_created = None, village__block__district__in = districts_assigned_to_partner).values_list('id', flat=True)
+        return object_list.filter(id__in= set(list(videos_with_user) + list(videos_with_out_user)))
 
 class BaseResource(ModelResource):
     
