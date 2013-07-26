@@ -177,23 +177,20 @@ define(function(require) {
             switch (newState) {
                 // playback completed/stopped
                 case 0:
-                    // playback paused:
                     var now_playing_video = jQuery('.now-playing').closest('li');
                     var next_video = now_playing_video.next();
                     if (next_video.length == 0) {
                         /* End of current slide or this is the last video altogether */
                         var next_slide = now_playing_video.closest('ul').closest('li').next();
                         if (next_slide.length == 0) {
-                            /* Last video *//* Go back to the first video */
-                            next_video = now_playing_video.closest('ul').closest('li').closest('ul:first-child');
+                            /* Last video - go back to the first video */
+                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
                         }
-                        else {
-                            next_video = next_slide.find('ul > li:first-child');
-                        }
+                        next_video = next_slide.find('ul > li:first-child');
                     }
                     window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                // stop the interval and manually send an update
                 case 2:
-                    // stop the interval and manually send an update
                     this._stopUpdateInterval();
                     this._updateVideoWatchedTime();
                     break;
