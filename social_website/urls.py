@@ -1,10 +1,10 @@
+from communications.views import media_view
+from django.conf import settings
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
-from views import social_home, collection_view, partner_view, searchFilters, search_view, featuredCollection
 from elastic_search import get_collections_from_elasticsearch, searchCompletions
-from django.conf import settings
-from social_website.api import VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
-from communications.views import media_view
+from social_website.api import  ActivityResource, CollectionResource,  CommentResource, PartnerFarmerResource, PartnerResource, PersonResource, VideoResource 
+from views import  collection_view, featuredCollection, partner_view, searchFilters, search_view, social_home
 
 video_resource = VideoResource()
 farmer_resource = PersonResource()
