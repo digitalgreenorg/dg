@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'path',
     'fbconnect',
     'tastypie',
+    'coco',
     'social_website',
 )
 
