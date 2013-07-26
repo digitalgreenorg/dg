@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.core.urlresolvers import reverse
@@ -66,13 +68,7 @@ class PersonVideoRecord(models.Model):
     like = models.BooleanField(default=False)
     adopted = models.PositiveSmallIntegerField(default = 0)
     
-class Comment(models.Model):
-    uid = models.AutoField(primary_key=True)
-    date = models.DateField()
-    text = models.TextField()
-    isOnline = models.BooleanField()
-    video = models.ForeignKey(Video)
-    person = models.ForeignKey(Person)
+
 
 #===============================================================================
 # Website Models
@@ -157,6 +153,15 @@ class UserProfile(models.Model):
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
+
+class Comment(models.Model):
+    uid = models.AutoField(primary_key=True)
+    date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
+    text = models.TextField()
+    isOnline = models.BooleanField()
+    video = models.ForeignKey(Video)
+    person = models.ForeignKey(Person, null=True, blank=True)
+    user = models.ForeignKey(UserProfile, null=True, blank=True)
 
 class VideoLike(models.Model):
     video = models.ForeignKey(Video)

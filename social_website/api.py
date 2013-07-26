@@ -1,3 +1,5 @@
+import datetime
+
 from tastypie.resources import ModelResource
 from tastypie import fields
 from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoLike
@@ -119,19 +121,6 @@ class ActivityResource(BaseResource):
                    'newsFeed':'exact',
                    }
 
-class CommentResource(BaseResource):
-    person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
-    video = fields.ForeignKey(VideoResource, 'video', null=True)
-    #user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
-    #inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
-    #in videoID out Comment
-    #in activityID out Comment
-    class Meta:
-        queryset = Comment.objects.order_by('-date').all()
-        resource_name = 'comment'
-        filtering={
-                   'video':ALL_WITH_RELATIONS,
-                   }
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     print bundle.data
@@ -161,4 +150,29 @@ class VideoLikeResource(ModelResource):
                    'video':ALL_WITH_RELATIONS,
                    'user' :ALL_WITH_RELATIONS
                    }
-        
+class CommentResource(BaseResource):
+    person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
+    video = fields.ForeignKey(VideoResource, 'video', null=True)
+    user = fields.ForeignKey(UserResource, 'user', null=True)
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+    hydrate_user = partial(dict_to_foreign_uri, field_name='user', resource_name='user')
+    def hydrate_isOnline(self, bundle):
+        print 'there'
+        bundle.data['isOnline'] = True
+        return bundle
+    #===========================================================================
+    # inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
+    # in videoID out Comment
+    # in activityID out Comment
+    #===========================================================================
+    class Meta:
+        always_return_data = True
+        queryset = Comment.objects.order_by('-date').all()
+        resource_name = 'comment'
+        authentication = Authentication()
+        authorization = Authorization()
+        filtering={
+                   'video':ALL_WITH_RELATIONS,
+                   'text':ALL,
+                   'user':ALL_WITH_RELATIONS,
+                   }

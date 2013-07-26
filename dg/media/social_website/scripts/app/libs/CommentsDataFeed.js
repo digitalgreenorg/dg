@@ -34,7 +34,7 @@ define(function(require) {
 
             this.addInputParam('offset', false, 0);
             this.addInputParam('limit', false, 10);
-            this.addInputParam('video__uid', false,jQuery('.featured-ft-videoDetails').attr('data-video-uid'));
+            this.addInputParam('video', false,jQuery('.featured-ft-videoDetails').attr('data-video-uid'));
         },
 
         fetch: function(page, countPerPage) {
@@ -48,7 +48,7 @@ define(function(require) {
 
             this.setInputParam('offset', page, true);
             this.setInputParam('limit', countPerPage, true);
-            this.setInputParam('video__uid', jQuery('.featured-ft-videoDetails').attr('data-video-uid') , true);
+            this.setInputParam('video', jQuery('.featured-ft-videoDetails').attr('data-video-uid') , true);
 
             // perform the fetch
             this.base();
