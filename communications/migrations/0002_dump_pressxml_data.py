@@ -23,14 +23,11 @@ class Migration(DataMigration):
             format=str.split(' ')
             day = format[0]
             month=format[1]
-            year=format[2]
-            print type(year), year, type(month), month, type(day), day
+            year=format[2]            
             month_no1=strptime(month, '%b').tm_mon
             year1 = unicodedata.normalize('NFKD', year).encode('ascii','ignore')
-            day1 = unicodedata.normalize('NFKD', day).encode('ascii','ignore')
-            print type(year), year, type(month_no1), month_no1, type(day), day
-            pub_date2="%s-%s-%s" % (year1,unicode(month_no1),day1)
-            print type(pub_date2)
+            day1 = unicodedata.normalize('NFKD', day).encode('ascii','ignore')            
+            pub_date2="%s-%s-%s" % (year1,unicode(month_no1),day1)            
             content = item.getElementsByTagName('DESC')[0].childNodes[0].nodeValue
             article = Article(title=title,pub_date=pub_date2,source=source,location=location,content=content,link=link)
             article.save()
