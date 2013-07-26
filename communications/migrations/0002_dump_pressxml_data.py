@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
-import unicodedata
+import datetime, unicodedata, os
+from dg.base_settings import PROJECT_PATH
 from communications.models import Article
 from django.db import models
 from south.db import db
@@ -12,7 +12,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        xmldoc = minidom.parse('C:\Users\chandu\Documents\dg\dg\media\Output\press.xml')
+        xmldoc = minidom.parse(os.path.join(PROJECT_PATH, 'media\Output\press.xml'))
         itemlist = xmldoc.getElementsByTagName('TEAM')
         for item in itemlist:
             source = item.getElementsByTagName('TITLE')[0].childNodes[0].nodeValue
