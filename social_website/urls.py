@@ -28,4 +28,5 @@ urlpatterns = patterns('',
     url(r'^press/$', media_view, name='press'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
+	url(r'^connect/$', direct_to_template, {'template': 'connect.html', 'extra_context': {'header': {'jsController':'Connect', 'currentPage':'Connect', 'loggedIn':False}}}, name='connect'),
 )
