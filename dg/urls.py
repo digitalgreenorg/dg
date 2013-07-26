@@ -10,12 +10,14 @@ from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
 import website_archive_urls
+from website_admin import website_admin
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^websiteadmin/', include(website_admin.urls)),
     (r'^', include(social_website.urls)),
     (r'^social/', include(social_website.api_urls)),
     (r'^archive/', include(website_archive_urls)),
