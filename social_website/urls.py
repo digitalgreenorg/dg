@@ -4,6 +4,7 @@ from views import social_home, collection_view, partner_view, searchFilters, sea
 from elastic_search import get_collections_from_elasticsearch, searchCompletions
 from django.conf import settings
 from social_website.api import VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
+from communications.views import media_view
 
 video_resource = VideoResource()
 farmer_resource = PersonResource()
@@ -53,6 +54,7 @@ urlpatterns = patterns('',
     url(r'^reports/1/field$', direct_to_template,{'template': 'field-developments-09.html'}),
     url(r'^reports/1/learning$', direct_to_template,{'template': 'learnings-09.html'}),
     url(r'^contact/$', direct_to_template, {'template': 'contact.html', 'extra_context': {'header': {'jsController':'Contact', 'currentPage':'Contact', 'loggedIn':False}}}, name='contact'),
+    url(r'^press/$', media_view),
     url(r'^board/$', direct_to_template, {'template': 'board.html', 'extra_context': {'header': {'jsController':'Board', 'currentPage':'Board', 'loggedIn':False}}}, name='board'),
     url(r'^career/$', direct_to_template, {'template': 'career.html', 'extra_context': {'header': {'jsController':'Career', 'currentPage':'Career', 'loggedIn':False}}}, name='career'),
     (r'^$', social_home),
