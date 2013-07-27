@@ -73,7 +73,7 @@ def read_data(entry):
                 # TODO: what if there is more than one _s??
                 # Can we upload to s3 here
                 image_name = ''.join([facebookID, ".", picture.split('.')[-1]])
-                image_url = ''.join([STATIC_URL, "social_website/uploads/facebook/", image_name])
+                image_url = ''.join([MEDIA_URL, "facebook/", image_name])
                 # TODO: don't use explicit path here.
                 create_thumbnail(picture, image_name, 170, 112)
                 altString = "Image from Facebook"
@@ -111,7 +111,7 @@ def read_data(entry):
     date = entry['created_time'].split('T')[0]
     avatarURL = "".join([STATIC_URL, 'assets\\images\\favicon-white.png'])
     newsFeed = 1
-    activity_type = ActivityType.facebook
+    activity_type = 0 #ActivityType.facebook
     titleURL = 'https://www.facebook.com/digitalgreenorg/posts/' + facebookID
     store_data(title, date, textContent, avatarURL, newsFeed, image_url, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL)
     return False
