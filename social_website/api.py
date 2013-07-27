@@ -150,6 +150,7 @@ class VideoLikeResource(ModelResource):
                    'video':ALL_WITH_RELATIONS,
                    'user' :ALL_WITH_RELATIONS
                    }
+
 class CommentResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
     video = fields.ForeignKey(VideoResource, 'video', null=True)

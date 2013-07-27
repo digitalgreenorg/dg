@@ -160,7 +160,7 @@ define(function(require) {
             var len = cachesToClearOnChange.length;
             for (; i < len; i++) {
                 cacheArray.push(cachesToClearOnChange[i]);
-            }
+            }    
 
         },
         
@@ -228,7 +228,7 @@ define(function(require) {
         },
 
         _fetch: function(overrideData, customCallback, type) {
-        	var content_type;
+            var content_type;
             var state = this._state;
 
             state.fetchTimeout = null;
@@ -246,12 +246,12 @@ define(function(require) {
             var inputParamData = this._getAjaxInputParamData();
 
             if (type=='POST'){
-        		content_type = 'application/json';
-        		inputParamData = JSON.stringify(inputParamData)
-        	}
+                content_type = 'application/json';
+                inputParamData = JSON.stringify(inputParamData)
+            }
             else{
-            	type = 'GET'
-            	content_type = 'application/x-www-form-urlencoded';
+                type = 'GET'
+                content_type = 'application/x-www-form-urlencoded';
             }
             
             Util.Object.extend(inputParamData, overrideData);

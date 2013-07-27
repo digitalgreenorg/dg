@@ -51,8 +51,6 @@ define(function(require) {
             this.setInputParam('video', jQuery('.featured-ft-videoDetails').attr('data-video-uid') , true);
 
             // perform the fetch
-            this.base();
-            
             this.base(null, customCallback);
         },
 
