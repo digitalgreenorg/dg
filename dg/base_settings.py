@@ -30,15 +30,11 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 APPEND_SLASH = True
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/var/www/media/uploaded_files/'
-#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/social_website/uploads/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -60,12 +56,12 @@ STATICFILES_DIRS = (
 )
 
 MIDDLEWARE_CLASSES = (
-	'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware'
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -90,6 +86,7 @@ TEMPLATE_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.media',
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.contrib.auth.context_processors.auth',
@@ -121,6 +118,7 @@ INSTALLED_APPS = (
     'social_website',
     'social_auth',
     'communications',
+    'human_resources',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
