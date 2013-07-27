@@ -834,6 +834,14 @@ a {
     margin-left: 25px;
 }
 
+.h-list-xxlg > * + * {
+    margin-left: 70px;
+}
+
+.h-list-xxxlg > * + * {
+    margin-left: 110px;
+}
+
 .h-list-sm > *:first-child {
     margin-left: 0;
 }
@@ -1012,6 +1020,11 @@ a {
 .media .img-size-sq img{
 	width: 100px;
 	height: 100px;
+}
+
+.media .img-size-logo img{
+	width: 177px;
+	height: 125px;
 }
 
 .media .img-marginLg-lt {
