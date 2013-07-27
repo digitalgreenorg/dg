@@ -157,7 +157,6 @@ class CommentResource(BaseResource):
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
     hydrate_user = partial(dict_to_foreign_uri, field_name='user', resource_name='user')
     def hydrate_isOnline(self, bundle):
-        print 'there'
         bundle.data['isOnline'] = True
         return bundle
     #===========================================================================
@@ -167,7 +166,7 @@ class CommentResource(BaseResource):
     #===========================================================================
     class Meta:
         always_return_data = True
-        queryset = Comment.objects.order_by('-date').all()
+        queryset = Comment.objects.order_by('-date', '-uid').all()
         resource_name = 'comment'
         authentication = Authentication()
         authorization = Authorization()

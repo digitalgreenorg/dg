@@ -17,7 +17,6 @@ define(function(require) {
     require('libs/external/swfobject/swfobject');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
-    var CommentDataFeed = require('app/libs/CommentsDataFeed');
     //var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
     //var TimeWatchedDataFeed = require('app/libs/TimeWatchedDataFeed');
 
@@ -54,7 +53,6 @@ define(function(require) {
             references.commentsFeedViewController = new CommentsFeedViewController(references.$commentsAreaWrapper);
 
             references.videoLikeDataFeed = new VideoLikeDataFeed();
-            references.commentDataFeed = new CommentDataFeed();
       // 	uncomment when comment-like and user time watched functionality is updated  
       //      references.commentLikeDataFeed = new CommentLikeDataFeed();
       //      references.timeWatchedDataFeed = new TimeWatchedDataFeed();
@@ -104,7 +102,6 @@ define(function(require) {
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
             this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
-            state.videoLiked = this._state.videoLiked;
             
             state.updateVideoWatchedTimeInterval = undefined;
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
@@ -282,17 +279,9 @@ define(function(require) {
             if (videoUID == undefined || userID == undefined || text == undefined) {
                 throw new Error('ViewCollectionsController._onCommentButtonClick: videoUID ,userID, text are required parameters');
             }
-
-            this._references.commentDataFeed.addInputParam('video', false, videoUID);
-            this._references.commentDataFeed.addInputParam('user', false, userID);
-            this._references.commentDataFeed.addInputParam('text', false, text);
             
-            this._references.commentDataFeed.setInputParam('video', videoUID, true);
-            this._references.commentDataFeed.setInputParam('user', userID, true);
-            this._references.commentDataFeed.setInputParam('text', text, true);
-            
-            this._references.commentDataFeed._fetch(null, function(){}, 'POST');
-            this._references.commentDataFeed.getComments(0, 1);
+            this._references.commentsFeedViewController.addNewComment(videoUID, userID, text);
+            this._references.$commentBox.val('');
         },
         
         _onCommentLikeButtonClick: function(e) {

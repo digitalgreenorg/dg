@@ -37,7 +37,7 @@ define(function(require) {
             this.addInputParam('video', false,jQuery('.featured-ft-videoDetails').attr('data-video-uid'));
         },
 
-        fetch: function(page, countPerPage) {
+        fetch: function(page, countPerPage, customCallback) {
             if (page == undefined) {
                 page = 0;
             }
@@ -52,15 +52,19 @@ define(function(require) {
 
             // perform the fetch
             this.base();
+            
+            this.base(null, customCallback);
         },
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
-            
+            // If this was a post of a comment, then an object is returned not an array.
             if (unprocessedData.objects == undefined) {
                 if (unprocessedData.uid != undefined) {
-                    var commentsToAdd = []
-                    return commentsToAdd
+                    /* Clear cache so next fetch includes this newly added comment. */
+                    this.clearCommentCache();
+                    var commentsToAdd = [];
+                    return commentsToAdd;
                 }
             }
             
@@ -93,7 +97,7 @@ define(function(require) {
         },
 
         clearCommentCache: function() {
-            this._dataModel.get('comments').clear();
+            this._dataModel.get('objects').clear();
         },
 
         getTotalCount: function() {

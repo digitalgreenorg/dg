@@ -186,21 +186,21 @@
                                         <form>
                                             <label for="comment" class="text-hide">Comment</label>
                                             <textarea class="comment-text" id="comment"></textarea>
-                                            <div class="grid layout-vr-md">
+                                            <!--div class="grid layout-vr-md">
                                                 <div class="grid-col">
                                                     <input type="checkbox" id="facebook" />
                                                     <label class="copy" for="facebook">Post to Facebook</label>
                                                 </div>
-                                                <!-- <div class="grid-rt">
+                                                <div class="grid-rt">
                                                     <p class="copy">Posting as Rikin Gandhi (<a href="#">Not you?</a>)</p>
-                                                </div> -->
-                                            </div>
+                                                </div>
+                                            </div-->
                                             <div class="centered">
-                                            	{% if not request.user.is_authenticated %}
-                                					<a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
-                            					{% else %}
-                                                	<input type="submit" value="Add a Comment" class="comment-btn" />
-                                            	{% endif %}
+                                            {% if not request.user.is_authenticated %}
+                                				<a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
+                            				{% else %}
+                                                <input type="submit" value="Add a Comment" class="comment-btn" />
+                                            {% endif %}
                                             </div>
                                         </form>
                                     </div>

@@ -163,6 +163,17 @@ define(function(require) {
             }
 
         },
+        
+        deleteInputParam: function(name) {
+
+            if (name == undefined) {
+                throw new Error('DataFeed.deleteInputParam(): parameter "name" required but not provided');
+            }
+            
+            delete this._state.inputParams[name];
+
+            return this;
+        },
 
         setInputParam: function(name, value, suppressOnChangeEvent) {
             var inputParamData = this._state.inputParams[name];
