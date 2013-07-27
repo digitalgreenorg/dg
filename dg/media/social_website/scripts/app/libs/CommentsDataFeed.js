@@ -57,6 +57,13 @@ define(function(require) {
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
             
+            if (unprocessedData.objects == undefined) {
+                if (unprocessedData.uid != undefined) {
+                    var commentsToAdd = []
+                    return commentsToAdd
+                }
+            }
+            
             // local references
             var dataModel = this._dataModel;
             var commentsModel = dataModel.get('objects');
