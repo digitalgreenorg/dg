@@ -1,8 +1,14 @@
+import ast
+import datetime
+import json
+import urllib2
+
+from django.contrib.auth import logout
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-import ast, datetime, json, urllib2
+
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
 
@@ -57,7 +63,7 @@ def partner_view(request, partner):
             'loggedIn':False},
         'partner': partner,
         }
-    return render_to_response('profile.html' , context, context_instance = RequestContext(request))
+    return render_to_response('profile.html', context, context_instance = RequestContext(request))
 
 def search_view(request):
     searchString = request.GET.get('searchString', None)
@@ -170,3 +176,8 @@ def footer_view(request):
         'footer_dict':footer_dict
         }
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
+
+
+def logout_view(request, next_url):
+    logout(request)
+    return HttpResponseRedirect(next_url)

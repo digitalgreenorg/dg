@@ -30,15 +30,11 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 APPEND_SLASH = True
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/var/www/media/uploaded_files/'
-#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/social_website/uploads/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -60,16 +56,22 @@ STATICFILES_DIRS = (
 )
 
 MIDDLEWARE_CLASSES = (
-	'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware'
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'dg.urls'
+
+SOUTH_MIGRATION_MODULES = {
+    'social_auth': 'ignore',
+}
+
+SOCIAL_AUTH_USER_MODEL = 'social_website.UserProfile'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -84,9 +86,14 @@ TEMPLATE_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.media',
     'django.core.context_processors.request',
     'django.core.context_processors.static',
-    'django.contrib.auth.context_processors.auth',  
+    'django.contrib.auth.context_processors.auth',
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+    'social_auth.context_processors.social_auth_by_type_backends',
+    'social_auth.context_processors.social_auth_login_redirect',
 )
 
 INSTALLED_APPS = (
@@ -109,10 +116,17 @@ INSTALLED_APPS = (
     'tastypie',
     'coco',
     'social_website',
+    'social_auth',
     'communications',
+    'human_resources',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
 SESSION_COOKIE_HTTPONLY = False
 
-
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+)

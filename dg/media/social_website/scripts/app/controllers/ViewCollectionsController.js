@@ -58,6 +58,8 @@ define(function(require) {
       //      references.timeWatchedDataFeed = new TimeWatchedDataFeed();
 
             references.$likeButton = jQuery('.js-like-button');
+            references.$commentBox = jQuery('#comment');
+            references.$commentButton = jQuery('.comment-btn');
 
             references.$videoTarget = jQuery('#video-target');
 
@@ -73,10 +75,16 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
+            
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.videoLikeDataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
 
             boundFunctions.onLikeButtonClick = this._onVideoLikeButtonClick.bind(this);
             references.$likeButton.on('click', boundFunctions.onLikeButtonClick);
 
+            boundFunctions.onCommentButtonClick = this._onCommentButtonClick.bind(this);
+            references.$commentButton.on('click', boundFunctions.onCommentButtonClick);
+            
             boundFunctions.onCommentLikeButtonClick = this._onCommentLikeButtonClick.bind(this);
             references.$commentsAreaWrapper.on('click', '.js-comment-like-button', boundFunctions.onCommentLikeButtonClick);
         },
@@ -93,6 +101,8 @@ define(function(require) {
             state.userID = jQuery('body').data('userId');
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
+            this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
+            
             state.updateVideoWatchedTimeInterval = undefined;
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
         },
@@ -228,7 +238,16 @@ define(function(require) {
         _getComments: function() {
             this._references.commentsFeedViewController.getComments();
         },
+        
+        
 
+        _onDataProcessed: function(likedEntries) {
+            this._state.videoLiked = likedEntries[0].liked;
+            if (this._state.videoLiked) {
+                this._references.$likeButton.addClass('liked');
+            }
+        },
+        
         _onVideoLikeButtonClick: function(e) {
             e.preventDefault();
 
@@ -245,9 +264,26 @@ define(function(require) {
                 throw new Error('ViewCollectionsController._onVideoLikeButtonClick: videoUID and userID are required parameters');
             }
 
-            this._references.videoLikeDataFeed.fetch(videoUID, userID, this._onVideoLikedCallback.bind(this));
+            this._references.videoLikeDataFeed.fetch(videoUID, userID, function(){}, 'POST');
         },
 
+        _onCommentButtonClick: function(e) {
+            e.preventDefault();
+
+            var $currentTarget = jQuery(e.currentTarget);
+
+            var videoUID = this._state.videoUID;
+            var userID = this._state.userID;
+            var text = this._references.$commentBox.val();
+
+            if (videoUID == undefined || userID == undefined || text == undefined) {
+                throw new Error('ViewCollectionsController._onCommentButtonClick: videoUID ,userID, text are required parameters');
+            }
+            
+            this._references.commentsFeedViewController.addNewComment(videoUID, userID, text);
+            this._references.$commentBox.val('');
+        },
+        
         _onCommentLikeButtonClick: function(e) {
             e.preventDefault();
 
