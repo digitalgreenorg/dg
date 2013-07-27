@@ -12,12 +12,16 @@ from output.views import video_analytics
 from website_admin import website_admin
 import website_archive_urls
 
+from social_auth.urls import *
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
+    url(r'', include('social_auth.urls')),
+
     (r'^social/', include(social_website.api_urls)),
     (r'^archive/', include(website_archive_urls)),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),

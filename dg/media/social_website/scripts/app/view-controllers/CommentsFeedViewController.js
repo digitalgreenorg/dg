@@ -54,6 +54,7 @@ define(function(require) {
             state.currentPageNumber = 0;
             state.commentsPerPage = 10;
             state.currentCount = 0;
+            state.commentAdded = false;
         },
 
         _initEvents: function() {
@@ -92,7 +93,7 @@ define(function(require) {
             return this._state.currentPageNumber;
         },
 
-        getComments: function(page, commentsPerPage) {
+        getComments: function(page, commentsPerPage, addedComment) {
 
             if (page == undefined) {
                 page = this.getCurrentPageNumber();
@@ -117,16 +118,26 @@ define(function(require) {
                 return false;
             }
 
-            this._updateCommentsFeedDisplay(commentsArray, totalCount);
+            this._updateCommentsFeedDisplay(commentsArray, totalCount, addedComment);
         },
 
         _onDataProcessed: function() {
+            if (this._state.commentAdded == true) {
+                this.getComments(0, this._state.commentsPerPage, true);
+                this._state.commentAdded = false;
+                return;
+            }
             this.getComments();
         },
 
-        _updateCommentsFeedDisplay: function(commentsArray, totalCount) {
-            this._renderComments(commentsArray);
-            this._onCommentsFeedUpdated(totalCount, commentsArray.length);
+        _updateCommentsFeedDisplay: function(commentsArray, totalCount, addedComment) {
+            this._renderComments(commentsArray, addedComment);
+            if (addedComment) {
+                this._onCommentsFeedUpdatedNewComment(totalCount, commentsArray.length);
+            }
+            else {
+                this._onCommentsFeedUpdated(totalCount, commentsArray.length);
+            }
         },
 
         _onCommentsFeedUpdated: function(totalCount, addedCount) {
@@ -134,8 +145,13 @@ define(function(require) {
             this.addToCurrentCount(addedCount);
             this.updateCommentsItemPaginationDisplay();
         },
+        
+        _onCommentsFeedUpdatedNewComment: function(totalCount, addedCount) {
+            this.updateTotalCount(totalCount);
+            this.updateCommentsItemPaginationDisplay();
+        },
 
-        _renderComments: function(commentsArray) {
+        _renderComments: function(commentsArray, addedComment) {
 
             // Commenting user and changing to farmer for every comment
         	//var userID = jQuery('body').data('userId');
@@ -180,8 +196,12 @@ define(function(require) {
             var renderData = {
                 comments: renderCommentsArray
             };
-
-            viewRenderer.renderAppend(this._references.$commentsList, commentTemplate, renderData);
+            if (addedComment){
+                viewRenderer.renderHTML(this._references.$commentsList, commentTemplate, renderData);
+            }
+            else {
+                viewRenderer.renderAppend(this._references.$commentsList, commentTemplate, renderData);
+            }
         },
 
         updateTotalCount: function(totalCount) {
@@ -241,7 +261,26 @@ define(function(require) {
                 return;
             }
         },
-
+        
+        afterCommentAdd: function(){
+            this._state.commentAdded = true;
+            this._references.dataFeed.deleteInputParam('user');
+            this._references.dataFeed.deleteInputParam('text');
+            this.getComments();
+        },
+        
+        addNewComment: function(video, user, text) {
+            this._references.dataFeed.addInputParam('video', false, video);
+            this._references.dataFeed.addInputParam('user', false, user);
+            this._references.dataFeed.addInputParam('text', false, text);
+            
+            this._references.dataFeed.setInputParam('video', video, true);
+            this._references.dataFeed.setInputParam('user', user, true);
+            this._references.dataFeed.setInputParam('text', text, true);
+            
+            this._references.dataFeed._fetch(null, this.afterCommentAdd.bind(this), 'POST');
+        },
+        
         /**
          * Controller destructor
          * @return {void}

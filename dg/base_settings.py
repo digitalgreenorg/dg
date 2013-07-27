@@ -67,6 +67,12 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'dg.urls'
 
+SOUTH_MIGRATION_MODULES = {
+    'social_auth': 'ignore',
+}
+
+SOCIAL_AUTH_USER_MODEL = 'social_website.UserProfile'
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
@@ -84,6 +90,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.contrib.auth.context_processors.auth',
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+    'social_auth.context_processors.social_auth_by_type_backends',
+    'social_auth.context_processors.social_auth_login_redirect',
 )
 
 INSTALLED_APPS = (
@@ -106,6 +116,7 @@ INSTALLED_APPS = (
     'tastypie',
     'coco',
     'social_website',
+    'social_auth',
     'communications',
     'human_resources',
 )
@@ -113,4 +124,9 @@ INSTALLED_APPS = (
 #following line makes sessionid cookie accessible to in-browser javascript
 SESSION_COOKIE_HTTPONLY = False
 
-
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+)
