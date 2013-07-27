@@ -3,5 +3,17 @@ from django.template import RequestContext
 from human_resources.models import Member
 
 def member_view(request):
-    member_list = Member.objects.all()
-    return render_to_response('teammember.html', {'member_list': member_list}, context_instance=RequestContext(request))
+    delhi_team = Member.objects.filter(location="New Delhi")
+    elt_team = delhi_team.filter(team="Executive Leadership Team").all()
+    tech_team = delhi_team.filter(team="Technology Team").all()
+    support_team = delhi_team.filter(team="Support Team").all()
+    programs_team = delhi_team.filter(team="Programs").all()
+    other_teams = Member.objects.exclude(location="New Delhi").order_by('location').values()
+    context = {
+        'elt': elt_team,
+        'tech': tech_team,
+        'support': support_team,
+        'programs': programs_team,
+        'other_teams': other_teams,
+    }
+    return render_to_response('team_page.html', context, context_instance=RequestContext(request))
