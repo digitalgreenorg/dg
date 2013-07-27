@@ -140,6 +140,7 @@ function() {
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
+        'inc_table_name': 'animator',
         'foreign_entities': {
             'village': {
                 "assigned_villages": {
