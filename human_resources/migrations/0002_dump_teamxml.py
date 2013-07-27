@@ -19,8 +19,8 @@ class Migration(DataMigration):
             image = item.getElementsByTagName('ARTIST')[0].childNodes[0].nodeValue
             personal_intro = item.getElementsByTagName('DESC')[0].childNodes[0].nodeValue
             email = item.getElementsByTagName('MAILID')[0].childNodes[0].nodeValue
-            team = "Programs"
-            location = "New Delhi"
+            team = "Program Team"
+            location = "Headquarters-Delhi"
             member = Member(designation=designation, image=image, personal_intro=personal_intro, email=email, name=name,team=team, location=location)
             member.save()
         

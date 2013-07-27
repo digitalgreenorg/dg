@@ -3,11 +3,11 @@ from django.template import RequestContext
 from human_resources.models import Member
 
 def member_view(request):
-    delhi_team = Member.objects.filter(location="New Delhi")
+    delhi_team = Member.objects.filter(location="Headquarters-Delhi")
     elt_team = delhi_team.filter(team="Executive Leadership Team").all()
     tech_team = delhi_team.filter(team="Technology Team").all()
     support_team = delhi_team.filter(team="Support Team").all()
-    programs_team = delhi_team.filter(team="Programs").all()
+    programs_team = delhi_team.filter(team="Program Team").all()
     other_teams = Member.objects.exclude(location="New Delhi").order_by('location').values()
     context = {
         'elt': elt_team,
