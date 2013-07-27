@@ -43,7 +43,7 @@
             Profile
     -->
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
-    <body data-controller="{{header.jsController}}" data-user-id="3442">
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
             <div class="header-wrapper clearfix">
@@ -59,17 +59,17 @@
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f">to catalyze change</span></a></li>
                                 <li class="nav-pipe nav-size hdg-e {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f">and our approach</span></a></li>
                                 <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url donate %}">Donate</a></li>
-                                {% if not header.loggedIn %}
+                                {% if not request.user.is_authenticated %}
                                 <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
                                 {% else %}
                                 <li>
-                                    <a class="btn-sign-in btn-signed" href="#">
+                                    <a class="btn-sign-in btn-signed" href="{% url logout request.path %}">
                                         <div class="media">
                                             <div class="img">
                                                 <img src="http://placehold.it/16x16">
                                             </div>
                                             <div class="bd">
-                                                Hi, Rikin
+                                                {{request.user.first_name}}
                                             </div>
                                         </div>
                                     </a>
@@ -80,13 +80,15 @@
                     </div>  <!-- End .wrapper -->
                 </header> <!-- End .global-nav -->
             </div>
+            
+            {% load url from future %}
             <div id="login_modal" class="modal-login modal hide" >
 				<a href="#" class="close" data-dismiss="modal">&times;</a>
 				<h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
 				<div class="layout-vr-sm">
-                    <a href="#" class="btn btn-facebook">Facebook</a>
+                    <a href="{% url 'socialauth_begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
                 </div>
                 <div class="layout-vr-tiny">
-                    <a href="#" class="btn btn-google-plus">Google</a>
+                    <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
                 </div>
 			</div>

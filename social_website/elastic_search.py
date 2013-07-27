@@ -28,18 +28,7 @@ def get_related_collections(collection):
         response = urllib2.urlopen(url, query)
         result = json.loads(response.read())
         for res in result['hits']['hits']:
-            related_collections.append({"uid" : res['_source']['uid'], 
-                                        "title" : res['_source']['title'], 
-                                        "partner" : res['_source']['partner'],
-                                        "language" : res['_source']['language'],
-                                        "state" : res['_source']['state'],
-                                        "thumbnailURL" : res['_source']['thumbnailURL'],
-                                        "likes" : res['_source']['likes'],
-                                        "views" : res['_source']['views'],
-                                        "adoptions" : res['_source']['adoptions'],
-                                        "duration" : res['_source']['duration'],
-                                        "vid_count" : len(res['_source']['videos']),
-                                        })
+            related_collections.append(res['_source'])
     except Exception:
         pass
     return related_collections
@@ -79,9 +68,9 @@ def get_collections_from_elasticsearch(request):
     partner_uid = params.get('uid', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"multi_match" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
-                                        "query" : searchString
-                                        }
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+                                "like_text" : searchString
+                                }
                        }
     elif partner_uid:
         partner_name = Partner.objects.get(uid = partner_uid).name
