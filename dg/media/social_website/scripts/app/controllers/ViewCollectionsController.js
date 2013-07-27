@@ -291,7 +291,7 @@ define(function(require) {
             this._references.commentDataFeed.setInputParam('user', userID, true);
             this._references.commentDataFeed.setInputParam('text', text, true);
             
-            this._references.commentDataFeed._fetch(null, this._onVideoLikedCallback.bind(this), 'POST');
+            this._references.commentDataFeed._fetch(null, this._onCommentCallback.bind(this), 'POST');
         },
         
         _onCommentLikeButtonClick: function(e) {
@@ -327,6 +327,16 @@ define(function(require) {
             }
         },
 
+        _onCommentCallback: function() {
+            var responseStatus = this._references.commentDataFeed.getResponseStatus();
+
+            if (responseStatus.success) {
+            	this._references.commentsFeedViewController.getComments();
+            } else {
+                // NOTE: any desired error handling would go here
+            }
+        },
+        
         _onCommentLikedCallback: function($commentLikeButton, newCommentLikedStatus, data) {
             var responseStatus = this._references.commentLikeDataFeed.getResponseStatus();
 
