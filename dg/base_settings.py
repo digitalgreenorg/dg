@@ -71,8 +71,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'dg.urls'
 
-SOCIAL_AUTH_USER_MODEL = 'social_website.UserProfile'
-
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
@@ -115,8 +113,8 @@ INSTALLED_APPS = (
     'tastypie',
     'coco',
     'social_website',
-    'communications',
     'social_auth',
+    'communications',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
