@@ -8,7 +8,7 @@ def member_view(request):
     tech_team = delhi_team.filter(team="Technology Team").all()
     support_team = delhi_team.filter(team="Support Team").all()
     programs_team = delhi_team.filter(team="Program Team").all()
-    other_teams = Member.objects.exclude(location="New Delhi").order_by('location').values()
+    other_teams = Member.objects.exclude(location="Headquarters-Delhi").order_by('location').values()
     context = {
         'elt': elt_team,
         'tech': tech_team,
