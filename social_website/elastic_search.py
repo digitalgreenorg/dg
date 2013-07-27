@@ -28,18 +28,7 @@ def get_related_collections(collection):
         response = urllib2.urlopen(url, query)
         result = json.loads(response.read())
         for res in result['hits']['hits']:
-            related_collections.append({"uid" : res['_source']['uid'], 
-                                        "title" : res['_source']['title'], 
-                                        "partner" : res['_source']['partner'],
-                                        "language" : res['_source']['language'],
-                                        "state" : res['_source']['state'],
-                                        "thumbnailURL" : res['_source']['thumbnailURL'],
-                                        "likes" : res['_source']['likes'],
-                                        "views" : res['_source']['views'],
-                                        "adoptions" : res['_source']['adoptions'],
-                                        "duration" : res['_source']['duration'],
-                                        "vid_count" : len(res['_source']['videos']),
-                                        })
+            related_collections.append(res['_source'])
     except Exception:
         pass
     return related_collections
