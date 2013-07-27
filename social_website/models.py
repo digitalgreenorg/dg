@@ -4,7 +4,10 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils import timezone
+
+from post_save_funcs import increase_online_video_like
 
 #===============================================================================
 # Linked to COCO
@@ -25,6 +28,9 @@ class Partner(models.Model):
     adoptions = models.BigIntegerField(default=0)
     def get_absolute_url(self):
         return reverse('partner', args=[str(self.name)])
+    def increase_likes(self):
+        self.likes += 1
+        self.save()
     
 class Video(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -95,6 +101,9 @@ class Collection(models.Model):
     def get_absolute_url_for_video(self, video_index = 1):
         return reverse('collection_video_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
+    def increase_likes(self):
+        self.likes += 1
+        self.save()
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -166,3 +175,5 @@ class Comment(models.Model):
 class VideoLike(models.Model):
     video = models.ForeignKey(Video)
     user = models.ForeignKey(UserProfile)
+post_save.connect(increase_online_video_like, sender = VideoLike)
+    
