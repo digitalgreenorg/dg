@@ -9,7 +9,7 @@ from django.contrib.contenttypes import generic
 from ajax_filtered_fields.forms import AjaxForeignKeyField
 from django.conf import settings
 from ajax_filtered_fields.forms import FilteredSelect
-
+from forms import CocoUserForm
 
 
 # autocomplete widget
@@ -569,6 +569,10 @@ class PracticeSubtopicAdmin(admin.ModelAdmin):
 class PracticeSubjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+class CocoUserAdmin(admin.ModelAdmin):
+    form = CocoUserForm
+    list_display = ('user','partner','get_villages')
+
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Region)
@@ -597,6 +601,7 @@ admin.site.register(PracticeSubSector,PracticeSubSectorAdmin)
 admin.site.register(PracticeTopic,PracticeTopicAdmin)
 admin.site.register(PracticeSubtopic,PracticeSubtopicAdmin)
 admin.site.register(PracticeSubject,PracticeSubjectAdmin)
+admin.site.register(CocoUser, CocoUserAdmin)
 #admin.site.register(Reviewer)
 #admin.site.register(Random)
 #admin.site.register(Message, MessageAdmin)
