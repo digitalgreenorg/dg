@@ -13,8 +13,8 @@ from social_website.scripts.generate_activities import ActivityType
 from social_website.models import Activity, ImageSpec
 
 
-def create_thumbnail(url, image_url, new_width, new_height):
-    filepath = PROJECT_PATH + image_url
+def create_thumbnail(url, image_name, new_width, new_height):
+    filepath = MEDIA_ROOT + 'facebook/' + image_name
     urllib.urlretrieve(url, filepath)
     img = Image.open(filepath)
     ratio = new_width*1.0/new_height
@@ -72,9 +72,10 @@ def read_data(entry):
                 picture = entry['picture'].replace("_s", "_n")
                 # TODO: what if there is more than one _s??
                 # Can we upload to s3 here
-                image_url = ''.join([STATIC_URL, "social_website\\uploads\\facebook\\", facebookID, ".", picture.split('.')[-1]])
+                image_name = ''.join([facebookID, ".", picture.split('.')[-1]])
+                image_url = ''.join([MEDIA_URL, "facebook/", image_name])
                 # TODO: don't use explicit path here.
-                create_thumbnail(picture, image_url, 170, 112)
+                create_thumbnail(picture, image_name, 170, 112)
                 altString = "Image from Facebook"
                 imageLinkURL = entry['link'] if 'link' in entry else ''
                 has_image = True
@@ -96,9 +97,10 @@ def read_data(entry):
         if 'picture' in entry:
             try:
                 picture = urllib2.unquote(entry['picture']).split('url=')[-1]
-                image_url = ''.join([STATIC_URL, "social_website\\uploads\\facebook\\", facebookID, ".", (picture.split('.')[-1])[:3]])
+                image_name = ''.join([facebookID, ".", (picture.split('.')[-1])[:3]])
+                image_url = ''.join([STATIC_URL, "social_website/uploads/facebook/", image_name])
                 # TODO: don't use explicit path here.
-                create_thumbnail(picture, image_url, 170, 112)
+                create_thumbnail(picture, image_name, 170, 112)
                 altString = "Image from Facebook"
                 imageLinkURL = entry['link'] if 'link' in entry else ''
                 has_image = True
@@ -109,7 +111,7 @@ def read_data(entry):
     date = entry['created_time'].split('T')[0]
     avatarURL = "".join([STATIC_URL, 'assets\\images\\favicon-white.png'])
     newsFeed = 1
-    activity_type = ActivityType.facebook
+    activity_type = 0 #ActivityType.facebook
     titleURL = 'https://www.facebook.com/digitalgreenorg/posts/' + facebookID
     store_data(title, date, textContent, avatarURL, newsFeed, image_url, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL)
     return False
