@@ -2,14 +2,15 @@ import datetime, json, urllib2
 from django.http import HttpResponse
 from pyes import ES
 from social_website.models import Partner
+from dg.settings import COMPLETION_INDEX, FACET_INDEX
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
 def get_related_collections(collection):
     related_collections = []
     conn = ES(['127.0.0.1:9200'])
-    conn.default_indices="test2"
-    conn.refresh("test2")
+    conn.default_indices = FACET_INDEX
+    conn.refresh(FACET_INDEX)
     q ={"query": {
                         "bool" : {
                                   "must_not" : {"term" : { "uid" : collection.uid }},
@@ -23,21 +24,11 @@ def get_related_collections(collection):
         }
     try :
         query = json.dumps(q)
-        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+        url = "http://localhost:9200/%s/_search" % FACET_INDEX
+        response = urllib2.urlopen(url, query)
         result = json.loads(response.read())
         for res in result['hits']['hits']:
-            related_collections.append({"uid" : res['_source']['uid'], 
-                                        "title" : res['_source']['title'], 
-                                        "partner" : res['_source']['partner'],
-                                        "language" : res['_source']['language'],
-                                        "state" : res['_source']['state'],
-                                        "thumbnailURL" : res['_source']['thumbnailURL'],
-                                        "likes" : res['_source']['likes'],
-                                        "views" : res['_source']['views'],
-                                        "adoptions" : res['_source']['adoptions'],
-                                        "duration" : res['_source']['duration'],
-                                        "vid_count" : len(res['_source']['videos']),
-                                        })
+            related_collections.append(res['_source'])
     except Exception:
         pass
     return related_collections
@@ -77,7 +68,10 @@ def get_collections_from_elasticsearch(request):
     partner_uid = params.get('uid', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"match" : {"_all":{"query":searchString}}}
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+                                "like_text" : searchString
+                                }
+                       }
     elif partner_uid:
         partner_name = Partner.objects.get(uid = partner_uid).name
         match_query = {"match" : {"partner" :{ "query" : partner_name}}}
@@ -95,8 +89,8 @@ def get_collections_from_elasticsearch(request):
     limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
     conn = ES(['127.0.0.1:9200'])
-    conn.default_indices="test2"
-    conn.refresh("test2")
+    conn.default_indices = FACET_INDEX
+    conn.refresh(FACET_INDEX)
     q ={"query": {
                   "filtered":{
                               "query" : match_query,
@@ -119,7 +113,8 @@ def get_collections_from_elasticsearch(request):
     result_list = []
     try :
         query = json.dumps(q)
-        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+        url = "http://localhost:9200/%s/_search" % FACET_INDEX
+        response = urllib2.urlopen(url, query)
         result = json.loads(response.read())
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
@@ -134,8 +129,8 @@ def searchCompletions(request):
     searchString = request.GET.get('searchString')
     maxCount = int(request.GET.get('maxCount'))
     conn = ES(['127.0.0.1:9200'])
-    conn.default_indices="test-index"
-    conn.refresh("test-index")
+    conn.default_indices = COMPLETION_INDEX
+    conn.refresh(COMPLETION_INDEX)
     q = {"query" : {
                     "query_string" :{
                                     "fields" : ["searchTerm.partial"],
@@ -154,12 +149,16 @@ def searchCompletions(request):
         }
     try:
         query = json.dumps(q)
-        response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
+        url = "http://localhost:9200/%s/_search" % COMPLETION_INDEX
+        response = urllib2.urlopen(url, query)
         result = json.loads(response.read())
         result_list = []
         done_list = []
         for res in result['hits']['hits']:
-            if res['_source']['searchTerm'] not in done_list:
+            if res['_source']['type'] != "Collections":
+                result_list.append(res['_source'])
+                res['_source']['count'] = 0
+            elif res['_source']['searchTerm'] not in done_list:
                 val = str(res['_source']['searchTerm']).lower()
                 for term in result['facets']['facet']['terms']:
                     if val == term['term'] :

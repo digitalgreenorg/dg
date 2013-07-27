@@ -1,11 +1,15 @@
+import datetime
+
 from tastypie.resources import ModelResource
 from tastypie import fields
-from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video
+from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoLike
 from functools import partial
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from django.http import HttpResponse
 from functools import partial
+from tastypie.authorization import DjangoAuthorization, Authorization
+from tastypie.authentication import BasicAuthentication, Authentication
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -79,13 +83,15 @@ class VideoResource(BaseResource):
     class Meta:
         queryset = Video.objects.all()
         resource_name = 'video'
-        excludes = ['sector','subsector','topic','subtopic','subject','state']
+        excludes = ['category','subcategory','topic','subtopic','subject','state']
         filtering={
                    'uid':ALL
                    }
 
     def dehydrate(self, bundle):
-        bundle.data['tags'] = Video.objects.get(uid=bundle.data.get('uid')).sector+";"+Video.objects.get(uid=bundle.data.get('uid')).subsector+";"+Video.objects.get(uid=bundle.data.get('uid')).topic+";"+Video.objects.get(uid=bundle.data.get('uid')).subtopic+";"+Video.objects.get(uid=bundle.data.get('uid')).subject 
+        video = bundle.obj
+        tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
+        bundle.data['tags'] = ','.join(tags)
         return bundle
  
 class CollectionResource(BaseCorsResource):
@@ -112,19 +118,61 @@ class ActivityResource(BaseResource):
         filtering={
                    'farmer':ALL_WITH_RELATIONS,
                    'partner':ALL_WITH_RELATIONS,
-                   'newsFeed':ALL
+                   'newsFeed':'exact',
+                   }
+
+
+def dict_to_foreign_uri(bundle, field_name, resource_name=None):
+    print bundle.data
+    field_dict = bundle.data.get(field_name)
+    print field_dict
+    bundle.data[field_name] = "/social/api/%s/%s/"%(resource_name if resource_name else field_name, 
+                                                    str(field_dict))
+    return bundle
+
+class UserResource(ModelResource):
+    class Meta:
+        queryset = UserProfile.objects.all()
+        resource_name = 'user'
+
+class VideoLikeResource(ModelResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    user = fields.ForeignKey(UserResource, 'user')
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+    hydrate_user = partial(dict_to_foreign_uri, field_name='user', resource_name='user')
+    class Meta:
+        always_return_data = True
+        queryset = VideoLike.objects.all()
+        resource_name = 'updateVideoLike'
+        authentication = Authentication()
+        authorization = Authorization()
+        filtering = {
+                   'video':ALL_WITH_RELATIONS,
+                   'user' :ALL_WITH_RELATIONS
                    }
 
 class CommentResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
     video = fields.ForeignKey(VideoResource, 'video', null=True)
-    #user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
-    #inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
-    #in videoID out Comment
-    #in activityID out Comment
+    user = fields.ForeignKey(UserResource, 'user', null=True)
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+    hydrate_user = partial(dict_to_foreign_uri, field_name='user', resource_name='user')
+    def hydrate_isOnline(self, bundle):
+        bundle.data['isOnline'] = True
+        return bundle
+    #===========================================================================
+    # inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
+    # in videoID out Comment
+    # in activityID out Comment
+    #===========================================================================
     class Meta:
-        queryset = Comment.objects.order_by('-date').all()
+        always_return_data = True
+        queryset = Comment.objects.order_by('-date', '-uid').all()
         resource_name = 'comment'
+        authentication = Authentication()
+        authorization = Authorization()
         filtering={
                    'video':ALL_WITH_RELATIONS,
+                   'text':ALL,
+                   'user':ALL_WITH_RELATIONS,
                    }

@@ -34,7 +34,7 @@ define(function(require) {
 
             this.addInputParam('offset', false, 0);
             this.addInputParam('limit', false, 10);
-            this.addInputParam('newsFeed',false,1);
+            this.addInputParam('newsFeed', false, 1);
         },
 
         fetch: function(page, countPerPage) {
@@ -73,6 +73,7 @@ define(function(require) {
             var startingCacheId = page;
 
             newsItemsModel.addSubset(newsItemsToAdd, startingCacheId);
+            return newsItemsToAdd;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {

@@ -66,6 +66,7 @@ define(function(require) {
             var startingCacheId = page * countPerPage;
 
             collectionsModel.addSubset(collectionsToAdd, startingCacheId);
+            return collectionsToAdd;
         },
 
         getTotalCount: function() {

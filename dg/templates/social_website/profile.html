@@ -12,7 +12,7 @@
                             <div class="grid-col grid-size2of3">
                                 <div class="media">
                                     <div class="img">
-                                        <img src="{{partner.logoURL}}" alt="" height='61' width='61'"/>
+                                        <img src="{{ MEDIA_URL }}/{{partner.logoURL}}" alt="" height='61' width='61'"/>
                                     </div>
                                     <div class="bd">
                                         <h1 class="hdg-b hdg-bold push-top-sm">{{partner.name}}</h1>
@@ -80,7 +80,7 @@
     </section>
         
         <section class="wrapper layout-vr-lg">
-            <div class="activities-wrapper inner-wrapper">
+            <div class="activities-wrapper inner-wrapper js-activities-wrapper" data-partnerID="{{partner.uid}}">
                 <h2 class="hdg-a hdg-source-lt layout-vr-md">Activities</h2>
                 <ul class="js-activities-container">
                     
@@ -88,6 +88,9 @@
 
                 </ul>
                 <div class="timeline-fade"></div>
+                <div class="centered layout-vr-lg profile-buttons">
+                    <a href="#" class="btn js-activities-show-more-btn">Show More</a>
+                </div>
             </div> <!-- End .inner-wrapper -->
 
         </section> <!-- End .wrapper -->

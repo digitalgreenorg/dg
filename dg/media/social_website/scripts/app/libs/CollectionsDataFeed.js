@@ -90,6 +90,7 @@ define(function(require) {
 
 					collectionsModel.addSubset(collectionsToAdd,
 							startingCacheId);
+                    return collectionsToAdd;        
 				},
 
 				/**
