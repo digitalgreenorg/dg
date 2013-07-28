@@ -46,6 +46,7 @@ def read_data(entry):
     '''
     has_image = False
     facebookID = entry['id'].split('_')[-1]
+    image_url = ""
     altString = ""
     imageLinkURL = ""
     
