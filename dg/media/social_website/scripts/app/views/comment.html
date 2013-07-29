@@ -1,15 +1,29 @@
 {{#comments}}
 <li class="js-comment">
     <div class="media">
+    	{{#isOnline}}
+    	<div class="img comment-left-img">
+            <img class="comment-avatar-thumbnail" src="{{user_imageURL}}"  alt="" />
+        </div>
+        {{/isOnline}}
+        {{^isOnline}}
         {{#person.thumbnailURL}}
         <div class="img comment-left-img">
             <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}"  alt="" />
         </div>
         {{/person.thumbnailURL}}
+        {{/isOnline}}
         <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
             <div class="comment-left-carat">
                 <div class="comment-hd">
-                    <h3 class="copy"><span class="hdg-bold">{{person.name}}</span> </h3>
+                <h3 class="copy"><span class="hdg-bold">
+                    {{#isOnline}}
+                        {{user.first_name}} {{user.last_name}}
+                    {{/isOnline}}
+                    {{^isOnline}}
+                        {{person.name}}
+                    {{/isOnline}}
+                </span></h3>
                 </div>
                 <div class="comment-bd">
                     <p class="copy layout-vr-sm">{{text}}</p>

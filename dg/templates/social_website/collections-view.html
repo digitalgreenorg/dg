@@ -31,8 +31,8 @@
 
                         <div class="bd">
                             <div class="media">
-                                <div class="img">
-                                    <img src="{{ collection.partner.logoURL }}" alt="" />
+                                <div class="img img-size-sq-small">
+                                    <a href="{% url partner collection.partner.name %}"><img src="{{ collection.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
                                     <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner.name }}</h2>
@@ -180,21 +180,26 @@
                             <div class="commentBox-form">
                                 <div class="media commentLeft-border">
                                     <div class="img">
-                                        <img src="http://placehold.it/60x60" alt="" />
+                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                           	 <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+									    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+									         <img  src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=60">
+								        {% endif %}
+                                                
                                     </div>
                                     <div class="bd layout-vr-md">
                                         <form>
                                             <label for="comment" class="text-hide">Comment</label>
                                             <textarea class="comment-text" id="comment"></textarea>
-                                            <!--div class="grid layout-vr-md">
-                                                <div class="grid-col">
+                                           <div class="grid layout-vr-md">
+                                               <!--   <div class="grid-col">
                                                     <input type="checkbox" id="facebook" />
                                                     <label class="copy" for="facebook">Post to Facebook</label>
-                                                </div>
+                                                </div> -->
                                                 <div class="grid-rt">
-                                                    <p class="copy">Posting as Rikin Gandhi (<a href="#">Not you?</a>)</p>
+                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
                                                 </div>
-                                            </div-->
+                                            </div>
                                             <div class="centered">
                                             {% if not request.user.is_authenticated %}
                                                 <a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
