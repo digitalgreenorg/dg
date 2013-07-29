@@ -31,9 +31,8 @@
 
                         <div class="bd">
                             <div class="media">
-                                <div class="img">
-                                <img src="{{ collection.partner.logoURL }}" alt="" />
-                                    <a href="{% url partner collection.partner.name %}"><img src="{{ collection.partner.logoURL }}" alt="" /></a>
+                                <div class="img img-size-sq-small">
+                                    <a href="{% url partner collection.partner.name %}"><img src="{{ collection.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
                                     <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner.name }}</h2>
