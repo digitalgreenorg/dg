@@ -178,6 +178,7 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
-def logout_view(request, next_url):
+def logout_view(request):
+    next_url = request.GET.get('next', None)
     logout(request)
     return HttpResponseRedirect(next_url)
