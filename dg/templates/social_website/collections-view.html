@@ -37,7 +37,7 @@
                                 <div class="bd">
                                     <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner.name }}</h2>
                                     <p class="copy layout-vr-tiny">Member since {{ collection.partner.joinDate.year }}</p>
-                                    <a class="hdg-bold copy" href="#">{{ collection.partner.collection_count }} Collections</a>
+                                    <a class="hdg-bold copy" href="{% url partner collection.partner.name %}">{{ collection.partner.collection_count }} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
                             <h3 class="copy hdg-bold layout-vr-tiny">{{ collection.state}}</h3>
