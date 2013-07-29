@@ -8,12 +8,14 @@ def member_view(request):
     tech_team = delhi_team.filter(team="Technology Team").all()
     support_team = delhi_team.filter(team="Support Team").all()
     programs_team = delhi_team.filter(team="Program Team").all()
-    other_teams = Member.objects.exclude(location="Headquarters-Delhi").order_by('location').values()
+    other_teams = Member.objects.exclude(location="Headquarters-Delhi").order_by('location')
+    other_teams_list = [{'name':member.name, 'designation':member.designation, 
+                            'image': {'url': member.image.url}, 'email':member.email, 'location':member.location} for member in other_teams]
     context = {
         'elt': elt_team,
         'tech': tech_team,
         'support': support_team,
         'programs': programs_team,
-        'other_teams': other_teams,
+        'other_teams': other_teams_list,
     }
     return render_to_response('team_page.html', context, context_instance=RequestContext(request))
