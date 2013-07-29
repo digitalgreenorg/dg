@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^careers/$', direct_to_template, {'template': 'career.html'}, name='career'),
     # TODO: Connect needs to be fixed.
     url(r'^connect/(?P<partner>.+)/$', partner_view, name='partner'),
-	url(r'^connect/$', direct_to_template, {'template': 'connect.html'}, name='connect'),
+	url(r'^connect/$', direct_to_template, {'template': 'connect.html', 'extra_context': {'header': {'currentPage':'Connect'}}}, name='connect'),
     url(r'^contact/$', direct_to_template, {'template': 'contact.html'}, name='contact'),
     url(r'^donate/$', direct_to_template, {'template': 'donate.html'}, name='donate'),
     url(r'^example/$', direct_to_template,{'template':'example1.html'}),
