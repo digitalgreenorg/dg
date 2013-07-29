@@ -31,4 +31,10 @@ urlpatterns = patterns('',
     url(r'^logout/?$', logout_view, name='logout'),
     url(r'^main.js$', direct_to_template, {'template': 'main.js', 'mimetype':'text/javascript'}, name='mainjs'),
     # TODO: There are no names used below
+    url(r'^reports/1/field$', direct_to_template,{'template': 'field-developments-09.html'}, name='annualreport09fields'),
+    url(r'^reports/1/learning$', direct_to_template,{'template': 'learnings-09.html'}, name='annualreport09learnings'),
+    url(r'^press/$', media_view, name='press'),
+    url(r'^team/$', member_view, name='team'),
+    url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
+    url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
 )
