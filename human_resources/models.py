@@ -26,7 +26,7 @@ class Member(models.Model):
     location = models.CharField(max_length=100, choices=location_choices)
     image = models.ImageField(help_text="""Maximum Width Should be 118
                                          and Maximum Height should be 124""",
-                              upload_to='Output/Images')
+                              upload_to='team/')
 
     def __unicode__(self):
         return self.name
