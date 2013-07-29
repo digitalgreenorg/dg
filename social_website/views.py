@@ -60,7 +60,9 @@ def partner_view(request, partner):
     context= {
         'header': {
             'jsController':'Profile',
-            'loggedIn':False},
+            'loggedIn':False,
+            'currentPage':'Connect',
+            },
         'partner': partner,
         }
     return render_to_response('profile.html', context, context_instance = RequestContext(request))
