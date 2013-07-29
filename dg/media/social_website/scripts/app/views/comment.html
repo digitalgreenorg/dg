@@ -20,7 +20,9 @@
                     {{#isOnline}}
                         {{user.first_name}} {{user.last_name}}
                     {{/isOnline}}
+                    {{^isOnline}}
                         {{person.name}}
+                    {{/isOnline}}
                 </span></h3>
                 </div>
                 <div class="comment-bd">
