@@ -153,7 +153,7 @@ def featuredCollection(request):
         'adoptions': collection.adoptions,
         'language': collection.language,
         'partner_name': collection.partner.name,
-        'partner_logo': '' if collection.partner.logoURL._file is None else collection.partner.logoURL,
+        'partner_logo': collection.partner.logoURL.url,
         'partner_url': collection.partner.get_absolute_url(),
         'video_count': collection.videos.all().count(),
         'link': collection.get_absolute_url(),
