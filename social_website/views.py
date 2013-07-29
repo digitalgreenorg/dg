@@ -41,6 +41,7 @@ def collection_view(request, partner, state, language, title, video=1):
     context= {
               'header': {
                          'jsController':'ViewCollections',
+                         'currentPage':'Discover',
                          'loggedIn':False
                          },
               'collection': collection,
