@@ -155,6 +155,7 @@ function() {
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
+        'inc_table_name': 'animator',
         'foreign_entities': {
             'village': {
                 "assigned_villages": {
@@ -822,7 +823,11 @@ function() {
             'group': {
                 'group': {
                     'placeholder': 'id_group',
-                    'name_field': 'group_name'
+                    'name_field': 'group_name',
+					'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 }
             }
         },
@@ -9619,7 +9624,10 @@ define('views/status',[
         },
         
         reset: function(){
-            Offline.reset_database();
+            var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
+			if(val==true){
+				Offline.reset_database();
+			}
         }    
     
           
@@ -9975,13 +9983,13 @@ define('app',[
                   xhr.setRequestHeader("X-CSRFToken", get_csrf());
               }
           },
-          error: function(xhr, status, error){
-              if(xhr.status == 401)
-              {
-                  window.Router.navigate("login",{trigger:true});
-              }
-          }
       });
+      
+      $(document).ajaxError(function(event, jqxhr, settings, exception) {
+          if(jqxhr.status==401)
+              window.Router.navigate("login",{trigger:true});               
+      });
+      
       $("#app").empty().append(AppLayout.el);
       AppLayout.render();
   };

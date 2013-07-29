@@ -1,3 +1,4 @@
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
@@ -29,6 +30,21 @@ class CocoModelForm(ModelForm):
     class Meta:
         model = CocoModel
         exclude = ('user_modified')
+
+class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s (%s) (%s)" % (obj.village_name, obj.block.block_name, obj.block.district.district_name)
+
+
+class CocoUserForm(forms.ModelForm):
+    villages = UserModelMultipleChoiceField(
+        widget=FilteredSelectMultiple(
+                                      verbose_name='villages',
+                                      is_stacked=False
+                                     ),
+        queryset=Village.objects.all()
+        )
+
 
 class LanguageForm(CocoModelForm):
     class Meta:
