@@ -24,8 +24,8 @@ class Member(models.Model):
                                                   MinLengthValidator(250)])
     team = models.CharField(max_length=100, choices=team_choices)
     location = models.CharField(max_length=100, choices=location_choices)
-    image = models.ImageField(help_text="""Maximum Width Should be 118
-                                         and Maximum Height should be 124""",
+    image = models.ImageField(help_text="""Minimum Width Should be 100
+                                         and Minimum Height should be 100""",
                               upload_to='team/')
 
     def __unicode__(self):
