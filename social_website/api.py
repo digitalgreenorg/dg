@@ -112,6 +112,11 @@ class ActivityResource(BaseResource):
     farmer = fields.ForeignKey(PersonResource, 'farmer', null=True)
     video = fields.ForeignKey(VideoResource, 'video', null=True)
     collection = fields.ForeignKey(CollectionResource, 'collection', null=True, full=True)
+    
+    def dehydrate_avatarURL (self, bundle):
+        if bundle.obj.partner:
+            return bundle.obj.partner.logoURL.url
+    
     class Meta:
         queryset = Activity.objects.all().order_by('-date')
         resource_name = 'activity'

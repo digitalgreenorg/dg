@@ -72,6 +72,7 @@ SOUTH_MIGRATION_MODULES = {
 }
 
 SOCIAL_AUTH_USER_MODEL = 'social_website.UserProfile'
+GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id') ]
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

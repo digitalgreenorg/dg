@@ -63,13 +63,18 @@
                                 <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
                                 {% else %}
                                 <li>
-                                    <a class="btn-sign-in btn-signed" href="{% url logout request.path %}">
+                                    <a class="btn-sign-in btn-signed" href="{% url logout %}?next={{request.path}}">
                                         <div class="media">
                                             <div class="img">
-                                                <img src="http://placehold.it/16x16">
+                                            {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                           	 <img class="profile-image" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+											{% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+											 <img class="profile-image" src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=16">
+											{% endif %}
+                                                
                                             </div>
                                             <div class="bd">
-                                                {{request.user.first_name}}
+                                                Sign Out
                                             </div>
                                         </div>
                                     </a>

@@ -1022,9 +1022,19 @@ a {
 	height: 100px;
 }
 
+.media .img-size-sq-small img{
+	width: 60px;
+	height: 60px;
+}
+
 .media .img-size-logo img{
 	width: 177px;
 	height: 125px;
+}
+
+.media .img-size-partner-location img{
+	width: 302px;
+	height: 222px;
 }
 
 .media .img-marginLg-lt {
@@ -1035,6 +1045,9 @@ a {
     margin-right: 65px;
 }
 
+.profile-image {
+	width: 16px;
+}
 /* Modifications for News on home page */
 .bd-text {
     width: 70%;
