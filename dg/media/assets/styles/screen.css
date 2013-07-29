@@ -1035,6 +1035,9 @@ a {
     margin-right: 65px;
 }
 
+.profile-image {
+	width: 16px;
+}
 /* Modifications for News on home page */
 .bd-text {
     width: 70%;
