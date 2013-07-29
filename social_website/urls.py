@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^reports/1/field$', direct_to_template,{'template': 'field-developments-09.html'}),
     url(r'^reports/1/learning$', direct_to_template,{'template': 'learnings-09.html'}),
     url(r'^press/$', media_view, name='press'),
-    url(r'^teammembers/$', member_view, name='teammember'),
+    url(r'^team/$', member_view, name='team'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
 )
