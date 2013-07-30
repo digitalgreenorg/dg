@@ -607,6 +607,14 @@ a {
     padding-left: 15px;
 }
 
+.grid-pad-lt-tiny{
+	padding-left: 7px;
+}
+
+.grid-pad-rt-tiny{
+	padding-right: 7px;
+}
+
 .grid-margin-rt-md {
     margin-right: 25px;
 }
