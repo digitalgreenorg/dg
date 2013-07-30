@@ -85,7 +85,11 @@ define(function(require) {
             // on search item mouse enter
             boundFunctions.onSearchItemMouseEnter = this._onSearchItemMouseEnter.bind(this);
             references.$searchItemsContainer.on('mouseenter', '.js-search-completion-item', boundFunctions.onSearchItemMouseEnter);
-
+            
+            // on search item mouse click
+            boundFunctions.onSearchItemMouseClick = this._onSearchItemMouseClick.bind(this);
+            references.$searchItemsContainer.on('click', '.js-search-completion-item', boundFunctions.onSearchItemMouseClick);
+            
             // search input timeout
             boundFunctions.onSearchInputChangedTimeout = this._onSearchInputChangedTimeout.bind(this);
 
@@ -254,7 +258,7 @@ define(function(require) {
                     break;
             }
         },
-
+        
         _onKeyUp: function(e) {
             switch (e.keyCode) {
                 // no need to send extra requests to the server
@@ -295,6 +299,11 @@ define(function(require) {
             }
         },
 
+        _onSearchItemMouseClick: function(e){
+        	e.preventDefault();
+            this._selectItem();
+        },
+        
         _onSearchItemMouseEnter: function(e) {
             this._references.$searchItemsContainer.find('.js-search-completion-item.hover').removeClass('hover');
             
