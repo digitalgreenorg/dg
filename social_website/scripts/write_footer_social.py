@@ -10,8 +10,8 @@ from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
 
-from settings import APP_KEY_TWITTER, APP_SECRET_TWITTER, OAUTH_TOKEN_TWITTER, OAUTH_TOKEN_SECRET_TWITTER
-from settings import APP_KEY_LINKEDIN, APP_SECRET_LINKEDIN, OAUTH_TOKEN_LINKEDIN, OAUTH_SECRET_LINKEDIN
+from dg.settings import APP_KEY_TWITTER, APP_SECRET_TWITTER, OAUTH_TOKEN_TWITTER, OAUTH_TOKEN_SECRET_TWITTER
+from dg.settings import APP_KEY_LINKEDIN, APP_SECRET_LINKEDIN, OAUTH_TOKEN_LINKEDIN, OAUTH_SECRET_LINKEDIN
 
 # Facebook Likes
 response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
@@ -42,18 +42,18 @@ data = json.loads(content)
 linkedin_followers = data["numFollowers"]
 linkedin_followers = '{:,}'.format(int(linkedin_followers))
 
-fo = open(settings.PROJECT_PATH+"/templates/social_website/includes/partials/footer_social_media.html", "r")
+fo = open(dg.settings.PROJECT_PATH+"/templates/social_website/includes/partials/footer_social_media.html", "r")
 data = fo.readlines()
 fo.close()
 
-file_template = """                            
-                                        <li><a href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c" id="fb-likes">%s <span>Like</span></h5></a></li>
-                                        <li><a href="https://twitter.com/digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n
-                                        <li><a href="http://www.youtube.com/user/digitalgreenorg"><h4 class="social-icon icon-youtube">You Tube</h4> <h5 class="sub-text hdg-c">%s <span>Videos</span></h5></a></li>\n
-                                        <li><a href="http://www.linkedin.com/company/619071"><h4 class="social-icon icon-linkedin">Linked In</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n
+file_template = """
+                                        <li><a target='_blank' href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c" id="fb-likes">%s <span>Like</span></h5></a></li>
+                                        <li><a target='_blank' href="https://twitter.com/digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n
+                                        <li><a target='_blank' href="http://www.youtube.com/user/digitalgreenorg"><h4 class="social-icon icon-youtube">You Tube</h4> <h5 class="sub-text hdg-c">%s <span>Videos</span></h5></a></li>\n
+                                        <li><a target='_blank' href="http://www.linkedin.com/company/619071"><h4 class="social-icon icon-linkedin">Linked In</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n
                """
 file_template = file_template % (facebook_likes, twitter_followers, youtube_videos, linkedin_followers)
 
-fo = open(settings.PROJECT_PATH+"/templates/social_website/includes/partials/footer_social_media.html", "w")
+fo = open(dg.settings.PROJECT_PATH+"/templates/social_website/includes/partials/footer_social_media.html", "w")
 fo.write(file_template)
 fo.close()
