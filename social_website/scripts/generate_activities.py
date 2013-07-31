@@ -200,22 +200,23 @@ def add_milestone(partner):
         milestone.save()
         next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
 
-# Do this only if making afresh, NOT IN CRON !!
-Activity.objects.all().delete()
-Milestone.objects.all().delete()
-    
-for partner in Partner.objects.all():
-    #Initial entry for milestone table
-    milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
-    milestone_object.save()
-    #Adding Village Added Activities for each partner
-    for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
-        add_village(village, partner)
-    #Adding Collection Added Activities for each partner
-    for collection in Collection.objects.filter(partner=partner):
-        add_collection(collection)
-    #Adding Video Added Activities for each partner
-    for video in Video.objects.filter(partner=partner):
-        add_video(video)
-    #Adding Milestone Activities for each partner
-    add_milestone(partner)
+if __name__ == '__main__':
+    # Do this only if making afresh, NOT IN CRON !!
+    Activity.objects.all().delete()
+    Milestone.objects.all().delete()
+        
+    for partner in Partner.objects.all():
+        #Initial entry for milestone table
+        milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
+        milestone_object.save()
+        #Adding Village Added Activities for each partner
+        for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
+            add_village(village, partner)
+        #Adding Collection Added Activities for each partner
+        for collection in Collection.objects.filter(partner=partner):
+            add_collection(collection)
+        #Adding Video Added Activities for each partner
+        for video in Video.objects.filter(partner=partner):
+            add_video(video)
+        #Adding Milestone Activities for each partner
+        add_milestone(partner)
