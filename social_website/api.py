@@ -117,6 +117,9 @@ class ActivityResource(BaseResource):
         if bundle.obj.partner:
             return bundle.obj.partner.logoURL.url
     
+    def dehydrate_date(self, bundle):
+        return bundle.obj.date.strftime('%b %d, %Y')
+
     class Meta:
         queryset = Activity.objects.all().order_by('-date')
         resource_name = 'activity'
