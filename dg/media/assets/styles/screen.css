@@ -3107,3 +3107,7 @@ body {
 .modal-footer .btn-block + .btn-block {
   margin-left: 0;
 }
+::-webkit-input-placeholder {
+   color: lightgray;
+   font-size: 22px;
+}
