@@ -187,26 +187,29 @@
 								        {% endif %}
                                                 
                                     </div>
-                                    <div class="bd layout-vr-md">
+                                    <div class="bd">
                                         <form>
                                             <label for="comment" class="text-hide">Comment</label>
                                             <textarea class="comment-text" id="comment"></textarea>
-                                           <div class="grid layout-vr-md">
-                                               <!--   <div class="grid-col">
-                                                    <input type="checkbox" id="facebook" />
-                                                    <label class="copy" for="facebook">Post to Facebook</label>
-                                                </div> -->
-                                                <div class="grid-rt">
-                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
-                                                </div>
-                                            </div>
-                                            <div class="centered">
                                             {% if not request.user.is_authenticated %}
-                                                <a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
+                                                <div class="layout-vr-md"></div>
+                                                <div class="centered layout-vr-md">
+                                                    <a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
+                                                </div>
                                             {% else %}
-                                                <input type="submit" value="Add a Comment" class="comment-btn" />
+                                                <div class="grid layout-vr-md">
+                                                    <!--   <div class="grid-col">
+                                                        <input type="checkbox" id="facebook" />
+                                                        <label class="copy" for="facebook">Post to Facebook</label>
+                                                    </div> -->
+                                                    <div class="grid-rt">
+                                                        <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
+                                                    </div>
+                                                </div>
+                                                <div class="centered">
+                                                    <input type="submit" value="Add a Comment" class="comment-btn" />
+                                                </div>
                                             {% endif %}
-                                            </div>
                                         </form>
                                     </div>
                                 </div>
