@@ -116,7 +116,8 @@ class ActivityResource(BaseResource):
     def dehydrate_avatarURL (self, bundle):
         if bundle.obj.partner:
             return bundle.obj.partner.logoURL.url
-    
+        return bundle.obj.avatarURL
+
     def dehydrate_date(self, bundle):
         return bundle.obj.date.strftime('%b %d, %Y')
 
