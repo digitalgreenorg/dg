@@ -2915,6 +2915,7 @@ textarea.comment-text {
 .play-button:hover {
 	background-position: right -134px;
     color: #49cd34;
+    cursor: pointer;
 }
  
 
