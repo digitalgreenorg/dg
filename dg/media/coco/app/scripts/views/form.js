@@ -8,11 +8,12 @@ define([
     'indexeddb_backbone_config', 
     'configs', 
     'offline_utils', 
+    'denormalize',
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -637,132 +638,6 @@ define([
             return d_json;
         },
             
-        denormalize_json: function(n_json){
-            console.log("FORM: Before DNormalising json - "+JSON.stringify(n_json))
-            var f_entities = {};    
-            if(this.bulk)
-                f_entities = this.bulk.foreign_fields;
-            else            
-                f_entities = this.foreign_entities;
-            var c=0;
-            console.log(f_entities);
-            for (member in f_entities) {
-                for(element in f_entities[member])
-                {
-                    if(f_entities[member][element].expanded)
-                    {
-                        for(el in f_entities[member][element].expanded.denormalize)
-                        {
-                            var d_obj = f_entities[member][element].expanded.denormalize;
-                            if (n_json[element] instanceof Array) {
-                                $.each(n_json[element], function(ind, obj){
-                                    var id = obj[el];
-                                    var index = obj["index"];
-                                    var tr_el = $('tr[index='+index+']');
-                                    var label = $(tr_el).find('select option:selected').text();
-                                    // console.log((sel_el));
-                                    // var label = $(sel_el)
-                                    obj[el]={};
-                                    obj[el]["id"] = id;
-                                    obj[el][d_obj[el]["name_field"]] = label;
-                                    // delete obj["index"];
-                                });    
-                            }
-                        }
-                    }
-                    else if (this.bulk)
-                    {
-                        var name_field = f_entities[member][element]["name_field"];
-                        var that = this;
-                        $.each(n_json.bulk, function(ind, obj){
-                            var id = obj[element];
-                            if($.inArray(element, that.bulk.borrow_fields)!=-1)
-                            {
-                                obj[element] = {};
-                                obj[element]["id"] = id;
-                                obj[element][name_field] = $('select[name='+element+'] option:selected').text();     
-                            }
-                            else
-                            {
-                                var index = obj["index"];
-                                console.log("index = "+index);
-                                var tr_el = $('tr[index='+index+']');
-                                var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
-                                var label = null;
-                                var el_dict = {};
-                                if($(dom_el).is("select"))
-                                {
-                                    label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
-                                    el_dict["id"] = parseInt(id);
-                                    el_dict[name_field] = label;   
-                                }
-                                else if($(dom_el).is("input"))
-                                {
-                                    var index = that.f_index.indexOf(member);
-                                    console.log(index);
-                                
-                                    var collection1 = that.f_colls[index];
-                                    console.log(element);
-                                    console.log(collection1);
-                                    var model = collection1.where({
-                                        id: parseInt(id)
-                                    })[0];
-                                    el_dict["id"] = parseInt(id);
-                                    el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
-                                }
-                                obj[element] = el_dict;
-                            }
-                        });
-                    }
-                    else if (element in n_json) {
-                        name_field = f_entities[member][element]["name_field"];
-                        if (n_json[element] instanceof Array) {
-                            var el_array = [];
-                            var that = this;
-                            $.each(n_json[element],function(index, id){
-                                id = parseInt(id);
-                                console.log(id);
-                                if((id != "")&&(id!=null)&&(id!=undefined)){ 
-                                    var entity = that.f_colls[c].where({
-                                        id: id
-                                    })[0];
-                                    var el_dict = {};
-                                    el_dict["id"] = id;
-                                    el_dict[name_field] = entity.get(f_entities[member][element]["name_field"]);    
-                                    el_array.push(el_dict);    
-                                }
-                            });
-                            n_json[element] = el_array;
-                        } else {
-                            var id = parseInt(n_json[element]);
-                            if(id){ 
-                                // var entity = this.f_colls[c].where({
-//                                     id: id
-//                                 })[0];
-//                                 n_json[element] = {};
-//                                 n_json[element]["id"] = id;
-//                                 n_json[element][name_field] = entity.get(f_entities[member][element]["name_field"]);    
-                                // var tr_el = $('tr[index='+index+']');
-                                //var label = $(tr_el).find('select option:selected').text();
-                                // var sel_el = $('select[name='+element+'] option:selected').text(); 
-                                n_json[element] = {};
-                                n_json[element]["id"] = id;
-                                n_json[element][name_field] = $('select[name='+element+'] option:selected').text();     
-                            }
-                            else{
-                                n_json[element] = {};
-                                n_json[element]["id"] = null;
-                                n_json[element][name_field] = null;
-                            }
-                        }
-                    }    
-                }
-                c++;
-            }
-            console.log("FORM: After DNormalising json - "+JSON.stringify(n_json))
-            
-        },
-                
         fill_form: function() {
             console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
@@ -1007,35 +882,73 @@ define([
             }, this);
         },
         
-        save: function() {
-            this.show_errors(null);    //clear old errors
-            this.set_submit_button_state('loading'); //set state to loading
-            
+        denormalize_json: function(json){
+            var dfds = [];
+            if(this.bulk){
+                _.each(json.bulk, function(bulk, index){
+                    var dfd = Denormalizer.denormalize(bulk, this.bulk.foreign_fields);
+                    dfds.push(dfd);
+                }, this);
+            }
+            else{
+                var dfd = Denormalizer.denormalize(json, this.foreign_entities);
+                dfds.push(dfd);
+                if(this.inline){
+                    _.each(json.inlines, function(inline, index){
+                        var dfd = Denormalizer.denormalize(inline, this.inline.foreign_entities);
+                        dfds.push(dfd);
+                    }, this);
+                }
+            }
+            return $.when.apply($,dfds);
+        },
+        
+        //converts form into json object
+        serialize_form: function(){
+            var json = {};
             if(this.bulk)
             {
-                this.final_json= {};
-                this.parse_bulk(this.final_json);
-                // $.each(this.final_json.bulk, function(index, obj){
-                // });
-                this.include_borrowed_attributes(this.final_json, this.bulk.borrow_fields);
+                this.parse_bulk(json);
+                this.include_borrowed_attributes(json, this.bulk.borrow_fields);
             }
             else
             {
-                this.final_json = Backbone.Syphon.serialize(this);
+                json = Backbone.Syphon.serialize(this);
                 if(this.expanded)
-                    this.parse_expanded(this.final_json);
+                    this.parse_expanded(json);
                 if(this.inline)
-                    this.parse_inlines(this.final_json);
+                    this.parse_inlines(json);
             }
-
-            this.clean_json(this.final_json);
-            this.denormalize_json(this.final_json);
-            if(this.edit_case)
-                this.final_json = this.extend_edit_json(this.final_json);
-            var ev_data = {
-                context: this,
-            };
-            this.trigger("save_clicked",ev_data);
+            return json;
+        },
+        
+        
+        save: function() {
+            //clear old errors
+            this.show_errors(null);    
+            //set state to loading
+            this.set_submit_button_state('loading');
+            //get a json object out of the form 
+            this.final_json = this.serialize_form(); 
+            //clean json to be able to send to server    
+            this.clean_json(this.final_json);   
+            //denormalise the foreign elements in json 
+            var that = this;
+            this.denormalize_json(this.final_json)
+                .done(function(){
+                    //preserve the background fields - not entered through form:            
+                    if(that.edit_case)
+                        that.final_json = that.extend_edit_json(that.final_json);   
+                    /*form rendered, form filled by user, save clicked, savable json prepared, 
+                    this module's work is done for now, sending event*/
+                    var ev_data = {
+                        context: that,
+                    };
+                    that.trigger("save_clicked",ev_data);
+                })  
+                .fail(function(){
+                    console.log("Denormalising json failed!");
+                }); 
         },
 
         button2_clicked: function() {
