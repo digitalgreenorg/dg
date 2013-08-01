@@ -108,15 +108,15 @@ def read_data(entry):
     date = entry['created_time'].split('T')[0]
     avatarURL = ''.join([STATIC_URL, 'assets/images/favicon-white.png'])
     newsFeed = 1
-    activity_type = 0 #ActivityType.facebook
+    activity_type = ActivityType.facebook
     titleURL = 'https://www.facebook.com/digitalgreenorg/posts/' + facebookID
     store_data(title, date, textContent, avatarURL, newsFeed, image_url, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL)
     return False
 
 def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altString, imageLinkURL, facebookID, has_image, activity_type, titleURL):
     activity = None
-    if title not in ["Digital Green", "Timeline Photos"] and Activity.objects.filter(title=title, type=ActivityType.facebook).count() > 0:
-        activity = Activity.objects.get(title=title, type=ActivityType.facebook)
+    if title not in ["Digital Green", "Timeline Photos"] and Activity.objects.filter(title=title, type=activity_type).count() > 0:
+        activity = Activity.objects.get(title=title, type=activity_type)
         # TODO: What if MultipleObjectsReturned?
     else:
         activity = Activity(title=title, date=date, textContent=textContent, avatarURL=avatarURL, newsFeed=newsFeed, facebookID=facebookID, type=activity_type, titleURL=titleURL)
