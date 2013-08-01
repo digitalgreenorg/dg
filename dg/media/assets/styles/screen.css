@@ -2903,17 +2903,17 @@ textarea.comment-text {
 
 .play-button {
 	background: url(../images/arrow-slideshow.png) no-repeat right 0;
-    height: 39px;
-    width: 28px;
-    top: 50%;
-    left: 50%;
+    height: 120px;
+    width: 101px;
+    top: 35%;
+    left: 45%;
     position: absolute;
     z-index: 1000;
     
 }
 
 .play-button:hover {
-	background-position: right -50px;
+	background-position: right -134px;
     color: #49cd34;
 }
  
@@ -3127,4 +3127,8 @@ body {
 }
 .modal-footer .btn-block + .btn-block {
   margin-left: 0;
+}
+::-webkit-input-placeholder {
+   color: lightgray;
+   font-size: 22px;
 }
