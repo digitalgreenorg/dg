@@ -56,7 +56,7 @@ def initial_personvideorecord():
         
 def add_partner_info(partner):
     website_partner = Partner(coco_id = str(partner.id), joinDate = partner.date_of_association, name = partner.partner_name,
-                              logoURL = '', description = '')
+                              logoURL = '', description = '', full_name = ' ')
     website_partner.save()
 
 def get_offline_stats(video_id):
