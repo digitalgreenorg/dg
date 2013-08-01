@@ -405,7 +405,7 @@ function() {
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
             }],
-            foreign_entities: { //used at convert_namespace only
+            foreign_entities: { //used at convert_namespace, denormalize only
                 village: {
                     village: {
                         placeholder: 'id_village',
