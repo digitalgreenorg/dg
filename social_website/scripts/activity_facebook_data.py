@@ -14,7 +14,7 @@ from social_website.models import Activity, ImageSpec
 
 
 def create_thumbnail(url, image_name, new_width, new_height):
-    filepath = dg.settings.MEDIA_ROOT + '/facebook/' + image_name
+    filepath = dg.settings.MEDIA_ROOT + 'facebook/' + image_name
     urllib.urlretrieve(url, filepath)
     img = Image.open(filepath)
     ratio = new_width*1.0/new_height
