@@ -2915,6 +2915,7 @@ textarea.comment-text {
 .play-button:hover {
 	background-position: right -134px;
     color: #49cd34;
+    cursor: pointer;
 }
  
 
@@ -3131,4 +3132,8 @@ body {
 ::-webkit-input-placeholder {
    color: lightgray;
    font-size: 22px;
+}
+
+.menu-item:hover .menu-subitem{
+    color:black;
 }
