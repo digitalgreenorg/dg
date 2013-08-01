@@ -401,7 +401,11 @@
 </script>
 <script type="text/template" id="mediator_list_item_template">
     <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= name %></td>
     <td> 
 		<% 
@@ -479,7 +483,11 @@
 </script>
 <script type="text/template" id="screening_list_item_template">
     <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= date %></td>
     <td> <%= animator.name %></td>
     <td> <%= village.village_name %></td>
@@ -682,7 +690,11 @@
 </script>
 <script type="text/template" id="adoption_list_item_template">
     <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= date_of_adoption %></td>
     <td> <%= person.person_name %></td>
 	<td> <%= group.group_name %></td>
@@ -842,7 +854,11 @@
 </script>
 <script type="text/template" id="group_list_item_template">
     <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= group_name %></td>
     <td> <%= village.village_name %></td>
     <td>
@@ -919,7 +935,11 @@
 </script>
 <script type="text/template" id="video_list_item_template">
     <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= title %></td>
 	<td> <%= village.village_name %></td>
     <td> <%= video_production_start_date %></td>
@@ -1110,7 +1130,11 @@
 
 <script type="text/template" id="village_list_item_template">
 <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= village_name %></td>
     <td> <%= block_name %></td>
     <td> <%= start_date %></td>
@@ -1125,7 +1149,11 @@
 <!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
 <script type="text/template" id="person_list_item_template">
 <tr>
-    <td><%= id %></td>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
     <td><%= person_name %></td>
     <td> <%= father_name %></td>
     <td> <%= village.village_name %></td>
