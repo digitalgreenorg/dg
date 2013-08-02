@@ -2,16 +2,16 @@ from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
 
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
 import gdata.youtube.service
 import os
 import urllib
+
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from datetime import timedelta, date, datetime
 from math import ceil, floor
 from PIL import Image
 
-from datetime import timedelta, date, datetime
-from smtplib import SMTP
 from dashboard.models import Video
 
 BUCKET_NAME = 'video_thumbnail'
