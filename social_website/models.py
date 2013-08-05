@@ -176,3 +176,7 @@ class VideoLike(models.Model):
     video = models.ForeignKey(Video)
     user = models.ForeignKey(UserProfile)
 post_save.connect(increase_online_video_like, sender = VideoLike)
+
+class CronTimestamp(models.Model):
+    name = models.CharField(max_length=30)
+    last_time = models.DateTimeField(default=lambda : datetime.datetime.utcnow())
