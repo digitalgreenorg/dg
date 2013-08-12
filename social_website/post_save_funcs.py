@@ -39,3 +39,12 @@ def video_collection_activity(sender, **kwargs):
         for video_uid in videos:
             video = get_model('social_website', 'Video').objects.get(uid=video_uid)
             add_video_collection(collection, video)
+
+def collection_video_save(sender, **kwargs):
+    if kwargs['action'] == 'post_add' or kwargs['action'] == 'post_remove':
+        from migration_functions import populate_collection_stats, populate_partner_stats
+        collection = kwargs["instance"]
+        populate_collection_stats(collection)
+        populate_partner_stats(collection.partner)
+        collection.save()
+        collection.partner.save()
