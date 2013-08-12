@@ -104,7 +104,7 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
-m2m_changed.connect(collection_video_save, sender = Collection)
+m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
