@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 import json
 from social_website.models import Collection, Video, Partner
+from dg.settings import OLD_VID_PAGE_URL
 
 def get_absolute_url_for_completion(self):
     return reverse('social_website.views.search_view')
@@ -45,6 +46,7 @@ def enter_data_into_facet_search(conn, index_name):
 
 def enter_data_into_completion_search(conn, index_name):
     i = 0
+    non_collection = 0
     # Videos
     for video in Video.objects.all():
         if len(video.collection_set.all()):
@@ -58,6 +60,15 @@ def enter_data_into_completion_search(conn, index_name):
                                "type" : "Videos"})
             conn.index(data, index_name, index_name, i+1)
             i+= 1
+        else:
+            url = OLD_VID_PAGE_URL + '?id=%s' % video.coco_id
+            data = json.dumps({"searchTerm":video.title, 
+                               "targetURL" : url,
+                               "type" : "Videos"})
+            conn.index(data, index_name, index_name, i+1)
+            i+= 1
+            non_collection += 1
+    print "%d videos without collections added" % non_collection
     
     # Collections        
     for collection in Collection.objects.all():
