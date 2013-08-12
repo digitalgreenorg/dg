@@ -14,3 +14,6 @@ def increase_online_video_like(sender, **kwargs):
     except Exception, ex:
         print ex
         
+def collection_video_save(sender, **kwargs):
+    instance = kwargs["instance"]
+    
