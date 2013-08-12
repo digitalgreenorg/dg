@@ -8,10 +8,10 @@
                         <div class='grid-col grid-size1of3'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Current Openings</h3>
                             <ul class='link-list'>
-                                <li><a href="#programmanagers">Program Managers - Bihar, Odisha</a>
-                                </li>
-                                <li><a href="#trainingspecialists">Training Specialists</a>
-                                </li>
+                                {% for job in job_list %}
+                                    <li><a href="#{{job.title}}">{{job.title}}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>  
                         <div class='grid-col grid-size2of3 copy'>
@@ -27,125 +27,39 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id='programmanagers' class='about-bg'>
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Program Managers - Bihar, Odisha</h2>
-                    <div class='layout-vr-xlg'>
-                        <p class='copy copy-para'>We invite applications from suitable candidates for the position of Program Managers for Bihar and Odisha. The Program Managers will be based in Patna and Bhubaneswar, respectively, and will report to the State Managers.
-                        </p>
-                        <div>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
-                            <ul class='bullet-list copy copy-para'>
-                                <li>Work with the state teams and partner organizations, develop annual work plans and quarterly activity plans and ensure their timely execution
-                                </li>
-                                <li>Monitor project activities and report on activities, milestones and accomplishments in a timely fashion
-                                </li>
-                                <li>Nurture and strengthen partnership with area-specific NGOs and community groups
-                                </li>
-                                <li>Use ICT to disseminate best practices among target rural populations and motivate them to adopt new practices
-                                </li>
-                                <li>Identify concerns, issues and problems promptly, address and report them to the State Managers
-                                </li>
-                                <li>Liaise with partners and technical advisors
-                                </li>
-                                <li>Identify suitable farming practices, livelihood practices and develop content for video production
-                                </li>
-                                <li>Process necessary project approval and contractual documentation
-                                </li>
-                                <li>Perform other related duties as required
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
-                            <ul class='bullet-list copy copy-para'>
-                                <li>University degree preferably in Rural Development, Social Sciences or Information Technology
-                                </li>
-                                <li>Two to three years of relevant experience in project/ program formulation and implementation at national and international levels
-                                </li>
-                                <li>Previous project/program management experience
-                                </li>
-                                <li>Excellent writing, communication and negotiation skills
-                                </li>
-                                <li>Ability to prepare clear and concise reports
-                                </li>
-                                <li>Strong strategic and creative thinking, excellent leadership, coordination and information management skills
-                                </li>
-                                <li>Demonstrated analytical skills applied on a wide range of factors, parameters, policies and priorities for the assessment and resolution of complex situations
-                                </li>
-                                <li>Personal commitment, drive for results, efficiency and flexibility
-                                </li>
-                                <li>Ability to work effectively and harmoniously in a team and with colleagues from varied cultures and professional backgrounds
-                                </li>
-                            </ul>
-                        </div>
-                        <p class='copy'>Familiarity with the region will be an added asset.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id='trainingspecialists' class='about-bg about-bg-white'>
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Training Specialists</h2>
-                    <div class='layout-vr-xlg'>
-                        <p class='copy copy-para'>We invite applications from suitable candidates for the positions of Training Specialists to be based in state capitals with state teams, and also at the headquarters in New Delhi. The Training Specialists placed in the states will report to the State Managers and at headquarters to the Training Director.
-                        </p>
-                        <div>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
-                            <ul class='bullet-list copy copy-para'>
-                                <li>In collaboration with the Training Director, develop sets of training modules for different components of Digital Green system: initiation, production and diffusion
-                                </li>
-                                <li>Develop a profile of the training output and a training manual that details how training will be imparted at various levels
-                                </li>
-                                <li>Participate in the delivery of training at various locations assuring highest quality standards
-                                </li>
-                                <li>Develop a suitable and appropriate methodology for supportive supervision to be followed to observe trainees at workplace
-                                </li>
-                                <li>Evaluate training inputs over time to assure that training is leading to performance enhancement and work with Team Leaders to refine and fine-tune the training materials for greater efficacy
-                                </li>
-                                <li>Document lessons learned and best practices ensuring that these are incorporated into program guidance and capacity building tools
-                                </li>
-                                <li>Keep abreast of latest advances in training technologies and adapt them to Digital Green work
-                                </li>
-                                <li>Identify areas for support and interventions within the thematic/sectoral areas assigned
-                                </li>
-                                <li>Perform other related duties as required
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
-                            <ul class='bullet-list copy copy-para'>
-                                <li>University degree in Rural Development, Social Sciences or any other relevant discipline
-                                </li>
-                                <li>Five years of relevant experience in providing performance based training using adult learning principles
-                                </li>
-                                <li>Experience in transfer of learning to semi-literate and rural populations with an aptitude to use ICT tools for social change
-                                </li>
-                                <li>Excellent writing, communication and negotiation skills
-                                </li>
-                                <li>Ability to prepare clear and concise reports
-                                </li>
-                                <li>Excellent leadership, coordination and information management skills
-                                </li>
-                                <li>Strong strategic and creative thinking
-                                </li>
-                                <li>Demonstrated analytical skills applied on a wide range of factors, parameters, policies and priorities for the assessment and resolution of complex situations
-                                </li>
-                                <li>Personal commitment, drive for results, efficiency and flexibility
-                                </li>
-                                <li>Ability to work effectively and harmoniously in a team and with colleagues from varied cultures and professional backgrounds
-                                </li>
-                            </ul>
+        {% for job in job_list %}
+            <section id='{{job.title}}' class='{% cycle 'about-bg' 'about-bg about-bg-white' %}'>
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
+                        <div class='layout-vr-xlg'>
+                            <p class='copy copy-para'>{{job.description}}
+                            </p>
+                            <div>
+                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
+                                <ul class='bullet-list copy copy-para'>
+                                    {% for keyres in job.keyresponsibility_set.all %}
+                                        <li>{{keyres}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
+                                <ul class='bullet-list copy copy-para'>
+                                    {% for exp in job.experiencequalification_set.all %}
+                                        <li>{{exp}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <p class='copy'>{{job.conclusion}}
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        {% endfor %}
 
 {% include "includes/footer.html" %}
 
