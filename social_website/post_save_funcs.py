@@ -15,8 +15,7 @@ def increase_online_video_like(sender, **kwargs):
         print ex
         
 def collection_video_save(sender, **kwargs):
-    if kwargs['action'] == 'post_add':
-        print "here"
+    if kwargs['action'] == 'post_add' or kwargs['action'] == 'post_remove':
         from migration_functions import populate_collection_stats, populate_partner_stats
         collection = kwargs["instance"]
         populate_collection_stats(collection)
