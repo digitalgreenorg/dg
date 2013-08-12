@@ -16,10 +16,10 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ['date']
     
 class CollectionAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'state', 'partner', 'language', 'videos', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'likes', 'views', 'adoptions']
+    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'state', 'partner', 'language', 'videos', 'category', 'subcategory', 'topic', 'subtopic', 'subject']
                           }
                   )]
     list_display = ('title', 'category', 'partner', 'state', 'language')
     search_fields = ['title']
-    
+    filter_horizontal = ('videos',)
     
