@@ -35,24 +35,20 @@
                         <div class='layout-vr-xlg'>
                             <p class='copy copy-para'>{{job.description}}
                             </p>
-                            <div>
-                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
-                                <ul class='bullet-list copy copy-para'>
-                                    {% for keyres in job.keyresponsibility_set.all %}
-                                        <li>{{keyres}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
-                                <ul class='bullet-list copy copy-para'>
-                                    {% for exp in job.experiencequalification_set.all %}
-                                        <li>{{exp}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for keyres in job.keyresponsibility_set.all %}
+                                    <li>{{keyres}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for exp in job.experiencequalification_set.all %}
+                                    <li>{{exp}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                             <p class='copy'>{{job.conclusion}}
                             </p>
                         </div>
