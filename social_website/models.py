@@ -4,10 +4,10 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.utils import timezone
 
-from post_save_funcs import increase_online_video_like
+from post_save_funcs import collection_add_activity, increase_online_video_like, video_add_activity, video_collection_activity
 
 #===============================================================================
 # Linked to COCO
@@ -57,6 +57,7 @@ class Video(models.Model):
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
+post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -104,6 +105,8 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+post_save.connect(collection_add_activity, sender=Collection)
+m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)

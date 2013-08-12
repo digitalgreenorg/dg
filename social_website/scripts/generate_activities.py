@@ -1,9 +1,10 @@
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from django.db.models import Max
+import pickle
+from django.db.models import get_model, Max
 import dashboard.models
-from social_website.models import Activity, Collection, ImageSpec, Milestone, Partner, Video
+#from social_website.models import Collection, ImageSpec, Milestone, Partner, Video
 
 
 class ActivityType:
@@ -19,6 +20,7 @@ class ActivityType:
 
 
 def add_collection(collection):
+    Activity = get_model('social_website','Activity')
     partner = collection.partner
     title = "%s shared a new collection" % (collection.partner.name).title()
     collection_name = (collection.title)
@@ -35,6 +37,8 @@ def add_collection(collection):
 
 
 def add_video(video):
+    Activity = get_model('social_website','Activity')
+    ImageSpec = get_model('social_website','ImageSpec')
     partner = video.partner
     title = "%s shared a new video" % (video.partner.name).title()
     video_title = (video.title).title()
@@ -56,10 +60,10 @@ def add_video(video):
     activity.save()
 
 
-def add_video_collection(video_collection):
-    collection = video_collection.collection
-    video = video_collection.video
-    partner = video.partner
+def add_video_collection(collection, video):
+    Activity = get_model('social_website','Activity')
+    print type(collection)
+    partner = collection.partner
     title = collection.partner.name
     collection_name = (collection.title).title()
     video_title = (video.title).title()
@@ -68,12 +72,14 @@ def add_video_collection(video_collection):
     newsFeed = 0
     titleURL = collection.get_absolute_url()
     activity_type = ActivityType.new_video_collection
-    activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, video_id = video.id, titleURL=titleURL, type=activity_type)
+    print type(Activity)
+    activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, video_id = video.uid, titleURL=titleURL, type=activity_type)
     activity.save()
 
 
 def add_village(village, partner):
-    screenings = dashboard.models.Screening.objects.filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
+    Activity = get_model('social_website','Activity')
+    screenings = dashboard.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     if (len(screenings) > 0):
         title = partner.name
         date = screenings[0].date
@@ -89,6 +95,10 @@ def add_village(village, partner):
 
 
 def add_milestone(partner):
+    Activity = get_model('social_website', 'Activity')
+    ImageSpec = get_model('social_website', 'ImageSpec')
+    Milestone = get_model('social_website', 'Milestone')
+    Video = get_model('social_website', 'Video')
     milestone_video_village = [x * 10 for x in range(11)]
     milestone_video_village.extend([x * 25 for x in range(5, 9)])
     milestone_video_village.extend([x * 50 for x in range(5, 101)])
@@ -201,17 +211,28 @@ def add_milestone(partner):
         next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
 
 if __name__ == '__main__':
+    Activity = get_model('social_website', 'Activity')
+    Collection = get_model('social_website', 'Collection')
+    Milestone = get_model('social_website', 'Milestone')
+    Partner = get_model('social_website', 'Partner')
+    Video = get_model('social_website', 'Video')
+
     # Do this only if making afresh, NOT IN CRON !!
-    Activity.objects.all().delete()
-    Milestone.objects.all().delete()
-        
+#     Activity.objects.all().delete()
+#     Milestone.objects.all().delete()
+    
+
     for partner in Partner.objects.all():
         #Initial entry for milestone table
         milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
         milestone_object.save()
         #Adding Village Added Activities for each partner
+        file = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
+        village_partner_list = []
         for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
             add_village(village, partner)
+            village_partner_list.append((village, partner))
+        pickle.dump(village_partner_list, open(file,"wb"))
         #Adding Collection Added Activities for each partner
         for collection in Collection.objects.filter(partner=partner):
             add_collection(collection)
