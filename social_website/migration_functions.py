@@ -66,8 +66,7 @@ def get_offline_stats(video_id):
     stats['adopted__sum'] = stats['adopted__sum'] if stats['adopted__sum'] is not None else 0 
     return stats
 
-def update_person_video_record(pma):
-    videos = [video for video in pma.screening.videoes_screened.all()]
+def update_person_video_record(pma, videos):
     for video in videos:
         try:
             person_video_obj = PersonVideoRecord.objects.get(personID = pma.person_id, videoID = video.id)
