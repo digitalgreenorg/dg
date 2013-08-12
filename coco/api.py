@@ -209,6 +209,16 @@ class VillageLevelAuthorization(Authorization):
         kwargs[self.village_field] = villages
         return object_list.filter(**kwargs).distinct()
 
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.village_field] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download" )
+
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):
         ###Videos produced by partner with in the same state
@@ -224,6 +234,16 @@ class VideoAuthorization(Authorization):
         districts_assigned_to_partner = District.objects.filter(partner_id = coco_user.partner_id, state__in = user_states).values_list('id', flat = True)
         videos_with_out_user = videos.filter(user_created = None, village__block__district__in = districts_assigned_to_partner).values_list('id', flat=True)
         return object_list.filter(id__in= set(list(videos_with_user) + list(videos_with_out_user)))
+    
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs['village__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download video")
 
 class BaseResource(ModelResource):
     
