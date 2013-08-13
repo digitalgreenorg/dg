@@ -60,7 +60,7 @@ class Video(models.Model):
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
     def __unicode__(self):
-        return "%s (%s)" % (self.title, coco_id)
+        return "%s (%s)" % (self.title, self.coco_id)
 
 class Person(models.Model):
     uid = models.AutoField(primary_key=True)
