@@ -20,20 +20,21 @@ class ActivityType:
 
 
 def add_collection(collection):
-    Activity = get_model('social_website','Activity')
-    partner = collection.partner
-    title = "%s shared a new collection" % (collection.partner.name).title()
-    collection_name = (collection.title)
-    video_number = len(collection.videos.all())
-    state_name = collection.state
-    country_name = (dashboard.models.State.objects.get(state_name=state_name)).country.country_name
-    textContent = "Watch our new collection on %s with %s videos, produced in %s, %s." % (collection_name, video_number, state_name, country_name)
-    date = collection.videos.aggregate(Max('date'))['date__max']
-    newsFeed = 0
-    titleURL = collection.get_absolute_url()
-    activity_type = ActivityType.new_collection
-    activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, titleURL=titleURL, type=activity_type)
-    activity.save()
+    if len(collection.videos.all()) > 0:
+        Activity = get_model('social_website','Activity')
+        partner = collection.partner
+        title = "%s shared a new collection" % (collection.partner.name).title()
+        collection_name = (collection.title)
+        video_number = len(collection.videos.all())
+        state_name = collection.state
+        country_name = (dashboard.models.State.objects.get(state_name=state_name)).country.country_name
+        textContent = "Watch our new collection on %s with %s videos, produced in %s, %s." % (collection_name, video_number, state_name, country_name)
+        date = collection.videos.aggregate(Max('date'))['date__max']
+        newsFeed = 0
+        titleURL = collection.get_absolute_url()
+        activity_type = ActivityType.new_collection
+        activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, titleURL=titleURL, type=activity_type)
+        activity.save()
 
 
 def add_video(video):
