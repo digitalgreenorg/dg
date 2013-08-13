@@ -29,6 +29,8 @@ class Partner(models.Model):
     views = models.BigIntegerField(default=0)
     likes = models.BigIntegerField(default=0)
     adoptions = models.BigIntegerField(default=0)
+    def __unicode__(self):
+        return self.name
     def get_absolute_url(self):
         return reverse('partner', args=[str(self.name)])
     def increase_likes(self):
@@ -58,6 +60,9 @@ class Video(models.Model):
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.title
 post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):

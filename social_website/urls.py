@@ -2,7 +2,7 @@ from django.conf.urls.defaults import include, patterns, url
 from django.views.generic.simple import direct_to_template
 
 from communications.views import media_view
-from human_resources.views import member_view
+from human_resources.views import job_view, member_view
 from views import social_home, collection_view, logout_view, partner_view, search_view
 
 urlpatterns = patterns('',
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^about/resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^about/team/$', member_view, name='team'),
     url(r'^about/tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
-    url(r'^careers/$', direct_to_template, {'template': 'career.html'}, name='career'),
+    url(r'^careers/$', job_view, name='career'),
     # TODO: Connect needs to be fixed.
     url(r'^connect/(?P<partner>.+)/$', partner_view, name='partner'),
     url(r'^connect/$', direct_to_template, {'template': 'connect.html', 'extra_context': {'header': {'currentPage':'Connect'}}}, name='connect'),
