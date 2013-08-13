@@ -14,7 +14,7 @@ from post_save_funcs import increase_online_video_like
 #===============================================================================
 class Partner(models.Model):
     uid = models.AutoField(primary_key=True)
-    coco_id = models.CharField(max_length=20, default='')
+    coco_id = models.CharField(max_length=20, blank=True, null=True)
     name = models.CharField(max_length=100)
     full_name = models.CharField(max_length=250)
     description = models.TextField(blank=True)
@@ -60,7 +60,7 @@ class Video(models.Model):
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
     def __unicode__(self):
-        return self.title
+        return "%s (%s)" % (self.title, coco_id)
 
 class Person(models.Model):
     uid = models.AutoField(primary_key=True)
