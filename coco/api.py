@@ -497,6 +497,7 @@ class PersonResource(BaseResource):
     videos_seen = fields.DictField(null=True)
     
     class Meta:
+        max_limit = None
         queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
         resource_name = 'person'
         authorization = VillageLevelAuthorization('village__in')
