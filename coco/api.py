@@ -247,8 +247,6 @@ class VideoAuthorization(Authorization):
         # Is the requested object owned by the user?
         kwargs = {}
         kwargs['village__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
-        print bundle.obj.id
-        print 'in read detail'
         obj = object_list.filter(**kwargs).distinct()
         if obj:
             return True
