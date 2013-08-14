@@ -666,7 +666,12 @@
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <input id="interested_row7" name="interested" type="checkbox">
+                    <%if(typeof(interested)!="undefined"&&interested){%>
+                        <input type="checkbox" name="interested" checked>
+                    <%} else{%>
+                        <input type="checkbox" name="interested">
+                    <%}%>    
+                    
                 </div>
             </div>
         </td>
