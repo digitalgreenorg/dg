@@ -108,7 +108,8 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
                 },
                 error: function(model, error) {
                     //TODO: OOPS! What should be done now????
-                    alert("unexpected error. check console log "+error);
+                    // alert("unexpected error. check console log "+error);
+                    console.log("CONVERTNAMESPACE: unexpected error.",error);
                     return dfd.reject(error);
                 }
             });
