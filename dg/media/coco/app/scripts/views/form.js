@@ -864,6 +864,9 @@ define([
                             obj[member] = [];
                         }
                     }
+                    else if(typeof(obj[member])=="string"){
+                        obj[member] = obj[member].trim();
+                    }
                 }    
             }    
 

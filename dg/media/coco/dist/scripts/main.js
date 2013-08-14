@@ -6540,28 +6540,25 @@ define('views/form',[
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 inl_obj["index"] = $(inl).attr("index");
-                var inputs = $(inl).find("input");
-                var ignore = true;
-                // if($(inl).attr("model_id"))
-                //     inl_obj.id = parseInt($(inl).attr("model_id"));
-                $.each(inputs,function(index1, inp){
-                    inl_obj[$(inp).attr("name")]= $(inp).val();
-                    if($(inp).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(inp).attr("name"));
+                $(inl).find(':input').each(function(){
+                    if(!$(this).attr('name'))
+                        return;
+                    inline_attrs.push($(this).attr("name"));    
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    				switch(this.type) {
+    					case 'password':
+    					case 'select-multiple':
+    					case 'select-one':
+    					case 'text':
+    					case 'textarea':
+    						inl_obj[attr_name] = $(this).val();
+    						break;
+    					case 'checkbox':
+    					case 'radio':
+    						inl_obj[attr_name] = this.checked;
+    				}
                 });
-                var selects = $(inl).find("select");
-                $.each(selects,function(index2, sel){
-                    inl_obj[$(sel).attr("name")]= $(sel).val();
-                    if($(sel).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(sel).attr("name"));
-                });
-                if(!ignore)
-                    raw_json[element].push(inl_obj);
-                // console.log($(inl).serializeArray());    
+                raw_json[element].push(inl_obj);
             });
             
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -6651,6 +6648,9 @@ define('views/form',[
                         {
                             obj[member] = [];
                         }
+                    }
+                    else if(typeof(obj[member])=="string"){
+                        obj[member] = obj[member].trim();
                     }
                 }    
             }    
