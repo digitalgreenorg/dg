@@ -911,7 +911,37 @@ function() {
                     end_time : new Date().toJSON().replace("Z", "")
                 })    
             }
-        } 
+        },
+        reset_database_check_url: '/coco/reset_database_check/',
+        onLogin: function(Offline, Auth){
+            getLastDownloadTimestamp()
+                .done(function(timestamp){
+                    askServer(timestamp);
+                });
+            var that = this;    
+            function askServer(timestamp){
+                $.get(that.reset_database_check_url,{
+                    lastdownloadtimestamp: timestamp
+                })
+                    .done(function(resp){
+                        console.log(resp);
+                        if(resp=="1")
+                            Offline.reset_database();
+                    });
+            }   
+            function getLastDownloadTimestamp()
+            {
+                var dfd = new $.Deferred();
+                Offline.fetch_object("meta_data", "key", "last_full_download_start")
+                    .done(function(model){
+                        dfd.resolve(model.get("timestamp"));
+                    })
+                    .fail(function(model, error){
+                    
+                    });
+                return dfd;    
+            } 
+        }
     };
 
     return {

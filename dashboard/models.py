@@ -967,7 +967,7 @@ class Target(CocoModel):
     class Meta:
         unique_together = ("district","month_year")
         
-class CocoUser(models.Model):
+class CocoUser(CocoModel):
     user = models.OneToOneField(User)
     partner = BigForeignKey(Partners)
     villages = BigManyToManyField(Village)

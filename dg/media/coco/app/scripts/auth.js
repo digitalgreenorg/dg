@@ -1,8 +1,10 @@
 define([
     'models/user_model',  
     'auth_offline_backend',
+    'configs',
+    'offline_utils',
     'jquery_cookie'
-  ], function(User, OfflineAuthBackend){
+  ], function(User, OfflineAuthBackend, all_configs, Offline){
       
   var internet_connected = function(){
       return navigator.onLine;
@@ -127,6 +129,8 @@ define([
                       })
                       .done(function(){
                           console.log("Login Successfull");
+                          if(all_configs.misc.onLogin)
+                              all_configs.misc.onLogin(Offline, this);
                           dfd.resolve();
                       });      
               });
@@ -143,6 +147,8 @@ define([
               })
               .done(function(){
                   console.log("Login Successfull");
+                  if(all_configs.misc.onLogin)
+                      all_configs.misc.onLogin(Offline, this);
                   dfd.resolve();
               });      
       }
