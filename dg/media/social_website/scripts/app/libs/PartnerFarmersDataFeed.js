@@ -67,7 +67,7 @@ define(function(require) {
             // store total count
             dataModel.set('totalCount', unprocessedData.objects[0]['farmer'].length);
             if (dataModel._data.totalCount == 0) {
-            	$('.js-partner-farmers-carousel-container').hide();
+            	$('.js-partner-farmers-carousel-container-outer').hide();
             }
 
             // import
