@@ -2,7 +2,7 @@
         <div class="slide" id="video-img">
             <div class='main-carousel-video-player' id='player'></div>
             <div class="slide-img" >
-				<img src="{{STATIC_URL}}social_website/content/home_carousel_img.jpg" alt="">
+				<img src="{{STATIC_URL}}social_website/content/{% if header.currentPage == 'About' %}home_carousel_img.jpg{% else %}home_carousel_img.jpg{% endif%}" alt="">
 				<div class="play-button" onclick=video_player.init({% if header.currentPage == "About" %}'gJo2P3vrWJU'{% else %}'ICxPW-OoSFI'{% endif%});> 
 				</div>
              </div>
