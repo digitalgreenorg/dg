@@ -79,7 +79,9 @@ def add_video_collection(collection, video):
 
 
 def add_village(village, partner):
-    Activity = get_model('social_website','Activity')
+    file = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
+    village_partner_list = pickle.load(open(file, "rb"))
+    Activity = get_model('social_website', 'Activity')
     screenings = dashboard.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     if (len(screenings) > 0):
         title = partner.name
@@ -93,6 +95,8 @@ def add_village(village, partner):
         textContent = "We just screened our first video, %s, in %s village." % (video_title, village_name)
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
+        village_partner_list.append((village.id, partner.uid))
+    pickle.dump(village_partner_list, open(file, "wb"))
 
 
 def add_milestone(partner):
@@ -219,26 +223,32 @@ if __name__ == '__main__':
     Video = get_model('social_website', 'Video')
 
     # Do this only if making afresh, NOT IN CRON !!
-#     Activity.objects.all().delete()
-#     Milestone.objects.all().delete()
-    
+    Activity.objects.all().delete()
+    Milestone.objects.all().delete()
 
+    file_village = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
+    village_partner_list = []
+    pickle.dump(village_partner_list, open(file_village, "wb"))
+    file_collection = "".join([dg.settings.MEDIA_ROOT, "collection_dict.p"])
+    collection_dict = {}
     for partner in Partner.objects.all():
         #Initial entry for milestone table
         milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
         milestone_object.save()
         #Adding Village Added Activities for each partner
-        file = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
-        village_partner_list = []
         for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
             add_village(village, partner)
-            village_partner_list.append((village, partner))
-        pickle.dump(village_partner_list, open(file,"wb"))
+
         #Adding Collection Added Activities for each partner
         for collection in Collection.objects.filter(partner=partner):
             add_collection(collection)
+            collection_dict[collection.uid] = []
+            for video in collection.videos.all():
+                collection_dict[collection.uid].append(video.uid)
+
         #Adding Video Added Activities for each partner
         for video in Video.objects.filter(partner=partner):
             add_video(video)
         #Adding Milestone Activities for each partner
         add_milestone(partner)
+    pickle.dump(collection_dict, open(file_collection, "wb"))

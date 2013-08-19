@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.signals import m2m_changed, post_save
 from django.utils import timezone
 
-from post_save_funcs import collection_video_save, collection_add_activity, increase_online_video_like, video_add_activity, video_collection_activity
+from post_save_funcs import collection_video_save, increase_online_video_like, video_add_activity, video_collection_activity
 
 
 #===============================================================================
@@ -111,7 +111,6 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
-post_save.connect(collection_add_activity, sender=Collection)
 m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
