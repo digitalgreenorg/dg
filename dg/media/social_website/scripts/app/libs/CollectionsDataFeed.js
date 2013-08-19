@@ -78,7 +78,9 @@ define(function(require) {
 					// store total count
 					dataModel.set('totalCount',
 							unprocessedData.meta.total_count);
-
+					 if (dataModel._data.totalCount == 0) {
+						 $('.js-collections-wrapper-outer').hide();
+			         }
 					// import collections from data
 					var collectionsToAdd = unprocessedData.objects;
 					var startingCacheId = page * countPerPage;

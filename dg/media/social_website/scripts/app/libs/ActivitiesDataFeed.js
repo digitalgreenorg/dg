@@ -68,6 +68,9 @@ define(function(require) {
 
             // store total count
             dataModel.set('totalCount', unprocessedData.meta.total_count);
+            if (dataModel._data.totalCount == 0) {
+            	$('.js-activities-wrapper-outer').hide();
+            }
             // import
             var dataToAdd = unprocessedData.objects;
             var startingCacheId = page;
