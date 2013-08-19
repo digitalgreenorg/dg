@@ -101,8 +101,8 @@ def get_online_stats(yt_entry):
     return stats
 
 def populate_adoptions(pap):
-    person_id = pap.person.id
-    video_id = pap.video.id
+    person_id = pap.person_id
+    video_id = pap.video_id
     try:
         person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
         person_vid_obj.adopted += 1
@@ -130,11 +130,11 @@ def update_website_video(vid):
         thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
         website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                             category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                            thumbnailURL = thumbnailURL, thumbnailURL16by9 = '',
                             language = language, partner = partner, state = state,
                             offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                             onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
-                            )
+                            thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                            thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         website_vid.save()
         
 def get_collection_pracs(videos,field1,field2,field3,field4,field5):
