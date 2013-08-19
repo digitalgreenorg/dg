@@ -22,7 +22,7 @@
                                 </div>
                                 <h2 class="copy hdg-bold layout-vr-tiny">{{partner.location}}</h2>
                                 <h3 class="layout-vr-sm copy">Member since {{partner.joinDate}}</h3>
-                                <p class="copy">{{partner.description}}</p>
+                                <p class="copy">{{partner.description|safe}}</p>
                             </div>
                             <div class="grid-col grid-size1of3">
                                 <div class="borderLt grid-margin-lt-lg">
