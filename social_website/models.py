@@ -108,6 +108,9 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+    
+    def __unicode__(self):
+        return self.title
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)

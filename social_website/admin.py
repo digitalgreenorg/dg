@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Partner, Activity, Collection
+from models import Activity, Collection, FeaturedCollection, Partner
 
 class PartnerAdmin(admin.ModelAdmin):
 
@@ -22,4 +22,9 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'partner', 'state', 'language')
     search_fields = ['title']
     
-    
+class FeaturedCollectionAdmin(admin.ModelAdmin):
+    fieldsets = [(None,  {'fields': ['collageURL','collection']
+                          }
+                  )]
+    list_display = ('collection', 'collageURL')
+    search_fields = ['collection']
