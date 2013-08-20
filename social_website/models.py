@@ -7,7 +7,8 @@ from django.db import models
 from django.db.models.signals import m2m_changed, post_save
 from django.utils import timezone
 
-from post_save_funcs import collection_video_save, increase_online_video_like
+from post_save_funcs import collection_video_save, increase_online_video_like, video_add_activity, video_collection_activity
+
 
 #===============================================================================
 # Linked to COCO
@@ -28,6 +29,8 @@ class Partner(models.Model):
     views = models.BigIntegerField(default=0)
     likes = models.BigIntegerField(default=0)
     adoptions = models.BigIntegerField(default=0)
+    def __unicode__(self):
+        return self.name
     def get_absolute_url(self):
         return reverse('partner', args=[str(self.name)])
     def increase_likes(self):
@@ -57,6 +60,10 @@ class Video(models.Model):
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.title
+post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -104,6 +111,7 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
 class FeaturedCollection(models.Model):
