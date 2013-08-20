@@ -6,7 +6,7 @@ from dashboard.models import Screening, ServerLog, Village
 from social_website.models import Partner
 from social_website.scripts.generate_activities import add_milestone, add_village
 
-for partner in Partner.objects.all()[1:2]:
+for partner in Partner.objects.all():
     print partner.uid
     add_milestone(partner)
 
