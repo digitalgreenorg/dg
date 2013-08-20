@@ -1,7 +1,10 @@
 define([
+    'auth',
+    'offline_utils',
+    'configs',
     'jquery',
-    'form_field_validator'
-  ], function(){
+    'form_field_validator',
+  ], function(Auth, Offline, all_configs){
     
     var run = function(){
         $.validator.addMethod('allowedChar',
@@ -19,7 +22,20 @@ define([
 		$.validator.addMethod('dateOrder',
             dateOrder, 'End date should be later than start date'
         );
-    }  
+        
+        reset_database_check();
+    } 
+     
+    function reset_database_check(){
+        if(!all_configs.misc.onLogin)
+            return;
+        Auth.check_login()
+            .done(function(){
+                if(!navigator.onLine)
+                    return;
+                all_configs.misc.onLogin(Offline, Auth);    
+            });
+    }
     
     function validateUniCodeChars(value) {
     	if(value) {

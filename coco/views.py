@@ -4,6 +4,8 @@ from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
+from dashboard.models import CocoUser
+from datetime import datetime
 
 def coco_v2(request):
     return render(request,'dashboard.html')
@@ -32,6 +34,19 @@ def record_full_download_time(request):
     stat.save()
     return HttpResponse("1")
        
+def reset_database_check(request):
+    if not(request.user):
+        return HttpResponse("0")
+    cocouser = CocoUser.objects.get(user = request.user)    
+    if not(cocouser and cocouser.time_modified):
+        return HttpResponse("0")
+    lastdownloadtime = request.GET["lastdownloadtimestamp"]
+    lastdownloadtimestamp = datetime.strptime(lastdownloadtime, '%Y-%m-%dT%H:%M:%S.%f')
+    if lastdownloadtimestamp<=cocouser.time_modified:
+        return HttpResponse("1")
+    return HttpResponse("0")    
+    
+               
 def html_decorator(func):
     """
     This decorator wraps the output in html.
