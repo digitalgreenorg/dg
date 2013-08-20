@@ -926,7 +926,37 @@ function() {
                     end_time : new Date().toJSON().replace("Z", "")
                 })    
             }
-        } 
+        },
+        reset_database_check_url: '/coco/reset_database_check/',
+        onLogin: function(Offline, Auth){
+            getLastDownloadTimestamp()
+                .done(function(timestamp){
+                    askServer(timestamp);
+                });
+            var that = this;    
+            function askServer(timestamp){
+                $.get(that.reset_database_check_url,{
+                    lastdownloadtimestamp: timestamp
+                })
+                    .done(function(resp){
+                        console.log(resp);
+                        if(resp=="1")
+                            Offline.reset_database();
+                    });
+            }   
+            function getLastDownloadTimestamp()
+            {
+                var dfd = new $.Deferred();
+                Offline.fetch_object("meta_data", "key", "last_full_download_start")
+                    .done(function(model){
+                        dfd.resolve(model.get("timestamp"));
+                    })
+                    .fail(function(model, error){
+                    
+                    });
+                return dfd;    
+            } 
+        }
     };
 
     return {
@@ -7926,8 +7956,10 @@ define('views/incremental_download',[
 define('auth',[
     'models/user_model',  
     'auth_offline_backend',
+    'configs',
+    'offline_utils',
     'jquery_cookie'
-  ], function(User, OfflineAuthBackend){
+  ], function(User, OfflineAuthBackend, all_configs, Offline){
       
   var internet_connected = function(){
       return navigator.onLine;
@@ -8052,6 +8084,8 @@ define('auth',[
                       })
                       .done(function(){
                           console.log("Login Successfull");
+                          if(all_configs.misc.onLogin)
+                              all_configs.misc.onLogin(Offline, this);
                           dfd.resolve();
                       });      
               });
@@ -8068,6 +8102,8 @@ define('auth',[
               })
               .done(function(){
                   console.log("Login Successfull");
+                  if(all_configs.misc.onLogin)
+                      all_configs.misc.onLogin(Offline, this);
                   dfd.resolve();
               });      
       }
@@ -9878,9 +9914,12 @@ define('router',[
   };
 });
 define('user_initialize',[
+    'auth',
+    'offline_utils',
+    'configs',
     'jquery',
-    'form_field_validator'
-  ], function(){
+    'form_field_validator',
+  ], function(Auth, Offline, all_configs){
     
     var run = function(){
         $.validator.addMethod('allowedChar',
@@ -9898,7 +9937,20 @@ define('user_initialize',[
 		$.validator.addMethod('dateOrder',
             dateOrder, 'End date should be later than start date'
         );
-    }  
+        
+        reset_database_check();
+    } 
+     
+    function reset_database_check(){
+        if(!all_configs.misc.onLogin)
+            return;
+        Auth.check_login()
+            .done(function(){
+                if(!navigator.onLine)
+                    return;
+                all_configs.misc.onLogin(Offline, Auth);    
+            });
+    }
     
     function validateUniCodeChars(value) {
     	if(value) {
