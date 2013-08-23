@@ -47,23 +47,9 @@
   			<form class="navbar-form pull-left" action="/videotask/set_options/" method="get">
   				<select class='span2' name='lang' onchange="this.form.submit();">
   					<option {% if not selected_lang or selected_lang == "-1" %}selected="selected"{% endif %} value="-1">Any Language</option>
-					<option {% if selected_lang == 10000000000148 %}selected="selected"{% endif %} value="10000000000148">Bareli</option>
-					<option {% if selected_lang == 10000000000150 %}selected="selected"{% endif %} value="10000000000150">Bhili</option>
-					<option {% if selected_lang == 10000000000147 %}selected="selected"{% endif %} value="10000000000147">Gondi</option>
-					<option {% if selected_lang == 10000000000001 %}selected="selected"{% endif %} value="10000000000001">Hindi</option>
-					<option {% if selected_lang == 10000000000123 %}selected="selected"{% endif %} value="10000000000123">Ho</option>
-					<option {% if selected_lang == 10000000000127 %}selected="selected"{% endif %} value="10000000000127">Kannada</option>
-					<option {% if selected_lang == 10000000000151 %}selected="selected"{% endif %} value="10000000000151">Malvi</option>
-					<option {% if selected_lang == 10000000000003 %}selected="selected"{% endif %} value="10000000000003">Mundari</option>
-					<option {% if selected_lang == 10000000000149 %}selected="selected"{% endif %} value="10000000000149">Narsinghpuria</option>
-					<option {% if selected_lang == 10000000000128 %}selected="selected"{% endif %} value="10000000000128">Neemadi</option>
-					<option {% if selected_lang == 10000000000125 %}selected="selected"{% endif %} value="10000000000125">Oriya</option>
-					<option {% if selected_lang == 10000000000157 %}selected="selected"{% endif %} value="10000000000157">Oromifa</option>
-					<option {% if selected_lang == 10000000000155 %}selected="selected"{% endif %} value="10000000000155">Paraja</option>
-					<option {% if selected_lang == 10000000000004 %}selected="selected"{% endif %} value="10000000000004">Sadri</option>
-					<option {% if selected_lang == 10000000000132 %}selected="selected"{% endif %} value="10000000000132">Santhali</option>
-					<option {% if selected_lang == 10000000000156 %}selected="selected"{% endif %} value="10000000000156">Telugu</option>
-					<option {% if selected_lang == 10000000000152 %}selected="selected"{% endif %} value="10000000000152">Thethi</option>
+					{% for language in languages %}
+                    <option {% if selected_lang == language.id %}selected="selected"{% endif %} value="{{language.id}}">{{language.language_name}}</option>
+                    {% endfor %}
 				</select>	
 				<select class='span2' name='state' onchange="this.form.submit();">
 					<option {% if not selected_state or selected_state == "-1" %}selected="selected"{% endif %} value="-1">Any State</option>
