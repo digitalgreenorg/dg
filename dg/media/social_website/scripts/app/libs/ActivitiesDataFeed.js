@@ -68,6 +68,7 @@ define(function(require) {
 
             // store total count
             dataModel.set('totalCount', unprocessedData.meta.total_count);
+            
             // import
             var dataToAdd = unprocessedData.objects;
             var startingCacheId = page;
