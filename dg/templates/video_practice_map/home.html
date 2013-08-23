@@ -53,13 +53,9 @@
 				</select>	
 				<select class='span2' name='state' onchange="this.form.submit();">
 					<option {% if not selected_state or selected_state == "-1" %}selected="selected"{% endif %} value="-1">Any State</option>
-					<option {% if selected_state == 10000000000007 %}selected="selected"{% endif %} value="10000000000007">Andhra Pradesh</option>
-					<option {% if selected_state == 10000000000006 %}selected="selected"{% endif %} value="10000000000006">Bihar</option>
-					<option {% if selected_state == 10000000000002 %}selected="selected"{% endif %} value="10000000000002">Jharkhand</option>
-					<option {% if selected_state == 10000000000005 %}selected="selected"{% endif %} value="10000000000005">Karnataka</option>
-					<option {% if selected_state == 10000000000001 %}selected="selected"{% endif %} value="10000000000001">Madhya Pradesh</option>
-					<option {% if selected_state == 10000000000003 %}selected="selected"{% endif %} value="10000000000003">Orissa</option>
-					<option {% if selected_state == 10000000000008 %}selected="selected"{% endif %} value="10000000000008">Oromia</option>
+					{% for state in states %}
+                    <option {% if selected_state == state.id %}selected="selected"{% endif %} value="{{state.id}}">{{state.state_name}}</option>
+                    {% endfor %}
 				</select>
 			</form>
   			<ul class="nav pull-right">

@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import Template, Context
 
-from dashboard.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
+from dashboard.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, State, Video
 from video_practice_map.models import VideoPractice,SkippedVideo
 from django.views.decorators.csrf import csrf_exempt
 
@@ -70,10 +70,11 @@ def home(request):
         review_vid_pr = vid_pr.practice 
         vid_pr_id = vid_pr.id
     languages = Language.objects.all().values('id', 'language_name')
+    states = State.objects.all().values('id', 'state_name')
                 
     return render_to_response("video_practice_map/home.html", dict(vid=vid, user=user, task_type=next_action, selected_lang=language,
                                                                    selected_state=state, practice_tups = all_practice_options(), new_pr = review_vid_pr,vid_pr_id=vid_pr_id, 
-                                                                   can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped, languages=languages))
+                                                                   can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped, languages=languages, states=states))
                                                                    
     
 def get_end_of_videos_status(user, language, state):
