@@ -210,3 +210,16 @@ def update_questions_asked(pma):
             except Exception as ex:
                 # this means either person or video does not exist on website DB
                 pass
+            
+def delete_person(person):
+    website_person = Person.objects.get(coco_id = str(person.id))
+    comments = Comment.objects.filter(person = website_person)
+    comments.delete()
+    website_person.delete()
+    
+def delete_video(video):
+    website_video = Video.objects.get(coco_id = str(video.id))
+    comments = Comment.objects.filter(video = website_video)
+    comments.delete()
+    website_video.delete()
+    

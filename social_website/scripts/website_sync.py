@@ -5,7 +5,7 @@ setup_environ(dg.settings)
 import datetime
 from dashboard import models
 from social_website.models import CronTimestamp
-from social_website.migration_functions import populate_adoptions, populate_farmers, update_person_video_record, update_questions_asked, update_website_video
+from social_website.migration_functions import delete_person, delete_video, populate_adoptions, populate_farmers, update_person_video_record, update_questions_asked, update_website_video
 
 
 def process_log(objects, logfile):
@@ -26,10 +26,14 @@ def process_log(objects, logfile):
             logfile.write(' Added Pap ')
         elif object.entry_table == 'Video':
             video_object = models.Video.objects.get(id = object.model_id)
+            if object.action == -1:
+                delete_video(video_object)
             update_website_video(video_object)
             logfile.write(' Added Video ')
         elif object.entry_table == 'Person':
             person_object = models.Person.objects.get(id = object.model_id)
+            if object.action == -1:
+                delete_person(person_object)
             if person_object.image_exists :
                 populate_farmers(person_object)
                 logfile.write(' Added Person ')
