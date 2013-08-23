@@ -92,13 +92,25 @@ def check_video_youtube_id(vid):
     return None
     
 def get_online_stats(yt_entry):     
-    stats = {}
-    stats['views'] = int(yt_entry.statistics.view_count) 
-    stats['duration'] = int(yt_entry.media.duration.seconds)
-    if yt_entry.rating:
-        stats['likes'] = int((float(yt_entry.rating.average)*float(yt_entry.rating.num_raters)-float(yt_entry.rating.num_raters))/4)
-    else:
-        stats['likes'] = 0         
+    stats = {   'views': 0,
+                'duration': 0,
+                'likes': 0,
+            }
+    try:
+        stats['views'] = int(yt_entry.statistics.view_count)
+    except AttributeError:
+        pass
+    try:
+        stats['duration'] = int(yt_entry.media.duration.seconds)
+    except AttributeError:
+        pass
+    try:
+        if yt_entry.rating:
+            stats['likes'] = int((float(yt_entry.rating.average)*float(yt_entry.rating.num_raters)-float(yt_entry.rating.num_raters))/4)
+        else:
+            stats['likes'] = 0
+    except AttributeError:
+        pass
     return stats
 
 def populate_adoptions(pap):

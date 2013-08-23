@@ -9,6 +9,8 @@ from django.template import Template, Context
 
 from dashboard.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
 from video_practice_map.models import VideoPractice,SkippedVideo
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 @login_required(login_url='/videotask/login/')
@@ -101,6 +103,7 @@ def logout_view(request):
     return HttpResponseRedirect('/videotask/home/')
 
 @login_required(login_url='/videotask/login/')
+@csrf_exempt
 def form_submit(request):
     if request.POST:
         if request.POST['action'] == 'review':
@@ -191,6 +194,7 @@ def all_practice_options(request=None):
         return value_arr
     
 @login_required(login_url='/videotask/login/')
+@csrf_exempt
 @user_passes_test(lambda u: u.groups.filter(name='Practice Creators').count() > 0, login_url='/videotask/login/')
 def add_new(request):
     msg = None
