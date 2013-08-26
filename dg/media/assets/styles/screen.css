@@ -758,6 +758,10 @@ a {
     line-height: 1.4;
 }
 
+.copy-italic {
+	font-style: italic;
+}
+
 /*
 .copy-lg {
     font-size: 14px;
@@ -3136,4 +3140,10 @@ body {
 
 .menu-item:hover .menu-subitem{
     color:black;
+}
+
+/* Hiding HTML Element */
+
+.ele-hide{
+	display: none;
 }

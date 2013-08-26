@@ -142,6 +142,7 @@ define(function(require) {
         },
 
         _onDataProcessed: function() {
+        	$('.js-partner-farmers-carousel-container-outer').show();
             this.getPartnerFarmers();
         },
 
