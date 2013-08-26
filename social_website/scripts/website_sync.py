@@ -43,9 +43,8 @@ def process_log(objects, logfile):
 script_name = 'website_sync'
 
 # Drop and re-create PersonVIdeoRecord
-#PersonVideoRecord.objects.all().delete()
-#initial_personvideorecord()
-#print "PVR done"
+PersonVideoRecord.objects.all().delete()
+initial_personvideorecord()
 file_name = script_name + str(datetime.datetime.now().date()) + ".txt"
 logfile = open(file_name, "w")
 crontimestamp = CronTimestamp.objects.get(name = script_name)
