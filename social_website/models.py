@@ -110,7 +110,7 @@ class Collection(models.Model):
         self.save()
     
     def __unicode__(self):
-        return self.title
+        return self.title+" (" + str(self.partner.name) +", "+ self.state +", " + self.language + ")"
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
