@@ -4,10 +4,11 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed, post_save
 from django.utils import timezone
 
-from post_save_funcs import increase_online_video_like
+from post_save_funcs import collection_video_save, increase_online_video_like, video_add_activity, video_collection_activity
+
 
 #===============================================================================
 # Linked to COCO
@@ -59,8 +60,10 @@ class Video(models.Model):
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
+
     def __unicode__(self):
         return "%s (%s)" % (self.title, self.coco_id)
+post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -108,6 +111,8 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
+m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -180,3 +185,7 @@ class VideoLike(models.Model):
     video = models.ForeignKey(Video)
     user = models.ForeignKey(UserProfile)
 post_save.connect(increase_online_video_like, sender = VideoLike)
+
+class CronTimestamp(models.Model):
+    name = models.CharField(max_length=30)
+    last_time = models.DateTimeField(default=lambda : datetime.datetime.utcnow())
