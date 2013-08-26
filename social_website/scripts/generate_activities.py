@@ -1,10 +1,12 @@
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
+import logging
 import pickle
 from django.db.models import get_model, Max
 import dashboard.models
 #from social_website.models import Collection, ImageSpec, Milestone, Partner, Video
+logger = logging.getLogger('social_website')
 
 
 class ActivityType:
@@ -100,6 +102,7 @@ def add_village(village, partner):
 
 
 def add_milestone(partner):
+    total_rows = 0
     Activity = get_model('social_website', 'Activity')
     ImageSpec = get_model('social_website', 'ImageSpec')
     Milestone = get_model('social_website', 'Milestone')
@@ -140,6 +143,7 @@ def add_milestone(partner):
         imageURL = video.thumbnailURL16by9
         altString = "Video"
         imageLinkURL = "/video/?id=" + video.coco_id
+        total_rows += 1
         image_spec_entry = ImageSpec(imageURL=imageURL, altString=altString, imageLinkURL=imageLinkURL)
         image_spec_entry.save()
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, video_id = video.uid, titleURL=titleURL, type=activity_type)
@@ -167,6 +171,7 @@ def add_milestone(partner):
         newsFeed = 0
         titleURL = partner.get_absolute_url()
         activity_type = ActivityType.village_milestone
+        total_rows += 1
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
         villageNumber = next_village_milestone
@@ -188,6 +193,7 @@ def add_milestone(partner):
         newsFeed = 0
         titleURL = partner.get_absolute_url()
         activity_type = ActivityType.screening_milestone
+        total_rows += 1
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
         screeningNumber = next_screening_milestone
@@ -208,12 +214,14 @@ def add_milestone(partner):
         newsFeed = 0
         titleURL = partner.get_absolute_url()
         activity_type = ActivityType.viewer_milestone
+        total_rows += 1
         activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, titleURL=titleURL, type=activity_type)
         activity.save()
         viewerNumber = next_viewer_milestone
         milestone.viewerNumber = viewerNumber
         milestone.save()
         next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
+    logger.info("%s Rows To Be Added: %s" % (partner.name, total_rows))
 
 if __name__ == '__main__':
     Activity = get_model('social_website', 'Activity')
