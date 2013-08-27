@@ -43,12 +43,14 @@ def process_log(objects, logfile):
 script_name = 'website_sync'
 
 # Drop and re-create PersonVIdeoRecord
-#PersonVideoRecord.objects.all().delete()
-#initial_personvideorecord()
-#print "PVR done"
+PersonVideoRecord.objects.all().delete()
+initial_personvideorecord()
 file_name = script_name + str(datetime.datetime.now().date()) + ".txt"
 logfile = open(file_name, "w")
-crontimestamp = CronTimestamp.objects.get(name = script_name)
+try:
+    crontimestamp = CronTimestamp.objects.get(name = script_name)
+except CronTimestamp.DoesNotExist:
+    crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 8, 1, 3, 30), name=script_name)
 timestamp = crontimestamp.last_time
 serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
 
