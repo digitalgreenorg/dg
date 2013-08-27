@@ -12,33 +12,39 @@ def process_log(objects, logfile):
     for object in objects:
         logfile.write(object.entry_table)
         if object.entry_table == 'Screening':
-            screening_object = models.Screening.objects.get(id = object.model_id)
-            for pma in screening_object.personmeetingattendance_set.all():
-                update_questions_asked(pma)
-                logfile.write(' Added Pma ')
+            try:
+                screening_object = models.Screening.objects.get(id = object.model_id)
+                for pma in screening_object.personmeetingattendance_set.all():
+                    update_questions_asked(pma)
+                    logfile.write(' Added Pma ')
+            except models.Screening.DoesNotExist:
+                continue
 #        elif object.entry_table == "PersonAdoptPractice":
 #            pap_object = models.PersonAdoptPractice.objects.get(id = object.model_id)
 #            populate_adoptions(pap_object)
 #            logfile.write(' Added Pap ')
         elif object.entry_table == 'Video':
-            video_object = models.Video.objects.get(id = object.model_id)
-            if object.action == -1:
-                delete_video(video_object)
-                logfile.write(' Deleted Video ')
-            update_website_video(video_object)
-            logfile.write(' Added Video ')
+            try:
+                video_object = models.Video.objects.get(id = object.model_id)
+                if object.action == -1:
+                    delete_video(video_object)
+                    logfile.write(' Deleted Video ')
+                update_website_video(video_object)
+                logfile.write(' Added Video ')
+            except models.Video.DoesNotExist:
+                continue
         elif object.entry_table == 'Person':
-            person_object = models.Person.objects.get(id = object.model_id)
-            if object.action == -1:
-                delete_person(person_object)
-                logfile.write(' Deleted Person ')
-            if person_object.image_exists :
-                populate_farmers(person_object)
-                logfile.write(' Added Person ')
+            try:
+                person_object = models.Person.objects.get(id = object.model_id)
+                if object.action == -1:
+                    delete_person(person_object)
+                    logfile.write(' Deleted Person ')
+                if person_object.image_exists :
+                    populate_farmers(person_object)
+                    logfile.write(' Added Person ')
+            except models.Person.DoesNotExist:
+                continue
         logfile.write('\n')
-        
-        
-         
 
 script_name = 'website_sync'
 
@@ -50,17 +56,12 @@ logfile = open(file_name, "w")
 try:
     crontimestamp = CronTimestamp.objects.get(name = script_name)
 except CronTimestamp.DoesNotExist:
-    crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 8, 1, 3, 30), name=script_name)
+    crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
 timestamp = crontimestamp.last_time
 serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
 
 # Update last_time but dont save
 crontimestamp.last_time = datetime.datetime.now()
-process_log(serverlog_objects[:200], logfile)
+process_log(serverlog_objects, logfile)
 crontimestamp.save()
-
-
-
-    
-
 
