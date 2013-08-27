@@ -143,14 +143,14 @@ def update_website_video(vid):
         try :
             website_vid = Video.objects.get(coco_id = str(vid.id))
             # There is just one result for a filter, but we want to use update here.
-            website_vid = Video.objects.filter(coco_id = str(vid.id)).update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+            website_vid = Video.objects.filter(coco_id = str(vid.id))
+            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
-            website_vid[0].save()
         except Video.DoesNotExist:
             website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
@@ -219,9 +219,9 @@ def populate_farmers(person):
     try:
         website_farmer = Person.objects.get(coco_id = str(person.id))
         # There is just one result for a filter, but we want to use update here.
-        website_farmer = Person.objects.filter(coco_id = str(person.id)).update(coco_id = str(person.id), name = person.person_name, 
+        website_farmer = Person.objects.filter(coco_id = str(person.id))
+        website_farmer.update(coco_id = str(person.id), name = person.person_name, 
                                                                                 partner = partner,thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
-        website_farmer[0].save()
     except Person.DoesNotExist:
         website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                                 thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
