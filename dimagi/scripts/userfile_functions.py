@@ -80,26 +80,26 @@ def write_person_detail(person_id, filename): #used for updating case..
     # Write xml for a particular person
     file = codecs.open(filename, "w",'utf-8')
     write_opening_meta(file, 1)
-    write_person_content(file, 0, case_id, owner_id, person, videos_seen)
-    write_closing_meta(file, owner_id, 1)    
+    i = 0
+    write_person_content(file, i, case_id, owner_id, person, videos_seen)
+    i+= 1
+    write_closing_meta(file, owner_id, i)    
     file.close()
     return file
 
-def write_full_case_list(person_list, filename, user_id): #for generating cases
+def write_full_case_list(person_list, filename, user_id, case_user_dict, case_person_dict): #for generating cases
     file = codecs.open(filename, "w",'utf-8')
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
     write_opening_meta(file, len(person_list))
     i = 0
-    case_user_dict = {}
-    case_person_dict = {}
     for person_id in person_list:
         owner_id = user_id
         person = Person.objects.get(id = person_id)
         case_id = uuid.uuid4()
-        case_person_dict[person.id] = case_id
         case_user_dict[person.id] = user_id
+        case_person_dict[person.id] = unicode(case_id)
         # Getting list of videos seen
         vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
         videos_seen = ''
@@ -120,32 +120,18 @@ def write_full_case_list(person_list, filename, user_id): #for generating cases
     pickle.dump(case_person_dict, open('case_person','w')) #mapping of case with person(farmer)
     return file
 
-def make_upload_file(villages, filename, user_id):
+def make_upload_file(villages, filename, user_id, case_user_dict, case_person_dict):
     Person = get_model('dashboard','Person')
-    person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)
-    f = write_full_case_list(person_ids, filename, user_id)
-#    response = upload_file(filename)
-#    print response
+    person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)    
+    f = write_full_case_list(person_ids, filename, user_id, case_user_dict, case_person_dict)
+    response = upload_file(filename)
+#   print response
     
         
 def upload_file(file):
     register_openers()
-#    print 'uploading ' + file
+    print 'uploading ' + file
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    request = urllib2.Request("https://www.commcarehq.org/a/capilot/receiver", datagen, headers)
+    request = urllib2.Request("https://www.commcarehq.org/a/aug-coco/receiver", datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()
-
-if __name__ == '__main__':
-    Person = get_model('dashboard','Person')
-    data = read_userfile('apca.json')
-    for row in data:
-        username = row['username']
-        print "creating xml for " + str(username)
-        filename = username + '.xml'
-        person_list = Person.objects.filter(village__in = row['villages']).values_list('id', flat=True)
-        write_full_case_list(person_list,filename,row['user_id'])
-        
-#        upload_file(filename)
-        
-
