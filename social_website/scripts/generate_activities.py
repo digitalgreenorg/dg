@@ -25,7 +25,7 @@ def add_collection(collection):
     if len(collection.videos.all()) > 0:
         Activity = get_model('social_website','Activity')
         partner = collection.partner
-        title = "%s shared a new collection" % (collection.partner.name).title()
+        title = "%s shared a new collection" % (collection.partner.name)
         collection_name = (collection.title)
         video_number = len(collection.videos.all())
         state_name = collection.state
@@ -43,7 +43,7 @@ def add_video(video):
     Activity = get_model('social_website','Activity')
     ImageSpec = get_model('social_website','ImageSpec')
     partner = video.partner
-    title = "%s shared a new video" % (video.partner.name).title()
+    title = "%s shared a new video" % (video.partner.name)
     video_title = (video.title).title()
     language_name = video.language
     village_name = (dashboard.models.Video.objects.get(id=video.coco_id)).village.village_name
@@ -65,7 +65,6 @@ def add_video(video):
 
 def add_video_collection(collection, video):
     Activity = get_model('social_website','Activity')
-    print type(collection)
     partner = collection.partner
     title = collection.partner.name
     collection_name = (collection.title).title()
@@ -75,7 +74,6 @@ def add_video_collection(collection, video):
     newsFeed = 0
     titleURL = collection.get_absolute_url()
     activity_type = ActivityType.new_video_collection
-    print type(Activity)
     activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, video_id = video.uid, titleURL=titleURL, type=activity_type)
     activity.save()
 
@@ -131,7 +129,7 @@ def add_milestone(partner):
     while (len(videos) >= next_video_milestone):
         video = videos[next_video_milestone - 1]
         partner = video.partner
-        title = (video.partner.name).title() + " has produced %s+ videos" % (next_video_milestone)
+        title = (video.partner.name) + " has produced %s+ videos" % (next_video_milestone)
         video_title = (video.title).title()
         language_name = video.language
         village_name = (dashboard.models.Video.objects.get(id=video.coco_id)).village.village_name
@@ -161,7 +159,7 @@ def add_milestone(partner):
     next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
     while (len(villages) >= next_village_milestone):
         village = villages[next_village_milestone - 1]
-        title = "%s is now sharing videos in %s+ villages." % ((partner.name).title(), next_village_milestone)
+        title = "%s is now sharing videos in %s+ villages." % ((partner.name), next_village_milestone)
         if(len(dashboard_partner_states) > 1):
             states_name = ", ".join(dashboard_partner_states)
             textContent = "We have reached %s+ villages in the states of %s in partnership with Digital Green." % (next_village_milestone, states_name)
@@ -184,7 +182,7 @@ def add_milestone(partner):
     next_screening_milestone = milestone_screening_viewer[milestone_screening_viewer.index(screeningNumber) + 1]
     while (len(screenings) >= next_screening_milestone):
         screening = screenings[next_screening_milestone - 1]
-        title = (partner.name).title()
+        title = (partner.name)
         textContent = "We just showed our %sth video in %s, %s since %s." % (next_screening_milestone,
                                                                                  screening.village.village_name,
                                                                                  screening.village.block.district.state.state_name,
@@ -206,7 +204,7 @@ def add_milestone(partner):
     next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
     while (len(viewers) >= next_viewer_milestone):
         viewer = viewers[next_viewer_milestone - 1]
-        title = (partner.name).title()
+        title = (partner.name)
         textContent = "%s is our %sth viewer watching videos in %s" % ((viewer.person.person_name).title(),
                                                                           next_viewer_milestone,
                                                                           viewer.screening.village.block.district.state.state_name)
