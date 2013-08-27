@@ -142,6 +142,7 @@ def update_website_video(vid):
         thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
         try :
             website_vid = Video.objects.get(coco_id = str(vid.id))
+            # There is just one result for a filter, but we want to use update here.
             website_vid = Video.objects.filter(coco_id = str(vid.id)).update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
@@ -217,6 +218,7 @@ def populate_farmers(person):
     partner = Partner.objects.get(coco_id = str(person.village.block.district.partner.id))
     try:
         website_farmer = Person.objects.get(coco_id = str(person.id))
+        # There is just one result for a filter, but we want to use update here.
         website_farmer = Person.objects.filter(coco_id = str(person.id)).update(coco_id = str(person.id), name = person.person_name, 
                                                                                 partner = partner,thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
         website_farmer[0].save()

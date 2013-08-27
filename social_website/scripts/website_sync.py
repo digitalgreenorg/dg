@@ -30,8 +30,9 @@ def process_log(objects, logger):
                 if object.action == -1:
                     delete_video(video_object)
                     logger.info(' Deleted Video ')
-                update_website_video(video_object)
-                logger.info(' Added Video ')
+                else:
+                    update_website_video(video_object)
+                    logger.info(' Added Video ')
             except models.Video.DoesNotExist:
                 continue
         elif object.entry_table == 'Person':
@@ -40,7 +41,7 @@ def process_log(objects, logger):
                 if object.action == -1:
                     delete_person(person_object)
                     logger.info(' Deleted Person ')
-                if person_object.image_exists :
+                elif person_object.image_exists :
                     populate_farmers(person_object)
                     logger.info(' Added Person ')
             except models.Person.DoesNotExist:
