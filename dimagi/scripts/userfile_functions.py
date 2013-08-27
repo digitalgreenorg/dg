@@ -80,10 +80,8 @@ def write_person_detail(person_id, filename): #used for updating case..
     # Write xml for a particular person
     file = codecs.open(filename, "w",'utf-8')
     write_opening_meta(file, 1)
-    i = 0
-    write_person_content(file, i, case_id, owner_id, person, videos_seen)
-    i+= 1
-    write_closing_meta(file, owner_id, i)    
+    write_person_content(file, 0, case_id, owner_id, person, videos_seen)
+    write_closing_meta(file, owner_id, 1)    
     file.close()
     return file
 
