@@ -27,10 +27,10 @@
                             <div class="grid-col grid-size1of3">
                                 <div class="borderLt grid-margin-lt-lg">
                                     <ul class="v-list-md stats-list">
-                                        <li><a class="hdg-c hdg-bold hdg-lt stats-watch" title="Videos"><span class="text-hide">Videos</span> {{partner.video_count}}</a></li>
-                                        <li><a class="hdg-c hdg-bold hdg-lt stats-view" title="Views"><span class="text-hide">Viewed</span> {{partner.views}}</a></li>
-                                        <li><a class="hdg-c hdg-bold hdg-lt stats-like" title="Likes"><span class="text-hide">Liked</span> {{partner.likes}}</a></li>
-                                        <li><a class="hdg-c hdg-bold hdg-lt stats-adopt" title="Adoptions"><span class="text-hide">Adopted</span> {{partner.adoptions}}</a></li>
+                                        {% if partner.video_count %}<li><a class="hdg-c hdg-bold hdg-lt stats-watch" title="Videos"><span class="text-hide">Videos</span> {{partner.video_count}}</a></li>{% endif %}
+                                        {% if partner.views %}<li><a class="hdg-c hdg-bold hdg-lt stats-view" title="Views"><span class="text-hide">Viewed</span> {{partner.views}}</a></li>{% endif %}
+                                        {% if partner.likes %}<li><a class="hdg-c hdg-bold hdg-lt stats-like" title="Likes"><span class="text-hide">Liked</span> {{partner.likes}}</a></li>{% endif %}
+                                        {% if partner.adoptions %}<li><a class="hdg-c hdg-bold hdg-lt stats-adopt" title="Adoptions"><span class="text-hide">Adopted</span> {{partner.adoptions}}</a></li>{% endif %}
                                     </ul>
                                 </div>
                             </div>
