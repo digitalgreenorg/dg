@@ -3,12 +3,16 @@ import dg.settings
 setup_environ(dg.settings)
 import logging
 import pickle
-from dashboard.models import Screening, ServerLog, Village
+from dashboard.models import Partners, Screening, ServerLog, Village
 from social_website.models import Activity, Partner
 from social_website.scripts.generate_activities import ActivityType, add_milestone, add_village
 
 logger = logging.getLogger('social_website')
 for partner in Partner.objects.all():
+    try:
+        Partners.objects.get(id=partner.coco_id)
+    except:
+        continue
     types = [ActivityType.video_milestone, ActivityType.village_milestone, ActivityType.screening_milestone, ActivityType.viewer_milestone]
     initial_rows = len(Activity.objects.filter(partner=partner, type__in=types))
     add_milestone(partner)

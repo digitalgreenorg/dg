@@ -238,6 +238,10 @@ if __name__ == '__main__':
     file_collection = "".join([dg.settings.MEDIA_ROOT, "collection_dict.p"])
     collection_dict = {}
     for partner in Partner.objects.all():
+        try:
+            dashboard.models.Partners.objects.get(id=partner.coco_id)
+        except:
+            continue
         #Initial entry for milestone table
         milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
         milestone_object.save()
