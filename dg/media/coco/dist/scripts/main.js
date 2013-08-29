@@ -7645,37 +7645,50 @@ define('views/incremental_download',[
                 .fail(function(error){
                     if(error == "Not Found")
                     {
-                        that.fetch_from_online(that.get_online_id(incd_o))
-                            .done(function(on_model){
-                                ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
-                                    .done(function(on_off_obj){
-                                        that.add_offline(on_off_obj.off_json)
-                                            .done(function(off_model){
-                                                // console.log("INCD:ADD: Successfully added model in offline db. Added model - "+JSON.stringify(off_model.toJSON()));
-                                                dfd.resolve();
-                                            })
-                                            .fail(function(error){
-                                                // console.log("INCD:ADD: Error saving model in offline db - "+error);
-                                                // console.log(error);
-                                                // alert("Unexpected error:INCD:ADD: Error saving new model in offline db - "+error);
-                                                dfd.reject(error);
-                                            });    
-                                    })
-                                    .fail(function(error){
-                                        // console.log("INCD:ADD: Not saving object to offlinedb coz ConvertNamespace failed");
-                                        dfd.reject(error);
-                                    });    
-                            })
-                            .fail(function(response){
-                                // console.log("INCD: Error fetching model from server - "+response.statusText);
-                                dfd.reject(response);
-                            });
+                        fetch_and_add();
                     }
                 })
                 .done(function(off_model){
                     // console.log("INCD: The model supposed to be added already exists. Moving on...");
-                    dfd.reject("INCD: The model supposed to be added already exists. Moving on...");    
-                });    
+                    fetch_and_add(off_model);
+                });                  
+                
+            function fetch_and_add(existing_model){
+                that.fetch_from_online(that.get_online_id(incd_o))
+                    .done(function(on_model){
+                        ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
+                            .done(function(on_off_obj){
+                                var off_json = on_off_obj.off_json;
+                                if(off_json.id)
+                                {
+                                    off_json.online_id = parseInt(off_json.id); 
+                                    delete off_json.id;
+                                }
+                                Offline.save(existing_model,that.get_entity_name(incd_o),off_json)
+                                    .done(function(off_model){
+                                        dfd.resolve();
+                                    })
+                                    .fail(function(error){
+                                        dfd.reject(error);
+                                    });    
+                            })
+                            .fail(function(error){
+                                Offline.save(existing_model,that.get_entity_name(incd_o),{
+                                    online_id : on_model.get("id")
+                                })
+                                    .done(function(off_model){
+                                        dfd.resolve();
+                                    })
+                                    .fail(function(error){
+                                        dfd.reject(error);
+                                    });    
+                            });    
+                    })
+                    .fail(function(response){
+                        // console.log("INCD: Error fetching model from server - "+response.statusText);
+                        dfd.reject(response);
+                    });    
+            }      
         },    
         
         incd_edit: function(incd_o, dfd){
