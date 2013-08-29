@@ -111,6 +111,9 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+    def __unicode__(self):
+        return self.title+" (" + str(self.partner.name) +", "+ self.state +", " + self.language + ")"
+
 m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
