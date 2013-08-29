@@ -149,7 +149,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/logfile'),
+            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
             'formatter': 'standard',
         },
         'console':{
