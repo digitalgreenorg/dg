@@ -24,7 +24,7 @@ class CollectionAdmin(admin.ModelAdmin):
     filter_horizontal = ('videos',)
 
 class FeaturedCollectionAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['collageURL','collection']
+    fieldsets = [(None,  {'fields': ['collageURL', 'collection', 'show_on_homepage', 'show_on_language_selection']
                           }
                   )]
     list_display = ('collection', 'collageURL')
