@@ -16,13 +16,13 @@ from post_save_funcs import collection_video_save, increase_online_video_like, v
 class Partner(models.Model):
     uid = models.AutoField(primary_key=True)
     coco_id = models.CharField(max_length=20, blank=True, null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(help_text="""Partner Name Should not have any spaces or /""",max_length=100, unique=True)
     full_name = models.CharField(max_length=250)
     description = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     location_image = models.ImageField(help_text="""Minimum Width Should be 302 and Minimum Height should be 202""", upload_to='partner', null=True, blank=True)
     joinDate = models.DateField()
-    logoURL = models.ImageField(help_text="""Minimum Width Should be 61 and Minimum Height should be 61""", upload_to='partner', null=True, blank=True)
+    logoURL = models.ImageField(help_text="""Minimum Width Should be 61 and Minimum Height should be 61""", upload_to='partner')
     websiteURL = models.URLField(max_length=100, default='')
     collection_count = models.PositiveIntegerField(default=0)
     video_count = models.PositiveIntegerField(default=0)
@@ -102,6 +102,8 @@ class Collection(models.Model):
     likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
+    def __unicode__(self):
+        return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.state, self.language))
     def get_absolute_url(self):
         return reverse('collection_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
@@ -117,7 +119,9 @@ m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
     collection = models.ForeignKey(Collection)
-    collageURL = models.URLField(max_length=200)
+    collageURL = models.ImageField(help_text="""Width Should be 642 and Height should be 321""", upload_to='featured_collection')
+    show_on_homepage = models.BooleanField(default=True)
+    show_on_language_selection = models.BooleanField(default=True)
 
 class ImageSpec(models.Model):
     imageURL = models.URLField(max_length=400) 
