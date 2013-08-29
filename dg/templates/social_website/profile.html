@@ -11,7 +11,7 @@
                 {% endif %}
                     <div class="bd">
                         <div class="grid">
-                            <div class="grid-col grid-size2of3">
+                            <div class="grid-col {% if partner.video_count or partner.views or partner.likes or partner.adoptions %}grid-size2of3{% endif %}">
                                 <div class="media">
                                     <a href="{{partner.websiteURL}}" target="_blank">
                                         <div class="img img-size-sq-small ">
