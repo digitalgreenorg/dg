@@ -1,7 +1,7 @@
 from django.core.management import setup_environ
-from django.db.models import Sum
 import dg.settings
 setup_environ(dg.settings)
+from django.db.models import Sum
 from social_website.migration_functions import get_offline_stats, populate_collection_stats, populate_partner_stats
 from social_website.models import Collection, Partner, PersonVideoRecord, Video
 
