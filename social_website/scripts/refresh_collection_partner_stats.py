@@ -5,7 +5,6 @@ setup_environ(dg.settings)
 from social_website.migration_functions import get_offline_stats, populate_collection_stats, populate_partner_stats
 from social_website.models import Collection, Partner, PersonVideoRecord, Video
 
-vid_id_list = Video.objects.all().values_list('coco_id', flat=True)
 stats = PersonVideoRecord.objects.all().values('videoID').annotate(views = Sum('views'), likes = Sum('like'), adoptions = Sum('adopted'))
 for row in stats:
     try:
