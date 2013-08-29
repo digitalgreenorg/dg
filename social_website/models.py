@@ -102,6 +102,8 @@ class Collection(models.Model):
     likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
+    def __unicode__(self):
+        return self.title+" (" + str(self.partner.name) +", "+ self.state +", " + self.language + ")"
     def get_absolute_url(self):
         return reverse('collection_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
