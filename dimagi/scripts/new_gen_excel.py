@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import settings
+import os, settings
 from django.core.management import setup_environ
 setup_environ(settings)
 from dashboard.models import *
@@ -179,7 +179,6 @@ def write_village_info(cluster_dict, workbook):
     return sheet
 
 def write_mediator_info(mediator_dict, workbook):
-    mediator_info = []
     sheet = workbook.add_sheet('mediator')
     row = 0
     sheet.write(row, 0, "field: id")
@@ -189,20 +188,20 @@ def write_mediator_info(mediator_dict, workbook):
     row += 1
     mediator_not_found = 0
     for mediator in mediator_dict:
-        mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name = mediator['village']).values_list('animator_id','animator__name','village_id')
-        if len(mediator_info)<1:
-            mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name__icontains = mediator['village']).values_list('animator__id','animator__name','village_id')
-        if(mediator_info):
-            mediator_id = truncate_id(mediator_info[0][0])
-            vill_id = truncate_id(mediator_info[0][2])
+        mediator_id = mediator['mediator']
+        vill_id = mediator['village']
+        user_name = mediator['cluster']
+        mediator = Animator.objects.filter(id = mediator['mediator'])
+        mediator_name = mediator[0].name
+        if(mediator):
             sheet.write(row, 0, str(mediator_id))
-            sheet.write(row, 1, mediator_info[0][1])
+            sheet.write(row, 1, mediator_name)
             sheet.write(row, 2, str(vill_id))
-            sheet.write(row, 3, mediator['cluster'])
+            sheet.write(row, 3, str(user_name))
             row += 1
         else:
             mediator_not_found += 1
-            print "no mediator for "  + mediator['village']
+            print "no mediator for "  + str(mediator['village'])
     print str(mediator_not_found) + " mediators not found"
     return sheet
 
@@ -278,7 +277,7 @@ def write_video_schedule_info(vid_dict, workbook):
     return sheet
         
 from userfile_functions import read_userfile
-data = read_userfile('apca.json')
+data = read_userfile(os.path.dirname(__file__)+r'\ap_fixtures.json')
 cluster_village_dict = []
 mediator_dict = []
 for entry in data:
@@ -287,40 +286,28 @@ for entry in data:
     cluster_village_dict.append({'cluster': entry['username'],
                                  'villages': entry['villages']})
     for v in villages:
-        village = Village.objects.get(id = v).village_name
         mediator = ''
         try:
-            mediator = Animator.objects.filter(assigned_villages = v)[0]
+            mediator_list = Animator.objects.filter(assigned_villages = v)
         except Exception ,ex:
             pass
-        mediator_dict.append({'mediator':mediator,
-                              'village': village,
-                              'cluster' : entry['username']})
+        for mediator in mediator_list:
+            mediator_dict.append({'mediator':mediator.id,
+                                  'village': v,
+                                  'cluster' : entry['username']})
+
 workbook = xlwt.Workbook(encoding = 'utf-8')
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_dict, workbook)
-#video_schedule_dict, video_list = video_schedule.get_video_schedule()
-#print video_list
 video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
 video_list = set(video_list)
-print video_list
 video_distinct_sheet = write_distinct(video_list,workbook)
 video_schedule_dict = []
-for id in [10000000020194,10000000021136,10000000020757,10000000020480,10000000020752,10000000020198,10000000021065,10000000020190,]:
+for id in video_list:
     video_schedule_dict.append({'id': id,
                                 'low_val': '2013-01-01',
                                 'high_val': '2013-12-31' })
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-workbook.save('trial-2-Fixtures_07_1.xls')
 
-
-
-
-
-
-
-    
-
-
-    
+workbook.save('ap_fixtures.xls')
