@@ -59,25 +59,25 @@
 				</translation>
 				<translation lang="tel" default="">
 					<text id="form_done-label">
-						<value>?? ???? ???? ????????. ?????? ???</value>
+						<value>మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
 					</text>
 					<text id="selected_village-label">
-						<value>???????</value>
+						<value>గ్రామము</value>
 					</text>
 					<text id="selected_mediator-label">
-						<value>?????????</value>
+						<value>కార్యకర్త</value>
 					</text>
 					<text id="selected_group-label">
-						<value>?????? ????</value>
+						<value>గ్రూప్ పేరు</value>
 					</text>
 					<text id="selected_video-label">
-						<value>?????? ????</value>
+						<value>చిత్రం పేరు</value>
 					</text>
 					<text id="selected_person-label">
-						<value>????</value>
+						<value>రైతు</value>
 					</text>
 					<text id="date-label">
-						<value>????</value>
+						<value>తేది</value>
 					</text>
 				</translation>
 			</itext>
