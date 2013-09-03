@@ -44,7 +44,57 @@ def find_exact_villages(cluster_dict):
                     village_not_found +=1
     return cluster_dict, mediator_dict
     
-    
+def write_type_info(workbook):
+    sheet = workbook.add_sheet('types')
+    row = 0
+    sheet.write(row, 0, "name")
+    sheet.write(row, 1, "tag")
+    sheet.write(row, 2, "field 1")
+    sheet.write(row, 3, "field 2")
+    sheet.write(row, 4, "field 3")
+    sheet.write(row, 5, "field 4")
+    row = 1
+    #Define group relation below
+    sheet.write(row, 0, "Group")
+    sheet.write(row, 1, "group")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "village_id")
+    sheet.write(row, 5, "")
+    row = 2
+    #Define village relation below
+    sheet.write(row, 0, "Village")
+    sheet.write(row, 1, "village")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "")
+    sheet.write(row, 5, "")
+    row = 3
+    #Define mediator relation below
+    sheet.write(row, 0, "Mediator")
+    sheet.write(row, 1, "mediator")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "group_id")
+    sheet.write(row, 5, "")
+    row = 4
+    #Define unique video relation below
+    sheet.write(row, 0, "Unique_video")
+    sheet.write(row, 1, "unique_video")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "video_id")
+    sheet.write(row, 5, "")
+    row = 5
+    #Define video relation below
+    sheet.write(row, 0, "Video")
+    sheet.write(row, 1, "video")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "low")
+    sheet.write(row, 5, "high")
+    return sheet
+
 def write_person_info(cluster_dict, workbook):
     person_info = []
     sheet = workbook.add_sheet('person')
@@ -264,6 +314,7 @@ for entry in data:
                                   'cluster' : entry['username']})
 
 workbook = xlwt.Workbook(encoding = 'utf-8')
+type_sheet = write_type_info(workbook)
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_dict, workbook)
