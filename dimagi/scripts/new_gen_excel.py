@@ -220,39 +220,6 @@ def write_distinct(vid_list, workbook):
             sheet.write(row, 2, 'warangal')  # for testing 
             row += 1
     return sheet
-    
-
-def write_person_watched_video_info(cluster_dict, workbook):
-    person_info = []
-    sheet = workbook.add_sheet('videoseen')
-    row = 0
-    sheet.write(row, 0, "field: id")
-#    sheet.write(row, 1, "field: name ")
-    sheet.write(row, 1, "field: video_id")
-    sheet.write(row, 2, "group 1")
-    row += 1
-    for cluster in cluster_dict:
-        for vill in cluster['villages']:
-            village_person_info = Person.objects.filter(village__village_name = vill).values_list('id','person_name','group')
-#            person_info.append(village_person_info)
-            for person in village_person_info:
-                vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = three_months).values_list('screening__videoes_screened', flat = True)
-                for vid_id in vid_id_list:
-                    if (vid_id):
-                        vid_name = Video.objects.filter(id = vid_id).values_list('title')
-                        person_id = truncate_id(person[0])
-                        group_id = truncate_id(person[2])
-                        sheet.write(row, 0, str(person_id))
-#                        sheet.write(row, 1, vid_name[0])
-                        sheet.write(row, 1, str(vid_id))
-                        sheet.write(row, 2, cluster['cluster'])
-                        row += 1
-                    else:
-                        print "not found"
-                        
-        if len(village_person_info) < 1:
-            print " No person found in " + cluster['cluster'] 
-    return sheet
 
 def write_video_schedule_info(vid_dict, workbook):
     sheet = workbook.add_sheet('video')
