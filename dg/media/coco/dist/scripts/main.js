@@ -6479,34 +6479,40 @@ define('views/form',[
             if(disable_submit)
                 this.set_submit_button_state('disabled');
             
-            
             if(typeof(errors)!=="object")
                 errors = $.parseJSON(errors);
             console.log("Showing this error");
             console.log(errors);
-            _.each(errors, function(errors_obj, parent){
-                var parent_el = this.$('[name='+parent+']');
-                $.each(errors_obj, function(error_el_name, error_list){
-                    var error_ul = null;
-                    all_li = "<li>"+error_list.join("</li><li>")+"</li>";
-                    error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
-                    if(error_el_name=="__all__")
-                    {
-                        parent_el.before(error_ul);     //insert error message
-                        parent_el.addClass("error");    //highlight
-                    }
-                    else
-                    {
-                        //NOt Done
-                        var error_el = parent_el.find('[name='+error_el_name+']');
-                        error_el.after(error_ul);    //insert error message
-                        error_el
-                            .parent('div')
-                            .parent('div')
-                            .addClass("error");     //highlight
-                    }
-                });
-            }, this);
+            try{
+                _.each(errors, function(errors_obj, parent){
+                    var parent_el = this.$('[name='+parent+']');
+                    $.each(errors_obj, function(error_el_name, error_list){
+                        var error_ul = null;
+                        all_li = "<li>"+error_list.join("</li><li>")+"</li>";
+                        error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
+                        if(error_el_name=="__all__")
+                        {
+                            parent_el.before(error_ul);     //insert error message
+                            parent_el.addClass("error");    //highlight
+                        }
+                        else
+                        {
+                            //NOt Done
+                            var error_el = parent_el.find('[name='+error_el_name+']');
+                            error_el.after(error_ul);    //insert error message
+                            error_el
+                                .parent('div')
+                                .parent('div')
+                                .addClass("error");     //highlight
+                        }
+                    });
+                }, this);
+            }
+            catch(err){
+                //if the error object has an unknown format - show it as it is on top of form
+                var parent_el = this.$('[name='+this.entity_name+']');
+                parent_el.before("<div class='form_error'>"+JSON.stringify(errors)+"</div>");    //insert error message
+            }
             
         },        
         
