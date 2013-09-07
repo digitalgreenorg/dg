@@ -1,0 +1,73 @@
+/* ---------------------------------------------------------------------
+Original Author: Susan Robertson
+Contributors: N/A
+
+Target Browsers: IE7, IE6
+Media Type: Screen, Projection
+Width: All Sizes
+------------------------------------------------------------------------ */
+
+/* Bicubic resizing for non-native sized IMG */
+img {
+    -ms-interpolation-mode: bicubic;
+}
+
+audio, canvas, video {
+    display: inline;
+    zoom: 1;
+}
+
+.grid:after,
+.h-list:after,
+.social:after,
+footer-links:after,
+.sorting-categories li:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+	zoom: 1;
+}
+
+/*
+.clearfix {
+	display: inline-block;
+}
+*/
+
+.slide-text {
+    top: 200px;
+}
+
+.blocks {
+    clear: both;
+    margin-top: 20px;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.blocks > *,
+.vidDrawer-container,
+.featured-ft-videoDetails {
+    display: inline;
+    zoom: 1;
+}
+
+ol.pagination {
+    width: 250px;
+}
+
+.gradientBg-ft-btn {
+    width: 300px;
+}
+
+.vidDrawer-container {
+    display: inline;
+    zoom: 1;
+    width: 100%;
+}
+

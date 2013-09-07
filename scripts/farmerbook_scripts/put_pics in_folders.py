@@ -2,9 +2,9 @@
 # WITH FOLDER NAME AS THE VILLAGE_ID AND COPYING PHOTOS IN THEM
 
 from django.core.management import setup_environ
-import settings
+import dg.settings
 import shutil
-setup_environ(settings)
+setup_environ(dg.settings)
 import sys, os, glob , string
 from dashboard.models import *
 

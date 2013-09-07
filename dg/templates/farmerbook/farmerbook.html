@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Farmerbook | Digitalgreen</title>
+    
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Farmerbook DigitalGreen Farmer Facebook Pictures Photos Images">
+    <meta name="description" content="DigitalGreen Farmers details">
+
+    <!-- Le styles -->
+	<link href="/media/farmerbook/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/media/farmerbook/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="/media/farmerbook/css/farmer_page.css" rel="stylesheet"/>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100%;}
+	  #map_canvas img{max-width:none}
+	  .vidsWatchedItem { width:120px; margin-left:5px !important;}
+	  #map_left_panel{
+	  width:180px;
+	  background-color: #D5D5D5;
+	  border: 1px solid #E1E1E8;
+	  position:absolute;
+	  top:40px;  /* adjust value accordingly */
+	  margin-left: 10px;  /* adjust value accordingly */
+	  }
+	  
+	  #map_right_panel{
+	  width:228px;
+	  background-color: #D5D5D5;
+	  border: 1px solid #E1E1E8;
+	  position:absolute;
+	  top:40px;  /* adjust value accordingly */
+	  right:30px;  /* adjust value accordingly */
+	  }
+	  #top_bar{
+		width:100%;
+		height:40px;
+		border: 1px solid #6D9D30;
+
+	  }
+	  
+	.active_page{
+		background:darkgreen;
+		color:white !important;
+	}
+	.user_info_caption {
+		margin: 3px 15px 0 0;
+		width: 250px;
+		font-size: 12px;
+		font-weight: 200;
+		text-shadow: 0 1px 0 white;
+		color: #555555;
+	
+	}
+	.ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+	}
+
+	.ellipsis.multiline {
+		white-space: normal;
+	}
+	
+	.btn-custom {
+	  background-color: hsl(50, 100%, 30%) !important;
+	  background-repeat: repeat-x;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffd400", endColorstr="#997f00");
+	  background-image: -khtml-gradient(linear, left top, left bottom, from(#ffd400), to(#997f00));
+	  background-image: -moz-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -ms-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffd400), color-stop(100%, #997f00));
+	  background-image: -webkit-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -o-linear-gradient(top, #ffd400, #997f00);
+	  background-image: linear-gradient(#ffd400, #997f00);
+	  border-color: #997f00 #997f00 hsl(50, 100%, 25%);
+	  color: #fff !important;
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+	  -webkit-font-smoothing: antialiased;
+	}
+	
+	.activeSlide {text-decoration:none;color:#999;background-position:0 -26px;cursor:default;}
+	.normalSlide {background-image:url(/media/farmerbook/images/bg_control_nav.png);color:#333;cursor:pointer;display:inline-block;position:relative;font-size:1.7em;height:13px;margin:0px 0 0 4px;outline:none;text-align:left;text-decoration:none;text-indent:-999em;width:13px;}
+
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/markerclusterer.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-carousal.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-transition.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-custompopover.js"></script>
+	<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/sha256.js"></script>
+	
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="icon" type="image/png" href="/media/img/admin/dgfavicon3.png">
+    
+    <script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-16211208-1");
+			pageTracker._trackPageview();
+			} 
+	catch(err) {}
+	</script>
+
+	<script type='text/javascript'>	
+	
+	
+		$(document).ready(function() {
+		    $('#myModal').hide();
+			$('.carousel').carousel({ pause: true, interval: false});
+			{% if type == "village" %}
+				villageClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'csp' %}
+				cspClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'group' %}
+				groupClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'partner' %}
+				partnerClick('{{type_id}}')
+			{%endif %}			
+		});
+		
+		function showLoading() {
+			$("div#myModal").html("<div class='modal-body' ><div id='loading_image' style='position:absolute; top:50%;left:45%;'>"+
+							"<img src='/media/farmerbook//images/loading.gif' /></div></div>");
+			$('#myModal').show();
+			$('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+							 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);			
+		}
+		
+		function removeLoading() {
+			$('#loading_image').remove();
+		}
+		
+		function personClick(person_id) {
+			showLoading();
+			checkLoginFB(person_id);			
+		}
+		
+		function personPageLoad(server_url) {
+			$("div#myModal").load(server_url, function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						alert(msg + xhr.status + " " + xhr.statusText);
+					  }
+					  removeLoading();
+					  $('#myModal').modal();					 
+					  mixpanel.track("Person Page Loaded");					  
+					});
+		}
+		
+		function checkLoginFB(person_id) {
+			server_url = '/getpersonpage?person_id='+person_id;
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;
+					server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid				
+				}
+				personPageLoad(server_url);
+			});
+		}
+		
+		function groupClick(group_id) {
+			showLoading();
+			$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				  }		  
+				  mixpanel.track("Group Page Loaded")
+			});
+		}
+		
+		function villageClick(vil_id) {
+			showLoading();
+			$("div#myModal").load('/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				 }
+				  removeLoading();				
+				  $('#myModal').modal();
+				  mixpanel.track("Village Page Loaded");
+				  
+			});
+			
+		}
+		
+		function cspClick(csp_id) {
+			showLoading();
+			$("div#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				  }
+				  //alert('Load was performed.');
+				  removeLoading();				
+				  $('#myModal').modal();
+				 
+				 mixpanel.track("Person Page Loaded");
+				  
+				});	
+			
+		}		
+		
+		function partnerClick(partner_id) {
+			showLoading();
+			$("div#myModal").load('/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				  }
+				  removeLoading();				
+				  $('#myModal').modal();				 
+				 mixpanel.track("Partner Page Loaded");
+				  
+				});	
+			
+		}
+		
+		function previous(){	
+			new_page = parseInt($('#current_page').val()) - 1;
+			//if there is an item before the current active link run the function
+			if($('.active_page').prev('.page_link').length==true){
+				go_to_page(new_page);
+			}			
+		}
+
+		function next(){
+			new_page = parseInt($('#current_page').val()) + 1;
+			//if there is an item after the current active link run the function
+			if($('.active_page').next('.page_link').length==true){
+				go_to_page(new_page);
+			}
+			
+		}
+		function go_to_page(page_num){
+			//get the number of items shown per page
+			var show_per_page = parseInt($('#show_per_page').val());
+			
+			//get the element number where to start the slice from
+			start_from = page_num * show_per_page;
+			
+			//get the element number where to end the slice
+			end_on = start_from + show_per_page;
+			
+			//hide all children elements of pag_content div, get specific items and show them
+			$('#pag_content').children().css('display', 'none').slice(start_from, end_on).css('display', 'block');
+			
+			/*get the page link that has longdesc attribute of the current page and add active_page class to it
+			and remove that class from previously active page link*/
+			$('.normalSlide[longdesc=' + page_num +']').addClass('activeSlide').siblings('.activeSlide').removeClass('activeSlide');
+			
+			//update the current page input field
+			$('#current_page').val(page_num);
+		}
+		
+		function fbconnectClick() {
+		}
+		
+		function initialize() {
+			$(function(){
+			   $("[rel=popover]").popover();
+			});
+			var center = new google.maps.LatLng(21.7, 79.7);
+			var options = {
+			  'zoom': 5,
+			  'center': center,
+			  'mapTypeId': google.maps.MapTypeId.HYBRID,
+			  'panControl': false,
+				'panControlOptions': {
+				  position: google.maps.ControlPosition.TOP_RIGHT
+				},
+			  'zoomControl': true,
+		      'zoomControlOptions': {
+		        style: google.maps.ZoomControlStyle.BIG,
+  				position: google.maps.ControlPosition.TOP_RIGHT
+		       },
+			};
+
+			var map = new google.maps.Map(document.getElementById("map_canvas"), options);
+			var markers = [];
+			
+			function MakeInfoWindowEvent(map, marker, i) {  
+				return function() {
+				   $("div#myModal").html("<div class='modal-body' ><div id='loading_image' style='position:absolute; top:50%;left:45%;'>"+
+							"<img src='/media/farmerbook//images/loading.gif' /></div></div>");
+				   $('#myModal').show();
+				   $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+				   $("div#myModal").load('/getvillagepage?village_id='+i, function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						alert(msg + xhr.status + " " + xhr.statusText);
+					  }
+					  //alert('Load was performed.');
+					  $('#loading_image').remove();					
+					  $('#myModal').modal();
+					  mixpanel.track("Village Page Loaded");
+					  
+					});
+				};				
+			 }
+			
+			$.getJSON("/getvillages",function(json){
+				$.each(json,function(i){
+					vil_details = json[i];
+					//console.log(json[i].grade);
+					var latLng = new google.maps.LatLng(vil_details.latitude, vil_details.longitude);
+					if(vil_details.grade == 'A') {
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/greena.png'});
+					} else if(vil_details.grade == 'B') {
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					} else if(vil_details.grade == 'C') {
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/yellowc.png'});
+					} else if(vil_details.grade == 'D') {
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					}
+					markers.push(marker);
+					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], vil_details.id));
+				});
+				var markerCluster = new MarkerClusterer(map, markers);				
+					
+			});						
+		}
+		
+		</script>
+
+<!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
+for(e=0;e<g.length;e++)(function(a){b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}})(g[e]);c._i.push([a,d,f])};window.mixpanel=c})(document,[]);
+mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->		
+  </head>
+
+  <body onload="initialize()" style="font-family: Calibri; font-weight: normal;">
+	<div class="navbar navbar-fixed-top">
+        <div class="container" style="background-color:#6D9D30;width:100%">
+          <div><a href="http://digitalgreen.org" target="_blank"><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></a></div>
+		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
+		  <div href="javascript:void(0);" onclick="fbConnectClick()" class='btn btn-primary' id='fbconnect' style="float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;"> Connect With facebook</div>
+        </div>      
+    </div>
+	<div id="map_canvas" style=""></div>
+	<div id="map_left_panel">
+	<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Farmers</span> </div>
+	<div style="border: 2px solid #6D9D30;margin-top:2px;"></div>
+	<!--<div id='img_container'>
+			{% for person in top_adopters_stats %}
+				<a href="javascript:void(0);" onclick="personClick({{ person.id }})" >
+					<img rel="popover" data-original-title="{{person.name}}" data-content="Adoption Rate: {{person.adoption_rate|floatformat:0}}%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/{{ person.id }}.jpg">
+				</a>
+			{% endfor %}
+	</div>-->
+				<a href="javascript:void(0);" onclick="personClick(40000022215)">
+					<img rel="popover" data-original-title="Basappa Somanakoppa" data-content="Adoption Rate: 75%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022215.jpg" >
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058416)">
+					<img rel="popover" data-original-title="RAGHUNATH LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058416.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058409)">
+					<img rel="popover" data-original-title="NILAKANTA LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058409.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058406)">
+					<img rel="popover" data-original-title="DHANURJAY LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058406.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000029610)">
+					<img rel="popover" data-original-title="Basavanneppa Kamadhenu" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000029610.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000022240)">
+					<img rel="popover" data-original-title="Pakkirappa Katagi" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022240.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(6000009672)">
+					<img rel="popover" data-original-title="Sarojini B Shivapur" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/6000009672.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000023530)">
+					<img rel="popover" data-original-title="Yallavva Kutri" data-content="Adoption Rate: 63%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000023530.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053260)">
+					<img rel="popover" data-original-title="Subhadra Dandpat" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053260.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000043229)">
+					<img rel="popover" data-original-title="Abanti Sethy" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000043229.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000020424)">
+					<img rel="popover" data-original-title="Channappa Dhanigonda" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000020424.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000011640)">
+					<img rel="popover" data-original-title="Mithila Mohanta" data-content="Adoption Rate: 59%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000011640.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000042137)">
+					<img rel="popover" data-original-title="Rita Nayak" data-content="Adoption Rate: 59%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000042137.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053254)">
+					<img rel="popover" data-original-title="Padmabati Singh" data-content="Adoption Rate: 58%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053254.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053251)">
+					<img rel="popover" data-original-title="Pana Singh" data-content="Adoption Rate: 58%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053251.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053253)">
+					<img rel="popover" data-original-title="Chhabirani Singh" data-content="Adoption Rate: 56%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053253.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053256)">
+					<img rel="popover" data-original-title="Pankajini Ray" data-content="Adoption Rate: 55%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053256.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000042493)">
+					<img rel="popover" data-original-title="Indumati Naik" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000042493.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000040708)">
+					<img rel="popover" data-original-title="Jahaji Naik" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000040708.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000046012)">
+					<img rel="popover" data-original-title="Sabita Nayak" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000046012.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058407)">
+					<img rel="popover" data-original-title="KAMALACHAN LOKEI" data-content="Adoption Rate: 50%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058407.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053259)">
+					<img rel="popover" data-original-title="Subasini Das" data-content="Adoption Rate: 50%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053259.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000046007)">
+					<img rel="popover" data-original-title="Padmini Nayak" data-content="Adoption Rate: 48%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000046007.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000044992)">
+					<img rel="popover" data-original-title="Binati Mohanta" data-content="Adoption Rate: 48%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000044992.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000062128)">
+					<img rel="popover" data-original-title="KARTIK TAMARBI" data-content="Adoption Rate: 46%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000062128.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053252)">
+					<img rel="popover" data-original-title="Basanti Singh" data-content="Adoption Rate: 45%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053252.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000015782)">
+					<img rel="popover" data-original-title="Chandamani Mohanta" data-content="Adoption Rate: 45%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000015782.jpg">
+				</a>			
+	</div>
+	{% load humanize %}
+	{% load customtags%}
+	<div id="map_right_panel">
+			<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Service Providers</span> </div>
+			<div style="border: 2px solid #6D9D30;margin-top:2px;">
+			{% for csp in csp_leader_stats %}
+				<div class="sp_details_container" style="height:auto;">
+					<a href="javascript:void(0);" onclick="cspClick({{csp.id}})">
+						<img src={{csp.photo_link}}>		
+					</a>			
+					
+					
+					<div class="sp_details"> 
+					<a href="javascript:void(0);" onclick="cspClick({{csp.id}})" style="color: #524D4D;font-weight: bold;">
+					{{csp.name|truncchar:18}}</a> <span>facilitated {{csp.screenings|intcomma}} screenings and {{csp.adoptions|intcomma}} adoptions.</span>
+					</div>
+					
+				</div>
+				
+			 {% endfor %}	
+			
+		</div>		
+
+				
+			
+				
+		</div>		
+	
+	<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Partners</span> </div>
+			<div style="border: 2px solid #6D9D30;margin-top:2px;"></div>
+			{% for partner in partner_leader_stats %}
+			
+				<div style=" margin-top:3px;"><a href='javascript:void(0);' onclick="partnerClick({{partner.1.0}})" style="color: #524D4D;font-weight: bold;">
+					<img src="http://s3.amazonaws.com/dg_farmerbook/partner/{{partner.1.0}}.jpg"" style="margin-right:5px;width:45px; height:30px;float:left;"></a> 
+					<div><a href='javascript:void(0);' onclick="partnerClick({{partner.1.0}})" style="color: #524D4D;font-weight: bold;">
+					<span style="color: #524D4D;font-weight: bold;">{{partner.1.1}} </a>
+					</span>serves {{partner.1.2|intcomma}} villages reaching {{partner.1.3|intcomma}} farmers</div>
+				</div>
+				{% endfor %}
+						
+		</div>
+	<div id="myModal" class="modal" style="width:1023px; min-height:570px;"></div>
+	
+	 <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster 
+    <script src="/media/farmerbook/js/jquery.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-transition.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-alert.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-modal.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-dropdown.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-scrollspy.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-tab.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-popover.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-button.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-collapse.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-carousel.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-typeahead.js"></script>-->
+<script type="text/javascript">
+    mixpanel.track("Landing Page Loaded");
+</script>
+<div id="fb-root"></div>
+      <script>
+		function followClick(person_id, video_title, date_of_adoption, person_name) {
+			console.log(person_id, video_title, date_of_adoption, person_name);
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;
+					var message = fuid+person_id+"dg_farmerbook";
+					var hash = CryptoJS.SHA256(message);
+					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
+					link_url = '{{server_url}}/farmerbook/person/'+person_id;
+					$.post("/fbconnect/savefollower/", data, function(data) { 
+						console.log(data);
+						console.log($(this));
+						$('#follow').text("Subscribed");
+						$('#follow').addClass("disabled");
+			
+					});
+					if(video_title) {
+						desc = "Adopted "+video_title+" on "+date_of_adoption+".";
+					}
+					else {
+						desc = "No Adoptions."
+					}
+								
+					var obj = {
+					  method: 'feed',
+					  link: '{{server_url}}/farmerbook/person/'+person_id,
+					  picture: 'https://s3.amazonaws.com/dg_farmerbook/2/'+person_id+'.jpg',
+					  name: 'Farmerbook',
+					  caption: person_name,
+					  description: desc
+					};
+					console.log(obj);
+					FB.api('/me/feed', 'post', obj, function(response) {
+					  if (!response || response.error) {
+						console.log('Error occured in fb api post feed');
+					  } else {
+						console.log('Post ID: ' + response.id);
+						alert("You are successfully subscribed to "+person_name+".");
+					  }
+					});
+					console.log(obj);					
+				} else {
+					console.log('redirecting');
+					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+				}	
+			});
+		}		
+		
+		function loggedIn(response) {
+			button = document.getElementById('fbconnect');
+			button.innerHTML = 'Connected With Facebook';
+			console.log(response);
+			//send ajax request to save user
+			fuid = response.authResponse.userID;
+			FB.api('/me', {"fields": ["name", "first_name", "last_name"]}, function(response) {
+					console.log('in fb api call success call b');
+					console.log(response);
+					name = response.name;
+					first_name = response.first_name;
+					last_name = response.last_name;
+					var data = { 'fuid' : fuid, 'name' : name, 'first_name' : first_name, 'last_name' : last_name};
+					$.post("/fbconnect/savefbuser/", data, function(data) { console.log(data);});	
+			});		
+		}
+		
+		function fbConnectClick() {
+			console.log('in fbconnect click');
+			FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				loggedIn(response);				
+			} else {
+				console.log('redirecting');
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+			}
+			});
+		}
+		
+		window.fbAsyncInit = function() {
+		  FB.init({
+            appId      : '{{facebook_app_id}}', // App ID
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+          });
+		  
+		   FB.getLoginStatus(function(response) {
+		   console.log('in fb getlogin status 1');
+			if (response.status === 'connected') {
+				console.log('in connected');
+				{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
+				loggedIn(response);				
+		  } else {
+		  		{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
+		  }
+		  });
+        };
+        // Load the SDK Asynchronously
+        (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+         }(document));
+      </script>
+  </body>
+</html>

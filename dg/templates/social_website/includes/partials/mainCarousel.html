@@ -1,0 +1,50 @@
+    <div class="wrapper slideshow">
+        <div class="slide" id="video-img">
+            <div class='main-carousel-video-player' id='player'></div>
+            <div class="slide-img" >
+				<img src="{{STATIC_URL}}social_website/content/{% if header.currentPage == 'About' %}about_carousel_img.jpg{% else %}home_carousel_img.jpg{% endif%}" alt="">
+				<div class="play-button" onclick=video_player.init({% if header.currentPage == "About" %}'CR8zRC3wd-s'{% else %}'ICxPW-OoSFI'{% endif%});> 
+				</div>
+             </div>
+
+			<div id="main-carousel" class="main-carousel carousel-wrapper">
+                <div class="carousel-container js-carousel-container">
+                    <ul class="carousel-list">
+                        <li>
+                            <div class="slide-text">
+                                <h1 class="hdg-source-reg hdg-super hdg-white hdg-textShadow"><span class="hdg-source-semibold">Digital Green</span> is a knowledge platform to amplify development around the world.</h1>
+                                <a href="{% url discover %}" class="hdg-white hdg-source-reg hdg-c hdg-textShadow">Watch, Learn, Share</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="slide-text">
+                                <h1 class="hdg-source-reg hdg-super hdg-white hdg-textShadow">We work with rural communities to produce videos to transform livelihoods.</h1>
+                                <a href="{% comment %}{% url connect %}{% endcomment %}" class="hdg-white hdg-source-reg hdg-c hdg-textShadow">Connect with our community</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="slide-text">
+                                <h1 class="hdg-source-reg hdg-super hdg-white hdg-textShadow"><span class="hdg-source-semibold">Digital Green</span> helps farmers share best practices within their communities.</h1>
+                                <a href="{% url discover %}" class="hdg-white hdg-source-reg hdg-c hdg-textShadow">Discover best practices</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="slide-text">
+                                <h1 class="hdg-source-reg hdg-super hdg-white hdg-textShadow"><span class="hdg-source-semibold">Digital Green</span> combines technology and social organization for community transformation.</h1>
+                                <a href="{% url about %}" class="hdg-white hdg-source-reg hdg-c hdg-textShadow">Learn more about us</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="carousel-nav js-carousel-nav">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,288 @@
+{% extends "base_all_analytics.html" %}
+{% load analytics_extra_tags %}
+
+{% block title %} DigitalGreen - Progress Dashboard{% endblock %}
+
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/analytics.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}  
+    <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+    <script type ='text/javascript'>
+    var search_params = "{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}";
+    	//Function to set the default dates when the page loads
+    	window.onload = function(){
+			//Calling code for tablesorter
+			$('#table2').tablesorter({textExtraction: function(node) {  
+				if($(node).find("a").length)
+					return $(node).find("a").html();
+				return node.innerHTML;
+				}
+			});
+		}		
+    			
+		function reset(){	        
+			window.location.href = '{{search_box_params.base_url}}?geog=country&id=1';
+		}
+		
+		function go(){
+			var base_url = '{{search_box_params.base_url}}';
+			var is_date_selected = {{search_box_params.is_date_selected}};
+			var url = new Array();
+			var orig_from_date = '{{search_box_params.from_date}}';
+			var orig_to_date = '{{search_box_params.to_date}}';
+			var cur_from_date = $("#inlinedatepicker1").html();
+			var cur_to_date = $("#inlinedatepicker2").html();
+			if(is_date_selected || orig_from_date!=cur_from_date || orig_to_date!=cur_to_date) {
+				url.push('from_date='+cur_from_date);
+				url.push('to_date='+cur_to_date);
+			}
+				
+			if($("input:checkbox:not(:checked)").length > 0) {
+				$("input:checked").each(function() {
+   					url.push("partners="+$(this).val())
+				});
+			}
+			
+			var geog = null, id = '1';
+			$("select").each(function() {
+				if($(this).val()==-1)
+					return false;
+				if($(this).attr('name')!="")
+					{
+						geog = $(this).attr('name');
+						id = $(this).val();					
+					}
+			});
+			if(geog != null) {
+				url.push("geog="+geog);
+				url.push("id="+id)
+			};
+			
+			if(url.length > 0) {
+				window.location.href = base_url+'?'+url.join('&');
+			}
+			else {
+				window.location.href = base_url;
+			};
+			
+		}
+    		
+		//Function to enable/disable and fill option in Selects for region select drop downs
+    	function dochange(src, val) {
+			$.ajax({ type: "GET", 
+					url: "/analytics/drop_down_val?geog="+src+"&id="+val,
+					success: function(html) {                    
+              		var flag = false;
+					$(".select").each(function() {
+						if(flag == true)
+							$(this).val(-1).attr('disabled','disabled');
+						if (this.name == src)
+							flag = true;					
+					});
+					
+				   $("#"+src+"Id").html(html).removeAttr('disabled');                   
+              }
+         });
+        }    	
+    
+    </script>
+{% endblock jsfile %}
+
+
+{% block bodytitle %}  {% endblock bodytitle %}
+
+{% block mainbodycontent %} {% endblock mainbodycontent %}
+
+
+{% block content %}  
+<div id='analyticsheader'> 
+
+	<div id='analyticslogo'> 
+		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/analyticslogo1.png" alt='Analytics Logo'> </a>
+	</div>
+	
+	<div id='analyticsnav'>
+		<div class='analyticsnavlink' id='analyticsnavdiv'>
+			<a id='analyticsnavlink' href="#">Select Dashboard <img src="/media/Output/Images/navbtn1.png" alt=""></a>
+			<div id='analyticsnav1'>
+				<ul>
+					<li> <a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+				</ul>
+			</div>
+		</div>
+		<div class='analyticsnavlink'>
+			<a href='/'>Home</a>
+		</div>
+						
+	</div>	
+	
+</div>
+<div id='analyticspagetitle'> 
+	&nbsp; 
+	{% block analyticsbreadcrums %}
+		<a href='/'>Home</a> /
+		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
+	{% endblock analyticsbreadcrums %}
+
+</div>
+<div id='content'>
+	<div id='customize'>
+		<div id='customizetitle'>
+			<div id='customizetitlename'>  </div>			
+		</div>
+		
+		<div id='customizebody'>			 			
+			<div id='calender' class='customdiv'>
+				<div id='calendertitle' class='customtitle'>										
+					<table id='calendertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='customtitlename'> Calendar </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='calenderbody' class='custombody'>
+					<table id='calenderbodytable' class='custombodytable'>
+						<tr>
+							<td id='calenderbodytitle' colspan='2'> date: 'yyyy-mm-dd' format  </td>
+						</tr>
+						<tr>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> from: </div> 	 </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker1' class='inputdiv'>{{search_box_params.from_date}}</div> </td>
+						</tr>
+						<tr>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> to: </div>  </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker2' class='inputdiv'>{{search_box_params.to_date}}</div> </td>
+						</tr>
+					</table>				
+				</div>
+								
+			</div>				
+			
+			
+			<div id='searchdiv' class='customdiv'>
+				<div id='searchtitle' class='customtitle'>										
+					<table id='searchtitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='customtitlename'> Search by </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='selectbody'>
+							<div class='searchbody1' id='country'>
+				   				<select class='select' name='country' id = 'countryId' onChange="dochange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
+										{% for key,item in search_box_params.geog_val.0.items %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+				    			</select>				
+							</div>				
+							<div class='searchbody1' id='state'>
+				   				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select State</option>
+									{%if search_box_params.geog_val.1 %}
+										{% for key,item in search_box_params.geog_val.1.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}
+				    			</select>				
+							</div>
+							<div class='searchbody1' id='district'>
+				    			<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select District</option>
+					    			{%if search_box_params.geog_val.2 %}
+										{% for key,item in search_box_params.geog_val.2.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}						
+				    			</select>	
+							</div>
+							<div class='searchbody1' id='block'>
+				    			<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
+					   		 		<option value='-1'>Select Block</option>
+					   		 		{%if search_box_params.geog_val.3 %}
+										{% for key,item in search_box_params.geog_val.3.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}						
+				    			</select>				
+							</div>			
+							<div class='searchbody1' id='village'>
+				   	 			<select class='select' name='village' id = 'villageId'  {% if not search_box_params.geog_val.4 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select Village</option>	
+										{%if search_box_params.geog_val.4 %}
+											{% for key,item in search_box_params.geog_val.4.items %}
+												<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+											{%endfor%}
+										{%endif%}					    								
+				    			</select>					
+							</div>
+				</div>							
+			</div>
+				
+			{% if search_box_params.partners %}
+			<div id='partner' class='customdiv'>
+				<div id='partnertitle' class='customtitle'>										
+					<table id='partnertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='customtitlename'> Partners </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='partnerbody' class='custombody'>
+					<table id='partnerbodytable' class='custombodytable'>
+					{% for partner in search_box_params.partners %}
+						<tr>
+							<td id='partnerbodytd2' class='custompartnerbodytd'> 
+								<div id='partnername' class='partnerdiv'>{{partner.PARTNER_NAME}}</div> 
+								<div class='partnercheckbox'> 
+									<input type="checkbox" name="partners" value="{{partner.id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
+								</div> 
+							</td>														
+						</tr>
+					{% endfor %}				
+					</table>				
+				</div>
+			</div>				
+			{% endif %}
+			
+			<div id='submitdiv'>										
+					<table id='submittable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
+							<td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
+						</tr>
+					</table>
+			</div>			
+			<br/>
+			<br/>	
+		</div>
+				
+	</div>
+	
+	<div id='contentbody'>		
+		{% block contentbody %}
+			<div id='contentheader'>
+				<table id='contentheadertable'>						
+					<tr>
+						<td class='contentheadertitle' > {% block datepick1 %} {% endblock datepick1 %} </td>
+						<td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>				
+					</tr>
+				</table>					
+			</div>
+			
+		{% endblock contentbody %}
+	</div> 
+</div>
+{% endblock content %}

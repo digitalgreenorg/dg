@@ -3,9 +3,9 @@ sys.path.append('/home/ubuntu/code/dg_git')
 site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
 
 from django.core.management import setup_environ
-import settings
+import dg.settings
 
-setup_environ(settings)
+setup_environ(dg.settings)
 
 from django.db.models import Min, F
 from dashboard.models import *

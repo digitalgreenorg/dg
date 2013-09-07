@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{% block title %}  {% endblock title %}</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
+	<link rel="icon" type="image/png" href="/media/Output/Images/dgfavicon3.png">
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
+    {% block cssfile %}
+       
+    {% endblock cssfile %}    
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />     
+              
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>   
+	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>	
+    <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>    
+    <script type="text/javascript" src="/media/Output/JS/Jdatepick.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/Jdefaultload.js"></script>
+    {% block jsfile %}       
+    {% endblock jsfile %}
+     
+    <script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-16211208-1");
+			pageTracker._trackPageview();
+			} 
+	catch(err) {}
+	</script>
+    
+</head>
+
+<body>
+<div id='fullbody'>
+	
+	<table cellspacing='0' cellpadding='0' id='mainbodytable'>
+		<tr>
+			<td class='mainbodytd' colspan='2' cellspacing='0' cellpadding='0' align='center'>
+				
+			{% block mainbody %}
+				
+				<div id='navpanel'>
+					<div id='headermenulist' class='headermenulist'>				
+										
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Our Work
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Our Work
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/aboutus" title='Overview'> Overview </a>  </li>
+											<li> <a href="/overviewfarmer" title='Farmers'> Farmers</a></li>
+											<li> <a href="/overviewdatabase" title='Database'> Database</a></li>
+											<li> <a href="/overviewproduction" title='Production'> Production</a></li>
+											<li> <a href="/overviewdistribution" title='Distribution'> Distribution</a></li>
+											<li> <a href="/overviewsequence" title='Sequencing'> Sequencing</a></li>
+											<li> <a href="/overviewdiffusion" title='Diffusion'> Diffusion</a></li>											
+											<li> <a href="/overviewscalability" title='Scalability'> Scalability</a></li>
+											
+										</ul>										
+									</div> 									 
+								</div>
+							</div>	
+						</div>
+						
+						<div id='headermenugap'>  </div>		
+						
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Technology
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Technology
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/farmerbook" title='farmer book' target='_blank'> Farmerbook </a></li>
+											<li> <a href="/tech" title='Software we build'> Software </a></li>
+											<li> <a href="/wondervillagegame" title='Games'> Games </a></li>
+											<li> <a href="/analytics/overview_module?geog=country&id=1" title='Progress Dashboard' target='_blank'>Analytics</a></li>											
+											<li> <a href="/analytics/video_search/" title='Search for Videos'> Search Videos </a></li>
+										</ul>										
+									</div> 									 
+								</div>
+							</div>	
+						</div>
+						
+						<div id='headermenugap'>  </div>
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Publication
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Publication
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/annualreports" title='Annual Reports'> Annual Reports </a>  </li>				
+											<li> <a href="/press" title='Press'> Media Coverage </a> </li>
+											<li> <a href="/nexus" title='Nexus: The Monthly Newsletter' target=_blank> Nexus Newsletter </a> </li>
+										</ul>										
+									</div> 
+								</div>
+							</div>	
+						</div>
+						
+						<div id='headermenugap'>  </div>					
+						
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									About Us									
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										About Us
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/keyprinciple" title='Key Principles'> Key Principles </a>  </li>																										
+											<li> <a href="/corevalue" title='Core Values'> Core Values </a>  </li>
+											<li> <a href="/partnerexecutive" title='Partners'> Partners </a> </li>
+											<li> <a href="/team" title='Team'> Team </a>  </li>
+											<li> <a href="/photos" title='Photos'> Photos </a>  </li>
+											<li> <a href="/webvideos" title='Videos'> Videos </a>  </li>
+										</ul>										
+									</div> 
+								</div>
+							</div>
+						</div>
+						
+						<div id='headermenugap'>  </div>
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Get Involved
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Get Involved
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/career" title='Hunt for jobs'> Careers </a> </li>
+											<li> <a href="/donate" title='Donate us'> Donate </a> </li>
+											<li> <a href="/contact" title='Contact Us'> Contact Us </a> </li>											
+										</ul>										
+									</div> 
+								</div>
+							</div>	
+						</div>						
+															
+					</div>
+				</div>
+				
+				<div id='logosearchdiv'>				
+					<div id='navheaderleft'> <a href="/"> <img src="/media/Output/Images/dglogo11.png" alt='Digital Green Logo' title="Logo"> </a>   </div>
+					<div id='navheaderright'>
+						<a href='/donate' title='Donate to us'><img src="/media/Output/Images/donatebtn1.png" alt='temp' title='Donate to Us'> </a>
+					</div>
+				</div>
+				
+			{% endblock mainbody %}		
+						
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='mainbodytd' colspan='2' cellspacing='0px' cellpadding='0px'>
+				<div id='analyticscontent'>
+					<div id='analyticscontentdesc'>
+						{% block analyticscontent %}
+						{% endblock analyticscontent %}	
+					</div>				
+				</div>			
+			</td>
+		</tr>
+		<tr>
+			<td class='mainbodytd' colspan='2' cellspacing='0' cellpadding='0'>
+				<br/>
+				<br/>
+				<br/>		
+			</td>
+		</tr>
+		
+		<tr>	
+			<td id='footertd31'>				
+			</td>
+			<td id='footertd32'>				
+				<div id='footercopyright'>
+					
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<br/>
+</body>
+</html>

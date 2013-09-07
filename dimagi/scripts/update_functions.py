@@ -1,9 +1,14 @@
-import settings
-from django.core.management import setup_environ
-setup_environ(settings)
-import os, csv, datetime, json, urllib2, uuid, base64, pickle
-from userfile_functions import upload_file, write_person_detail
+import base64
+import csv
+import datetime
+import json
+import os
+import pickle
+import urllib2
+import uuid
+
 from django.db.models import get_model
+from userfile_functions import upload_file, write_person_detail
 
 def get_case_person_list():
     BASE_URL = 'https://www.commcarehq.org/a/biharpilot/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
@@ -23,7 +28,7 @@ def get_case_person_list():
         case_id = case['case_id']
         if case['properties'].has_key('id'):
             person_id = case['properties']['id']
-            person_caseid_dict[person_id] = case_id
+            Person_caseid_dict[Person_id] = Case_id
     fp = open('person_case','wb')
     pickle.dump({
                  'person_caseid_dict': person_caseid_dict,
