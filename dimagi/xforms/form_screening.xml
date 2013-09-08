@@ -54,7 +54,7 @@
 			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0" />
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0" />
 			<itext>
-				<translation lang="en" default="">
+				<translation lang="en">
 					<text id="date-label">
 						<value>Date</value>
 					</text>

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import os, settings
+import os
+import dg.settings
 from django.core.management import setup_environ
-setup_environ(settings)
+setup_environ(dg.settings)
 from dashboard.models import *
-import video_schedule
 import xlrd
 import xlwt
 import sys
@@ -60,14 +60,14 @@ def write_type_info(workbook):
     sheet.write(row, 2, "id")
     sheet.write(row, 3, "name")
     sheet.write(row, 4, "village_id")
-    sheet.write(row, 5, "")
+    sheet.write(row, 5, "seen")
     row = 2
     #Define village relation below
     sheet.write(row, 0, "Village")
     sheet.write(row, 1, "village")
     sheet.write(row, 2, "id")
     sheet.write(row, 3, "name")
-    sheet.write(row, 4, "")
+    sheet.write(row, 4, "seen")
     sheet.write(row, 5, "")
     row = 3
     #Define mediator relation below
@@ -75,7 +75,7 @@ def write_type_info(workbook):
     sheet.write(row, 1, "mediator")
     sheet.write(row, 2, "id")
     sheet.write(row, 3, "name")
-    sheet.write(row, 4, "group_id")
+    sheet.write(row, 4, "village_id")
     sheet.write(row, 5, "")
     row = 4
     #Define unique video relation below
@@ -83,16 +83,16 @@ def write_type_info(workbook):
     sheet.write(row, 1, "unique_video")
     sheet.write(row, 2, "id")
     sheet.write(row, 3, "name")
-    sheet.write(row, 4, "video_id")
+    sheet.write(row, 4, "")
     sheet.write(row, 5, "")
     row = 5
     #Define video relation below
     sheet.write(row, 0, "Video")
     sheet.write(row, 1, "video")
     sheet.write(row, 2, "id")
-    sheet.write(row, 3, "name")
-    sheet.write(row, 4, "low")
-    sheet.write(row, 5, "high")
+    sheet.write(row, 3, "low")
+    sheet.write(row, 4, "high")
+    sheet.write(row, 5, "")
     return sheet
 
 def write_person_info(cluster_dict, workbook):
@@ -241,13 +241,12 @@ def write_mediator_info(mediator_dict, workbook):
         mediator_id = mediator['mediator']
         vill_id = mediator['village']
         user_name = mediator['cluster']
-        mediator = Animator.objects.filter(id = mediator['mediator'])
-        mediator_name = mediator[0].name
+        mediator_name = mediator['mediator_name']
         if(mediator):
             sheet.write(row, 0, str(mediator_id))
             sheet.write(row, 1, mediator_name)
             sheet.write(row, 2, str(vill_id))
-            sheet.write(row, 3, str(user_name))
+            sheet.write(row, 3, user_name)
             row += 1
         else:
             mediator_not_found += 1
@@ -310,6 +309,7 @@ for entry in data:
             pass
         for mediator in mediator_list:
             mediator_dict.append({'mediator':mediator.id,
+                                  'mediator_name':mediator.name,
                                   'village': v,
                                   'cluster' : entry['username']})
 
