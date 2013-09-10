@@ -1,7 +1,8 @@
+import os
 import dg.settings
 from django.core.management import setup_environ
 setup_environ(dg.settings)
-import csv,datetime, json, urllib2, uuid, pickle,os
+import csv,datetime, json, urllib2, uuid
 from django.db.models import get_model
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
@@ -45,19 +46,9 @@ def write_closing_meta(file, owner_id, i):
     file.write('<n'+unicode(i) + ':instanceID>' + unicode(uuid.uuid4()) + '</n' + unicode(i) + ':instanceID>\n')
     file.write('</n' + unicode(i) + ':meta>\n')
     file.write('</data>')
-    
-
+   
+   
 def write_person_detail(person_id, filename): #used for updating case..
-    # Retrieving the mapping from pickle files
-    dir = os.path.dirname(__file__)
-    filepath = os.path.join(dir,'case_user')
-    fp = open(filepath,'rb')
-    case_user_dict = pickle.load(fp)
-    fp.close()
-    filepath = os.path.join(dir,'case_person')
-    fp = open(filepath,'rb')
-    case_person_dict = pickle.load(fp)
-    fp.close()
     
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
@@ -85,7 +76,6 @@ def write_person_detail(person_id, filename): #used for updating case..
     i+= 1
     write_closing_meta(file, owner_id, i)    
     file.close()
-    return file
 
 def write_full_case_list(person_list, filename, user_id, case_user_dict, case_person_dict): #for generating cases
     file = codecs.open(filename, "w",'utf-8')
@@ -116,22 +106,20 @@ def write_full_case_list(person_list, filename, user_id, case_user_dict, case_pe
     
     write_closing_meta(file, owner_id, i)    
     file.close()
-    pickle.dump(case_user_dict, open('case_user','w')) #mapping of case with user
-    pickle.dump(case_person_dict, open('case_person','w')) #mapping of case with person(farmer)
-    return file
 
 def make_upload_file(villages, filename, user_id, case_user_dict, case_person_dict):
     Person = get_model('dashboard','Person')
     person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)    
-    f = write_full_case_list(person_ids, filename, user_id, case_user_dict, case_person_dict)
-    response = upload_file(filename)
-#   print response
+    file = write_full_case_list(person_ids, filename, user_id, case_user_dict, case_person_dict)
+    #response = upload_file(filename)
+    #   print response
     
-        
+    
 def upload_file(file):
     register_openers()
     print 'uploading ' + file
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    request = urllib2.Request("https://www.commcarehq.org/a/aug-coco/receiver", datagen, headers)
+    #Please make sure your replace "aug-coco" with your project name
+    request = urllib2.Request("https://www.commcarehq.org/a/delete/receiver", datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()
