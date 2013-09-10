@@ -3,7 +3,8 @@ import os
 import dg.settings
 from django.core.management import setup_environ
 setup_environ(dg.settings)
-from dashboard.models import *
+from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Village
+from dimagi.models import CommCareUser, CommCareUserVillage
 import xlrd
 import xlwt
 import sys
@@ -293,7 +294,19 @@ def write_video_schedule_info(vid_dict, workbook):
     return sheet
         
 from userfile_functions import read_userfile
-data = read_userfile(os.path.dirname(__file__)+r'\ap_fixtures.json')
+#getting user getting from the database and storing it in list of dictionaries
+users = CommCareUser.objects.all()
+data = []
+dict = {}
+for user in users:
+    dict['username'] = user.username
+    dict['user_id'] = user.guid 
+    villages = CommCareUserVillage.objects.filter(user = user.id)
+    dict['villages']=[]
+    for vil in villages:
+        dict['villages'].append(vil.village.id)
+    data.append(dict)
+    
 cluster_village_dict = []
 mediator_dict = []
 for entry in data:
