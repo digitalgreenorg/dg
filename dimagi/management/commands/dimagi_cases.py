@@ -33,3 +33,6 @@ class Command(BaseCommand):
                     case_user_dict,
                     case_person_dict
                 )
+                response = upload_file(filename, commcare_project_name) 
+                if response == 201 or response == 200:
+                    print "Successfully uploaded cases for " +entry['username']

@@ -115,11 +115,11 @@ def make_upload_file(villages, filename, user_id, case_user_dict, case_person_di
     #   print response
     
     
-def upload_file(file):
+def upload_file(file, project_name):
     register_openers()
-    print 'uploading ' + file
+    print 'uploading ' + file + 'to the' + project_name
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
     #Please make sure your replace "aug-coco" with your project name
-    request = urllib2.Request("https://www.commcarehq.org/a/delete/receiver", datagen, headers)
+    request = urllib2.Request('https://www.commcarehq.org/a/%s/receiver' %(project_name) , datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()
