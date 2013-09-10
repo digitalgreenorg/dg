@@ -293,7 +293,6 @@ def write_video_schedule_info(vid_dict, workbook):
             print str(record['id']) + " not found"
     return sheet
         
-from userfile_functions import read_userfile
 #getting user getting from the database and storing it in list of dictionaries
 users = CommCareUser.objects.all()
 data = []

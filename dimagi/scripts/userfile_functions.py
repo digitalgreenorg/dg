@@ -8,20 +8,10 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import codecs
 
-def write_userfile(file, data):
-    f = open(file,'w')
-    f.write(data)
-        
-def read_userfile(file):
-    json_data=open(file).read()
-    print json_data
-    data = json.loads(json_data)
-    return data
-
 def write_opening_meta(file, num_people):
     file.write('<?xml version="1.0" ?>\n')
     file.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
-    file.write('<num_people>' + unicode(num_people) + '</num_people>\n')
+    file.write('<num_people> %s </num_people>\n' % (unicode(num_people)))
     
 def write_person_content(file, i, case_id, owner_id, person, videos_seen):
     file.write('<people>\n')
@@ -114,12 +104,11 @@ def make_upload_file(villages, filename, user_id, case_user_dict, case_person_di
     #response = upload_file(filename)
     #   print response
     
-    
-def upload_file(file, project_name):
+#TODO: Can we change all calls to upload file?
+def upload_file(file, commcare_project):
     register_openers()
     print 'uploading ' + file + 'to the' + project_name
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    #Please make sure your replace "aug-coco" with your project name
-    request = urllib2.Request('https://www.commcarehq.org/a/%s/receiver' %(project_name) , datagen, headers)
+    request = urllib2.Request(commcare_project.receiver_url , datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()
