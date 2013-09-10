@@ -1,4 +1,5 @@
 from django.db import models
+from poster.streaminghttp import register_openers
 
 from dashboard.fields import BigForeignKey
 from dashboard.models import Person, Village
@@ -27,9 +28,21 @@ class CommCareProject(models.Model):
     name = models.CharField(max_length=100, unique='True')
     
     def _get_fixture_url(self):
-            "Returns the url for the project's fixtures."
-            return 'https://www.commcarehq.org/a/%s/fixtures/data-types/' % (self.name)
+        "Returns the url for the project's fixtures."
+        return 'https://www.commcarehq.org/a/%s/fixtures/data-types/' % (self.name)
     fixture_url = property(_get_fixture_url)
+    
+    def _get_receiver_url(self):
+        "Returns the url to upload the project's cases."
+        return ' https://www.commcarehq.org/a/%s/receiver' % (self.name)
+    receiver_url = property(_get_receiver_url)
+
+    def upload_case_file(self, file):
+        register_openers()
+        datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
+        request = urllib2.Request(self.receiver_url , datagen, headers)
+        response = urllib2.urlopen(request)
+        return response.getcode()
 
 class CommCareUser(models.Model):
     username = models.CharField(max_length=40)
