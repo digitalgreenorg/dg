@@ -6,30 +6,32 @@ import os
 import urllib2
 import uuid
 
-from dashboard.models import PersonMeetingAttendance
-from dimagi.models import CommCareCase
 from django.db.models import get_model
 from userfile_functions import upload_file, write_person_detail
 
 def get_case_person_list():
     person_caseid_dict = {}
+    CommCareCase = get_model('dimagi','CommCareCase')
     cases = CommCareCase.objects.all()
     for case in cases:
         person_caseid_dict[case.person.id]=case.guid
     return person_caseid_dict
     
 def get_case_id(person_id):
+    CommCareCase= get_model('dimagi','CommCareCase')
     return CommCareCase.objects.get(person__id=person_id).guid
 
 
 def get_case_user_list():
     case_user_dict = {}
+    CommCareCase= get_model('dimagi','CommCareCase')
     cases = CommCareCase.objects.all()
     for case in cases:
         case_user_dict[case.guid]=case.user.guid
     return case_user_dict
 
 def check_person_id(person_id):
+    CommCareCase= get_model('dimagi','CommCareCase')
     exists = False
     case = CommCareCase.objects.get(person__id=person_id) 
     if case.is_open==True:
