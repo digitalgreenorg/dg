@@ -1198,6 +1198,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .search input:focus{
     box-shadow: 0 0 5px #bfc6e1;
     border: 1px solid #bfc6e1;
+    border-radius: 5px;
 }
 
 .search-items-container {}
