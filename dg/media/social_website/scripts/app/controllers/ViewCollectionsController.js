@@ -176,11 +176,13 @@ define(function(require) {
 
             videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
             
-            // The id that is shown in the URL. Below functionality will autoplay the youtube video on all video pages except for the first video in a collection
-            var videoId = jQuery('.video-wrapper').attr('data-videoid');
+            // Below functionality will autoplay the youtube video on all video pages except for the first video in a collection
+            videoPlayer.playVideo();
+            // The id that is shown in the URL. Uncomment if don't want to play first video automatically in the playlist
+            /*var videoId = jQuery('.video-wrapper').attr('data-videoid');
             if (videoId != 1){
             	videoPlayer.playVideo();
-            }
+            }*/
         },
 
         _onYouTubePlayerStateChange: function(newState) {

@@ -250,9 +250,9 @@ define(function(require) {
 
             return {
                 time: Util.secondsToHMSFormat(time),
-                adoptions: Util.integerCommaFormat(collectionData.adoptions),
-                views: Util.integerCommaFormat(collectionData.views),
-                likes: Util.integerCommaFormat(collectionData.likes)
+                adoptions: Util.integerAbbreviatedFormat(collectionData.adoptions),
+                views: Util.integerAbbreviatedFormat(collectionData.views),
+                likes: Util.integerAbbreviatedFormat(collectionData.likes)
             };
         },
 
