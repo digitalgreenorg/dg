@@ -3141,7 +3141,16 @@ body {
    color: lightgray;
    font-size: 22px;
 }
-
+.header-fixed{
+    position:fixed;
+    top:0px;
+    margin:auto;
+    z-index:100000;
+    background-color:white;
+}
+.margin-header{
+    margin-top: 67px;
+}
 .menu-item:hover .menu-subitem{
     color:black;
 }

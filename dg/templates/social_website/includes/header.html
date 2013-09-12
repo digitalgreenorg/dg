@@ -53,6 +53,7 @@
     <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
+            <div class="header-fixed">
             <div class="header-wrapper clearfix">
                 <header class="global-nav">
                     <a class="skip-to-content" href="#main">Skip to content</a>
@@ -104,3 +105,5 @@
                     <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
                 </div>
 			</div>
+            </div>
+            <div class="margin-header"></div>
