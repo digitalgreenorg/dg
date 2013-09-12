@@ -1,6 +1,7 @@
 import urllib2
 
 from django.core.management.base import BaseCommand, CommandError
+from dimagi.models import CommCareProject
 
 class Command(BaseCommand):
     args = '<commcare_project_name> <commcare_project_name> ...'
@@ -14,6 +15,7 @@ class Command(BaseCommand):
     '''
 
     def handle(self, *args, **options):
+        commcare_project_list = args
         for commcare_project_name in commcare_project_list:
             try:
                 commcare_project = CommCareProject.objects.get(name=commcare_project_name)
@@ -24,7 +26,7 @@ class Command(BaseCommand):
             opener.addheaders =[('User-agent', 'Mozilla/5.0'),
                                  ('user', 'nandini@digitalgreen:digitalgreen'),
                                  ('Cookie', 'csrftoken=97a5a243ad2abf742d6efb8c8d761c4f; sessionid=2b175aad09329500ba61126ecc88cf20; __utma=166502700.872983835.1346667629.1354086932.1354120837.88; __utmb=166502700.3.10.1354120837; __utmc=166502700; __utmz=166502700.1352897150.78.5.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided)')]
-            response = opener.open(project.fixture_url)
+            response = opener.open(commcare_project.fixture_url)
             # Data Types Retrieved
             string_response = response.read() 
             types = string_response.split('fields')
