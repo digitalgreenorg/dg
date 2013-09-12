@@ -310,6 +310,8 @@ class District(CocoModel):
     fieldofficer = BigForeignKey(FieldOfficer)
     fieldofficer_startday = models.DateField(null=True, db_column='FIELDOFFICER_STARTDAY', blank=True)
     partner = BigForeignKey(Partners)
+    latitude = models.CharField(max_length=25, null=True, blank=True)
+    longitude = models.CharField(max_length=25, null=True, blank=True)
     class Meta:
         db_table = u'district'
 
