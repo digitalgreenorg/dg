@@ -90,6 +90,7 @@ define(function(require) {
         },
 
         _onDataProcessed: function() {
+        	$('.js-activities-wrapper-outer').show();
             this.getActivities();
         },
 

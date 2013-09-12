@@ -926,7 +926,37 @@ function() {
                     end_time : new Date().toJSON().replace("Z", "")
                 })    
             }
-        } 
+        },
+        reset_database_check_url: '/coco/reset_database_check/',
+        onLogin: function(Offline, Auth){
+            getLastDownloadTimestamp()
+                .done(function(timestamp){
+                    askServer(timestamp);
+                });
+            var that = this;    
+            function askServer(timestamp){
+                $.get(that.reset_database_check_url,{
+                    lastdownloadtimestamp: timestamp
+                })
+                    .done(function(resp){
+                        console.log(resp);
+                        if(resp=="1")
+                            Offline.reset_database();
+                    });
+            }   
+            function getLastDownloadTimestamp()
+            {
+                var dfd = new $.Deferred();
+                Offline.fetch_object("meta_data", "key", "last_full_download_start")
+                    .done(function(model){
+                        dfd.resolve(model.get("timestamp"));
+                    })
+                    .fail(function(model, error){
+                    
+                    });
+                return dfd;    
+            } 
+        }
     };
 
     return {
@@ -4423,9 +4453,19 @@ function($, configs, pa, indexeddb) {
         _iterate_foreign_fields: function(json, f_entities) {
             for (var entity in f_entities) {
                 for (var element in f_entities[entity]) {
+                    var id_field = this._get_id_field(entity, element, f_entities);
+                    var name_field = this._get_name_field(entity, element, f_entities);
+                    var field_desc = {
+                        entity_name: entity,
+                        id_attribute: id_field,
+                        name_attribute: name_field
+                    };
+                    
                     if (!(json[element])) 
                     {
                         json[element] = {};
+                        json[element][field_desc.id_attribute] = null;
+                        json[element][field_desc.name_attribute] = null;
                         continue;
                     }
                     
@@ -4440,13 +4480,6 @@ function($, configs, pa, indexeddb) {
                         return;
                     }
                         
-                    var id_field = this._get_id_field(entity, element, f_entities);
-                    var name_field = this._get_name_field(entity, element, f_entities);
-                    var field_desc = {
-                        entity_name: entity,
-                        id_attribute: id_field,
-                        name_attribute: name_field
-                    };
 
                     if (json[element] instanceof Array) //multi-select dropdown
                     {
@@ -4471,7 +4504,11 @@ function($, configs, pa, indexeddb) {
         _denormalize_object: function(obj, field_desc) {
             console.log("Denormalize: dnormalizing object", JSON.stringify(obj), JSON.stringify(field_desc));
             var dfd = new $.Deferred();
-            if (!obj[field_desc.id_attribute]) return dfd.resolve();
+            if (!obj[field_desc.id_attribute]){ 
+                obj[field_desc.id_attribute] = null;
+                obj[field_desc.name_attribute] = null;
+                return dfd.resolve();
+            }
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: field_desc.entity_name,
@@ -4486,7 +4523,8 @@ function($, configs, pa, indexeddb) {
                 },
                 error: function(model, error) {
                     //TODO: OOPS! What should be done now????
-                    alert("Denormalize: unexpected error. check console log " + error);
+                    // alert("Denormalize: unexpected error. check console log " + error);
+                    console.log("Denormalize: unexpected error.fetch failed",error);
                     return dfd.reject(error);
                 }
             });
@@ -6441,34 +6479,40 @@ define('views/form',[
             if(disable_submit)
                 this.set_submit_button_state('disabled');
             
-            
             if(typeof(errors)!=="object")
                 errors = $.parseJSON(errors);
             console.log("Showing this error");
             console.log(errors);
-            _.each(errors, function(errors_obj, parent){
-                var parent_el = this.$('[name='+parent+']');
-                $.each(errors_obj, function(error_el_name, error_list){
-                    var error_ul = null;
-                    all_li = "<li>"+error_list.join("</li><li>")+"</li>";
-                    error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
-                    if(error_el_name=="__all__")
-                    {
-                        parent_el.before(error_ul);     //insert error message
-                        parent_el.addClass("error");    //highlight
-                    }
-                    else
-                    {
-                        //NOt Done
-                        var error_el = parent_el.find('[name='+error_el_name+']');
-                        error_el.after(error_ul);    //insert error message
-                        error_el
-                            .parent('div')
-                            .parent('div')
-                            .addClass("error");     //highlight
-                    }
-                });
-            }, this);
+            try{
+                _.each(errors, function(errors_obj, parent){
+                    var parent_el = this.$('[name='+parent+']');
+                    $.each(errors_obj, function(error_el_name, error_list){
+                        var error_ul = null;
+                        all_li = "<li>"+error_list.join("</li><li>")+"</li>";
+                        error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
+                        if(error_el_name=="__all__")
+                        {
+                            parent_el.before(error_ul);     //insert error message
+                            parent_el.addClass("error");    //highlight
+                        }
+                        else
+                        {
+                            //NOt Done
+                            var error_el = parent_el.find('[name='+error_el_name+']');
+                            error_el.after(error_ul);    //insert error message
+                            error_el
+                                .parent('div')
+                                .parent('div')
+                                .addClass("error");     //highlight
+                        }
+                    });
+                }, this);
+            }
+            catch(err){
+                //if the error object has an unknown format - show it as it is on top of form
+                var parent_el = this.$('[name='+this.entity_name+']');
+                parent_el.before("<div class='form_error'>"+JSON.stringify(errors)+"</div>");    //insert error message
+            }
             
         },        
         
@@ -6532,28 +6576,25 @@ define('views/form',[
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 inl_obj["index"] = $(inl).attr("index");
-                var inputs = $(inl).find("input");
-                var ignore = true;
-                // if($(inl).attr("model_id"))
-                //     inl_obj.id = parseInt($(inl).attr("model_id"));
-                $.each(inputs,function(index1, inp){
-                    inl_obj[$(inp).attr("name")]= $(inp).val();
-                    if($(inp).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(inp).attr("name"));
+                $(inl).find(':input').each(function(){
+                    if(!$(this).attr('name'))
+                        return;
+                    inline_attrs.push($(this).attr("name"));    
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    				switch(this.type) {
+    					case 'password':
+    					case 'select-multiple':
+    					case 'select-one':
+    					case 'text':
+    					case 'textarea':
+    						inl_obj[attr_name] = $(this).val();
+    						break;
+    					case 'checkbox':
+    					case 'radio':
+    						inl_obj[attr_name] = this.checked;
+    				}
                 });
-                var selects = $(inl).find("select");
-                $.each(selects,function(index2, sel){
-                    inl_obj[$(sel).attr("name")]= $(sel).val();
-                    if($(sel).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(sel).attr("name"));
-                });
-                if(!ignore)
-                    raw_json[element].push(inl_obj);
-                // console.log($(inl).serializeArray());    
+                raw_json[element].push(inl_obj);
             });
             
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -6643,6 +6684,9 @@ define('views/form',[
                         {
                             obj[member] = [];
                         }
+                    }
+                    else if(typeof(obj[member])=="string"){
+                        obj[member] = obj[member].trim();
                     }
                 }    
             }    
@@ -6852,7 +6896,8 @@ define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                 },
                 error: function(model, error) {
                     //TODO: OOPS! What should be done now????
-                    alert("unexpected error. check console log "+error);
+                    // alert("unexpected error. check console log "+error);
+                    console.log("CONVERTNAMESPACE: unexpected error.",error);
                     return dfd.reject(error);
                 }
             });
@@ -7917,8 +7962,10 @@ define('views/incremental_download',[
 define('auth',[
     'models/user_model',  
     'auth_offline_backend',
+    'configs',
+    'offline_utils',
     'jquery_cookie'
-  ], function(User, OfflineAuthBackend){
+  ], function(User, OfflineAuthBackend, all_configs, Offline){
       
   var internet_connected = function(){
       return navigator.onLine;
@@ -8043,6 +8090,8 @@ define('auth',[
                       })
                       .done(function(){
                           console.log("Login Successfull");
+                          if(all_configs.misc.onLogin)
+                              all_configs.misc.onLogin(Offline, this);
                           dfd.resolve();
                       });      
               });
@@ -8059,6 +8108,8 @@ define('auth',[
               })
               .done(function(){
                   console.log("Login Successfull");
+                  if(all_configs.misc.onLogin)
+                      all_configs.misc.onLogin(Offline, this);
                   dfd.resolve();
               });      
       }
@@ -9869,9 +9920,12 @@ define('router',[
   };
 });
 define('user_initialize',[
+    'auth',
+    'offline_utils',
+    'configs',
     'jquery',
-    'form_field_validator'
-  ], function(){
+    'form_field_validator',
+  ], function(Auth, Offline, all_configs){
     
     var run = function(){
         $.validator.addMethod('allowedChar',
@@ -9889,7 +9943,20 @@ define('user_initialize',[
 		$.validator.addMethod('dateOrder',
             dateOrder, 'End date should be later than start date'
         );
-    }  
+        
+        reset_database_check();
+    } 
+     
+    function reset_database_check(){
+        if(!all_configs.misc.onLogin)
+            return;
+        Auth.check_login()
+            .done(function(){
+                if(!navigator.onLine)
+                    return;
+                all_configs.misc.onLogin(Offline, Auth);    
+            });
+    }
     
     function validateUniCodeChars(value) {
     	if(value) {

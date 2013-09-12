@@ -143,6 +143,7 @@ define(function(require) {
         },
 
         _onDataProcessed: function() {
+        	$('.js-collections-wrapper-outer').show();
             this.getCollections();
         },
 

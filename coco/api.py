@@ -199,6 +199,23 @@ def get_user_districts(request):
                 districts = District.objects.filter(district_name = user_permission.district_operated)
         return districts
 
+def get_user_videos(user_id):
+    ###Videos produced by partner with in the same state
+    coco_user = CocoUser.objects.get(user_id = user_id)
+    villages = coco_user.get_villages()
+    user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
+    ###FIRST GET VIDEOS PRODUCED IN STATE
+    videos = Video.objects.filter(village__block__district__state__in = user_states)
+    ###FILTER IT FOR SAME PARTNER.
+    users_with_same_partner = CocoUser.objects.filter(partner_id = coco_user.partner_id).values_list('user_id', flat=True)
+    videos_with_user = videos.exclude(user_created = None).filter(user_created_id__in = users_with_same_partner).values_list('id', flat = True)
+    districts_assigned_to_partner = District.objects.filter(partner_id = coco_user.partner_id, state__in = user_states).values_list('id', flat = True)
+    videos_with_out_user = videos.filter(user_created = None, village__block__district__in = districts_assigned_to_partner).values_list('id', flat=True)
+    videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
+    
+    return set(list(videos_with_user) + list(videos_with_out_user)+list(videos_seen))
+    
+
 class VillageLevelAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
@@ -209,21 +226,32 @@ class VillageLevelAuthorization(Authorization):
         kwargs[self.village_field] = villages
         return object_list.filter(**kwargs).distinct()
 
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.village_field] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download" )
+
 class VideoAuthorization(Authorization):
-    def read_list(self, object_list, bundle):
-        ###Videos produced by partner with in the same state
-        print bundle.request.user.id
-        coco_user = CocoUser.objects.get(user_id=bundle.request.user.id)
-        print coco_user
-        user_states = State.objects.filter(district__block__village__in = coco_user.get_villages()).distinct().values_list('id', flat=True)
-        ###FIRST GET VIDEOS PRODUCED IN STATE
-        videos = Video.objects.filter(village__block__district__state__in = user_states)
-        ###FILTER IT FOR SAME PARTNER.
-        users_with_same_partner = CocoUser.objects.filter(partner_id = coco_user.partner_id).values_list('user_id', flat=True)
-        videos_with_user = videos.exclude(user_created = None).filter(user_created_id__in = users_with_same_partner).values_list('id', flat = True)
-        districts_assigned_to_partner = District.objects.filter(partner_id = coco_user.partner_id, state__in = user_states).values_list('id', flat = True)
-        videos_with_out_user = videos.filter(user_created = None, village__block__district__in = districts_assigned_to_partner).values_list('id', flat=True)
-        return object_list.filter(id__in= set(list(videos_with_user) + list(videos_with_out_user)))
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        #To add adoption for the video seen which is outside user access
+        if bundle.obj.id in get_user_videos(bundle.request.user.id):
+            return True
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs['village__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download video")
 
 class BaseResource(ModelResource):
     
@@ -477,6 +505,7 @@ class PersonResource(BaseResource):
     videos_seen = fields.DictField(null=True)
     
     class Meta:
+        max_limit = None
         queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
         resource_name = 'person'
         authorization = VillageLevelAuthorization('village__in')

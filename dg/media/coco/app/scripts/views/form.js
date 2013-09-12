@@ -664,34 +664,40 @@ define([
             if(disable_submit)
                 this.set_submit_button_state('disabled');
             
-            
             if(typeof(errors)!=="object")
                 errors = $.parseJSON(errors);
             console.log("Showing this error");
             console.log(errors);
-            _.each(errors, function(errors_obj, parent){
-                var parent_el = this.$('[name='+parent+']');
-                $.each(errors_obj, function(error_el_name, error_list){
-                    var error_ul = null;
-                    all_li = "<li>"+error_list.join("</li><li>")+"</li>";
-                    error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
-                    if(error_el_name=="__all__")
-                    {
-                        parent_el.before(error_ul);     //insert error message
-                        parent_el.addClass("error");    //highlight
-                    }
-                    else
-                    {
-                        //NOt Done
-                        var error_el = parent_el.find('[name='+error_el_name+']');
-                        error_el.after(error_ul);    //insert error message
-                        error_el
-                            .parent('div')
-                            .parent('div')
-                            .addClass("error");     //highlight
-                    }
-                });
-            }, this);
+            try{
+                _.each(errors, function(errors_obj, parent){
+                    var parent_el = this.$('[name='+parent+']');
+                    $.each(errors_obj, function(error_el_name, error_list){
+                        var error_ul = null;
+                        all_li = "<li>"+error_list.join("</li><li>")+"</li>";
+                        error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
+                        if(error_el_name=="__all__")
+                        {
+                            parent_el.before(error_ul);     //insert error message
+                            parent_el.addClass("error");    //highlight
+                        }
+                        else
+                        {
+                            //NOt Done
+                            var error_el = parent_el.find('[name='+error_el_name+']');
+                            error_el.after(error_ul);    //insert error message
+                            error_el
+                                .parent('div')
+                                .parent('div')
+                                .addClass("error");     //highlight
+                        }
+                    });
+                }, this);
+            }
+            catch(err){
+                //if the error object has an unknown format - show it as it is on top of form
+                var parent_el = this.$('[name='+this.entity_name+']');
+                parent_el.before("<div class='form_error'>"+JSON.stringify(errors)+"</div>");    //insert error message
+            }
             
         },        
         
@@ -755,28 +761,25 @@ define([
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 inl_obj["index"] = $(inl).attr("index");
-                var inputs = $(inl).find("input");
-                var ignore = true;
-                // if($(inl).attr("model_id"))
-                //     inl_obj.id = parseInt($(inl).attr("model_id"));
-                $.each(inputs,function(index1, inp){
-                    inl_obj[$(inp).attr("name")]= $(inp).val();
-                    if($(inp).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(inp).attr("name"));
+                $(inl).find(':input').each(function(){
+                    if(!$(this).attr('name'))
+                        return;
+                    inline_attrs.push($(this).attr("name"));    
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    				switch(this.type) {
+    					case 'password':
+    					case 'select-multiple':
+    					case 'select-one':
+    					case 'text':
+    					case 'textarea':
+    						inl_obj[attr_name] = $(this).val();
+    						break;
+    					case 'checkbox':
+    					case 'radio':
+    						inl_obj[attr_name] = this.checked;
+    				}
                 });
-                var selects = $(inl).find("select");
-                $.each(selects,function(index2, sel){
-                    inl_obj[$(sel).attr("name")]= $(sel).val();
-                    if($(sel).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(sel).attr("name"));
-                });
-                if(!ignore)
-                    raw_json[element].push(inl_obj);
-                // console.log($(inl).serializeArray());    
+                raw_json[element].push(inl_obj);
             });
             
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -866,6 +869,9 @@ define([
                         {
                             obj[member] = [];
                         }
+                    }
+                    else if(typeof(obj[member])=="string"){
+                        obj[member] = obj[member].trim();
                     }
                 }    
             }    

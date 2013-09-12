@@ -74,7 +74,7 @@ except Exception:
     log.write("error in updating linkedin followers\n")
 
 file_template = """
-                                        <li><a target='_blank' href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c" id="fb-likes">%s <span>Like</span></h5></a></li>
+                                        <li><a target='_blank' href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c" id="fb-likes">%s <span>Likes</span></h5></a></li>
                                         <li><a target='_blank' href="https://twitter.com/digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n
                                         <li><a target='_blank' href="http://www.youtube.com/user/digitalgreenorg"><h4 class="social-icon icon-youtube">You Tube</h4> <h5 class="sub-text hdg-c">%s <span>Videos</span></h5></a></li>\n
                                         <li><a target='_blank' href="http://www.linkedin.com/company/619071"><h4 class="social-icon icon-linkedin">Linked In</h4> <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>\n

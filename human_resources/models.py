@@ -27,6 +27,30 @@ class Member(models.Model):
     image = models.ImageField(help_text="""Minimum Width Should be 100
                                          and Minimum Height should be 100""",
                               upload_to='team/')
-
+    hierarchy_num = models.FloatField()
     def __unicode__(self):
         return self.name
+
+# Models for Careers page
+
+class Job(models.Model):
+    title = models.CharField(max_length = 300)
+    description = models.TextField()
+    conclusion = models.TextField()
+    
+    def __unicode__(self):
+        return '%s' %(self.title)
+
+class KeyResponsibility(models.Model):
+    job = models.ForeignKey(Job)
+    point = models.CharField(max_length = 500)
+    
+    def __unicode__(self):
+        return '%s' %(self.point)
+
+class ExperienceQualification(models.Model):
+    job = models.ForeignKey(Job)
+    point = models.CharField(max_length = 500)
+    
+    def __unicode__(self):
+        return '%s' %(self.point)

@@ -1,91 +1,47 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from social_website.migration_functions import add_partner_info, create_collections, initial_personvideorecord, populate_adoptions, populate_collection_stats, populate_farmers, \
-                                               populate_partner_stats, update_person_video_record, update_questions_asked, update_website_video
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Fill up the PersonVideoRecord
-        initial_personvideorecord()
-        
-        # Initial Partner information
-        for partner in orm['dashboard.Partners'].objects.exclude(date_of_association = None):
-            add_partner_info(partner)
-        print "Partner initial done"
-        
-        # Videos migrations    
-        for vid in orm['dashboard.Video'].objects.prefetch_related('language','village__block__district__partner','related_practice__practice_sector',
-                                                                    'related_practice__practice_subsector','related_practice__practice_topic',
-                                                                    'related_practice__practice_subtopic','related_practice__practice_subject').all():
-            update_website_video(vid)    
-        print "Videos done "    
-        
-        # Generate collections from Video     
-        create_collections()
-        
-        # Fill up Collection stats based on videos in them
-        for collection in orm['social_website.Collection'].objects.all():
-            populate_collection_stats(collection)
-        
-        # Fill up Partner aggregated stats     
-        for partner in orm['social_website.Partner'].objects.all():
-            populate_partner_stats(partner)
-        print "collection and partner done"
-        
-        # Person table migration    
-        for person in orm['dashboard.Person'].objects.filter(image_exists = True):
-            populate_farmers(person)
-        print "Person done"
-                
-        # Thumbnail migrations 
-        for video in orm['social_website.Video'].objects.all():
-            video.thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(video.coco_id)
-            video.thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(video.coco_id)
-            video.save()
-                
-        for collection in orm['social_website.Collection'].objects.all():
-            video = collection.videos.all()[0]
-            collection.thumbnailURL = video.thumbnailURL16by9
-            collection.save()
-            
-        # ONLY INITIALLY IT SHOULD BE DONE LIKE THIS
-        featured_collection_dict = {
-                            'Bhili': 114,
-                            'Gondi': 122,
-                            'Hindi': 31,
-                            'Ho': 57,
-                            'Kannada': 43,
-                            'Mundari': 39,
-                            'Narsinghpuria': 116,
-                            'Neemadi': 73,
-                            'Oriya': 104,
-                            'Sadri': 126,
-                            'Santhali': 174,
-                            'Telugu': 97,
-                            'Thethi': 89,
-                            }
-        for key in featured_collection_dict:
-            collection = orm['social_website.Collection'].objects.get(uid = featured_collection_dict[key])
-            fc_object = orm['social_website.FeaturedCollection'](collection = collection,
-                                                                 collageURL='/media/assets/images/Collage/Collection ' + collection.language + '.jpg')
-            fc_object.save()
-        print "thumbnails done"
-        
-        chunk = 10000
-        pmas_question = orm['dashboard.PersonMeetingAttendance'].objects.exclude(expressed_question='')
-        for i in range(0, pmas_question.count()/chunk + 1):
-            pma_slice = pmas_question[i*chunk:(i+1)*chunk]
-            print "Pma questions chunk %d" % (i*chunk)
-            for pma in pma_slice:
-                update_questions_asked(pma)
-            del pma_slice
+        # Adding field 'CocoUser.user_created'
+        db.add_column('dashboard_cocouser', 'user_created',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='cocouser_created', null=True, to=orm['auth.User']),
+                      keep_default=False)
+
+        # Adding field 'CocoUser.time_created'
+        db.add_column('dashboard_cocouser', 'time_created',
+                      self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'CocoUser.user_modified'
+        db.add_column('dashboard_cocouser', 'user_modified',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='cocouser_related_modified', null=True, to=orm['auth.User']),
+                      keep_default=False)
+
+        # Adding field 'CocoUser.time_modified'
+        db.add_column('dashboard_cocouser', 'time_modified',
+                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Deleting field 'CocoUser.user_created'
+        db.delete_column('dashboard_cocouser', 'user_created_id')
+
+        # Deleting field 'CocoUser.time_created'
+        db.delete_column('dashboard_cocouser', 'time_created')
+
+        # Deleting field 'CocoUser.user_modified'
+        db.delete_column('dashboard_cocouser', 'user_modified_id')
+
+        # Deleting field 'CocoUser.time_modified'
+        db.delete_column('dashboard_cocouser', 'time_modified')
+
 
     models = {
         'auth.group': {
@@ -183,7 +139,11 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'CocoUser'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'cocouser_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'cocouser_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'villages': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Village']", 'symmetrical': 'False'})
         },
         'dashboard.country': {
@@ -715,155 +675,7 @@ class Migration(DataMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'villageprecalculation_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'villageprecalculation_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
-        },
-        'social_website.activity': {
-            'Meta': {'object_name': 'Activity'},
-            'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']", 'null': 'True', 'blank': 'True'}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'facebookID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'farmer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
-            'images': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['social_website.ImageSpec']", 'null': 'True', 'blank': 'True'}),
-            'newsFeed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'null': 'True', 'blank': 'True'}),
-            'textContent': ('django.db.models.fields.TextField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'titleURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'type': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
-        },
-        'social_website.collection': {
-            'Meta': {'object_name': 'Collection'},
-            'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'likes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videos': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['social_website.Video']", 'symmetrical': 'False'}),
-            'views': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-        },
-        'social_website.comment': {
-            'Meta': {'object_name': 'Comment'},
-            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 8, 5, 0, 0)'}),
-            'isOnline': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.UserProfile']", 'null': 'True', 'blank': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
-        },
-        'social_website.featuredcollection': {
-            'Meta': {'object_name': 'FeaturedCollection'},
-            'collageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']"}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'social_website.imagespec': {
-            'Meta': {'object_name': 'ImageSpec'},
-            'altString': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '400'})
-        },
-        'social_website.milestone': {
-            'Meta': {'object_name': 'Milestone'},
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'unique': 'True'}),
-            'screeningNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videoNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'viewerNumber': ('django.db.models.fields.IntegerField', [], {}),
-            'villageNumber': ('django.db.models.fields.IntegerField', [], {})
-        },
-        'social_website.partner': {
-            'Meta': {'object_name': 'Partner'},
-            'adoptions': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'coco_id': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '20'}),
-            'collection_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '250'}),
-            'joinDate': ('django.db.models.fields.DateField', [], {}),
-            'likes': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'location_image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'logoURL': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'views': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'websiteURL': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '100'})
-        },
-        'social_website.person': {
-            'Meta': {'object_name': 'Person'},
-            'coco_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '100'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'social_website.personvideorecord': {
-            'Meta': {'object_name': 'PersonVideoRecord'},
-            'adopted': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'like': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'personID': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videoID': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'views': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'})
-        },
-        'social_website.userprofile': {
-            'Meta': {'object_name': 'UserProfile'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'social_website.video': {
-            'Meta': {'object_name': 'Video'},
-            'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'coco_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'description': ('django.db.models.fields.TextField', [], {'default': "''"}),
-            'duration': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'offlineLikes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'offlineViews': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'onlineLikes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'onlineViews': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'thumbnailURL16by9': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        },
-        'social_website.videolike': {
-            'Meta': {'object_name': 'VideoLike'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.UserProfile']"}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
         }
     }
 
-    complete_apps = ['dashboard', 'social_website']
-    symmetrical = True
+    complete_apps = ['dashboard']

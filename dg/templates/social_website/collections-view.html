@@ -35,7 +35,7 @@
                                     <a href="{% url partner collection.partner.name %}"><img src="{{ collection.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner.name }}</h2>
+                                    <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url partner collection.partner.name %}">{{ collection.partner.name }}</a></h2>
                                     <p class="copy layout-vr-tiny">Member since {{ collection.partner.joinDate.year }}</p>
                                     <a class="hdg-bold copy" href="{% url partner collection.partner.name %}">{{ collection.partner.collection_count }} Collections</a>
                                 </div>
@@ -50,7 +50,7 @@
                                     <div class="stat-bar-container">
                                         <!-- <div class="left-value js-left-value"></div> -->
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{collection.adoptions}}">
+                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.adoptions}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="right-stat-label">Adopted</div>
