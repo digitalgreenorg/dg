@@ -7,6 +7,7 @@ from django.db.models import get_model
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import codecs
+from django.core.exceptions import ValidationError
 
 def write_opening_meta(file, num_people):
     file.write('<?xml version="1.0" ?>\n')
@@ -67,7 +68,7 @@ def write_person_detail(person_id, filename): #used for updating case..
     write_closing_meta(file, owner_id, i)    
     file.close()
 
-def write_full_case_list(person_list, filename, user_id, case_user_dict, case_person_dict): #for generating cases
+def write_full_case_list(person_list, filename, user_id, project_id): #for generating cases
     file = codecs.open(filename, "w",'utf-8')
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
@@ -78,8 +79,21 @@ def write_full_case_list(person_list, filename, user_id, case_user_dict, case_pe
         owner_id = user_id
         person = Person.objects.get(id = person_id)
         case_id = uuid.uuid4()
-        case_user_dict[person.id] = user_id
-        case_person_dict[person.id] = unicode(case_id)
+        #Creating/populating CommCareCase table in DB
+        CommCareCase = get_model('dimagi','CommCareCase')
+        CommCareUser = get_model('dimagi','CommCareUser')
+        try:
+            commcarecase = CommCareCase(is_open = True,
+                                    person_id = person_id,
+                                    project_id = project_id,
+                                    user_id = CommCareUser.objects.get(guid=owner_id).id,
+                                    guid = case_id
+                                    )
+            if commcarecase.full_clean() == None:
+                commcarecase.save()
+        except ValidationError ,e:
+            pass #what should be here????
+            
         # Getting list of videos seen
         vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
         videos_seen = ''
@@ -93,14 +107,14 @@ def write_full_case_list(person_list, filename, user_id, case_user_dict, case_pe
         # Putting all the info in xml tags
         write_person_content(file, i, case_id, owner_id, person, videos_seen)
         i += 1
-    
+
     write_closing_meta(file, owner_id, i)    
     file.close()
 
-def make_upload_file(villages, filename, user_id, case_user_dict, case_person_dict):
+def make_upload_file(villages, filename, user_id, project_id):
     Person = get_model('dashboard','Person')
     person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)    
-    file = write_full_case_list(person_ids, filename, user_id, case_user_dict, case_person_dict)
+    file = write_full_case_list(person_ids, filename, user_id, project_id)
     #response = upload_file(filename)
     #   print response
     

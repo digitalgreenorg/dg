@@ -27,14 +27,11 @@ class Command(BaseCommand):
             for user in commcare_users:
                 villages = CommCareUserVillage.objects.filter(user=user).values_list('village__id', flat =True)
                 filename = os.path.join(MEDIA_ROOT, "dimagi", "%s.xml" % (user.username))
-                case_user_dict = {}
-                case_person_dict = {}
                 file_to_upload = make_upload_file(
                     villages,
                     filename,
                     user.guid,
-                    case_user_dict,
-                    case_person_dict
+                    commcare_project.id
                 )
                 response = commcare_project.upload_case_file(filename)
                 if response == 201 or response == 200:
