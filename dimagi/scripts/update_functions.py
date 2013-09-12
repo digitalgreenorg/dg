@@ -1,95 +1,45 @@
-import settings
-from django.core.management import setup_environ
-setup_environ(settings)
-import os, csv, datetime, json, urllib2, uuid, base64, pickle
-from userfile_functions import upload_file, write_person_detail
+import base64
+import csv
+import datetime
+import json
+import os
+import urllib2
+import uuid
+
 from django.db.models import get_model
+from userfile_functions import upload_file, write_person_detail
 
 def get_case_person_list():
-    BASE_URL = 'https://www.commcarehq.org/a/biharpilot/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
-    Realm = 'DJANGO'
-    Username = 'nandinibhardwaj@gmail.com'
-    Password = 'digitalgreen'
-    URL = BASE_URL
-    authhandler = urllib2.HTTPDigestAuthHandler()
-    authhandler.add_password(Realm, URL, Username, Password)
-    opener = urllib2.build_opener(authhandler)
-    urllib2.install_opener(opener)
-    page_content = urllib2.urlopen(URL)
-    data = json.loads(page_content.read())
-    case_ids = {}
     person_caseid_dict = {}
-    for case in data['objects']:
-        case_id = case['case_id']
-        if case['properties'].has_key('id'):
-            person_id = case['properties']['id']
-            person_caseid_dict[person_id] = case_id
-    fp = open('person_case','wb')
-    pickle.dump({
-                 'person_caseid_dict': person_caseid_dict,
-                 },fp)
-    fp.close()
+    CommCareCase = get_model('dimagi','CommCareCase')
+    cases = CommCareCase.objects.all()
+    for case in cases:
+        person_caseid_dict[case.person.id]=case.guid
+    return person_caseid_dict
     
 def get_case_id(person_id):
-    dir = os.path.dirname(__file__)
-    filepath = os.path.join(dir,'person_case')
-    fp = open(filepath,'rb')
-    loaded = pickle.load(fp)
-    fp.close()
-    person_caseid_dict = loaded['person_caseid_dict']
-    case_id = person_caseid_dict[person_id]
-    return case_id
+    CommCareCase= get_model('dimagi','CommCareCase')
+    return CommCareCase.objects.get(person__id=person_id).guid
 
 
-def get_user_data(user_id):
-    BASE_URL = 'https://www.commcarehq.org/a/biharpilot/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
-    Realm = 'DJANGO'
-    Username = 'nandinibhardwaj@gmail.com'
-    Password = 'digitalgreen'
-    URL = BASE_URL + '&user_id=' + user_id
-    
-    authhandler = urllib2.HTTPDigestAuthHandler()
-    authhandler.add_password(Realm, URL, Username, Password)
-    opener = urllib2.build_opener(authhandler)
-    urllib2.install_opener(opener)
-    page_content = urllib2.urlopen(URL)
-    data = json.loads(page_content.read())
-    case_ids = []
-    return data['objects']
+def get_case_user_list():
+    case_user_dict = {}
+    CommCareCase= get_model('dimagi','CommCareCase')
+    cases = CommCareCase.objects.all()
+    for case in cases:
+        case_user_dict[case.guid]=case.user.guid
+    return case_user_dict
 
-def get_case_user_list(user_ids):
-    for user_id in user_ids:
-        case_user_dict = {}
-        data = get_user_data(user_id)
-        for case in data:
-            case_id = case['case_id']
-            user_id = case['user_id']
-            case_user_dict[case_id] = user_id
-    dir = os.path.dirname(__file__)
-    filepath = os.path.join(dir,'case_user')
-    fp = open(filepath,'wb')
-    pickle.dump({
-                 'case_user_dict': case_user_dict,
-                 },fp)
-    fp.close()
-    
-
-def check_person_id(data, person_id):
+def check_person_id(person_id):
+    CommCareCase= get_model('dimagi','CommCareCase')
     exists = False
-    for case in data:
-        if case['properties'].has_key('id'):
-            if case['properties']['id'] == person_id and case['closed']==False:
-                exists = True
-                return exists
+    case = CommCareCase.objects.get(person__id=person_id) 
+    if case.is_open==True:
+        exists = True
     return exists
 
 def close_case(case_id, filename):
-    dir = os.path.dirname(__file__)
-    filepath = os.path.join(dir,'case_user')
-    fp = open(filepath,'rb')
-    loaded = pickle.load(fp)
-    fp.close()
-    case_user_dict = loaded['case_user_dict']
+    case_user_dict = get_case_user_list
     owner_id = case_user_dict[case_id]
     # Putting all the info in xml tags
     f = open(filename,'w')

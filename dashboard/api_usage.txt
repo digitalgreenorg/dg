@@ -1,0 +1,28 @@
+# Get all countries 
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/country/  
+
+# Get particular country 
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/country/1/  
+
+# Get all countries sorted by their names
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/country/?order_by=country_name
+
+# Get all districts sorted by their state names
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/district/?order_by=state__state_name
+
+# Filter states starting with "J"
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/state/?state_name__startswith=J 
+
+The following commands would give an authorization if username:password is not authorized to add/edit these models. Use the admin  credentials in place of username:password.
+
+# Add a new country
+curl --dump-header - -H "Content-Type: application/json" --user username:password -X POST --data '{"country_name":"Bangladesh","start_date":"2012-07-27"}' http://localhost:8000/api/v1/country/
+
+# Edit an existing country
+curl --dump-header - -H "Content-Type: application/json" --user username:password -X PUT --data '{"country_name":"Bangladesh","start_date":"2012-07-28"}' http://localhost:8000/api/v1/country/4/
+
+# Delete a country
+curl --dump-header - -H "Content-Type: application/json" --user username:password -X DELETE  http://localhost:8000/api/v1/country/4/
+
+# Search in District model (using haystack)
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/district/search/?q=Uttar%20Pradesh

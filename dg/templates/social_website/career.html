@@ -1,0 +1,61 @@
+{% include "includes/header.html" %}
+
+        <section id="career" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Join Us</h2>
+                    <div class="grid layout-vr-xlg">
+                        <div class='grid-col grid-size1of3'>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Current Openings</h3>
+                            <ul class='link-list'>
+                                {% for job in job_list %}
+                                    <li><a href="#{{job.title}}">{{job.title}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>  
+                        <div class='grid-col grid-size2of3 copy'>
+                            <p class='copy-para'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity.
+                            </p>
+                            <p class='copy-para'>We offer a dynamic and enabling work environment and competitive compensation, based on experience and qualifications, comparable to leading national level development sector organizations. 
+                            </p>
+                            <p>If you would like to be part of the Digital Green family, submit your application with a cover note, current CV and at least three references to jobs@digitalgreen.org. If you are student, you can also apply for an internship position.
+                            </p>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        
+        {% for job in job_list %}
+            <section id='{{job.title}}' class='{% cycle 'about-bg' 'about-bg about-bg-white' %}'>
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
+                        <div class='layout-vr-xlg'>
+                            <p class='copy copy-para'>{{job.description}}
+                            </p>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for keyres in job.keyresponsibility_set.all %}
+                                    <li>{{keyres}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for exp in job.experiencequalification_set.all %}
+                                    <li>{{exp}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <p class='copy'>{{job.conclusion}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endfor %}
+
+{% include "includes/footer.html" %}
+

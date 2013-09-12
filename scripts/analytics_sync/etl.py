@@ -5,13 +5,9 @@ import os
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
-
 from django.core.management import setup_environ
-sys.path.append('/home/ubuntu/code/dg_git')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
-
-import settings
-setup_environ(settings)
+import dg.settings
+setup_environ(dg.settings)
 
 from django.db.models import Min, Count
 from dashboard.models import *
@@ -101,7 +97,7 @@ class AnalyticsSync():
                                         JOIN STATE s on s.id = d.state_id""")
             print "Finished insert into person_adopt_practice_myisam"
 
-            # main_data_dst stores all the coutns for every date and every village                                        
+            # main_data_dst stores all the counts for every date and every village                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0, tot_male_act = 0,
                 tot_fem_act = 0, tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
                 tot_exp_att=0, tot_int=0, tot_exp_ado = 0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
@@ -115,7 +111,7 @@ class AnalyticsSync():
                 person_village[id] = village
 
             pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'interested', 'expressed_question', 
-            'expressed_adoption_video', 'screening__videoes_screened').order_by('person', 'screening__date')
+            'expressed_adoption_video').order_by('person', 'screening__date')
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
@@ -157,7 +153,7 @@ class AnalyticsSync():
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
                 
-            del pma #Free memory
+            del pmas #Free memory
             print "Finished date calculations"
 
             
@@ -539,6 +535,8 @@ if __name__ == "__main__":
     parser.add_argument("mysql_root_password", help="MySQL Root Password")
     parser.add_argument("action", help="Task to run. Currently only referesh. Can include add.",  choices=['refresh_schema'])
     args = parser.parse_args()
+    print("Log")
+    print(datetime.date.today())
     if args.action == "refresh_schema":
         an_sync_obj = AnalyticsSync(args.mysql_root_username, args.mysql_root_password)
         an_sync_obj.refresh_build()

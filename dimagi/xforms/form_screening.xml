@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
 	<h:head>
 		<h:title>Screening Form</h:title>
@@ -54,7 +54,7 @@
 			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0" />
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0" />
 			<itext>
-				<translation lang="en" default="">
+				<translation lang="en">
 					<text id="date-label">
 						<value>Date</value>
 					</text>
@@ -101,51 +101,51 @@
 						<value>Your form has been completed. Press Done to continue</value>
 					</text>
 				</translation>
-				<translation lang="tel">
+				<translation lang="tel" default="">
 					<text id="date-label">
-						<value>????</value>
+						<value>తేది</value>
 					</text>
 					<text id="time-label">
-						<value>????</value>
+						<value>సమయం</value>
 					</text>
 					<text id="selected_village-label">
-						<value>???????</value>
+						<value>గ్రామము</value>
 					</text>
 					<text id="selected_mediator-label">
-						<value>?????????</value>
+						<value>కార్యకర్త</value>
 					</text>
 					<text id="selected_group-label">
-						<value>?????? ????</value>
+						<value>గ్రూప్ పేరు</value>
 					</text>
 					<text id="selected_video-label">
-						<value>?????? ????</value>
-					</text>
+						<value>చిత్రం పేరు</value>
+					</text>					
 					<text id="attendance_record-label">
-						<value>?????? ?????</value>
-					</text>
+						<value>హాజారు నమోదు</value>
+					</text>					
 					<text id="attended-label">
 						<value><output ref="/data/attendance_record/attendee_name"/></value>
 					</text>
 					<text id="attended_yes-label">
-						<value>???????</value>
+						<value>వచ్చారు</value>
 					</text>
 					<text id="attended_no-label">
-						<value>??????</value>
+						<value>రాలేదు</value>
 					</text>
 					<text id="interested-label">
-						<value>??????</value>
+						<value>ఆసక్తి</value>
 					</text>
 					<text id="interested_yes-label">
-						<value>?????</value>
+						<value>అవును</value>
 					</text>
 					<text id="interested_no-label">
-						<value>????</value>
+						<value>కాదు</value>
 					</text>
 					<text id="question_asked-label">
-						<value>?????? ??????</value>
+						<value>అడిగిన ప్రశ్న</value>
 					</text>
 					<text id="form_done-label">
-						<value> ?? ???? ???? ????????. ?????? ???</value>
+						<value> మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
 					</text>
 				</translation>
 			</itext>

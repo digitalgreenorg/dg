@@ -1,4 +1,4 @@
-﻿<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
 	<h:head>
 		<h:title>Adoption</h:title>
 		<model>
@@ -17,14 +17,10 @@
 			
 			<instance id="village" src="jr://fixture/item-list:village"/>
 			<instance id="group" src="jr://fixture/item-list:group"/>
-			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
 			<instance id="video" src="jr://fixture/item-list:video"/>
 			<instance id="unique_video" src="jr://fixture/item-list:unique_video"/>
-<<<<<<< HEAD
-=======
-			<instance id="all_videos" src="jr://fixture/item-list:all_videos"/>
->>>>>>> dimagi2
+			<instance id="casedb" src="jr://instance/casedb"/>
 			
 			<bind nodeset="/data/selected_date" type="xsd:date" required="true()"/>
 			
@@ -33,7 +29,7 @@
 			<bind nodeset="/data/selected_person" required="true()" />
 			<bind nodeset="/data/selected_video" required="true()" />
 			<bind nodeset="/data/selected_mediator" required="true()"/>
-			<bind nodeset="/data/listofvideos"  calculate="if(/data/selected_person = '','', instance('person')/person_list/person[id =/data/selected_person]/seen)" /> 
+			<bind nodeset="/data/listofvideos"  calculate="if(/data/selected_person = '','', instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen)" /> 
 			<bind nodeset="/data/form_done"/>
 			
 			
@@ -115,18 +111,14 @@
 		
 		<select1 ref="/data/selected_person">
 			<label ref="jr:itext('selected_person-label')"/>
-			<itemset nodeset=" instance('person')/person_list/person[group_id=/data/selected_group and seen != '0'] " >
-				<label ref="name"/>
+			<itemset nodeset=" instance('casedb')/casedb/case[group_id=/data/selected_group and videos_seen != ''] " >
+				<label ref="case_name"/>
 				<value ref="id"/>
 			</itemset>
 		</select1>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')"/>
-<<<<<<< HEAD
 			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
-=======
-			<itemset nodeset="instance('all_videos')/all_videos_list/all_videos[selected(/data/listofvideos,id) ]">
->>>>>>> dimagi2
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>

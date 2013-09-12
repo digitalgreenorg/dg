@@ -1,26 +1,18 @@
+import os
 import dg.settings
 from django.core.management import setup_environ
 setup_environ(dg.settings)
-import csv,datetime, json, urllib2, uuid, pickle,os
+import csv,datetime, json, urllib2, uuid
 from django.db.models import get_model
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import codecs
-
-def write_userfile(file, data):
-    f = open(file,'w')
-    f.write(data)
-        
-def read_userfile(file):
-    json_data=open(file).read()
-    print json_data
-    data = json.loads(json_data)
-    return data
+from django.core.exceptions import ValidationError
 
 def write_opening_meta(file, num_people):
     file.write('<?xml version="1.0" ?>\n')
     file.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
-    file.write('<num_people>' + unicode(num_people) + '</num_people>\n')
+    file.write('<num_people> %s </num_people>\n' % (unicode(num_people)))
     
 def write_person_content(file, i, case_id, owner_id, person, videos_seen):
     file.write('<people>\n')
@@ -45,19 +37,9 @@ def write_closing_meta(file, owner_id, i):
     file.write('<n'+unicode(i) + ':instanceID>' + unicode(uuid.uuid4()) + '</n' + unicode(i) + ':instanceID>\n')
     file.write('</n' + unicode(i) + ':meta>\n')
     file.write('</data>')
-    
-
+   
+   
 def write_person_detail(person_id, filename): #used for updating case..
-    # Retrieving the mapping from pickle files
-    dir = os.path.dirname(__file__)
-    filepath = os.path.join(dir,'case_user')
-    fp = open(filepath,'rb')
-    case_user_dict = pickle.load(fp)
-    fp.close()
-    filepath = os.path.join(dir,'case_person')
-    fp = open(filepath,'rb')
-    case_person_dict = pickle.load(fp)
-    fp.close()
     
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
@@ -85,9 +67,8 @@ def write_person_detail(person_id, filename): #used for updating case..
     i+= 1
     write_closing_meta(file, owner_id, i)    
     file.close()
-    return file
 
-def write_full_case_list(person_list, filename, user_id, case_user_dict, case_person_dict): #for generating cases
+def write_full_case_list(person_list, filename, user_id, project_id): #for generating cases
     file = codecs.open(filename, "w",'utf-8')
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
@@ -98,8 +79,21 @@ def write_full_case_list(person_list, filename, user_id, case_user_dict, case_pe
         owner_id = user_id
         person = Person.objects.get(id = person_id)
         case_id = uuid.uuid4()
-        case_user_dict[person.id] = user_id
-        case_person_dict[person.id] = unicode(case_id)
+        #Creating/populating CommCareCase table in DB
+        CommCareCase = get_model('dimagi','CommCareCase')
+        CommCareUser = get_model('dimagi','CommCareUser')
+        try:
+            commcarecase = CommCareCase(is_open = True,
+                                    person_id = person_id,
+                                    project_id = project_id,
+                                    user_id = CommCareUser.objects.get(guid=owner_id).id,
+                                    guid = case_id
+                                    )
+            if commcarecase.full_clean() == None:
+                commcarecase.save()
+        except ValidationError ,e:
+            pass #what should be here????
+            
         # Getting list of videos seen
         vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
         videos_seen = ''
@@ -113,25 +107,22 @@ def write_full_case_list(person_list, filename, user_id, case_user_dict, case_pe
         # Putting all the info in xml tags
         write_person_content(file, i, case_id, owner_id, person, videos_seen)
         i += 1
-    
+
     write_closing_meta(file, owner_id, i)    
     file.close()
-    pickle.dump(case_user_dict, open('case_user','w')) #mapping of case with user
-    pickle.dump(case_person_dict, open('case_person','w')) #mapping of case with person(farmer)
-    return file
 
-def make_upload_file(villages, filename, user_id, case_user_dict, case_person_dict):
+def make_upload_file(villages, filename, user_id, project_id):
     Person = get_model('dashboard','Person')
     person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)    
-    f = write_full_case_list(person_ids, filename, user_id, case_user_dict, case_person_dict)
-    response = upload_file(filename)
-#   print response
+    file = write_full_case_list(person_ids, filename, user_id, project_id)
+    #response = upload_file(filename)
+    #   print response
     
-        
-def upload_file(file):
+#TODO: Can we change all calls to upload file?
+def upload_file(file, commcare_project):
     register_openers()
-    print 'uploading ' + file
+    print 'uploading ' + file + 'to the' + project_name
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    request = urllib2.Request("https://www.commcarehq.org/a/aug-coco/receiver", datagen, headers)
+    request = urllib2.Request(commcare_project.receiver_url , datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()

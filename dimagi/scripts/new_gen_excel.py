@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import settings
+import os
+import dg.settings
 from django.core.management import setup_environ
-setup_environ(settings)
-from dashboard.models import *
-import video_schedule
+setup_environ(dg.settings)
+from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Village
+from dimagi.models import CommCareUser, CommCareUserVillage
 import xlrd
 import xlwt
 import sys
@@ -44,7 +45,57 @@ def find_exact_villages(cluster_dict):
                     village_not_found +=1
     return cluster_dict, mediator_dict
     
-    
+def write_type_info(workbook):
+    sheet = workbook.add_sheet('types')
+    row = 0
+    sheet.write(row, 0, "name")
+    sheet.write(row, 1, "tag")
+    sheet.write(row, 2, "field 1")
+    sheet.write(row, 3, "field 2")
+    sheet.write(row, 4, "field 3")
+    sheet.write(row, 5, "field 4")
+    row = 1
+    #Define group relation below
+    sheet.write(row, 0, "Group")
+    sheet.write(row, 1, "group")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "village_id")
+    sheet.write(row, 5, "seen")
+    row = 2
+    #Define village relation below
+    sheet.write(row, 0, "Village")
+    sheet.write(row, 1, "village")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "seen")
+    sheet.write(row, 5, "")
+    row = 3
+    #Define mediator relation below
+    sheet.write(row, 0, "Mediator")
+    sheet.write(row, 1, "mediator")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "village_id")
+    sheet.write(row, 5, "")
+    row = 4
+    #Define unique video relation below
+    sheet.write(row, 0, "Unique_video")
+    sheet.write(row, 1, "unique_video")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "name")
+    sheet.write(row, 4, "")
+    sheet.write(row, 5, "")
+    row = 5
+    #Define video relation below
+    sheet.write(row, 0, "Video")
+    sheet.write(row, 1, "video")
+    sheet.write(row, 2, "id")
+    sheet.write(row, 3, "low")
+    sheet.write(row, 4, "high")
+    sheet.write(row, 5, "")
+    return sheet
+
 def write_person_info(cluster_dict, workbook):
     person_info = []
     sheet = workbook.add_sheet('person')
@@ -179,7 +230,6 @@ def write_village_info(cluster_dict, workbook):
     return sheet
 
 def write_mediator_info(mediator_dict, workbook):
-    mediator_info = []
     sheet = workbook.add_sheet('mediator')
     row = 0
     sheet.write(row, 0, "field: id")
@@ -189,20 +239,19 @@ def write_mediator_info(mediator_dict, workbook):
     row += 1
     mediator_not_found = 0
     for mediator in mediator_dict:
-        mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name = mediator['village']).values_list('animator_id','animator__name','village_id')
-        if len(mediator_info)<1:
-            mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name__icontains = mediator['village']).values_list('animator__id','animator__name','village_id')
-        if(mediator_info):
-            mediator_id = truncate_id(mediator_info[0][0])
-            vill_id = truncate_id(mediator_info[0][2])
+        mediator_id = mediator['mediator']
+        vill_id = mediator['village']
+        user_name = mediator['cluster']
+        mediator_name = mediator['mediator_name']
+        if(mediator):
             sheet.write(row, 0, str(mediator_id))
-            sheet.write(row, 1, mediator_info[0][1])
+            sheet.write(row, 1, mediator_name)
             sheet.write(row, 2, str(vill_id))
-            sheet.write(row, 3, mediator['cluster'])
+            sheet.write(row, 3, user_name)
             row += 1
         else:
             mediator_not_found += 1
-            print "no mediator for "  + mediator['village']
+            print "no mediator for "  + str(mediator['village'])
     print str(mediator_not_found) + " mediators not found"
     return sheet
 
@@ -220,39 +269,6 @@ def write_distinct(vid_list, workbook):
             sheet.write(row, 1, unicode(vid_name[0][0]))
             sheet.write(row, 2, 'warangal')  # for testing 
             row += 1
-    return sheet
-    
-
-def write_person_watched_video_info(cluster_dict, workbook):
-    person_info = []
-    sheet = workbook.add_sheet('videoseen')
-    row = 0
-    sheet.write(row, 0, "field: id")
-#    sheet.write(row, 1, "field: name ")
-    sheet.write(row, 1, "field: video_id")
-    sheet.write(row, 2, "group 1")
-    row += 1
-    for cluster in cluster_dict:
-        for vill in cluster['villages']:
-            village_person_info = Person.objects.filter(village__village_name = vill).values_list('id','person_name','group')
-#            person_info.append(village_person_info)
-            for person in village_person_info:
-                vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = three_months).values_list('screening__videoes_screened', flat = True)
-                for vid_id in vid_id_list:
-                    if (vid_id):
-                        vid_name = Video.objects.filter(id = vid_id).values_list('title')
-                        person_id = truncate_id(person[0])
-                        group_id = truncate_id(person[2])
-                        sheet.write(row, 0, str(person_id))
-#                        sheet.write(row, 1, vid_name[0])
-                        sheet.write(row, 1, str(vid_id))
-                        sheet.write(row, 2, cluster['cluster'])
-                        row += 1
-                    else:
-                        print "not found"
-                        
-        if len(village_person_info) < 1:
-            print " No person found in " + cluster['cluster'] 
     return sheet
 
 def write_video_schedule_info(vid_dict, workbook):
@@ -277,8 +293,19 @@ def write_video_schedule_info(vid_dict, workbook):
             print str(record['id']) + " not found"
     return sheet
         
-from userfile_functions import read_userfile
-data = read_userfile('apca.json')
+#getting user getting from the database and storing it in list of dictionaries
+users = CommCareUser.objects.all()
+data = []
+dict = {}
+for user in users:
+    dict['username'] = user.username
+    dict['user_id'] = user.guid 
+    villages = CommCareUserVillage.objects.filter(user = user.id)
+    dict['villages']=[]
+    for vil in villages:
+        dict['villages'].append(vil.village.id)
+    data.append(dict)
+    
 cluster_village_dict = []
 mediator_dict = []
 for entry in data:
@@ -287,40 +314,30 @@ for entry in data:
     cluster_village_dict.append({'cluster': entry['username'],
                                  'villages': entry['villages']})
     for v in villages:
-        village = Village.objects.get(id = v).village_name
         mediator = ''
         try:
-            mediator = Animator.objects.filter(assigned_villages = v)[0]
+            mediator_list = Animator.objects.filter(assigned_villages = v)
         except Exception ,ex:
             pass
-        mediator_dict.append({'mediator':mediator,
-                              'village': village,
-                              'cluster' : entry['username']})
+        for mediator in mediator_list:
+            mediator_dict.append({'mediator':mediator.id,
+                                  'mediator_name':mediator.name,
+                                  'village': v,
+                                  'cluster' : entry['username']})
+
 workbook = xlwt.Workbook(encoding = 'utf-8')
+type_sheet = write_type_info(workbook)
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_dict, workbook)
-#video_schedule_dict, video_list = video_schedule.get_video_schedule()
-#print video_list
 video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
 video_list = set(video_list)
-print video_list
 video_distinct_sheet = write_distinct(video_list,workbook)
 video_schedule_dict = []
-for id in [10000000020194,10000000021136,10000000020757,10000000020480,10000000020752,10000000020198,10000000021065,10000000020190,]:
+for id in video_list:
     video_schedule_dict.append({'id': id,
                                 'low_val': '2013-01-01',
                                 'high_val': '2013-12-31' })
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-workbook.save('trial-2-Fixtures_07_1.xls')
 
-
-
-
-
-
-
-    
-
-
-    
+workbook.save('ap_fixtures.xls')

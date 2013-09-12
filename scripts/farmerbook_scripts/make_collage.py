@@ -1,6 +1,6 @@
 from django.core.management import setup_environ
-import settings
-setup_environ(settings)
+import dg.settings
+setup_environ(dg.settings)
 import sys, os, glob , string
 from PIL import Image
 
