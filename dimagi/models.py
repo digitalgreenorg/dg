@@ -43,6 +43,9 @@ class CommCareProject(models.Model):
         request = urllib2.Request(self.receiver_url , datagen, headers)
         response = urllib2.urlopen(request)
         return response.getcode()
+    
+    def __unicode__(self):
+        return self.name
 
 class CommCareUser(models.Model):
     username = models.CharField(max_length=40)
@@ -51,6 +54,8 @@ class CommCareUser(models.Model):
     assigned_villages = models.ManyToManyField(Village, through='CommCareUserVillage')
     class Meta:
         unique_together = ("project","username")
+    def __unicode__(self):
+        return self.username
 
 class CommCareUserVillage(models.Model):
     '''
@@ -69,5 +74,5 @@ class CommCareCase(models.Model):
     project = models.ForeignKey(CommCareProject)
     user = models.ForeignKey(CommCareUser)
     class Meta:
-       unique_together = ("is_open","person","project","user",)
-
+       unique_together = ("is_open","person","project","user")
+       
