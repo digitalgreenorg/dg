@@ -3,8 +3,9 @@ import os
 import dg.settings
 from django.core.management import setup_environ
 setup_environ(dg.settings)
-from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Village
+from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Video, Village
 from dimagi.models import CommCareUser, CommCareUserVillage
+from dg.settings import MEDIA_ROOT
 import xlrd
 import xlwt
 import sys
@@ -294,50 +295,51 @@ def write_video_schedule_info(vid_dict, workbook):
     return sheet
         
 #getting user getting from the database and storing it in list of dictionaries
-users = CommCareUser.objects.all()
-data = []
-dict = {}
-for user in users:
-    dict['username'] = user.username
-    dict['user_id'] = user.guid 
-    villages = CommCareUserVillage.objects.filter(user = user.id)
-    dict['villages']=[]
-    for vil in villages:
-        dict['villages'].append(vil.village.id)
-    data.append(dict)
+
+def create_fixture(users, project_name):
+    data = []
+    dict = {}
+    for user in users:
+        dict['username'] = user.username
+        dict['user_id'] = user.guid 
+        villages = CommCareUserVillage.objects.filter(user = user.id)
+        dict['villages']=[]
+        for vil in villages:
+            dict['villages'].append(vil.village.id)
+        data.append(dict)
+        
+    cluster_village_dict = []
+    mediator_dict = []
+    for entry in data:
+        print entry['username']
+        villages = entry['villages']
+        cluster_village_dict.append({'cluster': entry['username'],
+                                     'villages': entry['villages']})
+        for v in villages:
+            mediator = ''
+            try:
+                mediator_list = Animator.objects.filter(assigned_villages = v)
+            except Exception ,ex:
+                pass
+            for mediator in mediator_list:
+                mediator_dict.append({'mediator':mediator.id,
+                                      'mediator_name':mediator.name,
+                                      'village': v,
+                                      'cluster' : entry['username']})
     
-cluster_village_dict = []
-mediator_dict = []
-for entry in data:
-    print entry['username']
-    villages = entry['villages']
-    cluster_village_dict.append({'cluster': entry['username'],
-                                 'villages': entry['villages']})
-    for v in villages:
-        mediator = ''
-        try:
-            mediator_list = Animator.objects.filter(assigned_villages = v)
-        except Exception ,ex:
-            pass
-        for mediator in mediator_list:
-            mediator_dict.append({'mediator':mediator.id,
-                                  'mediator_name':mediator.name,
-                                  'village': v,
-                                  'cluster' : entry['username']})
-
-workbook = xlwt.Workbook(encoding = 'utf-8')
-type_sheet = write_type_info(workbook)
-group_sheet = write_group_info(cluster_village_dict, workbook)
-village_sheet = write_village_info(cluster_village_dict, workbook)
-mediator_sheet = write_mediator_info(mediator_dict, workbook)
-video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
-video_list = set(video_list)
-video_distinct_sheet = write_distinct(video_list,workbook)
-video_schedule_dict = []
-for id in video_list:
-    video_schedule_dict.append({'id': id,
-                                'low_val': '2013-01-01',
-                                'high_val': '2013-12-31' })
-video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-
-workbook.save('ap_fixtures.xls')
+    workbook = xlwt.Workbook(encoding = 'utf-8')
+    type_sheet = write_type_info(workbook)
+    group_sheet = write_group_info(cluster_village_dict, workbook)
+    village_sheet = write_village_info(cluster_village_dict, workbook)
+    mediator_sheet = write_mediator_info(mediator_dict, workbook)
+    video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
+    video_list = set(video_list)
+    video_distinct_sheet = write_distinct(video_list,workbook)
+    video_schedule_dict = []
+    for id in video_list:
+        video_schedule_dict.append({'id': id,
+                                    'low_val': '2013-01-01',
+                                    'high_val': '2013-12-31' })
+    video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
+    filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xls" % (project_name)) 
+    workbook.save(filename)
