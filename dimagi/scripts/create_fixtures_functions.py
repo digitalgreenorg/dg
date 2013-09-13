@@ -1,51 +1,18 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime,timedelta
 import os
-import dg.settings
-from django.core.management import setup_environ
-setup_environ(dg.settings)
-from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Video, Village
-from dimagi.models import CommCareUser, CommCareUserVillage
-from dg.settings import MEDIA_ROOT
-import xlrd
-import xlwt
 import sys
 import time
-from datetime import datetime,timedelta
+import xlrd
+import xlwt
+
+from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Video, Village
+from dg.settings import MEDIA_ROOT
+
+from dimagi.models import CommCareUser, CommCareUserVillage
 
 three_months = datetime.now() - timedelta(days = 365)
 
-def truncate_id(id):
-    return id
-
-def find_exact_villages(cluster_dict):
-    
-    village_not_found = 0 
-    mediator_dict= []
-    for cluster in cluster_dict:
-        counter = 0
-        for vill in cluster['villages']:
-            if vill == '':
-                print "blank"
-            else:
-                village_info = []
-                village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
-                if village_info:
-                    cluster['villages'][counter] = village_info[0][1]
-                    counter += 1
-                    mediator_dict.append(({'mediator': '',
-                                      'village': village_info[0][1],
-                                      'cluster': cluster['cluster']}))
-                else:
-                    village_info = Village.objects.filter(village_name__icontains = vill).values_list('id','village_name')
-                    cluster['villages'][counter] = village_info[0][1]
-                    counter += 1
-                    mediator_dict.append(({'mediator': '',
-                                      'village': village_info[0][1],
-                                      'cluster': cluster['cluster']}))
-                if not village_info:
-                    village_not_found +=1
-    return cluster_dict, mediator_dict
-    
 def write_type_info(workbook):
     sheet = workbook.add_sheet('types')
     row = 0
@@ -113,8 +80,8 @@ def write_person_info(cluster_dict, workbook):
             village_person_info = Person.objects.filter(village__village_name = vill).values_list('id','person_name','group')
             person_info.append(village_person_info)
             for person in village_person_info:
-                person_id = truncate_id(person[0])
-                group_id = truncate_id(person[2])
+                person_id = person[0]
+                group_id = person[2]
                 sheet.write(row, 0, unicode(person_id))
                 sheet.write(row, 1, person[1])
                 sheet.write(row, 2, unicode(group_id))
@@ -174,8 +141,8 @@ def write_group_info(cluster_dict, workbook):
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:
                 watched = PersonMeetingAttendance.objects.filter(person__group = group[0], screening__date__gt = three_months).values_list('screening__videoes_screened').distinct().count() 
-                group_id = truncate_id(group[0])
-                vill_id = truncate_id(group[2])
+                group_id = group[0]
+                vill_id = group[2]
                 sheet.write(row, 0, str(group_id))
                 sheet.write(row, 1, group[1])
                 sheet.write(row, 2, str(vill_id))
@@ -214,7 +181,7 @@ def write_village_info(cluster_dict, workbook):
             village_info = Village.objects.filter(id = vill).values_list('id','village_name')
             if village_info:
                 watched = PersonMeetingAttendance.objects.filter(person__village = village_info[0][0], screening__date__gt = three_months).values_list('screening__videoes_screened').distinct().count()
-                village_id = truncate_id(village_info[0][0])
+                village_id = village_info[0][0]
                 sheet.write(row, 0, str(village_id))
                 sheet.write(row, 1, village_info[0][1])
                 if watched > 0:

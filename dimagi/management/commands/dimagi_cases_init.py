@@ -1,6 +1,6 @@
 import os
-
 from django.core.management.base import BaseCommand, CommandError
+
 from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareProject, CommCareUser, CommCareUserVillage
