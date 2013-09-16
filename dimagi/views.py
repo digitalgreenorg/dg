@@ -10,6 +10,7 @@ def save_submission(request):
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
+    update_XMLSubmission(submission)
     try:
         submission.save()
     except Exception as ex:
@@ -29,3 +30,38 @@ def save_in_db(submission):
         status = -1
         msg = 'error in form'
     return status, msg
+
+
+def update_XMLSubmission(obj):
+    if obj.xml_data== '':
+        obj.type = "Error"
+        obj.app_version = 0
+    else:
+        data = minidom.parseString(obj.xml_data)
+        if data.getElementsByTagName('data'):
+            type = data.getElementsByTagName('data')[0].attributes['name'].value
+            if type.lower() == 'screening form' or type.lower() == 'screening':
+                type= "Screening"
+            elif type.lower() == 'adoption form' or type.lower() == 'adoption':
+                type= "Adoption"
+            
+            obj.type = type
+            
+            version = int(data.getElementsByTagName('data')[0].attributes['version'].value)
+            obj.app_version = version
+            
+            obj.username = str(data.getElementsByTagName('n0:username')[0].childNodes[0].nodeValue)
+            
+            start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
+            start_date = str(start[0])
+            start_time = str(start[1].split('.')[0])
+            obj.start_time = start_date+" "+start_time
+            
+            end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
+            end_date = str(end[0])
+            end_time = str(end[1].split('.')[0])
+            obj.end_time = end_date+" "+end_time
+
+        elif data.getElementsByTagName('device_report'):
+            obj.type = "Report"
+            obj.app_version = 0
