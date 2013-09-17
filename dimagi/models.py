@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from poster.streaminghttp import register_openers
 
@@ -26,6 +27,7 @@ class XMLSubmission(models.Model):
 
 class CommCareProject(models.Model):
     name = models.CharField(max_length=100, unique='True')
+    last_updated_time = models.DateTimeField(default=datetime.datetime.utcnow)
     
     def _get_fixture_url(self):
         "Returns the url for the project's fixtures."
