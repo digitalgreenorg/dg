@@ -38,7 +38,47 @@ def write_closing_meta(file, owner_id, i):
     file.write('</n' + unicode(i) + ':meta>\n')
     file.write('</data>')
    
-   
+def write_new_case(persons, filename):
+    file = codecs.open(filename, "w",'utf-8')
+    write_opening_meta(file, 1)
+    i = 0
+    for person in persons:
+        person = Person.objects.get(id = person_id)
+        CommCareUserVillage=get_model('dimagi','CommCareUserVillage')
+        owner_id = CommCareUserVillage.objects.get(village=person.village_id).user.id
+        CommCareUser = get_model('dimagi','CommCareUser')
+        project_id = CommCareUser.objects.get(id=owner_id).project_id
+        case_id = uuid.uuid4()
+        #Creating/populating CommCareCase table in DB
+        CommCareCase = get_model('dimagi','CommCareCase')
+        try:
+            commcarecase = CommCareCase(is_open = True,
+                                    person_id = person_id,
+                                    project_id = project_id,
+                                    user_id = owner_id,
+                                    guid = case_id
+                                    )
+            if commcarecase.full_clean() == None:
+                commcarecase.save()
+        except ValidationError ,e:
+            pass #what should be here????
+        
+        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
+        videos_seen = ''
+        for vid in vids:
+            videos_seen = videos_seen + unicode(vid) + ' '
+        # Getting list of videos adopted
+        adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
+        videos_adopted = ''
+        for vid in adopts:
+            videos_adopted = videos_adopted + unicode(vid) + ' '
+        # Write xml for a particular person        
+        
+        write_person_content(file, i, case_id, owner_id, person, videos_seen)
+        i+= 1
+    write_closing_meta(file, owner_id, i)    
+    file.close()
+    
 def write_person_detail(person_id, filename): #used for updating case..
     
     Person = get_model('dashboard','Person')
@@ -118,11 +158,4 @@ def make_upload_file(villages, filename, user_id, project_id):
     #response = upload_file(filename)
     #   print response
     
-#TODO: Can we change all calls to upload file?
-def upload_file(file, commcare_project):
-    register_openers()
-    print 'uploading ' + file + 'to the' + project_name
-    datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    request = urllib2.Request(commcare_project.receiver_url , datagen, headers)
-    response = urllib2.urlopen(request)
-    return response.getcode()
+

@@ -5,9 +5,11 @@ import json
 import os
 import urllib2
 import uuid
+import datetime
 
+from dg.settings import MEDIA_ROOT
 from django.db.models import get_model
-from userfile_functions import upload_file, write_person_detail
+from userfile_functions import write_closing_meta, write_person_content, write_opening_meta 
 
 def get_case_person_list():
     person_caseid_dict = {}
@@ -38,9 +40,10 @@ def check_person_id(person_id):
         exists = True
     return exists
 
-def close_case(case_id, filename):
-    case_user_dict = get_case_user_list
-    owner_id = case_user_dict[case_id]
+def close_case(person_id, filename):
+    CommCareCase = get_model('dimagi', 'CommCareCase')
+    case_id = CommCareCase.objects.get(person = person_id).guid
+    owner_id = CommCareCase.objects.get(person = person_id).user.guid
     # Putting all the info in xml tags
     f = open(filename,'w')
     f.write('<?xml version="1.0" ?>\n')
@@ -66,49 +69,33 @@ def close_case(case_id, filename):
     f.write('</n' + str(i) + ':meta>\n')
     f.write('</data>')
     f.close()
-    return f
+    
 
 def get_person_id_from_pma(instance):
     PersonMeetingAttendance = get_model('dashboard',instance.entry_table)
     person_id = PersonMeetingAttendance.objects.get(id = instance.model_id).person.id
     return person_id
     
-def update_case(sender, **kwargs):
-    instance = kwargs["instance"]
-    action  = instance.action
-    if instance.entry_table == 'Person' or instance.entry_table == 'PersonMeetingAttendance' or instance.entry_table == 'PersonAdoptPractice':
-        if instance.entry_table == 'Person':
-            person_id = instance.model_id
-        else:
-            person_id = get_person_id_from_pma(instance)
-        case_id = get_case_id(str(person_id))
-        scripts_dir = os.path.dirname(__file__)
-        dir = scripts_dir + "\case_update"
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-        filename = 'person' + str(person_id) + '.xml'
-        filename = os.path.join(dir,filename)
-        if action == 0 or action == 1:
-            write_person_detail(person_id,filename,0, case_id )
-        else:
-            close_case(case_id, filename)
-#        Uncomment the line below if cron job is not active/ or to have real time changes in pma
-#        response = upload_file(filename)
-#        print response
-
-def write_dict(dict, filename):
-    f = open(filename,'w')
-    data = json.dumps(dict)
-    f.write(data)
-
-def read_dict(filename):
-    json_data=open(filename).read()
-    data = json.loads(json_data)
-    return data
-
-#
-#user_ids = ['8a7cc079078e17fd20e068eb4bd05729', #Joshin
-#            '8a7cc079078e17fd20e068eb4bb0f056'] #Disha
-#get_case_user_list(user_ids)
-#get_case_person_list()
-
+def update_case(persons, filename):
+    file = codecs.open(filename, "w",'utf-8')
+    write_opening_meta(file, 1)
+    i = 0
+    CommCareCase = get_model('dimagi', 'CommCareCase')
+    for person in persons:
+        case_id = CommCareCase.objects.get(person=person).guid
+        owner_id = CommCareCase.objects.get(person=person).user.guid
+        person = Person.objects.get(id = person_id)
+        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
+        videos_seen = ''
+        for vid in vids:
+            videos_seen = videos_seen + unicode(vid) + ' '
+        # Getting list of videos adopted
+        adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
+        videos_adopted = ''
+        for vid in adopts:
+            videos_adopted = videos_adopted + unicode(vid) + ' '
+        # Write xml for a particular person
+        write_person_content(file, i, case_id, owner_id, person, videos_seen)
+        i+= 1
+    write_closing_meta(file, owner_id, i)    
+    file.close()                

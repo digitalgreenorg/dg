@@ -118,7 +118,7 @@ class ServerLog(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
-post_save.connect(update_case, sender = ServerLog)    
+    
 #    def __unicode__(self):
 #        return self.entry_table
 

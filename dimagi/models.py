@@ -1,6 +1,8 @@
 import datetime
+import urllib2
 from django.db import models
 from poster.streaminghttp import register_openers
+from poster.encode import multipart_encode
 
 from dashboard.fields import BigForeignKey
 from dashboard.models import Person, Village
