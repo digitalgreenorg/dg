@@ -44,10 +44,10 @@ class DistrictFeed(Feed):
         return {
                  'georss:point': ' '.join([item.latitude, item.longitude]),
                  'dgrss:adoptionQuantity': str(adoptionQuantity),
-                 'dgrss:sector': ' ,'.join(sector_list),
-                 'dgrss:subsector': ' ,'.join(subsector_list),
-                 'dgrss:topic': ' ,'.join(topic_list),
-                 'dgrss:subtopic': ' ,'.join(subtopic_list),
-                 'dgrss:subject': ' ,'.join(subject_list),
+                 'dgrss:sector': ', '.join(sector_list),
+                 'dgrss:subsector': ', '.join(subsector_list),
+                 'dgrss:topic': ', '.join(topic_list),
+                 'dgrss:subtopic': ', '.join(subtopic_list),
+                 'dgrss:subject': ', '.join(subject_list),
                  'dgrss:analyticsLink': ''.join(['http://www.digitalgreen.org/analytics/overview_module?geog=district&id=', str(item.id)]),
                  }
