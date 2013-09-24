@@ -6,6 +6,7 @@ import os
 import urllib2
 import uuid
 import datetime
+import codecs
 
 from dg.settings import MEDIA_ROOT
 from django.db.models import get_model
@@ -84,12 +85,15 @@ def update_case(persons, filename):
     for person in persons:
         case_id = CommCareCase.objects.get(person=person).guid
         owner_id = CommCareCase.objects.get(person=person).user.guid
-        person = Person.objects.get(id = person_id)
+        Person = get_model('dashboard','Person')
+        person = Person.objects.get(id = person)
+        PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
         vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
         videos_seen = ''
         for vid in vids:
             videos_seen = videos_seen + unicode(vid) + ' '
         # Getting list of videos adopted
+        PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
         adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
         videos_adopted = ''
         for vid in adopts:

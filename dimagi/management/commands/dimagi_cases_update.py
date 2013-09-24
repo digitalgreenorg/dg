@@ -6,6 +6,7 @@ from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareProject, CommCareUser
 from dimagi.scripts.userfile_functions import write_new_case
+from dimagi.scripts.update_functions import update_case
 
 
 class Command(BaseCommand):
@@ -27,7 +28,10 @@ class Command(BaseCommand):
             
             last_update_time = datetime.now() - timedelta(days=1)
             villages = CommCareUser.objects.filter(project=commcare_project.id).values_list('assigned_villages', flat=True)
-            ServerLog = get_model('dasboard','ServerLog')
+            ServerLog = get_model('dashboard','ServerLog')
+            persons_list=[]
+            pma_list=[]
+            
             persons_list = ServerLog.objects.filter(entry_table='Person').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             pma_list = ServerLog.objects.filter(entry_table='PersonMeetingAttendance').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             
@@ -35,58 +39,59 @@ class Command(BaseCommand):
             case_close_list=[]
             case_videos_seen_update_list = []
             
-            for person in persons_list:
-                if person.action == 0 or person.action == 1:
-                    case_update_list.append(person.model_id)
-                elif person.action == -1:
-                    case_close_list.append(person.model_id) #this is not working for now
-            
-            PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
-            for pma in pma_list:
-                # For PersonMeetingAttendance, model_id contains the Person ID
-                case_videos_seen_update_list.append(pma.model_id)
-            
-            case_close_set = set(case_close_list)
-            # If the case has been closed, there is no need to create or update it. If a case, does not exist, the assumption is that closing will proceed without error.
-            case_update_set = set(case_update_list) - case_close_set
-            # If the case has been closed, or updated, there is no need to update the videos seen list.
-            case_videos_seen_update_set = set(case_videos_seen_update_list) - case_close_set.union(case_update_set)
-            
-            filename_closecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_close_case.xls" % (commcare_project_name))
-            filename_newcases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_newcase.xls" % (commcare_project_name))
-            filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_updatecase.xls" % (commcare_project_name))
-            
-            # close_case(case_close_set, filename_closecases)
-            write_new_case(case_create_set, filename_newcases)
-            update_case(case_videos_seen_update_set, file_updatecases)
-            
-            try : 
-                response_new = commcare_project.upload_case_file(filename_newcases)
-                if response_new == 201 or response_new == 200:
-                    self.stdout.write('Successfully created new cases for "%s"' % commcare_project_name)
-                else:
-                    self.stdout.write('Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi/updates' % commcare_project_name)
-            except Exception as ex:
-                pass
-            
-            try : 
-                response_update = commcare_project.upload_case_file(file_updatecases)
-                if response_update == 201 or response_new == 200:
-                    self.stdout.write('Successfully updated cases for "%s"' % commcare_project_name)
-                else:
-                    self.stdout.write('Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi/updates' % commcare_project_name)
-            except Exception as ex:
-                pass
-            
-            for person_id in case_close_list:
-                file_closecase = os.path.join(MEDIA_ROOT, "dimagi", "updates", "closing_forms", "%s.xls" % (person_id))
-                close_case(person_id, file_closecase)
+            if persons_list:
+                for person in persons_list:
+                    if person.action == 0 or person.action == 1:
+                        case_update_list.append(person.model_id)
+                    elif person.action == -1:
+                        case_close_list.append(person.model_id) #this is not working for now
+                case_close_set = set(case_close_list)
+                # If the case has been closed, there is no need to create or update it. If a case, does not exist, the assumption is that closing will proceed without error.
+                case_update_set = set(case_update_list) - case_close_set
+                #filename_closecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_close_case.xml" % (commcare_project_name))
+                filename_newcases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_newcase.xml" % (commcare_project_name))
+                # close_case(case_close_set, filename_closecases)
+                write_new_case(case_create_set, filename_newcases)
                 try : 
-                    response_closecase = commcare_project.upload_case_file(file_closecase)
-                    if response_closecase == 201 or response_closecase == 200:
-                        self.stdout.write('Successfully closed case for "%s"' % commcare_project_name)
+                    response_new = commcare_project.upload_case_file(filename_newcases)
+                    if response_new == 201 or response_new == 200:
+                        self.stdout.write('Successfully created new cases for "%s"' % commcare_project_name)
                     else:
-                        self.stdout.write('Not closed but file ("%s") has been created in MEDIA_ROOT/dimagi/closing_forms' % person_id)
+                        self.stdout.write('Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi/updates' % commcare_project_name)
+                except Exception as ex:
+                    pass
+                #The below code will close cases
+                for person_id in case_close_list:
+                    file_closecase = os.path.join(MEDIA_ROOT, "dimagi", "updates", "closing_forms", "%s.xls" % (person_id))
+                    close_case(person_id, file_closecase)
+                    try : 
+                        response_closecase = commcare_project.upload_case_file(file_closecase)
+                        if response_closecase == 201 or response_closecase == 200:
+                            self.stdout.write('Successfully closed case for "%s"' % commcare_project_name)
+                        else:
+                            self.stdout.write('Not closed but file ("%s") has been created in MEDIA_ROOT/dimagi/closing_forms' % person_id)
+                    except Exception as ex:
+                        pass
+                     
+            if pma_list: 
+                PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
+                for pma in pma_list:
+                    # For PersonMeetingAttendance, model_id contains the Person ID
+                    case_videos_seen_update_list.append(pma.model_id)
+                # If the case has been closed, or updated, there is no need to update the videos seen list.
+                if case_close_list:
+                    case_videos_seen_update_set = set(case_videos_seen_update_list) - case_close_set.union(case_update_set)
+                else:
+                    case_videos_seen_update_set = set(case_videos_seen_update_list)
+                    
+                filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_updatecase.xml" % (commcare_project_name))
+                update_case(case_videos_seen_update_set, filename_updatecases)
+                try : 
+                    response_update = commcare_project.upload_case_file(filename_updatecases)
+                    if response_update == 201 or response_new == 200:
+                        self.stdout.write('Successfully updated cases for "%s"' % commcare_project_name)
+                    else:
+                        self.stdout.write('Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi/updates' % commcare_project_name)
                 except Exception as ex:
                     pass
         
