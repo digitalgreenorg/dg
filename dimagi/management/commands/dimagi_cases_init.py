@@ -26,15 +26,19 @@ class Command(BaseCommand):
             commcare_users = CommCareUser.objects.filter(project=commcare_project).all()
             for user in commcare_users:
                 villages = CommCareUserVillage.objects.filter(user=user).values_list('village__id', flat =True)
-                filename = os.path.join(MEDIA_ROOT, "dimagi", "%s.xml" % (user.username))
+                filename = user.username+"_"+commcare_project_name 
+                filename = os.path.join(MEDIA_ROOT, "dimagi", "%s.xml" % (filename))
                 file_to_upload = make_upload_file(
                     villages,
                     filename,
                     user.guid,
                     commcare_project.id
                 )
-                response = commcare_project.upload_case_file(filename)
-                if response == 201 or response == 200:
-                    self.stdout.write('Successfully uploaded cases for "%s"' % entry['username'])
-                else:
-                    self.stdout.write('Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi' % entry['username'])
+                try :
+                    response = commcare_project.upload_case_file(filename)
+                    if response.getcode() == 201 or response.getcode() == 200:
+                        self.stdout.write('Successfully uploaded cases for "%s" \n' % user.username)
+                    else:
+                        self.stdout.write('Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading only this ("%s") xml file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (user.username, user.username))
+                except Exception as ex:
+                    pass
