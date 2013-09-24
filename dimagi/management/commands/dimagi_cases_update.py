@@ -33,26 +33,32 @@ class Command(BaseCommand):
             
             case_update_list=[]
             case_close_list=[]
+            case_videos_seen_update_list = []
+            
             for person in persons_list:
-                if person.action == 0 or person.action ==1:
+                if person.action == 0 or person.action == 1:
                     case_update_list.append(person.model_id)
                 elif person.action == -1:
                     case_close_list.append(person.model_id) #this is not working for now
             
-            case_videos_seen_update_list = []
             PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
             for pma in pma_list:
-                person_id = PersonMeetingAttendance.objects.get(id = pma.model_id).person.id
-                if pma.action == 0 or pma.action ==1:
-                    case_videos_seen_update_list.append(person_id)
+                # For PersonMeetingAttendance, model_id contains the Person ID
+                case_videos_seen_update_list.append(pma.model_id)
             
+            case_close_set = set(case_close_list)
+            # If the case has been closed, there is no need to create or update it. If a case, does not exist, the assumption is that closing will proceed without error.
+            case_update_set = set(case_update_list) - case_close_set
+            # If the case has been closed, or updated, there is no need to update the videos seen list.
+            case_videos_seen_update_set = set(case_videos_seen_update_list) - case_close_set.union(case_update_set)
+            
+            filename_closecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_close_case.xls" % (commcare_project_name))
             filename_newcases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_newcase.xls" % (commcare_project_name))
             filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_updatecase.xls" % (commcare_project_name))
             
-                        
-            write_new_case(case_update_list, filename_newcases)
-            
-            update_case(case_videos_seen_update_list, file_updatecases)
+            # close_case(case_close_set, filename_closecases)
+            write_new_case(case_create_set, filename_newcases)
+            update_case(case_videos_seen_update_set, file_updatecases)
             
             try : 
                 response_new = commcare_project.upload_case_file(filename_newcases)
