@@ -1,7 +1,7 @@
 from django.contrib.admin.sites import AdminSite
 
-from dimagi.models import *
-from dimagi.admin import *
+from dimagi.models import CommCareCase, CommCareProject, CommCareUser, CommCareUserVillage
+from dimagi.admin import CommCareCaseAdmin, CommCareProjectAdmin, CommCareUserAdmin, CommCareUserVillageAdmin
 
 class McocoAdmin(AdminSite):
     pass

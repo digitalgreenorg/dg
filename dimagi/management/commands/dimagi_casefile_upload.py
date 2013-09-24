@@ -19,5 +19,7 @@ class Command(BaseCommand):
             response = commcare_project.upload_case_file(filename)
             if response.getcode() == 201 or response.getcode() == 200:
                 self.stdout.write('Successfully uploaded cases \n')
+            else:
+                self.stdout.write('HTTP response code: %d. Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading this file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (reponse.getcode(), filename))
         except Exception as ex:
             pass

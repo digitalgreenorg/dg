@@ -24,3 +24,4 @@ class Command(BaseCommand):
             commcare_users = CommCareUser.objects.filter(project=commcare_project).all()
             #The following function creates an excel workbook with project_name 
             create_fixture(commcare_users, commcare_project_name)
+

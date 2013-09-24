@@ -39,6 +39,6 @@ class Command(BaseCommand):
                     if response.getcode() == 201 or response.getcode() == 200:
                         self.stdout.write('Successfully uploaded cases for "%s" \n' % user.username)
                     else:
-                        self.stdout.write('Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading only this ("%s") xml file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (user.username, user.username))
+                        self.stdout.write('HTTP response code: %d. Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading only this ("%s") xml file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (response.getcode(), user.username, user.username))
                 except Exception as ex:
                     pass

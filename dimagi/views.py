@@ -10,7 +10,7 @@ def save_submission(request):
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
-    update_XMLSubmission(submission)
+    update_submission(submission)
     try:
         submission.save()
     except Exception as ex:
@@ -32,7 +32,7 @@ def save_in_db(submission):
     return status, msg
 
 
-def update_XMLSubmission(obj):
+def update_submission(obj):
     if obj.xml_data== '':
         obj.type = "Error"
         obj.app_version = 0
