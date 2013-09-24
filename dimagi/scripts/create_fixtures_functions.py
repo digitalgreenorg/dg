@@ -254,9 +254,9 @@ def write_video_schedule_info(vid_dict, workbook):
 #getting user getting from the database and storing it in list of dictionaries
 
 def create_fixture(users, project_name):
-    data = []
-    dict = {}
+    data = []    
     for user in users:
+        dict = {}
         dict['username'] = user.username
         dict['user_id'] = user.guid 
         villages = CommCareUserVillage.objects.filter(user = user.id)
