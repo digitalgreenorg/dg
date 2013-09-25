@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>configs.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>configs.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([],
+<span class="keyword">function</span>() {
+    
+    <span class="comment">/*
+    var dummy_config = {
+        entity_name :</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>string = key of this object in all_config, name of objectstore in IDB
+for - accessing this object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/village/'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>string - the rest url for this entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+        <span class="string">'dashboard_display'</span>: {
+            listing: <span class="literal">false</span>,         <span class="comment">//whether to provide listing option for this entity on dashboard</span>
+            add: <span class="literal">false</span>              <span class="comment">//whether to provide add option for this entity on dashboard</span>
+        },
+    
+        -----------------------------------Listing configs---------------------------------
+        page_header: <span class="string">'Village'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>string = The name that needs to shown in headers </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        list_table_header_template: <span class="string">'village_table_template'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>HTML template - The id of template used as coloumn headers in list page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        list_table_row_template: <span class="string">'village_list_item_template'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>HTML template - The id of template used to create rows of list table. 
+This template is passed the model json.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        -----------------------------------------------------------------------------------
+    
+        ----------------------------------Form configs-------------------------------------
+        foreign_entities: {
+            f_entity_name:{         //the entity_name of foreign element
+                attribute_name:{    //the attribute name of this foreign element in json
+                    
+                    'placeholder': 'string - the id of element in form's html where the dropdown of this f_entity is inserted',
+                    
+                    'name_field': 'string - the attribute name in f_entity's json which needs to be shown in its dropdown',
+                    
+                    'dependency': [{    // whether this elements's dropdown depends on value of other form elements
+                        'source_form_element': 'village',   // attribute name of source element in json
+                        'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
+                        'src_attr' : //to compare dep_attr of dependent element with a particular attribute in source f_entity
+                    }],
+                    
+                    'filter': { //whether to filter the objects of foreign entity before rendering into dropdown
+                        attr: 'group',  //the attribute name in f_entity's json to filter on
+                        value: null     //desired value of the attr
+                    },
+    
+                    id_field: "person_id", // the name of id field for this f_entity in denormalised json                         
+                }
+            },
+    
+            f_entity_name:{         //the entity_name of foreign element
+                attribute_name:{    //the attribute name of this foreign element in json
+                    
+                    'dependency': [{    // whether this elements's dropdown depends on value of other form elements
+                        'source_form_element': 'village',   // attribute name of source element in json
+                        'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
+                    }],
+
+                    id_field: "person_id", // the name of id field for this f_entity in denormalised json</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>would not use options template to render its objects - would use the specfied template<br>won&#39;t be denormalised, wud be converted offline to online, 
+any field to be denormalised or converted offline to online can be declared - 
+this shd be clubbed and put as foreign entity of expanded.   </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="string">'expanded'</span>: { 
+                        template: <span class="string">'person_pma_template'</span>, <span class="comment">// the template to use instead of options</span>
+                        placeholder: <span class="string">'pmas'</span>,    <span class="comment">// the id of placeholder in form's HTML</span>
+                        TODO: the following two should be merged and converted to same format as foreign_entities
+                        denormalize: { <span class="comment">// any field in expanded template to be denormalised     </span>
+                            <span class="string">"expressed_adoption_video"</span>: {
+                                name_field: <span class="string">'title'</span> <span class="comment">//used as key for name in denormalised object</span>
+                            }
+                        },
+                        foreign_fields: { <span class="comment">// any more field in expanded template for offline to online conv</span>
+                            <span class="string">"expressed_adoption_video"</span>: {
+                                entity_name: <span class="string">"video"</span>  <span class="comment">//the entity_name for this f_entity element</span>
+                            }
+                        },
+                        extra_fields: [<span class="string">"expressed_question"</span>, <span class="string">"interested"</span>, <span class="string">"expressed_adoption_video"</span>]
+                    }
+                }
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>object - describes the foreign keys in the json of this entity&#39;s model.
+To convert between online offline namespaces, denormalize-normalize json    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+        inline: {
+            <span class="string">'entity'</span>: <span class="string">'person'</span>,     <span class="comment">//entity name of inline</span>
+    
+            <span class="string">'default_num_rows'</span>: <span class="number">10</span>,         <span class="comment">//default num of rows to show</span>
+    
+            <span class="string">"template"</span>: <span class="string">"person_inline"</span>,    <span class="comment">//id of template used to render inline</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Include any jquery validation desired inside html of rows 
+TODO: need to explain the &lt;%index%&gt; tags required in inlines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+            <span class="string">"foreign_attribute"</span>: {
+                <span class="string">'host_attribute'</span>: [<span class="string">"id"</span>, <span class="string">"group_name"</span>],
+                <span class="string">'inline_attribute'</span>: <span class="string">"group"</span>
+            },
+            <span class="string">"header"</span>: <span class="string">"person_inline_header"</span>,
+            <span class="string">'borrow_attributes'</span>: [{
+                <span class="string">'host_attribute'</span>: <span class="string">'village'</span>,
+                <span class="string">'inline_attribute'</span>: <span class="string">'village'</span>
+            }]
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>object - describes inlines to be included in this entity&#39;s form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        bulk:{},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>object - if multiple objects of this entity type can be saved through its add form, describe configs of object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        ------------------------------------------------------------------------------------
+    }
+    */</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>//This template would be passed the json of inline model and shall produce the desired row
+    TODO: maybe instead of relying on users to use templating lang we should fill the rows ourselves in js code, like we are doing in form!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="keyword">var</span> village_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Village'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'village_table_template'</span>, 
+        <span class="string">'list_table_row_template'</span>: <span class="string">'village_list_item_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/village/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'village'</span>,
+        <span class="string">'dashboard_display'</span>: {
+            listing: <span class="literal">false</span>,
+            add: <span class="literal">false</span>
+        },
+        <span class="string">'sort_field'</span>: <span class="string">'village_name'</span>
+    };
+
+    <span class="keyword">var</span> mediator_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Mediator'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'mediator_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'mediator_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'mediator_add_edit_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'mediator_add_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/mediator/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'mediator'</span>,
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'name'</span>, <span class="string">'gender'</span>, <span class="string">'district.id'</span>],
+        <span class="string">'sort_field'</span>: <span class="string">'name'</span>,
+        <span class="string">'inc_table_name'</span>: <span class="string">'animator'</span>,
+        <span class="string">'foreign_entities'</span>: {
+            <span class="string">'village'</span>: {
+                <span class="string">"assigned_villages"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_ass_villages'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                }, <span class="comment">//name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} </span>
+            },
+            district: {
+                district :{
+                    placeholder : <span class="string">'id_district'</span>,
+                    name_field : <span class="string">'district_name'</span> 
+                }
+            }
+        },
+        <span class="string">'form_field_validation'</span>: {
+            ignore: [],
+            rules: {
+                name: {
+                    required: <span class="literal">true</span>,
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">100</span>,
+                    allowedChar: <span class="literal">true</span>
+                },
+                gender: <span class="string">"required"</span>,
+                phone_no: {
+                    digits: <span class="literal">true</span>,
+                    maxlength: <span class="number">10</span>
+                },
+                assigned_villages: <span class="string">"required"</span>,
+                district: <span class="string">"required"</span>
+            },
+            messages: {
+                name: {
+                    required: <span class="string">'Mediator name is required'</span>,
+                    minlength: <span class="string">'Mediator name should contain at least 2 characters'</span>,
+                    maxlength: <span class="string">'Mediator name should contain at most 100 characters'</span>,
+                    allowedChar: <span class="string">'Mediator name should contain only english and local language characters'</span>
+                },
+                gender: <span class="string">"Gender is required"</span>,
+                phone_no: {
+                    digits: <span class="string">'Phone number should contain only digits'</span>,
+                    maxlength: <span class="string">"Phone number should not contain more than 10 digits"</span>
+                },
+                assigned_villages: <span class="string">"Assigned villages are required"</span>,
+                district: <span class="string">"District is required"</span>
+            },
+
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-inline"</span>
+
+        }
+
+    };
+
+    <span class="keyword">var</span> video_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Video'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'video_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'video_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'video_add_edit_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'video_add_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/video/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'video'</span>,
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'title'</span>, <span class="string">'video_production_start_date'</span>, <span class="string">'video_production_end_date'</span>, <span class="string">'village.id'</span>],
+        <span class="string">'sort_field'</span>: <span class="string">'title'</span>,
+        <span class="string">'foreign_entities'</span>: {
+            <span class="string">'mediator'</span>: {
+                <span class="string">"facilitator"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_facilitator'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'name'</span>
+                },
+                <span class="string">"cameraoperator"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_cameraoperator'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'name'</span>
+                },
+            },
+            <span class="string">'person'</span>: {
+                <span class="string">"farmers_shown"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_farmers_shown'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'person_name'</span>,
+                    <span class="string">'dependency'</span>: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                    }]
+                },
+            },
+            <span class="string">'village'</span>: {
+                <span class="string">"village"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_village'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                },
+            },
+            <span class="string">'language'</span>: {
+                <span class="string">"language"</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_language'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'language_name'</span>
+                }
+            }
+
+
+        },
+        <span class="string">'form_field_validation'</span>: {
+            ignore: [],
+            rules: {
+                title: {
+                    required: <span class="literal">true</span>,
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">200</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>allowedChar: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                video_type: <span class="string">"required"</span>,
+                video_production_start_date: {
+                    required: <span class="literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>validateDate: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                video_production_end_date: {
+                    required: <span class="literal">true</span>,
+					dateOrder: {video_production_start_date : <span class="string">"video_production_start_date"</span>}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>validateDate: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                language: <span class="string">"required"</span>,
+                summary: {
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">500</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>allowedChar: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                village: <span class="string">"required"</span>,
+                facilitator: <span class="string">"required"</span>,
+                cameraoperator: <span class="string">"required"</span>,
+                farmers_shown: <span class="string">"required"</span>,
+                actors: <span class="string">"required"</span>,
+                video_suitable_for: <span class="string">"required"</span>,
+
+				approval_date: {
+					dateOrder: {video_production_start_date : <span class="string">"video_production_end_date"</span>}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>validateDate: true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                youtubeid: {
+                    maxlength: <span class="number">20</span>
+                }
+            },
+            messages: {
+                title: {
+                    required: <span class="string">'Video title is required'</span>,
+                    minlength: <span class="string">'Video title should contain at least 2 characters'</span>,
+                    maxlength: <span class="string">'Video title should contain at most 200 characters'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>allowedChar: &#39;Video title should only contain alphabets and local language characters&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                video_type: <span class="string">"Video type is required"</span>,
+                video_production_start_date: {
+                    required: <span class="string">'Video production start date is required'</span>,
+                    validateDate: <span class="string">"Enter video production start date in the form of YYYY-MM-DD"</span>
+                },
+                video_production_end_date: {
+                    required: <span class="string">'Video production end date is required'</span>,
+                    validateDate: <span class="string">"Enter video production end date in the form of YYYY-MM-DD"</span>,
+					dateOrder: <span class="string">"End date should be later than start date"</span>
+                },
+                language: <span class="string">"Language is required"</span>,
+                summary: {
+                    minlength: <span class="string">"Summary should contain at least 2 characters"</span>,
+                    maxlength: <span class="string">"Summary should contain at most 500 characters"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>allowedChar: &quot;summary should not contain special characters&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                village: <span class="string">"Village is required"</span>,
+                facilitator: <span class="string">"Facilitator is required"</span>,
+                cameraoperator: <span class="string">"Camera operator is required"</span>,
+                farmers_shown: <span class="string">"Persons shown are required"</span>,
+                actors: <span class="string">"Actors are required"</span>,
+                video_suitable_for: <span class="string">"Video suitable for is required"</span>,
+                approval_date: {
+                    validateDate: <span class="string">"Enter Approval Date in the form of YYYY-MM-DD"</span>,
+					dateOrder: <span class="string">"Approval date should be later than end date"</span>
+                },
+                youtubeid: {
+                    maxlength: <span class="string">"YoutubeID should contain at most 20 characters"</span>
+                }
+            },
+
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-inline"</span>
+
+        }
+    };
+
+    <span class="keyword">var</span> language_configs = {
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/language/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'language'</span>,
+        <span class="string">'sort_field'</span>: <span class="string">'language_name'</span>,
+        <span class="string">'dashboard_display'</span>: {
+            listing: <span class="literal">false</span>,
+            add: <span class="literal">false</span>
+        }
+    };
+
+    <span class="keyword">var</span> district_configs = {
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/district/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'district'</span>,
+        <span class="string">'sort_field'</span>: <span class="string">'district_name'</span>,
+        <span class="string">'dashboard_display'</span>: {
+            listing: <span class="literal">false</span>,
+            add: <span class="literal">false</span>
+        }
+    };
+
+    <span class="keyword">var</span> group_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Group'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'group_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'group_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'group_add_edit_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'group_add_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/group/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'group'</span>,
+        <span class="string">'inc_table_name'</span>: <span class="string">'persongroups'</span>,
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'group_name'</span>, <span class="string">'village.id'</span>],
+        <span class="string">'sort_field'</span>: <span class="string">'group_name'</span>,
+        <span class="string">'foreign_entities'</span>: {
+            <span class="string">'village'</span>: {
+                <span class="string">'village'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_village'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                },
+            },
+        },
+        <span class="string">'inline'</span>: {
+            <span class="string">'entity'</span>: <span class="string">'person'</span>,
+            <span class="string">'default_num_rows'</span>: <span class="number">10</span>,
+            <span class="string">"template"</span>: <span class="string">"person_inline"</span>,
+            <span class="string">"joining_attribute"</span>: {
+                <span class="string">'host_attribute'</span>: [<span class="string">"id"</span>, <span class="string">"group_name"</span>],
+                <span class="string">'inline_attribute'</span>: <span class="string">"group"</span>
+            },
+            <span class="string">"header"</span>: <span class="string">"person_inline_header"</span>,
+            <span class="string">'borrow_attributes'</span>: [{
+                <span class="string">'host_attribute'</span>: <span class="string">'village'</span>,
+                <span class="string">'inline_attribute'</span>: <span class="string">'village'</span>
+            }],
+            foreign_entities: { <span class="comment">//used at convert_namespace, denormalize only</span>
+                village: {
+                    village: {
+                        placeholder: <span class="string">'id_village'</span>,
+                        name_field: <span class="string">'village_name'</span>
+                    },
+                },
+                group: {
+                    group: {
+                        placeholder: <span class="string">'id_group'</span>,
+                        name_field: <span class="string">'group_name'</span>
+                    }
+                }
+            }
+        },
+        <span class="string">'form_field_validation'</span>: {
+            ignore: <span class="string">".donotvalidate"</span>,
+            rules: {
+                group_name: {
+                    required: <span class="literal">true</span>,
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">100</span>,
+                    allowedChar: <span class="literal">true</span>
+                },
+                village: <span class="string">"required"</span>
+            },
+            messages: {
+                name: {
+                    required: <span class="string">'Group name is required'</span>,
+                    minlength: <span class="string">'Group name  should contain at least 2 characters'</span>,
+                    maxlength: <span class="string">'Group name should contain at most 100 characters'</span>,
+                    allowedChar: <span class="string">'Group name should contain only english and local language characters'</span>
+                },
+                village: <span class="string">"Village is required"</span>
+            },
+
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-inline"</span>,
+        }
+
+
+    };
+
+    <span class="keyword">var</span> screening_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Screening'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'screening_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'screening_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'screening_add_edit_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'screening_add_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/screening/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'screening'</span>,
+        download_chunk_size: <span class="number">1000</span>,
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'date'</span>, <span class="string">'start_time'</span>, <span class="string">'end_time'</span>, <span class="string">'village.id'</span>, <span class="string">'animator.id'</span>],
+        afterSave: <span class="keyword">function</span>(off_json, Offline){
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> videos_shown = off_json.videoes_screened;
+            console.log(<span class="string">"recvd off_json in afterSave - "</span>+JSON.stringify(off_json));
+            update_attendees()
+                .done(<span class="keyword">function</span>(){
+                    dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(){
+                    dfd.reject();
+                });
+            <span class="keyword">return</span> dfd.promise();
+
+            <span class="function"><span class="keyword">function</span> <span class="title">update_attendees</span><span class="params">()</span>{</span>
+                <span class="keyword">var</span> all_update_dfds = [];
+                $.each(off_json.farmers_attendance, <span class="keyword">function</span>(index, per){
+                    all_update_dfds.push(update_attendee(per));    
+                });
+                <span class="keyword">return</span> $.when.apply($,all_update_dfds);
+            }
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">update_attendee</span><span class="params">(per)</span>{</span>
+                <span class="keyword">var</span> p_dfd = <span class="keyword">new</span> $.Deferred();
+                Offline.fetch_object(<span class="string">"person"</span>, <span class="string">"id"</span>, parseInt(per.person_id))
+                    .done(<span class="keyword">function</span>(p_model){
+                        console.log(<span class="string">"old p -"</span>+JSON.stringify(p_model));
+                        <span class="keyword">var</span> videos_seen = p_model.get(<span class="string">"videos_seen"</span>);
+                        <span class="keyword">if</span>(videos_seen)
+                        {
+                            <span class="keyword">var</span> videos_seen_ids = _.pluck(videos_seen, <span class="string">'id'</span>);
+                            $.each(videos_shown, <span class="keyword">function</span>(index, vid){
+                                <span class="keyword">if</span>($.inArray(vid.id, videos_seen_ids)==-<span class="number">1</span>)
+                                    videos_seen.push(vid);
+                            });
+                        }
+                        <span class="keyword">else</span>
+                            videos_seen = videos_shown;
+                        p_model.set(<span class="string">"videos_seen"</span>, videos_seen);
+                        Offline.save(p_model, <span class="string">"person"</span>, p_model.toJSON())
+                            .done(<span class="keyword">function</span>(p_model){
+                                console.log(<span class="string">"new p -"</span>+JSON.stringify(p_model));
+                                p_dfd.resolve();
+                            })
+                            .fail(<span class="keyword">function</span>(error){
+                                console.log(<span class="string">"error updating person in after save - "</span>+error);
+                                p_dfd.reject(error);
+                            });
+                    })
+                    .fail(<span class="keyword">function</span>(error){
+                        console.log(<span class="string">"error fetching person in after save - "</span>+error);
+                        p_dfd.reject(error);
+                    });
+                <span class="keyword">return</span> p_dfd;    
+            };
+        },
+        <span class="string">'foreign_entities'</span>: {
+            <span class="string">'village'</span>: {
+                <span class="string">'village'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_village'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                },
+            },
+            <span class="string">'video'</span>: {
+                <span class="string">'videoes_screened'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_videoes_screened'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'title'</span>
+                },
+            },
+            <span class="string">'mediator'</span>: {
+                <span class="string">'animator'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_animator'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'name'</span>,
+                    <span class="string">'dependency'</span>: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'assigned_villages'</span>
+                    }]
+                }
+            },
+            <span class="string">'group'</span>: {
+                farmer_groups_targeted: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_group'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'group_name'</span>,
+                    <span class="string">'dependency'</span>: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                    }]
+                }
+            },
+            <span class="string">'person'</span>: {
+                person: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_person'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'person_name'</span>,
+                    <span class="string">'dependency'</span>: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                    }],
+                    <span class="string">'filter'</span>: {
+                        attr: <span class="string">'group'</span>,
+                        value: <span class="literal">null</span>
+                    }
+                },
+                farmers_attendance: {
+                    dependency: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'farmer_groups_targeted'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'group'</span>
+                    }, {
+                        <span class="string">'source_form_element'</span>: <span class="string">'person'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'id'</span>
+                    }],
+                    id_field: <span class="string">"person_id"</span>, <span class="comment">// for convert_namespace conversion      </span>
+                    <span class="string">'expanded'</span>: { <span class="comment">// won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  </span>
+                        template: <span class="string">'person_pma_template'</span>,
+                        placeholder: <span class="string">'pmas'</span>,
+                        denormalize: { <span class="comment">// any field in expanded template to be denormalised     </span>
+                            <span class="string">"expressed_adoption_video"</span>: {
+                                name_field: <span class="string">'title'</span>
+                            }
+                        },
+                        foreign_entities: { <span class="comment">// any more field in expanded template for offline to online conv</span>
+                            video:{
+                                <span class="string">"expressed_adoption_video"</span>: {
+                                    entity_name: <span class="string">"video"</span>,
+                                    name_field: <span class="string">'title'</span>
+                                }
+                            }
+                        },
+                        extra_fields: [<span class="string">"expressed_question"</span>, <span class="string">"interested"</span>, <span class="string">"expressed_adoption_video"</span>]
+                    }
+                }
+            }
+        },
+        <span class="string">'form_field_validation'</span>: {
+            ignore: [],
+            rules: {
+                date: {
+                    required: <span class="literal">true</span>,
+                    validateDate: <span class="literal">true</span>
+                },
+                start_time: {
+                    required: <span class="literal">true</span>,
+                    validateTime: <span class="literal">true</span>
+                },
+                end_time: {
+                    required: <span class="literal">true</span>,
+                    validateTime: <span class="literal">true</span>,
+					timeOrder: {start_time : <span class="string">"start_time"</span>}
+                },
+                animator: <span class="string">"required"</span>,
+                village: <span class="string">"required"</span>,
+                videoes_screened: <span class="string">"required"</span>,
+
+            },
+            messages: {
+				date: {
+					required: <span class="string">'Screening date is required'</span>,
+					validateDate: <span class="string">'Enter screening date in the form of YYYY-MM-DD'</span>,
+				},
+				start_time: {
+					required: <span class="string">'Screening start time is required'</span>,
+					validateTime: <span class="string">'Enter the start time in the form of HH:MM. Use 24 hour format'</span>,
+				},
+				end_time: {
+					required: <span class="string">'Screening end time is required'</span>,
+					validateTime: <span class="string">'Enter the end time in the form of HH:MM. Use 24 hour format'</span>,
+					timeOrder: <span class="string">'End time should be later than start time'</span>,
+				},
+				animator: <span class="string">"Mediator is required"</span>,
+				village:<span class="string">"Village is required"</span>,
+				videoes_screened:<span class="string">"Videos screened is required"</span>,
+			},
+
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-inline"</span>
+        }
+    };
+
+    <span class="keyword">var</span> adoption_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Adoption'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'adoption_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'adoption_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'adoption_add_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'adoption_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/adoption/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'adoption'</span>,
+        <span class="string">'inc_table_name'</span>: <span class="string">'personadoptpractice'</span>,
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'person.id'</span>, <span class="string">'video.id'</span>, <span class="string">'date_of_adoption'</span>],
+        form_field_validation: {
+            ignore: [],
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-block"</span>,
+            display: <span class="string">"block"</span>
+        },
+        add: {
+            <span class="string">'foreign_entities'</span>: {
+                <span class="string">'village'</span>: {
+                    <span class="string">'village'</span>: {
+                        <span class="string">'placeholder'</span>: <span class="string">'id_village'</span>,
+                        <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                    },
+                },
+                <span class="string">'group'</span>: {
+                    <span class="string">'group'</span>: {
+                        <span class="string">'placeholder'</span>: <span class="string">'id_group'</span>,
+                        <span class="string">'name_field'</span>: <span class="string">'group_name'</span>,
+                        <span class="string">'dependency'</span>: [{
+                            <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                            <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                        }]
+                    }
+                },
+                <span class="string">'person'</span>: {
+                    float_person: {
+                        <span class="string">'placeholder'</span>: <span class="string">'id_person'</span>,
+                        <span class="string">'name_field'</span>: <span class="string">'person_name'</span>,
+                        <span class="string">'dependency'</span>: [{
+                            <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                            <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                        }],
+                        <span class="string">'filter'</span>: {
+                            attr: <span class="string">'group'</span>,
+                            value: <span class="literal">null</span>
+                        }
+                    },
+                    farmers_attendance: {
+                        dependency: [{
+                            <span class="string">'source_form_element'</span>: <span class="string">'group'</span>,
+                            <span class="string">'dep_attr'</span>: <span class="string">'group'</span>
+                        }, {
+                            <span class="string">'source_form_element'</span>: <span class="string">'float_person'</span>,
+                            <span class="string">'dep_attr'</span>: <span class="string">'id'</span>
+                        }],
+                        id_field: <span class="string">"person_id"</span>, <span class="comment">// for convert_namespace conversion      </span>
+                        <span class="string">'expanded'</span>: { <span class="comment">// won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  </span>
+                            template: <span class="string">'adoption_inline'</span>,
+                            placeholder: <span class="string">'bulk'</span>
+                        }
+                    }
+                }
+            },
+            <span class="string">'bulk'</span>: {
+                foreign_fields: { <span class="comment">//foreign fields in the individual objects</span>
+                    <span class="string">"video"</span>: {
+                        video: {
+                            <span class="string">'name_field'</span>: <span class="string">'title'</span>
+                        }
+                    },
+                    <span class="string">"person"</span>: {
+                        person: {
+                            <span class="string">'name_field'</span>: <span class="string">'person_name'</span>
+                        }
+                    },
+                    village: {
+                        village:{
+                            <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                        }
+                    },
+                    group: {
+                        group:{
+                            <span class="string">'name_field'</span>: <span class="string">'group_name'</span>
+                        }
+                    }
+                },
+                borrow_fields: [<span class="string">'village'</span>, <span class="string">'group'</span>]
+            }
+        },
+        edit: {
+            <span class="string">'foreign_entities'</span>: {
+                <span class="string">'person'</span>: {
+                    <span class="string">'person'</span>: {
+                        <span class="string">'placeholder'</span>: <span class="string">'id_person'</span>,
+                        <span class="string">'name_field'</span>: <span class="string">'person_name'</span>
+                    },
+                },
+                <span class="string">'video'</span>: {
+                    <span class="string">'video'</span>: {
+                        <span class="string">'placeholder'</span>: <span class="string">'id_video'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>&#39;sub_attr&#39;: &#39;videos_seen&#39;,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="string">'name_field'</span>: <span class="string">'title'</span>,
+                        <span class="string">'dependency'</span>: [{
+                            <span class="string">'source_form_element'</span>: <span class="string">'person'</span>,
+                            <span class="string">'dep_attr'</span>: <span class="string">'id'</span>,
+                            <span class="string">'src_attr'</span>: <span class="string">'videos_seen'</span>,
+                        }]
+                    }
+                }
+            }
+        }
+
+    };
+
+    <span class="keyword">var</span> person_configs = {
+        <span class="string">'page_header'</span>: <span class="string">'Person'</span>,
+        <span class="string">'list_table_header_template'</span>: <span class="string">'person_table_template'</span>,
+        <span class="string">'list_table_row_template'</span>: <span class="string">'person_list_item_template'</span>,
+        <span class="string">'add_template_name'</span>: <span class="string">'person_add_edit_template'</span>,
+        <span class="string">'edit_template_name'</span>: <span class="string">'person_add_edit_template'</span>,
+        <span class="string">'rest_api_url'</span>: <span class="string">'/coco/api/v1/person/'</span>,
+        <span class="string">'entity_name'</span>: <span class="string">'person'</span>,
+        <span class="string">'foreign_entities'</span>: {
+            <span class="string">'village'</span>: {
+                <span class="string">'village'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_village'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'village_name'</span>
+                },
+            },
+            <span class="string">'group'</span>: {
+                <span class="string">'group'</span>: {
+                    <span class="string">'placeholder'</span>: <span class="string">'id_group'</span>,
+                    <span class="string">'name_field'</span>: <span class="string">'group_name'</span>,
+					<span class="string">'dependency'</span>: [{
+                        <span class="string">'source_form_element'</span>: <span class="string">'village'</span>,
+                        <span class="string">'dep_attr'</span>: <span class="string">'village'</span>
+                    }]
+                }
+            }
+        },
+        <span class="string">'unique_together_fields'</span>: [<span class="string">'person_name'</span>, <span class="string">'father_name'</span>, <span class="string">'village.id'</span>],
+        <span class="string">'sort_field'</span>: <span class="string">'person_name'</span>,
+        <span class="string">'form_field_validation'</span>: {
+            ignore: [],
+            rules: {
+                person_name: {
+                    required: <span class="literal">true</span>,
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">100</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>allowedChar:true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+
+                father_name: {
+                    required: <span class="literal">true</span>,
+                    minlength: <span class="number">2</span>,
+                    maxlength: <span class="number">100</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>allowedChar:true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                },
+                age: {
+                    digits: <span class="literal">true</span>,
+                    min: <span class="number">1</span>,
+                    max: <span class="number">100</span>
+                },
+                gender: <span class="string">"required"</span>,
+                phone_no: {
+                    digits: <span class="literal">true</span>,
+                    maxlength: <span class="number">10</span>
+                },
+                village: {
+                    required: <span class="literal">true</span>
+                }
+            },
+            messages: {
+				person_name: {
+					required: <span class="string">'Person name is required'</span>,
+					minlength: <span class="string">'Person name  should contain at least 2 characters'</span>,
+					maxlength: <span class="string">'Person Name should contain at most 100 characters'</span>,
+					allowedChar: <span class="string">'Person name should contain only english and local language characters'</span>
+				},
+				father_name: {
+					required: <span class="string">"Father's name is required"</span>,
+					minlength: <span class="string">"Father's name should contain at least 2 characters"</span>,
+					maxlength: <span class="string">"Father's name should contain at most 100 characters"</span>,
+					allowedChar: <span class="string">"Father's name should contain only english and local language characters"</span>
+				},
+				age: {
+					digits: <span class="string">"Age should contain only digits"</span>,
+					min:<span class="string">"Age should not be less than 1 year"</span>,
+					max:<span class="string">"Age should not be more than 100 years"</span>
+				},
+				gender:{
+					required: <span class="string">"Gender is required"</span>
+				},
+				phone_number_person: {
+					digits: <span class="string">'Phone number should contain digits only'</span>,
+					maxlength: <span class="string">"Phone number should not contain more than 10 digits"</span>
+				},
+				village: {
+					required: <span class="string">"Village is required"</span>
+				}
+			},
+
+            highlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .addClass(<span class="string">"error"</span>);
+
+            },
+            unhighlight: <span class="keyword">function</span>(element, errorClass, validClass) {
+                $(element)
+                    .parent(<span class="string">'div'</span>)
+                    .parent(<span class="string">'div'</span>)
+                    .removeClass(<span class="string">"error"</span>);
+
+            },
+            errorElement: <span class="string">"span"</span>,
+            errorClass: <span class="string">"help-inline"</span>
+        }
+
+    };
+
+    <span class="keyword">var</span> misc = {
+        download_chunk_size: <span class="number">2000</span>,
+        background_download_interval: <span class="number">5</span> * <span class="number">60</span> * <span class="number">1000</span>,
+        inc_download_url: <span class="string">"/get_log/"</span>,
+        afterFullDownload: <span class="keyword">function</span>(start_time, download_status){
+            <span class="keyword">return</span> saveTimeTaken();
+            <span class="function"><span class="keyword">function</span> <span class="title">saveTimeTaken</span><span class="params">()</span>{</span>
+                <span class="keyword">var</span> record_endpoint = <span class="string">"/coco/record_full_download_time/"</span>; 
+                <span class="keyword">return</span> $.post(record_endpoint, {
+                    start_time : start_time,
+                    end_time : <span class="keyword">new</span> Date().toJSON().replace(<span class="string">"Z"</span>, <span class="string">""</span>)
+                })    
+            }
+        },
+        reset_database_check_url: <span class="string">'/coco/reset_database_check/'</span>,
+        onLogin: <span class="keyword">function</span>(Offline, Auth){
+            getLastDownloadTimestamp()
+                .done(<span class="keyword">function</span>(timestamp){
+                    askServer(timestamp);
+                });
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;    
+            <span class="function"><span class="keyword">function</span> <span class="title">askServer</span><span class="params">(timestamp)</span>{</span>
+                $.get(that.reset_database_check_url,{
+                    lastdownloadtimestamp: timestamp
+                })
+                    .done(<span class="keyword">function</span>(resp){
+                        console.log(resp);
+                        <span class="keyword">if</span>(resp==<span class="string">"1"</span>)
+                            Offline.reset_database();
+                    });
+            }   
+            <span class="function"><span class="keyword">function</span> <span class="title">getLastDownloadTimestamp</span><span class="params">()</span>
+            {</span>
+                <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+                Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download_start"</span>)
+                    .done(<span class="keyword">function</span>(model){
+                        dfd.resolve(model.get(<span class="string">"timestamp"</span>));
+                    })
+                    .fail(<span class="keyword">function</span>(model, error){
+                    
+                    });
+                <span class="keyword">return</span> dfd;    
+            } 
+        }
+    };
+
+    <span class="keyword">return</span> {
+        village: village_configs,
+        mediator: mediator_configs,
+        video: video_configs,
+        group: group_configs,
+        person: person_configs,
+        screening: screening_configs,
+        adoption: adoption_configs,
+        language: language_configs,
+        district: district_configs,
+        misc: misc
+    }
+
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

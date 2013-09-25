@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>login.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>login.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([
+    <span class="string">'jquery'</span>,
+    <span class="string">'underscore'</span>,
+    <span class="string">'backbone'</span>,
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'models/user_model'</span>,
+    <span class="string">'auth'</span>,
+	<span class="string">'offline_utils'</span>
+], <span class="keyword">function</span>(jquery, underscore, backbone, layoutmanager, User, Auth, Offline){
+    
+    <span class="keyword">var</span> LoginView = Backbone.Layout.extend({
+      template: <span class="string">"#login"</span>,
+      events:{
+          <span class="string">'click #login_button'</span>: <span class="string">'attempt_login'</span>,
+		  <span class="string">'click #change_user'</span> : <span class="string">'change_user'</span>		  
+      },
+      
+      initialize: <span class="keyword">function</span>(){
+          console.log(<span class="string">"Initializing login view"</span>);
+          _(<span class="keyword">this</span>).bindAll(<span class="string">'render'</span>);
+          <span class="keyword">var</span> that = <span class="keyword">this</span>;
+          User.fetch({
+              success: <span class="keyword">function</span>(model){
+                  console.log(<span class="string">"USERMODEL : successfully fetched"</span>);
+                  that.render();
+              },
+              error: <span class="keyword">function</span>(){
+                  console.log(<span class="string">"USERMODEL :  fetch failed"</span>) 
+                  that.render();           
+              }
+          });
+          
+      },
+      
+      serialize: <span class="keyword">function</span>(){
+          <span class="keyword">return</span> User.toJSON();
+      },
+      
+      scrap_view: <span class="keyword">function</span>(){
+           <span class="keyword">this</span>.$(<span class="string">'#login_modal'</span>).modal(<span class="string">'hide'</span>);  
+           <span class="keyword">this</span>.remove();   
+      },
+      
+      afterRender: <span class="keyword">function</span>(){
+          console.log(<span class="string">"rendered login view"</span>);
+          <span class="keyword">this</span>.$(<span class="string">'#login_modal'</span>).modal({
+              keyboard: <span class="literal">false</span>,
+              backdrop: <span class="string">"static"</span>,
+          });
+          <span class="keyword">this</span>.$(<span class="string">'#login_modal'</span>).modal(<span class="string">'show'</span>);
+      },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>fetches u,p from dom  and asks auth module to login</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      attempt_login: <span class="keyword">function</span>(e){
+		  e.preventDefault();
+          console.log(<span class="string">"login attempted"</span>);
+          <span class="keyword">this</span>.set_login_button_state(<span class="string">'loading'</span>);
+          <span class="keyword">var</span> username = <span class="keyword">this</span>.$(<span class="string">'#username'</span>).val();
+          <span class="keyword">var</span> password = <span class="keyword">this</span>.$(<span class="string">'#password'</span>).val();
+          <span class="keyword">var</span> that = <span class="keyword">this</span>;
+          Auth.login(username, password)
+              .done(<span class="keyword">function</span>(){
+                  that.scrap_view();
+                  window.Router.navigate(<span class="string">""</span>, {
+                      trigger:<span class="literal">true</span>
+                  });
+              })
+              .fail(<span class="keyword">function</span>(error){
+			      $(<span class="string">"#password"</span>).val(<span class="string">''</span>);
+				  that.$(<span class="string">'#error_msg'</span>).html(error);
+                  that.set_login_button_state(<span class="string">'reset'</span>);
+              });
+      },
+      
+      set_login_button_state: <span class="keyword">function</span>(state){
+          <span class="keyword">if</span>(state==<span class="string">"disabled"</span>)
+              <span class="keyword">this</span>.$(<span class="string">"#login_button"</span>).attr(<span class="string">"disabled"</span>,<span class="literal">true</span>);    
+          <span class="keyword">else</span>
+              <span class="keyword">this</span>.$(<span class="string">"#login_button"</span>).button(state);    
+      },
+	  
+	  change_user: <span class="keyword">function</span>(){
+		<span class="keyword">var</span> val = confirm(<span class="string">"Your current database will be deleted and a new database will be downloaded"</span>);
+		<span class="keyword">if</span> (val==<span class="literal">true</span>){
+			Offline.reset_database();
+		}
+	  }
+      
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">return</span> LoginView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

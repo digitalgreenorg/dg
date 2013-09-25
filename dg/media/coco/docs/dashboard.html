@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>dashboard.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>dashboard.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="string">'jquery'</span>, <span class="string">'underscore'</span>, <span class="string">'configs'</span>, <span class="string">'indexeddb_backbone_config'</span>, <span class="string">'collections/upload_collection'</span>, <span class="string">'views/upload'</span>, <span class="string">'views/incremental_download'</span>, <span class="string">'views/notification'</span>, <span class="string">'layoutmanager'</span>, <span class="string">'models/user_model'</span>, <span class="string">'auth'</span>, <span class="string">'offline_utils'</span>, <span class="string">'views/full_download'</span> ],
+
+<span class="keyword">function</span>(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
+
+    <span class="keyword">var</span> DashboardView = Backbone.Layout.extend({
+        template: <span class="string">"#dashboard"</span>,
+        events: {
+            <span class="string">"click #sync"</span>: <span class="string">"sync"</span>,
+            <span class="string">"click #inc_download"</span>: <span class="string">"inc_download"</span>,
+            <span class="string">"click #logout"</span>: <span class="string">"logout"</span>
+        },
+        item_template: _.template($(<span class="string">"#dashboard_item_template"</span>)
+            .html()),
+
+        initialize: <span class="keyword">function</span>() {
+            <span class="keyword">this</span>.upload_v = <span class="literal">null</span>;
+            <span class="keyword">this</span>.inc_download_v = <span class="literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>start the background inc download process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.background_download();
+            _(<span class="keyword">this</span>)
+                .bindAll(<span class="string">'render'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>re-render the view when User model changes - to keep username updated    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            User.on(<span class="string">'change'</span>, <span class="keyword">this</span>.render);
+            <span class="keyword">this</span>.upload_entries = upload_collection.length;
+        },
+
+        serialize: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>send username and # of uploadQ items to the template </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> username = User.get(<span class="string">"username"</span>);
+            <span class="keyword">return</span> {
+                username: username,
+                upload_entries: <span class="keyword">this</span>.upload_entries
+            }
+        },
+
+        afterRender: <span class="keyword">function</span>() { 
+            console.log(<span class="string">"rendering dashboard"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>iterate over entities defined in config and create their &quot;list&quot; and &quot;add&quot; rows </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">for</span> (<span class="keyword">var</span> member <span class="keyword">in</span> configs) {
+                <span class="keyword">if</span> (member == <span class="string">"misc"</span>) <span class="keyword">continue</span>;
+                <span class="keyword">var</span> listing = <span class="literal">true</span>;
+                <span class="keyword">var</span> add = <span class="literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>check entity&#39;s config for whether to show list/add links for this entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (configs[member].dashboard_display) {
+                    listing = configs[member].dashboard_display.listing;
+                    add = configs[member].dashboard_display.add;
+                }
+                <span class="keyword">if</span> (listing || add) {
+                    <span class="keyword">if</span> (listing) $(<span class="string">'#dashboard_items'</span>)
+                        .append(<span class="keyword">this</span>.item_template({
+                        name: member + <span class="string">"/list"</span>,
+                        title: configs[member][<span class="string">"page_header"</span>] + <span class="string">'s'</span>
+                    }));
+
+                    <span class="keyword">if</span> (add) $(<span class="string">'#dashboard_items_add'</span>)
+                        .append(<span class="keyword">this</span>.item_template({
+                        name: member + <span class="string">"/add"</span>,
+                        title: <span class="string">'&lt;i class="icon-plus-sign"&gt;&lt;/i&gt;'</span>
+                    }));
+                    <span class="keyword">else</span> $(<span class="string">'#dashboard_items_add'</span>)
+                        .append(<span class="string">"&lt;li&gt;&lt;i class='icon-white icon-plus-sign'&gt;&lt;/li&gt;"</span>);
+                }
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>keep the # uploadq entries shown on view up-to-date</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            upload_collection.on(<span class="string">'all'</span>, <span class="keyword">function</span>() {
+                $(<span class="string">"#upload_num"</span>)
+                    .html(<span class="keyword">function</span>() {
+                    <span class="keyword">return</span> upload_collection.length;
+                });
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>keep the online-offline indicator up-to-date</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            window.addEventListener(<span class="string">"offline"</span>, <span class="keyword">this</span>.user_offline);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>keep the online-offline indicator up-to-date</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            window.addEventListener(<span class="string">"online"</span>, <span class="keyword">this</span>.user_online);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>set the online-offline indicator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (User.isOnline()) {
+                <span class="keyword">this</span>.user_online();
+            } <span class="keyword">else</span> {
+                <span class="keyword">this</span>.user_offline();
+            }
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>disable all links of db not yet downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                that.db_downloaded();
+            })
+                .fail(<span class="keyword">function</span>(model, error) {
+                that.db_not_downloaded();
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>enable sync button, show online indicator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        user_online: <span class="keyword">function</span>() {
+            $(<span class="string">'#sync'</span>)
+                .removeAttr(<span class="string">"disabled"</span>);
+            $(<span class="string">'#offline'</span>)
+                .hide();
+            $(<span class="string">'#online'</span>)
+                .show();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>disable sync button, show offline indicator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        user_offline: <span class="keyword">function</span>() {
+            $(<span class="string">'#sync'</span>)
+                .attr(<span class="string">'disabled'</span>, <span class="literal">true</span>);
+            $(<span class="string">'#online'</span>)
+                .hide();
+            $(<span class="string">'#offline'</span>)
+                .show();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>enable add, list links</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        db_downloaded: <span class="keyword">function</span>() {
+            $(<span class="string">'.list_items'</span>)
+                .unbind(<span class="string">'click'</span>, <span class="literal">false</span>);
+            $(<span class="string">'.list_items'</span>)
+                .removeClass(<span class="string">"disabled"</span>);
+            console.log(<span class="string">"Dashboard links enabled"</span>);
+            $(<span class="string">"#helptext"</span>)
+                .hide();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>disable add, list links</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        db_not_downloaded: <span class="keyword">function</span>() {
+            $(<span class="string">'.list_items'</span>)
+                .bind(<span class="string">'click'</span>, <span class="literal">false</span>);
+            $(<span class="string">'.list_items'</span>)
+                .addClass(<span class="string">"disabled"</span>);
+            console.log(<span class="string">"Dashboard links disabled"</span>);
+            $(<span class="string">"#helptext"</span>)
+                .show();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>if DB exists initiate upload and then inc download otherwise start full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        sync: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">if</span> (<span class="keyword">this</span>.inc_download_v &amp;&amp; <span class="keyword">this</span>.inc_download_v.in_progress) {
+                alert(<span class="string">"Please wait till background download is finished."</span>);
+                <span class="keyword">return</span>;
+            }
+            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                console.log(<span class="string">"In Sync: db completely downloaded"</span>);
+                that.sync_in_progress = <span class="literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>start upload</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                that.upload()
+                    .done(<span class="keyword">function</span>() {
+                    console.log(<span class="string">"UPLOAD FINISHED"</span>);
+                    notifs_view.add_alert({
+                        notif_type: <span class="string">"success"</span>,
+                        message: <span class="string">"Sync successfully finished"</span>
+                    });
+                })
+                    .fail(<span class="keyword">function</span>(error) {
+                    console.log(<span class="string">"ERROR IN UPLOAD :"</span> + error);
+                    notifs_view.add_alert({
+                        notif_type: <span class="string">"error"</span>,
+                        message: <span class="string">"Sync Incomplete. Failed to finish upload : "</span> + error
+                    });
+                })
+                    .always(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>upload finished
+start inc download - even if upload failed    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.inc_download({
+                        background: <span class="literal">false</span>
+                    })
+                        .done(<span class="keyword">function</span>() {
+                        console.log(<span class="string">"INC DOWNLOAD FINISHED"</span>);
+                        that.sync_in_progress = <span class="literal">false</span>;
+                        notifs_view.add_alert({
+                            notif_type: <span class="string">"success"</span>,
+                            message: <span class="string">"Incremental download successfully finished"</span>
+                        });
+                    })
+                        .fail(<span class="keyword">function</span>(error) {
+                        console.log(<span class="string">"ERROR IN INC DOWNLOAD"</span>);
+                        console.log(error);
+                        that.sync_in_progress = <span class="literal">false</span>;
+                        notifs_view.add_alert({
+                            notif_type: <span class="string">"error"</span>,
+                            message: <span class="string">"Sync Incomplete. Failed to do Incremental Download: "</span> + error
+                        });
+
+                    });
+                });
+
+            })
+                .fail(<span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>if DB is not downloaded, start the full download    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (error == <span class="string">"Not Found"</span>) {
+                    that.render()
+                        .done(<span class="keyword">function</span>() {
+                        console.log(<span class="string">"In Sync: db not completely downloaded"</span>);
+                        that.download();
+                    });
+                }
+            });
+
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>method to initiate full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        download: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>create full download view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!<span class="keyword">this</span>.full_download_v) {
+                <span class="keyword">this</span>.full_download_v = <span class="keyword">new</span> FullDownloadView();
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>this view has a modal interface therefore appending to body</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="keyword">this</span>.full_download_v.el)
+                .appendTo(<span class="string">'body'</span>);
+            <span class="keyword">this</span>.full_download_v.render();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>start full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.full_download_v.start_full_download()
+                .done(<span class="keyword">function</span>() {
+                notifs_view.add_alert({
+                    notif_type: <span class="string">"success"</span>,
+                    message: <span class="string">"Successfully downloaded the database"</span>
+                });
+                dfd.resolve();
+            })
+                .fail(<span class="keyword">function</span>(error) {
+                notifs_view.add_alert({
+                    notif_type: <span class="string">"error"</span>,
+                    message: <span class="string">"Failed to download the database : "</span> + error
+                });
+                dfd.reject();
+            });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>method to initiate upload</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        upload: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = $.Deferred();
+            <span class="keyword">if</span> (!<span class="keyword">this</span>.upload_v) {
+                <span class="keyword">this</span>.upload_v = <span class="keyword">new</span> UploadView();
+            }
+            $(<span class="keyword">this</span>.upload_v.el)
+                .appendTo(<span class="string">'body'</span>);
+            <span class="keyword">this</span>.upload_v.render();
+            <span class="keyword">this</span>.upload_v.start_upload()
+                .done(<span class="keyword">function</span>() {
+                <span class="keyword">return</span> dfd.resolve();
+            })
+                .fail(<span class="keyword">function</span>(error) {
+                <span class="keyword">return</span> dfd.reject(error);
+            });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>method to initiate inc download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        inc_download: <span class="keyword">function</span>(options) {
+            <span class="keyword">var</span> dfd = $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">if</span> (!<span class="keyword">this</span>.inc_download_v) {
+                <span class="keyword">this</span>.inc_download_v = <span class="keyword">new</span> IncDownloadView();
+            }
+            <span class="keyword">if</span> (<span class="keyword">this</span>.inc_download_v.in_progress) {
+                <span class="keyword">return</span> dfd.resolve();
+            }
+            $(<span class="keyword">this</span>.inc_download_v.el)
+                .appendTo(<span class="string">'body'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>options contains whether to show modal or do it in background    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.inc_download_v.start_incremental_download(options)
+                .done(<span class="keyword">function</span>() {
+                <span class="keyword">return</span> dfd.resolve();
+            })
+                .fail(<span class="keyword">function</span>(error) {
+                <span class="keyword">return</span> dfd.reject();
+            });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>starts the background inc download process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        background_download: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            console.log(<span class="string">"Going for background inc download"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>function to set timer to start inc download after time interval defined in config file</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> call_again = <span class="keyword">function</span>() {
+                setTimeout(<span class="keyword">function</span>() {
+                    that.background_download();
+                }, configs.misc.background_download_interval);
+            };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>check if uploadqueue is empty and internet is connected - if both true do the background download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (<span class="keyword">this</span>.is_uploadqueue_empty() &amp;&amp; <span class="keyword">this</span>.is_internet_connected() &amp;&amp; !<span class="keyword">this</span>.sync_in_progress) <span class="keyword">this</span>.inc_download({
+                background: <span class="literal">true</span>
+            })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>when the inc download is finished set the timer to start it again later</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                .always(call_again);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>if cant do inc download right now, just set the timer to start it again later    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> call_again();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>check emptiness of uploadQ</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        is_uploadqueue_empty: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>return false if the check is made before uploadQ collection could be fetched from DB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> upload_collection.fetched &amp;&amp; upload_collection.length &lt;= <span class="number">0</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>check internet connection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        is_internet_connected: <span class="keyword">function</span>() {
+            <span class="keyword">return</span> navigator.onLine;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>logout and navigate to login url</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        logout: <span class="keyword">function</span>() {
+            Auth.logout()
+                .always(<span class="keyword">function</span>() {
+                window.Router.navigate(<span class="string">'login'</span>, {
+                    trigger: <span class="literal">true</span>
+                });
+            });
+        }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> DashboardView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

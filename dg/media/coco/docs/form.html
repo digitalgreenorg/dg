@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>form.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>form.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([
+    <span class="string">'jquery'</span>, 
+    <span class="string">'underscore'</span>, 
+    <span class="string">'layoutmanager'</span>, 
+    <span class="string">'form_field_validator'</span>, 
+    <span class="string">'syphon'</span>, 
+    <span class="string">'views/notification'</span>, 
+    <span class="string">'indexeddb_backbone_config'</span>, 
+    <span class="string">'configs'</span>, 
+    <span class="string">'offline_utils'</span>, 
+    <span class="string">'denormalize'</span>,
+    <span class="string">'indexeddb-backbone'</span>,
+    <span class="string">'chosen'</span>,
+    <span class="string">'date_picker'</span>,
+    <span class="string">'time_picker'</span>
+], <span class="keyword">function</span>(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
+
+
+    <span class="keyword">var</span> ShowAddEditFormView = Backbone.Layout.extend({
+
+        events: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>&#39;click #button1&#39;: &#39;save&#39;, // jQuery Validate handles this event. Below, we link the </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="string">'click #button2'</span>: <span class="string">'button2_clicked'</span>,
+            <span class="string">'click #add_rows'</span>: <span class="string">'append_new_inlines'</span>
+        },
+        template : <span class="string">'#form_template'</span>,         
+        options_inner_template : _.template($(<span class="string">'#options_template'</span>)
+            .html()),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>would be called when render is called       </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        serialize: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> s_passed = <span class="keyword">this</span>.options.serialize;
+            s_passed[<span class="string">"form_template"</span>] = <span class="keyword">this</span>.form_template;    
+            s_passed[<span class="string">"inline"</span>] = (<span class="keyword">this</span>.inline) ? <span class="literal">true</span>: <span class="literal">false</span>;
+            s_passed[<span class="string">"entity_name"</span>] = <span class="keyword">this</span>.entity_name;
+            <span class="keyword">return</span> s_passed;
+        },
+        
+        <span class="comment">/* 
+        Identifies the action of this form - add/ edit_id/ edit_json  
+        Sets the result on the view object 
+        this.edit_case_id, this.edit_case_json, this.edit_case
+        */</span>
+        identify_form_action: <span class="keyword">function</span>(params){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>There are two ways in which edit is true - when the ID is given, and the second is when a json is given(LIMIT: can be add too if json is missing id?).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.edit_case = <span class="literal">false</span>;
+            <span class="keyword">this</span>.edit_id = <span class="literal">null</span>;
+            <span class="keyword">if</span> (params.model_json) {
+                <span class="keyword">this</span>.edit_case_json = <span class="literal">true</span>; <span class="comment">// edit_case_upload</span>
+                <span class="keyword">this</span>.model_json = params.model_json;
+                <span class="keyword">this</span>.edit_case = <span class="literal">true</span>;
+                <span class="keyword">this</span>.edit_id = <span class="keyword">this</span>.model_json.id;
+            } <span class="keyword">else</span> <span class="keyword">if</span> (params.model_id) {
+                <span class="keyword">this</span>.edit_case_id = <span class="literal">true</span>;
+                <span class="keyword">this</span>.edit_case = <span class="literal">true</span>;
+                <span class="keyword">this</span>.edit_id = params.model_id;
+            }
+        },
+        
+        <span class="comment">/*
+        Refactor possible
+        Reads entity_config and sets basic properties on view object for easy access
+        */</span>
+        read_form_config: <span class="keyword">function</span>(params){
+            <span class="keyword">this</span>.entity_name = params.entity_name;
+            <span class="keyword">this</span>.entity_config = all_configs[<span class="keyword">this</span>.entity_name];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>default locations - </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.foreign_entities = <span class="keyword">this</span>.entity_config.foreign_entities;
+            <span class="keyword">this</span>.inline = <span class="keyword">this</span>.entity_config.inline;
+            <span class="keyword">this</span>.bulk = <span class="keyword">this</span>.entity_config.bulk;
+            <span class="keyword">if</span>(<span class="keyword">this</span>.edit_case)
+            {
+                <span class="keyword">this</span>.form_template = $(<span class="string">'#'</span> + <span class="keyword">this</span>.entity_config.edit_template_name).html();
+                <span class="keyword">if</span>(<span class="keyword">this</span>.entity_config.edit)
+                {
+                    <span class="keyword">this</span>.foreign_entities = <span class="keyword">this</span>.entity_config.edit.foreign_entities;
+                    <span class="keyword">this</span>.inline = <span class="keyword">this</span>.entity_config.edit.inline;
+                    <span class="keyword">this</span>.bulk = <span class="keyword">this</span>.entity_config.edit.bulk;
+                }
+            }
+            <span class="keyword">else</span>
+            {
+                <span class="keyword">this</span>.form_template = $(<span class="string">'#'</span> + <span class="keyword">this</span>.entity_config.add_template_name).html();
+                <span class="keyword">if</span>(<span class="keyword">this</span>.entity_config.add)
+                {
+                    <span class="keyword">this</span>.foreign_entities = <span class="keyword">this</span>.entity_config.add.foreign_entities;
+                    <span class="keyword">this</span>.inline = <span class="keyword">this</span>.entity_config.add.inline;
+                    <span class="keyword">this</span>.bulk = <span class="keyword">this</span>.entity_config.add.bulk;
+                }
+            }
+        },
+        
+        <span class="comment">/*
+        Relies on view object's context 
+        Gets foreign entities, create their offline collection to be fetched in afterRender
+        Sets up datastructures to setup in-form change events
+        Shamelessly polluting the view object
+        */</span>
+        setup_foreign_elements: <span class="keyword">function</span>(){
+            <span class="keyword">this</span>.f_colls = []; <span class="comment">//stores the foreign entities' collections</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>TODO: get rid of this</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.f_index = []; <span class="comment">//stores the index of an entity to access its collection in f_colls</span>
+            <span class="keyword">this</span>.source_dependents_map = {}; <span class="comment">//stores the dependency mapping between form elements</span>
+            <span class="keyword">this</span>.element_entity_map={}; <span class="comment">//stores the mapping between foreign element and their entity</span>
+            <span class="keyword">this</span>.foreign_elements_rendered = {};  <span class="comment">//stores whether a foreign element has been rendered</span>
+            <span class="keyword">this</span>.num_sources = {};  <span class="comment">//stores the number of sources for a dependent element</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>create a collection for each distinct entity, put them in this.f_colls, remem their index in f_colls using f_index</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">for</span>(f_entity <span class="keyword">in</span> <span class="keyword">this</span>.foreign_entities){
+                <span class="keyword">var</span> f_collection = Offline.create_b_collection(f_entity, {
+                    comparator: <span class="keyword">function</span>(model){
+                        <span class="keyword">return</span> model.get(all_configs[<span class="keyword">this</span>.storeName].sort_field).toLowerCase();
+                    }
+                });
+                <span class="keyword">this</span>.f_index.push(f_entity);
+                <span class="keyword">this</span>.f_colls.push(f_collection);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>create entity_map, dependency map, foreign_elements_rendered, for each foreign element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">for</span>(<span class="keyword">var</span> element <span class="keyword">in</span> <span class="keyword">this</span>.foreign_entities[f_entity])
+                {
+                    <span class="keyword">this</span>.element_entity_map[element] = f_entity; <span class="comment">//created mapping of element - entity</span>
+                    <span class="keyword">this</span>.foreign_elements_rendered[element] = <span class="literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>creating source - dependency mapping to be used for in-form events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">var</span> dependency = <span class="keyword">this</span>.foreign_entities[f_entity][element][<span class="string">"dependency"</span>];
+                    <span class="keyword">if</span>(dependency)
+                        <span class="keyword">this</span>.num_sources[element] = dependency.length;
+                    <span class="keyword">else</span>
+                        <span class="keyword">this</span>.num_sources[element] = <span class="number">0</span>;   
+                    <span class="keyword">if</span>(dependency)
+                    {
+                        <span class="keyword">var</span> f_ens = <span class="keyword">this</span>.foreign_entities;
+                        <span class="keyword">var</span> that = <span class="keyword">this</span>;
+                        $.each(dependency,<span class="keyword">function</span>(index,dep){
+                            <span class="keyword">var</span> source_elm = dep.source_form_element;
+                            <span class="keyword">if</span>(source_elm <span class="keyword">in</span> that.source_dependents_map)
+                                that.source_dependents_map[source_elm].push(element);
+                            <span class="keyword">else</span>{
+                                that.source_dependents_map[source_elm] = [];
+                                that.source_dependents_map[source_elm].push(element);
+                            }
+                        });
+                        console.log(<span class="string">"source_dependents_map = "</span>+JSON.stringify(<span class="keyword">this</span>.source_dependents_map));    
+                    }
+                    
+                }
+            }
+        },
+        
+        <span class="comment">/*
+        params = {
+            serialiaze:{
+                button1: "...",     //name of first button, not shown if ==""
+                button2: "..."      //name of sec button, not shown if =="" 
+            },
+            entity_name:,           //name of entity to be added/edited
+            model_id:,              //id of model if edit case
+            model_json:,            //json of model to be shown in edit form - used when json!= json(model_id)
+        }
+        */</span>
+        initialize: <span class="keyword">function</span>(params) {
+            console.log(<span class="string">"ADD/EDIT: params to add/edit view: "</span>);
+            console.log(params);
+            <span class="keyword">this</span>.final_json = <span class="literal">null</span>;
+            _.bindAll(<span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>sets this.edit_case, and  this.edit_case_id, or this.edit_case_json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.identify_form_action(params);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>read entity_config and sets main properties on view object for easy access</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.read_form_config(params);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>reads this.foreign_entities and setsup the collections, source_dependents_map</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.setup_foreign_elements();
+        },
+        
+        afterRender: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.disable_foreign_elements();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>start in-form change events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.start_change_events();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>fetch all foreign collections and render them when all are fetched</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.fetch_and_render_foreign_entities();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>if edit case - fill form with the model    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(<span class="keyword">this</span>.edit_case)
+                <span class="keyword">this</span>.render_edit_model();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>if inline case - render inlines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(<span class="keyword">this</span>.inline)
+                <span class="keyword">this</span>.render_inlines();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>call validator on the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.initiate_form_field_validation();
+            
+            <span class="keyword">this</span>.initiate_form_widgets();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>fetches all foreign collections and renders them when all are fetched</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_and_render_foreign_entities: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> for_entities_fetch_dfds = [] 
+            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.f_colls.length; i++) {
+                console.log(<span class="string">"fetching f coll"</span>);
+                <span class="keyword">var</span> f_dfd = <span class="keyword">this</span>.f_colls[i].fetch();
+                for_entities_fetch_dfds.push(f_dfd);    
+            }
+            $.when.apply($,for_entities_fetch_dfds)
+                .done(<span class="keyword">this</span>.render_non_dep_for_elements)
+                .fail(<span class="keyword">function</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>TODO: handle error callback</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    alert(<span class="string">"Atleast one foreign entity could not be fetched!"</span>);
+                })
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>fill non-dependent foreign elements - dependent gets filled on change events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        render_non_dep_for_elements: <span class="keyword">function</span>(){
+            console.log(<span class="string">"Rendering non dependent f elements"</span>);
+            _.each(<span class="keyword">this</span>.element_entity_map, <span class="keyword">function</span>(entity,element){
+                <span class="keyword">if</span>(!<span class="keyword">this</span>.foreign_entities[entity][element][<span class="string">"dependency"</span>])
+                    <span class="keyword">this</span>.render_foreign_element(element, <span class="keyword">this</span>.get_collection_of_element(element).toArray());    
+            }, <span class="keyword">this</span>);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>fetch offline model and inlines and render them into form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        render_edit_model: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">if</span> (<span class="keyword">this</span>.edit_case_json) {
+                <span class="keyword">this</span>.normalize_json(<span class="keyword">this</span>.model_json);
+                <span class="keyword">this</span>.fill_form();           
+            } 
+            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.edit_case_id) 
+            {
+                Offline.fetch_object(<span class="keyword">this</span>.entity_config.entity_name, <span class="string">"id"</span>, <span class="keyword">this</span>.edit_id)
+                    .done(<span class="keyword">function</span>(model) {
+                        console.log(<span class="string">"EDIT: edit model fetched"</span>);
+                        that.model_json = model.toJSON();
+                        that.normalize_json(that.model_json);
+                        that.fill_form();
+                    })
+                    .fail(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>TODO: error handling</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        console.log(<span class="string">"ERROR: EDIT: Edit model could not be fetched!"</span>);
+                        alert(<span class="string">"ERROR: EDIT: Edit model could not be fetched!"</span>);
+                    });
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>disable dropdowns of all foreign elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        disable_foreign_elements: <span class="keyword">function</span>(){
+            <span class="keyword">for</span> (f_entity <span class="keyword">in</span> <span class="keyword">this</span>.foreign_entities) {
+                <span class="keyword">for</span>(element <span class="keyword">in</span> <span class="keyword">this</span>.foreign_entities[f_entity])
+                {
+                    <span class="keyword">if</span>(!<span class="keyword">this</span>.foreign_entities[f_entity][element].expanded)
+                    {
+                        <span class="keyword">this</span>.$(<span class="string">'[name='</span>+element+<span class="string">']'</span>).prop(<span class="string">"disabled"</span>, <span class="literal">true</span>);
+                    }
+                }
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>render header, empty inlines if add case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        render_inlines: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.$(<span class="string">'#inline_header'</span>).html($(<span class="string">'#'</span>+<span class="keyword">this</span>.inline.header).html());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>if add case put in empty inlines, edit case would get handled when model is being put it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(!<span class="keyword">this</span>.edit_case)
+                <span class="keyword">this</span>.append_new_inlines(<span class="keyword">this</span>.inline.default_num_rows);
+            <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">this</span>.edit_case_id)
+            {
+                console.log(<span class="string">"FORM:EDIT: Fteching inline collection"</span>);
+                Offline.fetch_collection(<span class="keyword">this</span>.inline.entity)
+                    .done(<span class="keyword">function</span>(collection){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>id-json dictionary of inline models - later used to extend the modified inlines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.inl_models_dict = {};
+                        <span class="keyword">var</span> inl_models = collection.filter(<span class="keyword">function</span>(model){
+                            <span class="keyword">if</span>(model.get(that.inline.joining_attribute.inline_attribute).id == that.edit_id)
+                            {
+                                that.inl_models_dict[model.get(<span class="string">"id"</span>)] = model.toJSON();
+                                <span class="keyword">return</span> <span class="literal">true</span> 
+                            }
+                            <span class="keyword">return</span> <span class="literal">false</span>;    
+                        });
+                        console.log(inl_models);
+                        that.fill_inlines(inl_models);
+                    })
+                    .fail(<span class="keyword">function</span>(){
+                        console.log(<span class="string">"ERROR: EDIT: Inline collection could not be fetched!"</span>);
+                    });
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>not showing the inlines in case of edit_case_json            </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        },
+        
+        append_new_inlines: <span class="keyword">function</span>(num_rows){
+            <span class="keyword">var</span> inline_t  = _.template($(<span class="string">'#'</span>+<span class="keyword">this</span>.inline.template).html());
+            <span class="keyword">if</span>(<span class="keyword">typeof</span>(num_rows)!=<span class="string">"number"</span>)
+                num_rows = <span class="number">5</span>;
+            <span class="keyword">var</span> start_index = get_index_to_start_from();
+            <span class="keyword">for</span>(<span class="keyword">var</span> i=start_index; i&lt;start_index+num_rows; i++)
+            {
+                <span class="keyword">var</span> tr = $(inline_t({index:i}));
+                <span class="keyword">this</span>.$(<span class="string">'#inline_body'</span>).append(tr);
+                tr.on(<span class="string">'change'</span>, <span class="keyword">this</span>.switch_validation_for_inlines);
+            }
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">get_index_to_start_from</span><span class="params">()</span>{</span>
+                <span class="keyword">var</span> all_present_inlines = <span class="keyword">this</span>.$(<span class="string">'#inline_body tr'</span>).not(<span class="string">".form_error"</span>);    
+                <span class="keyword">if</span>(!all_present_inlines.length)
+                    <span class="keyword">return</span> <span class="number">1</span>
+                <span class="keyword">var</span> max_index = $(_.last(all_present_inlines)).attr(<span class="string">"index"</span>);
+                <span class="keyword">return</span> parseInt(max_index)+<span class="number">1</span>;
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>to prevent validation of empty inline rows</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        switch_validation_for_inlines: <span class="keyword">function</span>(ev){
+            <span class="keyword">var</span> elem = ev.delegateTarget;   <span class="comment">//get the changed row</span>
+            <span class="keyword">var</span> empty = <span class="literal">true</span>;
+            $(elem).find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                <span class="keyword">if</span>($(<span class="keyword">this</span>).val())
+                    empty = <span class="literal">false</span>;
+            });
+            <span class="keyword">if</span>(!empty)
+            {
+                $(elem).find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                    $(<span class="keyword">this</span>).removeClass(<span class="string">"donotvalidate"</span>);
+                });
+            }
+            <span class="keyword">else</span>
+            {
+                $(elem).find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                    $(<span class="keyword">this</span>).addClass(<span class="string">"donotvalidate"</span>);
+                });
+            }
+        },
+        
+        fill_inlines: <span class="keyword">function</span>(model_array){
+            console.log(<span class="string">"Filling inlines"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> inline_t  = _.template($(<span class="string">'#'</span>+<span class="keyword">this</span>.inline.template).html());
+            
+            $.each(model_array,<span class="keyword">function</span>(index, model){
+                <span class="keyword">var</span> tr = inline_t({index:index});
+                <span class="keyword">var</span> filled_tr = that.fill_form_elements($(tr), model.toJSON());
+                $(filled_tr).find(<span class="string">':input'</span>).removeClass(<span class="string">"donotvalidate"</span>);
+                that.$(<span class="string">'#inline_body'</span>).append(filled_tr);
+                $(filled_tr).on(<span class="string">'change'</span>, that.switch_validation_for_inlines);
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fill_form_elements: <span class="keyword">function</span>(container, o_json){
+            container.attr(<span class="string">"model_id"</span>, o_json.id);
+            container.find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                <span class="keyword">if</span>(!$(<span class="keyword">this</span>).attr(<span class="string">'name'</span>))
+                    <span class="keyword">return</span>;
+                <span class="keyword">var</span> attr_name = $(<span class="keyword">this</span>).attr(<span class="string">"name"</span>).replace(<span class="keyword">new</span> RegExp(<span class="string">"[0-9]"</span>, <span class="string">"g"</span>), <span class="string">""</span>);
+    			<span class="keyword">switch</span>(<span class="keyword">this</span>.type) {
+    				<span class="keyword">case</span> <span class="string">'password'</span>:
+    				<span class="keyword">case</span> <span class="string">'select-multiple'</span>:
+    				<span class="keyword">case</span> <span class="string">'select-one'</span>:
+    				<span class="keyword">case</span> <span class="string">'text'</span>:
+    				<span class="keyword">case</span> <span class="string">'textarea'</span>:
+    					$(<span class="keyword">this</span>).val(o_json[attr_name]);
+    					<span class="keyword">break</span>;
+    				<span class="keyword">case</span> <span class="string">'checkbox'</span>:
+    				<span class="keyword">case</span> <span class="string">'radio'</span>:
+    					<span class="keyword">this</span>.checked = o_json[attr_name];
+                }
+            });
+            <span class="keyword">return</span> container;
+        },
+
+        start_change_events: <span class="keyword">function</span>(){
+            <span class="keyword">for</span>(element <span class="keyword">in</span> <span class="keyword">this</span>.source_dependents_map)
+            {
+                console.log(<span class="string">"creating changeevent for - "</span>+element);
+                <span class="keyword">this</span>.$(<span class="string">'[name='</span>+element+<span class="string">']'</span>).change(<span class="keyword">this</span>.render_dep_for_elements);
+            }
+        },
+        
+        initiate_form_field_validation: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> validate_obj = $.extend(<span class="keyword">this</span>.entity_config.form_field_validation,{
+                <span class="string">"submitHandler"</span> : <span class="keyword">function</span>() {
+                     that.save();
+                 }
+            });
+            <span class="keyword">this</span>.$(<span class="string">'form'</span>)
+                .validate(validate_obj);
+        },
+        
+        initiate_form_widgets: <span class="keyword">function</span>(){
+            $(<span class="string">".chzn-select"</span>).chosen({<span class="string">'search_contains'</span>:<span class="literal">true</span>});
+			
+			<span class="keyword">var</span> eDate = <span class="keyword">new</span> Date();
+			enddate = eDate.getFullYear() + <span class="string">"-"</span> + (eDate.getMonth() + <span class="number">1</span>) + <span class="string">"-"</span> + eDate.getDate();
+			$(<span class="string">".date-picker"</span>)
+                .datepicker({
+                    format: <span class="string">'yyyy-mm-dd'</span>,
+					startDate: <span class="string">'2009-01-01'</span>,
+					endDate: enddate,
+                }).on(<span class="string">'changeDate'</span>, <span class="keyword">function</span>(ev){
+                    $(<span class="keyword">this</span>).datepicker(<span class="string">'hide'</span>);
+                });
+            
+            $(<span class="string">".time-picker"</span>)
+                .timepicker({
+                    minuteStep: <span class="number">1</span>,
+                    defaultTime: <span class="literal">false</span>,
+                    showMeridian: <span class="literal">false</span>
+                });                
+        },
+        
+        get_collection_of_element : <span class="keyword">function</span>(element){
+            <span class="keyword">var</span> entity = <span class="keyword">this</span>.element_entity_map[element];  
+            <span class="keyword">var</span> index = <span class="keyword">this</span>.f_index.indexOf(entity);   
+            <span class="keyword">return</span> <span class="keyword">this</span>.f_colls[index];   
+        },
+        
+        get_sources_of_element: <span class="keyword">function</span>(element){
+            <span class="keyword">var</span> entity = <span class="keyword">this</span>.element_entity_map[element];  
+            <span class="keyword">return</span> <span class="keyword">this</span>.foreign_entities[entity][element].dependency;
+        },
+        
+        get_curr_value_of_element: <span class="keyword">function</span>(element){
+            <span class="keyword">return</span> $(<span class="string">'[name='</span>+element+<span class="string">']'</span>).val();
+        },
+        
+        render_dep_for_elements: <span class="keyword">function</span>(ev){
+            <span class="keyword">var</span> source = $(ev.target).attr(<span class="string">"name"</span>); <span class="comment">//source changed</span>
+            console.log(<span class="string">"FILLING DEP ENTITIES OF -"</span>+source);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Iterate over its dependents</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            _.each(<span class="keyword">this</span>.source_dependents_map[source], <span class="keyword">function</span>(dep_el){
+                <span class="keyword">var</span> filtered_models = <span class="keyword">this</span>.filter_dep_for_element(dep_el);
+                <span class="keyword">this</span>.render_foreign_element(dep_el, filtered_models);
+            }, <span class="keyword">this</span>);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Fully Reset the dependent foreign element by looking at all its sources.  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        filter_dep_for_element: <span class="keyword">function</span>(element){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>get dependent element&#39;s entity&#39;s collection - to be filtered</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> dep_collection = <span class="keyword">this</span>.get_collection_of_element(element);   
+            <span class="keyword">var</span> all_sources = <span class="keyword">this</span>.get_sources_of_element(element);   <span class="comment">// get all sources of this element - to filter by</span>
+            <span class="keyword">var</span> final_models = [];  <span class="comment">//model array to be finally inserted into dom</span>
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            
+            <span class="keyword">if</span>(!dep_collection.length)
+                <span class="keyword">return</span> [];
+                
+            $.each(all_sources, <span class="keyword">function</span>(index, dep_desc){
+                <span class="keyword">var</span> dep_attr = dep_desc.dep_attr;
+                <span class="keyword">var</span> source_form_element = dep_desc.source_form_element;
+                <span class="keyword">var</span> filtered_models = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>LIMITS: source can&#39;t be an expanded right now, bcoz won&#39;t get its value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> source_curr_value = that.get_curr_value_of_element(source_form_element);   
+                <span class="keyword">if</span>(!source_curr_value)
+                    <span class="keyword">return</span>;
+                <span class="keyword">else</span> <span class="keyword">if</span>(!(source_curr_value <span class="keyword">instanceof</span> Array))  
+                {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>if source is single select - convert its value to array - like a multiselect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">var</span> temp = source_curr_value;
+                    source_curr_value = [];    
+                    source_curr_value.push((temp));
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>many-to-many relation between source and dependent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span>(dep_collection.at(<span class="number">0</span>).get(dep_desc.dep_attr) <span class="keyword">instanceof</span> Array)
+                {
+                    filtered_models = dep_collection.filter(<span class="keyword">function</span>(model){
+                       <span class="keyword">var</span> exists = <span class="literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>LIMITS: array assumed to contain objects - its an array so possibly other case not possible</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                       $.each(model.get(dep_desc.dep_attr),<span class="keyword">function</span>(index, object){
+                            <span class="keyword">if</span>($.inArray(String(object.id), source_curr_value)&gt;-<span class="number">1</span>)
+                                exists = <span class="literal">true</span>;
+                       });
+                       <span class="keyword">return</span> exists;
+                    });
+                }
+                <span class="keyword">else</span>
+                {
+                    filtered_models = dep_collection.filter(<span class="keyword">function</span>(model){
+                        <span class="keyword">var</span> exists = <span class="literal">false</span>;
+                        <span class="keyword">var</span> compare = <span class="literal">null</span>;
+                        <span class="keyword">if</span>(<span class="keyword">typeof</span> model.get(dep_desc.dep_attr) == <span class="string">"object"</span>)
+                            compare = model.get(dep_desc.dep_attr).id; 
+                        <span class="keyword">else</span>
+                            compare = model.get(dep_desc.dep_attr)
+                            
+                        <span class="keyword">if</span>(dep_desc.src_attr&amp;&amp;dep_desc.src_attr!=<span class="string">"id"</span>)
+                        {
+                            <span class="keyword">var</span> s_collection = that.get_collection_of_element(source_form_element);
+                            <span class="keyword">var</span> s_model = s_collection.get(parseInt(source_curr_value[<span class="number">0</span>]));
+                            <span class="keyword">if</span>(s_model.get(dep_desc.src_attr) <span class="keyword">instanceof</span> Array)
+                            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>LIMITS: array assumed to contain objects - its an array so possibly other case not possible</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                $.each(s_model.get(dep_desc.src_attr), <span class="keyword">function</span>(index, src_compare){
+                                    <span class="keyword">if</span>(compare == src_compare.id)
+                                        exists = <span class="literal">true</span>;
+                                });
+                            }
+                            <span class="keyword">return</span> exists;
+                        }        
+                        <span class="keyword">else</span>
+                        {
+                            <span class="keyword">if</span>(!($.inArray(String(compare), source_curr_value)==-<span class="number">1</span>))
+                                exists = <span class="literal">true</span>;
+                            <span class="keyword">return</span> exists;
+                        }            
+                    });
+                }
+                final_models = final_models.concat(filtered_models);
+            });
+            <span class="keyword">return</span> final_models;
+        },
+          
+        filter_model_array: <span class="keyword">function</span>(model_array, filter){
+            <span class="keyword">var</span> filter_attr = filter.attr;
+            <span class="keyword">var</span> filter_value = filter.value;
+            filtered = [];
+            $.each(model_array, <span class="keyword">function</span>(index, obj){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>TODO: assumed to be an object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span>(obj.get(filter_attr).id == filter_value)
+                {
+                    filtered.push(obj);
+                }
+            });
+            <span class="keyword">return</span> filtered;
+        },
+          
+        render_foreign_element: <span class="keyword">function</span>(element, model_array){
+            console.log(<span class="string">"FILLING FOREIGN ENTITY - "</span>+element);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.num_sources[element]--;
+            <span class="keyword">var</span> f_entity_desc = <span class="keyword">this</span>.foreign_entities[<span class="keyword">this</span>.element_entity_map[element]][element];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>if any defined, filter the model array before putting into dom </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(f_entity_desc.filter)
+                model_array = <span class="keyword">this</span>.filter_model_array(model_array, f_entity_desc.filter);
+            
+            <span class="keyword">if</span>(f_entity_desc.expanded)
+            {
+                <span class="keyword">var</span> expanded_template  = _.template($(<span class="string">'#'</span>+f_entity_desc.expanded.template).html());
+                $f_el = <span class="keyword">this</span>.$(<span class="string">'#'</span> + f_entity_desc.expanded.placeholder);
+                $f_el.html(<span class="string">''</span>);
+                <span class="keyword">this</span>.expanded = element; <span class="comment">//LIMIT: there can be only one expanded f element!</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Its edit case and edit model is not yet rendered - so render it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span>(<span class="keyword">this</span>.edit_case &amp;&amp; !<span class="keyword">this</span>.foreign_elements_rendered[element])
+                {
+                    <span class="keyword">var</span> id_field = <span class="string">"id"</span>
+                    <span class="keyword">if</span>(f_entity_desc.id_field)
+                        id_field = f_entity_desc.id_field;
+                        <span class="keyword">var</span> collection = <span class="keyword">this</span>.get_collection_of_element(element);                
+                    $.each(<span class="keyword">this</span>.model_json[element], <span class="keyword">function</span>(index, f_json){
+                        model = collection.get(f_json[id_field]);
+                        <span class="keyword">if</span>(!model)
+                            <span class="keyword">return</span>;
+                        <span class="keyword">var</span> t_json = model.toJSON();
+                        t_json[<span class="string">"index"</span>] = index; 
+                        $.each(f_entity_desc.expanded.extra_fields, <span class="keyword">function</span>(index,field){
+                            t_json[field] = f_json[field];
+                        });
+                        console.log(t_json);
+                        $f_el.append(expanded_template(t_json));    
+                    });
+                    <span class="keyword">if</span>(<span class="keyword">this</span>.num_sources[element]&lt;=<span class="number">0</span>)
+                        <span class="keyword">this</span>.foreign_elements_rendered[element] = <span class="literal">true</span>;
+                }
+                <span class="keyword">else</span>
+                {
+                    $.each(model_array,<span class="keyword">function</span>(index, f_model){
+                        <span class="keyword">var</span> t_json = f_model.toJSON();
+                        t_json[<span class="string">"index"</span>] = index; 
+                        $f_el.append(expanded_template(t_json));    
+                    });
+                }    
+                <span class="keyword">this</span>.initiate_form_widgets();
+				$(<span class="string">'.inline_table'</span>).show();
+            }
+            <span class="keyword">else</span>
+            {
+                console.log(<span class="string">"NOT EXPANDED"</span>);
+                $f_el = <span class="keyword">this</span>.$(<span class="string">'#'</span> + f_entity_desc.placeholder);
+                <span class="keyword">if</span>($f_el.is(<span class="string">'select[multiple]'</span>))
+                    $f_el.html(<span class="string">''</span>);    
+                <span class="keyword">else</span>
+                    $f_el.html(<span class="keyword">this</span>.options_inner_template({
+                        id: <span class="string">""</span>,
+                        name: <span class="string">"------------"</span>
+                    }));
+                $.each(model_array,<span class="keyword">function</span>(index, f_model){
+                    <span class="keyword">var</span> f_json = f_model; 
+                    <span class="keyword">if</span>(f_model <span class="keyword">instanceof</span> Backbone.Model)
+                        f_json = f_model.toJSON();
+                    $f_el.append(that.options_inner_template({
+                        id: parseInt(f_json[<span class="string">"id"</span>]),
+                        name: f_json[f_entity_desc.name_field]
+                    }));    
+                });
+                $f_el.prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);
+                $f_el.trigger(<span class="string">"liszt:updated"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>select the options selected in edit model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span>(<span class="keyword">this</span>.edit_case &amp;&amp; !<span class="keyword">this</span>.foreign_elements_rendered[element])
+                {
+                    <span class="keyword">this</span>.$(<span class="string">'form [name='</span>+element+<span class="string">']'</span>).val(<span class="keyword">this</span>.model_json[element]).change();
+                    <span class="keyword">this</span>.$(<span class="string">'form [name='</span>+element+<span class="string">']'</span>).trigger(<span class="string">"liszt:updated"</span>);
+                    <span class="keyword">if</span>(<span class="keyword">this</span>.num_sources[element]&lt;=<span class="number">0</span>)
+                        <span class="keyword">this</span>.foreign_elements_rendered[element] = <span class="literal">true</span>;
+                }
+            }
+        },
+                        
+        normalize_json: <span class="keyword">function</span>(d_json){
+            console.log(<span class="string">"FORM: Before Normalised json = "</span>+JSON.stringify(d_json));      
+            <span class="keyword">var</span> f_entities = <span class="keyword">this</span>.foreign_entities;
+            <span class="keyword">for</span> (member <span class="keyword">in</span> f_entities) {
+                <span class="keyword">for</span>(element <span class="keyword">in</span> f_entities[member])
+                {
+                    <span class="keyword">if</span>((element <span class="keyword">in</span> d_json)&amp;&amp;!(f_entities[member][element].expanded)) 
+                    {
+                        <span class="keyword">if</span> (d_json[element] <span class="keyword">instanceof</span> Array) {
+                            <span class="keyword">var</span> el_array = [];
+                            $.each(d_json[element],<span class="keyword">function</span>(index,object){
+                                el_array.push(parseInt(object[<span class="string">"id"</span>]));
+                            });
+                            d_json[element] = el_array;
+                        }
+                        <span class="keyword">else</span> {
+                            d_json[element] = parseInt(d_json[element][<span class="string">"id"</span>]); 
+                        }
+                    }
+                }
+            }
+            console.log(<span class="string">"FORM: Normalised json = "</span>+JSON.stringify(d_json));      
+            <span class="keyword">return</span> d_json;
+        },
+            
+        fill_form: <span class="keyword">function</span>() {
+            console.log(<span class="string">"FORM: filling form with the model - "</span>+JSON.stringify(<span class="keyword">this</span>.model_json));
+            Backbone.Syphon.deserialize(<span class="keyword">this</span>, <span class="keyword">this</span>.model_json);
+        },
+        
+            
+        set_submit_button_state: <span class="keyword">function</span>(state){
+            <span class="keyword">if</span>(state==<span class="string">"disabled"</span>)
+                <span class="keyword">this</span>.$(<span class="string">".action_button"</span>).attr(<span class="string">"disabled"</span>,<span class="literal">true</span>);    
+            <span class="keyword">else</span>
+                <span class="keyword">this</span>.$(<span class="string">".action_button"</span>).button(state);    
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>server err eg. - {&quot;mediator&quot;: {&quot;<strong>all</strong>&quot;: [&quot;Animator with this Name, Gender and Partner already exists.&quot;]}}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        show_errors: <span class="keyword">function</span>(errors, disable_submit){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>used to clear form errors </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(errors==<span class="literal">null</span>)
+            {
+                $(<span class="string">'.form_error'</span>).remove();
+                $(<span class="string">'.error'</span>).removeClass(<span class="string">"error"</span>);
+                <span class="keyword">return</span>;
+            }
+            
+            <span class="keyword">this</span>.set_submit_button_state(<span class="string">'reset'</span>);
+            <span class="keyword">if</span>(disable_submit)
+                <span class="keyword">this</span>.set_submit_button_state(<span class="string">'disabled'</span>);
+            
+            <span class="keyword">if</span>(<span class="keyword">typeof</span>(errors)!==<span class="string">"object"</span>)
+                errors = $.parseJSON(errors);
+            console.log(<span class="string">"Showing this error"</span>);
+            console.log(errors);
+            <span class="keyword">try</span>{
+                _.each(errors, <span class="keyword">function</span>(errors_obj, parent){
+                    <span class="keyword">var</span> parent_el = <span class="keyword">this</span>.$(<span class="string">'[name='</span>+parent+<span class="string">']'</span>);
+                    $.each(errors_obj, <span class="keyword">function</span>(error_el_name, error_list){
+                        <span class="keyword">var</span> error_ul = <span class="literal">null</span>;
+                        all_li = <span class="string">"&lt;li&gt;"</span>+error_list.join(<span class="string">"&lt;/li&gt;&lt;li&gt;"</span>)+<span class="string">"&lt;/li&gt;"</span>;
+                        error_ul = <span class="string">"&lt;tr class='form_error'&gt;&lt;td colspan='100%'&gt;&lt;ul&gt;"</span> + all_li + <span class="string">"&lt;/ul&gt;&lt;/td&gt;&lt;/tr&gt;"</span>;
+                        <span class="keyword">if</span>(error_el_name==<span class="string">"__all__"</span>)
+                        {
+                            parent_el.before(error_ul);     <span class="comment">//insert error message</span>
+                            parent_el.addClass(<span class="string">"error"</span>);    <span class="comment">//highlight</span>
+                        }
+                        <span class="keyword">else</span>
+                        {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>NOt Done</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">var</span> error_el = parent_el.find(<span class="string">'[name='</span>+error_el_name+<span class="string">']'</span>);
+                            error_el.after(error_ul);    <span class="comment">//insert error message</span>
+                            error_el
+                                .parent(<span class="string">'div'</span>)
+                                .parent(<span class="string">'div'</span>)
+                                .addClass(<span class="string">"error"</span>);     <span class="comment">//highlight</span>
+                        }
+                    });
+                }, <span class="keyword">this</span>);
+            }
+            <span class="keyword">catch</span>(err){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>if the error object has an unknown format - show it as it is on top of form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> parent_el = <span class="keyword">this</span>.$(<span class="string">'[name='</span>+<span class="keyword">this</span>.entity_name+<span class="string">']'</span>);
+                parent_el.before(<span class="string">"&lt;div class='form_error'&gt;"</span>+JSON.stringify(errors)+<span class="string">"&lt;/div&gt;"</span>);    <span class="comment">//insert error message</span>
+            }
+            
+        },        
+        
+        parse_inlines: <span class="keyword">function</span>(raw_json){
+            console.log(<span class="string">"FORM: fetching inlines"</span>);
+            <span class="keyword">var</span> all_inlines = $(<span class="string">'#inline_body tr'</span>).not(<span class="string">".form_error"</span>);    
+            raw_json[<span class="string">"inlines"</span>] = [];
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> inline_attrs = [];
+            $.each(all_inlines,<span class="keyword">function</span>(index, inl){
+                <span class="keyword">var</span> inl_obj = {};
+                <span class="keyword">var</span> ignore = <span class="literal">true</span>;
+                inl_obj.index = $(inl).attr(<span class="string">"index"</span>);
+                <span class="keyword">if</span>($(inl).attr(<span class="string">"model_id"</span>))
+                    inl_obj.id = parseInt($(inl).attr(<span class="string">"model_id"</span>));
+                $(inl).find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                    <span class="keyword">if</span>(!$(<span class="keyword">this</span>).attr(<span class="string">'name'</span>))
+                        <span class="keyword">return</span>;
+                    <span class="keyword">else</span>
+                        inline_attrs.push($(<span class="keyword">this</span>).attr(<span class="string">"name"</span>));    
+                    <span class="keyword">var</span> attr_name = $(<span class="keyword">this</span>).attr(<span class="string">"name"</span>).replace(<span class="keyword">new</span> RegExp(<span class="string">"[0-9]"</span>, <span class="string">"g"</span>), <span class="string">""</span>);
+    				<span class="keyword">switch</span>(<span class="keyword">this</span>.type) {
+    					<span class="keyword">case</span> <span class="string">'password'</span>:
+    					<span class="keyword">case</span> <span class="string">'select-multiple'</span>:
+    					<span class="keyword">case</span> <span class="string">'select-one'</span>:
+    					<span class="keyword">case</span> <span class="string">'text'</span>:
+    					<span class="keyword">case</span> <span class="string">'textarea'</span>:
+    						inl_obj[attr_name] = $(<span class="keyword">this</span>).val();
+    						<span class="keyword">break</span>;
+    					<span class="keyword">case</span> <span class="string">'checkbox'</span>:
+    					<span class="keyword">case</span> <span class="string">'radio'</span>:
+    						inl_obj[attr_name] = <span class="keyword">this</span>.checked;
+    				}
+                    <span class="keyword">if</span>(inl_obj[attr_name]!=<span class="string">""</span>)
+                        ignore = <span class="literal">false</span>;
+                });
+                <span class="keyword">if</span>(!ignore)
+                    raw_json[<span class="string">"inlines"</span>].push(inl_obj);
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>remove inline attrs from raw_json...let them be inside raw_json.inlines only</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.each(inline_attrs,<span class="keyword">function</span>(index,attr){
+                <span class="keyword">delete</span> raw_json[attr];
+            });
+            console.log(inline_attrs);
+            
+            
+        },
+        
+        parse_expanded: <span class="keyword">function</span>(raw_json){
+            console.log(<span class="string">"FORM: fetching expandeds"</span>);
+            <span class="keyword">var</span> element = <span class="keyword">this</span>.expanded;
+            <span class="keyword">var</span> entity = <span class="keyword">this</span>.element_entity_map[element];
+            <span class="keyword">var</span> desc = <span class="keyword">this</span>.foreign_entities[entity][element]
+            console.log(<span class="string">"FORM:expande desc -"</span> +JSON.stringify(desc));   
+            <span class="keyword">var</span> placeholder = desc.expanded.placeholder; 
+            <span class="keyword">var</span> all_inlines = $(<span class="string">'#'</span>+placeholder+ <span class="string">' tr'</span>);    
+            raw_json[element] = [];
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> inline_attrs = [];
+            $.each(all_inlines,<span class="keyword">function</span>(index, inl){
+                <span class="keyword">var</span> inl_obj = {};
+                inl_obj[<span class="string">"index"</span>] = $(inl).attr(<span class="string">"index"</span>);
+                <span class="keyword">var</span> inputs = $(inl).find(<span class="string">"input"</span>);
+                <span class="keyword">var</span> ignore = <span class="literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>if($(inl).attr(&quot;model_id&quot;))
+    inl_obj.id = parseInt($(inl).attr(&quot;model_id&quot;));</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                $.each(inputs,<span class="keyword">function</span>(index1, inp){
+                    inl_obj[$(inp).attr(<span class="string">"name"</span>)]= $(inp).val();
+                    <span class="keyword">if</span>($(inp).val()!=<span class="string">""</span>)
+                        ignore = <span class="literal">false</span>;
+                    <span class="keyword">if</span>(index==<span class="number">0</span>)
+                        inline_attrs.push($(inp).attr(<span class="string">"name"</span>));
+                });
+                <span class="keyword">var</span> selects = $(inl).find(<span class="string">"select"</span>);
+                $.each(selects,<span class="keyword">function</span>(index2, sel){
+                    inl_obj[$(sel).attr(<span class="string">"name"</span>)]= $(sel).val();
+                    <span class="keyword">if</span>($(sel).val()!=<span class="string">""</span>)
+                        ignore = <span class="literal">false</span>;
+                    <span class="keyword">if</span>(index==<span class="number">0</span>)
+                        inline_attrs.push($(sel).attr(<span class="string">"name"</span>));
+                });
+                <span class="keyword">if</span>(!ignore)
+                    raw_json[element].push(inl_obj);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>console.log($(inl).serializeArray());    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>remove inline attrs from raw_json...let them be inside raw_json.inlines only</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.each(inline_attrs,<span class="keyword">function</span>(index,attr){
+                <span class="keyword">delete</span> raw_json[attr];
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>console.log(inline_attrs);    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        },  
+              
+        
+        parse_bulk: <span class="keyword">function</span>(raw_json){
+            console.log(<span class="string">"FORM: fetching bulks"</span>);
+            <span class="keyword">var</span> all_inlines = $(<span class="string">'#bulk tr'</span>).not(<span class="string">".form_error"</span>);    
+            raw_json[<span class="string">"bulk"</span>] = [];
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            $.each(all_inlines,<span class="keyword">function</span>(index, inl){
+                <span class="keyword">var</span> inl_obj = {};
+                inl_obj[<span class="string">"index"</span>] = $(inl).attr(<span class="string">"index"</span>);
+                $(inl).find(<span class="string">':input'</span>).each(<span class="keyword">function</span>() {
+                    <span class="keyword">if</span>(!$(<span class="keyword">this</span>).attr(<span class="string">'name'</span>))
+                        <span class="keyword">return</span>;
+                    <span class="keyword">var</span> attr_name = $(<span class="keyword">this</span>).attr(<span class="string">"name"</span>).replace(<span class="keyword">new</span> RegExp(<span class="string">"[0-9]"</span>, <span class="string">"g"</span>), <span class="string">""</span>);
+    				<span class="keyword">switch</span>(<span class="keyword">this</span>.type) {
+    					<span class="keyword">case</span> <span class="string">'password'</span>:
+    					<span class="keyword">case</span> <span class="string">'select-multiple'</span>:
+    					<span class="keyword">case</span> <span class="string">'select-one'</span>:
+    					<span class="keyword">case</span> <span class="string">'text'</span>:
+    					<span class="keyword">case</span> <span class="string">'textarea'</span>:
+    						inl_obj[attr_name] = $(<span class="keyword">this</span>).val();
+    						<span class="keyword">break</span>;
+    					<span class="keyword">case</span> <span class="string">'checkbox'</span>:
+    					<span class="keyword">case</span> <span class="string">'radio'</span>:
+    						inl_obj[attr_name] = <span class="keyword">this</span>.checked;
+    				}
+                    <span class="keyword">if</span>(inl_obj[attr_name]!=<span class="string">""</span>)
+                        ignore = <span class="literal">false</span>;
+                });
+                <span class="keyword">if</span>(!ignore)
+                    raw_json[<span class="string">"bulk"</span>].push(inl_obj);
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>preserve the background fields - not entered through form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        extend_edit_json: <span class="keyword">function</span>(o_json){
+            o_json = $.extend(<span class="keyword">this</span>.model_json, o_json);
+            <span class="keyword">if</span>(<span class="keyword">this</span>.inline)
+            {
+                _.each(o_json.inlines, <span class="keyword">function</span>(inl, index){
+                    <span class="keyword">var</span> old_json = <span class="keyword">this</span>.inl_models_dict[inl.id];
+                    o_json.inlines[index] = $.extend(old_json, inl);
+                }, <span class="keyword">this</span>);
+            }
+            <span class="keyword">return</span> o_json;
+        },
+        
+        
+        clean_json: <span class="keyword">function</span>(form_json){
+            console.log(<span class="string">"FORM: Before cleaning json - "</span>+JSON.stringify(form_json))
+            
+            <span class="keyword">if</span>(<span class="keyword">this</span>.bulk)
+            {
+                $.each(form_json.bulk, <span class="keyword">function</span>(index, obj){
+                    clean_object(obj);
+                });
+            }
+            <span class="keyword">else</span>
+            {
+                clean_object(form_json);
+                <span class="keyword">if</span>(<span class="keyword">this</span>.inline)
+                {
+                    $.each(form_json.inlines, <span class="keyword">function</span>(index, obj){
+                        clean_object(obj);
+                    });
+                }
+            }
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">clean_object</span><span class="params">(obj)</span>
+            {</span>
+                <span class="keyword">for</span>(member <span class="keyword">in</span> obj)
+                {   
+                    <span class="keyword">if</span>(member == <span class="string">""</span>)
+                        <span class="keyword">delete</span> obj[member];
+                    <span class="keyword">else</span> <span class="keyword">if</span>(!obj[member])
+                    {
+                        obj[member] = <span class="literal">null</span>
+                        <span class="keyword">if</span>(<span class="keyword">this</span>.$(<span class="string">'[name='</span>+member+<span class="string">']'</span>).is(<span class="string">'select[multiple]'</span>))
+                        {
+                            obj[member] = [];
+                        }
+                    }
+                }    
+            }    
+
+            console.log(<span class="string">"FORM: After cleaning json - "</span>+JSON.stringify(form_json))
+            
+        },  
+        
+        include_borrowed_attributes: <span class="keyword">function</span>(o_json, fields){
+            _.each(o_json.bulk, <span class="keyword">function</span>(bulk, index){
+                _.each(fields, <span class="keyword">function</span>(field, index){
+                    bulk[field] = parseInt(<span class="keyword">this</span>.$(<span class="string">'[name='</span>+field+<span class="string">']'</span>).val());
+                }, <span class="keyword">this</span>);
+            }, <span class="keyword">this</span>);
+        },
+        
+        denormalize_json: <span class="keyword">function</span>(json){
+            <span class="keyword">var</span> dfds = [];
+            <span class="keyword">if</span>(<span class="keyword">this</span>.bulk){
+                _.each(json.bulk, <span class="keyword">function</span>(bulk, index){
+                    <span class="keyword">var</span> dfd = Denormalizer.denormalize(bulk, <span class="keyword">this</span>.bulk.foreign_fields);
+                    dfds.push(dfd);
+                }, <span class="keyword">this</span>);
+            }
+            <span class="keyword">else</span>{
+                <span class="keyword">var</span> dfd = Denormalizer.denormalize(json, <span class="keyword">this</span>.foreign_entities);
+                dfds.push(dfd);
+                <span class="keyword">if</span>(<span class="keyword">this</span>.inline){
+                    _.each(json.inlines, <span class="keyword">function</span>(inline, index){
+                        <span class="keyword">var</span> dfd = Denormalizer.denormalize(inline, <span class="keyword">this</span>.inline.foreign_entities);
+                        dfds.push(dfd);
+                    }, <span class="keyword">this</span>);
+                }
+            }
+            <span class="keyword">return</span> $.when.apply($,dfds);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>converts form into json object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        serialize_form: <span class="keyword">function</span>(){
+            <span class="keyword">var</span> json = {};
+            <span class="keyword">if</span>(<span class="keyword">this</span>.bulk)
+            {
+                <span class="keyword">this</span>.parse_bulk(json);
+                <span class="keyword">this</span>.include_borrowed_attributes(json, <span class="keyword">this</span>.bulk.borrow_fields);
+            }
+            <span class="keyword">else</span>
+            {
+                json = Backbone.Syphon.serialize(<span class="keyword">this</span>);
+                <span class="keyword">if</span>(<span class="keyword">this</span>.expanded)
+                    <span class="keyword">this</span>.parse_expanded(json);
+                <span class="keyword">if</span>(<span class="keyword">this</span>.inline)
+                    <span class="keyword">this</span>.parse_inlines(json);
+            }
+            <span class="keyword">return</span> json;
+        },
+        
+        
+        save: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>clear old errors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.show_errors(<span class="literal">null</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>set state to loading</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.set_submit_button_state(<span class="string">'loading'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>get a json object out of the form </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.final_json = <span class="keyword">this</span>.serialize_form();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>clean json to be able to send to server    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.clean_json(<span class="keyword">this</span>.final_json);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>denormalise the foreign elements in json </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.denormalize_json(<span class="keyword">this</span>.final_json)
+                .done(<span class="keyword">function</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>preserve the background fields - not entered through form:            </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">if</span>(that.edit_case)
+                        that.final_json = that.extend_edit_json(that.final_json);   
+                    <span class="comment">/*form rendered, form filled by user, save clicked, savable json prepared, 
+                    this module's work is done for now, sending event*/</span>
+                    <span class="keyword">var</span> ev_data = {
+                        context: that,
+                    };
+                    that.trigger(<span class="string">"save_clicked"</span>,ev_data);
+                })  
+                .fail(<span class="keyword">function</span>(){
+                    console.log(<span class="string">"Denormalising json failed!"</span>);
+                }); 
+        },
+
+        button2_clicked: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> ev_data = {
+                context: <span class="keyword">this</span>,
+            };
+            <span class="keyword">this</span>.trigger(<span class="string">"button2_clicked"</span>,ev_data);
+        }
+
+
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> ShowAddEditFormView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

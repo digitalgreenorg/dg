@@ -1,6 +1,6 @@
-define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offline_backend'
-
-], function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
+//A module of data layer to communicate with offline DB. Since there are no fixed entities in COCO v2(as they are defined by user in config.js), there are no predefined models. This module creates backbone models/collection on the fly and enable communication with the offline DB thru the models/collections.
+define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offline_backend'], 
+function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
     
     var offline = {
         
@@ -14,6 +14,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return new model_offline();
         },
         
+        //Creates and return a new offline backbone collection object for the given entity
         create_b_collection: function(entity_name, options){
             var model_offline = Backbone.Model.extend({
                 database: indexeddb,
@@ -28,21 +29,22 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return new collection_offline();
         },
     
-        //Saves object to offline object store. 
+        //Saves object in offline DB
         save: function(off_model, entity_name, json){
             var dfd = new $.Deferred();
             console.log("SAVING THIS IN OFFLINE DB - "+JSON.stringify(json));
-            //TODO: Do Unique validation here?
             if(!off_model)
             {
+                //create offline model
                 off_model = this.create_b_model(entity_name);
             }
             var that = this;
+            //check whether user is logged in
             this.check_login_wrapper()
                 .done(function(){
+                    //save model with the given json
                     off_model.save(json,{
                         success: function(model){
-                            //TODO: If edit case, do label changes here?
                             return dfd.resolve(off_model);
                         },
                         error: function(model,error){
@@ -50,7 +52,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             //format error object to match the format of error sent by online save
                             var err_json = {};
 							//get unique together fields
-							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); //to copy by value
+							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); 
 							var utStr = that.beautify(ut);
 							cap_entity_name = entity_name.charAt(0).toUpperCase() + entity_name.slice(1);
 							var newerr = cap_entity_name + " with this " + utStr + " already exists";
@@ -73,21 +75,20 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
 			return ut.join(", ");
 		},
         
-        /*
-        creates a offline model
-        sets the key, value
-        fetches it
-        returns fetched model
-        Must have an index on key in IDB
-        */
+        //fetches an object from Offline DB from "entity_name" table having "value" value for "key" attribute 
         fetch_object: function(entity_name, key, value){
             var dfd = new $.Deferred();
+            //create a offline model
             var off_model = this.create_b_model(entity_name);
+            // set the key, value - Must have an index on key in IDB
             off_model.set(key, value);
+            //check whether user is logged in
             this.check_login_wrapper()
                 .done(function(){
+                    // fetch the model - from offline DB
                     off_model.fetch({
                         success: function(off_model){
+                            // return fetched model
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
@@ -98,13 +99,18 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return dfd;
         },
         
+        //fetches whole "entity_name" table from offline DB as backbone collection 
         fetch_collection: function(entity_name){
             var dfd = new $.Deferred();
+            //create backbone collection of type entity_name
             var off_coll = this.create_b_collection(entity_name);
+            //check whether user is logged in 
             this.check_login_wrapper()
                 .done(function(){
+                    //fetch collection
                     off_coll.fetch({
                         success: function(off_coll){
+                            //return fetched collection
                             dfd.resolve(off_coll);
                         },
                         error: function(error){
@@ -115,18 +121,24 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return dfd;
         },
         
+        //deletes an object from offline db - specified in either off_model or as (entity_name,id)
         delete_object: function(off_model, entity_name, id){
             var dfd = new $.Deferred();
             if(!off_model)
-            {
+            {   
+                //if backbone model for the object to be deleted was not provided - create one
                 off_model = this.create_b_model(entity_name);
             }
             if(id)
             {
+                //set id on model to delete
                 off_model.set("id",id);
             }
+            
+            //check whether user is logged in
             this.check_login_wrapper()
                 .done(function(){
+                    //delete the model 
                     off_model.destroy({
                         success: function(model){
                             return dfd.resolve(model);
@@ -140,6 +152,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return dfd;
         },
         
+        //wrapper to wrap db requests with - to check whether user is logged in or not before accessing DB
         check_login_wrapper: function(){
             var dfd = new $.Deferred();
             console.log("Offline Backend : Authenticating Request");
@@ -149,11 +162,13 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                 })
                 .fail(function(){
                     dfd.reject();
+                    //navigate to login url if not logged in
                     window.Router.navigate("login",{trigger:true});
                 });  
             return dfd;    
         },
         
+        //completely deletes the offline database and refreshes the page 
         reset_database: function(){
             var request = indexedDB.deleteDatabase("offline-database");
             request.onerror = function(event) {
@@ -167,6 +182,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             }
             request.onblocked = function(event) {
                 console.log("RESET DATABASE:Blocked!");
+                //reloading when blocked might be causing the unproper deletion of db 
                 location.reload();
             };
         }    

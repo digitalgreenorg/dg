@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>convert_namespace.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>convert_namespace.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="string">'jquery'</span>, <span class="string">'configs'</span>, <span class="string">'backbone'</span>, <span class="string">'indexeddb_backbone_config'</span>
+
+], <span class="keyword">function</span>($, configs, pa, indexeddb) {
+    <span class="keyword">var</span> convert_namespace = {
+        which_to_which: <span class="string">"offlinetoonline"</span>,
+        conv_dict : {
+            <span class="string">"onlinetooffline"</span> : {
+                replace_this : <span class="string">"online_id"</span>,
+                replace_with : <span class="string">"id"</span>
+            },
+            <span class="string">"offlinetoonline"</span> : {
+                replace_this : <span class="string">"id"</span>,
+                replace_with : <span class="string">"online_id"</span>
+            }
+        },
+
+        get_id_field : <span class="keyword">function</span>(entity, element, f_entities){
+            <span class="keyword">return</span> f_entities[entity][element].id_field||<span class="string">"id"</span>;
+        },
+        
+        convert : <span class="keyword">function</span>(json, f_entities, which_to_which) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">if</span>(which_to_which)
+                <span class="keyword">this</span>.which_to_which = which_to_which;
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">var</span> conv_json = $.extend(<span class="literal">true</span>, <span class="literal">null</span>, json); <span class="comment">// making a deep copy of received json...this copy would be altered</span>
+            console.log(<span class="string">"FORMCONTROLLER:convert_namespace: json before converting"</span> + JSON.stringify(json));
+            <span class="keyword">this</span>.field_dfds = [];
+            <span class="keyword">this</span>.iterate_foreign_fields(conv_json, f_entities);
+            
+            <span class="keyword">var</span> object_jsons = <span class="literal">null</span>;
+            <span class="keyword">switch</span>(<span class="keyword">this</span>.which_to_which){
+                <span class="keyword">case</span> <span class="string">"onlinetooffline"</span>: 
+                    object_jsons = {
+                        off_json : conv_json,
+                        on_json : json
+                    }
+                    <span class="keyword">break</span>;
+                <span class="keyword">default</span>:
+                    object_jsons = {
+                        off_json : json,
+                        on_json : conv_json
+                    }
+            }
+            <span class="keyword">if</span>(<span class="keyword">this</span>.field_dfds.length)
+            {
+                $.when.apply($, <span class="keyword">this</span>.field_dfds)
+                    .done(<span class="keyword">function</span>(){
+                        <span class="keyword">return</span> dfd.resolve(object_jsons);
+                    })
+                    .fail(<span class="keyword">function</span>(){
+                        <span class="keyword">return</span> dfd.reject();
+                    });
+            }
+            <span class="keyword">else</span>
+            {
+                console.log(<span class="string">"FORMCONTROLLER:convert_namespace: Nothing to convert."</span>);
+                <span class="keyword">return</span> dfd.resolve(object_jsons);
+            }
+            
+            <span class="keyword">return</span> dfd.promise();
+        },
+        
+        iterate_foreign_fields: <span class="keyword">function</span>(json, f_entities){
+            <span class="keyword">for</span> (<span class="keyword">var</span> entity <span class="keyword">in</span> f_entities) {
+                <span class="keyword">for</span>(<span class="keyword">var</span> element <span class="keyword">in</span> f_entities[entity])
+                {
+                    <span class="keyword">if</span> (!(json[element]))
+                        <span class="keyword">continue</span>;
+                    <span class="keyword">var</span> id_field = <span class="keyword">this</span>.get_id_field(entity, element, f_entities);
+                    <span class="keyword">var</span> field_desc = {
+                        entity_name : entity, 
+                        id_attribute : id_field
+                    };
+                    
+                    <span class="keyword">if</span>(json[element] <span class="keyword">instanceof</span> Array)   <span class="comment">//multi-select dropdown</span>
+                        _.each(json[element],<span class="keyword">function</span>(object, index){
+                            <span class="keyword">this</span>.field_dfds.push(<span class="keyword">this</span>.convert_object(object, field_desc));
+                        }, <span class="keyword">this</span>);
+                    <span class="keyword">else</span>   <span class="comment">//single-select dropdown</span>
+                        <span class="keyword">this</span>.field_dfds.push(<span class="keyword">this</span>.convert_object(json[element],field_desc));
+                
+                    <span class="keyword">if</span>(f_entities[entity][element].expanded) <span class="comment">//expandeds</span>
+                        <span class="keyword">if</span>(f_entities[entity][element].expanded.foreign_entities) <span class="comment">//contains foreign fields</span>
+                            _.each(json[element], <span class="keyword">function</span>(object, index){
+                                <span class="keyword">this</span>.iterate_foreign_fields(object, f_entities[entity][element].expanded.foreign_entities);
+                            }, <span class="keyword">this</span>);
+                }
+            }
+        },
+        
+        convert_object: <span class="keyword">function</span>(obj, field_desc){
+            console.log(<span class="string">"ConvertNamespace: converting object"</span>,JSON.stringify(obj), JSON.stringify(field_desc));
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">if</span>(!obj[field_desc.id_attribute])
+                <span class="keyword">return</span> dfd.resolve();
+            <span class="keyword">var</span> generic_model_offline = Backbone.Model.extend({
+                database: indexeddb,
+                storeName: field_desc.entity_name,
+            });
+            <span class="keyword">var</span> f_model = <span class="keyword">new</span> generic_model_offline();
+            f_model.set(<span class="keyword">this</span>.conv_dict[<span class="keyword">this</span>.which_to_which].replace_this, parseInt(obj[field_desc.id_attribute]));
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            f_model.fetch({
+                success: <span class="keyword">function</span>(model) {
+                    obj[field_desc.id_attribute] = model.get(that.conv_dict[that.which_to_which].replace_with); 
+                    <span class="keyword">return</span> dfd.resolve();
+                },
+                error: <span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>TODO: OOPS! What should be done now????</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    alert(<span class="string">"unexpected error. check console log "</span>+error);
+                    <span class="keyword">return</span> dfd.reject(error);
+                }
+            });
+            <span class="keyword">return</span> dfd.promise();
+        }    
+    
+    }   
+    
+    
+    <span class="keyword">return</span> convert_namespace;
+
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

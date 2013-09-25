@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>form_controller.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>form_controller.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([
+    <span class="string">'jquery'</span>, 
+    <span class="string">'underscore'</span>, 
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'views/notification'</span>, 
+    <span class="string">'indexeddb_backbone_config'</span>, 
+    <span class="string">'configs'</span>, 
+    <span class="string">'views/form'</span>, 
+    <span class="string">'collections/upload_collection'</span>, 
+    <span class="string">'convert_namespace'</span>, 
+    <span class="string">'offline_utils'</span>, 
+    <span class="string">'online_utils'</span>,
+    <span class="string">'indexeddb-backbone'</span>
+    ], <span class="keyword">function</span>(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>FormController: Brings up the Add/Edit form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="comment">/*
+    If we are saving offline - we set the json from the form, (we denormalize it), save it in the model and save the model in the upload queue.
+    If we are saving online - we set the json from the form, (we denormalize it), we convert foreign keys ids to the online namespace, save the offline model, and then save it on server.
+    If server save succeeds, then we set the online_id in the offline model.
+    */</span>
+    
+    
+    <span class="keyword">var</span> FormControllerView = Backbone.Layout.extend({
+
+        initialize: <span class="keyword">function</span>(params) {
+            console.log(<span class="string">"FORMCONTROLLER: initializing a new FormControllerView"</span>);
+            <span class="keyword">this</span>.params = params;
+            _.bindAll(<span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>this.render();</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        },
+        template: <span class="string">"&lt;div&gt;&lt;div id = 'form'&gt;&lt;/div&gt;&lt;/div&gt;"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>setting up the form view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        beforeRender: <span class="keyword">function</span>() {
+            console.log(<span class="keyword">this</span>.params);
+            <span class="keyword">this</span>.params = $.extend(<span class="keyword">this</span>.params,{
+                serialize: {
+                    button1: <span class="string">"Save and Add Another"</span>,
+                    button2: <span class="literal">null</span>
+                }
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h1>form is the id of the element inside template where the new view will be inserted.</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> form_v = <span class="keyword">new</span> Form(<span class="keyword">this</span>.params);
+            <span class="keyword">this</span>.setView(<span class="string">"#form"</span>, form_v);
+            <span class="keyword">this</span>.listenTo(form_v, <span class="string">'save_clicked'</span>, <span class="keyword">this</span>.on_save);
+            <span class="keyword">this</span>.listenTo(form_v, <span class="string">'button2_clicked'</span>, <span class="keyword">this</span>.on_button2);
+        },
+        
+        <span class="comment">/*
+        Called when form view sends save_clicked event. 
+        Identifies type of final_json and saves it
+        After Save is finished calls an after_form_save function
+        */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>form.inline, bulk, final_json, foreign_fields, entity_name, </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        on_save: <span class="keyword">function</span>(e) {
+            <span class="keyword">this</span>.form = e.context;  <span class="comment">//event contains the form view object itself</span>
+            console.log(<span class="string">"FORMCONTROLLER: cleaned, denormalised json from form.js-"</span>+JSON.stringify(<span class="keyword">this</span>.form.final_json));
+            <span class="keyword">var</span> that = <span class="keyword">this</span>; 
+            <span class="keyword">var</span> save_complete_dfds = [];    <span class="comment">//stores dfds of all objects bieng saved in this form</span>
+            
+            <span class="keyword">if</span>(<span class="keyword">this</span>.form.bulk)
+            {
+                <span class="comment">/*Save each object in bulk form individually*/</span>
+                $.each(<span class="keyword">this</span>.form.final_json.bulk, <span class="keyword">function</span>(ind, obj){
+                    <span class="keyword">var</span> bulk_index = obj.index;
+                    <span class="keyword">delete</span> obj.index;
+                    <span class="keyword">var</span> save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
+                    save_object_dfd
+                        .fail(<span class="keyword">function</span>(error){
+                            that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
+                        });
+                    save_complete_dfds.push(save_object_dfd);
+                });
+            }
+            <span class="keyword">else</span>    <span class="comment">//normal or inlines</span>
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>separate inlines from final json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span>(<span class="keyword">this</span>.form.inline)
+                {
+                    console.log(<span class="string">"FORMCONTROLLER: separating inlines from final json"</span>);
+                    <span class="keyword">this</span>.inline_models = <span class="keyword">this</span>.form.final_json.inlines;
+                    <span class="keyword">delete</span> <span class="keyword">this</span>.form.final_json.inlines;
+                    <span class="keyword">var</span> inlines_dfd = <span class="keyword">new</span> $.Deferred();
+                    save_complete_dfds.push(inlines_dfd);
+                }
+                <span class="keyword">var</span> save_object_dfd = <span class="keyword">this</span>.save_object(<span class="keyword">this</span>.form.final_json, <span class="keyword">this</span>.form.foreign_entities, <span class="keyword">this</span>.form.entity_name);
+                save_object_dfd
+                    .done(<span class="keyword">function</span>(off_json){
+                        <span class="keyword">if</span>(that.form.inline)
+                            that.save_inlines(that.inline_models, off_json, that.form.inline)
+                                .done(<span class="keyword">function</span>(all_inlines){
+                                    console.log(<span class="string">"ALL INLINED SAVED"</span>);
+                                    inlines_dfd.resolve(all_inlines);
+                                })
+                                .fail(<span class="keyword">function</span>(){
+                                    console.log(<span class="string">"FAILED AT INLINES SAVE"</span>);
+                                    show_inline_error();
+                                    inlines_dfd.reject();
+                                });
+                    })
+                    .fail(<span class="keyword">function</span>(error){
+                        that.form.show_errors(error);
+                    });
+                save_complete_dfds.push(save_object_dfd);                                
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>When all objects in form are saved...</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.when.apply(<span class="literal">null</span>, save_complete_dfds)
+                .done(<span class="keyword">function</span>(){
+                    console.log(<span class="string">"Everything saved"</span>);
+                    that.after_form_save(that.form.entity_name);
+                })
+                .fail(<span class="keyword">function</span>(){
+                    <span class="keyword">if</span>(that.form.bulk)
+                        show_bulk_error();   
+                });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>shown if any inline could not be saved</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="function"><span class="keyword">function</span> <span class="title">show_inline_error</span><span class="params">()</span>{</span>
+                <span class="keyword">var</span> err = {};
+                err[that.form.entity_name] = {
+                    __all__: [<span class="string">"Some "</span>+that.form.inline.entity+<span class="string">" (in red below) could not be saved. To correct errors and try saving them again - go to list page and edit this "</span>+that.form.entity_name]
+                };
+                that.form.show_errors(err, <span class="literal">true</span>);
+            };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>shown if any bulk could not be saved</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="function"><span class="keyword">function</span> <span class="title">show_bulk_error</span><span class="params">()</span>{</span>
+                <span class="keyword">var</span> err = {};
+                err[that.form.entity_name] = {
+                    __all__: [<span class="string">"Some "</span>+that.form.entity_name+<span class="string">" (in red below) could not be saved. To correct errors and try saving them again - open a new add form"</span>]
+                };
+                that.form.show_errors(err, <span class="literal">true</span>);   
+            };
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>converts the error for an inline/bulk into a format which makes it show up at its own row</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        convert_to_row_error: <span class="keyword">function</span>(error, row_entity_name, row_index){
+            error = $.parseJSON(error);
+            error[<span class="string">"row"</span>+row_index] = error[row_entity_name];
+            <span class="keyword">delete</span> error[row_entity_name];
+            <span class="keyword">return</span> error;
+        },
+        
+        save_inlines: <span class="keyword">function</span>(inlines, parent_off_json, inline_config){
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.complete_inlines(inlines, parent_off_json, inline_config); 
+            iterate_inlines();
+            <span class="keyword">return</span> dfd;
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">iterate_inlines</span><span class="params">()</span>{</span>
+                <span class="keyword">if</span>(!inlines.length)
+                    <span class="keyword">return</span> dfd.resolve();
+                save_inline(inlines.shift())    
+                    .done(<span class="keyword">function</span>(){
+                        iterate_inlines();
+                    })
+                    .fail(<span class="keyword">function</span>(){
+                        dfd.reject();
+                    });
+            };
+            <span class="function"><span class="keyword">function</span> <span class="title">save_inline</span><span class="params">(inl)</span>{</span>
+                <span class="keyword">var</span> inl_dfd = $.Deferred();
+                <span class="keyword">var</span> inl_index = inl.index;
+                <span class="keyword">delete</span> inl.index;
+                that.save_object(inl, inline_config.foreign_entities, inline_config.entity)
+                    .fail(<span class="keyword">function</span>(error){
+                        that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                        <span class="keyword">return</span> inl_dfd.reject();
+                    })
+                    .done(<span class="keyword">function</span>(){
+                       <span class="keyword">return</span> inl_dfd.resolve(); 
+                    });
+                <span class="keyword">return</span> inl_dfd.promise();
+            };
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>put in the borrowed attributes and the joining attribute in inlines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        complete_inlines: <span class="keyword">function</span>(inlines, parent_off_json, inline_config){
+            <span class="keyword">var</span> host_attr_json = {};
+            host_attr_json[inline_config.joining_attribute.inline_attribute]={}
+            _.each(inline_config.joining_attribute.host_attribute, <span class="keyword">function</span>(attr, index){
+               host_attr_json[inline_config.joining_attribute.inline_attribute][attr] = parent_off_json[attr];
+            }, <span class="keyword">this</span>);
+            
+            <span class="keyword">var</span> borr_json = {}
+            $.each(inline_config.borrow_attributes, <span class="keyword">function</span>(index,b_attr){
+                borr_json[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
+            });
+            
+            _.each(inlines, <span class="keyword">function</span>(inl, index){
+                console.log(<span class="string">"inl before extension - "</span>+JSON.stringify(inl));
+                $.extend(<span class="literal">true</span>, inl, host_attr_json);
+                $.extend(<span class="literal">true</span>, inl, borr_json);
+                console.log(<span class="string">"inl after extension - "</span>+JSON.stringify(inl));
+            });
+        },
+        
+        save_object: <span class="keyword">function</span>(json, foreign_entities, entity_name){
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that =  <span class="keyword">this</span>;
+            <span class="keyword">if</span>(<span class="keyword">this</span>.is_uploadqueue_empty() &amp;&amp; <span class="keyword">this</span>.is_internet_connected())
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Online mode</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                ConvertNamespace.convert(json, foreign_entities, <span class="string">"offlinetoonline"</span>)
+                    .done(<span class="keyword">function</span>(on_off_jsons){
+                        that.save_when_online(entity_name, on_off_jsons)
+                            .done(<span class="keyword">function</span>(off_json){
+                                call_after_save(off_json)
+                                    .done(<span class="keyword">function</span>(){
+                                        show_suc_notif();
+                                        dfd.resolve(off_json);
+                                    })
+                                    .fail(<span class="keyword">function</span>(error){
+                                        alert(<span class="string">"afterSave failed for entity - "</span>+entity_name+<span class="string">" - "</span>+error);
+                                    });
+                            })
+                            .fail(<span class="keyword">function</span>(error){
+                                show_err_notif();
+                                dfd.reject(error);
+                            });                            
+                    })
+                    .fail(<span class="keyword">function</span>(error){
+                        show_err_notif();
+                        <span class="keyword">return</span> dfd.reject(error);
+                    });
+            }
+            <span class="keyword">else</span>
+            {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Offline mode</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.save_when_offline(entity_name, json)
+                    .done(<span class="keyword">function</span>(off_json){
+                        call_after_save(off_json)
+                            .done(<span class="keyword">function</span>(){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
+                            })
+                            .fail(<span class="keyword">function</span>(error){
+                                alert(<span class="string">"afterSave failed for entity - "</span>+entity_name+<span class="string">" - "</span>+error);
+                            });
+                    })
+                    .fail(<span class="keyword">function</span>(error){
+                        show_err_notif();
+                        <span class="keyword">return</span> dfd.reject(error);
+                    });
+            }
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">call_after_save</span><span class="params">(saved_off_json)</span>{</span>
+                <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+                <span class="keyword">var</span> afterSave = configs[entity_name].afterSave;
+                <span class="keyword">if</span>(afterSave)
+                    afterSave(saved_off_json, Offline)
+                        .done(<span class="keyword">function</span>(){
+                            dfd.resolve();
+                        })
+                        .fail(<span class="keyword">function</span>(error){
+                            dfd.reject(error);
+                        });
+                <span class="keyword">else</span> dfd.resolve();    
+                <span class="keyword">return</span> dfd.promise();    
+            };
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">show_suc_notif</span><span class="params">()</span>{</span>
+                notifs_view.add_alert({
+                    notif_type: <span class="string">"success"</span>,
+                    message: <span class="string">"Saved "</span>+entity_name
+                });
+            };
+            
+            <span class="function"><span class="keyword">function</span> <span class="title">show_err_notif</span><span class="params">()</span>{</span>
+                notifs_view.add_alert({
+                    notif_type: <span class="string">"error"</span>,
+                    message: <span class="string">"Error saving "</span>+entity_name
+                });    
+            };
+            
+            <span class="keyword">return</span> dfd.promise();
+        },
+                
+        save_when_offline: <span class="keyword">function</span>(entity_name, off_json){
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> action, that = <span class="keyword">this</span>;
+            <span class="keyword">if</span>(off_json.id)
+                action = <span class="string">"E"</span>
+            <span class="keyword">else</span>
+                action = <span class="string">"A"</span>
+            
+            Offline.save(<span class="literal">null</span>, entity_name, off_json)
+                .done(<span class="keyword">function</span>(off_m){
+                    console.log(<span class="string">"SAVED IN OFFLINE - "</span>+JSON.stringify(off_m.toJSON()));
+                    upload_collection.create({
+                            data: off_m.toJSON(),
+                            action: action,   
+                            entity_name: entity_name        
+                        },
+                        {
+                            success:<span class="keyword">function</span>(u_model){
+                                console.log(<span class="string">"FORMCNTROLLER: model added to uploadqueue - "</span>+JSON.stringify(u_model.toJSON()));
+                                <span class="keyword">return</span> dfd.resolve(off_m.toJSON());    
+                            },
+                            error: <span class="keyword">function</span>(error){
+                                alert(<span class="string">"Unexepected Error- error adding model to uploadqueue"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>TODO: should delete the model from offline db as well?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                <span class="keyword">return</span> dfd.reject(error);
+                            }    
+                    });
+                })
+                .fail(<span class="keyword">function</span>(error){
+                    <span class="keyword">return</span> dfd.reject(error);
+                });
+                
+            <span class="keyword">return</span> dfd.promise();    
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>save onlines then offline</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        save_when_online: <span class="keyword">function</span>(entity_name, on_off_jsons){ 
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> on_json = on_off_jsons.on_json;
+            <span class="keyword">var</span> off_json = on_off_jsons.off_json
+            console.log(<span class="string">"FORMCONTROLLER: Got this json to save online - "</span>+JSON.stringify(on_json));
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>if edit case, substitute id with online id TODO: move it to convertnamespace?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span>(off_json.id)
+            {
+                on_json.id = parseInt(off_json.online_id); 
+                <span class="keyword">delete</span> on_json.online_id;
+            }
+            Online.save(<span class="literal">null</span>, entity_name, on_json)
+                .done(<span class="keyword">function</span>(on_m){
+                    console.log(<span class="string">"SAVED IN ONLINE - "</span>+JSON.stringify(on_m.toJSON()));
+                    off_json.online_id  = parseInt(on_m.get(<span class="string">"id"</span>));
+                    Offline.save(<span class="literal">null</span>, entity_name, off_json)
+                        .done(<span class="keyword">function</span>(off_m){
+                            console.log(<span class="string">"SAVED IN OFFLINE - "</span>+JSON.stringify(off_m.toJSON()));
+                            <span class="keyword">return</span> dfd.resolve(off_m.toJSON());    
+                        })
+                        .fail(<span class="keyword">function</span>(error){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>TODO: what to do abt the model just saved on server? </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>							<span class="keyword">return</span> dfd.reject(error);
+                        });
+                })
+                .fail(<span class="keyword">function</span>(xhr){
+                    <span class="keyword">return</span> dfd.reject(xhr.responseText);
+				});
+			<span class="keyword">return</span> dfd.promise();	 
+        },        
+        
+        is_uploadqueue_empty : <span class="keyword">function</span>(){
+            console.log(<span class="string">"FORMCONTROLLER: length of upload_collection - "</span>+upload_collection.length);
+            console.log(upload_collection);
+                
+            <span class="keyword">return</span> upload_collection.length&lt;=<span class="number">0</span>;    
+        },
+        
+        is_internet_connected : <span class="keyword">function</span>(){
+            <span class="keyword">return</span> navigator.onLine;
+        },       
+
+        on_button2: <span class="keyword">function</span>(e) {
+            console.log(<span class="string">"FORMCONTROLLER: Button 2 clicked on form"</span>);
+        },
+        
+        after_form_save: <span class="keyword">function</span>(entity_name){
+            window.Router.navigate(entity_name+<span class="string">'/add'</span>);
+            window.Router.add(entity_name); <span class="comment">//since may be already on the add page, therefore have to call this explicitly</span>
+        }
+
+
+
+
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> FormControllerView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
