@@ -8,7 +8,7 @@ from social_website.models import Collection, Partner, PersonVideoRecord, Video
 stats = PersonVideoRecord.objects.all().values('videoID').annotate(views = Sum('views'), likes = Sum('like'), adoptions = Sum('adopted'))
 for row in stats:
     try:
-        video = Video.objects.get(uid = row['videoID'])
+        video = Video.objects.get(coco_id = row['videoID'])
         video.offlineLikes = row['like']
         video.offlineViwes = row['views']
         video.adoptions = row['adoptions']
