@@ -9,7 +9,7 @@ stats = PersonVideoRecord.objects.all().values('videoID').annotate(views = Sum('
 for row in stats:
     try:
         video = Video.objects.get(coco_id = row['videoID'])
-        video.offlineLikes = row['like']
+        video.offlineLikes = row['likes']
         video.offlineViwes = row['views']
         video.adoptions = row['adoptions']
         video.save()
