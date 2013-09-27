@@ -10,7 +10,7 @@ for row in stats:
     try:
         video = Video.objects.get(coco_id = row['videoID'])
         video.offlineLikes = row['likes']
-        video.offlineViwes = row['views']
+        video.offlineViews = row['views']
         video.adoptions = row['adoptions']
         video.save()
     except Video.DoesNotExist:
