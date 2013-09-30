@@ -1,8 +1,11 @@
 from django.http import HttpResponse
-from models import XMLSubmission
+from django.views.decorators.csrf import csrf_exempt
 from xml.dom import minidom
+
+from models import XMLSubmission
 from scripts import save_mobile_data
 
+@csrf_exempt
 def save_submission(request):
     submission = XMLSubmission()
     submission.xml_data = request.raw_post_data
