@@ -64,6 +64,11 @@
               </a>
             
               
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
               <a class="source" href="user_model.html">
                 user_model.js
               </a>
@@ -81,6 +86,11 @@
               
               <a class="source" href="router.html">
                 router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
               </a>
             
               
@@ -163,7 +173,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>The view for login. Its responsibiltiy is to show the login form to user and uses auth.js module to do the actual authentication.</p>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>define([
@@ -186,8 +197,22 @@
       initialize: <span class="keyword">function</span>(){
           console.log(<span class="string">"Initializing login view"</span>);
           _(<span class="keyword">this</span>).bindAll(<span class="string">'render'</span>);
-          <span class="keyword">var</span> that = <span class="keyword">this</span>;
-          User.fetch({
+          <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>fetch the user from offline db,if one exists, to show it in the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          User.fetch({
               success: <span class="keyword">function</span>(model){
                   console.log(<span class="string">"USERMODEL : successfully fetched"</span>);
                   that.render();
@@ -200,8 +225,22 @@
           
       },
       
-      serialize: <span class="keyword">function</span>(){
-          <span class="keyword">return</span> User.toJSON();
+      serialize: <span class="keyword">function</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>send the user info to the template</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">return</span> User.toJSON();
       },
       
       scrap_view: <span class="keyword">function</span>(){
@@ -210,8 +249,22 @@
       },
       
       afterRender: <span class="keyword">function</span>(){
-          console.log(<span class="string">"rendered login view"</span>);
-          <span class="keyword">this</span>.$(<span class="string">'#login_modal'</span>).modal({
+          console.log(<span class="string">"rendered login view"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>render the modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">this</span>.$(<span class="string">'#login_modal'</span>).modal({
               keyboard: <span class="literal">false</span>,
               backdrop: <span class="string">"static"</span>,
           });
@@ -221,11 +274,11 @@
         </li>
         
         
-        <li id="section-2">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>fetches u,p from dom  and asks auth module to login</p>
 
@@ -237,29 +290,112 @@
           <span class="keyword">this</span>.set_login_button_state(<span class="string">'loading'</span>);
           <span class="keyword">var</span> username = <span class="keyword">this</span>.$(<span class="string">'#username'</span>).val();
           <span class="keyword">var</span> password = <span class="keyword">this</span>.$(<span class="string">'#password'</span>).val();
-          <span class="keyword">var</span> that = <span class="keyword">this</span>;
-          Auth.login(username, password)
-              .done(<span class="keyword">function</span>(){
-                  that.scrap_view();
+          <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>use the auth module to authenticate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          Auth.login(username, password)
+              .done(<span class="keyword">function</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>login successfull - route to the home view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                  that.scrap_view();
                   window.Router.navigate(<span class="string">""</span>, {
                       trigger:<span class="literal">true</span>
                   });
               })
-              .fail(<span class="keyword">function</span>(error){
-			      $(<span class="string">"#password"</span>).val(<span class="string">''</span>);
-				  that.$(<span class="string">'#error_msg'</span>).html(error);
+              .fail(<span class="keyword">function</span>(error){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>authentication failed
+clear the password</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			      $(<span class="string">"#password"</span>).val(<span class="string">''</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>show the error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>				  that.$(<span class="string">'#error_msg'</span>).html(error);
                   that.set_login_button_state(<span class="string">'reset'</span>);
               });
-      },
-      
-      set_login_button_state: <span class="keyword">function</span>(state){
+      },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>set state of login button - disable while authentication request is under process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      set_login_button_state: <span class="keyword">function</span>(state){
           <span class="keyword">if</span>(state==<span class="string">"disabled"</span>)
               <span class="keyword">this</span>.$(<span class="string">"#login_button"</span>).attr(<span class="string">"disabled"</span>,<span class="literal">true</span>);    
           <span class="keyword">else</span>
               <span class="keyword">this</span>.$(<span class="string">"#login_button"</span>).button(state);    
-      },
-	  
-	  change_user: <span class="keyword">function</span>(){
+      },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>to login with different user - clear the offline db of existing user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	  change_user: <span class="keyword">function</span>(){
 		<span class="keyword">var</span> val = confirm(<span class="string">"Your current database will be deleted and a new database will be downloaded"</span>);
 		<span class="keyword">if</span> (val==<span class="literal">true</span>){
 			Offline.reset_database();
@@ -271,11 +407,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Our module now returns our view</p>
 

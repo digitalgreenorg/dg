@@ -64,6 +64,11 @@
               </a>
             
               
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
               <a class="source" href="user_model.html">
                 user_model.js
               </a>
@@ -81,6 +86,11 @@
               
               <a class="source" href="router.html">
                 router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
               </a>
             
               
@@ -163,40 +173,23 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>The client agent to communicate with backends to process authentication requests
+Exports an interface providng 3 methods - login, logout, check_login - for login view to use
+Based on internet-connectivity, it runs the authentication requests against the - server and the offline backend</p>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>define([
-    <span class="string">'models/user_model'</span>,  
+    <span class="string">'models/user_model'</span>,
     <span class="string">'auth_offline_backend'</span>,
     <span class="string">'configs'</span>,
     <span class="string">'offline_utils'</span>,
     <span class="string">'jquery_cookie'</span>
-  ], <span class="keyword">function</span>(User, OfflineAuthBackend, all_configs, Offline){
-      
-  <span class="keyword">var</span> internet_connected = <span class="keyword">function</span>(){
-      <span class="keyword">return</span> navigator.onLine;
-  }
-        
-  <span class="keyword">var</span> check_login = <span class="keyword">function</span>(){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred()
-      console.log(<span class="string">"checking login"</span>);
-      <span class="keyword">if</span>(check_online_login())
-      {
-          check_offline_login()
-              .done(<span class="keyword">function</span>(){
-                  dfd.resolve();
-              })
-              .fail(<span class="keyword">function</span>(error){
-                  dfd.reject(error);
-              });
-      }
-      <span class="keyword">else</span>
-      {
-          dfd.reject(<span class="string">"Not logged in on server"</span>);
-      }
-      <span class="keyword">return</span> dfd.promise();
-  }</pre></div></div>
+], <span class="keyword">function</span>(User, OfflineAuthBackend, all_configs, Offline) {
+
+    <span class="keyword">var</span> internet_connected = <span class="keyword">function</span>() {
+        <span class="keyword">return</span> navigator.onLine;
+    }</pre></div></div>
             
         </li>
         
@@ -207,15 +200,26 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>ideally shd have been exacty same as the server uses. But approximating it to avoid network request.</p>
+              <p>checks whether the user is logged in or not in both backends- based on internet connectivity </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> check_online_login = <span class="keyword">function</span>(){
-      <span class="keyword">if</span>(!internet_connected||$.cookie(<span class="string">'sessionid'</span>))
-          <span class="keyword">return</span> <span class="literal">true</span>;
-      <span class="keyword">return</span> <span class="literal">false</span>;
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> check_login = <span class="keyword">function</span>() {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred()
+        console.log(<span class="string">"checking login"</span>);
+        <span class="keyword">if</span> (check_online_login()) {
+            check_offline_login()
+                .done(<span class="keyword">function</span>() {
+                    dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    dfd.reject(error);
+                });
+        } <span class="keyword">else</span> {
+            dfd.reject(<span class="string">"Not logged in on server"</span>);
+        }
+        <span class="keyword">return</span> dfd.promise();
+    }</pre></div></div>
             
         </li>
         
@@ -226,37 +230,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>is exactly same as the offline backend uses. (Since offline backend auth is custom written by us)</p>
+              <p>ideally shd have been exacty same as the server uses. But approximating it to avoid network request.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> check_offline_login = <span class="keyword">function</span>(){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      User.fetch({
-          success: <span class="keyword">function</span>(){
-              <span class="keyword">if</span>(User.get(<span class="string">"loggedin"</span>))
-                  <span class="keyword">return</span> dfd.resolve();
-              <span class="keyword">else</span>
-                  <span class="keyword">return</span> dfd.reject(<span class="string">"User is currently logged out. (Offline Backend)"</span>);
-          },
-          error: <span class="keyword">function</span>(){
-               <span class="keyword">return</span> dfd.reject(<span class="string">"User couldn't be fetched from offline db"</span>);
-          }
-      });
-      <span class="keyword">return</span> dfd;
-  }
-  
-  <span class="keyword">var</span> logout = <span class="keyword">function</span>(){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      <span class="keyword">var</span> that = <span class="keyword">this</span>;
-      online_logout()
-          .always(<span class="keyword">function</span>(){
-              offline_logout()
-                  .always(<span class="keyword">function</span>(){
-                      dfd.resolve();
-                  })
-          });
-      <span class="keyword">return</span> dfd;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> check_online_login = <span class="keyword">function</span>() {
+        <span class="keyword">if</span> (!internet_connected || $.cookie(<span class="string">'sessionid'</span>))
+            <span class="keyword">return</span> <span class="literal">true</span>;
+        <span class="keyword">return</span> <span class="literal">false</span>;
+    }</pre></div></div>
             
         </li>
         
@@ -267,98 +249,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>this.save_login_state_in_offline(User.get(&quot;username&quot;), User.get(&quot;password&quot;), false);</p>
+              <p>is exactly same as the offline backend uses. (Since offline backend auth is custom written by us)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  }
-  
-  <span class="keyword">var</span> online_logout = <span class="keyword">function</span>(){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-
-      <span class="keyword">if</span>(!internet_connected())
-          dfd.resolve();
-          
-      $.post(<span class="string">"/coco/logout/"</span>)
-          .done(<span class="keyword">function</span>(resp){
-              <span class="keyword">return</span> dfd.resolve();
-          })
-          .fail(<span class="keyword">function</span>(resp){
-              <span class="keyword">return</span> dfd.reject(resp);
-          });
-
-      <span class="keyword">return</span> dfd.promise();      
-  }
-  
-  <span class="keyword">var</span> offline_logout = <span class="keyword">function</span>(){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      OfflineAuthBackend.logout()
-          .done(<span class="keyword">function</span>(){
-              dfd.resolve();
-          })
-          .fail(<span class="keyword">function</span>(){
-              dfd.reject();
-          });
-      <span class="keyword">return</span> dfd;
-  }
-  
-  <span class="keyword">var</span> login = <span class="keyword">function</span>(username, password){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      console.log(<span class="string">"Attemting login"</span>);
-      <span class="keyword">if</span>(internet_connected())
-      {
-          online_login(username, password)
-              .fail(<span class="keyword">function</span>(error){
-                  console.log(<span class="string">"Online login failed - "</span>+error);
-                  dfd.reject(error);
-              })
-              .done(<span class="keyword">function</span>(){
-                  offline_login(username, password)
-                      .fail(<span class="keyword">function</span>(error){
-                          console.log(<span class="string">"Offline login failed - "</span>+error);
-                          <span class="keyword">if</span>(error == <span class="string">"No user found"</span>)
-                          {     
-                              offline_register(username, password)
-                                  .fail(<span class="keyword">function</span>(error){
-                                      console.log(<span class="string">"Offline register failed - "</span>+error);
-                                      dfd.reject(error);
-                                  })
-                                  .done(<span class="keyword">function</span>(){
-                                      console.log(<span class="string">"Registered in Offline backend"</span>);
-                                      console.log(<span class="string">"Login Successfull"</span>);
-                                      dfd.resolve();
-                                  });      
-                          }
-                          <span class="keyword">else</span>
-                              dfd.reject(error);
-                      })
-                      .done(<span class="keyword">function</span>(){
-                          console.log(<span class="string">"Login Successfull"</span>);
-                          <span class="keyword">if</span>(all_configs.misc.onLogin)
-                              all_configs.misc.onLogin(Offline, <span class="keyword">this</span>);
-                          dfd.resolve();
-                      });      
-              });
-      }
-      <span class="keyword">else</span>
-      {
-          offline_login(username, password)
-              .fail(<span class="keyword">function</span>(error){
-                  console.log(<span class="string">"Offline login failed - "</span>+error);
-                  <span class="keyword">if</span>(error == <span class="string">"No user found"</span>)
-                      dfd.reject(<span class="string">"You need to be online till database has been downloaded."</span>);
-                  <span class="keyword">else</span>
-                      dfd.reject(error);
-              })
-              .done(<span class="keyword">function</span>(){
-                  console.log(<span class="string">"Login Successfull"</span>);
-                  <span class="keyword">if</span>(all_configs.misc.onLogin)
-                      all_configs.misc.onLogin(Offline, <span class="keyword">this</span>);
-                  dfd.resolve();
-              });      
-      }
-      <span class="keyword">return</span> dfd;
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> check_offline_login = <span class="keyword">function</span>() {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
             
         </li>
         
@@ -369,26 +265,23 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>resolves if server returns 1 or internet is not connected otherwise rejects</p>
+              <p>check login state stored in offline db</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> online_login = <span class="keyword">function</span>(username, password){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      <span class="keyword">if</span>(!internet_connected())
-          <span class="keyword">return</span> dfd.resolve();
-      $.post(<span class="string">"/coco/login/"</span>, { <span class="string">"username"</span>: username, <span class="string">"password"</span>: password } )
-          .done(<span class="keyword">function</span>(resp){
-              <span class="keyword">if</span>(resp==<span class="string">"1"</span>)
-                  <span class="keyword">return</span> dfd.resolve();
-              <span class="keyword">else</span> 
-                  <span class="keyword">return</span> dfd.reject(<span class="string">"Username or password is incorrect (Server)"</span>);
-          })
-          .fail(<span class="keyword">function</span>(resp){
-              <span class="keyword">return</span> dfd.reject(<span class="string">"Could not contact server. Try again in a minute."</span>);
-          });
-      <span class="keyword">return</span> dfd.promise();      
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        User.fetch({
+            success: <span class="keyword">function</span>() {
+                <span class="keyword">if</span> (User.get(<span class="string">"loggedin"</span>))
+                    <span class="keyword">return</span> dfd.resolve();
+                <span class="keyword">else</span>
+                    <span class="keyword">return</span> dfd.reject(<span class="string">"User is currently logged out. (Offline Backend)"</span>);
+            },
+            error: <span class="keyword">function</span>() {
+                <span class="keyword">return</span> dfd.reject(<span class="string">"User couldn't be fetched from offline db"</span>);
+            }
+        });
+        <span class="keyword">return</span> dfd;
+    }</pre></div></div>
             
         </li>
         
@@ -399,39 +292,385 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>resolves if u, p matches the one stored in off db </p>
+              <p>logs out of the offline backend, if internet accessible- logs out of the server backend</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> offline_login = <span class="keyword">function</span>(username, password){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      OfflineAuthBackend.login(username, password)
-          .done(<span class="keyword">function</span>(){
-              dfd.resolve();
-          })
-          .fail(<span class="keyword">function</span>(error){
-              dfd.reject(error);
-          });
-      <span class="keyword">return</span> dfd.promise();
-  }
-  
-  <span class="keyword">var</span> offline_register = <span class="keyword">function</span>(username, password){
-      <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
-      OfflineAuthBackend.register(username, password)
-          .done(<span class="keyword">function</span>(){
-              dfd.resolve();
-          })
-          .fail(<span class="keyword">function</span>(error){
-              dfd.reject(error);
-          });
-      <span class="keyword">return</span> dfd.promise();
-  }
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> logout = <span class="keyword">function</span>() {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        <span class="keyword">var</span> that = <span class="keyword">this</span>;
+        online_logout()
+            .always(<span class="keyword">function</span>() {
+                offline_logout()
+                    .always(<span class="keyword">function</span>() {
+                        dfd.resolve();
+                    })
+            });
+        <span class="keyword">return</span> dfd;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>logs out of the online backend if internet accessible</p>
 
-  <span class="keyword">return</span> {
-    check_login: check_login,
-    logout: logout,
-    login: login
-  };
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> online_logout = <span class="keyword">function</span>() {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+
+        <span class="keyword">if</span> (!internet_connected())
+            dfd.resolve();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>the logout endpoint should be made configurable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $.post(<span class="string">"/coco/logout/"</span>)
+            .done(<span class="keyword">function</span>(resp) {
+                <span class="keyword">return</span> dfd.resolve();
+            })
+            .fail(<span class="keyword">function</span>(resp) {
+                <span class="keyword">return</span> dfd.reject(resp);
+            });
+
+        <span class="keyword">return</span> dfd.promise();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>contact OfflineAuthBackend to log out of the offline backend </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> offline_logout = <span class="keyword">function</span>() {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        OfflineAuthBackend.logout()
+            .done(<span class="keyword">function</span>() {
+                dfd.resolve();
+            })
+            .fail(<span class="keyword">function</span>() {
+                dfd.reject();
+            });
+        <span class="keyword">return</span> dfd;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>logs-in to the offline backend, if internet accessible - logs-in to the server backend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> login = <span class="keyword">function</span>(username, password) {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        console.log(<span class="string">"Attemting login"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>internet accessible - login to server backend - when successfull - login to offline backend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (internet_connected()) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>try server backend login</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            online_login(username, password)
+                .fail(<span class="keyword">function</span>(error) {
+                    console.log(<span class="string">"Online login failed - "</span> + error);
+                    dfd.reject(error);
+                })
+                .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>try offline backend login</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    offline_login(username, password)
+                        .fail(<span class="keyword">function</span>(error) {
+                            console.log(<span class="string">"Offline login failed - "</span> + error);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If no user exists(new machine - first time login) the user is registered in the offline backend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">if</span> (error == <span class="string">"No user found"</span>) {
+                                offline_register(username, password)
+                                    .fail(<span class="keyword">function</span>(error) {
+                                        console.log(<span class="string">"Offline register failed - "</span> + error);
+                                        dfd.reject(error);
+                                    })
+                                    .done(<span class="keyword">function</span>() {
+                                        console.log(<span class="string">"Registered in Offline backend"</span>);
+                                        console.log(<span class="string">"Login Successfull"</span>);
+                                        dfd.resolve();
+                                    });
+                            } <span class="keyword">else</span>
+                                dfd.reject(error);
+                        })
+                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>login successfull</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            console.log(<span class="string">"Login Successfull"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>run any onLogin logic defined by user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">if</span> (all_configs.misc.onLogin)
+                                all_configs.misc.onLogin(Offline, <span class="keyword">this</span>);
+                            dfd.resolve();
+                        });
+                });
+        } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>internet nt accessible - only try loggin into offline backend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            offline_login(username, password)
+                .fail(<span class="keyword">function</span>(error) {
+                    console.log(<span class="string">"Offline login failed - "</span> + error);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>no db exists - can&#39;t register user till server authenticates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">if</span> (error == <span class="string">"No user found"</span>)
+                        dfd.reject(<span class="string">"You need to be online till database has been downloaded."</span>);
+                    <span class="keyword">else</span>
+                        dfd.reject(error);
+                })
+                .done(<span class="keyword">function</span>() {
+                    console.log(<span class="string">"Login Successfull"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>run any onLogin logic defined by user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">if</span> (all_configs.misc.onLogin)
+                        all_configs.misc.onLogin(Offline, <span class="keyword">this</span>);
+                    dfd.resolve();
+                });
+        }
+        <span class="keyword">return</span> dfd;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>resolves if server returns 1 or internet is not connected otherwise rejects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> online_login = <span class="keyword">function</span>(username, password) {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        <span class="keyword">if</span> (!internet_connected())
+            <span class="keyword">return</span> dfd.resolve();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>the endpoint should be made configurable     </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $.post(<span class="string">"/coco/login/"</span>, {
+            <span class="string">"username"</span>: username,
+            <span class="string">"password"</span>: password
+        })
+            .done(<span class="keyword">function</span>(resp) {
+                <span class="keyword">if</span> (resp == <span class="string">"1"</span>)
+                    <span class="keyword">return</span> dfd.resolve();
+                <span class="keyword">else</span>
+                    <span class="keyword">return</span> dfd.reject(<span class="string">"Username or password is incorrect (Server)"</span>);
+            })
+            .fail(<span class="keyword">function</span>(resp) {
+                <span class="keyword">return</span> dfd.reject(<span class="string">"Could not contact server. Try again in a minute."</span>);
+            });
+        <span class="keyword">return</span> dfd.promise();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>contact OfflineAuthBackend to authenticate a user against offline backend  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> offline_login = <span class="keyword">function</span>(username, password) {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        OfflineAuthBackend.login(username, password)
+            .done(<span class="keyword">function</span>() {
+                dfd.resolve();
+            })
+            .fail(<span class="keyword">function</span>(error) {
+                dfd.reject(error);
+            });
+        <span class="keyword">return</span> dfd.promise();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>contact OfflineAuthBackend to register a new user in offline backend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> offline_register = <span class="keyword">function</span>(username, password) {
+        <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+        OfflineAuthBackend.register(username, password)
+            .done(<span class="keyword">function</span>() {
+                dfd.resolve();
+            })
+            .fail(<span class="keyword">function</span>(error) {
+                dfd.reject(error);
+            });
+        <span class="keyword">return</span> dfd.promise();
+    }
+
+    <span class="keyword">return</span> {
+        check_login: check_login,
+        logout: logout,
+        login: login
+    };
 });</pre></div></div>
             
         </li>

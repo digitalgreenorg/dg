@@ -64,6 +64,11 @@
               </a>
             
               
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
               <a class="source" href="user_model.html">
                 user_model.js
               </a>
@@ -81,6 +86,11 @@
               
               <a class="source" href="router.html">
                 router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
               </a>
             
               
@@ -1364,7 +1374,10 @@ TODO: need to explain the &lt;%index%&gt; tags required in inlines</p>
                     .done(<span class="keyword">function</span>(resp){
                         console.log(resp);
                         <span class="keyword">if</span>(resp==<span class="string">"1"</span>)
+                        {
+                            alert(<span class="string">"Your database will be redownloaded because of some changes in data."</span>);
                             Offline.reset_database();
+                        }
                     });
             }   
             <span class="function"><span class="keyword">function</span> <span class="title">getLastDownloadTimestamp</span><span class="params">()</span>
