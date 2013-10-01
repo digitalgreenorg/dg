@@ -246,8 +246,8 @@ def write_video_schedule_info(vid_dict, workbook):
         else:
             print str(record['id']) + " not found"
     sheet.write(row,0,0)
-    sheet.write(row,1,"2010-01-01")
-    sheet.write(row,2,"2014-12-31")
+    sheet.write(row,1,"2013-01-01")
+    sheet.write(row,2,"2100-12-31")
     sheet.write(row,3,'warangal')
     return sheet
         
@@ -295,8 +295,8 @@ def create_fixture(users, project_name):
     video_schedule_dict = []
     for id in video_list:
         video_schedule_dict.append({'id': id,
-                                    'low_val': '2013-01-01',
-                                    'high_val': '2013-12-31' })
+                                    'low_val': '2013-01-01', #idea here is all videos have this low and high values. And as of now seasonal videos are done manually over commcare fixtures
+                                    'high_val': '2013-01-01' })
     video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
     filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xls" % (project_name)) 
     workbook.save(filename)
