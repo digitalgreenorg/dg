@@ -247,7 +247,7 @@ def write_video_schedule_info(vid_dict, workbook):
             print str(record['id']) + " not found"
     sheet.write(row,0,0)
     sheet.write(row,1,"2010-01-01")
-    sheet.write(row,2,"2014-13-31")
+    sheet.write(row,2,"2014-12-31")
     sheet.write(row,3,'warangal')
     return sheet
         
