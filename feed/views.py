@@ -1,11 +1,18 @@
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
 from dashboard.models import District, PersonAdoptPractice, Video
+from django.shortcuts import get_object_or_404
 
 
-class CustomFeedGenerator(Atom1Feed):
+class CombinedCustomFeedGenerator(Atom1Feed):
     def add_item_elements(self, handler, item):
-        super(CustomFeedGenerator, self).add_item_elements(handler, item)
+        super(CombinedCustomFeedGenerator, self).add_item_elements(handler, item)
+        handler.addQuickElement(u"georss:point", item['georss:point'])
+
+
+class IndividualCustomFeedGenerator(Atom1Feed):
+    def add_item_elements(self, handler, item):
+        super(IndividualCustomFeedGenerator, self).add_item_elements(handler, item)
         handler.addQuickElement(u"georss:point", item['georss:point'])
         handler.addQuickElement(u"dgrss:adoptionQuantity", item['dgrss:adoptionQuantity'])
         handler.addQuickElement(u"dgrss:sector", item['dgrss:sector'])
@@ -14,17 +21,49 @@ class CustomFeedGenerator(Atom1Feed):
         handler.addQuickElement(u"dgrss:subtopic", item['dgrss:subtopic'])
         handler.addQuickElement(u"dgrss:subject", item['dgrss:subject'])
         handler.addQuickElement(u"dgrss:analyticsLink", item['dgrss:analyticsLink'])
+        handler.addQuickElement(u"dgrss:videosLink", item['dgrss:videosLink'])
 
-class DistrictFeed(Feed):
-    feed_type = CustomFeedGenerator
-    title = "Digital Green Data Feed"
-    subtitle = ""
+
+class CombinedDistrictFeed(Feed):
+    feed_type = CombinedCustomFeedGenerator
+    title = "Digital Green All Districts"
+    subtitle = "All Districts ID, Name and Geo-Co-ordinates"
     link = "http://www.digitalgreen.org"
     author_name = 'Aadish Gupta'
     author_email = 'aadish@digitalgreen.org'
 
     def items(self):
-        return District.objects.all()
+        return District.objects.all()[:1]
+
+    def item_title(self, item):
+        return item.district_name
+
+    def item_link(self, item):
+        return ''.join(['http://www.digitalgreen.org/analytics/overview_module?geog=district&id=', str(item.id)])
+
+    def item_guid(self, item):
+        return str(item.id)
+
+    def item_extra_kwargs(self, item):
+        return {
+                 'georss:point': ' '.join([item.latitude, item.longitude]),
+                 }
+
+
+class IndividualDistrictFeed(Feed):
+    feed_type = IndividualCustomFeedGenerator
+    title = "Digital Green Data Feed"
+    subtitle = " District with practices, sub-practices, topic, sub-topic, subject"
+    link = "http://www.digitalgreen.org"
+    author_name = 'Aadish Gupta'
+    author_email = 'aadish@digitalgreen.org'
+
+    def get_object(self, request, district_id):
+        print "here"
+        return get_object_or_404(District, pk=district_id)
+
+    def items(self, obj):
+        return District.objects.filter(id=obj.id)
 
     def item_title(self, item):
         return item.district_name
@@ -40,7 +79,7 @@ class DistrictFeed(Feed):
         topic_list = filter(None,Video.objects.filter(village__block__district__id=item.id).values_list('related_practice__practice_topic__name', flat='true').distinct())
         subtopic_list = filter(None,Video.objects.filter(village__block__district__id=item.id).values_list('related_practice__practice_subtopic__name', flat='true').distinct())
         subject_list = filter(None,Video.objects.filter(village__block__district__id=item.id).values_list('related_practice__practice_subject__name', flat='true').distinct())
-
+        state = item.state.state_name.replace(' ', '%20')
         return {
                  'georss:point': ' '.join([item.latitude, item.longitude]),
                  'dgrss:adoptionQuantity': str(adoptionQuantity),
@@ -50,4 +89,5 @@ class DistrictFeed(Feed):
                  'dgrss:subtopic': ', '.join(subtopic_list),
                  'dgrss:subject': ', '.join(subject_list),
                  'dgrss:analyticsLink': ''.join(['http://www.digitalgreen.org/analytics/overview_module?geog=district&id=', str(item.id)]),
+                 'dgrss:videosLink':''.join(['http://www.digitalgreen.org/discover/?searchString=', state])
                  }
