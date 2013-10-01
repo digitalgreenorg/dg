@@ -3,6 +3,7 @@ import dg.settings
 setup_environ(dg.settings)
 
 import json
+import logging
 from math import ceil, floor
 from PIL import Image
 import urllib
@@ -129,6 +130,7 @@ def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altStrin
 
 
 def get_facebook_feed():
+    logger = logging.getLogger('social_website')
     TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + FACEBOOK_APP_ID + '&client_secret=' + FACEBOOK_API_SECRET
     response = urllib2.urlopen(TOKEN_URL)
     TOKEN = response.read()
@@ -150,7 +152,7 @@ def get_facebook_feed():
             repeated = read_data(entries.pop())
             if repeated:
                 get_more_entries = False
-
+    logger.info("News Feed Updated")
 if __name__ == '__main__':
     get_facebook_feed()
 
