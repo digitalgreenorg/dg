@@ -5,6 +5,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 import coco.urls
 import social_website.api_urls
 import social_website.urls
+import feed.urls
 from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
@@ -23,6 +24,7 @@ urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),
 
     (r'^social/', include(social_website.api_urls)),
+    (r'^bmgf/', include(feed.urls)),
     (r'^archive/', include(website_archive_urls)),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
