@@ -85,7 +85,7 @@ def overview_module(request):
     if(to_date):
         date_var = to_date
     else:
-        date_var = str(datetime.date.today())
+        date_var = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
     #Operational Village (Last 60 days)
     country_data.update(vil_oper = run_query(targets_sql.get_village_operational(geog, id, date_var, partners))[0]['count'])
     tot_val = views.screening_analytics.get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, ['avg_sc_per_day', 'avg_att_per_sc']);
