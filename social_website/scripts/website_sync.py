@@ -48,21 +48,23 @@ def process_log(objects, logger):
                 continue
         logger.info('\n')
 
-logger = logging.getLogger('social_website')
-script_name = 'website_sync'
 
-# Drop and re-create PersonVIdeoRecord
-PersonVideoRecord.objects.all().delete()
-initial_personvideorecord()
-try:
-    crontimestamp = CronTimestamp.objects.get(name = script_name)
-except CronTimestamp.DoesNotExist:
-    crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
-timestamp = crontimestamp.last_time
-serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
-
-# Update last_time but dont save
-crontimestamp.last_time = datetime.datetime.now()
-process_log(serverlog_objects, logger)
-crontimestamp.save()
+def call_website_sync():
+    logger = logging.getLogger('social_website')
+    script_name = 'website_sync'
+    
+    # Drop and re-create PersonVIdeoRecord
+    PersonVideoRecord.objects.all().delete()
+    initial_personvideorecord()
+    try:
+        crontimestamp = CronTimestamp.objects.get(name = script_name)
+    except CronTimestamp.DoesNotExist:
+        crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
+    timestamp = crontimestamp.last_time
+    serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
+    
+    # Update last_time but dont save
+    crontimestamp.last_time = datetime.datetime.now()
+    process_log(serverlog_objects, logger)
+    crontimestamp.save()
 
