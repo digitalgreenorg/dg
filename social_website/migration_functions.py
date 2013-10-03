@@ -254,3 +254,15 @@ def delete_video(video):
     comments.delete()
     website_video.delete()
     
+def get_youtube_entry(vid):
+    if vid.youtubeID != "":
+        try:
+            yt_service = gdata.youtube.service.YouTubeService()
+            yt_service.developer_key = DEVELOPER_KEY
+            yt_service.ssl = False
+            entry = yt_service.GetYouTubeVideoEntry(video_id = vid.youtubeID)
+            if entry is not None:
+                return entry
+        except Exception, ex:
+            pass
+    return None
