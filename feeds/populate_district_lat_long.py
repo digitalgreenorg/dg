@@ -1,5 +1,4 @@
-'''populate_district_lat_long.py: Finds the latitude and longitude for the existing districts in the
-                                  database and store it back'''
+'''populate_district_lat_long.py: One time script to populate existing districts coordinates.'''
 
 __author__ = "Aadish Gupta"
 
