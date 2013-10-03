@@ -23,7 +23,7 @@ def adoption_module(request):
     main_stats['tot_ado'] = totals['tot_ado'] if totals['tot_ado'] is not None else 0
     
     #Adoption rate
-    date_var = to_date if to_date else str(datetime.date.today())
+    date_var = to_date if to_date else (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
     adopt_rate_data = run_query(shared_sql.adoption_rate_totals(geog, id, date_var, partners))[0]
     if(adopt_rate_data and adopt_rate_data['tot_per']):
         main_stats.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
