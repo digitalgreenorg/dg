@@ -1,4 +1,5 @@
-'''populate_district_lat_long.py: One time script to populate existing districts coordinates.'''
+'''populate_district_lat_long.py: One time script to populate existing districts coordinates.
+   To run this file type python -m feeds.populate_district_lat_long'''
 
 __author__ = "Aadish Gupta"
 
