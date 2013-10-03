@@ -324,13 +324,14 @@ class District(CocoModel):
         return self.district_name
 
     def clean(self):
-        geocoder = Geocoder()
-        address = u"%s,%s,%s" % (self.district_name, self.state.state_name, self.state.country.country_name)
-        if (geocoder.convert(address)):
-            try:
-                (self.latitude, self.longitude) = geocoder.getLatLng()
-            except:
-                print "Geocodes not found for %s, %s" % (self.district_name, self.state.state_name)
+        if(self.latitude is None or self.longitude is None):
+            geocoder = Geocoder()
+            address = u"%s,%s,%s" % (self.district_name, self.state.state_name, self.state.country.country_name)
+            if (geocoder.convert(address)):
+                try:
+                    (self.latitude, self.longitude) = geocoder.getLatLng()
+                except:
+                    print "Geocodes not found for %s, %s" % (self.district_name, self.state.state_name)
                   
 class Block(CocoModel):
     id = BigAutoField(primary_key = True)
