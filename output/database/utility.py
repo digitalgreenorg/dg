@@ -98,8 +98,8 @@ def get_dates_partners(request):
         from_date = request.GET['from_date']
         to_date = request.GET['to_date']
     else:
-        from_date = str(datetime.date.today() - datetime.timedelta(365));
-        to_date = str(datetime.date.today());
+        from_date = (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d');
+        to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d');
 
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
