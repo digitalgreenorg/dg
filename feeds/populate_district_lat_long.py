@@ -1,3 +1,8 @@
+'''populate_district_lat_long.py: Finds the latitude and longitude for the existing districts in the
+                                  database and store it back'''
+
+__author__ = "Aadish Gupta"
+
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
