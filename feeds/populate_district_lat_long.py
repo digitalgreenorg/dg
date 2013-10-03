@@ -18,7 +18,3 @@ for d in District.objects.all():
             d.save()
         except:
             print "Geocodes not found for %s, %s" % (d.district_name, d.state.state_name)
-
-
-
-
