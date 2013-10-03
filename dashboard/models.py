@@ -4,11 +4,13 @@ from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
+from libs.geocoder import Geocoder
 
 import sys, traceback, datetime
 
@@ -310,11 +312,25 @@ class District(CocoModel):
     fieldofficer = BigForeignKey(FieldOfficer)
     fieldofficer_startday = models.DateField(null=True, db_column='FIELDOFFICER_STARTDAY', blank=True)
     partner = BigForeignKey(Partners)
+    latitude = models.DecimalField(max_digits=31, decimal_places=28, null=True, blank=True,
+                                   validators=[MaxValueValidator(90), MinValueValidator(-90)])
+    longitude = models.DecimalField(max_digits=32, decimal_places=28, null=True, blank=True,
+                                    validators=[MaxValueValidator(180), MinValueValidator(-180)])
+
     class Meta:
         db_table = u'district'
 
     def __unicode__(self):
         return self.district_name
+
+    def clean(self):
+        geocoder = Geocoder()
+        address = u"%s,%s,%s" % (self.district_name, self.state.state_name, self.state.country.country_name)
+        if (geocoder.convert(address)):
+            try:
+                (self.latitude, self.longitude) = geocoder.getLatLng()
+            except:
+                print "Geocodes not found for %s, %s" % (self.district_name, self.state.state_name)
                   
 class Block(CocoModel):
     id = BigAutoField(primary_key = True)
