@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from dashboard.models import Partners, Screening, ServerLog, Village
 from dg.settings import MEDIA_ROOT
 from social_website.models import Activity, Partner
-from social_website.scripts.generate_activities import ActivityType, add_milestone, add_village
+from social_website.utils.generate_activities import ActivityType, add_milestone, add_village
 
 class Command(BaseCommand):
     

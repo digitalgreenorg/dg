@@ -10,4 +10,3 @@ existing_vids = Website_video.objects.all().values_list('coco_id', flat=True)
 print len(Video.objects.exclude(id__in = existing_vids))
 for video in Video.objects.exclude(id__in = existing_vids):
     update_website_video(video)
-    

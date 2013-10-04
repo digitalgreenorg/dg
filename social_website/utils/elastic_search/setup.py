@@ -1,9 +1,9 @@
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
 from pyes import ES
+
+import dg.settings
+
 from custom_mappings import COMPLETION_MAPPING, FACET_MAPPING, SETTINGS
-from indexing_data import enter_data_into_completion_search, enter_data_into_facet_search
+from index import enter_data_into_completion_search, enter_data_into_facet_search
 
 def custom_create_index(conn, index_name, settings, mapping):
     try:
@@ -27,6 +27,3 @@ def call_setup_elastic():
     # COMPLETION SEARCH 
     custom_create_index(conn, completion_index, SETTINGS, COMPLETION_MAPPING)
     enter_data_into_completion_search(conn, completion_index)
-
-
-

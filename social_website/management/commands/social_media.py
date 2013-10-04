@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from twython import exceptions
 
 from social_website.utils.website_footer_social import WebsiteFooter
-from social_website.scripts.activity_facebook_data import get_facebook_feed
+from social_website.utils.facebook_newsfeed import get_facebook_feed
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
