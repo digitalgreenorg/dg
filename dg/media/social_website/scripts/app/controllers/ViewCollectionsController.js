@@ -178,11 +178,6 @@ define(function(require) {
             
             // Below functionality will autoplay the youtube video on all video pages
             videoPlayer.playVideo();
-            // The id that is shown in the URL. Uncomment if don't want to play first video automatically in the playlist
-            /*var videoId = jQuery('.video-wrapper').attr('data-videoid');
-            if (videoId != 1){
-            	videoPlayer.playVideo();
-            }*/
         },
 
         _onYouTubePlayerStateChange: function(newState) {
