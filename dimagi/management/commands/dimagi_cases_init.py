@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 commcare_project = CommCareProject.objects.get(name=commcare_project_name)
             except CommCareProject.DoesNotExist:
                 raise CommandError('CommCare Project "%s" not yet entered in the Database.' % commcare_project_name)
-            commcare_users = CommCareUser.objects.filter(project=commcare_project).all()
+            commcare_users = CommCareUser.objects.filter(project=commcare_project).filter(is_user=False)
             for user in commcare_users:
                 villages = CommCareUserVillage.objects.filter(user=user).values_list('village__id', flat =True)
                 filename = user.username+"_"+commcare_project_name 
@@ -38,7 +38,10 @@ class Command(BaseCommand):
                     response = commcare_project.upload_case_file(filename)
                     if response.getcode() == 201 or response.getcode() == 200:
                         self.stdout.write('Successfully uploaded cases for "%s" \n' % user.username)
+                        user.is_user = True
+                        user.save()
                     else:
                         self.stdout.write('HTTP response code: %d. Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading only this ("%s") xml file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (response.getcode(), user.username, user.username))
                 except Exception as ex:
                     pass
+                
