@@ -50,7 +50,8 @@ def update_submission(obj):
             
             obj.type = type
             
-            version = int(data.getElementsByTagName('data')[0].attributes['version'].value)
+            version = data.getElementsByTagName('n1:appVersion')[0].childNodes[0].nodeValue
+            version = int(version.split('App #')[1].split(' b')[0])
             obj.app_version = version
             
             obj.username = str(data.getElementsByTagName('n0:username')[0].childNodes[0].nodeValue)
