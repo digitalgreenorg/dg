@@ -428,6 +428,18 @@ a {
     margin-right: 5px;
 }
 
+.header-fixed{
+    position:fixed;
+    top:0px;
+    margin:auto;
+    z-index:100000;
+    background-color:white;
+}
+
+.header-margin{
+    margin-top: 67px;
+}
+
 /* ---------------------------------------------------------------------
  Follow Us Nav
 ------------------------------------------------------------------------ */
@@ -3140,16 +3152,6 @@ body {
 ::-webkit-input-placeholder {
    color: lightgray;
    font-size: 22px;
-}
-.header-fixed{
-    position:fixed;
-    top:0px;
-    margin:auto;
-    z-index:100000;
-    background-color:white;
-}
-.margin-header{
-    margin-top: 67px;
 }
 .menu-item:hover .menu-subitem{
     color:black;
