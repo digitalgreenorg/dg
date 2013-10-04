@@ -1,6 +1,11 @@
 import logging
+import httplib
+import urllib2
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
+
+from twython import exceptions
+
 from social_website.utils.website_footer_social import WebsiteFooter
 from social_website.scripts.activity_facebook_data import get_facebook_feed
 

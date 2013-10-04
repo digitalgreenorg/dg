@@ -1,11 +1,11 @@
 import datetime
-import httplib
 import json
 import oauth2 as oauth
+import os
 import urllib2
 
 from BeautifulSoup import BeautifulSoup
-from twython import Twython, exceptions
+from twython import Twython
 
 from dg.settings import APP_KEY_TWITTER, APP_SECRET_TWITTER, OAUTH_TOKEN_TWITTER, OAUTH_TOKEN_SECRET_TWITTER
 from dg.settings import APP_KEY_LINKEDIN, APP_SECRET_LINKEDIN, OAUTH_TOKEN_LINKEDIN, OAUTH_SECRET_LINKEDIN
@@ -13,7 +13,7 @@ from dg.settings import PROJECT_PATH
 
 class WebsiteFooter():
     def __init__(self):
-        self.template_path = os.path.join(PROJECT_PATH, "/templates/social_website/includes/partials", "footer_social_media.html")
+        self.template_path = os.path.join(PROJECT_PATH, "templates/social_website/includes/partials", "footer_social_media.html")
         self.template = """
                                                 <li><a target='_blank' href="http://www.facebook.com/digitalgreenorg">
                                                     <h4 class="social-icon icon-fb">Facebook</h4>

@@ -1,5 +1,6 @@
 import os
 import urllib
+import logging
 from datetime import timedelta, date, datetime
 from math import ceil, floor
 from PIL import Image
@@ -12,11 +13,12 @@ from dg.settings import ACCESS_KEY, SECRET_KEY, MEDIA_ROOT, YOUTUBE_SIMPLE_ACCES
 from dashboard.models import Video
 
 
-def get_thumbnail(entry):
+def get_thumbnail(entry, file_save_dir):
     for thumbnail in entry.media.thumbnail:
         urllib.urlretrieve(thumbnail.url, os.path.join(file_save_dir, thumbnail.url.split("/")[-1]))
         img = Image.open(os.path.join(file_save_dir, thumbnail.url.split("/")[-1]))
         return img
+
 
 def remove_border(image):
     sz = image.size
@@ -27,6 +29,7 @@ def remove_border(image):
     box = img1.getbbox()
     im_border_removed = image.crop(box)
     return im_border_removed
+
 
 def crop(img, new_width, new_height):
     ratio = new_width * 1.0 / new_height
@@ -58,14 +61,14 @@ def cleanup_youtubeid(video_id):
         video_id = video_id.split('/').pop()
     return video_id
 
-def add_to_s3(key, filepath):
+def add_to_s3(bucket, key, filepath):
     k = Key(bucket)
     k.key = key
     k.set_contents_from_filename(filepath)
     k.make_public()
 
 def call_youtube_update(complete=False):
-    
+    logger = logging.getLogger('dashboard')
     # Create S3 Connection
     bucket_name = 'video_thumbnail'
     bucket = S3Connection(ACCESS_KEY, SECRET_KEY).create_bucket(bucket_name)
@@ -80,11 +83,9 @@ def call_youtube_update(complete=False):
     # The YouTube API does not currently support HTTPS/SSL access.
     yt_service.ssl = False
 
-    error_ids = {}
-    
     #Check all videos every 7 days. Daily check for new videos only.
-    filter_all = (datetime.datetime.utcnow().weekday()) % 7 == 0  
-    
+    filter_all = (datetime.utcnow().weekday()) % 7 == 0
+
     vids = Video.objects.exclude(youtubeid='')
     if not (filter_all or complete):
         # Duration is computed using the YouTube API. If this field is not populated, this video record has been newly linked through youtubeid.
@@ -99,34 +100,25 @@ def call_youtube_update(complete=False):
             #Fetch the video entry from Youtube
             entry = yt_service.GetYouTubeVideoEntry(video_id=cleaned_id)
         except gdata.service.RequestError, inst:
-            error_ids[vid.id] = inst
+            logger.error("Video ID: %s YoutubeID: %s Error: %s" % (str(vid.id), cleaned_id, str(inst)))
         else:
             # Update thumbnails on s3
-            key = "".join([location_raw_images, str(vid.id), '.jpg']])
+            key = "".join([location_raw_images, str(vid.id), '.jpg'])
             if not bucket.get_key(key):
-                img = get_thumbnail(entry)
-                
+                img = get_thumbnail(entry, file_save_dir)
+
                 img_border = remove_border(img)
                 filepath_borderless = os.path.join(file_save_dir, ("raw.jpg"))
                 img_border.save(filepath_borderless)
-                add_to_s3(key, filepath_borderless)
-                
+                add_to_s3(bucket, key, filepath_borderless)
+
                 img_cropped = crop(img_border, 217, 124)
                 filepath_16by9 = os.path.join(file_save_dir, ("16.jpg"))
-                img_cropped.save(filepath_16by9)                
-                key = "".join([location_16by9_images, str(vid.id), '.jpg']])
-                add_to_s3(key, filepath_16by9)
+                img_cropped.save(filepath_16by9)
+                key = "".join([location_16by9_images, str(vid.id), '.jpg'])
+                add_to_s3(bucket, key, filepath_16by9)
             # Update duration
             duration = timedelta(seconds = int(entry.media.duration.seconds))
             if vid.duration != str(duration):
                 vid.duration = str(duration)
                 vid.save()
-
-    if(len(error_ids) > 0):
-        log = open(MEDIA_ROOT + "log/youtube_log.txt", "a")
-        log.write('\n' + str(datetime.utcnow()) + '\n')
-        text = ["Following Videos (ID & Error given) have problem with youtube id."]
-        for k, v in error_ids.iteritems():
-            text.append(str(k) + "\t" + str(v))
-        log.write('\n'.join(text))
-        log.close()
