@@ -1,7 +1,7 @@
 import dg.settings
 import pickle
 from django.db.models import get_model
-from social_website.scripts.generate_activities import add_collection, add_video, add_video_collection
+from social_website.utils.generate_activities import add_collection, add_video, add_video_collection
 
 
 def increase_online_video_like(sender, **kwargs):

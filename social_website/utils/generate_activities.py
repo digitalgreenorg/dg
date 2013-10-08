@@ -117,11 +117,19 @@ def add_milestone(partner):
     milestone_screening_viewer.extend([x * 25000 for x in range(5, 9)])
     milestone_screening_viewer.extend([x * 50000 for x in range(5, 101)])
 
-    milestone = Milestone.objects.get(partner_id=partner.uid)
-    videoNumber = milestone.videoNumber
-    villageNumber = milestone.villageNumber
-    screeningNumber = milestone.screeningNumber
-    viewerNumber = milestone.viewerNumber
+    try:
+        milestone = Milestone.objects.get(partner_id=partner.uid)
+        videoNumber = milestone.videoNumber
+        villageNumber = milestone.villageNumber
+        screeningNumber = milestone.screeningNumber
+        viewerNumber = milestone.viewerNumber
+    except Milestone.DoesNotExist:
+        milestone = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
+        milestone.save()
+        videoNumber = milestone.videoNumber
+        villageNumber = milestone.villageNumber
+        screeningNumber = milestone.screeningNumber
+        viewerNumber = milestone.viewerNumber
 
     # video milestone
     videos = Video.objects.filter(partner=partner).order_by('date')

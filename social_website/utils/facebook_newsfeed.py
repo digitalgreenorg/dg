@@ -1,43 +1,22 @@
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
-
 import json
-from math import ceil, floor
-from PIL import Image
+import logging
 import urllib
 import urllib2
 
-from dg.settings import FACEBOOK_APP_ID, FACEBOOK_API_SECRET, PROJECT_PATH, STATIC_URL
-from social_website.scripts.generate_activities import ActivityType
+from dg.settings import MEDIA_ROOT, MEDIA_URL, PROJECT_PATH, STATIC_URL
+from dg.settings import FACEBOOK_APP_ID, FACEBOOK_API_SECRET
+from libs.image_utils import ProcessedImage
+from social_website.utils.generate_activities import ActivityType
 from social_website.models import Activity, ImageSpec
 
 
 def create_thumbnail(url, image_name, new_width, new_height):
-    filepath = dg.settings.MEDIA_ROOT + 'facebook/' + image_name
-    urllib.urlretrieve(url, filepath)
-    img = Image.open(filepath)
-    ratio = new_width*1.0/new_height
-    width, height = img.size
-    region = {
-        'l': 0,
-        'r': width,
-        'upper': 0,
-        'lower': height,
-    }
-    if width > height * ratio:
-        crop = (width - height * ratio) / 2.0
-        region['l'] = int(floor(crop))
-        region['r'] = int(ceil(width - crop))
-    else:
-        crop = (height - width / ratio) / 2.0
-        region['upper'] = int(floor(crop))
-        region['lower'] = int(ceil(height - crop))
-    img_crop = img.crop((region['l'], region['upper'], region['r'], region['lower']))
-    img_resized = img_crop.resize((new_width, new_height), Image.ANTIALIAS)
-    img_resized.save(filepath)
-    return ''.join([dg.settings.MEDIA_URL, "facebook/", image_name])
-
+    image = ProcessedImage()
+    filepath = MEDIA_ROOT + 'facebook/' + image_name
+    image.set_image_from_url(url, filepath)
+    cropped_image = image.crop(new_width, new_height)
+    cropped_image.save(filepath)
+    return ''.join([MEDIA_URL, "facebook/", image_name])
 
 def read_data(entry):
     '''
@@ -129,6 +108,7 @@ def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altStrin
 
 
 def get_facebook_feed():
+    logger = logging.getLogger('social_website')
     TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + FACEBOOK_APP_ID + '&client_secret=' + FACEBOOK_API_SECRET
     response = urllib2.urlopen(TOKEN_URL)
     TOKEN = response.read()
@@ -150,7 +130,4 @@ def get_facebook_feed():
             repeated = read_data(entries.pop())
             if repeated:
                 get_more_entries = False
-
-if __name__ == '__main__':
-    get_facebook_feed()
-
+    logger.info("Newsfeed Updated")
