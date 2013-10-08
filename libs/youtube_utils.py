@@ -12,22 +12,25 @@ from libs.s3_utils import add_to_s3
 
 
 def get_youtube_entry(youtubeid):
-    if youtubeid != "" :
+    logger = logging.getLogger('social_website')
+    if youtubeid != "":
         try:
             yt_service = gdata.youtube.service.YouTubeService()
-            yt_service.developer_key = DEVELOPER_KEY
+            yt_service.developer_key = YOUTUBE_SIMPLE_ACCESS
             yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id = youtubeid)
+            entry = yt_service.GetYouTubeVideoEntry(video_id=youtubeid)
             if entry is not None:
                 return entry
-        except Exception, ex:
-            pass
+        except Exception, inst:
+            logger.error("YoutubeID: %s Error: %s" % (youtubeid, str(inst)))
     return None
 
-def get_online_stats(yt_entry):     
-    stats = {   'views': 0,
-                'duration': 0,
-                'likes': 0,
+
+def get_online_stats(yt_entry):
+    stats = {
+             'views': 0,
+             'duration': 0,
+             'likes': 0,
             }
     try:
         stats['views'] = int(yt_entry.statistics.view_count)
@@ -46,6 +49,7 @@ def get_online_stats(yt_entry):
         pass
     return stats
 
+
 def cleanup_youtubeid(video_id):
     # Strip spaces at the beginning and end
     video_id = video_id.strip()
@@ -55,29 +59,6 @@ def cleanup_youtubeid(video_id):
         video_id = video_id.split('/').pop()
     return video_id
 
-def call_youtube_update(complete=False):
-    logger = logging.getLogger('dashboard')
-    # Create S3 Connection
-    bucket_name = 'video_thumbnail'
-    bucket = S3Connection(ACCESS_KEY, SECRET_KEY).create_bucket(bucket_name)
-    bucket.set_acl('public-read')
-    location_raw_images = 'raw/'
-    location_16by9_images = '16by9/'
-
-    tmp_dir = os.path.join(MEDIA_ROOT, 'youtube')
-
-    yt_service = gdata.youtube.service.YouTubeService()
-    yt_service.developer_key = YOUTUBE_SIMPLE_ACCESS
-    # The YouTube API does not currently support HTTPS/SSL access.
-    yt_service.ssl = False
-    
-    vids = Video.objects.exclude(youtubeid='')
-    if not complete:
-        # Duration is computed using the YouTube API. If this field is not populated, this video record has been newly linked through youtubeid.
-        vids = vids.filter(duration=None)
-
-    for video in vids:
-        update_video_youtubeid_s3(video)
 
 def update_video_youtubeid_s3(vid):
     ''' Input: Dashboard Video
@@ -85,16 +66,22 @@ def update_video_youtubeid_s3(vid):
     Creates/updates thumbnails on s3
     Creates/updates duration in duration field
     '''
-    try
-        cleaned_id = cleanup_youtubeid(vid.youtubeid)
-        if cleaned_id == vid.youtubeid:
-            vid.youtubeid = cleaned_id
-            vid.save()
-        #Fetch the video entry from Youtube
-        entry = yt_service.GetYouTubeVideoEntry(video_id=cleaned_id)
-    except gdata.service.RequestError, inst:
-        logger.error("Video ID: %s YoutubeID: %s Error: %s" % (str(vid.id), cleaned_id, str(inst)))
-    else:
+    # Create S3 Connection
+    bucket_name = 'video_thumbnail'
+    bucket = S3Connection(ACCESS_KEY, SECRET_KEY).create_bucket(bucket_name)
+    bucket.set_acl('public-read')
+    location_raw_images = 'raw/'
+    location_16by9_images = '16by9/'
+
+    file_save_dir = os.path.join(MEDIA_ROOT, 'youtube')
+
+    cleaned_id = cleanup_youtubeid(vid.youtubeid)
+    if cleaned_id == vid.youtubeid:
+        vid.youtubeid = cleaned_id
+        vid.save()
+    #Fetch the video entry from Youtube
+    entry = get_youtube_entry(cleaned_id)
+    if entry:
         # Update thumbnails on s3
         key = "".join([location_raw_images, str(vid.id), '.jpg'])
         if not bucket.get_key(key):
@@ -103,24 +90,28 @@ def update_video_youtubeid_s3(vid):
             for thumbnail in entry.media.thumbnail:
                 try:
                     url = thumbnail.url
-                    filepath = os.path.join(tmp_dir, thumbnail.url.split("/")[-1])
+                    filepath = os.path.join(file_save_dir, thumbnail.url.split("/")[-1])
                     img.set_image_from_url(url, filepath)
                     found_thumbnail = True
+                    break
                 except:
                     continue
-            if not found_thumbnail:
-                #TODO Add to logger.
-                continue
-            img_borderless = img.remove_border()
-            filepath_borderless = os.path.join(file_save_dir, ("raw.jpg"))
-            img_borderless.save(filepath_borderless)
-            add_to_s3(bucket, key, filepath_borderless)
+            if found_thumbnail:
+                img_borderless = img.remove_border()
+                filepath_borderless = os.path.join(file_save_dir, ("raw.jpg"))
+                img_borderless.save(filepath_borderless)
+                add_to_s3(bucket, key, filepath_borderless)
+                print key
 
-            img_cropped = img_borderless.crop(217, 124)
-            filepath_16by9 = os.path.join(file_save_dir, ("16.jpg"))
-            img_cropped.save(filepath_16by9)
-            key = "".join([location_16by9_images, str(vid.id), '.jpg'])
-            add_to_s3(bucket, key, filepath_16by9)
+                img_cropped = img_borderless.crop(217, 124)
+                filepath_16by9 = os.path.join(file_save_dir, ("16.jpg"))
+                img_cropped.save(filepath_16by9)
+                key = "".join([location_16by9_images, str(vid.id), '.jpg'])
+                add_to_s3(bucket, key, filepath_16by9)
+                print key
+            else:
+                logger = logging.getLogger('social_website')
+                logger.info('Image does not exist for youtubeID')
         # Update duration
         duration = timedelta(seconds = int(entry.media.duration.seconds))
         if vid.duration != str(duration):
@@ -128,3 +119,11 @@ def update_video_youtubeid_s3(vid):
             vid.save()
 
 
+def call_youtube_update(complete=False):
+    vids = Video.objects.exclude(youtubeid='')
+    if not complete:
+        # Duration is computed using the YouTube API. If this field is not populated, this video record has been newly linked through youtubeid.
+        vids = vids.filter(duration=None)
+
+    for video in vids:
+        update_video_youtubeid_s3(video)
