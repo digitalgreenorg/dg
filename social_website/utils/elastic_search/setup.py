@@ -15,7 +15,7 @@ def custom_create_index(conn, index_name, settings, mapping):
     conn.indices.put_mapping(doc_type = index_name, mapping = mapping, indices = index_name)
 
 
-def call_setup_elastic():
+def setup_elastic_search():
     facet_index = dg.settings.FACET_INDEX
     completion_index = dg.settings.COMPLETION_INDEX
     conn = ES(['127.0.0.1:9200'])
