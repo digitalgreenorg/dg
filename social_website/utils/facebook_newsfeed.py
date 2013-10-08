@@ -12,9 +12,9 @@ from social_website.models import Activity, ImageSpec
 
 def create_thumbnail(url, image_name, new_width, new_height):
     image = ProcessedImage()
-    image.set_image_from_url(url)
-    cropped_image = image.crop(new_width, new_height)
     filepath = MEDIA_ROOT + 'facebook/' + image_name
+    image.set_image_from_url(url, filepath)
+    cropped_image = image.crop(new_width, new_height)
     cropped_image.save(filepath)
     return ''.join([MEDIA_URL, "facebook/", image_name])
 
