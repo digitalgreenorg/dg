@@ -2,10 +2,10 @@ import urllib
 from math import ceil, floor
 from PIL import Image
 
-class ProcessedImage(Image):
-    def __init__(self, image=image):
+class ProcessedImage():
+    def __init__(self, image=Image):
         self.image = image
-    
+
     def set_image_from_url(self, url, filepath):
         urllib.urlretrieve(url, filepath)
         self.image = Image.open(filepath)
