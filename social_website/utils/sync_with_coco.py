@@ -10,6 +10,13 @@ from social_website.migration_functions import delete_person, delete_video, init
 
 
 def process_log(objects, logger):
+    '''
+    Server Log is used to
+    - update questions asked (via dashboard.models.Screening)
+    - update person details (via dashboard.models.Person)
+    - create a new entry for newly linked video (via dashboard.models.Video)
+    '''
+    
     for object in objects:
         logger.info(object.entry_table)
         if object.entry_table == 'Screening':
@@ -48,21 +55,25 @@ def process_log(objects, logger):
                 continue
         logger.info('\n')
 
-logger = logging.getLogger('social_website')
-script_name = 'website_sync'
+def recreate_person_video_record():
+    # Drop and re-create PersonVideoRecord
+    PersonVideoRecord.objects.all().delete()
+    initial_personvideorecord()
 
-# Drop and re-create PersonVIdeoRecord
-PersonVideoRecord.objects.all().delete()
-initial_personvideorecord()
-try:
-    crontimestamp = CronTimestamp.objects.get(name = script_name)
-except CronTimestamp.DoesNotExist:
-    crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
-timestamp = crontimestamp.last_time
-serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
-
-# Update last_time but dont save
-crontimestamp.last_time = datetime.datetime.now()
-process_log(serverlog_objects, logger)
-crontimestamp.save()
+def sync_with_serverlog():
+    logger = logging.getLogger('social_website')
+    script_name = 'website_sync'
+        
+    try:
+        crontimestamp = CronTimestamp.objects.get(name = script_name)
+    except CronTimestamp.DoesNotExist:
+        crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
+    timestamp = crontimestamp.last_time
+    serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
+    
+    # Update last_time but dont save
+    crontimestamp.last_time = datetime.datetime.now()
+    
+    process_log(serverlog_objects, logger)
+    crontimestamp.save()
 

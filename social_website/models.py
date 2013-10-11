@@ -59,7 +59,7 @@ class Video(models.Model):
     subject = models.CharField(max_length=500, blank=True)
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
-    state = models.CharField(max_length=50)
+    state = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.title, self.coco_id)
