@@ -56,6 +56,7 @@ class CommCareUser(models.Model):
     guid = models.CharField(max_length=100)
     project = models.ForeignKey(CommCareProject)
     assigned_villages = models.ManyToManyField(Village, through='CommCareUserVillage')
+    is_user = models.BooleanField(default=False)
     class Meta:
         unique_together = ("project","username")
     def __unicode__(self):
