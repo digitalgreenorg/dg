@@ -15,7 +15,7 @@ define(function(require) {
     var jQuery = require('jquery');
 
     require('libs/external/swfobject/swfobject');
-    require('libs/external/buttons')
+    require('libs/external/buttons');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
     //var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
@@ -35,6 +35,14 @@ define(function(require) {
             this.base(bootstrapConfig, globalHelpers);
 
             this._initVideoPlayer();
+            
+            stLight.options({
+            	publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", 
+            	doNotHash: false, 
+            	doNotCopy: false, 
+            	hashAddressBar: false
+            });
+            
             this._initVideoStats();
 
             this._getComments();
@@ -69,13 +77,6 @@ define(function(require) {
                 autoPlay: false,
                 allowWrapping: false
             });
-            
-            stLight.options({
-            	publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", 
-            	doNotHash: false, 
-            	doNotCopy: false, 
-            	hashAddressBar: false
-            	});
         },
 
         _initEvents: function() {
