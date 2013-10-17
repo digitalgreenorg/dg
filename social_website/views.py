@@ -136,13 +136,21 @@ def searchFilters(request):
     return HttpResponse(data)
 
 
-    
+
 def featuredCollection(request):
     language_name = request.GET.get('language__name', None)
-    try:
-        featured_collection = FeaturedCollection.objects.get(collection__language=language_name)
-    except FeaturedCollection.DoesNotExist:
-        featured_collection = FeaturedCollection.objects.get(collection__language="Mundari")
+    featured_collections = FeaturedCollection.objects.filter(collection__language=language_name, show_on_language_selection=True).order_by('-uid')
+    if len(featured_collections) == 0:
+        featured_collections = FeaturedCollection.objects.filter(collection__language=language_name).order_by('-uid')
+        if len(featured_collections) == 0:
+            # This code should be triggered on
+            # homepage without language selection
+            # language sent is all_languages or None
+            # there is no featured collection with the chosen language
+            featured_collections = FeaturedCollection.objects.filter(show_on_homepage = True).order_by('-uid')
+            if len(featured_collections) == 0:
+                featured_collections = FeaturedCollection.objects.all().order_by('-uid')
+    featured_collection = featured_collections[0]
     collection= featured_collection.collection
     collage_url = featured_collection.collageURL
     time = 0
@@ -160,7 +168,7 @@ def featuredCollection(request):
         'partner_url': collection.partner.get_absolute_url(),
         'video_count': collection.videos.all().count(),
         'link': collection.get_absolute_url(),
-        'collageURL': collage_url,
+        'collageURL': collage_url.url,
         'duration': str(datetime.timedelta(seconds=time)),
     }
     resp = json.dumps({"featured_collection": featured_collection_dict})

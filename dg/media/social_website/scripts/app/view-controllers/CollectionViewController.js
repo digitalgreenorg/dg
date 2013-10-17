@@ -247,12 +247,36 @@ define(function(require) {
 
                 time += currentVideo.duration;
             }
+            
+            var adoptions = ''
+            	if (collectionData.adoptions < 10000){
+            		adoptions = Util.integerCommaFormat(collectionData.adoptions);
+            	}
+            	else{
+            		adoptions = Util.integerAbbreviatedFormat(collectionData.adoptions);
+            	}
 
+            var views = ''
+            	if (collectionData.views < 10000){
+            		views = Util.integerCommaFormat(collectionData.views);
+            	}
+            	else{
+            		views = Util.integerAbbreviatedFormat(collectionData.views);
+            	}
+            
+            var likes = ''
+            	if (collectionData.likes < 10000){
+            		likes = Util.integerCommaFormat(collectionData.likes);
+            	}
+            	else{
+            		likes = Util.integerAbbreviatedFormat(collectionData.likes);
+            	}
+            
             return {
                 time: Util.secondsToHMSFormat(time),
-                adoptions: Util.integerCommaFormat(collectionData.adoptions),
-                views: Util.integerCommaFormat(collectionData.views),
-                likes: Util.integerCommaFormat(collectionData.likes)
+                adoptions: adoptions,
+                views: views,
+                likes: likes
             };
         },
 
