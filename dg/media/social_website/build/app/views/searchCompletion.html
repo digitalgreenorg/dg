@@ -1,0 +1,8 @@
+{{#categories}}
+<li class='search-completion-category'>{{type}}</li>
+{{#items}}
+<li>
+    <a class="search-completion-item js-search-completion-item" href="{{targetURL}}">{{searchTerm}} {{#count}}({{count}}){{/count}} </a>
+</li>
+{{/items}}
+{{/categories}}

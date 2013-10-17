@@ -1,0 +1,18 @@
+                            {{#categories}}
+                            {{#options.length}}
+                            <li class="js-filter-category {{#categoryOpen}}open{{/categoryOpen}}" data-category-id="{{_categoryId}}">
+                                <div class="filter-category-label js-filter-category-label">{{title}}</div>
+                                <div class="filter-subcategory-wrapper js-subcategory-wrapper">
+                                    <ul class="sorting-categories v-list-divided js-subcategory-container">
+                                        {{#options}}
+                                        <li class="js-filter-option {{#filterActive}}enabled{{/filterActive}}" data-option-id="{{title}}">
+                                            <!-- <input id="adultManagement" type="checkbox" /> -->
+                                            <div class="custom-checkbox"></div>
+                                            <label for="adultManagement">{{title}} ({{count}})</label>
+                                        </li>
+                                        {{/options}}
+                                    </ul>
+                                </div>
+                            </li>
+                            {{/options.length}}
+                            {{/categories}}
