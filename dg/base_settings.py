@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     'social_auth',
     'communications',
     'human_resources',
+    'feeds',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
@@ -149,7 +150,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/logfile'),
+            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
             'formatter': 'standard',
         },
         'console':{
@@ -160,6 +161,10 @@ LOGGING = {
     },
     'loggers': {
         'social_website': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
+        'dashboard': {
             'handlers': ['logfile'],
             'level': 'DEBUG',
         },
