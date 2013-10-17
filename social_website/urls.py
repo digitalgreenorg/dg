@@ -7,7 +7,7 @@ from views import social_home, collection_view, logout_view, partner_view, searc
 
 urlpatterns = patterns('',
     url(r'^$', social_home, name="home"),    
-    url(r'^about/$', direct_to_template, {'template':'about.html', 'extra_context':{'header':{'currentPage':'About'}}}, name='about'),
+    url(r'^about/$', direct_to_template, {'template':'about.html', 'extra_context':{'header':{'jsController':'About', 'currentPage':'About'}}}, name='about'),
     url(r'^about/board/$', direct_to_template, {'template': 'board.html'}, name='board'),
     url(r'^about/ourwork/$', direct_to_template, {'template': 'our_work.html'}, name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
