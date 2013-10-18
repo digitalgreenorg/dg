@@ -815,7 +815,11 @@
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <input type="text" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_name%>" disabled>
+                    <% 
+                        var person_label="";
+                        person_label =person_name+"("+father_name+")";
+                    %>
+                    <input type="text" class="imput-xlarge" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
                 </div>
             </div>
         </td>
