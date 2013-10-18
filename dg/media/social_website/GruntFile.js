@@ -13,30 +13,10 @@ module.exports = function( grunt ) {
     html: {
       files: ['**/*.html']
     },
-
-    
-    // rjs configuration. You don't necessarily need to specify the typical
-    // `path` configuration, the rjs task will parse these values from your
-    // main module, using http://requirejs.org/docs/optimization.html#mainConfigFile
-    //
-    // name / out / mainConfig file should be used. You can let it blank if
-    // you're using usemin-handler to parse rjs config from markup (default
-    // setup)
-    // rjs: {
-    //      // no minification, is done by the min task
-    //      optimize: 'none',
-    //      baseUrl: './scripts',
-    //      wrap: true,
-    //      name: 'main'
-    //    },
-
-    // While Yeoman handles concat/min when using
-    // usemin blocks, you can still use them manually
     
     requirejs: {
         compile: {
         	options:{
-	            //optimize: "none",
 	            appDir: "./scripts/",
 	            baseUrl: "./",
 	            paths: {
@@ -54,13 +34,32 @@ module.exports = function( grunt ) {
 	            		beautify: false
 	            	}
 	            },
-	    		
 	    		inlineText: true,
-	    		
-	            // name: "main"
-	            // out: ""
-	            // findNestedDependencies: true,
-	    		
+	    		modules: [
+	    		          {
+	    		        	  name: 'main' 
+	    		          },
+	    		          {
+	    		        	  name: 'controllers/HomeController',
+	    		        	  exclude: ["main"]
+	    		          },
+	    		          {
+	    		        	  name: 'controllers/AboutController',
+	    		        	  exclude: ["main"]
+	    		          },
+	    		          {
+	    		        	  name: 'controllers/CollectionsController',
+	    		        	  exclude: ["main"]
+	    		          },
+	    		          {
+	    		        	  name: 'controllers/ProfileController',
+	    		        	  exclude: ["main"]
+	    		          },
+	    		          {
+	    		        	  name: 'controllers/ViewCollectionsController',
+	    		        	  exclude: ["main"]
+	    		          }
+	    		         ]
         	}
         }
     }
@@ -70,10 +69,6 @@ module.exports = function( grunt ) {
   
   grunt.loadNpmTasks('grunt-requirejs');
    
-  
-  // Alias the `test` task to run the `mocha` task instead
-  // grunt.registerTask('test', 'server:phantom mocha');
-  // grunt.registerTask('default', 'concat min');
   grunt.registerTask('roptimize', ['requirejs']);
 
 };
