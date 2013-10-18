@@ -136,7 +136,7 @@
 								<div id='videodatadiv2divdesctop'></div>	
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
 									<tr>
-										<td class='videoinfotd1span' colspan='2'> Farmer{{actors.tot_actors|pluralize}}: {% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}      </td>										
+										<td class='videoinfotd1span' colspan='2'> Featuring: {% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}      </td>										
 									</tr>
 									<tr>
 										<td class='videoinfotd1span' colspan='2'> Practices Shown: {{vid.related_practice.practice_name|default:'NA'}}</td>
