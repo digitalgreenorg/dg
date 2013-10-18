@@ -115,7 +115,7 @@ def save_adoption_data(xml_tree):
                 if pap.full_clean() == None:
                     pap.save()
                     status = 1
-                    error_msg = 'Sucessful'
+                    error_msg = 'Successful'
             except ValidationError ,e:
                 status = error_list['ADOPTION_SAVE_ERROR'] 
                 error_msg = unicode(e)
