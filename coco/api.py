@@ -14,6 +14,9 @@ PersonAdoptPractice, PersonGroups, PersonMeetingAttendance, UserPermission, Vide
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
 
+class PMANotSaved(Exception):
+    pass
+
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
 class ModelFormValidation(FormValidation):
     """
@@ -457,11 +460,14 @@ class ScreeningResource(BaseResource):
         screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
-            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
-                                          expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
-                                           interested = pma['interested'], user_created_id = user_id,
-                                          expressed_question = pma['expressed_question'],)
-            pma.save()
+            try:
+                pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
+                                              expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
+                                               interested = pma['interested'], user_created_id = user_id,
+                                              expressed_question = pma['expressed_question'],)
+                pma.save()
+            except Exception as e:
+                raise PMANotSaved('For Screening with id: '+str(screening_id) + 'pma is not getting saved. pma details: '+ pma)
     
         return bundle
 
