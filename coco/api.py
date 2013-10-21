@@ -463,7 +463,7 @@ class ScreeningResource(BaseResource):
             raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' attendance list is not available')
         for pma in pma_list:
             if not pma:
-                raise PMANotSaved('For Screening with id: ' + str(screening_id) + 'attendance list is not available')
+                raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' attendance list is not available')
             try:
                 attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
                                               expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
@@ -471,7 +471,7 @@ class ScreeningResource(BaseResource):
                                               expressed_question = pma['expressed_question'],)
                 attendance.save()
             except Exception as e:
-                raise PMANotSaved('For Screening with id: '+str(screening_id) + 'pma is not getting saved. pma details: '+ pma)
+                raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ pma)
     
         return bundle
 
