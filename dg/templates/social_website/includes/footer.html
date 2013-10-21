@@ -37,50 +37,8 @@
         </div>
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
-        <script type="text/javascript" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script>
-        <script type="text/javascript" src="{% url mainjs %}"></script>
-        <script type="text/javascript">var switchTo5x=true;</script>
-        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-        <script type="text/javascript">stLight.options({publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-        <script src="http://www.youtube.com/player_api"></script>
-		<script type="text/javascript">
-		//$.getJSON('http://graph.facebook.com/digitalgreenorg?fields=likes', function(data) {
-		//	  $('#fb-likes').html(data.likes+" <span>Likes</span>")
-		//	});
-		//$.getJSON('http://api.twitter.com/1/followers/ids.json?cursor=-1&screen_name=digitalgreenorg', function(data) {
-		//		alert(data);
-			  //$('#tw-followers').html(count(data.ids)+" <span>Followers</span>")
-		//	});
-		var video_player = {
-            ytplayer: null,
-    		init: function initialize_player(videoid) {
-    			this.ytplayer = new YT.Player('player', {
-    			    height: '424',
-    			    width: '1024',
-    			    videoId: videoid,
-    			    events: {
-    				    'onReady': this.onPlayerReady,
-    				    'onStateChange': this.onPlayerStateChange
-                    }
-    			});
-    			$("#video-img > div").not("#player").each(function(index, ele){$(ele).hide();});
-                $("#player").show();
-    		},
-            
-    		onPlayerReady: function onPlayerReady(event) {
-    			event.target.playVideo();
-    		},
-            
-    		onPlayerStateChange: function onPlayerStateChange(event) {        
-    			if(event.data === 0) {  
-                    video_player.ytplayer.destroy();
-                    $("#player").hide();          
-    				$("#video-img > div").not("#player").each(function(index, ele){$(ele).show();});			
-    			}
-    		}
-		};
-        
-		</script>
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/libs/external/requirejs/require.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/main.js"></script>
         <!-- Enabling Google Analytics -->
         <script type="text/javascript">
     		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

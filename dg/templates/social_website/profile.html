@@ -11,19 +11,22 @@
                 {% endif %}
                     <div class="bd">
                         <div class="grid">
-                            <div class="grid-col grid-size2of3">
+                            <div class="grid-col {% if partner.video_count or partner.views or partner.likes or partner.adoptions %}grid-size2of3{% endif %}">
                                 <div class="media">
-                                    <div class="img img-size-sq-small ">
-                                        <img src="{{partner.logoURL.url}}" alt="" />
-                                    </div>
-                                    <div class="bd">
-                                        <h1 class="hdg-b hdg-bold push-top-sm">{{partner.full_name}}</h1>
-                                    </div>
+                                    <a href="{{partner.websiteURL}}" target="_blank">
+                                        <div class="img img-size-sq-small ">
+                                            <img src="{{partner.logoURL.url}}" alt="" />
+                                        </div>
+                                        <div class="bd">
+                                            <h1 class="hdg-b hdg-bold push-top-sm">{{partner.full_name}}</h1>
+                                        </div>
+                                    </a>
                                 </div>
                                 <h2 class="copy hdg-bold layout-vr-tiny">{{partner.location}}</h2>
                                 <h3 class="layout-vr-sm copy">Member since {{partner.joinDate}}</h3>
                                 <p class="copy">{{partner.description|safe}}</p>
                             </div>
+                            {% if partner.video_count or partner.views or partner.likes or partner.adoptions %}
                             <div class="grid-col grid-size1of3">
                                 <div class="borderLt grid-margin-lt-lg">
                                     <ul class="v-list-md stats-list">
@@ -34,6 +37,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            {% endif %}
                         </div> <!-- End .grid -->
                     </div> <!-- End .bd -->
                 </div> <!-- End .media -->
