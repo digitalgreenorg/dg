@@ -1960,7 +1960,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 ------------------------------------------------------------------------ */
 
  .gradientBg {
-     margin-bottom: 50px;
+    margin-bottom: 50px;
      border-bottom: 1px solid #c1d0b3;
     background: #ffffff; /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -3160,4 +3160,31 @@ body {
 
 .ele-hide{
 	display: none;
+}
+
+/*-------------------GIC------------------*/
+.gradient-marginless{
+    margin-bottom: 6px;
+}
+
+.GIC-thumbnail{
+    height: 190px;
+    margin-left:20px;
+}
+
+.GIC-conatiner{
+    width:1024px;
+    margin:auto;
+}
+
+.leftdiv{
+    width:200px;
+    float:left;
+    height: 200px;
+}
+
+.rightdiv{
+    width: 724px;
+    float:left;
+    height:200px;
 }
