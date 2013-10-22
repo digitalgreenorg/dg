@@ -51,5 +51,25 @@
     			} 
     	catch(err) {}
     	</script>
+        <script type="text/javascript">
+        
+        var cookies = document.cookie;
+        var new_cookies = cookies.split(";")
+        var check_cookie = 0
+        for(i=0; i<new_cookies.length; i++){
+            var split_cookie = new_cookies[i].split("=");
+            if (split_cookie[0]=='GIC'){
+                check_cookie = 1;
+            }
+        }
+        
+        if (check_cookie == 0){
+            document.cookie = 'GIC=1; expires=Wed, 31 Oct 2013 20:47:11 UTC; path=/'
+            $(window).load(function(){
+                $('#GICModal').modal('show');
+            });
+            }
+        
+        </script>
     </body>
 </html>

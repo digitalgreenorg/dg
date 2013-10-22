@@ -3188,3 +3188,29 @@ body {
     float:left;
     height:200px;
 }
+
+.GIC-modal{
+    width: 600px;
+    top:50%;
+    margin-top:-200px;
+    margin-left:-350px;
+}
+
+.GIC-btn{
+    margin-left:50px;
+}
+
+.GIC-voteBtn{
+    margin-left: 150px;
+    width:10px;
+}
+
+.GIC-textVoteBtn{
+    margin-left:180px;
+    color:white;
+    font-size: 12px;
+}
+
+.GIC-textBtn{
+    margin-left:50px;
+}
