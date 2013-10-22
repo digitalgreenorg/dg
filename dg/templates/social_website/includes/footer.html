@@ -58,7 +58,7 @@
         var check_cookie = 0
         for(i=0; i<new_cookies.length; i++){
             var split_cookie = new_cookies[i].split("=");
-            if (split_cookie[0]=='GIC'){
+            if (split_cookie[0].trim()=='GIC'){
                 check_cookie = 1;
             }
         }
