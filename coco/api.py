@@ -453,27 +453,26 @@ class ScreeningResource(BaseResource):
         excludes = ['location', 'target_person_attendance', 'target_audience_interest', 'target_adoptions', 'time_created', 'time_modified']
     
     def obj_create(self, bundle, **kwargs):
-        bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
-        user_id = None
-        if bundle.request.user:
-            user_id =  bundle.request.user.id
-        screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
-        if not pma_list:
-            raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' attendance list is not available')
-        for pma in pma_list:
-            if not pma:
-                raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' attendance list is not available')
-            try:
-                attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
-                                              expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
-                                               interested = pma['interested'], user_created_id = user_id,
-                                              expressed_question = pma['expressed_question'],)
-                attendance.save()
-            except Exception as e:
-                raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ pma)
-    
-        return bundle
+        if pma_list:
+            bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
+            user_id = None
+            if bundle.request.user:
+                user_id =  bundle.request.user.id
+            screening_id  = getattr(bundle.obj,'id')
+            for pma in pma_list:
+                try:
+                    attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
+                                                  expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
+                                                   interested = pma['interested'], user_created_id = user_id,
+                                                  expressed_question = pma['expressed_question'],)
+                    attendance.save()
+                except Exception as e:
+                    raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ pma)
+        
+            return bundle
+        else:
+            raise PMANotSaved('Screening with details: ' + str(bundle.data) + ' can not be saved because attendance list is not available')
 
     def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
