@@ -1,5 +1,5 @@
 {% include "includes/header.html" %}
-
+{% autoescape off %}
         <section id="career" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
@@ -56,6 +56,6 @@
                 </div>
             </section>
         {% endfor %}
-
+{% endautoescape %}
 {% include "includes/footer.html" %}
 

@@ -21,6 +21,6 @@ def member_view(request):
     return render_to_response('team_page.html', context, context_instance=RequestContext(request))
     
 def job_view(request):
-    job_list = Job.objects.all().order_by('title')
+    job_list = Job.objects.all().order_by('hierarchy_num')
     return render_to_response('career.html',{'job_list':job_list}, context_instance=RequestContext(request))
     
