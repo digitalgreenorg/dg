@@ -7,12 +7,17 @@
                     <div class="grid layout-vr-xlg">
                         <div class='grid-col grid-size1of3'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Current Openings</h3>
+                            {% regroup job_list by geography as jobs %}
+                            
+                            {% for location_jobs in jobs %}
+                            <a href="#{{ location_jobs.grouper }}" class="hdg-f hdg-bold">{{location_jobs.grouper }}</a>
                             <ul class='link-list'>
-                                {% for job in job_list %}
+                                {% for job in location_jobs.list %}
                                     <li><a href="#{{job.title}}">{{job.title}}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
+                            {% endfor %}
                         </div>  
                         <div class='grid-col grid-size2of3 copy'>
                             <p class='copy-para'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity.
@@ -27,8 +32,23 @@
             </div> <!-- End .wrapper -->
         </section>
         
+        {% for location_jobs in jobs %}
+        <section id='{{location_jobs}}' class="{% cycle 'about-bg' 'about-bg about-bg-white' %}">
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{ geographies.(location_jobs.grouper) }}</h2>
+                        <div class='layout-vr-xlg'>
+                            <p class='copy copy-para'>
+                                {{location_jobs.geography_description}}
+                            </p>
+                        </div>
+                    </div>
+                </div> 
+        </section>
+        {% endfor%}
+        
         {% for job in job_list %}
-            <section id='{{job.title}}' class='{% cycle 'about-bg' 'about-bg about-bg-white' %}'>
+            <section id='{{job.title}}' class="{% cycle 'about-bg' 'about-bg about-bg-white' %}">
                 <div class="wrapper">
                     <div class="inner-wrapper">
                         <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
