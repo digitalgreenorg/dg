@@ -37,6 +37,7 @@ class Job(models.Model):
     title = models.CharField(max_length = 300)
     description = models.TextField()
     conclusion = models.TextField()
+    hierarchy_num = models.FloatField(default=0)
     
     def __unicode__(self):
         return '%s' %(self.title)

@@ -21,7 +21,7 @@ class ExperienceQualificationInline(admin.TabularInline):
     extra = 10
     
 class JobAdmin(admin.ModelAdmin):
-    fieldsets = [(None, {'fields':['title','description','conclusion']})]
+    fieldsets = [(None, {'fields':['title','description','conclusion','hierarchy_num']})]
     inlines = [ExperienceQualificationInline, KeyResponsibilityInline]
-    list_display = ('title',)
+    list_display = ('hierarchy_num','title')
     search_fields = ['title']
