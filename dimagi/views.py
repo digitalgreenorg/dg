@@ -1,3 +1,4 @@
+import datetime
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from xml.dom import minidom
@@ -9,6 +10,7 @@ from scripts import save_mobile_data
 def save_submission(request):
     submission = XMLSubmission()
     submission.xml_data = request.raw_post_data
+    submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     submission.save()
     status, msg = save_in_db(submission)
     submission.error_code = status
