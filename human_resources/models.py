@@ -33,14 +33,24 @@ class Member(models.Model):
 
 # Models for Careers page
 
+class Geography(models.Model):
+    name = models.CharField(max_length = 300)
+    description = models.TextField()
+    hierarchy_number = models.FloatField(default=0)
+    
+    def __unicode__(self):
+        return '%s - %f' % (self.name, self.hierarchy_number)
+
 class Job(models.Model):
     title = models.CharField(max_length = 300)
     description = models.TextField()
     conclusion = models.TextField()
     hierarchy_num = models.FloatField(default=0)
-    
+    geography = models.ForeignKey(Geography)
     def __unicode__(self):
         return '%s' %(self.title)
+    class Meta:
+        ordering = ['-geography__hierarchy_number', 'geography__name', '-hierarchy_num', 'title']
 
 class KeyResponsibility(models.Model):
     job = models.ForeignKey(Job)
@@ -55,3 +65,4 @@ class ExperienceQualification(models.Model):
     
     def __unicode__(self):
         return '%s' %(self.point)
+        
