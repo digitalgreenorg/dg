@@ -51,6 +51,17 @@
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
     <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
+        
+        <div id="GICModal" class="modal-login modal hide GIC-modal">
+                <a href="#" class="close hdg-e hdg-bold" data-dismiss="modal">&times;</a>
+                <a href="http://goo.gl/7hYYzo" target="_blank"><img src="{{STATIC_URL}}social_website/content/GIC.png" style="height:250px;"/></a><br><br><br><br>
+                <a class="comment-btn GIC-voteBtn" href="http://goo.gl/7hYYzo" target="_blank">Vote For Us</a>
+                <a class="comment-btn GIC-btn" href="#" data-dismiss="modal">Go to homepage</a>
+                <div> <p style="margin-left:175px; color:white; font-size:8px;">By October 30th 2013 
+                <span style="margin-left:110px;">www.digitalgreen.org</span></p>
+                </div>
+        </div>
+        
         <div class="wrapper-main wrapper">
             <div class="header-fixed">
                 <div class="header-wrapper clearfix">
