@@ -537,5 +537,5 @@ class Command(BaseCommand):
         print(datetime.date.today())
         mysql_root_username = args[0]
         mysql_root_password = args[1]
-        an_sync_obj = AnalyticsSync(args.mysql_root_username, args.mysql_root_password)
+        an_sync_obj = AnalyticsSync(mysql_root_username, mysql_root_password)
         an_sync_obj.refresh_build()
