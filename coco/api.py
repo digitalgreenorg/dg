@@ -40,7 +40,6 @@ class ModelFormValidation(FormValidation):
         # convert everything to lists
         multiple = not isinstance(uri, basestring)
         uris = uri if multiple else [uri]
-
         # handle all passed URIs
         converted = []
         for one_uri in uris:
@@ -56,67 +55,6 @@ class ModelFormValidation(FormValidation):
 
     def is_valid(self, bundle, request=None):
         data = bundle.data
-        # Ensure we get a bound Form, regardless of the state of the bundle.
-        if data is None:
-            data = {}
-        # copy data, so we don't modify the bundle
-        data = data.copy()
-        # convert URIs to PK integers for all relation fields
-        relation_fields = [name for name, field in
-                           self.form_class.base_fields.items()
-                           if issubclass(field.__class__, ModelChoiceField)]
-        
-        for field in relation_fields:
-            if field in data:
-                data[field] = self.uri_to_pk(data[field])
-        
-        # validate and return messages on error
-        if request.method == "PUT":
-            #Handles edit case
-            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
-        else:
-            form = self.form_class(data)
-        if form.is_valid():
-            return {}
-        return form.errors
-
-class MediatorFormValidation(FormValidation):
-    """
-        Override tastypie's standard ``FormValidation`` since this does not care
-        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
-        """
-    
-    def uri_to_pk(self, uri):
-            """
-                Returns the integer PK part of a URI.
-                
-                Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
-                returns the URI unmodified.
-                
-                Also handles lists of URIs
-                """
-            
-            if uri is None:
-                return None
-            
-            # convert everything to lists
-            print 'in mediator form validation'
-            converted = []
-            if type(uri) == type(dict()):
-                converted.append(uri.get('id'))
-                return uri.get('id')
-            elif type(uri) == type(list()):
-                for item in uri:
-                    print item.get('id')
-                    converted.append(item.get('id'))
-                return converted
-
-    def is_valid(self, bundle, request=None):
-        partner_id = get_user_partner_id(request)
-        if partner_id:
-            bundle.data['partner'] ={'id':partner_id, 'partner_name':''} #"/api/v1/partner/"+str(partner_id)+"/"
-        data = bundle.data
-        
         # Ensure we get a bound Form, regardless of the state of the bundle.
         if data is None:
             data = {}
@@ -288,12 +226,14 @@ class MediatorResource(BaseResource):
         queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
         authorization = VillageLevelAuthorization('assigned_villages__in')
-        validation = MediatorFormValidation(form_class=AnimatorForm)
+        #validation = MediatorFormValidation(form_class=AnimatorForm)
+        validation = ModelFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+    hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
     
     def dehydrate_assigned_villages(self, bundle):
         return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
