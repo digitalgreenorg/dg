@@ -50,7 +50,7 @@ class Job(models.Model):
     def __unicode__(self):
         return '%s' %(self.title)
     class Meta:
-        ordering = ['geography__hierarchy_number', 'geography__name', 'hierarchy_num', 'title']
+        ordering = ['-geography__hierarchy_number', 'geography__name', '-hierarchy_num', 'title']
 
 class KeyResponsibility(models.Model):
     job = models.ForeignKey(Job)

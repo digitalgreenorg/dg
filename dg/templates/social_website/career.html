@@ -7,7 +7,7 @@
                     <div class="grid layout-vr-xlg">
                         <div class='grid-col grid-size1of3'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Current Openings</h3>
-                            {% regroup job_list by geography as jobs %}
+                            {% regroup job_list by geography.name as jobs %}
                             
                             {% for location_jobs in jobs %}
                             <a href="#{{ location_jobs.grouper }}" class="hdg-f hdg-bold">{{location_jobs.grouper }}</a>
@@ -32,23 +32,22 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        {% for location_jobs in jobs %}
-        <section id='{{location_jobs}}' class="{% cycle 'about-bg' 'about-bg about-bg-white' %}">
+{% for job in job_list %}
+    {% ifchanged job.geography %}        
+        <section id='{{job.geography.name}}' class="{% cycle 'about-bg' 'about-bg about-bg-white' as section_background %}">
                 <div class="wrapper">
                     <div class="inner-wrapper">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{ geographies.(location_jobs.grouper) }}</h2>
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{ job.geography.name }}</h2>
                         <div class='layout-vr-xlg'>
                             <p class='copy copy-para'>
-                                {{location_jobs.geography_description}}
+                                {{ job.geography.description }}
                             </p>
                         </div>
                     </div>
                 </div> 
         </section>
-        {% endfor%}
-        
-        {% for job in job_list %}
-            <section id='{{job.title}}' class="{% cycle 'about-bg' 'about-bg about-bg-white' %}">
+    {% endifchanged %}
+            <section id='{{job.title}}' class="{% cycle section_background %}">
                 <div class="wrapper">
                     <div class="inner-wrapper">
                         <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
@@ -75,7 +74,8 @@
                     </div>
                 </div>
             </section>
-        {% endfor %}
+{% endfor %}
+
 {% endautoescape %}
 {% include "includes/footer.html" %}
 

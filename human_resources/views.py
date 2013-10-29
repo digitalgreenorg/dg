@@ -21,12 +21,5 @@ def member_view(request):
     return render_to_response('team_page.html', context, context_instance=RequestContext(request))
   
 def job_view(request):
-    #job_list = Job.objects.order_by('geography__hierarchy_number', 'geography__name', 'hierarchy_number', 'title')
-    
-    job_list = [{'geography':job.geography.id, 'title':job.title, 'id':job.id} for job in Job.objects.all()]
-    
-    geographies = Geography.objects.all()
-    all_jobs = Job.objects.all()
-    
-    return render_to_response('career.html',{'job_list':job_list, 'geographies':geographies, 'all_jobs':all_jobs}, context_instance=RequestContext(request))
-    
+    job_list = Job.objects.all()
+    return render_to_response('career.html',{'job_list':job_list}, context_instance=RequestContext(request))
