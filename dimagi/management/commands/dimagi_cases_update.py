@@ -66,17 +66,16 @@ class Command(BaseCommand):
             
             if len(case_close_set):
                 # Write XML for Closing Cases into file
-                for person_id in case_close_list:
-                    file_closecase = os.path.join(MEDIA_ROOT, "dimagi", "updates", "closing_forms", "%s.xml" % (person_id))
-                    close_case(person_id, file_closecase)
-                    try:
-                        response_closecase = commcare_project.upload_case_file(file_closecase)
-                        if response_closecase == 201 or response_closecase == 200:
-                            self.stdout.write('Successfully closed case for "%s"' % commcare_project_name)
-                        else:
-                            self.stdout.write('Not closed but file ("%s") has been created in MEDIA_ROOT/dimagi/closing_forms' % person_id)
-                    except Exception as ex:
-                        pass
+                file_closecase = os.path.join(MEDIA_ROOT, "dimagi", "updates", "closing_forms", "%s.xml" % (person_id))
+                close_case(case_close_list, file_closecase)
+                try:
+                    response_closecase = commcare_project.upload_case_file(file_closecase)
+                    if response_closecase == 201 or response_closecase == 200:
+                        self.stdout.write('Successfully closed case for "%s"' % commcare_project_name)
+                    else:
+                        self.stdout.write('Not closed but file ("%s") has been created in MEDIA_ROOT/dimagi/closing_forms' % person_id)
+                except Exception as ex:
+                    pass
             
             if len(case_videos_seen_update_set):                
                 filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_updatecase.xml" % (commcare_project_name))

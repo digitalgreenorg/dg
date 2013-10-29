@@ -41,36 +41,26 @@ def check_person_id(person_id):
         exists = True
     return exists
 
-def close_case(person_id, filename):
-    CommCareCase = get_model('dimagi', 'CommCareCase')
-    case_id = CommCareCase.objects.get(person = person_id).guid
-    owner_id = CommCareCase.objects.get(person = person_id).user.guid
-    # Putting all the info in xml tags
-    f = open(filename,'w')
-    f.write('<?xml version="1.0" ?>\n')
-    f.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
-    f.write('<num_people>1</num_people>\n')
-    f.write('<people>\n')
+def close_case(persons, filename):
+    file = codecs.open(filename, "w",'utf-8')
+    write_opening_meta(file, len(persons))
     i = 0
+    CommCareCase = get_model('dimagi', 'CommCareCase')
+    for person in persons:
+        case_id = CommCareCase.objects.get(person=person).guid
+        owner_id = CommCareCase.objects.get(person=person).user.guid
+        write_close_person_content(file, i, case_id, owner_id)
+        i+= 1
+    write_closing_meta(file, owner_id, i)
+    file.close()                
+    
+def write_close_person_content(f, i, case_id, owner_id):
+    f.write('<people>\n')
     f.write('<n'+unicode(i)+':case case_id="'+unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="' + owner_id +'" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
-    f.write('<n'+unicode(i)+':create>\n')
-    f.write('<n'+unicode(i)+':case_type>person</n'+unicode(i)+':case_type>\n')
-    f.write('<n'+unicode(i)+':owner_id>' + owner_id + '</n'+unicode(i)+':owner_id>\n')
-    f.write('</n'+unicode(i)+':create>\n')
-    f.write('<n'+unicode(i)+':update>\n')
-    f.write('</n'+unicode(i)+':update>\n')
-    f.write('<n'+unicode(i)+':close>' + '1' + '</n'+unicode(i)+':close>\n')
+    f.write('<n'+unicode(i)+':close>\n')
+    f.write('</n'+unicode(i)+':close>\n')
     f.write('</n'+unicode(i)+':case>\n')
     f.write('</people>\n')
-    # Writing closing meta info of the form
-    i += 1
-    f.write('<n'+unicode(i) + ':meta xmlns:n' + unicode(i) + '="http://openrosa.org/jr/xforms">\n')
-    f.write('<n'+unicode(i) + ':userID>' + owner_id + '</n' + unicode(i) + ':userID>\n')
-    f.write('<n'+unicode(i) + ':instanceID>' + unicode(uuid.uuid4()) + '</n' + unicode(i) + ':instanceID>\n')
-    f.write('</n' + unicode(i) + ':meta>\n')
-    f.write('</data>')
-    f.close()
-    
 
 def get_person_id_from_pma(instance):
     PersonMeetingAttendance = get_model('dashboard',instance.entry_table)
