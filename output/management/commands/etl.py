@@ -1,19 +1,15 @@
-import site, sys
-import datetime, time
-import argparse
+import datetime
 import os
+import site
+import sys
+import time
 
+from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
-
-DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
-
 from django.db.models import Min, Count
 from dashboard.models import *
-from collections import defaultdict
+
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class AnalyticsSync():
     def __init__(self, db_root_user, db_root_pass):
@@ -532,16 +528,14 @@ class AnalyticsSync():
 
 
 class Command(BaseCommand):
-    help = '''This command updates statistics displayed on Analytics dashboards.'''
+    help = '''This command updates statistics displayed on Analytics dashboards.
+    arguments: mysql_root_username mysql_root_password
+    '''
     
     def handle(self, *args, **options):
-        parser = argparse.ArgumentParser()
-        parser.add_argument("mysql_root_username", help="MySQL Root User")
-        parser.add_argument("mysql_root_password", help="MySQL Root Password")
-        parser.add_argument("action", help="Task to run. Currently only referesh. Can include add.",  choices=['refresh_schema'])
-        args = parser.parse_args()
         print("Log")
         print(datetime.date.today())
-        if args.action == "refresh_schema":
-            an_sync_obj = AnalyticsSync(args.mysql_root_username, args.mysql_root_password)
-            an_sync_obj.refresh_build()
+        mysql_root_username = args[0]
+        mysql_root_password = args[1]
+        an_sync_obj = AnalyticsSync(args.mysql_root_username, args.mysql_root_password)
+        an_sync_obj.refresh_build()
