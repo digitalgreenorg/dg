@@ -40,7 +40,7 @@ def write_closing_meta(file, owner_id, i):
    
 def write_new_case(persons, filename):
     file = codecs.open(filename, "w",'utf-8')
-    write_opening_meta(file, 1)
+    write_opening_meta(file, len(persons))
     i = 0
     for person in persons:
         person = Person.objects.get(id = person_id)

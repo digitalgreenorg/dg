@@ -83,7 +83,7 @@ class Command(BaseCommand):
                 try:
                     response_update = commcare_project.upload_case_file(filename_updatecases)
                     if response_update == 201 or response_update == 200:
-                        self.stdout.write('Successfully updated cases for "%s"' % commcare_project_name)
+                        self.stdout.write('Successfully updated cases for "%s" \n' % commcare_project_name)
                     else:
                         self.stdout.write('HTTP response code: %d. Not uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi/updates' % (commcare_project_name))
                 except Exception as ex:
