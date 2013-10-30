@@ -1,7 +1,7 @@
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
-from django import forms
 from models import *
 
 # function for saving formsets with user information
@@ -110,7 +110,7 @@ class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
         exclude = ('assigned_villages',)
-    
+        
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
         model = AnimatorAssignedVillage
