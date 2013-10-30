@@ -156,6 +156,14 @@ def get_user_videos(user_id):
     
     return set(list(videos_with_user) + list(videos_with_out_user)+list(videos_seen))
     
+def get_user_mediators(user_id):
+    coco_user = CocoUser.objects.get(user_id = user_id)
+    villages = coco_user.get_villages()
+    mediators_from_assigned_villages = Animator.objects.filter(assigned_villages__in = villages).values_list('id', flat=True).distinct()
+    user_districts = District.objects.filter(block__village__in = villages).distinct().values_list('id', flat=True)
+    mediators_from_same_district = Animator.objects.filter(district__in = user_districts).values_list('id', flat = True)
+        
+    return set(list(mediators_from_assigned_villages) + list(mediators_from_same_district))
 
 class VillageLevelAuthorization(Authorization):
     def __init__(self, field):
@@ -176,6 +184,23 @@ class VillageLevelAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download" )
+
+class MediatorAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_mediators(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_mediators(bundle.request.user.id):
+            return True
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs['assigned_villages__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Mediator")
+
 
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -225,8 +250,7 @@ class MediatorResource(BaseResource):
         authentication = SessionAuthentication()
         queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
-        authorization = VillageLevelAuthorization('assigned_villages__in')
-        #validation = MediatorFormValidation(form_class=AnimatorForm)
+        authorization = MediatorAuthorization()
         validation = ModelFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
