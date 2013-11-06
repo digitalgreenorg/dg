@@ -13,6 +13,7 @@ error_list = dict({'UNIDENTIFIED_FORM'     : -1,
                    'ADOPTION_SAVE_ERROR'   : -4,
                    'ADOPTION_READ_ERROR'   : -5,
                    'PMA_SAVE_ERROR'        : -6,
+                   'DEVICE_REPORT'         : -7,
                    })
 
 class XMLSubmission(models.Model):
