@@ -452,7 +452,7 @@ a {
 
 .hdg-follow {
     float: left;
-    width: 221px;
+    width: 140px;
 }
 
 .social {
@@ -487,6 +487,10 @@ a {
 
 .icon-linkedin {
     background: url(../images/icon-sprite.png) no-repeat 0 -369px;
+}
+
+.icon-gplus {
+    background: url(../images/icon-sprite.png) no-repeat 0 -647px;
 }
 
 .sub-text {
