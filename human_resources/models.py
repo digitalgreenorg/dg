@@ -14,6 +14,12 @@ location_choices = [('Headquarters-Delhi', 'Headquarters-Delhi'),
                     ('Patna', 'Patna'),
                     ('Lucknow', 'Lucknow'),]
 
+class Place(models.Model):
+    name = models.CharField(max_length = 300, default="Headquarters-Delhi")
+    
+    def __unicode__(self):
+        return self.name
+
 # Models for Team page
 class Member(models.Model):
     name = models.CharField(max_length=100)
@@ -25,6 +31,7 @@ class Member(models.Model):
                                                   MinLengthValidator(250)])
     team = models.CharField(max_length=100, choices=team_choices)
     location = models.CharField(max_length=100, choices=location_choices)
+    place = models.ForeignKey(Place, null=True)
     image = models.ImageField(help_text="""Minimum Width Should be 100
                                          and Minimum Height should be 100""",
                               upload_to='team/')
