@@ -15,6 +15,7 @@ define(function(require) {
     var jQuery = require('jquery');
 
     require('libs/external/swfobject/swfobject');
+    require('libs/external/buttons');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
     //var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
@@ -34,6 +35,14 @@ define(function(require) {
             this.base(bootstrapConfig, globalHelpers);
 
             this._initVideoPlayer();
+            
+            stLight.options({
+            	publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", 
+            	doNotHash: false, 
+            	doNotCopy: false, 
+            	hashAddressBar: false
+            });
+            
             this._initVideoStats();
 
             this._getComments();
@@ -176,11 +185,8 @@ define(function(require) {
 
             videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
             
-            // The id that is shown in the URL. Below functionality will autoplay the youtube video on all video pages except for the first video in a collection
-            var videoId = jQuery('.video-wrapper').attr('data-videoid');
-            if (videoId != 1){
-            	videoPlayer.playVideo();
-            }
+            // Below functionality will autoplay the youtube video on all video pages
+            videoPlayer.playVideo();
         },
 
         _onYouTubePlayerStateChange: function(newState) {

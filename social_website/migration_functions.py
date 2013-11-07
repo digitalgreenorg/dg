@@ -1,14 +1,17 @@
+import gc
+from collections import defaultdict 
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
+
 import gdata.youtube.service
+from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_stats
 from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
-from collections import defaultdict 
-import gc
+
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
-
 
 def initial_personvideorecord():
     from dashboard.models import PersonAdoptPractice, PersonMeetingAttendance
@@ -76,41 +79,6 @@ def update_person_video_record(pma, videos):
         except ObjectDoesNotExist:
             person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, like = pma.interested, views = 1)
         person_video_obj.save()
-  
-def check_video_youtube_id(vid):
-    if vid.youtubeid != "" :
-        try:
-            yt_service = gdata.youtube.service.YouTubeService()
-            yt_service.developer_key = DEVELOPER_KEY
-            yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id = vid.youtubeid)
-            if entry is not None:
-                return entry
-        except Exception, ex:
-            pass
-    return None
-    
-def get_online_stats(yt_entry):     
-    stats = {   'views': 0,
-                'duration': 0,
-                'likes': 0,
-            }
-    try:
-        stats['views'] = int(yt_entry.statistics.view_count)
-    except AttributeError:
-        pass
-    try:
-        stats['duration'] = int(yt_entry.media.duration.seconds)
-    except AttributeError:
-        pass
-    try:
-        if yt_entry.rating:
-            stats['likes'] = int((float(yt_entry.rating.average)*float(yt_entry.rating.num_raters)-float(yt_entry.rating.num_raters))/4)
-        else:
-            stats['likes'] = 0
-    except AttributeError:
-        pass
-    return stats
 
 def populate_adoptions(pap):
     person_id = pap.person_id
@@ -123,7 +91,7 @@ def populate_adoptions(pap):
         pass
       
 def update_website_video(vid):
-    yt_entry = check_video_youtube_id(vid)
+    yt_entry = get_youtube_entry(cleanup_youtubeid(vid.youtubeid))
     if yt_entry: 
         partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
         language  = vid.language.language_name
@@ -226,7 +194,7 @@ def populate_farmers(person):
         website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                                 thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
         website_farmer.save()
-    
+
 def update_questions_asked(pma):
     if pma.expressed_question != '':
         videos = [video for video in pma.screening.videoes_screened.all()]
@@ -253,4 +221,3 @@ def delete_video(video):
     comments = Comment.objects.filter(video = website_video)
     comments.delete()
     website_video.delete()
-    

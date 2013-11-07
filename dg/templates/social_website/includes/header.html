@@ -4,7 +4,6 @@
         <meta property="og:image" content="http://www.digitalgreen.org/media/social_website/content/dg_transition.png"/>
         <meta property="og:title" content="Digital Green"/>
         <meta property="og:type" content="website"/>
-        <meta property="og:url" content="http://www.digitalgreen.org/"/>
         <meta property="og:site_name" content="DigitalGreen"/>
         <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
         <meta property="fb:app_id" content="149405231925556" />
@@ -53,54 +52,56 @@
     <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
-            <div class="header-wrapper clearfix">
-                <header class="global-nav">
-                    <a class="skip-to-content" href="#main">Skip to content</a>
-                    <div class="wrapper">
-                        <nav class="inner-nav" role="navigation">
-                            <ul class="nav">
-                                <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                <li class="logo"><a href="{% url home%}">Green Digital</a></li>
-                                <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url discover%}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
-                                <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url connect %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
-                                <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
-                                <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
-                                <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url donate %}">Donate</a></li>
-                                {% if not request.user.is_authenticated %}
-                                <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
-                                {% else %}
-                                <li>
-                                    <a class="btn-sign-in btn-signed" href="{% url logout %}?next={{request.path}}">
-                                        <div class="media">
-                                            <div class="img">
-                                            {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                           	 <img class="profile-image" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
-											{% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-											 <img class="profile-image" src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=16">
-											{% endif %}
-                                                
-                                            </div>
-                                            <div class="bd">
-                                                Sign Out
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav> <!-- End .inner-nav -->
-                    </div>  <!-- End .wrapper -->
-                </header> <!-- End .global-nav -->
-            </div>
+            <div class="header-fixed">
+                <div class="header-wrapper clearfix">
+                    <header class="global-nav">
+                        <a class="skip-to-content" href="#main">Skip to content</a>
+                        <div class="wrapper">
+                            <nav class="inner-nav" role="navigation">
+                                <ul class="nav">
+                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
+                                    <li class="logo"><a href="{% url home%}">Green Digital</a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url discover%}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url connect %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
+                                    <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url career %}?header=true">Careers</a></li>
+                                    {% if not request.user.is_authenticated %}
+                                        <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
+                                    {% else %}
+                                        <li>
+                                            <a class="btn-sign-in btn-signed" href="{% url logout %}?next={{request.path}}">
+                                                <div class="media">
+                                                    <div class="img">
+                                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                                            <img class="profile-image" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+                                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                                            <img class="profile-image" src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=16">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="bd">
+                                                        Sign Out
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav> <!-- End .inner-nav -->
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>
             
-            {% load url from future %}
-            <div id="login_modal" class="modal-login modal hide" >
-				<a href="#" class="close" data-dismiss="modal">&times;</a>
-				<h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
-				<div class="layout-vr-sm">
-                    <a href="{% url 'socialauth_begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
+                {% load url from future %}
+                <div id="login_modal" class="modal-login modal hide" >
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
+                    <div class="layout-vr-sm">
+                        <a href="{% url 'socialauth_begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
+                    </div>
+                    <div class="layout-vr-tiny">
+                        <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
+                    </div>
                 </div>
-                <div class="layout-vr-tiny">
-                    <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
-                </div>
-			</div>
+            </div>
+            <div class="header-margin"></div>

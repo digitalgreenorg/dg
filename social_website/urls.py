@@ -7,7 +7,7 @@ from views import social_home, collection_view, logout_view, partner_view, searc
 
 urlpatterns = patterns('',
     url(r'^$', social_home, name="home"),    
-    url(r'^about/$', direct_to_template, {'template':'about.html', 'extra_context':{'header':{'currentPage':'About'}}}, name='about'),
+    url(r'^about/$', direct_to_template, {'template':'about.html', 'extra_context':{'header':{'jsController':'About', 'currentPage':'About'}}}, name='about'),
     url(r'^about/board/$', direct_to_template, {'template': 'board.html'}, name='board'),
     url(r'^about/ourwork/$', direct_to_template, {'template': 'our_work.html'}, name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^about/team/$', member_view, name='team'),
     url(r'^about/tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
     url(r'^careers/$', job_view, name='career'),
+    url(r'^career/$', job_view),
     # TODO: Connect needs to be fixed.
     url(r'^connect/(?P<partner>.+)/$', partner_view, name='partner'),
     url(r'^connect/$', direct_to_template, {'template': 'connect.html', 'extra_context': {'header': {'currentPage':'Connect'}}}, name='connect'),

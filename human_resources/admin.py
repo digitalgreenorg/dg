@@ -1,6 +1,6 @@
 from django.contrib import admin
 #from forms import ImageAdminForm
-from models import ExperienceQualification, Job, KeyResponsibility
+from models import Geography, ExperienceQualification, Job, KeyResponsibility
 
 class MemberAdmin(admin.ModelAdmin):
     #form = ImageAdminForm
@@ -21,7 +21,11 @@ class ExperienceQualificationInline(admin.TabularInline):
     extra = 10
     
 class JobAdmin(admin.ModelAdmin):
-    fieldsets = [(None, {'fields':['title','description','conclusion']})]
+    fieldsets = [(None, {'fields':['title','description','conclusion','hierarchy_num', 'geography']})]
     inlines = [ExperienceQualificationInline, KeyResponsibilityInline]
-    list_display = ('title',)
+    list_display = ('hierarchy_num','title', 'geography')
     search_fields = ['title']
+
+class GeographyAdmin(admin.ModelAdmin):
+    fieldsets = [(None, { 'fields': ['name', 'description', 'hierarchy_number']})]
+    list_display = ('name', 'hierarchy_number', )
