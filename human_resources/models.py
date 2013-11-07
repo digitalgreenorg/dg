@@ -11,7 +11,8 @@ location_choices = [('Headquarters-Delhi', 'Headquarters-Delhi'),
                     ('Bhopal', 'Bhopal'),
                     ('Bhubaneswar', 'Bhubaneswar'),
                     ('Hyderabad', 'Hyderabad'),
-                    ('Patna', 'Patna')]
+                    ('Patna', 'Patna'),
+                    ('Lucknow', 'Lucknow'),]
 
 # Models for Team page
 class Member(models.Model):
