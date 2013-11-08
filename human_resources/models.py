@@ -6,14 +6,6 @@ team_choices = [('Executive Leadership Team', 'Executive Leadership Team'),
                 ('Program Team', 'Program Team'),
                 ('Support Team', 'Support Team')]
 
-location_choices = [('Headquarters-Delhi', 'Headquarters-Delhi'),
-                    ('Bangalore', 'Bangalore'),
-                    ('Bhopal', 'Bhopal'),
-                    ('Bhubaneswar', 'Bhubaneswar'),
-                    ('Hyderabad', 'Hyderabad'),
-                    ('Patna', 'Patna'),
-                    ('Lucknow', 'Lucknow'),]
-
 class Place(models.Model):
     name = models.CharField(max_length = 300, default="Headquarters-Delhi")
     
