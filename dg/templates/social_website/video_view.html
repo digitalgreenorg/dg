@@ -23,9 +23,9 @@
                                     <a href="{% url partner video.partner.name %}"><img src="{{ video.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny">{{ video.partner.name }}</h2>
+                                    <a href="{% url partner video.partner.name %}"><h2 class="copy hdg-bold layout-vr-tiny">{{ video.partner.name }}</h2></a>
                                     <p class="copy layout-vr-tiny">Member since {{ video.partner.joinDate.year }}</p>
-                                    <a class="hdg-bold copy">{{ video.partner.video_count }} Videos</a>
+                                    <a href="{% url partner video.partner.name %}" class="hdg-bold copy">{{ video.partner.video_count }} Videos</a>
                                 </div>
                             </div> <!-- End .media -->
                             <h3 class="copy hdg-bold layout-vr-tiny">{{ video.state}}</h3>
