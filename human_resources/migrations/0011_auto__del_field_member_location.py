@@ -63,7 +63,7 @@ class Migration(SchemaMigration):
         'human_resources.place': {
             'Meta': {'object_name': 'Place'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'default': "'Headquarters-Delhi'", 'max_length': '300'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'})
         }
     }
 

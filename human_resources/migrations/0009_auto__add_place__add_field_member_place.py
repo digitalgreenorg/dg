@@ -11,14 +11,22 @@ class Migration(SchemaMigration):
         # Adding model 'Place'
         db.create_table('human_resources_place', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(default='Headquarters-Delhi', max_length=300)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=300)),
         ))
         db.send_create_signal('human_resources', ['Place'])
+
+        # Adding field 'Member.place'
+        db.add_column('human_resources_member', 'place',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['human_resources.Place'], null=True),
+                      keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting model 'Place'
         db.delete_table('human_resources_place')
+
+        # Deleting field 'Member.place'
+        db.delete_column('human_resources_member', 'place_id')
 
 
     models = {
@@ -60,12 +68,13 @@ class Migration(SchemaMigration):
             'location': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'personal_intro': ('django.db.models.fields.TextField', [], {}),
+            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['human_resources.Place']", 'null': 'True'}),
             'team': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'human_resources.place': {
             'Meta': {'object_name': 'Place'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'default': "'Headquarters-Delhi'", 'max_length': '300'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'})
         }
     }
 

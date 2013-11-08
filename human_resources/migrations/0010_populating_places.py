@@ -11,14 +11,13 @@ class Migration(DataMigration):
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
         Member = orm['human_resources.Member']
         Place = orm['human_resources.Place']
-        places = Place.objects.all()
-        locations_dict = {}
-        for place in places:
-            locations_dict[place.name]=place.id
-        members = Member.objects.all()
-        for member in members:
-            place_id = locations_dict[member.location]
-            member.place = Place.objects.get(id = place_id)
+        locations = Member.objects.values_list('location', flat=True).distinct()
+        for location in locations:
+            place = Place(name=location)
+            place.save()
+
+        for member in Member.objects.all():
+            member.place = Place.objects.get(name=member.location)
             member.save()
         
 
@@ -70,7 +69,7 @@ class Migration(DataMigration):
         'human_resources.place': {
             'Meta': {'object_name': 'Place'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'default': "'Headquarters-Delhi'", 'max_length': '300'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '300'})
         }
     }
 

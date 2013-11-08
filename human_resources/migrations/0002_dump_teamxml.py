@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime, os
 from dg.base_settings import PROJECT_PATH
-from human_resources.models import Member, team_choices, location_choices
+from human_resources.models import Member, team_choices
 from django.db import models
 from south.db import db
 from south.v2 import DataMigration
