@@ -1,16 +1,20 @@
 from django.contrib import admin
 #from forms import ImageAdminForm
-from models import Geography, ExperienceQualification, Job, KeyResponsibility
+from models import Geography, ExperienceQualification, Job, KeyResponsibility, Place
 
 class MemberAdmin(admin.ModelAdmin):
     #form = ImageAdminForm
     fieldsets = [(None,  {'fields': ['name', 'email', 'designation',
-                                     'team', 'personal_intro', 'location',
+                                     'team', 'personal_intro', 'place',
                                      'image', 'hierarchy_num']
                           }
                   )]
     list_display = ('name', 'email', 'designation')
     search_fields = ['name']
+    
+class PlaceAdmin(admin.ModelAdmin):
+    fieldsets = [(None, { 'fields': ['name']})]
+    list_display = ('name',)
 
 class KeyResponsibilityInline(admin.TabularInline):
     model = KeyResponsibility
