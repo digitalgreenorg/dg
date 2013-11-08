@@ -22,7 +22,7 @@ class Member(models.Model):
                                       validators=[MaxLengthValidator(1350),
                                                   MinLengthValidator(250)])
     team = models.CharField(max_length=100, choices=team_choices)
-    place = models.ForeignKey(Place, null=True)
+    place = models.ForeignKey(Place)
     image = models.ImageField(help_text="""Minimum Width Should be 100
                                          and Minimum Height should be 100""",
                               upload_to='team/')
