@@ -52,15 +52,15 @@
             </div>
         </section>
         
-        {% regroup other_teams by location as location_list %}
+        {% regroup other_teams by place as place_list %}
         
-        {% for location in location_list %}
+        {% for place in place_list %}
         <section class="{% cycle 'about-bg about-bg-white' 'about-bg'%}">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">{{location.grouper}} Team</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">{{place.grouper}} Team</h2>
                     <div class="media  ">
-                        {% for mem in location.list %}
+                        {% for mem in place.list %}
                             {% include "includes/team_member_info.html" %}
                         {% endfor %}
                     </div>
