@@ -92,7 +92,7 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
     filters[field] = {}
     filters[field]['title'] = field.title()
     filters[field]['options'] = []
-    for obj in set(Collection.objects.exclude(**kwargs).values_list(field, flat=True)): #works same as .exclude(field = '')
+    for obj in sorted(set(Collection.objects.exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
         facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
         if facet_count or facet_dict == {}:
             filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
@@ -120,7 +120,7 @@ def searchFilters(request):
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
     filters['partner']['options'] = []
-    for obj in Partner.objects.all():
+    for obj in Partner.objects.all().order_by('name'):
         facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
         if facet_count or facet_dict == {}:
             filters['partner']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in partner, "count" : facet_count })
