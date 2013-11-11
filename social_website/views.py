@@ -174,9 +174,9 @@ def featuredCollection(request):
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
 
-def video_view(request, partner, state, language, title):
+def video_view(request, uid):
     try:
-        video = Video.objects.get(partner__name__iexact = partner, state__iexact = state, language__iexact = language, title__iexact = title)
+        video = Video.objects.get(uid=uid)
     except Video.DoesNotExist:
         return HttpResponseRedirect(reverse('discover'))
 

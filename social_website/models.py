@@ -66,7 +66,7 @@ class Video(models.Model):
 
     def get_absolute_url(self):
         return reverse('video_page', 
-                       args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
+                       args=[str(self.uid)])
 post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):

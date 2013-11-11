@@ -36,5 +36,5 @@ urlpatterns = patterns('',
     url(r'^team/$', member_view, name='team'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
-    url(r'^video-view/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', video_view, name="video_page"),
+    url(r'^video-view/(?P<uid>.+)/$', video_view, name="video_page"),
 )
