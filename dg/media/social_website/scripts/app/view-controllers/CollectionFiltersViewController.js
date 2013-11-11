@@ -89,6 +89,7 @@ define(function(require) {
                     height: '0px'
                 }, 1000);
             	$newOpenFilterCategory.removeClass('open');
+            	filterCategories[newOpenCategoryId].categoryOpen = false;
                 return;
             }
 
