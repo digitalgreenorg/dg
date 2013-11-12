@@ -431,8 +431,8 @@ class ScreeningResource(BaseResource):
                                                    interested = pma['interested'], user_created_id = user_id,
                                                   expressed_question = pma['expressed_question'],)
                     attendance.save()
-                except Exception as e:
-                    raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ pma)
+                except Exception, e:
+                    raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
         
             return bundle
         else:
