@@ -4,7 +4,7 @@ import os
 import sys
 import time
 import xlrd
-import xlwt
+import xlsxwriter
 
 from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Video, Village
 from dg.settings import MEDIA_ROOT
@@ -14,7 +14,7 @@ from dimagi.models import CommCareUser, CommCareUserVillage
 three_months = datetime.now() - timedelta(days = 365)
 
 def write_type_info(workbook):
-    sheet = workbook.add_sheet('types')
+    sheet = workbook.add_worksheet('types')
     row = 0
     sheet.write(row, 0, "name")
     sheet.write(row, 1, "tag")
@@ -66,7 +66,7 @@ def write_type_info(workbook):
 
 def write_person_info(cluster_dict, workbook):
     person_info = []
-    sheet = workbook.add_sheet('person')
+    sheet = workbook.add_worksheet('person')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
@@ -106,7 +106,7 @@ def write_person_info(cluster_dict, workbook):
         if len(village_person_info) < 1:
             print " No person found in " + cluster['cluster'] 
     
-    sheet = workbook.add_sheet('all_videos')
+    sheet = workbook.add_worksheet('all_videos')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
@@ -122,7 +122,7 @@ def write_person_info(cluster_dict, workbook):
 
 def write_group_info(cluster_dict, workbook):
     group_info = []
-    sheet = workbook.add_sheet('group')
+    sheet = workbook.add_worksheet('group')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
@@ -153,7 +153,7 @@ def write_group_info(cluster_dict, workbook):
 
 def write_village_info(cluster_dict, workbook):
     village_info = []
-    sheet = workbook.add_sheet('village')
+    sheet = workbook.add_worksheet('village')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
@@ -179,7 +179,7 @@ def write_village_info(cluster_dict, workbook):
     return sheet
 
 def write_mediator_info(mediator_dict, workbook):
-    sheet = workbook.add_sheet('mediator')
+    sheet = workbook.add_worksheet('mediator')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
@@ -207,7 +207,7 @@ def write_mediator_info(mediator_dict, workbook):
     return sheet
 
 def write_distinct(vid_list, workbook):
-    sheet = workbook.add_sheet('unique_video')
+    sheet = workbook.add_worksheet('unique_video')
     row = 0
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name")
@@ -226,7 +226,7 @@ def write_distinct(vid_list, workbook):
     return sheet
 
 def write_video_schedule_info(vid_dict, workbook):
-    sheet = workbook.add_sheet('video')
+    sheet = workbook.add_worksheet('video')
     row = 0
     sheet.write(row, 0, "field: id")
 #    sheet.write(row, 1, "field: name")
@@ -284,7 +284,8 @@ def create_fixture(users, project_name):
                                       'village': v,
                                       'cluster' : entry['username']})
     
-    workbook = xlwt.Workbook(encoding = 'utf-8')
+    filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xlsx" % (project_name))
+    workbook = xlsxwriter.Workbook(filename)
     type_sheet = write_type_info(workbook)
     group_sheet = write_group_info(cluster_village_dict, workbook)
     village_sheet = write_village_info(cluster_village_dict, workbook)
@@ -298,5 +299,3 @@ def create_fixture(users, project_name):
                                     'low_val': '2013-01-01', #idea here is all videos have this low and high values. And as of now seasonal videos are done manually over commcare fixtures
                                     'high_val': '2013-01-01' })
     video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-    filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xls" % (project_name)) 
-    workbook.save(filename)
