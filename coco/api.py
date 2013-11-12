@@ -40,7 +40,6 @@ class ModelFormValidation(FormValidation):
         # convert everything to lists
         multiple = not isinstance(uri, basestring)
         uris = uri if multiple else [uri]
-
         # handle all passed URIs
         converted = []
         for one_uri in uris:
@@ -56,67 +55,6 @@ class ModelFormValidation(FormValidation):
 
     def is_valid(self, bundle, request=None):
         data = bundle.data
-        # Ensure we get a bound Form, regardless of the state of the bundle.
-        if data is None:
-            data = {}
-        # copy data, so we don't modify the bundle
-        data = data.copy()
-        # convert URIs to PK integers for all relation fields
-        relation_fields = [name for name, field in
-                           self.form_class.base_fields.items()
-                           if issubclass(field.__class__, ModelChoiceField)]
-        
-        for field in relation_fields:
-            if field in data:
-                data[field] = self.uri_to_pk(data[field])
-        
-        # validate and return messages on error
-        if request.method == "PUT":
-            #Handles edit case
-            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
-        else:
-            form = self.form_class(data)
-        if form.is_valid():
-            return {}
-        return form.errors
-
-class MediatorFormValidation(FormValidation):
-    """
-        Override tastypie's standard ``FormValidation`` since this does not care
-        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
-        """
-    
-    def uri_to_pk(self, uri):
-            """
-                Returns the integer PK part of a URI.
-                
-                Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
-                returns the URI unmodified.
-                
-                Also handles lists of URIs
-                """
-            
-            if uri is None:
-                return None
-            
-            # convert everything to lists
-            print 'in mediator form validation'
-            converted = []
-            if type(uri) == type(dict()):
-                converted.append(uri.get('id'))
-                return uri.get('id')
-            elif type(uri) == type(list()):
-                for item in uri:
-                    print item.get('id')
-                    converted.append(item.get('id'))
-                return converted
-
-    def is_valid(self, bundle, request=None):
-        partner_id = get_user_partner_id(request)
-        if partner_id:
-            bundle.data['partner'] ={'id':partner_id, 'partner_name':''} #"/api/v1/partner/"+str(partner_id)+"/"
-        data = bundle.data
-        
         # Ensure we get a bound Form, regardless of the state of the bundle.
         if data is None:
             data = {}
@@ -218,6 +156,14 @@ def get_user_videos(user_id):
     
     return set(list(videos_with_user) + list(videos_with_out_user)+list(videos_seen))
     
+def get_user_mediators(user_id):
+    coco_user = CocoUser.objects.get(user_id = user_id)
+    villages = coco_user.get_villages()
+    mediators_from_assigned_villages = Animator.objects.filter(assigned_villages__in = villages).values_list('id', flat=True).distinct()
+    user_districts = District.objects.filter(block__village__in = villages).distinct().values_list('id', flat=True)
+    mediators_from_same_district = Animator.objects.filter(district__in = user_districts).values_list('id', flat = True)
+        
+    return set(list(mediators_from_assigned_villages) + list(mediators_from_same_district))
 
 class VillageLevelAuthorization(Authorization):
     def __init__(self, field):
@@ -238,6 +184,23 @@ class VillageLevelAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download" )
+
+class MediatorAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_mediators(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_mediators(bundle.request.user.id):
+            return True
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs['assigned_villages__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Mediator")
+
 
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -287,13 +250,14 @@ class MediatorResource(BaseResource):
         authentication = SessionAuthentication()
         queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
-        authorization = VillageLevelAuthorization('assigned_villages__in')
-        validation = MediatorFormValidation(form_class=AnimatorForm)
+        authorization = MediatorAuthorization()
+        validation = ModelFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+    hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
     
     def dehydrate_assigned_villages(self, bundle):
         return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
@@ -467,8 +431,8 @@ class ScreeningResource(BaseResource):
                                                    interested = pma['interested'], user_created_id = user_id,
                                                   expressed_question = pma['expressed_question'],)
                     attendance.save()
-                except Exception as e:
-                    raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ pma)
+                except Exception, e:
+                    raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
         
             return bundle
         else:
