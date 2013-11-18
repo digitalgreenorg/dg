@@ -36,4 +36,5 @@ urlpatterns = patterns('',
     url(r'^team/$', member_view, name='team'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
+    url(r'^collection-add/$', direct_to_template, {'template': 'collection_add.html', 'extra_context': {'header': {'jsController':'CollectionAdd'}}}, name='create_collection'),
 )

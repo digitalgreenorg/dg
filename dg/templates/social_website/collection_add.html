@@ -1,0 +1,79 @@
+{% include "includes/header.html" %}
+{% include "includes/partials/search.html" %}
+{% load app_tags %}
+        
+    <section>
+        <form>
+            <div id="main" role="main" class="wrapper">
+                <div class="inner-wrapper" id="collection-view">
+                    <div class="js-collection-outer-wrapper">
+	                    <div class="grid layout-vr-sm">
+	                        <div class="grid-col grid-size2of3">
+	                            <h1 class="hdg-bold hdg-a" style="display:inline;">Collection Title</h1><span><input type="text" name="title" class="coltitle"></span>
+	                        </div>
+	                    </div>
+	                    <div class="media layout-vr-md">
+	                        <div class="video-wrapper" data-videoid="{{video_index}}">
+	                        </div>
+	                        <div class="bd js-collection-dropdown-container">
+	                        <!-- Collection Drop Downs -->
+	                        </div> <!-- End .bd -->
+	                    </div> <!-- End .media -->
+	                    <div class="boxWhite carousel-pad-rt layout-vr-lg">
+
+                        <!-- Begin video carousel -->
+                        <div id="collection-videos-carousel" class="collection-video-carousel carousel-wrapper carousel-border">
+                            
+                                        <ul class="h-list h-list-xlg clearfix js-carousel-container" id='sortable'>
+                                            
+                                </ul>
+                            
+                        </div>
+                        </div>
+                        <div class="layout-vr-lg">
+                            <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm copy-margin">Practice Mapping</h2>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Category</label>
+                                    <select id = "partnerlist" class="chosen-select">
+                                        <option value = "path">Agriculture</option>
+                                        <option value = "pradan">Health</option>
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subcategory</label>
+                                    <select id = "statelist" class="chosen-select">
+                                        <option value = "mp">Land Management</option>
+                                        <option value = "ap">Food Management</option>
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Topic</label>
+                                    <select id = "langlist" class="chosen-select">
+                                        <option value = "english">Sowing</option>
+                                        <option value = "hindi">Hindi</option>
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subtopic</label>
+                                    <select id = "addvideo" class="chosen-select">
+                                        <option value = "1">Line sowing</option>
+                                        <option value = "2">Dibbling</option>
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subsubtopic</label>
+                                    <select id = "addvideo" class="chosen-select">
+                                        <option value = "1">Papaya</option>
+                                        <option value = "2">Wheat</option>
+                                    </select>
+                                </div>
+                        </div>
+                        <button type="submit" class="btn copy-margin top-mar collection-save-button"> Save </button>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </form>
+    </section>
+        
+{% include "includes/footer.html" %}
+

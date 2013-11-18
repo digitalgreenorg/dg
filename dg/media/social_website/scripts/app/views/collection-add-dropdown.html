@@ -1,0 +1,31 @@
+<div class="bd">
+                            <div class="media va-dropdown">
+                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
+                                    <select id = "partnerlist" class="chosen-select js-dropdown" >
+                                      <option value='' selected='selected'>---------</option>
+                                      {{#partner}}
+                                      <option value = {{uid}}>{{name}}</option>
+                                      {{/partner}}
+                                    </select><br><br>
+                                <label class="copy hdg-bold layout-vr-tiny">State</label>
+                                    <select id = "statelist" class="chosen-select js-dropdown">
+                                    <option value='' selected='selected'>---------</option>
+                                    {{#state}}
+                                      <option value = {{.}}>{{.}}</option>
+                                    {{/state}}
+                                    </select><br><br>
+                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
+                                    <select id = "langlist" class="chosen-select js-dropdown">
+                                    <option value='' selected='selected'>---------</option>
+                                      {{#language}}
+                                      <option value = {{.}}>{{.}}</option>
+                                      {{/language}}
+                                    </select><br><br>
+                                <label class="copy hdg-bold layout-vr-tiny">Add Video</label>
+                                   
+                                    <div class='js-collection-video-dropdown-container'>
+                                    
+                                    </div>
+                                    </select><br><br>
+                            </div> <!-- End .media -->
+                        </div> <!-- End .bd -->

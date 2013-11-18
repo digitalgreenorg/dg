@@ -9,8 +9,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from dashboard.models import PracticeSector, PracticeSubSector, PracticeTopic, PracticeSubtopic, PracticeSubject
 from elastic_search import get_related_collections
-from social_website.models import  Collection, Partner, FeaturedCollection
+from social_website.models import  Collection, Partner, FeaturedCollection, Video
 
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
@@ -193,3 +194,35 @@ def logout_view(request):
     next_url = request.GET.get('next', None)
     logout(request)
     return HttpResponseRedirect(next_url)
+
+
+def videoadddropdown(request):
+    video = Video.objects.all()
+    language = video.values_list('language',flat=True)
+    language = sorted(set(language))
+    partner = Partner.objects.values('name', 'uid')
+    partner = sorted(partner)
+    state = video.values_list('state',flat=True)
+    state = sorted(set(state))
+    sector = PracticeSector.objects.values_list('name', flat=True)
+    sector = sorted(set(sector))
+    subsector = PracticeSubSector.objects.values_list('name', flat=True)
+    subsector = sorted(set(subsector))
+    subject = PracticeSubject.objects.values_list('name', flat=True)
+    subject = sorted(set(subject))
+    topic = PracticeTopic.objects.values_list('name', flat=True)
+    topic = sorted(set(topic))
+    subtopic = PracticeSubtopic.objects.values_list('name', flat=True)
+    subtopic = sorted(set(subtopic))
+    video_dropdown_dict = {
+         'language': language,
+         'partner': partner,
+         'state': state,
+         'sector': sector,
+         'subsector': subsector,
+         'topic': topic,
+         'subtopic': subtopic,
+         'subject': subject,
+     }
+    resp = json.dumps({"video_dropdown": video_dropdown_dict})
+    return HttpResponse(resp)
