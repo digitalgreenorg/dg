@@ -57,12 +57,15 @@ define(function(require) {
         setInputParam: function(key, value, disableCacheClearing) {
             var paramChanged = this.base(key, value);
             if (paramChanged && !disableCacheClearing) {
-                this.clearCommentCache();
+                this.clearVideoDropDownCache();
             }
 
             return paramChanged;
         },
 
+        clearVideoDropDownCache: function() {
+            this._dataModel.get('collectionVideoDropDown').clear();
+        },
 
         getCollectionVideoDropDown: function() {
 
@@ -76,6 +79,7 @@ define(function(require) {
             return collectionDropDown;
         
         }
+        
 
     });
 
