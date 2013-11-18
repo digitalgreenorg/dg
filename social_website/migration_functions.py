@@ -92,8 +92,11 @@ def populate_adoptions(pap):
       
 def update_website_video(vid):
     yt_entry = get_youtube_entry(cleanup_youtubeid(vid.youtubeid))
-    if yt_entry: 
-        partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
+    if yt_entry:
+        try: 
+            partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
+        except Partner.DoesNotExist:
+            return
         language  = vid.language.language_name
         state = vid.village.block.district.state.state_name
         date = vid.video_production_end_date
