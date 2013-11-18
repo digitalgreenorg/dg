@@ -111,13 +111,13 @@ define(function(require) {
         		//$("#vidlist").attr('disabled', false).trigger("chosen:updated")
         		//this._references.$collectionVideoDropDownContainer = $('.js-collection-video-dropdown-container');
         		references.videodataFeed.addInputParam('limit', false, 0);
-        		references.videodataFeed.setInputParam('limit', 0, true);
+        		references.videodataFeed.setInputParam('limit', 0, false);
         		references.videodataFeed.addInputParam('state', false, $("#statelist").val());
-        		references.videodataFeed.setInputParam('state', $("#statelist").val(), true);
+        		references.videodataFeed.setInputParam('state', $("#statelist").val(), false);
 				references.videodataFeed.addInputParam('partner', false, $("#partnerlist").val());
-				references.videodataFeed.setInputParam('partner', $("#partnerlist").val(), true);
+				references.videodataFeed.setInputParam('partner', $("#partnerlist").val(), false);
 				references.videodataFeed.addInputParam('language', false, $("#langlist").val());
-				references.videodataFeed.setInputParam('language', $("#langlist").val(), true);
+				references.videodataFeed.setInputParam('language', $("#langlist").val(), false);
 				this.getCollectionVideoDropDown();
         	}
         	else{
