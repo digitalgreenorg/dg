@@ -92,42 +92,46 @@ def populate_adoptions(pap):
       
 def update_website_video(vid):
     yt_entry = get_youtube_entry(cleanup_youtubeid(vid.youtubeid))
-    if yt_entry: 
-        partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
-        language  = vid.language.language_name
-        state = vid.village.block.district.state.state_name
-        date = vid.video_production_end_date
-        offline_stats = get_offline_stats(vid.id)
-        online_stats = get_online_stats(yt_entry)
-        if vid.related_practice is not None:
-            sector = vid.related_practice.practice_sector.name if vid.related_practice.practice_sector else ''
-            subsector = vid.related_practice.practice_subsector.name if vid.related_practice.practice_subsector else ''
-            topic = vid.related_practice.practice_topic.name if vid.related_practice.practice_topic else ''
-            subtopic = vid.related_practice.practice_subtopic.name if vid.related_practice.practice_subtopic else ''
-            subject = vid.related_practice.practice_subject.name if vid.related_practice.practice_subject else ''
-        else:
-            sector = subsector = topic = subtopic = subject = ''
-        thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
-        try :
-            website_vid = Video.objects.get(coco_id = str(vid.id))
-            # There is just one result for a filter, but we want to use update here.
-            website_vid = Video.objects.filter(coco_id = str(vid.id))
-            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
-                                category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
-                                thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
-                                thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
-        except Video.DoesNotExist:
-            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
-                                category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
-                                thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
-                                thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
-            website_vid.save()
+    if yt_entry:
+        try:
+            partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
+            language  = vid.language.language_name
+            state = vid.village.block.district.state.state_name
+            date = vid.video_production_end_date
+            offline_stats = get_offline_stats(vid.id)
+            online_stats = get_online_stats(yt_entry)
+            if vid.related_practice is not None:
+                sector = vid.related_practice.practice_sector.name if vid.related_practice.practice_sector else ''
+                subsector = vid.related_practice.practice_subsector.name if vid.related_practice.practice_subsector else ''
+                topic = vid.related_practice.practice_topic.name if vid.related_practice.practice_topic else ''
+                subtopic = vid.related_practice.practice_subtopic.name if vid.related_practice.practice_subtopic else ''
+                subject = vid.related_practice.practice_subject.name if vid.related_practice.practice_subject else ''
+            else:
+                sector = subsector = topic = subtopic = subject = ''
+            thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
+            try :
+                website_vid = Video.objects.get(coco_id = str(vid.id))
+                # There is just one result for a filter, but we want to use update here.
+                website_vid = Video.objects.filter(coco_id = str(vid.id))
+                website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+                                    category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
+                                    language = language, partner = partner, state = state,
+                                    offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                    onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                    thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                    thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+            except Video.DoesNotExist:
+                website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+                                    category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
+                                    language = language, partner = partner, state = state,
+                                    offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                    onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                    thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                    thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+                website_vid.save()
+        except Partner.DoesNotExist:
+            pass
+                
         
 def get_collection_pracs(videos,field1,field2,field3,field4,field5):
     pracs = {}
