@@ -107,9 +107,6 @@ define(function(require) {
         _onDropDownChosen: function(){
         	var references = this._references;
         	if( $("#partnerlist").val()!="" && $("#statelist").val()!="" && $("#langlist").val()!=""){
-        		alert("Here");
-        		//$("#vidlist").attr('disabled', false).trigger("chosen:updated")
-        		//this._references.$collectionVideoDropDownContainer = $('.js-collection-video-dropdown-container');
         		references.videodataFeed.addInputParam('limit', false, 0);
         		references.videodataFeed.setInputParam('limit', 0, true);
         		references.videodataFeed.addInputParam('state', false, $("#statelist").val());

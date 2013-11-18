@@ -3214,7 +3214,7 @@ body {
  
  .video-remove {
  position: absolute;
- top: 25px;
+ top: 15px;
  left:165px;
  background: url(../images/slideshow-x.png) no-repeat 0 0;
  height : 32px;
@@ -3228,6 +3228,9 @@ body {
      cursor: pointer;
  }
  
+ .cursor-move{
+    cursor: move;
+ }
  /*------------------ Sortable ------------------*/
  
  #sortable { 
