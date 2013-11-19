@@ -93,7 +93,7 @@ class Collection(models.Model):
     state = models.CharField(max_length=100)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
     language = models.CharField(max_length=20)
-    videos = models.ManyToManyField(Video) #,related_name='video_collections')
+    videos = models.ManyToManyField(Video, through='VideoinCollection')
     category = models.CharField(max_length=500, blank=True)
     subcategory = models.CharField(max_length=500, blank=True)
     topic = models.CharField(max_length=500, blank=True)
@@ -115,6 +115,16 @@ class Collection(models.Model):
         self.save()
 m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
+
+
+class VideoinCollection(models.Model):
+    video = models.ForeignKey(Video)
+    collection = models.ForeignKey(Collection)
+    order = models.IntegerField()
+    
+    class Meta:
+        ordering = ['order']
+
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)
