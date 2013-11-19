@@ -3231,6 +3231,31 @@ body {
  .cursor-move{
     cursor: move;
  }
+ 
+ .icon-addedit{
+    height : 30px;
+    width: 30px;
+    overflow: hidden;
+ }
+ 
+ .icon-coll-add{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -90px;
+    margin-right: 7px;
+ }
+ 
+ .icon-coll-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -129px;
+    cursor: pointer;
+ }
+ 
+ .icon-video-add{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -5px;
+    margin-right: 120px;
+ }
+ 
+ .icon-video-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -47px;
+ }
  /*------------------ Sortable ------------------*/
  
  #sortable { 
