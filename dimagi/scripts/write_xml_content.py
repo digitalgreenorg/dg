@@ -3,7 +3,7 @@ def write_opening_meta(file, num_people):
     file.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
     file.write('<num_people> %s </num_people>\n' % (unicode(num_people)))
     
-def write_person_content(file, i, case_id, owner_id, person, videos_seen):
+def write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted):
     file.write('<people>\n')
     file.write('<n'+unicode(i)+':case case_id="' + unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="' + owner_id + '" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
     file.write('<n'+unicode(i)+':create>\n')
@@ -15,7 +15,7 @@ def write_person_content(file, i, case_id, owner_id, person, videos_seen):
     file.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')
     file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
     file.write('<n'+unicode(i)+':videos_seen>' + videos_seen + '</n'+unicode(i)+':videos_seen>\n')
-    file.write('<n'+unicode(i)+':videos_adopted>' + '' + '</n'+unicode(i)+':videos_adopted>\n')
+    file.write('<n'+unicode(i)+':videos_adopted>' + videos_adopted + '</n'+unicode(i)+':videos_adopted>\n')
     file.write('</n'+unicode(i)+':update>\n')
     file.write('</n'+unicode(i)+':case>\n')
     file.write('</people>\n')

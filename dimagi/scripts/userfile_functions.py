@@ -88,7 +88,7 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
         for vid in adopts:
             videos_adopted = videos_adopted + unicode(vid) + ' '
         # Putting all the info in xml tags
-        write_person_content(file, i, case_id, owner_id, person, videos_seen)
+        write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
         i += 1
 
     write_closing_meta(file, owner_id, i)    
