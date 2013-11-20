@@ -74,7 +74,7 @@ def get_search_box(request):
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
     
-    if(from_date == str(datetime.date.today() - datetime.timedelta(365)) and to_date == str(datetime.date.today())):
+    if(from_date == (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d') and to_date == (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')):
         search_box_params['is_date_selected'] = 0
     else:
         search_box_params['is_date_selected'] = 1
@@ -451,7 +451,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
 
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
-        setting_to_date = str(datetime.date.today());
+        setting_to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
     setting_from_date = MyDate(* [int(x) for x in reversed(setting_from_date.split('-')[:2])])
     setting_to_date = MyDate(* [int(x) for x in reversed(setting_to_date.split('-')[:2])])
     data = [['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']]

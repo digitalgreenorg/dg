@@ -14,6 +14,8 @@ oauth2==1.5.211
 twython==3.0.0
 pytz==2013b
 pyes==0.20.0
+django-social-auth==0.7.25
+BeautifulSoup==3.2.1
 
 wsgiref==0.1.2
 newrelic==1.12.0.56

@@ -1,15 +1,65 @@
+import gc
+from collections import defaultdict 
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
+
 import gdata.youtube.service
+from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_stats
 from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
+
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
 
+def initial_personvideorecord():
+    from dashboard.models import PersonAdoptPractice, PersonMeetingAttendance
+    person_video_adoption_dict = defaultdict(dict)
+    paps = PersonAdoptPractice.objects.all().values('person_id', 'video_id')
+    for pap_row in paps:
+        if pap_row['video_id'] in person_video_adoption_dict[pap_row['person_id']]:
+            person_video_adoption_dict[pap_row['person_id']][pap_row['video_id']] += 1
+        else:
+            person_video_adoption_dict[pap_row['person_id']][pap_row['video_id']] = 1
+    del paps
+    
+    person_screening_dict = defaultdict(list)        
+    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened', 'interested')
+    for pma_row in pmas:
+        if pma_row['screening__videoes_screened']:
+            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened'], 'interested' : pma_row['interested']})
+    del pmas
+    gc.collect()
+    record_list = []
+    chunk = 20000
+    i = 0
+    for person_id, videos_info in person_screening_dict.iteritems():
+        vid_dict = defaultdict(dict)
+        for row in videos_info:
+            if row['vid'] in vid_dict:
+                vid_dict[row['vid']]['views'] += 1
+                if row['interested']:
+                    vid_dict[row['vid']]['interested'] = 1
+            else:
+                vid_dict[row['vid']]['views'] = 1
+                vid_dict[row['vid']]['interested'] = 1 if row['interested'] else 0
+            
+        for vid_id, vals in vid_dict.iteritems():
+            adopted = person_video_adoption_dict[person_id][vid_id] if vid_id in person_video_adoption_dict[person_id] else 0 
+            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], like =  vals['interested'], adopted = adopted))
+            i += 1
+            if i%chunk == 0:
+                PersonVideoRecord.objects.bulk_create(record_list)
+                print "%s" % (i)
+                del record_list
+                record_list = []
+    if record_list:
+        PersonVideoRecord.objects.bulk_create(record_list)
+        
 def add_partner_info(partner):
     website_partner = Partner(coco_id = str(partner.id), joinDate = partner.date_of_association, name = partner.partner_name,
-                              logoURL = '', description = '')
+                              logoURL = '', description = '', full_name = ' ')
     website_partner.save()
 
 def get_offline_stats(video_id):
@@ -19,8 +69,7 @@ def get_offline_stats(video_id):
     stats['adopted__sum'] = stats['adopted__sum'] if stats['adopted__sum'] is not None else 0 
     return stats
 
-def update_person_video_record(pma):
-    videos = [video for video in pma.screening.videoes_screened.all()]
+def update_person_video_record(pma, videos):
     for video in videos:
         try:
             person_video_obj = PersonVideoRecord.objects.get(personID = pma.person_id, videoID = video.id)
@@ -30,33 +79,10 @@ def update_person_video_record(pma):
         except ObjectDoesNotExist:
             person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, like = pma.interested, views = 1)
         person_video_obj.save()
-  
-def check_video_youtube_id(vid):
-    if vid.youtubeid != "" :
-        try:
-            yt_service = gdata.youtube.service.YouTubeService()
-            yt_service.developer_key = DEVELOPER_KEY
-            yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id = vid.youtubeid)
-            if entry is not None:
-                return entry
-        except Exception, ex:
-            pass
-    return None
-    
-def get_online_stats(yt_entry):     
-    stats = {}
-    stats['views'] = int(yt_entry.statistics.view_count) 
-    stats['duration'] = int(yt_entry.media.duration.seconds)
-    if yt_entry.rating:
-        stats['likes'] = int((float(yt_entry.rating.average)*float(yt_entry.rating.num_raters)-float(yt_entry.rating.num_raters))/4)
-    else:
-        stats['likes'] = 0         
-    return stats
 
 def populate_adoptions(pap):
-    person_id = pap.person.id
-    video_id = pap.video.id
+    person_id = pap.person_id
+    video_id = pap.video_id
     try:
         person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
         person_vid_obj.adopted += 1
@@ -65,9 +91,12 @@ def populate_adoptions(pap):
         pass
       
 def update_website_video(vid):
-    yt_entry = check_video_youtube_id(vid)
-    if yt_entry: 
-        partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
+    yt_entry = get_youtube_entry(cleanup_youtubeid(vid.youtubeid))
+    if yt_entry:
+        try: 
+            partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
+        except Partner.DoesNotExist:
+            return
         language  = vid.language.language_name
         state = vid.village.block.district.state.state_name
         date = vid.video_production_end_date
@@ -82,14 +111,26 @@ def update_website_video(vid):
         else:
             sector = subsector = topic = subtopic = subject = ''
         thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
-        website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
-                            category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                            thumbnailURL = thumbnailURL, thumbnailURL16by9 = '',
-                            language = language, partner = partner, state = state,
-                            offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                            onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
-                            )
-        website_vid.save()
+        try :
+            website_vid = Video.objects.get(coco_id = str(vid.id))
+            # There is just one result for a filter, but we want to use update here.
+            website_vid = Video.objects.filter(coco_id = str(vid.id))
+            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+                                category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
+                                language = language, partner = partner, state = state,
+                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+        except Video.DoesNotExist:
+            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+                                category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
+                                language = language, partner = partner, state = state,
+                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                thumbnailURL16by9 = "http://s3.amazonaws.com/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+            website_vid.save()
         
 def get_collection_pracs(videos,field1,field2,field3,field4,field5):
     pracs = {}
@@ -146,10 +187,17 @@ def populate_partner_stats(partner):
         
 def populate_farmers(person):
     partner = Partner.objects.get(coco_id = str(person.village.block.district.partner.id))
-    website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
-                            thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
-    website_farmer.save()
-    
+    try:
+        website_farmer = Person.objects.get(coco_id = str(person.id))
+        # There is just one result for a filter, but we want to use update here.
+        website_farmer = Person.objects.filter(coco_id = str(person.id))
+        website_farmer.update(coco_id = str(person.id), name = person.person_name, 
+                                                                                partner = partner,thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
+    except Person.DoesNotExist:
+        website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
+                                thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
+        website_farmer.save()
+
 def update_questions_asked(pma):
     if pma.expressed_question != '':
         videos = [video for video in pma.screening.videoes_screened.all()]
@@ -164,3 +212,15 @@ def update_questions_asked(pma):
             except Exception as ex:
                 # this means either person or video does not exist on website DB
                 pass
+            
+def delete_person(person):
+    website_person = Person.objects.get(coco_id = str(person.id))
+    comments = Comment.objects.filter(person = website_person)
+    comments.delete()
+    website_person.delete()
+    
+def delete_video(video):
+    website_video = Video.objects.get(coco_id = str(video.id))
+    comments = Comment.objects.filter(video = website_video)
+    comments.delete()
+    website_video.delete()

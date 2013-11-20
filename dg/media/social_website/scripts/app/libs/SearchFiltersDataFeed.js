@@ -27,6 +27,7 @@ define(function(require) {
             this.base(unprocessedData);
             // no data formatting/processing need be done; simply store it
             this._dataModel.set('searchFilters', unprocessedData);
+            return unprocessedData;
         },
 
         getSearchFilters: function() {

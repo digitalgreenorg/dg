@@ -86,6 +86,10 @@ define(function(require) {
             boundFunctions.onSearchItemMouseEnter = this._onSearchItemMouseEnter.bind(this);
             references.$searchItemsContainer.on('mouseenter', '.js-search-completion-item', boundFunctions.onSearchItemMouseEnter);
 
+            // on search item mouse click
+            boundFunctions.onSearchItemMouseClick = this._onSearchItemMouseClick.bind(this);
+            references.$searchItemsContainer.on('click', '.js-search-completion-item', boundFunctions.onSearchItemMouseClick);
+            
             // search input timeout
             boundFunctions.onSearchInputChangedTimeout = this._onSearchInputChangedTimeout.bind(this);
 
@@ -215,8 +219,9 @@ define(function(require) {
         _selectItem: function() {
             var $currentActive = this._references.$searchItemsContainer.find('.js-search-completion-item.hover');
             if ($currentActive.length==0){
-            	var searchString = this._references.dataFeed._state.inputParams.searchString.value
-            	currentURL = "/social/discover/?searchString=" + searchString;
+            	var $url = this._references.$searchWrapper.attr("data-url");
+            	var searchString = this._references.$searchInputBox.val();
+            	currentURL = $url+"?searchString=" + searchString;
             }
             else{
             var currentURL = $currentActive.attr('href');
@@ -294,6 +299,11 @@ define(function(require) {
             }
         },
 
+        _onSearchItemMouseClick: function(e){
+        	e.preventDefault();
+            this._selectItem();
+        },
+        
         _onSearchItemMouseEnter: function(e) {
             this._references.$searchItemsContainer.find('.js-search-completion-item.hover').removeClass('hover');
             

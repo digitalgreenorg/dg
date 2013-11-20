@@ -1,60 +1,74 @@
 {% include "includes/header.html" %}
         {% include "includes/partials/mainCarousel.html" %}
         
-        <section id="main" role="main" class="about-bg about-bg-white">
+        <section id="about" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
                     <div class="media layout-vr-xlg">
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">We are driving change by building on the social networks of the world’s most vulnerable</h3>
-                        <div class="imgExt img-marginLg-lt img-effects">
-                            <img src="http://placehold.it/463x283" alt="" />
+                        <div class="imgExt img-marginLg-lt img-effects img-size-lg">
+                            <img src="{{STATIC_URL}}social_website/content/about.jpg" alt="" />
                         </div>
                         <div class='bd'>
-                            <p class="copy copy-para">We use an innovative digital platform that brings together technology with global development efforts to enable everyone to live a life of dignity
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our mission is to integrate innovative technology with global development efforts to improve human well being.
+                            </h3>
+                            <p class="copy copy-para"> Learn more about our organization
                             </p>
-                            <p class="copy copy-para">We began as a research project in Microsoft Research India’s Technology for Emerging Markets team in 2006, and spun off as an independent organization in 2008.
-                            </p>
-                            <ul class="link-list">
-                                <li><a href="{% url model %}">About our model</a></li>
-                                <li><a href="#keyfacts">Key facts</a></li>
-                                <li><a href="{% url connect %}">Our partners</a></li>
-                                <li><a href="{% url board %}">Our board</a></li>
-                                <li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
-                                <li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
-                                <li><a href="{% url contact %}">Contact Us</a></li>
-                            </ul>
+                            <div class="grid-col grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#values">Our values</a></li>
+                                    <li><a href="{% url ourwork %}">Our work</a></li>
+                                    <li><a href="{% url connect %}">Our partners</a></li>
+                                    <li><a href="{% url board %}">Our board</a></li>
+                                    <li><a href="{% url team %}">Our team</a></li>
+                                </ul>
+                            </div>
+                            <div class="grid-rt grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#keyfacts">Key facts</a></li>
+                                    <li><a href="{% url resources %}#annualreport12">Annual report</a></li>
+                                    <li><a href="{% url press %}">Media coverage</a></li>
+                                    <li><a href="{% url resources %}">Resources</a></li>
+                                    <li><a href="{% url contact %}">Contact Us</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
 
-        <section id="keyfacts" class="about-bg">
+        <section id="values" class='about-bg'>
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Values</h2>    
+                    <div class='layout-vr-xlg'>
+                        <ul class="copy bullet-list">
+                            <li><span class="copy-italic">Humility</span>: We imbue humility in all that we do, while maintaining our pride about who we are, our achievements, and our worth.
+                            </li>
+                            <li><span class="copy-italic">Excellence</span>: We are guided by the firm conviction that success can only be achieved by constantly raising the bar and respecting complete ownership.
+                            </li>
+                            <li><span class="copy-italic">Accountability</span>: We take responsibility and ownership for our commitments, actions and results.
+                            </li>
+                            <li><span class="copy-italic">Empathy</span>: We respect the dignity of each individual, and recognize each person’s merit and contribution to our mission.
+                            </li>
+                            <li><span class="copy-italic">Integrity</span>: We demonstrate honesty, respect for others and trustworthiness in our work and interactions with stakeholders, including the communities we engage with.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="keyfacts" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Key Facts</h2>
-                    <div class="layout-vr-xlg">
+                    <div class="layout-vr-md">
                         <iframe src="http://www.scribd.com/embeds/154431570/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless></iframe>
                     </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-
-        <section class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Reports</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="imgExt img-marginLg-lt img-effects">
-                            <img src="http://placehold.it/463x283" alt="" />
-                        </div>
-                        <div>
-                            <ul class="link-list">
-                                <li><a href="/social/reports/2">Annual Report 2010-2011</a></li>
-                                <li><a href="/social/reports/1">Annual Report 2009-2010</a></li>
-                            </ul>
-                        </div>
+                    <div class="centered layout-vr-xlg">
+                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Key-Facts.pdf"><span class="label">DOWNLOAD</span></a>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->

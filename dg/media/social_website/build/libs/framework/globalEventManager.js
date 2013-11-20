@@ -1,0 +1,1 @@
+define(["require","framework/EventManager"],function(e){var t=e("framework/EventManager"),n=new t;return n});

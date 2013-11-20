@@ -15,18 +15,18 @@ define(function(require) {
 
         constructor: function() {
             // NOTE: response code testing; only one is required for implementation
-            this.base('api/genericReturnOK');
+            this.base('api/updateVideoLike/');
             // this.base('api/genericReturnError');
             
-            this.addInputParam('videoUID', true);
-            this.addInputParam('userID', true);
+            this.addInputParam('video', true);
+            this.addInputParam('user', true);
         },
 
-        fetch: function(videoUID, userID, customCallback) {
-            this.setInputParam('videoUID', videoUID);
-            this.setInputParam('userID', userID);
+        fetch: function(videoUID, userID, customCallback, type) {
+            this.setInputParam('video', videoUID);
+            this.setInputParam('user', userID);
 
-            this.base(null, customCallback);
+            this.base(null, customCallback, type);
         },
 
         _initConfig: function() {
@@ -36,6 +36,25 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
+            if (unprocessedData.objects == undefined) {
+                if (unprocessedData.id != undefined) {
+                    return [{
+                      'liked': true
+                    }];
+                }
+                return [{
+                  'liked': false
+                }];
+            }
+            var likedEntries = unprocessedData.objects;
+            if (likedEntries.length > 0) {
+                return [{
+                  'liked': true
+                }];
+            }
+            return [{
+              'liked': false
+            }];
         }
     });
 

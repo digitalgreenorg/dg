@@ -44,8 +44,18 @@ define(function(require) {
             references.dataFeed = new activitiesDataFeed();
 
             // html element references
-            references.$activitiesContainer = $referenceBase;
+            references.$activitiesWrapper = $referenceBase;
+            references.$activitiesContainer = $referenceBase.find('.js-activities-container');
+            references.$activitiesShowMoreButton = $referenceBase.find(".js-activities-show-more-btn");
             
+        },
+        _initState: function() {
+            this.base();
+
+            var state = this._state;
+            state.currentPageNumber = 0;
+            state.activitiesPerPage = 10;
+            state.currentCount = 0;
         },
 
         _initEvents: function() {
@@ -56,15 +66,55 @@ define(function(require) {
 
             boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
             references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+            
+            boundFunctions.onShowMoreClick = this._onShowMoreClick.bind(this);
+            references.$activitiesShowMoreButton.on("click", boundFunctions.onShowMoreClick);
+        },
+        
+        setActivitiesPerPage: function(n) {
+            this._state.activitiesPerPage = n;
+            return this;
+        },
+
+        getActivitiesPerPage: function(){
+            return this._state.activitiesPerPage;
+        },
+
+        setCurrentPageNumber: function(n) {
+            this._state.currentPageNumber = n;
+            return this;
+        },
+
+        getCurrentPageNumber: function(){
+            return this._state.currentPageNumber;
         },
 
         _onDataProcessed: function() {
+        	$('.js-activities-wrapper-outer').show();
             this.getActivities();
         },
 
-        getActivities: function(userId) {
+        getActivities: function(page, activitiesPerPage) {
 
-            var activitiesData = this._references.dataFeed.getActivities();
+        	if (page == undefined) {
+                page = this.getCurrentPageNumber();
+            } else {
+                this.setCurrentPageNumber(page);
+            }
+
+            if (activitiesPerPage == undefined) {
+                activitiesPerPage = this.getActivitiesPerPage();
+            } else {
+                this.setActivitiesPerPage(activitiesPerPage)
+            }
+            
+            var dataFeed = this._references.dataFeed;
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', activitiesPerPage, true);
+            dataFeed.setInputParam('partner', this._references.$activitiesWrapper.attr('data-partnerID'), true);
+
+            var activitiesData = dataFeed.getActivities();
+            var totalCount = dataFeed.getTotalCount();
 
             if (activitiesData == false) {
                 return false;
@@ -83,8 +133,8 @@ define(function(require) {
                 var currentActivity = activitiesData[i];
 
                 currentActivity._hasImages = (currentActivity.images && currentActivity.images.length != 0);
-                currentActivity._hasComments = currentActivity.comments.length != 0;
-                currentActivity._likes = Util.integerCommaFormat(currentActivity.likes);
+                //currentActivity._hasComments = currentActivity.comments.length != 0;
+                //currentActivity._likes = Util.integerCommaFormat(currentActivity.likes);
 
                 if (currentActivity.collection && currentActivity.collection.videos) {
 
@@ -94,7 +144,7 @@ define(function(require) {
                         likes: 0,
                         views: 0,
                         adoptions: 0,
-                        time: 0
+                        totalDuration: 0
                     };
 
                     var carouselSlides = [];
@@ -158,6 +208,12 @@ define(function(require) {
             }
         },
 
+        _onShowMoreClick: function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            this.getActivities(this.getCurrentPageNumber() + 1)
+        },
+        
         /**
          * Controller destructor
          * @return {void}

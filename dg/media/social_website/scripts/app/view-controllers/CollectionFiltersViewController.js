@@ -41,6 +41,7 @@ define(function(require) {
             var references = this._references;
 
             references.dataFeed = new SearchFiltersDataFeed();
+            references.filters_cleared = 0;		// Initially clear filters is 0, so if any data-attributes present, use them
 
             references.$filtersWrapper = $referenceBase;
             references.$filtersContainer = $referenceBase.find('.js-filters-container');
@@ -88,6 +89,7 @@ define(function(require) {
                     height: '0px'
                 }, 1000);
             	$newOpenFilterCategory.removeClass('open');
+            	filterCategories[newOpenCategoryId].categoryOpen = false;
                 return;
             }
 
@@ -152,6 +154,7 @@ define(function(require) {
 
         _onBreadcrumbsRemoveFilterClick: function(e) {
             e.preventDefault();
+            this._references.filters_cleared = 1; // on removal of any breadcrumb, remove usage of data-attributes
 
             var $breadcrumbItem = jQuery(e.currentTarget);
 
@@ -271,7 +274,9 @@ define(function(require) {
         		}
         	}
         	
-            
+            if (filterOptionData == undefined){
+            	return;
+            }
             // update value
             filterOptionData.filterActive = value;
             

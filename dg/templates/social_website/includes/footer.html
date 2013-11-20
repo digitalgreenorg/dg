@@ -17,13 +17,12 @@
                         <div class="inner-wrapper">
                             <nav role="navigation">
                                 <ul class="copy-lt hdg-upper copy footer-links">
-                                    <li><a href="#">Careers</a></li>
-                                    <li><a href="#">Press</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="/social/contact">Contact Us</a></li>
+                                    <li><a href="{% url career %}">Careers</a></li>
+                                    <li><a href="{% url press %}">Press</a></li>
+                                    <li><a href="{% url contact %}">Contact Us</a></li>
                                 </ul>
                             </nav>
-                            <a class="footer-btn" href="#">Coco</a>
+                            <a class="footer-btn" href="/coco/v2" target="_blank">Coco</a>
                         </div>
                     </div> <!-- End .inner-wrapper -->
                 </div>  <!-- End .wrapper -->
@@ -38,50 +37,19 @@
         </div>
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
-        <script type="text/javascript" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script>
-        <script type="text/javascript" src="{% url mainjs %}"></script>
-        <script type="text/javascript">var switchTo5x=true;</script>
-        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-        <script type="text/javascript">stLight.options({publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
-        <script src="http://www.youtube.com/player_api"></script>
-		<script src="{{STATIC_URL}}social_website/scripts/libs/external/bootstrap-modal.js"></script>
-		<script type="text/javascript">
-		//$.getJSON('http://graph.facebook.com/digitalgreenorg?fields=likes', function(data) {
-		//	  $('#fb-likes').html(data.likes+" <span>Likes</span>")
-		//	});
-		//$.getJSON('http://api.twitter.com/1/followers/ids.json?cursor=-1&screen_name=digitalgreenorg', function(data) {
-		//		alert(data);
-			  //$('#tw-followers').html(count(data.ids)+" <span>Followers</span>")
-		//	});
-		var video_player = {
-            ytplayer: null,
-    		init: function initialize_player(videoid) {
-    			this.ytplayer = new YT.Player('player', {
-    			    height: '424',
-    			    width: '1024',
-    			    videoId: videoid,
-    			    events: {
-    				    'onReady': this.onPlayerReady,
-    				    'onStateChange': this.onPlayerStateChange
-                    }
-    			});
-    			$("#video-img > div").not("#player").each(function(index, ele){$(ele).hide();});
-                $("#player").show();
-    		},
-            
-    		onPlayerReady: function onPlayerReady(event) {
-    			event.target.playVideo();
-    		},
-            
-    		onPlayerStateChange: function onPlayerStateChange(event) {        
-    			if(event.data === 0) {  
-                    video_player.ytplayer.destroy();
-                    $("#player").hide();          
-    				$("#video-img > div").not("#player").each(function(index, ele){$(ele).show();});			
-    			}
-    		}
-		};
-        
-		</script>
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/libs/external/requirejs/require.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/main.js"></script>
+        <!-- Enabling Google Analytics -->
+        <script type="text/javascript">
+    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    	</script>
+    	<script type="text/javascript">
+    		try {
+    			var pageTracker = _gat._getTracker("UA-16211208-1");
+    			pageTracker._trackPageview();
+    			} 
+    	catch(err) {}
+    	</script>
     </body>
 </html>

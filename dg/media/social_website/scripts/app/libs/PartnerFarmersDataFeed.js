@@ -72,6 +72,7 @@ define(function(require) {
             var startingCacheId = page * countPerPage;
 
             model.addSubset(dataToAdd, startingCacheId);
+            return dataToAdd;
         },
 
         clearCollectionCache: function() {

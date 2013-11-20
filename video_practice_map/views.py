@@ -7,8 +7,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import Template, Context
 
-from dashboard.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
+from dashboard.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, State, Video
 from video_practice_map.models import VideoPractice,SkippedVideo
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 @login_required(login_url='/videotask/login/')
@@ -67,10 +69,12 @@ def home(request):
         vid_pr=VideoPractice.objects.get(review_user=None, video=vid)
         review_vid_pr = vid_pr.practice 
         vid_pr_id = vid_pr.id
+    languages = Language.objects.all().values('id', 'language_name')
+    states = State.objects.all().values('id', 'state_name')
                 
     return render_to_response("video_practice_map/home.html", dict(vid=vid, user=user, task_type=next_action, selected_lang=language,
                                                                    selected_state=state, practice_tups = all_practice_options(), new_pr = review_vid_pr,vid_pr_id=vid_pr_id, 
-                                                                   can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped))
+                                                                   can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped, languages=languages, states=states))
                                                                    
     
 def get_end_of_videos_status(user, language, state):
@@ -101,6 +105,7 @@ def logout_view(request):
     return HttpResponseRedirect('/videotask/home/')
 
 @login_required(login_url='/videotask/login/')
+@csrf_exempt
 def form_submit(request):
     if request.POST:
         if request.POST['action'] == 'review':
@@ -191,6 +196,7 @@ def all_practice_options(request=None):
         return value_arr
     
 @login_required(login_url='/videotask/login/')
+@csrf_exempt
 @user_passes_test(lambda u: u.groups.filter(name='Practice Creators').count() > 0, login_url='/videotask/login/')
 def add_new(request):
     msg = None

@@ -91,8 +91,7 @@ define(function(require) {
          * @param {Function} customCallback A custom callback to run once data is received
          * @return {void}
          */
-        fetch: function(overrideData, customCallback) {
-
+        fetch: function(overrideData, customCallback, type) {
             var state = this._state;
 
             if (state.fetchTimeout) {
@@ -105,7 +104,7 @@ define(function(require) {
             if (fetchDelay) {
                 state.fetchTimeout = setTimeout(this._fetch.bind(this, overrideData, customCallback), fetchDelay);
             } else {
-                this._fetch(overrideData, customCallback);
+                this._fetch(overrideData, customCallback, type);
             }
         },
 
@@ -161,8 +160,19 @@ define(function(require) {
             var len = cachesToClearOnChange.length;
             for (; i < len; i++) {
                 cacheArray.push(cachesToClearOnChange[i]);
-            }
+            }    
 
+        },
+        
+        deleteInputParam: function(name) {
+
+            if (name == undefined) {
+                throw new Error('DataFeed.deleteInputParam(): parameter "name" required but not provided');
+            }
+            
+            delete this._state.inputParams[name];
+
+            return this;
         },
 
         setInputParam: function(name, value, suppressOnChangeEvent) {
@@ -217,8 +227,8 @@ define(function(require) {
             return inputParamData.value;
         },
 
-        _fetch: function(overrideData, customCallback) {
-
+        _fetch: function(overrideData, customCallback, type) {
+            var content_type;
             var state = this._state;
 
             state.fetchTimeout = null;
@@ -235,9 +245,19 @@ define(function(require) {
             
             var inputParamData = this._getAjaxInputParamData();
 
+            if (type=='POST'){
+                content_type = 'application/json';
+                inputParamData = JSON.stringify(inputParamData)
+            }
+            else{
+                type = 'GET'
+                content_type = 'application/x-www-form-urlencoded';
+            }
+            
             Util.Object.extend(inputParamData, overrideData);
             $.ajax({
-                type: 'GET',
+                type: type,
+                contentType: content_type, 
                 dataType: 'json',
                 url: feedURL,
                 data: inputParamData
@@ -306,7 +326,8 @@ define(function(require) {
          * @return {void}
          */
         _afterProcessData: function(processedData) {
-            this.trigger('dataProcessed', processedData);
+            if(Object.keys(processedData).length)
+                this.trigger('dataProcessed', processedData);
         },
 
         /**

@@ -1,0 +1,71 @@
+{% include "includes/header.html" %}    
+        
+        <section id="team" role="main" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Executive Leadership Team</h2>
+                    <div class="media  ">
+                        {% for mem in elt %}
+                            {% include "includes/team_member_info.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Program Team, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in programs %}
+                            {% include "includes/team_member_info.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Technology Team, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in tech %}
+                            {% include "includes/team_member_info.html" %}
+                        {% endfor %}              
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Admin-Finance-HR, New Delhi</h2>
+                    <div class="media  ">
+                        {% for mem in support %}
+                            {% include "includes/team_member_info.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        {% regroup other_teams by place as place_list %}
+        
+        {% for place in place_list %}
+        <section class="{% cycle 'about-bg about-bg-white' 'about-bg'%}">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">{{place.grouper}} Team</h2>
+                    <div class="media  ">
+                        {% for mem in place.list %}
+                            {% include "includes/team_member_info.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+{% include "includes/footer.html" %}

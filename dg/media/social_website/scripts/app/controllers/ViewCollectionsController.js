@@ -15,6 +15,7 @@ define(function(require) {
     var jQuery = require('jquery');
 
     require('libs/external/swfobject/swfobject');
+    require('libs/external/buttons');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
     //var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
@@ -34,6 +35,14 @@ define(function(require) {
             this.base(bootstrapConfig, globalHelpers);
 
             this._initVideoPlayer();
+            
+            stLight.options({
+            	publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", 
+            	doNotHash: false, 
+            	doNotCopy: false, 
+            	hashAddressBar: false
+            });
+            
             this._initVideoStats();
 
             this._getComments();
@@ -58,6 +67,8 @@ define(function(require) {
       //      references.timeWatchedDataFeed = new TimeWatchedDataFeed();
 
             references.$likeButton = jQuery('.js-like-button');
+            references.$commentBox = jQuery('#comment');
+            references.$commentButton = jQuery('.comment-btn');
 
             references.$videoTarget = jQuery('#video-target');
 
@@ -73,10 +84,16 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
+            
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.videoLikeDataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
 
             boundFunctions.onLikeButtonClick = this._onVideoLikeButtonClick.bind(this);
             references.$likeButton.on('click', boundFunctions.onLikeButtonClick);
 
+            boundFunctions.onCommentButtonClick = this._onCommentButtonClick.bind(this);
+            references.$commentButton.on('click', boundFunctions.onCommentButtonClick);
+            
             boundFunctions.onCommentLikeButtonClick = this._onCommentLikeButtonClick.bind(this);
             references.$commentsAreaWrapper.on('click', '.js-comment-like-button', boundFunctions.onCommentLikeButtonClick);
         },
@@ -93,6 +110,8 @@ define(function(require) {
             state.userID = jQuery('body').data('userId');
             state.videoUID = this._references.$videoTarget.data('video-uid');
 
+            this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
+            
             state.updateVideoWatchedTimeInterval = undefined;
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
         },
@@ -166,24 +185,28 @@ define(function(require) {
 
             videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
             
-            // The id that is shown in the URL. Below functionality will autoplay the youtube video on all video pages except for the first video in a collection
-            var videoId = jQuery('.video-wrapper').attr('data-videoid');
-            if (videoId != 1){
-            	videoPlayer.playVideo();
-            }
+            // Below functionality will autoplay the youtube video on all video pages
+            videoPlayer.playVideo();
         },
 
         _onYouTubePlayerStateChange: function(newState) {
             switch (newState) {
                 // playback completed/stopped
                 case 0:
-                // playback paused:
-                	var collection_count = jQuery(".featured-ft-videoDetails").attr('data-collection-count');
-                	var current_video = jQuery('.video-wrapper').attr('data-videoid');
-                	var current_collection = jQuery(".featured-ft-videoDetails").attr('data-collection-id');
-                	window.location.href = '/social/collections/?id='+current_collection+'&video='+parseInt(current_video%collection_count+1)+'#collection-view';	
+                    var now_playing_video = jQuery('.now-playing').closest('li');
+                    var next_video = now_playing_video.next();
+                    if (next_video.length == 0) {
+                        /* End of current slide or this is the last video altogether */
+                        var next_slide = now_playing_video.closest('ul').closest('li').next();
+                        if (next_slide.length == 0) {
+                            /* Last video - go back to the first video */
+                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
+                        }
+                        next_video = next_slide.find('ul > li:first-child');
+                    }
+                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                // stop the interval and manually send an update
                 case 2:
-                    // stop the interval and manually send an update
                     this._stopUpdateInterval();
                     this._updateVideoWatchedTime();
                     break;
@@ -221,7 +244,16 @@ define(function(require) {
         _getComments: function() {
             this._references.commentsFeedViewController.getComments();
         },
+        
+        
 
+        _onDataProcessed: function(likedEntries) {
+            this._state.videoLiked = likedEntries[0].liked;
+            if (this._state.videoLiked) {
+                this._references.$likeButton.addClass('liked');
+            }
+        },
+        
         _onVideoLikeButtonClick: function(e) {
             e.preventDefault();
 
@@ -238,9 +270,26 @@ define(function(require) {
                 throw new Error('ViewCollectionsController._onVideoLikeButtonClick: videoUID and userID are required parameters');
             }
 
-            this._references.videoLikeDataFeed.fetch(videoUID, userID, this._onVideoLikedCallback.bind(this));
+            this._references.videoLikeDataFeed.fetch(videoUID, userID, function(){}, 'POST');
         },
 
+        _onCommentButtonClick: function(e) {
+            e.preventDefault();
+
+            var $currentTarget = jQuery(e.currentTarget);
+
+            var videoUID = this._state.videoUID;
+            var userID = this._state.userID;
+            var text = this._references.$commentBox.val();
+
+            if (videoUID == undefined || userID == undefined || text == undefined) {
+                throw new Error('ViewCollectionsController._onCommentButtonClick: videoUID ,userID, text are required parameters');
+            }
+            
+            this._references.commentsFeedViewController.addNewComment(videoUID, userID, text);
+            this._references.$commentBox.val('');
+        },
+        
         _onCommentLikeButtonClick: function(e) {
             e.preventDefault();
 

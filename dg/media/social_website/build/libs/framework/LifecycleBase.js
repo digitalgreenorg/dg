@@ -1,0 +1,1 @@
+define(["libs/external/Base","jquery"],function(e,t){var n=e.extend({constructor:function(){return t(window).on("unload",this._onUnload.bind(this)),this},_onUnload:function(){this.destroy()},destroy:function(){t(window).off("unload",this._onUnload.bind(this))}});return n});
