@@ -488,7 +488,7 @@ define([
             };
 
             return dfd;
-        }
+        },
 
         // all of the following functions should be removed and offline_utils and online_utils should be used instead - the dependence on global offline_model and online_model would also have to be removed
         
