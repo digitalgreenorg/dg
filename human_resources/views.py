@@ -19,7 +19,7 @@ def member_view(request):
                             'place':member.place.name,
                             'hierarchy_num':member.hierarchy_num,
                         } for member in other_teams]
-    other_teams_list = sorted(other_teams_list, key=lambda k: (k['location'], k['hierarchy_num']))
+    other_teams_list = sorted(other_teams_list, key=lambda k: (k['place'], k['hierarchy_num']))
     context = {
         'elt': elt_team,
         'tech': tech_team,
