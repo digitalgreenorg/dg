@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>status.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>status.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This is the home/status view shown at root url. It contains the welcome message, usage instructions and some offline db stats.
+It checks whether offline db exists or not, if not initiates the full download module.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+define([
+    <span class="string">'jquery'</span>,
+    <span class="string">'underscore'</span>,
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'indexeddb_backbone_config'</span>,
+    <span class="string">'views/full_download'</span>,
+    <span class="string">'configs'</span>,
+    <span class="string">'collections/upload_collection'</span>,
+    <span class="string">'views/notification'</span>,
+    <span class="string">'offline_utils'</span>,
+    <span class="string">'indexeddb-backbone'</span>
+], <span class="keyword">function</span>(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline) {
+
+    <span class="keyword">var</span> StatusView = Backbone.Layout.extend({
+        template: <span class="string">"#status"</span>,
+        timestamp: <span class="literal">null</span>,
+        upload_entries: <span class="literal">null</span>,
+        events: {
+            <span class="string">"click button#download"</span>: <span class="string">"download"</span>,
+            <span class="string">"click button#reset_database"</span>: <span class="string">"reset"</span>
+        },
+
+        initialize: <span class="keyword">function</span>() {
+            _(<span class="keyword">this</span>).bindAll(<span class="string">'fill_status'</span>);
+            <span class="keyword">this</span>.fill_status();
+        },
+
+        serialize: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>send the following to the template</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> {
+                full_d_timestamp: <span class="keyword">this</span>.full_download_timestamp,
+                inc_d_timestamp: <span class="keyword">this</span>.inc_download_timestamp,
+                num_upload_entries: <span class="keyword">this</span>.upload_entries,
+                db_version: <span class="keyword">this</span>.db_version,
+                upload_collection: upload_collection.toJSON()
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>fills the stats on the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fill_status: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1>of unsynced entries</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            that.upload_entries = upload_collection.length;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>current version of IndexedDB - its wrong - shd take the last migration instead of first</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            that.db_version = indexeddb.migrations[<span class="number">0</span>].version;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>fetch last full download&#39;s timestamp</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                    that.full_download_timestamp = <span class="keyword">new</span> Date(model.get(<span class="string">'timestamp'</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>fetch last inc download&#39;s timestamp</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_inc_download"</span>)
+                        .done(<span class="keyword">function</span>(model) {
+                            that.inc_download_timestamp = <span class="keyword">new</span> Date(model.get(<span class="string">'timestamp'</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>all stats fetched....render the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.render();
+                        })
+                        .fail(<span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>all stats fetched....render the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.inc_download_timestamp = <span class="string">"Never"</span>;
+                            that.render();
+                        });
+                    that.render();
+                })
+                .fail(<span class="keyword">function</span>(model, error) {
+                    console.log(<span class="string">"STATUS: error while fetching last_downloaded from meta_data objectStore"</span>);
+                    console.log(error);
+                    <span class="keyword">if</span> (error == <span class="string">"Not Found"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>offline db not populated...full donwload never finished</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.full_download_timestamp = <span class="string">"Never"</span>;
+                        that.render()
+                            .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Start full download automatically</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                that.download();
+                            });
+                    }
+                });
+
+
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>method to initiate full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        download: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>create full download view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!<span class="keyword">this</span>.full_download_v) {
+                <span class="keyword">this</span>.full_download_v = <span class="keyword">new</span> FullDownloadView();
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>set full download as subview</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.setView(<span class="string">"#modal"</span>, <span class="keyword">this</span>.full_download_v).render();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>start full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.full_download_v.start_full_download()
+                .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>render status view once full download finishes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.fill_status();
+                    notifs_view.add_alert({
+                        notif_type: <span class="string">"success"</span>,
+                        message: <span class="string">"Successfully downloaded the database"</span>
+                    });
+                    dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    notifs_view.add_alert({
+                        notif_type: <span class="string">"error"</span>,
+                        message: <span class="string">"Failed to download the database : "</span> + error
+                    });
+                    dfd.reject();
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Resets the offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        reset: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> val = confirm(<span class="string">"Your database will be deleted and downloaded again. Are you sure you want to continue?"</span>)
+            <span class="keyword">if</span> (val == <span class="literal">true</span>) {
+                Offline.reset_database();
+            }
+        }
+
+
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> StatusView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

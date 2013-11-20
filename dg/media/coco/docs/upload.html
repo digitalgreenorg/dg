@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>upload.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>upload.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Uploads any data that is present in the uploadq to the server
+To use the module create an instance and call start_upload on it </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([
+    <span class="string">'jquery'</span>,
+    <span class="string">'underscore'</span>,
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'configs'</span>,
+    <span class="string">'views/form'</span>,
+    <span class="string">'collections/upload_collection'</span>,
+    <span class="string">'convert_namespace'</span>,
+    <span class="string">'offline_utils'</span>,
+    <span class="string">'online_utils'</span>,
+    <span class="string">'indexeddb-backbone'</span>,
+    <span class="string">'bootstrapjs'</span>
+], <span class="keyword">function</span>(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+
+    <span class="keyword">var</span> UploadView = Backbone.Layout.extend({
+
+        initialize: <span class="keyword">function</span>() {
+            console.log(<span class="string">"UPLOAD: initializing new upload view"</span>);
+            _(<span class="keyword">this</span>).bindAll(<span class="string">'stop_upload'</span>);
+        },
+
+        template: <span class="string">"#upload_template"</span>,
+
+        events: {
+            <span class="string">"click #stop_upload"</span>: <span class="string">"stop_upload"</span>
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        stop_upload: <span class="keyword">function</span>() {
+            console.log(<span class="string">"stopping upload"</span>);
+            <span class="keyword">this</span>.user_interrupt = <span class="literal">true</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>increment the progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        increment_pb: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>get the current width of progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            w = parseFloat(document.getElementById(<span class="string">'pbar'</span>).style.width);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>increment the width with the step</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            document.getElementById(<span class="string">'pbar'</span>).style.width = (w + progress_bar_step) + <span class="string">'%'</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>update the status on the view - # of uploaded/# of total objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_status: <span class="keyword">function</span>(status) {
+            $(<span class="string">'#upl_status'</span>).html(status);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>update the action on the view - for eg - &quot;uploading person&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_action: <span class="keyword">function</span>(action) {
+            $(<span class="string">'#upl_action'</span>).html(action);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>initializes the global vars used, ui</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        initialize_upload: <span class="keyword">function</span>() {
+            <span class="keyword">this</span>.user_interrupt = <span class="literal">false</span>;
+            <span class="keyword">this</span>.in_progress = <span class="literal">true</span>;
+            <span class="keyword">this</span>.$(<span class="string">'#upload_modal'</span>).modal({
+                keyboard: <span class="literal">false</span>,
+                backdrop: <span class="string">"static"</span>,
+            });
+            <span class="keyword">this</span>.$(<span class="string">'#upload_modal'</span>).modal(<span class="string">'show'</span>);
+
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>removes the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        tear_down: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.in_progress = <span class="literal">false</span>;
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>modal takes time to hide. Needed to get the correct point of time when upload has finished.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#upload_modal'</span>).on(<span class="string">'hidden'</span>, <span class="keyword">function</span>() {
+                that.remove();
+                dfd.resolve();
+            });
+            $(<span class="string">'#upload_modal'</span>).modal(<span class="string">'hide'</span>);
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>starts the upload process      </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        start_upload: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            console.log(<span class="string">"UPLOAD: start the upload"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>run the inititalization logic - setup global vars , ui</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.initialize_upload();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>retrieve the collection of objects to be uploaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.get_uploadq()
+                .done(<span class="keyword">function</span>(collection) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>process each object serially in the upload collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.iterate_uploadq(collection)
+                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>upload successfully finished</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.tear_down()
+                                .done(<span class="keyword">function</span>() {
+                                    dfd.resolve();
+                                });
+                        })
+                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>upload failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.tear_down()
+                                .done(<span class="keyword">function</span>() {
+                                    dfd.reject(error);
+                                });
+                        });
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>failed to retrieve objects to be uploaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.tear_down()
+                        .done(<span class="keyword">function</span>() {
+                            dfd.reject(error);
+                        });
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Reads the uploadQ table through the upload_collection backbone collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_uploadq: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>upload_collection is a pre-defined backbone collection attached to the uploadQ table in offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            upload_collection.fetch({
+                success: <span class="keyword">function</span>(collection) {
+                    dfd.resolve(collection);
+                },
+                error: <span class="keyword">function</span>(error) {
+                    dfd.reject(error);
+                }
+            });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>process each object serially in the uploadQ</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        iterate_uploadq: <span class="keyword">function</span>(uploadq) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.upload_collection = uploadq;
+            console.log(<span class="string">"UPLOAD: inside upload queue: "</span> + <span class="keyword">this</span>.upload_collection.length + <span class="string">" entries"</span>);
+            $(<span class="string">'#num_upload'</span>).html(<span class="keyword">this</span>.upload_collection.length);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>step for progress bar increments    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            progress_bar_step = <span class="number">100</span> / <span class="keyword">this</span>.upload_collection.length;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>stores the current download status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.upload_status = {};
+            <span class="keyword">this</span>.upload_status[<span class="string">"total"</span>] = <span class="keyword">this</span>.upload_collection.length;
+            <span class="keyword">this</span>.upload_status[<span class="string">"uploaded"</span>] = <span class="number">0</span>;
+            <span class="keyword">this</span>.pick_next(dfd);
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>returns the entity name of the object to be uploaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_entity_name: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">return</span> upload_model.get(<span class="string">'entity_name'</span>)
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>returns the action of the object to be uploaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_action: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">return</span> upload_model.get(<span class="string">'action'</span>);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>returns the json of the object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_json: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">return</span> upload_model.get(<span class="string">'data'</span>);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>returns the foregn field desc of the object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_foreign_field_desc: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">var</span> entity_name = <span class="keyword">this</span>.get_entity_name(upload_model);
+            <span class="keyword">if</span> (configs[entity_name].edit) {
+                <span class="keyword">return</span> configs[entity_name].edit.foreign_entities;
+            } <span class="keyword">else</span>
+                <span class="keyword">return</span> configs[entity_name].foreign_entities;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>returns the offline id of the object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_offline_id: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">return</span> parseInt(<span class="keyword">this</span>.get_json(upload_model).id);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>returns the online id of the object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_online_id: <span class="keyword">function</span>(upload_model) {
+            <span class="keyword">return</span> parseInt(<span class="keyword">this</span>.get_json(upload_model).online_id);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>recursively iterates over the uploadq list till its empty</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        pick_next: <span class="keyword">function</span>(whole_upload_dfd) {
+            console.log(<span class="string">"in pick_next"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.update_status(<span class="keyword">this</span>.upload_status[<span class="string">"uploaded"</span>] + <span class="string">"/"</span> + <span class="keyword">this</span>.upload_status[<span class="string">"total"</span>]);
+            <span class="keyword">this</span>.current_entry = <span class="keyword">this</span>.upload_collection.shift();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>all uploads processed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!<span class="keyword">this</span>.current_entry) {
+                <span class="keyword">return</span> whole_upload_dfd.resolve();
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>user interrupt flag is set - user clicked on stop button</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.user_interrupt) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>put the upload object back</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.upload_collection.unshift(<span class="keyword">this</span>.current_entry);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>stop the process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">return</span> whole_upload_dfd.reject(<span class="string">"User stopped Sync"</span>);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>process the object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> {
+                <span class="keyword">this</span>.process_upload_entry(<span class="keyword">this</span>.current_entry)
+                    .fail(<span class="keyword">function</span>(error) {
+                        console.log(<span class="string">"FAILED TO UPLOAD AN OBJECT: "</span>);
+                        console.log(error);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>it would be reached in foll cases:
+object to be uploaded doesn&#39;t exists in offline anymore
+ConvertNamespace failed
+online_id couldn&#39;t be injected
+The object discarded in upload error form could not be deleted</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    })
+                    .done(<span class="keyword">function</span>() {
+                        console.log(<span class="string">"SUCESSFULLY UPLOADED AN OBJECT"</span>);
+                    })
+                    .always(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>delete the object..finished processing it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.current_entry.destroy();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>continue processing the objects even if this object failed
+ increment progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.increment_pb();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>increment upload status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.upload_status[<span class="string">"uploaded"</span>]++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>recursively process the rest of the objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.pick_next(whole_upload_dfd);
+                    });
+            }
+
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>starts processing of a single upload object             </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        process_upload_entry: <span class="keyword">function</span>(up_entry) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>update action on the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.update_action(<span class="string">"Uploading "</span> + <span class="keyword">this</span>.get_entity_name(up_entry));
+
+            <span class="keyword">switch</span> (<span class="keyword">this</span>.get_action(up_entry)) {
+                <span class="keyword">case</span> <span class="string">'A'</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>add case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">this</span>.upload_add_edit(up_entry, dfd);
+                    <span class="keyword">break</span>;
+                <span class="keyword">case</span> <span class="string">'E'</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>edit case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">this</span>.upload_add_edit(up_entry, dfd);
+                    <span class="keyword">break</span>;
+                <span class="keyword">case</span> <span class="string">'D'</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>delete case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">this</span>.upload_delete(up_entry, dfd);
+                    <span class="keyword">break</span>;
+                <span class="keyword">default</span>:
+                    console.log(<span class="string">"ambiguous case"</span>);
+                    dfd.reject(<span class="string">"UPLOAD:UNEXPECTED ERROR: Ambiguous case. None of add, edit , delete!"</span>);
+            }
+            <span class="keyword">return</span> dfd.promise();
+
+        },
+
+        upload_add_edit: <span class="keyword">function</span>(up_model, dfd) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>check whether the object to be added/edited still exists, get the online_id for edit case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="keyword">this</span>.get_entity_name(up_model), <span class="string">"id"</span>, <span class="keyword">this</span>.get_offline_id(up_model))
+                .done(<span class="keyword">function</span>(off_model) {
+                    console.log(<span class="string">"Off model fetched - "</span> + JSON.stringify(off_model.toJSON()));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>convert namespace from offline to online </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    ConvertNamespace.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model), <span class="string">"offlinetoonline"</span>)
+                        .done(<span class="keyword">function</span>(on_off_obj) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>add case - remove the offline id - server will generate its own id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">if</span> (that.get_action(up_model) == <span class="string">"A"</span>) {
+                                <span class="keyword">delete</span> on_off_obj.on_json.id;
+                            } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>edit case - put the online_id as id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                on_off_obj.on_json.id = parseInt(off_model.get(<span class="string">"online_id"</span>));
+                                <span class="keyword">delete</span> on_off_obj.on_json.online_id;
+                            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>save the object on server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            Online.save(<span class="literal">null</span>, that.get_entity_name(up_model), on_off_obj.on_json)
+                                .done(<span class="keyword">function</span>(on_model) {
+                                    console.log(<span class="string">"INCD:ADD: Successfully uploaded model. uploaded model - "</span> + JSON.stringify(on_model.toJSON()));
+                                    <span class="keyword">var</span> off_json = off_model.toJSON();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>inject the online id returned by server in offline object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    off_json.online_id = parseInt(on_model.get(<span class="string">"id"</span>));
+                                    Offline.save(off_model, that.get_entity_name(up_model), off_json)
+                                        .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>successfully uploaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            console.log(<span class="string">"OFF model after all upload - "</span> , JSON.stringify(off_model.toJSON()));
+                                            dfd.resolve();
+                                        })
+                                        .fail(<span class="keyword">function</span>(error) {
+                                            dfd.reject(<span class="string">"UPLOAD: Error saving online_id in offline obj: "</span>, error);
+                                        });
+                                })
+                                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>server returned error when uploading object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    console.log(<span class="string">"Error while saving oject on server"</span>);
+                                    that.curr_entry_dfd = dfd;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>show the object in its form with the error - to let user fix it and continue with upload</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    that.show_form(that.get_entity_name(up_model), on_off_obj.off_json, error.responseText);
+                                });
+                        })
+                        .fail(<span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>namespace conversion failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            console.log(<span class="string">"UPLOAD: Not uploading object coz ConvertNamespace failed"</span>);
+                            dfd.reject(error);
+                        });
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>the object to be added/edited doesn&#39;t exist anymore....move on</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">if</span> (error == <span class="string">"Not Found"</span>) {
+                        <span class="keyword">return</span> dfd.reject(<span class="string">"The object to be uploaded doesn't exists anymore."</span>)
+                    } <span class="keyword">else</span>
+                        dfd.reject(error);
+                });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>show the json in its form with the error returned by server - let user fix it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        show_form: <span class="keyword">function</span>(entity_name, json, err_msg) {
+            console.log(<span class="string">"UPLOAD:ERROR: need to show this json -"</span> + JSON.stringify(json));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>create a form instance with that json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            p = <span class="keyword">new</span> Form({
+                serialize: {
+                    button1: <span class="string">"Save again"</span>,
+                    button2: <span class="string">"Discard"</span>
+                },
+                entity_name: entity_name,
+                model_json: json
+            });
+            p.render();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>show the error on form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            p.show_errors(err_msg);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>listen to when the user clicks save on the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.listenTo(p, <span class="string">'save_clicked'</span>, <span class="keyword">this</span>.after_upload_error_save_again);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>listen to when the user clicks discard on the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.listenTo(p, <span class="string">'button2_clicked'</span>, <span class="keyword">this</span>.after_upload_error_discard);
+            <span class="keyword">this</span>.$(<span class="string">'#upload_form'</span>)
+                .html(p.el);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>executed when user has corrected an object and retried upload after server returned error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        after_upload_error_save_again: <span class="keyword">function</span>(e) {
+            console.log(<span class="string">"UPLOAD:ERROR: edit and retry"</span>);
+            console.log(<span class="string">"UPLOAD:ERROR: json from form - "</span> + JSON.stringify(e.context.final_json));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>corrected object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> after_upload_error_json = e.context.final_json;
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>save the corrected json in offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.save(<span class="literal">null</span>, <span class="keyword">this</span>.get_entity_name(<span class="keyword">this</span>.current_entry), after_upload_error_json)
+                .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>remove the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.$(<span class="string">'#upload_form'</span>)
+                        .empty();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>edit the current upload object to set the corrected json    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.current_entry.set(<span class="string">'data'</span>, after_upload_error_json);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>retry uploading the corrected object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.upload_add_edit(that.current_entry, that.curr_entry_dfd);
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>the corrected json is not accepted by offline db - show the new error on form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    e.context.show_errors(error);
+                });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>executed when user discards the object after server returned error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        after_upload_error_discard: <span class="keyword">function</span>(e) {
+            console.log(<span class="string">"DISCARD"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">if</span> (<span class="keyword">this</span>.get_action(<span class="keyword">this</span>.current_entry) == <span class="string">"A"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>delete the object from offline db if its add case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                Offline.delete_object(<span class="literal">null</span>, <span class="keyword">this</span>.get_entity_name(<span class="keyword">this</span>.current_entry), <span class="keyword">this</span>.get_offline_id(<span class="keyword">this</span>.current_entry))
+                    .done(<span class="keyword">function</span>() {
+                        <span class="keyword">return</span> that.curr_entry_dfd.resolve();
+                    })
+                    .fail(<span class="keyword">function</span>(error) {
+                        <span class="keyword">return</span> that.curr_entry_dfd.reject(<span class="string">"The object discarded in upload error form could not be deleted - "</span> , error);
+                    });
+            } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>edit case not handled - need to revert the edit in offline db!!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.curr_entry_dfd.resolve();
+            }
+            <span class="keyword">this</span>.$(<span class="string">'#upload_form'</span>)
+                .html(<span class="string">""</span>);
+        },
+
+        upload_delete: <span class="keyword">function</span>(up_model, dfd) {
+            <span class="keyword">if</span> (<span class="keyword">this</span>.get_online_id(up_model)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>delete the object from server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                Online.delete_object(<span class="literal">null</span>, <span class="keyword">this</span>.get_entity_name(up_model), <span class="keyword">this</span>.get_online_id(up_model))
+                    .done(<span class="keyword">function</span>() {
+                        <span class="keyword">return</span> dfd.resolve();
+                    })
+                    .fail(<span class="keyword">function</span>(error) {
+                        <span class="keyword">return</span> dfd.reject(<span class="string">"The object discarded in upload error form could not be deleted - "</span> + error);
+                    });
+            } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>No online_id was found on the model when deleted. Therefore it was never uploaded on server. Hence taking no action.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">return</span> dfd.resolve();
+            }
+        },
+
+
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>Our module now returns our view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> UploadView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

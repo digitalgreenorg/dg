@@ -1,3 +1,4 @@
+// The view for login. Its responsibiltiy is to show the login form to user and uses auth.js module to do the actual authentication.
 define([
     'jquery',
     'underscore',
@@ -19,6 +20,7 @@ define([
           console.log("Initializing login view");
           _(this).bindAll('render');
           var that = this;
+          // fetch the user from offline db,if one exists, to show it in the form
           User.fetch({
               success: function(model){
                   console.log("USERMODEL : successfully fetched");
@@ -33,6 +35,7 @@ define([
       },
       
       serialize: function(){
+          // send the user info to the template
           return User.toJSON();
       },
       
@@ -43,6 +46,7 @@ define([
       
       afterRender: function(){
           console.log("rendered login view");
+          //render the modal
           this.$('#login_modal').modal({
               keyboard: false,
               backdrop: "static",
@@ -58,20 +62,26 @@ define([
           var username = this.$('#username').val();
           var password = this.$('#password').val();
           var that = this;
+          // use the auth module to authenticate
           Auth.login(username, password)
               .done(function(){
+                  //login successfull - route to the home view
                   that.scrap_view();
                   window.Router.navigate("", {
                       trigger:true
                   });
               })
               .fail(function(error){
+                  // authentication failed
+                  // clear the password
 			      $("#password").val('');
+                  // show the error
 				  that.$('#error_msg').html(error);
                   that.set_login_button_state('reset');
               });
       },
       
+      // set state of login button - disable while authentication request is under process
       set_login_button_state: function(state){
           if(state=="disabled")
               this.$("#login_button").attr("disabled",true);    
@@ -79,6 +89,7 @@ define([
               this.$("#login_button").button(state);    
       },
 	  
+      // to login with different user - clear the offline db of existing user
 	  change_user: function(){
 		var val = confirm("Your current database will be deleted and a new database will be downloaded");
 		if (val==true){
