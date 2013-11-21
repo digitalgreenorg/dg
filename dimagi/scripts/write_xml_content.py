@@ -27,3 +27,11 @@ def write_closing_meta(file, owner_id, i):
     file.write('</n' + unicode(i) + ':meta>\n')
     file.write('</data>')
     
+def write_close_person_content(file, i, case_id, owner_id):
+    file.write('<people>\n')
+    file.write('<n'+unicode(i)+':case case_id="'+unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="' + owner_id +'" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
+    file.write('<n'+unicode(i)+':close>\n')
+    file.write('</n'+unicode(i)+':close>\n')
+    file.write('</n'+unicode(i)+':case>\n')
+    file.write('</people>\n')
+    
