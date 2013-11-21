@@ -11,13 +11,19 @@
                             <h2 class="hdg-upper copy">{{ collection.title}}</h2>
                         </div>
                         <div class="grid-col grid-size1of3">
-                            <div class="push-top-sm">
+                            <div class="push-top-sm grid-lt grid-size3of4">
                                 <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
                                        <li>{{ collection.videos.all|length }} Videos</li>
                                        <li>{{ duration|seconds_to_duration }}</li>
                                    </ul>
                                 </div>
+                            </div>
+                            <div class="grid-rt grid-size1of4">
+                                <ul class="filterOptions hdg-upper copy clearfix js-most-filters">
+                                    <li><a href="{% url create_collection %}" class="icon-coll-edit icon-addedit" title="Edit this Collection"></a></li>
+                                    <li><a href="{% url about %}" class="icon-video-edit icon-addedit" title="Edit this Video"></a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
