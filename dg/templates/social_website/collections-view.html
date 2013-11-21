@@ -122,7 +122,7 @@
                                      <!-- Each carousel slide will be in a li here -->
                                     <li class="carousel-item carousel-item-1" style="width: 882px;">
                                         <ul class="h-list h-list-xlg clearfix">
-                                {% for video in collection.videos.all %}
+                                {% for video_collection in collection.videoincollection_set.all %}
                                     {% cycle 1 0 0 0 0 as new_slide silent %}
                                     {% if forloop.counter > 5 and new_slide %}
                                           </ul>
@@ -134,7 +134,7 @@
                                             <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->                                            
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
                                                 <div class="vidDrawer-image">
-                                                    <a href="{% url collection_video_page collection.partner.name collection.state collection.language collection.title forloop.counter %}" ><img src="{{ video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="video.title" /> </a>
+                                                    <a href="{% url collection_video_page collection.partner.name collection.state collection.language collection.title forloop.counter %}" ><img src="{{ video_collection.video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="video_collection.video.title" /> </a>
                                                       {% if forloop.counter == video_index %}
                                                       <div class="overlay now-playing">
                                                         Now Playing
@@ -142,10 +142,10 @@
                                                     {% endif %}
                                                 </div>
                                                 <div class="vidDrawer-flag copy-white">
-                                                    {{ video.duration|seconds_to_duration }}
+                                                    {{ video_collection.video.duration|seconds_to_duration }}
                                                 </div>
                                                 <div class="vidDrawer-hd copy-dk">
-                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{ video.title }}</span>
+                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{ video_collection.video.title }}</span>
                                                 </div>
                                             </li>
                                     <!-- End carousel slides -->
@@ -163,9 +163,9 @@
                         </div>
                     </div>
                     <div class="layout-vr-lg">
-                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{ video.title }}</h2>
-                        <p class="copy copy-lt layout-vr-sm">{{ video.date }}</p>
-                        <p class="copy copy-margin">{{ video.description }}</p>
+                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{ video_collection.video.title }}</h2>
+                        <p class="copy copy-lt layout-vr-sm">{{ video_collection.video.date }}</p>
+                        <p class="copy copy-margin">{{ video_collection.video.description }}</p>
                         <h3 class="tag">Tag</h3>
                         <ul class="h-list h-list-sm push-top-tiny">
                             {% for tag in tags %}

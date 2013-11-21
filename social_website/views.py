@@ -32,10 +32,12 @@ def collection_view(request, partner, state, language, title, video=1):
         return HttpResponseRedirect(reverse('discover'))
     try:
         video_index = int(video)
-        video = collection.videos.all()[video_index - 1]
+        video_collection = collection.videoincollection_set.all()[video_index - 1]
+        video = video_collection.video
     except (IndexError, AssertionError):
         video_index = 1
-        video = collection.videos.all()[video_index - 1]    
+        video_collection = collection.videoincollection_set.all()[video_index - 1]
+        video = video_collection.video    
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
     related_collection_dict = get_related_collections(collection)
