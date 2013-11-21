@@ -27,27 +27,80 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             });
         },
         list: function(entity_name) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_list_view(entity_name);
-            });
+        	if(this.check_url_wrapper(entity_name) && this.check_list_url_remove_wrapper(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_list_view(entity_name);
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
         },
         add: function(entity_name) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_add_edit_view(entity_name, null);
-            });
+        	if(this.check_url_wrapper(entity_name) && this.check_add_url_remove_wrapper(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view(entity_name, null);
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
+            
         },
         edit: function(entity_name, id) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_add_edit_view(entity_name, parseInt(id));
-            });
+        	if(this.check_url_wrapper(entity_name) && this.check_add_url_remove_wrapper(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view(entity_name, parseInt(id));
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
         },
         login: function() {
             AppLayout.render_login();
         },
-
+        //Check URL Wrapper for checking if user entered some dummy name instead of entity
+        check_url_wrapper: function(entity_name){
+        	if(typeof configs[entity_name] == 'undefined'){
+        		return false;
+        	}
+        	else{
+        		return true;
+        	}
+        },
+        //Check if if list view was allowed in configs so that user may not directly enter the url and access table
+        check_list_url_remove_wrapper: function(entity_name){
+            var listing = false;
+            if(configs[entity_name].dashboard_display)
+            {
+            	listing = configs[entity_name].dashboard_display.listing;
+            }
+            return listing;
+        },
+      //Check if if add view was allowed in configs so that user may not directly enter the url and access form
+        check_add_url_remove_wrapper: function(entity_name){
+            var add = true;
+            var enable_months = [];
+            if(configs[entity_name].dashboard_display)
+            {
+                add = configs[entity_name].dashboard_display.add;
+                enable_months = configs[entity_name].dashboard_display.enable_months;
+            }
+            if(typeof enable_months != 'undefined'){
+            	var d = new Date();
+                n = d.getMonth();
+                n=n+1;
+                res=$.inArray(n, enable_months);
+                if(res === -1){
+                	add=false;
+                }
+            }
+            return add;
+        },
         //check_login wrapper for checking whether user is logged in before routing to any of the above defined routes 
         check_login_wrapper: function() {
             var dfd = new $.Deferred();
