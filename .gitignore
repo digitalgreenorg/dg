@@ -1,0 +1,50 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+# /
+*.pyc
+.project
+.pydevproject
+/Nrlm/settings.py
+/sandbox_settings.py
+/gwt/DashboardGwt/war/WEB-INF/*
+/gwt/DashboardGwt/war/dashboardgwt/*
+*.prefs
+.DS_Store
+
+
+/nrlm/settings.py
+.project
+*.pyc
+.settings/*
