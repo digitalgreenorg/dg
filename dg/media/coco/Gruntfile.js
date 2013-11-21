@@ -190,6 +190,7 @@ module.exports = function( grunt ) {
     
     requirejs: {
         compile: {
+		 options: {
             optimize: "none",
             appDir: "app/",
             baseUrl: "scripts",
@@ -273,6 +274,7 @@ module.exports = function( grunt ) {
                    //                    },
                    
         }
+	   }
       }
   
   });
