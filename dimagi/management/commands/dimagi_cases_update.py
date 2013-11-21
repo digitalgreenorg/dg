@@ -5,8 +5,7 @@ from datetime import datetime, timedelta
 from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareProject, CommCareUser
-from dimagi.scripts.userfile_functions import write_new_case
-from dimagi.scripts.update_functions import close_case, update_case
+from dimagi.scripts.update_functions import close_case, update_case, write_new_case
 
 
 class Command(BaseCommand):
@@ -33,9 +32,9 @@ class Command(BaseCommand):
             persons_list = ServerLog.objects.filter(entry_table='Person').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             pma_list = ServerLog.objects.filter(entry_table='PersonMeetingAttendance').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             
-            case_update_set = set()
-            case_close_set = set()
-            case_videos_seen_update_set = set()            
+            case_update_set = set() #New case -- creating a new case for the project
+            case_close_set = set() #Closing case -- deleting a person
+            case_videos_seen_update_set = set() #Updating case -- updating videos seen and adopted properties for existing case
             
             for person in persons_list:
                 if person.action == -1:
