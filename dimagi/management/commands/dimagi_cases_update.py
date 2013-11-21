@@ -32,7 +32,7 @@ class Command(BaseCommand):
             persons_list = ServerLog.objects.filter(entry_table='Person').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             pma_list = ServerLog.objects.filter(entry_table='PersonMeetingAttendance').filter(village__in=villages).filter(timestamp__gte=last_update_time)
             
-            case_update_set = set() #New case -- creating a new case for the project
+            case_new_set = set() #New case -- creating a new case for the project
             case_close_set = set() #Closing case -- deleting a person
             case_videos_seen_update_set = set() #Updating case -- updating videos seen and adopted properties for existing case
             
@@ -40,19 +40,19 @@ class Command(BaseCommand):
                 if person.action == -1:
                     case_close_set.add(person.model_id)
                 else:
-                    case_update_set.add(person.model_id)
+                    case_new_set.add(person.model_id)
             # If the case has been closed, there is no need to create or update it. If a case, does not exist, the assumption is that closing will proceed without error.
-            case_update_set = case_update_set - case_close_set
+            case_new_set = case_new_set - case_close_set
             
             for pma in pma_list:
                 case_videos_seen_update_set.add(pma.model_id)
             
-            case_videos_seen_update_set = case_videos_seen_update_set - case_close_set.union(case_update_set)
+            case_videos_seen_update_set = case_videos_seen_update_set - case_close_set.union(case_new_set)
             
-            if len(case_update_set):
+            if len(case_new_set):
                 # Write XML for Creating Cases into file
                 filename_newcases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_newcase.xml" % (commcare_project_name))
-                write_new_case(case_update_set, filename_newcases)
+                write_new_case(case_new_set, filename_newcases)
             
                 try: 
                     response_new = commcare_project.upload_case_file(filename_newcases)
