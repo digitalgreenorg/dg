@@ -3231,6 +3231,48 @@ body {
  .cursor-move{
     cursor: move;
  }
+ 
+ .icon-addedit{
+    height : 25px;
+    width: 25px;
+    overflow: hidden;
+ }
+ 
+ .icon-coll-add{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -80px;
+ }
+ 
+ .icon-coll-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -120px;
+ }
+ 
+ .icon-video-add{
+    background: url(../images/addedit-sprite.png) no-repeat -40px 4px;
+ }
+ 
+ .icon-video-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -39px;
+ }
+ 
+ .icon-coll-edit{
+    background: url(../images/addedit-sprite.png) no-repeat 0 0;
+ }
+ 
+ .icon-coll-edit:hover{
+    background: url(../images/addedit-sprite.png) no-repeat 1px -40px;
+ }
+ 
+ .icon-video-edit{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -82px;
+ }
+ 
+ .icon-video-edit:hover{
+    background: url(../images/addedit-sprite.png) no-repeat -41px -121px;
+ }
+
+ .mrg-lt{
+    margin-left: 325px;
+}
  /*------------------ Sortable ------------------*/
  
  #sortable { 
