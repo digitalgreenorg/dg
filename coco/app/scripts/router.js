@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             });
         },
         list: function(entity_name) {
-        	if(this.check_url_wrapper(entity_name) && this.check_list_url_remove_wrapper(entity_name)){
+        	if(this.entity_valid(entity_name) && this.entity_list_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_list_view(entity_name);
@@ -38,7 +38,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         	}
         },
         add: function(entity_name) {
-        	if(this.check_url_wrapper(entity_name) && this.check_add_url_remove_wrapper(entity_name)){
+        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, null);
@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             
         },
         edit: function(entity_name, id) {
-        	if(this.check_url_wrapper(entity_name) && this.check_add_url_remove_wrapper(entity_name)){
+        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, parseInt(id));
@@ -64,7 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             AppLayout.render_login();
         },
         //Check URL Wrapper for checking if user entered some dummy name instead of entity
-        check_url_wrapper: function(entity_name){
+        entity_valid: function(entity_name){
         	if(typeof configs[entity_name] == 'undefined'){
         		return false;
         	}
@@ -73,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         	}
         },
         //Check if if list view was allowed in configs so that user may not directly enter the url and access table
-        check_list_url_remove_wrapper: function(entity_name){
+        entity_list_enabled: function(entity_name){
             var listing = false;
             if(configs[entity_name].dashboard_display)
             {
@@ -82,7 +82,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             return listing;
         },
       //Check if if add view was allowed in configs so that user may not directly enter the url and access form
-        check_add_url_remove_wrapper: function(entity_name){
+        entity_add_enabled: function(entity_name){
             var add = true;
             var enable_months = [];
             if(configs[entity_name].dashboard_display)
