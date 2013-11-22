@@ -2,7 +2,7 @@ import datetime
 
 from tastypie.resources import ModelResource
 from tastypie import fields
-from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoLike
+from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoinCollection, VideoLike
 from functools import partial
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
@@ -14,6 +14,15 @@ from tastypie.authentication import BasicAuthentication, Authentication
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
+
+def dict_to_foreign_uri(bundle, field_name, resource_name=None):
+    print bundle.data
+    field_dict = bundle.data.get(field_name)
+    print field_dict
+    bundle.data[field_name] = "/social/api/%s/%s/"%(resource_name if resource_name else field_name, 
+                                                    str(field_dict))
+    return bundle
+
 
 class BaseCorsResource(ModelResource):
     """
@@ -99,14 +108,40 @@ class VideoResource(BaseResource):
         return bundle
  
 class CollectionResource(BaseCorsResource):
-    videos = fields.ManyToManyField(VideoResource, 'videos',full=True)
-    partner = fields.ForeignKey(PartnerResource, 'partner', full=True)
+    videos = fields.ListField()
+    partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
+    hydrate_partner = partial(dict_to_foreign_uri, field_name='partner', resource_name='partner')
     class Meta:
+        always_return_data = True
         queryset = Collection.objects.all()
-        resource_name = 'collectionsSearch'
+        resource_name = 'collections'
         excludes = ['category','subcategory','topic','subtopic','subject']
         ordering={'likes','views','adoptions'}
-        
+        authentication = Authentication()
+        authorization = Authorization()
+    
+    def obj_create(self, bundle, **kwargs):
+        video_list = bundle.data.get('videos')
+        print video_list
+        if video_list:
+            bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
+            print bundle
+            print bundle.obj
+            collection_id = getattr(bundle.obj,'uid')
+            print collection_id
+            for index, video in enumerate(video_list):
+                try:
+                    vid_collection = VideoinCollection(collection_id=collection_id, video_id=video, 
+                                                  order=index)
+                    vid_collection.save()
+                except Exception, e:
+                    pass#raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
+            print "before bundle"
+            return bundle
+            
+        else:
+            pass#raise PMANotSaved('Screening with details: ' + str(bundle.data) + ' can not be saved because attendance list is not available')
+    
     
 class ActivityResource(BaseResource):
     # page,count -> send order by descding date
@@ -135,13 +170,7 @@ class ActivityResource(BaseResource):
                    }
 
 
-def dict_to_foreign_uri(bundle, field_name, resource_name=None):
-    print bundle.data
-    field_dict = bundle.data.get(field_name)
-    print field_dict
-    bundle.data[field_name] = "/social/api/%s/%s/"%(resource_name if resource_name else field_name, 
-                                                    str(field_dict))
-    return bundle
+
 
 class UserResource(ModelResource):
     class Meta:

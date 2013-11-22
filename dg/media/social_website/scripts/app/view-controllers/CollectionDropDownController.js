@@ -16,6 +16,7 @@ define(function(require) {
     var CollectionDropDownDataFeed = require('app/libs/CollectionDropDownDataFeed');
     var collectionDropDownTemplate = require('text!app/views/collection-add-dropdown.html');
     var CollectionVideoDropDownDataFeed = require('app/libs/CollectionVideoDropDownDataFeed');
+    var CollectionAddDataFeed = require('app/libs/CollectionsAddDataFeed');
     var collectionVideoDropDownTemplate = require('text!app/views/collection-add-video-dropdown.html');
     var carouselTemplate = require('text!app/views/collection-add-video-carousel.html');
     var Chosen = require('libs/external/chosen.jquery.min');
@@ -37,8 +38,11 @@ define(function(require) {
             var references = this._references;
             references.dataFeed = new CollectionDropDownDataFeed();
             references.videodataFeed = new CollectionVideoDropDownDataFeed();
+            references.addDataFeed = new CollectionAddDataFeed();
             references.$collectionAddWrapper = $referenceBase;
             references.$collectionDropDownContainer = $referenceBase.find('.js-collection-dropdown-container');
+            references.$saveButton = $referenceBase.find('.collection-save-button');
+            references.$collectionTitle = $referenceBase.find('.coltitle');
         },
 
         _initEvents: function() {
@@ -52,6 +56,9 @@ define(function(require) {
             
             boundFunctions.onVideoDataProcessed = this._onVideoDataProcessed.bind(this);
             references.videodataFeed.on('dataProcessed', boundFunctions.onVideoDataProcessed);
+            
+            boundFunctions.onSaveCollectionClick = this._onSaveCollectionClick.bind(this);
+            references.$saveButton.on("click", boundFunctions.onSaveCollectionClick);
             
         },
         
@@ -84,6 +91,36 @@ define(function(require) {
         	this.getCollectionVideoDropDown();
         },
 
+        afterCommentAdd: function(){
+            //this._state.commentAdded = true;
+            //this._references.dataFeed.deleteInputParam('user');
+            //this._references.dataFeed.deleteInputParam('text');
+            //this.getComments();
+        	alert('saved');
+        },
+        
+        _onSaveCollectionClick: function(e) {
+        	e.preventDefault();
+        	var order = $( "#sortable" ).sortable('toArray');
+        	alert(order);
+        	var references = this._references;
+        	alert(references.$collectionTitle.val());
+        	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
+            references.addDataFeed.addInputParam('partner', false, $("#partnerlist").val());
+            references.addDataFeed.addInputParam('language', false, $("#langlist").val());
+            references.addDataFeed.addInputParam('state', false, $("#statelist").val());
+            references.addDataFeed.addInputParam('videos', false, order);
+            
+            references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
+            references.addDataFeed.setInputParam('partner', $("#partnerlist").val(), true);
+            references.addDataFeed.setInputParam('language', $("#langlist").val(), true);
+            references.addDataFeed.setInputParam('state', $("#statelist").val(), true);
+            references.addDataFeed.setInputParam('videos', order, true);
+            
+            
+            references.addDataFeed._fetch(null, this.afterCommentAdd.bind(this), 'POST');
+        	
+        },
         _renderCollectionDropDown: function(collectiondropdownData) {
             var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, collectiondropdownData);
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
