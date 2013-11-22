@@ -26,6 +26,7 @@
 				<li><a href="#modes">Offline and Online Modes</a></li>
 				<li><a href="#login">Login</a></li>
 				<li><a href="#data">Data Entry, Listing and Modification</a></li>
+                <li><a href="#troubleshoot">Troubleshooting</a></li>
 			</ul>
 		</div>
 		<div class="span9" style="float:right; margin-top:2%;">
@@ -39,9 +40,8 @@
 					<ol><li> Make sure you have consistent internet connection.</li>
 						<li>Make sure your computer's time is correct. It can be seen at the bottom right of your screen.
 							If it isn't correct, get help from <a href="https://kb.wisc.edu/helpdesk/page.php?id=12540" target="_blank">here</a></li>
-						<li>Make sure you have a suitable browser as listed <a href="#browsers">here</a>.</li></li>
-					</ol>
-			<hr>
+						<li>Make sure you have a suitable browser as listed <a href="#browsers">here</a>.</li>
+					</ol></li><hr>
 			</ul>
 			<a name="syncing"></a><h3 class="topic">Syncing</h3>
 			<ul class="faq-wrap">
@@ -50,7 +50,7 @@
 					to your 
 					computer so that both the server and your computer have the latest copy of the data.</li><hr>
 				<li><b>When should I sync?</b></li>
-				<li>You should sync whenever you want to upload locally stored entries to the server.</li><hr>
+				<li>You should sync whenever you want to upload locally stored entries to the server. Please try to sync as and when you can.</li><hr>
 				<li><b>What does the number in the sync button mean?</b></li>
 				<li>The number in the sync button is the number of entries which are stored on your computer but not yet on the server.
 				Click on sync to upload them.</li><hr>
@@ -77,8 +77,10 @@
 				<li><b>How do I switch modes?</b></li>
 				<li>There is no need to switch modes in COCO version 2.
 					COCO V2 works seamlessly, automatically keeping track of internet connectivity.</li><hr>
-				<li><b>How do I know when I'm online/offline?</b></li>
-				<li>There is an indicator next to your username in the side panel. It turns green when you are online and grey when you are offline.</li><hr>
+                <li><b>How do I access COCO in offline mode?</b></li>
+				<li>In your browser, type this URL - www.digitalgreen.org/coco/v2/. Please note that the last slash '/' is essential 
+                and you will not be able to access COCO offline if you just type www.digitalgreen.org/coco/v2
+                </li><hr>    
 			</ul>
 			<a name="login"></a><h3 class="topic">Login</h3>
 			<ul class="faq-wrap">
@@ -107,6 +109,20 @@
 				<hr>
 				<li><b>How can I check if an entry has been added to the database?</b></li>
 				<li>Go to that entry's table and <a href="#sort">sort</a> by decreasing order of ID. You can alternatively <a href="#search">search</a> for that entry in the table</li><hr>
+			</ul>
+            <a name="troubleshoot"></a><h3 class="topic">Troubleshooting</h3>
+			<ul class="faq-wrap">
+				<li><b>How do I clear the application cache?</b></li>
+				<li>To clear the appcache in Google Chrome in your browser type chrome://appcache-internals/ and remove the appcache of the relevant application.
+                    In this case it will be http://www.digitalgreen.org/media/coco/cocooffline.appcache .</li><hr>
+                <li><b>How do I delete indexed database in chrome?</b></li>
+				<li>To delete the indexed database follow these steps:
+                    <ol><li>Click on <img src="/media/coco/app/images/chrome-options.png"> icon on the top right of chrome.</li>
+						<li>Click on 'Settings'</li>
+						<li>At the bottom of the page you'll see 'Show advanced settings'. Click on it.</li>
+                        <li>Click on the 'Content Settings' button and then 'All cookies and site data'</li>
+                        <li>In the search box, search for www.digitalgreen.org. Click on 'Indexed Database' and then 'remove'</li>
+					</ol></li><hr>
 			</ul>
 		</div>
 	</div>
