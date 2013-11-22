@@ -332,9 +332,9 @@ define(function(require) {
             var index;
             
             for (index in filterorder) {
-            	var categoryId = filterorder[index]; 
+                var categoryId = filterorder[index];
                 
-            	var currentCategory = Util.Object.clone(categories[categoryId], true);
+                var currentCategory = Util.Object.clone(categories[categoryId], true);
                 currentCategory._categoryId = categoryId;
 
                 var options = currentCategory.options;
