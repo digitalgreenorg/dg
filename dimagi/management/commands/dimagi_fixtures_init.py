@@ -22,6 +22,7 @@ class Command(BaseCommand):
             except CommCareProject.DoesNotExist:
                 raise CommandError('CommCare Project "%s" not yet entered in the Database.' % commcare_project_name)
             commcare_users = CommCareUser.objects.filter(project=commcare_project).all()
-            #The following function creates an excel workbook with project_name 
-            create_fixture(commcare_users, commcare_project_name)
 
+            #The following function creates an excel workbook with project_name
+            want_seasonal_behavior = "yes" 
+            create_fixture(commcare_users, commcare_project_name, want_seasonal_behavior)

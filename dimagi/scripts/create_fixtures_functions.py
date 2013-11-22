@@ -11,7 +11,7 @@ from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareUser, CommCareUserVillage
 
-three_months = datetime.now() - timedelta(days = 365)
+one_year = datetime.now() - timedelta(days = 365)
 
 def write_type_info(workbook):
     sheet = workbook.add_worksheet('types')
@@ -85,7 +85,7 @@ def write_person_info(cluster_dict, workbook):
                 sheet.write(row, 0, unicode(person_id))
                 sheet.write(row, 1, person[1])
                 sheet.write(row, 2, unicode(group_id))
-                vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = three_months).values_list('screening__videoes_screened', flat = True)
+                vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = one_year).values_list('screening__videoes_screened', flat = True)
                 if len(vid_id_list) > 0:
                     arr = ''
                     for vid in vid_id_list:
@@ -253,7 +253,7 @@ def write_video_schedule_info(vid_dict, workbook):
         
 #getting user getting from the database and storing it in list of dictionaries
 
-def create_fixture(users, project_name):
+def create_fixture(users, project_name, want_seasonal_behavior):
     data = []    
     for user in users:
         dict = {}
@@ -283,8 +283,11 @@ def create_fixture(users, project_name):
                                       'mediator_name':mediator.name,
                                       'village': v,
                                       'cluster' : entry['username']})
-    
-    filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xlsx" % (project_name))
+    if want_seasonal_behavior.lower() =="yes":
+        filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures.xlsx" % (project_name))
+    else:
+        filename = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_fixtures_update.xlsx" % (project_name))
+        
     workbook = xlsxwriter.Workbook(filename)
     type_sheet = write_type_info(workbook)
     group_sheet = write_group_info(cluster_village_dict, workbook)
@@ -293,9 +296,11 @@ def create_fixture(users, project_name):
     video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
     video_list = set(video_list)
     video_distinct_sheet = write_distinct(video_list,workbook)
-    video_schedule_dict = []
-    for id in video_list:
-        video_schedule_dict.append({'id': id,
-                                    'low_val': '2013-01-01', #idea here is all videos have this low and high values. And as of now seasonal videos are done manually over commcare fixtures
-                                    'high_val': '2013-01-01' })
-    video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
+    if want_seasonal_behavior.lower() =="yes":
+        video_schedule_dict = []
+        for id in video_list[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
+            video_schedule_dict.append({'id': id,
+                                        'low_val': '2013-01-01', 
+                                        'high_val': '2020-01-01' })
+        video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
+        
