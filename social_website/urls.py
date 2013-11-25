@@ -3,7 +3,7 @@ from django.views.generic.simple import direct_to_template
 
 from communications.views import media_view
 from human_resources.views import job_view, member_view
-from views import social_home, collection_view, logout_view, partner_view, search_view
+from views import social_home, collection_view, logout_view, partner_view, search_view, collection_add_view, collection_edit_view
 
 urlpatterns = patterns('',
     url(r'^$', social_home, name="home"),    
@@ -36,5 +36,6 @@ urlpatterns = patterns('',
     url(r'^team/$', member_view, name='team'),
     url(r'^resources/$', direct_to_template, {'template': 'resources.html'}, name='resources'),
     url(r'^tools/$', direct_to_template, {'template': 'tools.html', 'extra_context': {'header': {'currentPage':'Tools'}}}, name='tools'),
-    url(r'^collection-add/$', direct_to_template, {'template': 'collection_add.html', 'extra_context': {'header': {'jsController':'CollectionAdd'}}}, name='create_collection'),
+    url(r'^collection-add/(?P<collection>.+)/$', collection_edit_view, name='edit_collection'),
+    url(r'^collection-add/$', collection_add_view, name='create_collection'),
 )

@@ -198,7 +198,12 @@ def logout_view(request):
     return HttpResponseRedirect(next_url)
 
 
-def videoadddropdown(request):
+def collection_edit_view(request, collection):
+    try:
+        collection = Collection.objects.get(uid=collection)
+    except Collection.DoesNotExist:
+        return HttpResponseRedirect(reverse('create_collection'))
+    collection_videos = collection.videos.values_list('uid', flat=True)
     video = Video.objects.all()
     language = video.values_list('language',flat=True)
     language = sorted(set(language))
@@ -206,25 +211,63 @@ def videoadddropdown(request):
     partner = sorted(partner)
     state = video.values_list('state',flat=True)
     state = sorted(set(state))
-    sector = PracticeSector.objects.values_list('name', flat=True)
-    sector = sorted(set(sector))
-    subsector = PracticeSubSector.objects.values_list('name', flat=True)
-    subsector = sorted(set(subsector))
-    subject = PracticeSubject.objects.values_list('name', flat=True)
-    subject = sorted(set(subject))
-    topic = PracticeTopic.objects.values_list('name', flat=True)
-    topic = sorted(set(topic))
-    subtopic = PracticeSubtopic.objects.values_list('name', flat=True)
-    subtopic = sorted(set(subtopic))
-    video_dropdown_dict = {
-         'language': language,
-         'partner': partner,
-         'state': state,
-         'sector': sector,
-         'subsector': subsector,
-         'topic': topic,
-         'subtopic': subtopic,
-         'subject': subject,
-     }
-    resp = json.dumps({"video_dropdown": video_dropdown_dict})
-    return HttpResponse(resp)
+    context= {
+              'header': {
+                         'jsController':'CollectionAdd',
+                         },
+              'collection': collection,
+              'collection_videos': collection_videos,
+              'language': language,
+              'partner' : partner,
+              'state' : state,
+              }
+    return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
+
+
+def collection_add_view(request):
+    video = Video.objects.all()
+    language = video.values_list('language',flat=True)
+    language = sorted(set(language))
+    partner = Partner.objects.values('name', 'uid')
+    partner = sorted(partner)
+    state = video.values_list('state',flat=True)
+    state = sorted(set(state))
+    context= {
+              'header': {
+                         'jsController':'CollectionAdd',
+                         },
+              'language': language,
+              'partner' : partner,
+              'state' : state,
+              }
+    return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
+# def videoadddropdown(request):
+#     video = Video.objects.all()
+#     language = video.values_list('language',flat=True)
+#     language = sorted(set(language))
+#     partner = Partner.objects.values('name', 'uid')
+#     partner = sorted(partner)
+#     state = video.values_list('state',flat=True)
+#     state = sorted(set(state))
+#     sector = PracticeSector.objects.values_list('name', flat=True)
+#     sector = sorted(set(sector))
+#     subsector = PracticeSubSector.objects.values_list('name', flat=True)
+#     subsector = sorted(set(subsector))
+#     subject = PracticeSubject.objects.values_list('name', flat=True)
+#     subject = sorted(set(subject))
+#     topic = PracticeTopic.objects.values_list('name', flat=True)
+#     topic = sorted(set(topic))
+#     subtopic = PracticeSubtopic.objects.values_list('name', flat=True)
+#     subtopic = sorted(set(subtopic))
+#     video_dropdown_dict = {
+#          'language': language,
+#          'partner': partner,
+#          'state': state,
+#          'sector': sector,
+#          'subsector': subsector,
+#          'topic': topic,
+#          'subtopic': subtopic,
+#          'subject': subject,
+#      }
+#     resp = json.dumps({"video_dropdown": video_dropdown_dict})
+#     return HttpResponse(resp)
