@@ -129,6 +129,7 @@ class CollectionResource(BaseCorsResource):
             print bundle.obj
             collection_id = getattr(bundle.obj,'uid')
             print collection_id
+            del_objs = VideoinCollection.objects.filter(collection_id=collection_id).delete()
             for index, video in enumerate(video_list):
                 try:
                     vid_collection = VideoinCollection(collection_id=collection_id, video_id=video, 
@@ -138,11 +139,11 @@ class CollectionResource(BaseCorsResource):
                     pass#raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
             print "before bundle"
             return bundle
-            
+
         else:
-            pass#raise PMANotSaved('Screening with details: ' + str(bundle.data) + ' can not be saved because attendance list is not available')
-    
-    
+            pass
+
+
 class ActivityResource(BaseResource):
     # page,count -> send order by descding date
     images = fields.ManyToManyField(ImageSpecResource, 'images', null=True, full=True)

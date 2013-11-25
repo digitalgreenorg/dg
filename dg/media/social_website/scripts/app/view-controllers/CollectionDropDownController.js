@@ -124,6 +124,10 @@ define(function(require) {
         	alert(order);
         	var references = this._references;
         	alert(references.$collectionTitle.val());
+        	if ($('.js-uid').data('collectionuid')){
+        	    references.addDataFeed.addInputParam('uid', false, $('.js-uid').data('collectionuid'));
+        	    references.addDataFeed.setInputParam('uid', $('.js-uid').data('collectionuid'), true);
+        	}
         	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
             references.addDataFeed.addInputParam('partner', false, $("#partnerlist").val());
             references.addDataFeed.addInputParam('language', false, $("#langlist").val());
