@@ -53,7 +53,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     n = d.getMonth() + 1;
                     res = $.inArray(n, enable_months);
                     if(res === -1){
-                    	add=false;
+                    	add = false;
                     }
                 }
                 if (listing || add) {

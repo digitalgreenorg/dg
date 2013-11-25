@@ -27,6 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             });
         },
         list: function(entity_name) {
+        	//Check if entity present in url is valid or not and if list view of that entity is enable in case it is valid
         	if(this.entity_valid(entity_name) && this.entity_list_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
@@ -38,6 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         	}
         },
         add: function(entity_name) {
+        	//Check if entity present in url is valid or not and if add view of that entity is enable in case it is valid
         	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
@@ -50,6 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             
         },
         edit: function(entity_name, id) {
+        	//Check if entity present in url is valid or not and if edit view of that entity is enable in case it is valid
         	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
@@ -63,7 +66,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         login: function() {
             AppLayout.render_login();
         },
-        //Check URL Wrapper for checking if user entered some dummy name instead of entity
+        //Check if user entered wrong entity name in url.
         entity_valid: function(entity_name){
         	if(typeof configs[entity_name] == 'undefined'){
         		return false;
@@ -72,7 +75,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         		return true;
         	}
         },
-        //Check if if list view was allowed in configs so that user may not directly enter the url and access table
+        //Check if list view was allowed in configs so that user may not directly enter the url and access table
         entity_list_enabled: function(entity_name){
             var listing = false;
             if(configs[entity_name].dashboard_display)
@@ -81,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             }
             return listing;
         },
-      //Check if if add view was allowed in configs so that user may not directly enter the url and access form
+      //Check if add view was allowed in configs so that user may not directly enter the url and access form
         entity_add_enabled: function(entity_name){
             var add = true;
             var enable_months = [];
