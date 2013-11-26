@@ -124,12 +124,11 @@ class CollectionResource(BaseCorsResource):
         video_list = bundle.data.get('videos')
         print video_list
         if video_list:
+            bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
-            print bundle
-            print bundle.obj
             collection_id = getattr(bundle.obj,'uid')
-            print collection_id
-            del_objs = VideoinCollection.objects.filter(collection_id=collection_id).delete()
+
+            VideoinCollection.objects.filter(collection_id=collection_id).delete()
             for index, video in enumerate(video_list):
                 try:
                     vid_collection = VideoinCollection(collection_id=collection_id, video_id=video, 
