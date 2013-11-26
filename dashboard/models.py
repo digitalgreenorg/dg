@@ -411,6 +411,7 @@ class PersonGroups(CocoModel):
     timings = models.TimeField(db_column='TIMINGS',null=True, blank=True)
     time_updated = models.DateTimeField(db_column='TIME_UPDATED',auto_now=True)
     village = BigForeignKey(Village)
+    partner = models.BigIntegerField(default=0)
     class Meta:
         db_table = u'person_groups'
         verbose_name = "Person group"
@@ -444,6 +445,7 @@ class Person(CocoModel):
     
     objects = models.Manager() #The default manager
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook
+    partner = models.BigIntegerField(default=0)
     
     class Meta:
         db_table = u'person'

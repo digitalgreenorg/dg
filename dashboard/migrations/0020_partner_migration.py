@@ -3,8 +3,7 @@ import datetime
 from django.db.models import get_app, get_models
 from south.db import db
 from south.v2 import DataMigration
-from dashboard.models import Block, CocoUser, Village 
-
+from dashboard.models import CocoUser, User, Village
 
 def get_partner_id_for_village(village_id):
     user_assigned = CocoUser.objects.filter(villages__id__exact = village_id)
@@ -22,7 +21,7 @@ class Migration(DataMigration):
     def forwards(self, orm):
         "Write your forwards methods here."
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-        coco_model_list = [ 'video', 'screening', 'person_adopt_practice']
+        coco_model_list = [ 'video', 'screening', 'person_adopt_practice', 'person', 'person_groups']
         vils = Village.objects.all().values_list('id', flat=True)
         for model in get_models(get_app('dashboard')):
             if model._meta.db_table in coco_model_list:
@@ -36,7 +35,6 @@ class Migration(DataMigration):
                         objs = model.objects.filter(partner = 0, village_id = vil).update(partner = partner_id)
                 objs = model.objects.filter(partner = 0)
                 print 'after',model._meta.db_table, objs.count()
-
 
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -318,6 +316,7 @@ class Migration(DataMigration):
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'image_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LAND_HOLDINGS'", 'blank': 'True'}),
+            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PERSON_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'relations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'rel'", 'to': "orm['dashboard.Person']", 'through': "orm['dashboard.PersonRelations']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
@@ -349,6 +348,7 @@ class Migration(DataMigration):
             'days': ('django.db.models.fields.CharField', [], {'max_length': '9', 'db_column': "'DAYS'", 'blank': 'True'}),
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'GROUP_NAME'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_column': "'TIME_UPDATED'", 'blank': 'True'}),

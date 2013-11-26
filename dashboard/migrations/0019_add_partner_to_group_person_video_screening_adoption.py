@@ -8,6 +8,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Person.partner'
+        db.add_column(u'person', 'partner',
+                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
+                      keep_default=False)
+
         # Adding field 'Video.partner'
         db.add_column(u'video', 'partner',
                       self.gf('django.db.models.fields.BigIntegerField')(default=0),
@@ -23,8 +28,16 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.BigIntegerField')(default=0),
                       keep_default=False)
 
+        # Adding field 'PersonGroups.partner'
+        db.add_column(u'person_groups', 'partner',
+                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
+                      keep_default=False)
+
 
     def backwards(self, orm):
+        # Deleting field 'Person.partner'
+        db.delete_column(u'person', 'partner')
+
         # Deleting field 'Video.partner'
         db.delete_column(u'video', 'partner')
 
@@ -33,6 +46,9 @@ class Migration(SchemaMigration):
 
         # Deleting field 'PersonAdoptPractice.partner'
         db.delete_column(u'person_adopt_practice', 'partner')
+
+        # Deleting field 'PersonGroups.partner'
+        db.delete_column(u'person_groups', 'partner')
 
 
     models = {
@@ -312,6 +328,7 @@ class Migration(SchemaMigration):
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'image_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LAND_HOLDINGS'", 'blank': 'True'}),
+            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PERSON_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'relations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'rel'", 'to': "orm['dashboard.Person']", 'through': "orm['dashboard.PersonRelations']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
@@ -343,6 +360,7 @@ class Migration(SchemaMigration):
             'days': ('django.db.models.fields.CharField', [], {'max_length': '9', 'db_column': "'DAYS'", 'blank': 'True'}),
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'GROUP_NAME'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_column': "'TIME_UPDATED'", 'blank': 'True'}),
