@@ -3273,13 +3273,18 @@ body {
  .mrg-lt{
     margin-left: 325px;
 }
+
+.dropdown-ht{
+    height: 530px;
+}
+
  /*------------------ Sortable ------------------*/
  
  #sortable { 
  list-style-type: none;
  margin: 5px;
  padding: 5px;
- width: 800px;
+ width: 700px;
  }
  
  #sortable li {
