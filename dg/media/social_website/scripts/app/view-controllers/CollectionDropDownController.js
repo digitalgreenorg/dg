@@ -114,16 +114,15 @@ define(function(require) {
         	this.getCollectionVideoDropDown();
         },
 
-        afterCommentAdd: function(){
-        	alert('saved');
+        afterCollectionAdd: function(){
+            var url = "/discover" +"/"+ $("#partnerlist :selected").text() +"/"+ $("#statelist").val() +"/"+ $("#langlist").val() +"/"+ $('.coltitle').val()
+            window.location.assign(url)
         },
         
         _onSaveCollectionClick: function(e) {
         	e.preventDefault();
         	var order = $( "#sortable" ).sortable('toArray');
-        	alert(order);
         	var references = this._references;
-        	alert(references.$collectionTitle.val());
         	if ($('.js-uid').data('collectionuid')){
         	    references.addDataFeed.addInputParam('uid', false, $('.js-uid').data('collectionuid'));
         	    references.addDataFeed.setInputParam('uid', $('.js-uid').data('collectionuid'), true);
@@ -141,7 +140,7 @@ define(function(require) {
             references.addDataFeed.setInputParam('videos', order, true);
             
             
-            references.addDataFeed._fetch(null, this.afterCommentAdd.bind(this), 'POST');
+            references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'POST');
         	
         },
         _renderCollectionDropDown: function(collectiondropdownData) {
