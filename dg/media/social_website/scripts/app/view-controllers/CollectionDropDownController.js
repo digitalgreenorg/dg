@@ -29,7 +29,7 @@ define(function(require) {
          */
         constructor: function($referenceBase) {
             this.base($referenceBase);
-            
+            this._dropdownChosen();
             return this;
         },
 
@@ -47,12 +47,11 @@ define(function(require) {
 
         _initEvents: function() {
             this.base();
-            this.getCollectionDropDown();
             var boundFunctions = this._boundFunctions;
             var references = this._references;
             
-            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
-            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+            //boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            //references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
             
             boundFunctions.onVideoDataProcessed = this._onVideoDataProcessed.bind(this);
             references.videodataFeed.on('dataProcessed', boundFunctions.onVideoDataProcessed);
@@ -60,6 +59,19 @@ define(function(require) {
             boundFunctions.onSaveCollectionClick = this._onSaveCollectionClick.bind(this);
             references.$saveButton.on("click", boundFunctions.onSaveCollectionClick);
             
+            this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
+            $(".js-dropdown").on('change', this._boundFunctions.onDropDownChosen);
+            
+            this.checkforedit();
+            
+        },
+        
+        checkforedit: function(){
+            if ($('.js-uid').data('collectionuid')){
+                $("#partnerlist").val($('.va-dropdown').data('collectionpartner')).change();
+                $("#statelist").val($('.va-dropdown').data('collectionstate')).change();
+                $("#langlist").val($('.va-dropdown').data('collectionlanguage')).change();
+            }
         },
         
         getCollectionDropDown: function() {
@@ -82,6 +94,17 @@ define(function(require) {
             this._boundFunctions.onVideoChosen = this._onVideoChosen.bind(this);
             $("#vidlist").on('change', this._boundFunctions.onVideoChosen);
             
+            if ($('.js-uid').data('collectionuid')){
+            var videos_collection = $('.js-collection-video-dropdown-container').data('videos');
+            var a;
+            for (a in videos_collection){
+                console.log(videos_collection[a]);
+                $("#vidlist").val(videos_collection[a]).change();
+            }
+            
+            $("#vidlist").trigger("chosen:updated");
+            }
+            
         },
         _onDataProcessed: function() {
             this.getCollectionDropDown();
@@ -92,10 +115,6 @@ define(function(require) {
         },
 
         afterCommentAdd: function(){
-            //this._state.commentAdded = true;
-            //this._references.dataFeed.deleteInputParam('user');
-            //this._references.dataFeed.deleteInputParam('text');
-            //this.getComments();
         	alert('saved');
         },
         
@@ -105,6 +124,10 @@ define(function(require) {
         	alert(order);
         	var references = this._references;
         	alert(references.$collectionTitle.val());
+        	if ($('.js-uid').data('collectionuid')){
+        	    references.addDataFeed.addInputParam('uid', false, $('.js-uid').data('collectionuid'));
+        	    references.addDataFeed.setInputParam('uid', $('.js-uid').data('collectionuid'), true);
+        	}
         	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
             references.addDataFeed.addInputParam('partner', false, $("#partnerlist").val());
             references.addDataFeed.addInputParam('language', false, $("#langlist").val());
@@ -155,7 +178,7 @@ define(function(require) {
 				this.getCollectionVideoDropDown();
         	}
         	else{
-        		//$("#vidlist").attr('disabled', true).trigger("chosen:updated");
+        	//TODO: What happens if value becomes default again
         	}
         },
         
@@ -181,9 +204,7 @@ define(function(require) {
         	$("#vidlist").trigger("chosen:updated");
         	
         	$('#sortable li .video-remove').click(function(){
-        		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id')));
-        		//var options =  $('#vidlist').attr('options');
-        		//options[options.length] = newOption($(this).parent().attr('data-title'), $(this).parent().attr('id'));
+        		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
         		$("#vidlist").trigger("chosen:updated");
         		$(this).parent().remove();
                 

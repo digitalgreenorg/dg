@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import include, patterns, url
 from elastic_search import get_collections_from_elasticsearch, searchCompletions
 from social_website.api import VideoLikeResource, UserResource, VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
-from views import searchFilters, featuredCollection, videoadddropdown
+from views import searchFilters, featuredCollection
 
 
 video_resource = VideoResource()
@@ -29,7 +29,6 @@ urlpatterns = patterns('',
     (r'^api/featuredCollection/$', featuredCollection),
     (r'^api/', include(videolike_resource.urls)),
     (r'^api/', include(user_resource.urls)),
-    (r'^api/videodropdown/$', videoadddropdown),
 
 #    (r'', include(signin_resource.urls)),
 #    (r'', include(usercollectionhistory_resource.urls)),
