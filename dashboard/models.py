@@ -727,6 +727,7 @@ class Video(CocoModel):
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
     viewers = models.PositiveIntegerField(default=0, editable=False)
+    partner = models.BigIntegerField(default=0)
     
     @staticmethod
     def update_viewer_count(sender, **kwargs):
@@ -872,6 +873,7 @@ class Screening(CocoModel):
     farmer_groups_targeted = BigManyToManyField(PersonGroups)
     videoes_screened = BigManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
+    partner = models.BigIntegerField(default=0)
     class Meta:
         db_table = u'screening'
         unique_together = ("date", "start_time", "end_time","animator","village")
@@ -894,6 +896,7 @@ class PersonAdoptPractice(CocoModel):
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    partner = models.BigIntegerField(default=0)
 
     def get_village(self):
         return self.person.village.id
