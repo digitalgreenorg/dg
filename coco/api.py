@@ -165,6 +165,15 @@ def get_user_mediators(user_id):
         
     return set(list(mediators_from_assigned_villages) + list(mediators_from_same_district))
 
+def assign_partner(bundle):
+    partner_id = get_user_partner_id(bundle.request)
+    if partner_id:
+        bundle.data['partner'] = partner_id
+    else:
+        bundle.data['partner'] = 0
+    
+    return bundle
+    
 class VillageLevelAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
@@ -343,6 +352,7 @@ class VideoResource(BaseResource):
     hydrate_cameraoperator = partial(dict_to_foreign_uri, field_name='cameraoperator', resource_name='mediator')
     hydrate_facilitator = partial(dict_to_foreign_uri, field_name='facilitator', resource_name='mediator')
     hydrate_farmers_shown = partial(dict_to_foreign_uri_m2m, field_name = 'farmers_shown', resource_name = 'person')
+    hydrate_partner = partial(assign_partner)
     
     class Meta:
         max_limit = None
@@ -374,6 +384,7 @@ class PersonGroupResource(BaseResource):
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    hydrate_partner = partial(assign_partner)
     
     def dehydrate_group_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -404,6 +415,7 @@ class ScreeningResource(BaseResource):
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_farmer_groups_targeted = partial(dict_to_foreign_uri_m2m, field_name = 'farmer_groups_targeted', resource_name='group')
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
+    hydrate_partner = partial(assign_partner)
     
     class Meta:
         max_limit = None
@@ -490,6 +502,7 @@ class PersonResource(BaseResource):
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name = 'village')
     hydrate_group = partial(dict_to_foreign_uri, field_name = 'group')
+    hydrate_partner = partial(assign_partner)
     
     def dehydrate_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -520,6 +533,7 @@ class PersonAdoptVideoResource(BaseResource):
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
+    hydrate_partner = partial(assign_partner)
     
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
