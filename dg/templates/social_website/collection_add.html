@@ -12,58 +12,51 @@
 	                            <h1 class="hdg-bold hdg-a" style="display:inline;">Collection Title</h1><span><input type="text" name="title" class="coltitle" value="{{collection.title}}"></span>
 	                        </div>
 	                    </div>
-                        
 	                    <div class="media layout-vr-md">
-                            <div class="video-wrapper js-uid" data-collectionuid="{{collection.uid}}">
-                                <div id="video-target">
-                                    <div class="boxWhite carousel-pad-rt layout-vr-lg">
-                                        <div id="collection-videos-carousel" class="collection-video-carousel carousel-wrapper carousel-border">
-                                            <ul class="h-list h-list-xlg clearfix js-carousel-container" id='sortable'>    
-                                            </ul>
-                                        </div>
-                                    </div>    
-                                </div>
-                            </div>
-	                    <div class="bd js-collection-dropdown-container">
 	                        <div class="video-wrapper js-uid" data-collectionuid="{{collection.uid}}">
+	                           <div class="boxWhite carousel-pad-rt layout-vr-lg">
+                                    <div id="collection-videos-carousel" class="collection-video-carousel carousel-wrapper carousel-border">
+                                        <ul class="h-list h-list-xlg clearfix js-carousel-container" id='sortable'>    
+                                            <!-- Begin video carousel -->
+                                        </ul>
+                                    </div>
+                               </div>
 	                        </div>
 	                        <div class="bd">
-                            <div class="media va-dropdown" data-collectionpartner="{{collection.partner.uid}}" data-collectionlanguage="{{collection.language}}" data-collectionstate="{{collection.state}}">
-                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
-                                    <select id = "partnerlist" class="chosen-select js-dropdown" >
-                                      <option value='' selected='selected'>---------</option>
-                                      {% for pa in partner%} 
-                                      <option value = "{{pa.uid}}">{{pa.name}}</option>
-                                      {% endfor %}                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">State</label>
-                                    <select id = "statelist" class="chosen-select js-dropdown">
-                                    <option value='' selected='selected'>---------</option>
-                                      {% for st in state%} 
-                                      <option value = "{{st}}">{{st}}</option>
-                                      {% endfor %}                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
-                                    <select id = "langlist" class="chosen-select js-dropdown">
-                                    <option value='' selected='selected'>---------</option>
-                                      {% for lang in language%} 
-                                      <option value = "{{lang}}">{{lang}}</option>
-                                      {% endfor %}
-                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">Add Video</label>
-                                   
+	                            <div class="media va-dropdown" data-collectionpartner="{{collection.partner.uid}}" data-collectionlanguage="{{collection.language}}" data-collectionstate="{{collection.state}}">
+	                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
+	                                    <select id = "partnerlist" class="chosen-select js-dropdown" >
+	                                      <option value='' selected='selected'>---------</option>
+	                                      {% for pa in partner%} 
+	                                      <option value = "{{pa.uid}}">{{pa.name}}</option>
+	                                      {% endfor %}                                    </select><br><br>
+	                                <label class="copy hdg-bold layout-vr-tiny">State</label>
+	                                    <select id = "statelist" class="chosen-select js-dropdown">
+	                                    <option value='' selected='selected'>---------</option>
+	                                      {% for st in state%} 
+	                                      <option value = "{{st}}">{{st}}</option>
+	                                      {% endfor %}                                    </select><br><br>
+	                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
+	                                    <select id = "langlist" class="chosen-select js-dropdown">
+	                                    <option value='' selected='selected'>---------</option>
+	                                      {% for lang in language%} 
+	                                      <option value = "{{lang}}">{{lang}}</option>
+	                                      {% endfor %}
+	                                    </select><br><br>
+	                                <label class="copy hdg-bold layout-vr-tiny">Add Video</label>
                                     <div class='js-collection-video-dropdown-container' data-videos='[{{collection_videos|join:","}}]'>
-                                    
+                                        <!-- Video Drop Down -->
                                     </div>
                                     </select><br><br>
-                            </div> <!-- End .media -->
-                        </div> <!-- End .bd -->
-	                        <!-- Collection Drop Downs -->
+                                </div> <!-- End .media -->
+                            </div> <!-- End .bd -->
 	                    </div> <!-- End .media -->
-                        <div class="layout-vr-lg">
-                            <div class="layout-vr-lg js-collection-mapping-container">
-                                    <!-- Practice Mapping DropDowns -->
-                            </div>
-                            <input type="submit" value="Save" class="btn copy-margin top-mar collection-save-button"/>
+	                    
+                        <div class="layout-vr-lg js-collection-mapping-container">
+                                <!-- Practice Mapping DropDowns -->
                         </div>
+                        <input type="submit" value="Save" class="btn copy-margin top-mar collection-save-button"/>
+                    </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </form>
