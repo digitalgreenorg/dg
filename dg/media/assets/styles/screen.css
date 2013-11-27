@@ -3280,11 +3280,17 @@ body {
 
  /*------------------ Sortable ------------------*/
  
+ .video-wrapper-sortable{
+    float: left;
+    width: 703px;
+    margin-right: 30px;
+ }
+ 
  #sortable { 
  list-style-type: none;
  margin: 5px;
  padding: 5px;
- width: 700px;
+ width: 600px;
  }
  
  #sortable li {
