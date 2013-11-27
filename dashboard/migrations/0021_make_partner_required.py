@@ -8,48 +8,38 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Person.partner'
-        db.add_column(u'person', 'partner',
-                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
-                      keep_default=False)
 
-        # Adding field 'Video.partner'
-        db.add_column(u'video', 'partner',
-                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
-                      keep_default=False)
+        # Changing field 'Person.partner'
+        db.alter_column(u'person', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
-        # Adding field 'Screening.partner'
-        db.add_column(u'screening', 'partner',
-                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
-                      keep_default=False)
+        # Changing field 'Video.partner'
+        db.alter_column(u'video', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
-        # Adding field 'PersonAdoptPractice.partner'
-        db.add_column(u'person_adopt_practice', 'partner',
-                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
-                      keep_default=False)
+        # Changing field 'Screening.partner'
+        db.alter_column(u'screening', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
-        # Adding field 'PersonGroups.partner'
-        db.add_column(u'person_groups', 'partner',
-                      self.gf('django.db.models.fields.BigIntegerField')(default=0),
-                      keep_default=False)
+        # Changing field 'PersonAdoptPractice.partner'
+        db.alter_column(u'person_adopt_practice', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
+        # Changing field 'PersonGroups.partner'
+        db.alter_column(u'person_groups', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
     def backwards(self, orm):
-        # Deleting field 'Person.partner'
-        db.delete_column(u'person', 'partner')
 
-        # Deleting field 'Video.partner'
-        db.delete_column(u'video', 'partner')
+        # Changing field 'Person.partner'
+        db.alter_column(u'person', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(to=orm['dashboard.Partners'], null=True))
 
-        # Deleting field 'Screening.partner'
-        db.delete_column(u'screening', 'partner')
+        # Changing field 'Video.partner'
+        db.alter_column(u'video', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(to=orm['dashboard.Partners'], null=True))
 
-        # Deleting field 'PersonAdoptPractice.partner'
-        db.delete_column(u'person_adopt_practice', 'partner')
+        # Changing field 'Screening.partner'
+        db.alter_column(u'screening', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(to=orm['dashboard.Partners'], null=True))
 
-        # Deleting field 'PersonGroups.partner'
-        db.delete_column(u'person_groups', 'partner')
+        # Changing field 'PersonAdoptPractice.partner'
+        db.alter_column(u'person_adopt_practice', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(to=orm['dashboard.Partners'], null=True))
 
+        # Changing field 'PersonGroups.partner'
+        db.alter_column(u'person_groups', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(to=orm['dashboard.Partners'], null=True))
 
     models = {
         'auth.group': {
@@ -328,7 +318,7 @@ class Migration(SchemaMigration):
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'image_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LAND_HOLDINGS'", 'blank': 'True'}),
-            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PERSON_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'relations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'rel'", 'to': "orm['dashboard.Person']", 'through': "orm['dashboard.PersonRelations']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
@@ -342,7 +332,7 @@ class Migration(SchemaMigration):
             'Meta': {'unique_together': "(('person', 'video', 'date_of_adoption'),)", 'object_name': 'PersonAdoptPractice', 'db_table': "u'person_adopt_practice'"},
             'date_of_adoption': ('django.db.models.fields.DateField', [], {'db_column': "'DATE_OF_ADOPTION'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'person': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'prior_adoption_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'PRIOR_ADOPTION_FLAG'", 'blank': 'True'}),
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'QUALITY'", 'blank': 'True'}),
@@ -360,7 +350,7 @@ class Migration(SchemaMigration):
             'days': ('django.db.models.fields.CharField', [], {'max_length': '9', 'db_column': "'DAYS'", 'blank': 'True'}),
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'GROUP_NAME'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_column': "'TIME_UPDATED'", 'blank': 'True'}),
@@ -507,7 +497,7 @@ class Migration(SchemaMigration):
             'fieldofficer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.FieldOfficer']", 'null': 'True', 'blank': 'True'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'LOCATION'", 'blank': 'True'}),
-            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'start_time': ('django.db.models.fields.TimeField', [], {'db_column': "'START_TIME'"}),
             'target_adoptions': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_ADOPTIONS'", 'blank': 'True'}),
             'target_audience_interest': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_AUDIENCE_INTEREST'", 'blank': 'True'}),
@@ -630,7 +620,7 @@ class Migration(SchemaMigration):
             'language': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Language']"}),
             'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'movie_maker_project_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'MOVIE_MAKER_PROJECT_FILENAME'", 'blank': 'True'}),
-            'partner': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'picture_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'PICTURE_QUALITY'", 'blank': 'True'}),
             'raw_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'RAW_FILENAME'", 'blank': 'True'}),
             'related_practice': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),

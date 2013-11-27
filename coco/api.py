@@ -174,7 +174,30 @@ def assign_partner(bundle):
     
     return bundle
     
-class VillageLevelAuthorization(Authorization):
+class VillagePartnerAuthorization(Authorization):
+    def __init__(self, field):
+        self.village_field = field
+    
+    def read_list(self, object_list, bundle):
+        villages = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        kwargs = {}
+        kwargs[self.village_field] = villages
+        kwargs['partner_id'] = get_user_partner_id(bundle.request)
+        print kwargs, get_user_partner_id(bundle.request)
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.village_field] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        kwargs['partner_id'] = get_user_partner_id(bundle.request)
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download" )
+
+class VillageAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
     
@@ -192,7 +215,7 @@ class VillageLevelAuthorization(Authorization):
         if obj:
             return True
         else:
-            raise NotFound( "Not allowed to download" )
+            raise NotFound( "Not allowed to download Village" )
 
 class MediatorAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -325,7 +348,7 @@ class VillageResource(ModelResource):
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
         authentication = SessionAuthentication()
-        authorization = VillageLevelAuthorization('id__in')
+        authorization = VillageAuthorization('id__in')
         always_return_data = True
 
 class DistrictResource(ModelResource):
@@ -333,7 +356,7 @@ class DistrictResource(ModelResource):
         queryset = District.objects.all()
         resource_name = 'district'
         authentication = SessionAuthentication()
-        authorization = VillageLevelAuthorization('block__village__id__in')
+        authorization = VillageAuthorization('block__village__id__in')
         max_limit = None
 
 class VideoResource(BaseResource):
@@ -378,7 +401,7 @@ class PersonGroupResource(BaseResource):
         queryset = PersonGroups.objects.prefetch_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
+        authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupsForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
@@ -423,7 +446,7 @@ class ScreeningResource(BaseResource):
                                                       'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
+        authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
         excludes = ['location', 'target_person_attendance', 'target_audience_interest', 'target_adoptions', 'time_created', 'time_modified']
@@ -493,7 +516,7 @@ class PersonResource(BaseResource):
         max_limit = None
         queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
         resource_name = 'person'
-        authorization = VillageLevelAuthorization('village__in')
+        authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
         excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
@@ -525,7 +548,7 @@ class PersonAdoptVideoResource(BaseResource):
         queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
-        authorization = VillageLevelAuthorization('person__village__in')
+        authorization = VillagePartnerAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
         excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_updated', 'time_modified']
