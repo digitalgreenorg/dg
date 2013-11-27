@@ -23,7 +23,7 @@ define(function(require) {
          */
 
         constructor: function($language) {
-            this.base('api/videodropdown/');
+            this.base('api/mapping/');
 
             // prepare data model
             var collectionDropDownSubModel = this._dataModel.addSubModel('collectionDropDown', true);
@@ -45,8 +45,8 @@ define(function(require) {
             var dataModel = this._dataModel;
             var collectionDropDownModel = dataModel.get('collectionDropDown');
             
-            collectionDropDownModel.set('collectionDropDownObj', unprocessedData.video_dropdown);
-            return unprocessedData.video_dropdown;
+            collectionDropDownModel.set('collectionDropDownObj', unprocessedData.mapping_dropdown);
+            return unprocessedData.mapping_dropdown;
         },
 
         setInputParam: function(key, value, disableCacheClearing) {
