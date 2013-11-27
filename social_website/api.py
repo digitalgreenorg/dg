@@ -115,7 +115,6 @@ class CollectionResource(BaseCorsResource):
         always_return_data = True
         queryset = Collection.objects.all()
         resource_name = 'collections'
-        excludes = ['category','subcategory','topic','subtopic','subject']
         ordering={'likes','views','adoptions'}
         authentication = Authentication()
         authorization = Authorization()

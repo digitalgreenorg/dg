@@ -9,7 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from dashboard.models import PracticeSector, PracticeSubSector, PracticeTopic, PracticeSubtopic, PracticeSubject
+from dashboard.models import Practices 
+from dashboard.models import Video as Dashboard_Video
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection, Video
 
@@ -241,33 +242,36 @@ def collection_add_view(request):
               'state' : state,
               }
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
-# def videoadddropdown(request):
-#     video = Video.objects.all()
-#     language = video.values_list('language',flat=True)
-#     language = sorted(set(language))
-#     partner = Partner.objects.values('name', 'uid')
-#     partner = sorted(partner)
-#     state = video.values_list('state',flat=True)
-#     state = sorted(set(state))
-#     sector = PracticeSector.objects.values_list('name', flat=True)
-#     sector = sorted(set(sector))
-#     subsector = PracticeSubSector.objects.values_list('name', flat=True)
-#     subsector = sorted(set(subsector))
-#     subject = PracticeSubject.objects.values_list('name', flat=True)
-#     subject = sorted(set(subject))
-#     topic = PracticeTopic.objects.values_list('name', flat=True)
-#     topic = sorted(set(topic))
-#     subtopic = PracticeSubtopic.objects.values_list('name', flat=True)
-#     subtopic = sorted(set(subtopic))
-#     video_dropdown_dict = {
-#          'language': language,
-#          'partner': partner,
-#          'state': state,
-#          'sector': sector,
-#          'subsector': subsector,
-#          'topic': topic,
-#          'subtopic': subtopic,
-#          'subject': subject,
-#      }
-#     resp = json.dumps({"video_dropdown": video_dropdown_dict})
-#     return HttpResponse(resp)
+
+
+def mapping(request):
+    practice_dictionary = {}
+    
+    query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
+    for a in Practices.objects.filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
+
+        if a.practice_sector.name in practice_dictionary: #sector will be key
+            sector_dictionary = practice_dictionary[a.practice_sector.name]
+            subject_list = practice_dictionary[a.practice_sector.name]['subject']
+
+            if a.practice_subject and a.practice_subject.name not in subject_list:
+                practice_dictionary[a.practice_sector.name]['subject'].append(a.practice_subject.name)
+
+            if a.practice_subsector.name in sector_dictionary: #subsector will be key
+                subsector_dictionary = sector_dictionary[a.practice_subsector.name]
+
+                if a.practice_topic and a.practice_topic.name in subsector_dictionary:# topic will be key
+                    subtopic_list = subsector_dictionary[a.practice_topic.name]
+
+                    if a.practice_subtopic and a.practice_subtopic.name not in subtopic_list:
+                        subsector_dictionary[a.practice_topic.name].append(a.practice_subtopic.name)
+
+                elif a.practice_topic:
+                    subsector_dictionary[a.practice_topic.name] = []
+            else:
+                sector_dictionary[a.practice_subsector.name] = {}
+        else:
+            practice_dictionary[a.practice_sector.name] = {'subject': []}
+
+    resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    return HttpResponse(resp)

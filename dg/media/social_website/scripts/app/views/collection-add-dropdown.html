@@ -1,31 +1,46 @@
-<div class="bd">
-                            <div class="media va-dropdown">
-                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
-                                    <select id = "partnerlist" class="chosen-select js-dropdown" >
-                                      <option value='' selected='selected'>---------</option>
-                                      {{#partner}}
-                                      <option value = {{uid}}>{{name}}</option>
-                                      {{/partner}}
-                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">State</label>
-                                    <select id = "statelist" class="chosen-select js-dropdown">
+<h2 class="hdg-e hdg-black hdg-bold layout-vr-sm copy-margin">Practice Mapping</h2>
+<div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Category</label>
+                                    <select id = "catlist" class="chosen-select">
                                     <option value='' selected='selected'>---------</option>
-                                    {{#state}}
-                                      <option value = {{.}}>{{.}}</option>
-                                    {{/state}}
-                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
-                                    <select id = "langlist" class="chosen-select js-dropdown">
+                                    {{#category}}
+                                        <option value = "{{.}}">{{.}}</option>
+                                    {{/category}}
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subcategory</label>
+                                    <select id = "subcatlist" class="chosen-select">
                                     <option value='' selected='selected'>---------</option>
-                                      {{#language}}
-                                      <option value = {{.}}>{{.}}</option>
-                                      {{/language}}
-                                    </select><br><br>
-                                <label class="copy hdg-bold layout-vr-tiny">Add Video</label>
-                                   
-                                    <div class='js-collection-video-dropdown-container'>
-                                    
-                                    </div>
-                                    </select><br><br>
-                            </div> <!-- End .media -->
-                        </div> <!-- End .bd -->
+                                    {{#subcategory}}
+                                        <option value = "{{.}}">{{.}}</option>
+                                    {{/subcategory}}
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Topic</label>
+                                    <select id = "topiclist" class="chosen-select">
+                                    <option value='' selected='selected'>---------</option>
+                                    {{#topic}}
+                                        <option value = "{{.}}">{{.}}</option>
+                                    {{/topic}}
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subtopic</label>
+                                    <select id = "subtopiclist" class="chosen-select">
+                                    <option value='' selected='selected'>---------</option>
+                                    {{#subtopic}}
+                                        <option value = "{{.}}">{{.}}</option>
+                                    {{/subtopic}}
+                                    </select>
+                                </div>
+                                <div class="grid-size1of5 grid-col">
+                                    <label class="copy layout-vr-tiny">Subject</label>
+                                    <select id = "subjectlist" class="chosen-select">
+                                    <option value='' selected='selected'>---------</option>
+                                    {{#subject}}
+                                        <option value = "{{.}}">{{.}}</option>
+                                    {{/subject}}
+                                    </select>
+                                </div>

@@ -29,6 +29,7 @@ define(function(require) {
          */
         constructor: function($referenceBase) {
             this.base($referenceBase);
+            this.getCollectionDropDown();
             this._dropdownChosen();
             return this;
         },
@@ -40,7 +41,7 @@ define(function(require) {
             references.videodataFeed = new CollectionVideoDropDownDataFeed();
             references.addDataFeed = new CollectionAddDataFeed();
             references.$collectionAddWrapper = $referenceBase;
-            references.$collectionDropDownContainer = $referenceBase.find('.js-collection-dropdown-container');
+            references.$collectionDropDownContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
             references.$collectionTitle = $referenceBase.find('.coltitle');
         },
@@ -50,8 +51,8 @@ define(function(require) {
             var boundFunctions = this._boundFunctions;
             var references = this._references;
             
-            //boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
-            //references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
             
             boundFunctions.onVideoDataProcessed = this._onVideoDataProcessed.bind(this);
             references.videodataFeed.on('dataProcessed', boundFunctions.onVideoDataProcessed);
@@ -79,9 +80,18 @@ define(function(require) {
             if (collectiondropdownData == false) {
                 return false;
             }
+            this._references.mapping = collectiondropdownData;
             this._renderCollectionDropDown(collectiondropdownData);
-            this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
-            $(".js-dropdown").on('change', this._boundFunctions.onDropDownChosen);
+            
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
+            
+            /*this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            $("#subcategorylist").on('change', this._boundFunctions.onsubCategoryChosen);
+            
+            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);*/
+            
         },
 
         getCollectionVideoDropDown: function() {
@@ -115,6 +125,7 @@ define(function(require) {
         },
 
         afterCollectionAdd: function(){
+            alert('added')
             var url = "/discover" +"/"+ $("#partnerlist :selected").text() +"/"+ $("#statelist").val() +"/"+ $("#langlist").val() +"/"+ $('.coltitle').val()
             window.location.assign(url)
         },
@@ -132,21 +143,42 @@ define(function(require) {
             references.addDataFeed.addInputParam('language', false, $("#langlist").val());
             references.addDataFeed.addInputParam('state', false, $("#statelist").val());
             references.addDataFeed.addInputParam('videos', false, order);
+            references.addDataFeed.addInputParam('category', false, $("#catlist").val());
+            references.addDataFeed.addInputParam('subcategory', false, $("#subcatlist").val());
+            references.addDataFeed.addInputParam('topic', false, $("#topiclist").val());
+            references.addDataFeed.addInputParam('subtopic', false, $("#subtopiclist").val());
+            references.addDataFeed.addInputParam('subject', false, $("#subjectlist").val());
+            
             
             references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
             references.addDataFeed.setInputParam('partner', $("#partnerlist").val(), true);
             references.addDataFeed.setInputParam('language', $("#langlist").val(), true);
             references.addDataFeed.setInputParam('state', $("#statelist").val(), true);
             references.addDataFeed.setInputParam('videos', order, true);
+            references.addDataFeed.setInputParam('category', $("#catlist").val(), true);
+            references.addDataFeed.setInputParam('subcategory', $("#subcatlist").val(), true);
+            references.addDataFeed.setInputParam('topic', $("#topiclist").val(), true);
+            references.addDataFeed.setInputParam('subtopic', $("#subtopiclist").val(), true);
+            references.addDataFeed.setInputParam('subject', $("#subjectlist").val(), true);
             
             
             references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'POST');
         	
         },
         _renderCollectionDropDown: function(collectiondropdownData) {
-            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, collectiondropdownData);
+            var category = [];
+            var arr;
+            for (arr in collectiondropdownData){
+                category.push(arr);
+            }
+            var renderData = {
+                    category: category.sort()
+                };
+            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
             this._dropdownChosen();
+            this._references.category = category.sort();
+            
         },
         
         _renderVideoCollectionDropDown: function(collectionvideodropdownData) {
@@ -179,6 +211,104 @@ define(function(require) {
         	else{
         	//TODO: What happens if value becomes default again
         	}
+        },
+        
+        _onCategoryChosen: function(){
+            var category_name = $("#catlist").val();
+            var mapping_data = this._references.mapping;
+            
+            var subcategory = [];
+            var arr;
+            for (arr in mapping_data[category_name]){
+                if (arr != 'subject'){
+                    subcategory.push(arr);
+                }
+            }
+            
+            var renderData = {
+                    category: this._references.category,
+                    subcategory: subcategory.sort(),
+                    subject: mapping_data[category_name]['subject'].sort()
+            };
+            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            $("#catlist").val(category_name);
+            this._dropdownChosen();
+            this._references.subcategory = subcategory.sort();
+            this._references.subject = mapping_data[category_name]['subject'].sort();
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
+            
+            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
+        },
+        
+        _onsubCategoryChosen: function(){
+            var category_name = $("#catlist").val();
+            var subcategory_name = $("#subcatlist").val();
+            var subject_name = $("#subjectlist").val();
+            var mapping_data = this._references.mapping;
+            var topic=[];
+            var arr;
+            for (arr in mapping_data[category_name][subcategory_name]){
+                topic.push(arr);
+            }
+            
+            var renderData = {
+                    category: this._references.category,
+                    subcategory: this._references.subcategory,
+                    subject: this._references.subject,
+                    topic:topic.sort()
+            };
+            
+            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            $("#catlist").val(category_name);
+            $("#subcatlist").val(subcategory_name);
+            $("#subjectlist").val(subject_name);
+            this._dropdownChosen();
+            this._references.topic = topic.sort();
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
+            
+            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
+            
+            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);
+        },
+        
+        _onTopicChosen: function(){
+            var category_name = $("#catlist").val();
+            var subcategory_name = $("#subcatlist").val();
+            var subject_name = $("#subjectlist").val();
+            var topic_name = $("#topiclist").val();
+            var mapping_data = this._references.mapping;
+            var subtopic=mapping_data[category_name][subcategory_name][topic_name];
+            
+            var renderData = {
+                    category: this._references.category,
+                    subcategory: this._references.subcategory,
+                    subject: this._references.subject,
+                    topic: this._references.topic,
+                    subtopic: subtopic.sort()
+            };
+            
+            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            $("#catlist").val(category_name);
+            $("#subcatlist").val(subcategory_name);
+            $("#subjectlist").val(subject_name);
+            $("#topiclist").val(topic_name);
+            this._dropdownChosen();
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
+            
+            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
+            
+            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);
         },
         
         _onVideoChosen: function(){
