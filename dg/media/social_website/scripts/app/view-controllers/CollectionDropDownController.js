@@ -75,6 +75,18 @@ define(function(require) {
             }
         },
         
+        checkedit: function(){
+            if ($('.js-uid').data('collectionuid')){
+                $("#catlist").val($('.js-collection-mapping-container').data('category').trim()).change();
+                $("#subcatlist").val($('.js-collection-mapping-container').data('subcategory').trim()).change();
+                $("#topiclist").val($('.js-collection-mapping-container').data('topic').trim()).change();
+                $("#subtopiclist").val($('.js-collection-mapping-container').data('subtopic').trim());
+                $("#subjectlist").val($('.js-collection-mapping-container').data('subject').trim());
+                $("#subtopiclist").trigger("chosen:updated");
+                $("#subjectlist").trigger("chosen:updated");
+            }
+        },
+        
         getCollectionDropDown: function() {
             var collectiondropdownData = this._references.dataFeed.getCollectionDropDown();
             if (collectiondropdownData == false) {
@@ -86,6 +98,8 @@ define(function(require) {
             this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
             $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
             
+            this.checkedit();
+            this._dropdownChosen();
             /*this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
             $("#subcategorylist").on('change', this._boundFunctions.onsubCategoryChosen);
             
@@ -176,8 +190,10 @@ define(function(require) {
                 };
             var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
-            this._dropdownChosen();
+            //this._dropdownChosen();
             this._references.category = category.sort();
+            
+            
             
         },
         
@@ -231,6 +247,7 @@ define(function(require) {
                     subject: mapping_data[category_name]['subject'].sort()
             };
             var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.empty();
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
             $("#catlist").val(category_name);
             this._dropdownChosen();
@@ -262,6 +279,7 @@ define(function(require) {
             };
             
             var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.empty();
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
             $("#catlist").val(category_name);
             $("#subcatlist").val(subcategory_name);
@@ -295,6 +313,7 @@ define(function(require) {
             };
             
             var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
+            this._references.$collectionDropDownContainer.empty();
             this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
             $("#catlist").val(category_name);
             $("#subcatlist").val(subcategory_name);
