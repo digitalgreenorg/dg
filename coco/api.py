@@ -183,7 +183,6 @@ class VillagePartnerAuthorization(Authorization):
         kwargs = {}
         kwargs[self.village_field] = villages
         kwargs['partner_id'] = get_user_partner_id(bundle.request)
-        print kwargs, get_user_partner_id(bundle.request)
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
