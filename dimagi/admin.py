@@ -10,10 +10,10 @@ class CommCareProjectAdmin(admin.ModelAdmin):
 
 
 class CommCareUserAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['username', 'guid', 'project']
+    fieldsets = [(None,  {'fields': ['username', 'guid', 'project', 'is_user']
                           }
                   )]
-    list_display = ('username', 'project')
+    list_display = ('username', 'project', 'guid', 'is_user')
     search_fields = ['username']
 
 
