@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareProject, CommCareUser, CommCareUserVillage
-from dimagi.scripts.userfile_functions import make_upload_file
+from dimagi.scripts.create_cases_functions import make_upload_file
 
 
 class Command(BaseCommand):
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 )
                 try :
                     response = commcare_project.upload_case_file(filename)
-                    if response.getcode() == 201 or response.getcode() == 200:
+                    if response == 201 or response == 200:
                         self.stdout.write('Successfully uploaded cases for "%s" \n' % user.username)
                         user.is_user = True
                         user.save()
