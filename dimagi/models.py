@@ -40,10 +40,11 @@ class CommCareProject(models.Model):
     def _get_upload_fixture_url(self):
         "Returns the upload url for the project's fixtures."
         return 'https://www.commcarehq.org/a/%s/fixtures/item-lists/upload/' % (self.name)
+    upload_fixture_url = property(_get_upload_fixture_url)
     
     def _get_receiver_url(self):
         "Returns the url to upload the project's cases."
-        return ' https://www.commcarehq.org/a/%s/receiver' % (self.name)
+        return 'https://www.commcarehq.org/a/%s/receiver' % (self.name)
     receiver_url = property(_get_receiver_url)
 
     def upload_case_file(self, file):

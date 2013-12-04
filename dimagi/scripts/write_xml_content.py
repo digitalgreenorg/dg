@@ -1,3 +1,6 @@
+import datetime
+import uuid
+
 def write_opening_meta(file, num_people):
     file.write('<?xml version="1.0" ?>\n')
     file.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')

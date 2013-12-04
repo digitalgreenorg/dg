@@ -25,8 +25,8 @@ class Command(BaseCommand):
                 raise CommandError('CommCare Project "%s" not yet entered in the Database.' % commcare_project_name)
             commcare_users = CommCareUser.objects.filter(project=commcare_project).filter(is_user=False)
             for user in commcare_users:
-                villages = CommCareUserVillage.objects.filter(user=user).values_list('village__id', flat =True)
-                filename = user.username+"_"+commcare_project_name 
+                filename = user.username+"_"+commcare_project_name
+                villages = CommCareUserVillage.objects.filter(user = user).values_list('village__id', flat = True).distinct('village__id')
                 filename = os.path.join(MEDIA_ROOT, "dimagi", "%s.xml" % (filename))
                 file_to_upload = make_upload_file(
                     villages,
@@ -43,5 +43,5 @@ class Command(BaseCommand):
                     else:
                         self.stdout.write('HTTP response code: %d. Not completely uploaded but file ("%s") has been created in MEDIA_ROOT/dimagi. Try uploading only this ("%s") xml file again by replacing with new instanceID tag value(uuid.uuid4()) i.e., inside the meta tag \n' % (response.getcode(), user.username, user.username))
                 except Exception as ex:
-                    pass
+                    pass #------- print exception 
                 

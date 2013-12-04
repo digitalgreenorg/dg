@@ -13,9 +13,9 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
-    write_opening_meta(file, len(person_list))
     CommCareCase = get_model('dimagi','CommCareCase')
     CommCareUser = get_model('dimagi','CommCareUser')
+    write_opening_meta(file, len(person_list))
     i = 0
     for person_id in person_list:
         owner_id = user_id
@@ -35,7 +35,7 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
             pass #what should be here????
             
         # Getting list of videos seen
-        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
+        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True).distinct('screening__videoes_screened')
         videos_seen = ''
         for vid in vids:
             videos_seen = videos_seen + unicode(vid) + ' '
@@ -53,6 +53,6 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
 
 def make_upload_file(villages, filename, user_id, project_id):
     Person = get_model('dashboard','Person')
-    person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True)    
+    person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True).exclude(group__isnull = True)    
     file = write_full_case_list(person_ids, filename, user_id, project_id)
     

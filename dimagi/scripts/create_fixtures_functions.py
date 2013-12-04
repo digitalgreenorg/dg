@@ -254,6 +254,7 @@ def write_video_schedule_info(vid_dict, workbook):
 #getting user getting from the database and storing it in list of dictionaries
 
 def create_fixture(users, project_name, want_seasonal_behavior):
+    # getting user information in list of dictionaries; dictionary contains ursrname, uder_id and villages assigned
     data = []    
     for user in users:
         dict = {}
@@ -297,10 +298,13 @@ def create_fixture(users, project_name, want_seasonal_behavior):
     video_list = set(video_list)
     video_distinct_sheet = write_distinct(video_list,workbook)
     if want_seasonal_behavior.lower() =="yes":
-        video_schedule_dict = []
-        for id in video_list[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
-            video_schedule_dict.append({'id': id,
+        video_schedule_list = []
+        for id in video_list:
+            video_schedule_list.append(id)
+        video_schedule_list_of_dict = [] 
+        for id in video_schedule_list[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
+            video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01', 
                                         'high_val': '2020-01-01' })
-        video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
+        video_schedule_sheet = write_video_schedule_info(video_schedule_list_of_dict,workbook)
         

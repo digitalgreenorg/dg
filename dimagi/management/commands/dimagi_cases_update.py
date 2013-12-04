@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareProject, CommCareUser
-from dimagi.scripts.update_functions import close_case, update_case, write_new_case
+from dimagi.scripts.update_cases_functions import close_case, update_case, write_new_case
 
 
 class Command(BaseCommand):
