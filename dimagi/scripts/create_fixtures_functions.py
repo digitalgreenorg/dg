@@ -220,7 +220,7 @@ def write_distinct(vid_list, workbook):
             sheet.write(row, 1, unicode(vid_name[0][0]))
             sheet.write(row, 2, 'warangal')  # for testing 
             row += 1
-    sheet.write(row,0,0)
+    sheet.write(row,0,"0")
     sheet.write(row,1,"More Videos")
     sheet.write(row,2,'warangal')
     return sheet
@@ -245,7 +245,7 @@ def write_video_schedule_info(vid_dict, workbook):
             row += 1
         else:
             print str(record['id']) + " not found"
-    sheet.write(row,0,0)
+    sheet.write(row,0,"0")
     sheet.write(row,1,"2013-01-01")
     sheet.write(row,2,"2100-12-31")
     sheet.write(row,3,'warangal')
