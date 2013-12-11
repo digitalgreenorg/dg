@@ -8,11 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+
+        # Changing field 'Collection.title'
+        db.alter_column('social_website_collection', 'title', self.gf('django.db.models.fields.CharField')(max_length=200))
         # Removing M2M table for field videos on 'Collection'
         db.delete_table('social_website_collection_videos')
 
+        # Adding unique constraint on 'Collection', fields ['partner', 'state', 'language', 'title']
+        db.create_unique('social_website_collection', ['partner_id', 'state', 'language', 'title'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Collection', fields ['partner', 'state', 'language', 'title']
+        db.delete_unique('social_website_collection', ['partner_id', 'state', 'language', 'title'])
+
+
+        # Changing field 'Collection.title'
+        db.alter_column('social_website_collection', 'title', self.gf('django.db.models.fields.CharField')(max_length=500))
         # Adding M2M table for field videos on 'Collection'
         db.create_table('social_website_collection_videos', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
@@ -41,7 +53,7 @@ class Migration(SchemaMigration):
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
         'social_website.collection': {
-            'Meta': {'object_name': 'Collection'},
+            'Meta': {'unique_together': "(('title', 'partner', 'state', 'language'),)", 'object_name': 'Collection'},
             'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
@@ -52,7 +64,7 @@ class Migration(SchemaMigration):
             'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'videos': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['social_website.Video']", 'through': "orm['social_website.VideoinCollection']", 'symmetrical': 'False'}),
@@ -60,7 +72,7 @@ class Migration(SchemaMigration):
         },
         'social_website.comment': {
             'Meta': {'object_name': 'Comment'},
-            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 11, 19, 0, 0)'}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 12, 5, 0, 0)'}),
             'isOnline': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
             'text': ('django.db.models.fields.TextField', [], {}),
@@ -71,7 +83,7 @@ class Migration(SchemaMigration):
         'social_website.crontimestamp': {
             'Meta': {'object_name': 'CronTimestamp'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_time': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 11, 19, 0, 0)'}),
+            'last_time': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 12, 5, 0, 0)'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '30'})
         },
         'social_website.featuredcollection': {
@@ -173,7 +185,7 @@ class Migration(SchemaMigration):
             'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         'social_website.videoincollection': {
-            'Meta': {'object_name': 'VideoinCollection'},
+            'Meta': {'ordering': "['order']", 'object_name': 'VideoinCollection'},
             'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'order': ('django.db.models.fields.IntegerField', [], {}),

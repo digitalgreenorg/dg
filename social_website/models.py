@@ -88,7 +88,7 @@ class PersonVideoRecord(models.Model):
 #===============================================================================
 class Collection(models.Model):
     uid = models.AutoField(primary_key = True)
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
@@ -113,6 +113,8 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
+    class Meta:
+        unique_together = ("title", "partner", 'state', 'language')
 m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
