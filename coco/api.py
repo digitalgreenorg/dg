@@ -168,7 +168,7 @@ def get_user_mediators(user_id):
 def assign_partner(bundle):
     partner_id = get_user_partner_id(bundle.request)
     if partner_id:
-        bundle.data['partner'] = partner_id
+        bundle.data['partner'] = "/coco/api/v1/%s/%s/"%('partner', str(partner_id))
     else:
         bundle.data['partner'] = 0
     
@@ -270,6 +270,14 @@ class BaseResource(ModelResource):
         bundle = self.full_hydrate(bundle)
         bundle.obj.user_created_id = bundle.request.user.id
         return self.save(bundle)
+
+class PartnerResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = Partners.objects.all()
+        resource_name = 'partner'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
 
 class MediatorResource(BaseResource):
     mediator_label = fields.CharField()
@@ -395,6 +403,7 @@ class VideoResource(BaseResource):
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
+    partner = fields.ForeignKey(PartnerResource, 'partner')
     class Meta:
         max_limit = None
         queryset = PersonGroups.objects.prefetch_related('village').all()
@@ -428,6 +437,7 @@ class PersonGroupResource(BaseResource):
 class ScreeningResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
+    partner = fields.ForeignKey(PartnerResource, 'partner')
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
     farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
@@ -510,6 +520,7 @@ class PersonResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
+    partner = fields.ForeignKey(PartnerResource, 'partner')
     
     class Meta:
         max_limit = None
@@ -540,6 +551,7 @@ class PersonResource(BaseResource):
 class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
+    partner = fields.ForeignKey(PartnerResource, 'partner')
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
@@ -562,14 +574,6 @@ class PersonAdoptVideoResource(BaseResource):
 
     def dehydrate_village(self, bundle):
         return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
-
-class PartnerResource(ModelResource):    
-    class Meta:
-        max_limit = None
-        queryset = Partners.objects.all()
-        resource_name = 'partner'
-        authentication = SessionAuthentication()
-        authorization = Authorization()
 
 class LanguageResource(ModelResource):    
     class Meta:
