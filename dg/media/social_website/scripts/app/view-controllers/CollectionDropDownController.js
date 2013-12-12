@@ -175,8 +175,13 @@ define(function(require) {
             references.addDataFeed.setInputParam('subtopic', $("#subtopiclist").val(), true);
             references.addDataFeed.setInputParam('subject', $("#subjectlist").val(), true);
             
+            if ($('.js-uid').data('collectionuid')){
+                references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'PUT');
+            }
+            else{
+                references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'POST');
+            }
             
-            references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'POST');
         	
         },
         _renderCollectionDropDown: function(collectiondropdownData) {
