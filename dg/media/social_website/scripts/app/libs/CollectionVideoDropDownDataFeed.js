@@ -15,27 +15,12 @@ define(function(require) {
 
     var CollectionVideoDropDownDataFeed = DigitalGreenDataFeed.extend({
 
-        /*
-        Input params:
-        activityUID|videoUID {Number}
-        page {Number}
-        count {Number}
-
-        Output params:
-        comments {Comment[]}
-        totalCount {Number}
-        */
-
         constructor: function() {
             this.base('api/video/');
 
             // prepare data model
             var collectionVideoDropDownSubModel = this._dataModel.addSubModel('collectionVideoDropDown', true);
             
-            //will move it to view controller
-            /*this.addInputParam('offset', false, 0);
-            this.addInputParam('limit', false, 10);
-            this.addInputParam('video', false,jQuery('.featured-ft-videoDetails').attr('data-video-uid'));*/
         },
 
         fetch: function() {

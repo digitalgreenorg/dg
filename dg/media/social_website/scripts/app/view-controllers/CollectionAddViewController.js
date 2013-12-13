@@ -13,13 +13,15 @@ define(function(require) {
     var Controller = require('framework/controllers/Controller');
     var viewRenderer = require('framework/ViewRenderer');
     var jQuery = require('jquery');
-    var CollectionDropDownDataFeed = require('app/libs/CollectionDropDownDataFeed');
-    var collectionDropDownTemplate = require('text!app/views/collection-add-dropdown.html');
+    var Chosen = require('libs/external/chosen.jquery.min');
+    
+    var PracticeMappingDataFeed = require('app/libs/PracticeMappingDataFeed');
     var CollectionVideoDropDownDataFeed = require('app/libs/CollectionVideoDropDownDataFeed');
     var CollectionAddDataFeed = require('app/libs/CollectionsAddDataFeed');
+    
+    var practiceMappingTemplate = require('text!app/views/practice-mapping.html');
     var collectionVideoDropDownTemplate = require('text!app/views/collection-add-video-dropdown.html');
     var carouselTemplate = require('text!app/views/collection-add-video-carousel.html');
-    var Chosen = require('libs/external/chosen.jquery.min');
     
     var CollectionDropDownController = Controller.extend({
 
@@ -29,7 +31,7 @@ define(function(require) {
          */
         constructor: function($referenceBase) {
             this.base($referenceBase);
-            this.getCollectionDropDown();
+            this.getPracticeMapping();
             this._dropdownChosen();
             return this;
         },
@@ -37,13 +39,14 @@ define(function(require) {
         _initReferences: function($referenceBase) {
             this.base();
             var references = this._references;
-            references.dataFeed = new CollectionDropDownDataFeed();
+            references.dataFeed = new PracticeMappingDataFeed();
             references.videodataFeed = new CollectionVideoDropDownDataFeed();
             references.addDataFeed = new CollectionAddDataFeed();
             references.$collectionAddWrapper = $referenceBase;
-            references.$collectionDropDownContainer = $referenceBase.find('.js-collection-mapping-container');
+            references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
             references.$collectionTitle = $referenceBase.find('.coltitle');
+            references.$dropDown = $referenceBase.find('.js-dropdown');
         },
 
         _initEvents: function() {
@@ -61,50 +64,47 @@ define(function(require) {
             references.$saveButton.on("click", boundFunctions.onSaveCollectionClick);
             
             this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
-            $(".js-dropdown").on('change', this._boundFunctions.onDropDownChosen);
+            references.$dropDown.on('change', this._boundFunctions.onDropDownChosen);
             
             this.checkforedit();
             
         },
         
-        checkforedit: function(){
+        checkforedit: function(key){
             if ($('.js-uid').data('collectionuid')){
-                $("#partnerlist").val($('.va-dropdown').data('collectionpartner')).change();
-                $("#statelist").val($('.va-dropdown').data('collectionstate')).change();
-                $("#langlist").val($('.va-dropdown').data('collectionlanguage')).change();
+                if (key == 'mapping'){
+                    $("#catlist").val($('.js-collection-mapping-container').data('category').trim()).change();
+                    $("#subcatlist").val($('.js-collection-mapping-container').data('subcategory').trim()).change();
+                    $("#topiclist").val($('.js-collection-mapping-container').data('topic').trim()).change();
+                    $("#subtopiclist").val($('.js-collection-mapping-container').data('subtopic').trim());
+                    $("#subjectlist").val($('.js-collection-mapping-container').data('subject').trim());
+                    $("#subtopiclist").trigger("chosen:updated");
+                    $("#subjectlist").trigger("chosen:updated");
+                }
+                else{
+                    $("#partnerlist").val($('.va-dropdown').data('collectionpartner')).change();
+                    $("#statelist").val($('.va-dropdown').data('collectionstate')).change();
+                    $("#langlist").val($('.va-dropdown').data('collectionlanguage')).change();
+                }
+                
             }
         },
         
-        checkedit: function(){
-            if ($('.js-uid').data('collectionuid')){
-                $("#catlist").val($('.js-collection-mapping-container').data('category').trim()).change();
-                $("#subcatlist").val($('.js-collection-mapping-container').data('subcategory').trim()).change();
-                $("#topiclist").val($('.js-collection-mapping-container').data('topic').trim()).change();
-                $("#subtopiclist").val($('.js-collection-mapping-container').data('subtopic').trim());
-                $("#subjectlist").val($('.js-collection-mapping-container').data('subject').trim());
-                $("#subtopiclist").trigger("chosen:updated");
-                $("#subjectlist").trigger("chosen:updated");
-            }
-        },
         
-        getCollectionDropDown: function() {
-            var collectiondropdownData = this._references.dataFeed.getCollectionDropDown();
-            if (collectiondropdownData == false) {
+        getPracticeMapping: function() {
+            var practicemappingData = this._references.dataFeed.getPracticeMapping();
+            if (practicemappingData == false) {
                 return false;
             }
-            this._references.mapping = collectiondropdownData;
-            this._renderCollectionDropDown(collectiondropdownData);
+            this._references.mapping = practicemappingData;
+            this._renderPracticeMapping(practicemappingData);
             
             this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
             $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
             
-            this.checkedit();
+            this.checkforedit('mapping');
             this._dropdownChosen();
-            /*this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
-            $("#subcategorylist").on('change', this._boundFunctions.onsubCategoryChosen);
             
-            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
-            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);*/
             
         },
 
@@ -131,7 +131,7 @@ define(function(require) {
             
         },
         _onDataProcessed: function() {
-            this.getCollectionDropDown();
+            this.getPracticeMapping();
         },
         
         _onVideoDataProcessed: function() {
@@ -184,21 +184,18 @@ define(function(require) {
             
         	
         },
-        _renderCollectionDropDown: function(collectiondropdownData) {
+        _renderPracticeMapping: function(practicemappingData) {
             var category = [];
             var arr;
-            for (arr in collectiondropdownData){
+            for (arr in practicemappingData){
                 category.push(arr);
             }
             var renderData = {
                     category: category.sort()
                 };
-            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
-            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
-            //this._dropdownChosen();
+            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
+            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             this._references.category = category.sort();
-            
-            
             
         },
         
@@ -251,9 +248,9 @@ define(function(require) {
                     subcategory: subcategory.sort(),
                     subject: mapping_data[category_name]['subject'].sort()
             };
-            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
-            this._references.$collectionDropDownContainer.empty();
-            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
+            this._references.$practiceMappingContainer.empty();
+            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             $("#catlist").val(category_name);
             this._dropdownChosen();
             this._references.subcategory = subcategory.sort();
@@ -283,9 +280,9 @@ define(function(require) {
                     topic:topic.sort()
             };
             
-            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
-            this._references.$collectionDropDownContainer.empty();
-            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
+            this._references.$practiceMappingContainer.empty();
+            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             $("#catlist").val(category_name);
             $("#subcatlist").val(subcategory_name);
             $("#subjectlist").val(subject_name);
@@ -317,9 +314,9 @@ define(function(require) {
                     subtopic: subtopic.sort()
             };
             
-            var renderedCollectionDropDown = viewRenderer.render(collectionDropDownTemplate, renderData);
-            this._references.$collectionDropDownContainer.empty();
-            this._references.$collectionDropDownContainer.html(renderedCollectionDropDown);
+            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
+            this._references.$practiceMappingContainer.empty();
+            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             $("#catlist").val(category_name);
             $("#subcatlist").val(subcategory_name);
             $("#subjectlist").val(subject_name);

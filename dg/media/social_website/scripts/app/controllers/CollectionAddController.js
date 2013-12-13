@@ -11,7 +11,7 @@ define(function(require) {
     'use strict';
 
     var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
-    var CollectionDropDownController = require('app/view-controllers/CollectionDropDownController')
+    var CollectionAddViewController = require('app/view-controllers/CollectionAddViewController')
     var jQuery = require('jquery');
     var sortable = require('libs/external/jquery-ui');
 
@@ -31,21 +31,16 @@ define(function(require) {
         _initReferences: function() {
             this.base();
             var references = this._references;
-            var $collectionWrapper = jQuery('.js-collection-outer-wrapper');
+            
+            // Initializing Sortable for Dragging around videos
             $( "#sortable" ).sortable({
             	                delay: 100,
             	                revert: 300
             	            });
             $( "#sortable" ).disableSelection();
             
-            //var $filtersWrapper = jQuery('.js-filters-wrapper');
-
-            // helpers
-            var $languageCookie = -1
-            references.CollectionDropDownController = new CollectionDropDownController($collectionWrapper);
-            references.$saveButton = jQuery('.collection-save-button');
-            //references.collectionViewController = new CollectionViewController($collectionsContainer, $languageCookie);
-            //references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
+            var $collectionWrapper = jQuery('.js-collection-outer-wrapper');
+            references.CollectionAddViewController = new CollectionAddViewController($collectionWrapper);
         },
 
         _initEvents: function() {
