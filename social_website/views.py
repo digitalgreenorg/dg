@@ -248,7 +248,7 @@ def mapping(request):
     practice_dictionary = {}
     
     query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
-    for a in Practices.objects.filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
+    for a in Practices.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
 
         if a.practice_sector.name in practice_dictionary: #sector will be key
             sector_dictionary = practice_dictionary[a.practice_sector.name]
