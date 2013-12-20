@@ -93,13 +93,14 @@ def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_
 def get_dates_partners(request):
     if(not request):
         return None, None, None
-    if 'from_date' in request.GET and request.GET['from_date'] \
-    and 'to_date' in request.GET and request.GET['to_date']:
+    if 'from_date' in request.GET and request.GET['from_date'] :
         from_date = request.GET['from_date']
+    else:
+        from_date = (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d')
+    if 'to_date' in request.GET and request.GET['to_date']:
         to_date = request.GET['to_date']
     else:
-        from_date = (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d');
-        to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d');
+        to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
 
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
