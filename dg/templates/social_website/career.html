@@ -13,7 +13,7 @@
                             <a href="#{{ location_jobs.grouper }}" class="hdg-f hdg-bold">{{location_jobs.grouper }}</a>
                             <ul class='link-list'>
                                 {% for job in location_jobs.list %}
-                                    <li><a href="#{{job.title}}">{{job.title}}</a>
+                                    <li><a href="#{{job.title|slugify}}">{{job.title}}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -47,7 +47,7 @@
                 </div> 
         </section>
     {% endifchanged %}
-            <section id='{{job.title}}' class="{% cycle section_background %}">
+            <section id='{{job.title|slugify}}' class="{% cycle section_background %}">
                 <div class="wrapper">
                     <div class="inner-wrapper">
                         <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
