@@ -419,12 +419,15 @@ class PersonAdmin(admin.ModelAdmin):
 
 class BlockAdmin(admin.ModelAdmin):
     list_display = ('block_name', 'district')
+    search_fields = ['block_name', 'district__district_name']
 
 class DistrictAdmin(admin.ModelAdmin):
     list_display = ('district_name', 'state','fieldofficer', 'partner')
+    search_fields = ['district_name', 'state__state_name']
 
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name', 'region')
+    search_fields = ['state_name', 'country__country_name']
 
 class TrainingForm(forms.ModelForm):
     animators_trained = forms.ModelMultipleChoiceField(Animator.objects, widget=forms.SelectMultiple())
@@ -572,6 +575,7 @@ class PracticeSubjectAdmin(admin.ModelAdmin):
 class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
+    search_fields = ['user__username']
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
