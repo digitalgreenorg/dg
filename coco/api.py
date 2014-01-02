@@ -372,6 +372,7 @@ class VideoResource(BaseResource):
     facilitator = fields.ForeignKey(MediatorResource, 'facilitator')
     farmers_shown = fields.ToManyField('coco.api.PersonResource', 'farmers_shown')
     language = fields.ForeignKey('coco.api.LanguageResource', 'language')
+    partner = fields.ForeignKey(PartnerResource, 'partner')
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
