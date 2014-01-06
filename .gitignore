@@ -1,5 +1,8 @@
 *.py[cod]
 
+#OS Files
+[Tt]humbs.db
+
 # C extensions
 *.so
 
