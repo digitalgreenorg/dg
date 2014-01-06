@@ -11,7 +11,7 @@ CACHE:
 /media/coco/app/styles/css/datepicker.css
 /media/coco/app/styles/css/bootstrap-timepicker.css
 /media/coco/app/scripts/libs/chosen/chosen.css
-
+/media/configs.js
 
 /media/coco/dist/scripts/main.js
 /media/coco/app/scripts/libs/require.js

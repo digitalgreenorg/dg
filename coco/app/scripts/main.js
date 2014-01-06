@@ -17,6 +17,7 @@ require.config({
         'jquery_cookie': 'libs/jquery.cookie',
         'tabletools': 'libs/tabletools_media/js/Tabletools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
+        'configs': '../../../configs',
     },
 
     //specifying dependencies of non-amd libraries
