@@ -220,7 +220,8 @@ module.exports = function( grunt ) {
                     'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',    
                     'jquery_cookie':'libs/jquery.cookie',
                     'tabletools': 'libs/tabletools_media/js/Tabletools.min',
-                    'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min'
+                    'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
+                    'configs': 'empty:',
                 },
             // name: "main"
             // out: ""

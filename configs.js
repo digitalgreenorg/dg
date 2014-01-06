@@ -379,7 +379,7 @@ function() {
 	        		month: "required",
 	        		year: {
 	        			required:true,
-	        			datecheck: {month : "month"}
+	        			//datecheck: {month : "month"}
 	        		}
 	        	},
 
@@ -389,7 +389,7 @@ function() {
 	        	},
 	        	year: {
 	        		required: "Please select the year for which data is being reported",
-	        		datecheck: "Please enter correct and valid date"
+	        		//datecheck: "Please enter correct and valid date"
 	        	},
 	        	state: "Please select the state for which data is being reported",
 	        	project: "Please select the project name for which data is being reported",
@@ -842,7 +842,7 @@ function() {
 	        		month: "required",
 	        		year: {
 	        			required:true,
-	        			datecheck: {month : "month"}
+	        			//datecheck: {month : "month"}
 	        		}
 	        	},
 
@@ -852,7 +852,7 @@ function() {
 	        	},
 	        	year: {
 	        		required: "Please select the year for which data is being reported",
-	        		datecheck: "Please enter correct and valid date"
+	        		//datecheck: "Please enter correct and valid date"
 	        	},
 	        	state: "Please select the state for which data is being reported",
 	        	project: "Please select the project name for which data is being reported",
@@ -1669,7 +1669,7 @@ function() {
 	        		month: "required",
 	        		year: {
 	        			required:true,
-	        			datecheck: {month : "month"}
+	        			//datecheck: {month : "month"}
 	        		},
 	        		state: "required",
 	        		project: "required",
@@ -1806,7 +1806,7 @@ function() {
 	        	month: "Please select the month for which data is being reported",
 	        	year: {
 	        		required: "Please select the year for which data is being reported",
-	        		datecheck: "Please enter correct and valid date"
+	        		//datecheck: "Please enter correct and valid date"
 	        	},
 	        	state: "Please select the state for which data is being reported",
 	        	project: "Please select the project name for which data is being reported",
@@ -1993,7 +1993,7 @@ function() {
 	        		month: "required",
 	        		year: {
 	        			required:true,
-	        			datecheck: {month : "month"}
+	        			//datecheck: {month : "month"}
 	        		},
 	        		state: "required",
 	        		project: "required",
@@ -2146,7 +2146,7 @@ function() {
 	        	month: "Please select the month for which data is being reported",
 	        	year: {
 	        		required: "Please select the year for which data is being reported",
-	        		datecheck: "Please enter correct and valid date"
+	        		//datecheck: "Please enter correct and valid date"
 	        	},
 	        	state: "Please select the state for which data is being reported",
 	        	project: "Please select the project name for which data is being reported",
