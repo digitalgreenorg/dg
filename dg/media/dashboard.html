@@ -1,0 +1,3046 @@
+<!DOCTYPE HTML>
+<!-- manifest="/media/coco/cocooffline.appcache" -->
+<HTML XML:LANG="en-us" XMLNS="http://www.w3.org/1999/xhtml" LANG="en-us" MANIFEST="/media/coco/cocooffline.appcache">
+<HEAD>
+	<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=UTF-8">
+
+
+	<TITLE>Dashboard</TITLE>
+	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
+	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
+	<!-- LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.min3.css" -->
+	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen/chosen.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/nrlm.css">
+    
+    <SCRIPT DATA-MAIN="/media/coco/dist/scripts/main" SRC="/media/coco/app/scripts/libs/require.js"></SCRIPT>
+	<META NAME="robots" CONTENT="NONE,NOARCHIVE">
+	<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+
+                                        <!--Core Framework templates end here -->    
+    <!--Page layout, full download, incremental download, background inc download, upload, notifications, status, dashboard,    form page, list page, login, select-options template, -->            
+
+<SCRIPT TYPE="text/template" ID="header">
+<div class="page-header" style="margin-bottom:0px;">
+    <h1 ><a href="#">COCO</a></h1>
+    <ul class="breadcrumb">
+    <%=breadcrumb%>
+    </ul>
+</div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="error_notifcation_template" >
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Error! </strong><%= msg%>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="success_notifcation_template" >
+    <div class="alert alert-success">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Success! </strong><%= msg%>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="info_notifcation_template" >
+    <div class="alert alert-info">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Info! </strong><%= msg%>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="upload_template">
+    <div id="upload_modal" class="modal hide fade" >
+      <div class="modal-header">
+        <h3>Uploading</h3>
+      </div>
+      <div class="modal-body">
+          Data items to be uploaded = <span id="num_upload"> </span>
+          <br>
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "pbar" style="width: 0%"></div>
+        </div>
+        <table class="table">
+            <tr>
+                <td id="upl_action"> </td>
+                <td id="upl_status"> </td>
+            </tr>
+        </table>
+        <p id= "error_msg"> </p>
+        <div id= "upload_form">
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button id="stop_upload" type="button" class="btn">Stop It!</button>
+      </div>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="incremental_download_template">
+    <div id="incremental_download_modal" class="modal hide fade" >
+      <div class="modal-header">
+        <h3>Downloading</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+        </div>
+        <table class="table">
+            <tr>
+                <td id="inc_action"> </td>
+                <td id="inc_status"> </td>
+            </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+          <button id="stop_inc_download" type="button" class="btn">Stop It!</button>
+      </div>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="incremental_download_background_template">
+<div class="row control-group">
+    <div id="incremental_download_back" style="position:fixed;bottom:0px;z-index:10000" class="span2">
+    Downloading...
+      <div>
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+</div>    
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="download_template">
+    <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
+        <h3>Download</h3>
+      </div>
+      <div class="modal-body">
+        <p >Please wait...</p>
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "pbar" style="width: 0%"></div>
+        </div>
+        <div id="d_status">
+            <table class="table" style="width:100%">
+                <%$.each(all_configs, function(key,val) {
+                    if(key!="misc"){
+					var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
+					%>
+				    <tr id="<%=key%>">
+                        <td><%= keyCap %>s</td>
+                        <td class="status_text">In Progress</td>
+                        <td class="status_numbers"></td>
+                    </tr>
+                <%}});%>
+            </table>   
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Pause download</button>
+      </div>
+    </div>
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="dashboard_item_template">
+        <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
+</SCRIPT>
+<SCRIPT  TYPE="text/template" ID="dashboard">
+    <div id="coco_sidebar" class="coco_sidebar affix">
+		<table border = '0'>
+			<tr>
+				<td style="vertical-align:top;"><div>
+					<img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
+					<img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
+				</div></td>
+				<td>
+					<div id="coco_userinfo">
+					<%if(typeof(username)!=undefined){%>
+                    Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
+					<%}%>
+					</div>
+				</td>
+			</tr>
+		</table>
+        <div id="coco_brand">
+            <a href="#">COCO</a>
+        </div>
+        <div id="coco_sync" class="row control-group">
+            <button class="btn pull-left" id= "sync">Sync
+			<span class="badge" id="upload_num"><%=upload_entries%></span>
+			</button>
+        </div>
+		<p id="helptext">
+		Please download the database<br>
+		by clicking on the sync button
+		</p>
+        <div id="coco_nav" class="pull-left">
+            <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
+        
+            </ul>
+        </div>
+        <div id="coco_nav_add" class="pull-right">
+            <ul id = "dashboard_items_add" class="nav nav-list" title= "Click to add data">
+        
+            </ul>
+        </div>
+		<div id="faq">
+			Need Help? Check out the <a href=>FAQ</a>
+		</div>
+    </div>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="page_layout">
+    <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
+    <div id = "content" class="span10" ></div>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="status">
+    <div id="modal"></div>
+	<div class="page-header">
+	    <h1 style = "color:#0088cc;"> Welcome to COCO!
+            <br>
+                <small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small>
+            </br>
+        </h1>
+	</div>
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading">Add data</h5>
+		To add some data, click on (+) sign next to the type of data that you want to add.
+		</div>
+	</div>
+
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading">View Data</h5>
+		To view, sort and search through your data, click on the data link in the sidebar.
+		</div>
+	</div>
+
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading"> Sync data</h5>
+		To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server,
+		you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.
+		The number in the button shows how many entries are yet to be uploaded.
+		Clicking on the sync button will also download the database if it is not completely downloaded.
+		</div>
+	</div>
+
+	<div class="media">
+		<a class="pull-left">
+		<img class="media-object" src="/media/coco/app/images/feedback.png" style = "width:70px;">
+		</a>
+		<div class="media-body">
+		<h5 class="media-heading"> We value your feedback</h5>
+		Do share your feedback by mailing us at <a href="mailto:system@digitalgreen.org">system@digitalgreen.org</a>
+		</div>
+	</div>
+
+    <div style = "color:#999999; margin-top:25px;">
+        <b>Database last deleted and downloaded at </b><%=full_d_timestamp%>
+    </div><br>
+    <div style = "color:#999999; margin-top:-15px;">
+        <b>Database last synced at </b><%=inc_d_timestamp%>
+    </div><br>
+    <div style = "color:#999999; margin-top:-15px;">
+        <b>Current database version</b> <%=db_version%>
+    </div><br>
+    <div class="row pull-left" style="margin-left:0px; margin-right:10px; margin-top:-15px;color:#999999;">
+        <b>Entries to upload </b>
+    </div>
+    <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style = "margin-top:-20px;">
+                <i class="icon-chevron-down"></i>
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse" >
+            <div class="accordion-inner" style="height:300px;overflow-y:auto">
+                <table class="table">
+        		    <th> Id </th>
+                    <th> Type</th>
+        			<th> Add/Edit </th>
+        			<th> Data </th>
+                    <tbody>
+                        <% $.each(upload_collection, function(index, obj){%>
+                			<tr>
+                                <td>
+                                    <%=obj.id%>
+                                </td>
+                                <td>
+                                    <%=obj.entity_name%>
+                                </td>
+                                <td>
+                                    <%=obj.action%>
+                                </td>
+                                <td>
+                                    <%=JSON.stringify(obj.data)%>
+                                </td>
+                            </tr>    
+                        <%})%>
+        			</tbody>
+        		</table>
+            </div>
+        </div>
+    </div>
+    <button id="reset_database" class="btn btn-small btn-primary" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="form_template">
+    <div id = "form_div">
+        <form name="<%=entity_name%>" class="">
+                        
+            <%=form_template%>
+        
+            <% if (inline == true) { %>
+                <table id= "inline" class="table">
+                    <thead id ="inline_header">
+                    </thead>
+                    <tbody id= "inline_body">
+        
+                    </tbody>
+                </table>
+                <button id='add_rows' type= "button" class="btn btn-info btn-small">Add empty rows</button>
+            <% } %>
+        
+            <div class="form-actions">
+              <button id='button1' type="submit" class="btn btn-primary action_button" data-loading-text="Saving..."><%=button1%></button>
+              <%if(button2){%>
+                  <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
+              <%}%>
+            </div>
+        </form>
+	
+    </div>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="dashboard_breadcrumb">
+	<li class='active' >Dashboard</li>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="list_breadcrumb">
+	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="add_edit_breadcrumb">
+<li><a href="#">Dashboard</a> <span class="divider">/</span></li>
+<li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>
+<li class="active"><%=add_or_edit%></li>
+</SCRIPT>
+<SCRIPT  TYPE="text/template" ID="list_view_template">
+    <div id="legend">
+    	<legend class=""><%= page_header %></legend>
+    </div>
+	<div >
+       <table id= "list_table" class="table table-striped display">
+           <thead>
+               <%= table_header%>
+           </thead>
+       </table>
+	</div>
+	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
+
+	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;">
+	For multiple column sorting, press and hold the shift key while sorting each column.
+	</p>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="options_template">
+    <option value=<%=id%>><%=name%></option> 
+</SCRIPT>
+<SCRIPT TYPE="text/template" ID="login">
+
+<div id="login_modal" class="modal hide fade" >
+  <div class="modal-header">
+    <h3>Login</h3>
+  </div>
+  <div class="modal-body">
+  <span class="text-error" id="error_msg"></span>
+  <form action="">
+    <fieldset>
+      <div class="clearfix">
+      <%if(typeof(username)=="undefined"){%>
+        <input id="username" type="text" placeholder="Username">
+      <%}else{%>    
+        <input id="username" type="text" placeholder="Username" value="<%= username%>" disabled>
+      <%}%>
+      </div>
+      <div class="clearfix">
+        <input id="password" type="password" placeholder="Password">
+      </div>
+      <button id= "login_button" class="btn primary" type="submit" data-loading-text="Logging In...">Sign in</button>
+	  <br><a id="change_user">Sign in as a different user</a>
+    </fieldset>
+  </form>
+  </div>
+</div>
+
+
+</SCRIPT>
+
+
+                                <!--Core Framework templates end here -->    
+
+<!--//////////////////////////////////////////////////// Progress TEMPLATES Start ///////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="progress_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state.state_name %></td>
+    <td><%= project.project_name %></td>
+	<td><%= month %></td>
+    <td><%= year %></td>
+	<td class="nrlm-hide-cell"><%= Two_1 %></td>
+	<td class="nrlm-hide-cell"><%= Two_2 %></td>
+	<td class="nrlm-hide-cell"><%= Two_3 %></td>
+	<td class="nrlm-hide-cell"><%= Three_1 %></td>
+	<td class="nrlm-hide-cell"><%= Three_2 %></td>
+	<td class="nrlm-hide-cell"><%= Three_4 %></td>
+	<td class="nrlm-hide-cell"><%= Three_5 %></td>
+	<td class="nrlm-hide-cell"><%= Three_6 %></td>
+	<td class="nrlm-hide-cell"><%= Three_7 %></td>
+	<td class="nrlm-hide-cell"><%= Three_8 %></td>
+	<td class="nrlm-hide-cell"><%= Four_1 %></td>
+	<td class="nrlm-hide-cell"><%= Four_2 %></td>
+	<td class="nrlm-hide-cell"><%= Four_3 %></td>
+	<td class="nrlm-hide-cell"><%= Four_4 %></td>
+	<td class="nrlm-hide-cell"><%= Four_5 %></td>
+	<td class="nrlm-hide-cell"><%= Four_6 %></td>
+	<td class="nrlm-hide-cell"><%= Five_1 %></td>
+	<td class="nrlm-hide-cell"><%= Five_2 %></td>
+	<td class="nrlm-hide-cell"><%= Five_5 %></td>
+	<td class="nrlm-hide-cell"><%= Five_6 %></td>
+	<td class="nrlm-hide-cell"><%= Five_7 %></td>
+	<td class="nrlm-hide-cell"><%= Five_8 %></td>
+	<td class="nrlm-hide-cell"><%= Five_9 %></td>
+	<td class="nrlm-hide-cell"><%= Five_10 %></td>
+	<td class="nrlm-hide-cell"><%= Five_11 %></td>
+	<td class="nrlm-hide-cell"><%= Five_12 %></td>
+	<td class="nrlm-hide-cell"><%= Five_13 %></td>
+	<td class="nrlm-hide-cell"><%= Five_14 %></td>
+	<td class="nrlm-hide-cell"><%= Six_1 %></td>
+	<td class="nrlm-hide-cell"><%= Six_2 %></td>
+	<td class="nrlm-hide-cell"><%= Six_5 %></td>
+	<td class="nrlm-hide-cell"><%= Six_6 %></td>
+	<td class="nrlm-hide-cell"><%= Six_7 %></td>
+	<td class="nrlm-hide-cell"><%= Six_8 %></td>
+	<td class="nrlm-hide-cell"><%= Six_9 %></td>
+	<td class="nrlm-hide-cell"><%= Six_10 %></td>
+	<td class="nrlm-hide-cell"><%= Six_11 %></td>
+	<td class="nrlm-hide-cell"><%= Six_12 %></td>
+	<td class="nrlm-hide-cell"><%= Six_13 %></td>
+	<td class="nrlm-hide-cell"><%= Six_14 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_1 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_2 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_3 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_4 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_5 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_6 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_7 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_8 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_9 %></td>
+    <td>
+	<a href="#progress/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="progress_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>State</th>
+	   <th>Project</th>
+	   <th>Month</th>
+       <th>Year</th>
+	   	<th class="nrlm-hide-cell">Number of Blocks in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of Gram Panchayats in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of villages in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of new SHGs promoted with NRLM target households</th>
+		<th class="nrlm-hide-cell">Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are provided with basic SHG training at community level</th>
+		<th class="nrlm-hide-cell">Number of SHGs in which standard bookkeeping practices is introduced</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are following Pancha Sutras</th>
+		<th class="nrlm-hide-cell">Number of SHGs bookkeepers identified and positioned after initial training</th>
+		<th class="nrlm-hide-cell">Number of internal CRPs identified and trained in the intensive blocks</th>
+		<th class="nrlm-hide-cell">Number of Villages in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">Number of GPs in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">Number of Poorest of the Poor (POP) households identified</th>
+		<th class="nrlm-hide-cell">Number of Poor households identified</th>
+		<th class="nrlm-hide-cell">Number of Non-Poor households identified</th>
+		<th class="nrlm-hide-cell">Number of households having persons with disability member</th>
+		<th class="nrlm-hide-cell">Number of SHGs which are more than 3 month old</th>
+		<th class="nrlm-hide-cell">Number of 3 month old SHGs having bank accounts</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHGs (SC≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHGs (ST≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHGs (Minority≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHGs (with SC/ST<50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHGs (PWD≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of 6 month old SHGs in intensive blocks</th>
+		<th class="nrlm-hide-cell">Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHG (SC≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHG (ST≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHG (Minority≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHG (with SC/ST<50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHG (PWD≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of VOs formed</th>
+		<th class="nrlm-hide-cell">Number of SHGs holding membership in the VOs</th>
+		<th class="nrlm-hide-cell">Number of VOs provided training on basic VO management</th>
+		<th class="nrlm-hide-cell">Number of VOs having trained Bookkeeper</th>
+		<th class="nrlm-hide-cell">Number of VOs provided VRF (CIF)</th>
+		<th class="nrlm-hide-cell">Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</th>
+		<th class="nrlm-hide-cell">Number of CLFs formed</th>
+		<th class="nrlm-hide-cell">Number of CLFs provided CIF</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to CLFs (in Rs.Lakhs)</th>
+       <th></th>
+	   </tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="progress_add_edit_template">
+	<fieldset>
+        <legend>Current Progress</legend>
+		<p class="bold-helptext"></p>
+        <div class="control-group">
+			<label class="control-label nrlm-bold">
+				Month
+			</label>
+			<div class="controls">
+         		<select name="month" class="" id="month">
+					<option value="">------------</option>
+					<option value="Jan">Jan</option>
+					<option value="Feb">Feb</option>
+					<option value="Mar">Mar</option>
+					<option value="Apr">Apr</option>
+					<option value="May">May</option>
+					<option value="Jun">Jun</option>
+					<option value="Jul">Jul</option>
+					<option value="Aug">Aug</option>
+					<option value="Sep">Sep</option>
+					<option value="Oct">Oct</option>
+					<option value="Nov">Nov</option>
+					<option value="Dec">Dec</option>
+				</select>
+         	</div>
+			<!--span class="help-block" >Select the Month for which progress is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Year
+			</label>
+			<div class="controls">
+				<select name="year" class="" id="year">
+					<option value="">------------</option>
+					<option value="2013">2013</option>
+					<option value="2014">2014</option>
+					<option value="2015">2015</option>
+					<option value="2016">2016</option>
+				</select>
+			</div>
+			<!--span class="help-block" >Select the Year for which progress is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				State
+			</label>
+			<div class="controls">
+				<select id = "id_state" name="state" class="chzn-select">
+
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the State</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Project Name
+			</label>
+			<div class="controls">
+				<select id = "id_project" name="project" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the Project</span-->
+		</div>				
+	</fieldset>
+	<fieldset>
+        <legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of Implementations in Intensive blocks (Planned/Targeted vs Covered)</h4>
+				</div>
+			</div>
+		</legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Blocks in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Gram Panchayats in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of villages in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_3">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion of New SHGs, Revival of Dormant/Defunct SHGs and Strengthening of SHGs through training</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of new SHGs promoted with NRLM target households</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are provided with basic SHG training at community level</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs in which standard bookkeeping practices is introduced</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are following Pancha Sutras</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs bookkeepers identified and positioned after initial training</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of internal CRPs identified and trained in the intensive blocks</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_8">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of participatory Identification of  the poor (PIP) (Report only if PIP is undertaken)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Villages in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of GPs in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Poorest of the Poor (POP)  households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_3">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Poor households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Non-Poor households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of households having persons with disability member</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_6">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Revolving Fund (RF) support in Intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs which are more than 3 month old</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of 3 month old SHGs having bank accounts</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHGs (SC≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHGs (ST≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHGs (Minority≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHGs (with SC/ST<50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHGs (PWD≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">CIF support in intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of 6 month old SHGs in intensive blocks</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHG (SC≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHG (ST≥50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHG (Minority≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHG (with SC/ST<50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHG (PWD≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion and Functioning of Village Organizations(Vos)/CLFs  in Intensive Blocks (Fill-in Only if Applicable)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs holding membership in the VOs</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided training on basic VO management</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_3">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs having trained Bookkeeper</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided VRF (CIF)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of CLFs formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of CLFs provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of CIF provided to CLFs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_9">
+				</div>
+			</div>
+		</fieldset>
+	
+</SCRIPT>
+<!--//////////////////////////////////////////////////// PROGRESS TEMPLATES END ///////////////////////////////////////////////-->
+
+
+<!--//////////////////////////////////////////////////// TARGET TEMPLATES Start ///////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="target_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state.state_name %></td>
+    <td><%= project.project_name %></td>
+    <td><%= year %></td>
+	<td class="nrlm-hide-cell"><%= Two_1 %></td>
+	<td class="nrlm-hide-cell"><%= Two_2 %></td>
+	<td class="nrlm-hide-cell"><%= Two_3 %></td>
+	<td class="nrlm-hide-cell"><%= Three_1 %></td>
+	<td class="nrlm-hide-cell"><%= Three_2 %></td>
+	<td class="nrlm-hide-cell"><%= Three_4 %></td>
+	<td class="nrlm-hide-cell"><%= Three_5 %></td>
+	<td class="nrlm-hide-cell"><%= Three_6 %></td>
+	<td class="nrlm-hide-cell"><%= Three_7 %></td>
+	<td class="nrlm-hide-cell"><%= Three_8 %></td>
+	<td class="nrlm-hide-cell"><%= Four_1 %></td>
+	<td class="nrlm-hide-cell"><%= Four_2 %></td>
+	<td class="nrlm-hide-cell"><%= Five_5 %></td>
+	<td class="nrlm-hide-cell"><%= Five_6 %></td>
+	<td class="nrlm-hide-cell"><%= Five_7 %></td>
+	<td class="nrlm-hide-cell"><%= Five_8 %></td>
+	<td class="nrlm-hide-cell"><%= Five_9 %></td>
+	<td class="nrlm-hide-cell"><%= Five_10 %></td>
+	<td class="nrlm-hide-cell"><%= Five_11 %></td>
+	<td class="nrlm-hide-cell"><%= Five_12 %></td>
+	<td class="nrlm-hide-cell"><%= Five_13 %></td>
+	<td class="nrlm-hide-cell"><%= Five_14 %></td>
+	<td class="nrlm-hide-cell"><%= Six_2 %></td>
+	<td class="nrlm-hide-cell"><%= Six_5 %></td>
+	<td class="nrlm-hide-cell"><%= Six_6 %></td>
+	<td class="nrlm-hide-cell"><%= Six_7 %></td>
+	<td class="nrlm-hide-cell"><%= Six_8 %></td>
+	<td class="nrlm-hide-cell"><%= Six_9 %></td>
+	<td class="nrlm-hide-cell"><%= Six_10 %></td>
+	<td class="nrlm-hide-cell"><%= Six_11 %></td>
+	<td class="nrlm-hide-cell"><%= Six_12 %></td>
+	<td class="nrlm-hide-cell"><%= Six_13 %></td>
+	<td class="nrlm-hide-cell"><%= Six_14 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_1 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_2 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_3 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_4 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_5 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_6 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_7 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_8 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_9 %></td>
+	<td class="nrlm-hide-cell"><%= Col4_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col4_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col4_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col4_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col4_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col5_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col5_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col5_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col5_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col5_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col7_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col7_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col7_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col7_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col7_PWD %></td>
+    <td>
+	<a href="#target/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="target_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>State</th>
+	   <th>Project</th>
+       <th>Year</th>
+		<th class="nrlm-hide-cell">Number of Blocks in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of Gram Panchayats in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of villages in which intensive strategy implementation is in progress</th>
+		<th class="nrlm-hide-cell">Number of new SHGs promoted with NRLM target households</th>
+		<th class="nrlm-hide-cell">Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are provided with basic SHG training at community level</th>
+		<th class="nrlm-hide-cell">Number of SHGs in which standard bookkeeping practices is introduced</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are following Pancha Sutras</th>
+		<th class="nrlm-hide-cell">Number of SHGs bookkeepers identified and positioned after initial training</th>
+		<th class="nrlm-hide-cell">Number of internal CRPs identified and trained in the intensive blocks</th>
+		<th class="nrlm-hide-cell">Number of Villages in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">Number of GPs in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHGs (SC≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHGs (ST≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHGs (Minority≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHGs (with SC/ST<50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHGs (PWD≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHG (SC≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHG (ST≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHG (Minority≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHG (with SC/ST<50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHG (PWD≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of VOs to be formed</th>
+		<th class="nrlm-hide-cell">Number of SHGs holding membership in the VOs</th>
+		<th class="nrlm-hide-cell">Number of VOs provided training on basic VO management</th>
+		<th class="nrlm-hide-cell">Number of VOs having trained Bookkeeper</th>
+		<th class="nrlm-hide-cell">Number of VOs provided VRF (CIF)</th>
+		<th class="nrlm-hide-cell">Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</th>
+		<th class="nrlm-hide-cell">Number of CLFs to be formed</th>
+		<th class="nrlm-hide-cell">Number of CLFs provided CIF</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to CLFs (in Rs.Lakhs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(All other SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly PWD SHGs)</th>
+
+       <th></th>
+	   </tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="target_add_edit_template">
+	<fieldset>
+        <legend>Annual Target</legend>
+		<p class="bold-helptext"></p>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Year
+			</label>
+			<div class="controls">
+				<select name="year" class="" id="year">
+					<option value="">------------</option>
+					<option value="2014">FY 2013-14</option>
+					<option value="2015">FY 2014-15</option>
+					<option value="2016">FY 2015-16</option>
+				</select>
+			</div>
+			<!--span class="help-block" >Select the Year for which target is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				State
+			</label>
+			<div class="controls">
+				<select id = "id_state" name="state" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the State</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Project Name
+			</label>
+			<div class="controls">
+				<select id = "id_project" name="project" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the Project</span-->
+		</div>				
+	</fieldset>
+ 	<fieldset>
+		<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of Implementations in Intensive blocks (Planned/Targeted vs Covered)</h4>
+				</div>
+			</div>
+		</legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Blocks in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Two_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Gram Panchayats in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Two_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of villages in which intensive strategy implementation is in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Two_3">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion of New SHGs, Revival of Dormant/Defunct SHGs and Strengthening of SHGs through training</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of new SHGs promoted with NRLM target households</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are provided with basic SHG training at community level</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs in which standard bookkeeping practices is introduced</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are following Pancha Sutras</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs bookkeepers identified and positioned after initial training</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of internal CRPs identified and trained in the intensive blocks</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Three_8">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of participatory Identification of  the poor (PIP) (Report only if PIP is undertaken)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Villages in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Four_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of GPs in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Four_2">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Revolving Fund (RF) support in Intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHGs (SC≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Five_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHGs (ST≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Five_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHGs (Minority≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Five_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHGs (with SC/ST<50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Five_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHGs (PWD≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Five_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">CIF support in intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHG (SC≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHG (ST≥50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHG (Minority≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHG (with SC/ST<50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHG (PWD≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Six_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion and Functioning of Village Organizations(Vos)/CLFs  in Intensive Blocks (Fill-in Only if Applicable)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs to be formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs holding membership in the VOs</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided training on basic VO management</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_3">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs having trained Bookkeeper</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided VRF (CIF)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of CLFs to be formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of CLFs provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Annual Target" name="Seven_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of CIF provided to CLFs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_9">
+				</div>
+			</div>
+		</fieldset>
+<fieldset>
+            <legend>
+			<div class="row control-group">
+				<div class="span3">
+					<h4 class="nrlm-color-green">Financial Assistance to SHGs in Intensive Blocks(for FY 2013-14)</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">SC-SHGs</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">ST-SHGs</h4>
+				</div>
+				<div class="span2">
+					<h4 class="nrlm-color-green">Minority-SHGs</h4>
+				</div>
+				<div class="span2">
+					<h4 class="nrlm-color-green">Other-SHGs</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">PWD-SHGs</h4>
+				</div>				
+			</div></legend>
+			
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHGs Accessed with Bank Credit</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col4_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col4_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>Amount of Loan Accessed(Rs. In Lakhs)</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_SC" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_ST" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col5_Min" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col5_Oth" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_PWD" type="text" placeholder="In Lakhs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHG provided with Interest Subvention</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col7_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col7_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>Amount of Interest Subvention Given(Rs. In Lakhs)</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_SC" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_ST" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col8_Min" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col8_Oth" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_PWD" type="text" placeholder="In Lakhs">
+				</div>
+			</div>
+		</fieldset>
+</SCRIPT>
+<!--//////////////////////////////////////////////////// Target TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--//////////////////////////////////////////////////// ProgressTill13 TEMPLATES Start ///////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="progresstill13_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state.state_name %></td>
+    <td><%= project.project_name %></td>
+	<td><%= month %></td>
+    <td><%= year %></td>
+	<td class="nrlm-hide-cell"><%= Two_1 %></td>
+	<td class="nrlm-hide-cell"><%= Two_2 %></td>
+	<td class="nrlm-hide-cell"><%= Two_3 %></td>
+	<td class="nrlm-hide-cell"><%= Three_1 %></td>
+	<td class="nrlm-hide-cell"><%= Three_2 %></td>
+	<td class="nrlm-hide-cell"><%= Three_4 %></td>
+	<td class="nrlm-hide-cell"><%= Three_5 %></td>
+	<td class="nrlm-hide-cell"><%= Three_6 %></td>
+	<td class="nrlm-hide-cell"><%= Three_7 %></td>
+	<td class="nrlm-hide-cell"><%= Three_8 %></td>
+	<td class="nrlm-hide-cell"><%= Four_1 %></td>
+	<td class="nrlm-hide-cell"><%= Four_2 %></td>
+	<td class="nrlm-hide-cell"><%= Four_3 %></td>
+	<td class="nrlm-hide-cell"><%= Four_4 %></td>
+	<td class="nrlm-hide-cell"><%= Four_5 %></td>
+	<td class="nrlm-hide-cell"><%= Four_6 %></td>
+	<td class="nrlm-hide-cell"><%= Five_1 %></td>
+	<td class="nrlm-hide-cell"><%= Five_2 %></td>
+	<td class="nrlm-hide-cell"><%= Five_5 %></td>
+	<td class="nrlm-hide-cell"><%= Five_6 %></td>
+	<td class="nrlm-hide-cell"><%= Five_7 %></td>
+	<td class="nrlm-hide-cell"><%= Five_8 %></td>
+	<td class="nrlm-hide-cell"><%= Five_9 %></td>
+	<td class="nrlm-hide-cell"><%= Five_10 %></td>
+	<td class="nrlm-hide-cell"><%= Five_11 %></td>
+	<td class="nrlm-hide-cell"><%= Five_12 %></td>
+	<td class="nrlm-hide-cell"><%= Five_13 %></td>
+	<td class="nrlm-hide-cell"><%= Five_14 %></td>
+	<td class="nrlm-hide-cell"><%= Six_1 %></td>
+	<td class="nrlm-hide-cell"><%= Six_2 %></td>
+	<td class="nrlm-hide-cell"><%= Six_5 %></td>
+	<td class="nrlm-hide-cell"><%= Six_6 %></td>
+	<td class="nrlm-hide-cell"><%= Six_7 %></td>
+	<td class="nrlm-hide-cell"><%= Six_8 %></td>
+	<td class="nrlm-hide-cell"><%= Six_9 %></td>
+	<td class="nrlm-hide-cell"><%= Six_10 %></td>
+	<td class="nrlm-hide-cell"><%= Six_11 %></td>
+	<td class="nrlm-hide-cell"><%= Six_12 %></td>
+	<td class="nrlm-hide-cell"><%= Six_13 %></td>
+	<td class="nrlm-hide-cell"><%= Six_14 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_1 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_2 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_3 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_4 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_5 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_6 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_7 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_8 %></td>
+	<td class="nrlm-hide-cell"><%= Seven_9 %></td>
+    <td>
+	<a href="#progresstill13/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="progresstill13_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>State</th>
+	   <th>Project</th>
+	   <th>Till Month</th>
+       <th>Year</th>
+		<th class="nrlm-hide-cell">Number of Blocks in which intensive strategy implementation was in progress</th>
+		<th class="nrlm-hide-cell">Number of Gram Panchayats in which intensive strategy implementation was in progress</th>
+		<th class="nrlm-hide-cell">Number of villages in which intensive strategy implementation was in progress</th>
+		<th class="nrlm-hide-cell">Number of SHGs promoted with NRLM target households</th>
+		<th class="nrlm-hide-cell">Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are provided with basic SHG training at community level</th>
+		<th class="nrlm-hide-cell">Number of SHGs in which standard bookkeeping practices is introduced</th>
+		<th class="nrlm-hide-cell">Number of SHGs that are following Pancha Sutras</th>
+		<th class="nrlm-hide-cell">Number of SHGs bookkeepers identified and positioned after initial training</th>
+		<th class="nrlm-hide-cell">Number of internal CRPs identified and trained in the intensive blocks</th>
+		<th class="nrlm-hide-cell">Number of Villages in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">Number of GPs in which PIP process has been completed</th>
+		<th class="nrlm-hide-cell">New number of Poorest of the Poor (POP) households identified</th>
+		<th class="nrlm-hide-cell">Number of Poor households identified</th>
+		<th class="nrlm-hide-cell">Number of Non-Poor households identified</th>
+		<th class="nrlm-hide-cell">Number of households having persons with disability member</th>
+		<th class="nrlm-hide-cell">Number of SHGs which are more than 3 month old</th>
+		<th class="nrlm-hide-cell">Number of 3 month old SHGs having bank accounts</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHGs (SC≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHGs (ST≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHGs (Minority≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHGs (with SC/ST<50%) provided RF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHGs (PWD≥50%) provided RF</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of 6 month old SHGs in intensive blocks</th>
+		<th class="nrlm-hide-cell">Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</th>
+		<th class="nrlm-hide-cell">Number of predominantly SC-SHG (SC≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly ST-SHG (ST≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly Minority-SHG (Minority≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of Other-SHG (with SC/ST<50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Number of predominantly PWD-SHG (PWD≥50%) provided CIF</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Amount of CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</th>
+		<th class="nrlm-hide-cell">Number of VOs formed</th>
+		<th class="nrlm-hide-cell">Number of SHGs holding membership in the VOs</th>
+		<th class="nrlm-hide-cell">Number of VOs provided training on basic VO management</th>
+		<th class="nrlm-hide-cell">Number of VOs having trained Bookkeeper</th>
+		<th class="nrlm-hide-cell">Number of VOs provided VRF (CIF)</th>
+		<th class="nrlm-hide-cell">Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</th>
+		<th class="nrlm-hide-cell">Number of new CLFs formed</th>
+		<th class="nrlm-hide-cell">Number of CLFs provided CIF</th>		
+		<th class="nrlm-hide-cell">Amount of CIF provided to CLFs (in Rs.Lakhs)</th>
+       <th></th>
+	   </tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="progresstill13_add_edit_template">
+	<fieldset>
+        <legend>Previous Progress Details</legend>
+		<p class="bold-helptext"></p>
+        <div class="control-group">
+			<label class="control-label nrlm-bold">
+				Till Month
+			</label>
+			<div class="controls">
+         		<select name="month" class="" id="month">
+					<option value="">------------</option>
+					<option value="Mar">Till March 2013</option>
+					<option value="Aug">April - August 2013</option>
+				</select>
+         	</div>
+			<!--span class="help-block" >Select the Month for which progress is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Till Year
+			</label>
+			<div class="controls">
+				<select name="year" class="" id="year">
+					<option value="2013">2013</option>
+				</select>
+			</div>
+			<!--span class="help-block" >Select the Year for which progress is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				State
+			</label>
+			<div class="controls">
+				<select id = "id_state" name="state" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the State</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Project Name
+			</label>
+			<div class="controls">
+				<select id = "id_project" name="project" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the Project</span-->
+		</div>				
+	</fieldset>
+	<fieldset>
+        <legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of Implementations in Intensive blocks (Planned/Targeted vs Covered)</h4>
+				</div>
+			</div>
+		</legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Blocks in which intensive strategy implementation was in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Gram Panchayats in which intensive strategy implementation was in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of villages in which intensive strategy implementation was in progress</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Two_3">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion of New SHGs, Revival of Dormant/Defunct SHGs and Strengthening of SHGs through training</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs promoted with NRLM target households</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Pre-NRLM SHGs brought into the NRLM fold after revival/training and strengthening</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are provided with basic SHG training at community level</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs in which standard bookkeeping practices is introduced</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs that are following Pancha Sutras</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs bookkeepers identified and positioned after initial training</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of internal CRPs identified and trained in the intensive blocks</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Three_8">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Progress of participatory Identification of  the poor (PIP) (Report only if PIP is undertaken)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Villages in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of GPs in which PIP process has been completed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>New number of Poorest of the Poor (POP)  households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_3">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Poor households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Non-Poor households identified</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of households having persons with disability member</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Four_6">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Revolving Fund (RF) support in Intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs which are more than 3 month old</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of 3 month old SHGs having bank accounts</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHGs (SC≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHGs (ST≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHGs (Minority≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHGs (with SC/ST<50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHGs (PWD≥50%) provided RF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Five_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly SC-SHGs (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly ST-SHGs (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly Minority-SHGs (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to Other-SHGs (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of RF provided to predominantly PWD-SHGs (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Five_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">CIF support in intensive Blocks (all status under NRLM)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of 6 month old SHGs in intensive blocks</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs which have prepared Micro Investment Plan (MIP)/Micro Credit Plan (MCP)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly SC-SHG (SC≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly ST-SHG (ST≥50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly Minority-SHG (Minority≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of Other-SHG (with SC/ST<50%)  provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of predominantly PWD-SHG (PWD≥50%) provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Six_9">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly SC-SHG (SC≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_10">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly ST-SHG (ST≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_11">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly Minority-SHG (Minority≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_12">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to Other-SHG (SC/ST<50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_13">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of  CIF provided to predominantly PWD-SHG (PWD≥50%) (Rs. in lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Six_14">
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>
+			<div class="row control-group">
+				<div class="span6">
+					<h4 class="nrlm-color-green">Promotion and Functioning of Village Organizations(Vos)/CLFs  in Intensive Blocks (Fill-in Only if Applicable)</h4>
+				</div>
+			</div></legend>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_1">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of SHGs holding membership in the VOs</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_2">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided training on basic VO management</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_3">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs having trained Bookkeeper</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_4">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of VOs provided VRF (CIF)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_5">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of VRF(CIF) provided to VOs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_6">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of new CLFs formed</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_7">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Number of CLFs provided CIF</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Progress" name="Seven_8">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span6">
+					<label>Amount of CIF provided to CLFs (in Rs.Lakhs)</label>
+				</div>
+				<div class="span2">
+					<input type="text" placeholder="Enter Amount (Rs. in lakhs)" name="Seven_9">
+				</div>
+			</div>
+		</fieldset>
+	
+</SCRIPT>
+<!--//////////////////////////////////////////////////// PROGRESStill13 TEMPLATES END ///////////////////////////////////////////////-->
+
+
+<!--/////////////////////////////////////////////////// Project TEMPLATES START ////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="project_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+       <th></th>
+	   </tr>
+</SCRIPT>
+
+
+<SCRIPT TYPE="text/template" ID="project_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= project_name %></td>
+    <td>
+        <a href="#project/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="project_add_edit_template">
+        <fieldset>
+            <legend>Add State</legend>
+			<p class="bold-helptext"> All fields in bold are required</p>
+            <div class="control-group"> 
+		<label class="control-label"><b>Name</b></label>
+            	<div class="controls">
+             	<input type="text" id= "id_project" name="name" placeholder="State Name">
+             	</div>
+             </div>
+        </fieldset>
+</SCRIPT>
+
+<!--//////////////////////////////////////////////////// Project TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--//////////////////////////////////////////////////// HRDETAILS TEMPLATES Start ///////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="hrdetails_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state.state_name %></td>
+    <td><%= project.project_name %></td>
+	<td><%= month %></td>
+    <td><%= year %></td>
+	<td class="nrlm-hide-cell"><%= Col2_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col2_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col2_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col2_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col3_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col3_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col3_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col3_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col4_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col4_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col4_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col4_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col5_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col5_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col5_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col5_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col6_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col6_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col6_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col6_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col7_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col7_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col7_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col7_bmmup %></td>
+	<td class="nrlm-hide-cell"><%= Col8_smmu %></td>
+	<td class="nrlm-hide-cell"><%= Col8_dmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col8_bmmu %></td>
+	<td class="nrlm-hide-cell"><%= Col8_bmmup %></td>
+	<td>
+	<a href="#hrdetails/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="hrdetails_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>State</th>
+	   <th>Project</th>
+	   <th>Month</th>
+       <th>Year</th>
+		<th class="nrlm-hide-cell">Number of units setup that are approved (SMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are approved (DMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are approved (BMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are approved (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are Positioned (SMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are Positioned (DMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are Positioned (BMMU)</th>
+		<th class="nrlm-hide-cell">Number of units setup that are Positioned (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Thematic Positions Approved (SMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Positions Approved (DMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Positions Approved (BMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Positions Approved (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Thematic Staff in Position (SMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Staff in Position (DMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Staff in Position (BMMU)</th>
+		<th class="nrlm-hide-cell">Thematic Staff in Position (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Thematic staff Inducted (SMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Inducted (DMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Inducted (BMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Inducted (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Thematic staff Immersed (SMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Immersed (DMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Immersed (BMMU)</th>
+		<th class="nrlm-hide-cell">Thematic staff Immersed (BMMU Partnership)</th>
+		<th class="nrlm-hide-cell">Support staff Positions approved (SMMU)</th>
+		<th class="nrlm-hide-cell">Support staff Positions approved (DMMU)</th>
+		<th class="nrlm-hide-cell">Support staff Positions approved (BMMU)</th>
+		<th class="nrlm-hide-cell">Support staff Positions approved (BMMU Partnership)</th>		
+		<th></th>
+	   </tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="hrdetails_add_edit_template">
+	<fieldset>
+        <legend>HR Details</legend>
+		<p class="bold-helptext"> All fields are required</p>
+        <div class="control-group">
+			<label class="control-label nrlm-bold">
+				Month
+			</label>
+			<div class="controls">
+         		<select name="month" class="" id="month">
+					<option value="">------------</option>
+					<option value="Jan">Jan</option>
+					<option value="Feb">Feb</option>
+					<option value="Mar">Mar</option>
+					<option value="Apr">Apr</option>
+					<option value="May">May</option>
+					<option value="Jun">Jun</option>
+					<option value="Jul">Jul</option>
+					<option value="Aug">Aug</option>
+					<option value="Sep">Sep</option>
+					<option value="Oct">Oct</option>
+					<option value="Nov">Nov</option>
+					<option value="Dec">Dec</option>
+				</select>
+         	</div>
+			<!--span class="help-block" >Select the Month for which data is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Year
+			</label>
+			<div class="controls">
+				<select name="year" class="" id="year">
+					<option value="">------------</option>
+					<option value="2013">2013</option>
+					<option value="2014">2014</option>
+					<option value="2015">2015</option>
+					<option value="2016">2016</option>
+				</select>
+			</div>
+			<!--span class="help-block" >Select the Year for which data is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				State
+			</label>
+			<div class="controls">
+				<select id = "id_state" name="state" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the State for which data is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Project Name
+			</label>
+			<div class="controls">
+				<select id = "id_project" name="project" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the Project for which data is being reported</span-->
+		</div>				
+	</fieldset>
+	<fieldset>
+            <legend>
+			<div class="row control-group">
+				<div class="span5">
+					<h4 class="nrlm-color-green">HR Details upto the end of reporting month</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">SMMU</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">DMMU</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">BMMU</h4>
+				</div>
+				<div class="span2">
+					<h4 class="nrlm-color-green">BMMU (Partnership)</h4>
+				</div>				
+			</div></legend>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Number of units setup that are approved</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col2_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			
+			<div class="row control-group">
+				<div class="span5">
+					<label>Number of units setup that are Positioned</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col3_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Thematic Positions Approved</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col4_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Thematic Staff in Position</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col5_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Thematic staff Inducted</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col6_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Thematic staff Immersed</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col7_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Support staff Positions approved</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col8_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span5">
+					<label>Support staff in Position</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col9_smmu" type="text" placeholder="SMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col9_dmmu" type="text" placeholder="DMMU">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col9_bmmu" type="text" placeholder="BMMU">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col9_bmmup" type="text" placeholder="BMMU (Partnership)">
+				</div>
+			</div>
+		</fieldset>
+</SCRIPT>
+<!--//////////////////////////////////////////////////// HRDetails TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--//////////////////////////////////////////////////// FinancialAssistance TEMPLATES Start ///////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="financialassistance_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state.state_name %></td>
+    <td><%= project.project_name %></td>
+	<td><%= month %></td>
+    <td><%= year %></td>
+	<td class="nrlm-hide-cell"><%= Col2_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col2_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col2_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col2_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col2_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col3_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col3_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col3_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col3_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col3_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col4_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col4_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col4_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col4_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col4_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col5_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col5_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col5_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col5_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col5_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col6_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col6_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col6_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col6_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col6_PWD %></td>
+	<td class="nrlm-hide-cell"><%= Col7_SC %></td>
+	<td class="nrlm-hide-cell"><%= Col7_ST %></td>
+	<td class="nrlm-hide-cell"><%= Col7_Min %></td>
+	<td class="nrlm-hide-cell"><%= Col7_Oth %></td>
+	<td class="nrlm-hide-cell"><%= Col7_PWD %></td>
+	<td>
+	<a href="#financialassistance/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="financialassistance_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>State</th>
+	   <th>Project</th>
+	   <th>Month</th>
+       <th>Year</th>
+		<th class="nrlm-hide-cell">Total number of SHGs(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">Total number of SHGs(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">Total number of SHGs(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">Total number of SHGs(All other SHGs)</th>
+		<th class="nrlm-hide-cell">Total number of SHGs(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Bank Credit(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Bank Credit(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Bank Credit(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Bank Credit(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Bank Credit(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHGs Accessed with Bank Credit(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(All other SHGs)</th>
+		<th class="nrlm-hide-cell">Amount of Loan Accessed(Rs. In Lakh)(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Interest Subvention(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Interest Subvention(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Interest Subvention(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Interest Subvention(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG eligible for Interest Subvention(Predominantly PWD SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly SC SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly ST SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly Minority SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(All other SHGs)</th>
+		<th class="nrlm-hide-cell">No of SHG provided with Interest Subvention(Predominantly PWD SHGs)</th>
+		<th></th>
+	   </tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="financialassistance_add_edit_template">
+	<fieldset>
+        <legend>Financial Assistance</legend>
+		<p class="bold-helptext"> All fields are required</p>
+        <div class="control-group">
+			<label class="control-label nrlm-bold">
+				Month
+			</label>
+			<div class="controls">
+         		<select name="month" class="" id="month">
+					<option value="">------------</option>
+					<option value="Jan">Jan</option>
+					<option value="Feb">Feb</option>
+					<option value="Mar">Mar</option>
+					<option value="Apr">Apr</option>
+					<option value="May">May</option>
+					<option value="Jun">Jun</option>
+					<option value="Jul">Jul</option>
+					<option value="Aug">Aug</option>
+					<option value="Sep">Sep</option>
+					<option value="Oct">Oct</option>
+					<option value="Nov">Nov</option>
+					<option value="Dec">Dec</option>
+				</select>
+         	</div>
+			<!--span class="help-block" >Select the Month for which data is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Year
+			</label>
+			<div class="controls">
+				<select name="year" class="" id="year">
+					<option value="">------------</option>
+					<option value="2013">2013</option>
+					<option value="2012">2012</option>
+					<option value="2011">2011</option>
+					<option value="2010">2010</option>
+					<option value="2009">2009</option>
+					<option value="2008">2008</option>
+				</select>
+			</div>
+			<!--span class="help-block" >Select the Year for which data is being reported</span-->
+		</div>	
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				State
+			</label>
+			<div class="controls">
+				<select id = "id_state" name="state" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the State for which data is being reported</span-->
+		</div>
+		<div class="control-group">
+			<label class="control-label nrlm-bold">
+				Project Name
+			</label>
+			<div class="controls">
+				<select id = "id_project" name="project" class="chzn-select">
+                </select>
+			</div>
+			<!--span class="help-block" >Select the name of the Project for which data is being reported</span-->
+		</div>				
+	</fieldset>
+
+	<fieldset>
+            <legend>
+			<div class="row control-group">
+				<div class="span3">
+					<h4 class="nrlm-color-green">Financial Assistance to SHGs in Intensive Blocks(for FY 2013-14)</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">SC-SHGs</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">ST-SHGs</h4>
+				</div>
+				<div class="span2">
+					<h4 class="nrlm-color-green">Minority-SHGs</h4>
+				</div>
+				<div class="span2">
+					<h4 class="nrlm-color-green">Other-SHGs</h4>
+				</div>
+				<div class="span1">
+					<h4 class="nrlm-color-green">PWD-SHGs</h4>
+				</div>				
+			</div></legend>
+			<div class="row control-group">
+				<div class="span3">
+					<label>Total number of SHGs</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col2_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col2_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col2_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHG eligible for Bank Credit</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col3_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col3_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col3_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHGs Accessed with Bank Credit</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col4_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col4_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col4_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>Amount of Loan Accessed(Rs. In Lakhs)</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_SC" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_ST" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col5_Min" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col5_Oth" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col5_PWD" type="text" placeholder="In Lakhs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHG eligible for Interest Subvention</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col6_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col6_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col6_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>No of SHG provided with Interest Subvention</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_SC" type="text" placeholder="SC-SHG">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_ST" type="text" placeholder="ST-SHG">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col7_Min" type="text" placeholder="Minority-SHGs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col7_Oth" type="text" placeholder="Other-SHGs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col7_PWD" type="text" placeholder="PWD-SHGs">
+				</div>
+			</div>
+			<div class="row control-group">
+				<div class="span3">
+					<label>Amount of Interest Subvention Given(Rs. In Lakhs)</label>
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_SC" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_ST" type="text" placeholder="In Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col8_Min" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span2">
+					<input class="span2" name="Col8_Oth" type="text" placeholder="Rs. in Lakhs">
+				</div>
+				<div class="span1">
+					<input class="span1" name="Col8_PWD" type="text" placeholder="In Lakhs">
+				</div>
+			</div>
+		</fieldset>
+</SCRIPT>
+<!--//////////////////////////////////////////////////// FinancialAssistance TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--/////////////////////////////////////////////////// State TEMPLATES START ////////////////////////////////////////////-->
+<SCRIPT TYPE="text/template" ID="state_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+       <th></th>
+	   </tr>
+</SCRIPT>
+
+
+<SCRIPT TYPE="text/template" ID="state_list_item_template">
+<tr>
+    <%if(typeof(online_id)!="undefined"){%>
+        <td><%= online_id %></td>
+    <%}else{%>    
+        <td>Not uploaded</td>
+    <%}%>        
+    <td><%= state_name %></td>
+    <td>
+        <a href="#state/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
+</SCRIPT>
+
+<SCRIPT TYPE="text/template" ID="state_add_edit_template">
+        <fieldset>
+            <legend>Add State</legend>
+			<p class="bold-helptext"> All fields in bold are required</p>
+            <div class="control-group"> 
+		<label class="control-label"><b>Name</b></label>
+            	<div class="controls">
+             	<input type="text" id="id_state" name="name" placeholder="State Name">
+             	</div>
+             </div>
+        </fieldset>
+</SCRIPT>
+
+<!--//////////////////////////////////////////////////// State TEMPLATES END ///////////////////////////////////////////////-->
+
+</HEAD>
+
+<BODY>
+	
+     {% csrf_token %}
+    <DIV ID = "notifications">
+        
+    </DIV>
+    <DIV ID="app">
+    </DIV>
+	
+	
+</BODY>
+
+</HTML>
