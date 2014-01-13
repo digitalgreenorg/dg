@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>incremental_download.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>incremental_download.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Retrieves updates on server since a timestamp, runs those updates on the offline DB thus keeping the offline db in sync with server db
+To use the module create an instance and call start_incremental_download on it </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([
+    <span class="string">'jquery'</span>,
+    <span class="string">'underscore'</span>,
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'indexeddb_backbone_config'</span>,
+    <span class="string">'configs'</span>,
+    <span class="string">'convert_namespace'</span>,
+    <span class="string">'offline_utils'</span>,
+    <span class="string">'indexeddb-backbone'</span>,
+    <span class="string">'bootstrapjs'</span>,
+], <span class="keyword">function</span>(jquery, underscore, layoutmanager, indexeddb, all_configs, ConvertNamespace, Offline) {
+
+    <span class="keyword">var</span> IncrementalDownloadView = Backbone.Layout.extend({
+
+        initialize: <span class="keyword">function</span>() {
+            console.log(<span class="string">"UPLOAD: initializing new incremental_download view"</span>);
+            _.bindAll(<span class="keyword">this</span>);
+            <span class="keyword">this</span>.start_timestamp = <span class="literal">null</span>;
+            <span class="keyword">this</span>.in_progress = <span class="literal">false</span>;
+        },
+
+        template: <span class="string">"#incremental_download_template"</span>,
+        events: {
+            <span class="string">"click #stop_inc_download"</span>: <span class="string">"stop_inc_download"</span>
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>increment the progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        increment_pb: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>get the current width of progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            w = parseFloat(document.getElementById(<span class="string">'inc_pbar'</span>).style.width);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>increment the width with the step</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            document.getElementById(<span class="string">'inc_pbar'</span>).style.width = (w + <span class="keyword">this</span>.progress_bar_step) + <span class="string">'%'</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>update the status on the view - # of downloaded/# of total objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_status: <span class="keyword">function</span>(status) {
+            console.log(status);
+            $(<span class="string">'#inc_status'</span>).html(status);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>update the action on the view - for eg - &quot;downloading person&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_action: <span class="keyword">function</span>(action) {
+            $(<span class="string">'#inc_action'</span>).html(action);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each update. So inc download would be stopped after the current object bieng downloaded is finished bieng processed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        stop_inc_download: <span class="keyword">function</span>() {
+            console.log(<span class="string">"stopping inc download"</span>);
+            <span class="keyword">this</span>.user_interrupt = <span class="literal">true</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>initializes the global vars used, ui</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        initialize_inc_download: <span class="keyword">function</span>(options) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.in_progress = <span class="literal">true</span>;
+            <span class="keyword">this</span>.user_interrupt = <span class="literal">false</span>;
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>set ui for foreground inc download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!(options.background)) {
+                <span class="keyword">this</span>.template = <span class="string">"#incremental_download_template"</span>;
+                <span class="keyword">this</span>.render()
+                    .done(<span class="keyword">function</span>() {
+                        that.$(<span class="string">'#incremental_download_modal'</span>).modal({
+                            keyboard: <span class="literal">false</span>,
+                            backdrop: <span class="string">"static"</span>,
+                        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>modal takes time to animate and show up - so wait till it is completely visible to the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.$(<span class="string">'#incremental_download_modal'</span>).on(<span class="string">'shown'</span>, <span class="keyword">function</span>() {
+                            dfd.resolve();
+                        });
+                        that.$(<span class="string">'#incremental_download_modal'</span>).modal(<span class="string">'show'</span>);
+                    });
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>set ui for background inc download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> {
+                <span class="keyword">this</span>.template = <span class="string">"#incremental_download_background_template"</span>;
+                <span class="keyword">this</span>.render()
+                    .done(<span class="keyword">function</span>() {
+                        dfd.resolve();
+                    });
+            }
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>remove the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        tear_down: <span class="keyword">function</span>() {
+            <span class="keyword">this</span>.$(<span class="string">'#incremental_download_modal'</span>).modal(<span class="string">'hide'</span>);
+            <span class="keyword">this</span>.remove();
+            <span class="keyword">this</span>.in_progress = <span class="literal">false</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>starts the inc download process          </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        start_incremental_download: <span class="keyword">function</span>(options) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            console.log(<span class="string">"INCREMENTAL DOWNLOAD: start the incremental_download"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>initialization logic - like setting up ui, initializing global vars</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.initialize_inc_download(options)
+                .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>query the endpoint to get the list of updates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.getIncObjects()
+                        .done(<span class="keyword">function</span>(objects) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>serially process each update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.iterate_incd_objects(objects)
+                                .done(<span class="keyword">function</span>(last_object_timestamp) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>some finish logic -  save the timestamp</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    that.finish_download(last_object_timestamp)
+                                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>inc download successfuly finished
+remove the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            that.tear_down();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>resolve the process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            dfd.resolve();
+                                        })
+                                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>something failed in finish download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            that.tear_down();
+                                            dfd.reject(error);
+                                        });
+                                })
+                                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>error while saving some update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    <span class="keyword">if</span> (error.last_object_timestamp) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>save the timestamp of last object successfully processed so that next inc download resumes from this point</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                        that.finish_download(error.last_object_timestamp)
+                                            .always(<span class="keyword">function</span>() {
+                                                that.tear_down();
+                                                dfd.reject(error.err_msg);
+                                            });
+                                    }
+                                    dfd.reject(error.err_msg)
+                                });
+                        })
+                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>something failed while getting the updates from server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.tear_down();
+                            dfd.reject(error);
+                        });
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>gets the list of updates from server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        getIncObjects: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Recording the time when the request for update was sent, to update last_inc_downloaded ts if required.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.start_timestamp = <span class="keyword">new</span> Date().toJSON().replace(<span class="string">"Z"</span>, <span class="string">""</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>get the timestamp since when updates have to be fetched = timestamp when last inc download was run</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.get_last_download_timestamp()
+                .done(<span class="keyword">function</span>(timestamp) {
+                    console.log(<span class="string">"Timestamp for inc download - "</span> + timestamp);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>send the get request </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    $.get(all_configs.misc.inc_download_url, {
+                        timestamp: timestamp
+                    }, <span class="keyword">function</span>() {}, <span class="string">"json"</span>)
+                        .fail(<span class="keyword">function</span>() {
+                            dfd.reject(<span class="string">"Incremental download objects fetch failed!"</span>);
+                        })
+                        .done(<span class="keyword">function</span>(objects) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>resolve and return the objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            dfd.resolve(objects);
+                        });
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    dfd.reject(error);
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>the timestamp of the time when last inc download was run is returned or if no inc download has run till now, timestamp of full download is returned</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_last_download_timestamp: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>fetch last_inc_download timestamp from meta_data table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_inc_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                    dfd.resolve(model.get(<span class="string">'timestamp'</span>));
+                })
+                .fail(<span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>no last_inc_download timestamp found
+fetch and  return the timestamp of last full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download"</span>)
+                        .done(<span class="keyword">function</span>(model) {
+                            dfd.resolve(model.get(<span class="string">'timestamp'</span>));
+                        })
+                        .fail(<span class="keyword">function</span>(model, error) {
+                            dfd.reject(<span class="string">"Neither inc download has happened before nor full download."</span>);
+                        });
+                });
+
+            <span class="keyword">return</span> dfd;
+        },
+
+        iterate_incd_objects: <span class="keyword">function</span>(incd_objects) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.incd_objects = incd_objects;
+            <span class="keyword">if</span> (!<span class="keyword">this</span>.incd_objects.length || <span class="keyword">this</span>.incd_objects == <span class="number">0</span>)
+                <span class="keyword">return</span> dfd.resolve();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>step for progress bar increments    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.progress_bar_step = <span class="number">100</span> / incd_objects.length;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>stores the current download status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.download_status = {};
+            <span class="keyword">this</span>.download_status[<span class="string">"total"</span>] = incd_objects.length;
+            <span class="keyword">this</span>.download_status[<span class="string">"downloaded"</span>] = <span class="number">0</span>;
+            console.log(<span class="string">"INCD objects received"</span>);
+            console.log(incd_objects);
+            <span class="keyword">this</span>.pick_next(dfd);
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>recursively iterates over the incd_objects list till its empty</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        pick_next: <span class="keyword">function</span>(whole_download_dfd) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            <span class="keyword">this</span>.prev_incd_o = <span class="keyword">this</span>.cur_incd_o;
+            <span class="keyword">this</span>.update_status(<span class="keyword">this</span>.download_status[<span class="string">"downloaded"</span>] + <span class="string">"/"</span> + <span class="keyword">this</span>.download_status[<span class="string">"total"</span>]);
+            <span class="keyword">this</span>.cur_incd_o = <span class="keyword">this</span>.incd_objects.shift();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>all updates processed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!<span class="keyword">this</span>.cur_incd_o) {
+                <span class="keyword">var</span> update_timestamp;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>get the timestamp of last object processed </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (<span class="keyword">this</span>.prev_incd_o)
+                    update_timestamp = <span class="keyword">this</span>.get_timestamp(<span class="keyword">this</span>.prev_incd_o)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>if no object was processed use the start time of inc download    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">else</span>
+                    update_timestamp = <span class="keyword">this</span>.start_timestamp;
+                <span class="keyword">return</span> whole_download_dfd.resolve(update_timestamp);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>user interrupt flag is set - user clicked on stop button</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.user_interrupt) {
+                <span class="keyword">var</span> update_timestamp;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>get the timestamp of last object processed </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (<span class="keyword">this</span>.prev_incd_o)
+                    update_timestamp = <span class="keyword">this</span>.get_timestamp(<span class="keyword">this</span>.prev_incd_o)
+                <span class="keyword">else</span>
+                    update_timestamp = <span class="literal">null</span>;
+                <span class="keyword">return</span> whole_download_dfd.reject({
+                    err_msg: <span class="string">"User stopped Sync"</span>,
+                    last_object_timestamp: update_timestamp
+                });
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>process the object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> {
+                <span class="keyword">this</span>.process_incd_object(<span class="keyword">this</span>.cur_incd_o)
+                    .fail(<span class="keyword">function</span>(error) {
+                        console.log(<span class="string">"FAILED TO INC DOWNLOAD AN OBJECT: "</span>);
+                        console.log(error);
+                    })
+                    .done(<span class="keyword">function</span>() {
+                        console.log(<span class="string">"SUCESSFULLY DOWNLOADED AN OBJECT"</span>);
+                    })
+                    .always(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>continue processing the objects even if this object failed
+ increment progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.increment_pb();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>increment download status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.download_status[<span class="string">"downloaded"</span>]++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>recursively process the rest of the objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.pick_next(whole_download_dfd);
+                    });
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>format of each object: {&quot;pk&quot;:9372,&quot;model&quot;:&quot;dashboard.serverlog&quot;,&quot;fields&quot;:{&quot;action&quot;:1,&quot;timestamp&quot;:&quot;2013-04-15T06:47:35&quot;,&quot;entry_table&quot;:&quot;Screening&quot;,&quot;model_id&quot;:10000000132086}}
+get the timestamp from object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_timestamp: <span class="keyword">function</span>(obj) {
+            <span class="keyword">return</span> obj.fields.timestamp;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>get entity_name from object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_entity_name: <span class="keyword">function</span>(obj) {
+            <span class="keyword">for</span> (<span class="keyword">var</span> member <span class="keyword">in</span> all_configs) {
+                <span class="keyword">if</span> (member == obj.fields.entry_table.toLowerCase()) {
+                    <span class="keyword">return</span> all_configs[member].entity_name;
+                } <span class="keyword">else</span> <span class="keyword">if</span> ((all_configs[member].inc_table_name) &amp;&amp; (all_configs[member].inc_table_name == obj.fields.entry_table.toLowerCase())) {
+                    <span class="keyword">return</span> all_configs[member].entity_name;
+                }
+            }
+            <span class="keyword">return</span> -<span class="number">1</span>;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>get action from object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_action: <span class="keyword">function</span>(obj) {
+            <span class="keyword">return</span> obj.fields.action;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>get online_id from object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_online_id: <span class="keyword">function</span>(obj) {
+            <span class="keyword">return</span> parseInt(obj.fields.model_id);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>get foreign field desc object for this object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_foreign_field_desc: <span class="keyword">function</span>(obj) {
+            <span class="keyword">var</span> entity_name = <span class="keyword">this</span>.get_entity_name(obj);
+            <span class="keyword">if</span> (all_configs[entity_name].edit) {
+                <span class="keyword">return</span> all_configs[entity_name].edit.foreign_entities;
+            } <span class="keyword">else</span>
+                <span class="keyword">return</span> all_configs[entity_name].foreign_entities;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>runs an update object on the offline db             </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        process_incd_object: <span class="keyword">function</span>(incd_o) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>create online and offline backbone models for this entity
+should be using the offline_utils and online_utils instead</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> generic_model_offline = Backbone.Model.extend({
+                database: indexeddb,
+                storeName: <span class="keyword">this</span>.get_entity_name(incd_o),
+            });
+            <span class="keyword">var</span> generic_model_online = Backbone.Model.extend({
+                sync: Backbone.ajaxSync,
+                url: <span class="keyword">function</span>() {
+                    <span class="keyword">return</span> <span class="keyword">this</span>.id ? all_configs[that.get_entity_name(incd_o)].rest_api_url + <span class="keyword">this</span>.id + <span class="string">"/"</span> : all_configs[that.get_entity_name(incd_o)].rest_api_url;
+                },
+            });
+            <span class="keyword">this</span>.offline_model = <span class="keyword">new</span> generic_model_offline();
+            <span class="keyword">this</span>.online_model = <span class="keyword">new</span> generic_model_online();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>update action on the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.update_action(<span class="string">"Downloading "</span> + <span class="keyword">this</span>.get_entity_name(incd_o));
+            
+            <span class="keyword">switch</span> (<span class="keyword">this</span>.get_action(incd_o)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>add case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">case</span> <span class="number">1</span>:
+                    <span class="keyword">this</span>.incd_add(incd_o, dfd);
+                    <span class="keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>edit case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">case</span> <span class="number">0</span>:
+                    <span class="keyword">this</span>.incd_edit(incd_o, dfd);
+                    <span class="keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>delete case    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">case</span> -<span class="number">1</span>:
+                    <span class="keyword">this</span>.incd_delete(incd_o, dfd);
+                    <span class="keyword">break</span>;
+                <span class="keyword">default</span>:
+                    console.log(<span class="string">"ambiguous case"</span>);
+                    dfd.reject(<span class="string">"ambiguous case. None of add, edit , delete!"</span>);
+            }
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>runs an add-update on offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        incd_add: <span class="keyword">function</span>(incd_o, dfd) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>fetch object from offline db - check whether it already exists</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.fetch_from_offline(<span class="keyword">this</span>.get_online_id(incd_o))
+                .fail(<span class="keyword">function</span>(error) {
+                    <span class="keyword">if</span> (error == <span class="string">"Not Found"</span>) {
+                        fetch_and_add();
+                    }
+                })
+                .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>console.log(&quot;INCD: The model supposed to be added already exists. Moving on...&quot;);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    fetch_and_add(off_model);
+                });
+
+            <span class="function"><span class="keyword">function</span> <span class="title">fetch_and_add</span><span class="params">(existing_model)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>fetch update object from server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                that.fetch_from_online(that.get_online_id(incd_o))
+                    .done(<span class="keyword">function</span>(on_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>convert namespace from online to offline</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), <span class="string">"onlinetooffline"</span>)
+                            .done(<span class="keyword">function</span>(on_off_obj) {
+                                <span class="keyword">var</span> off_json = on_off_obj.off_json;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>inject online id and remove server id so that offline DB generate its own id for this object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                <span class="keyword">if</span> (off_json.id) {
+                                    off_json.online_id = parseInt(off_json.id);
+                                    <span class="keyword">delete</span> off_json.id;
+                                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>if the object with this online id already existed in offline DB it wud be over-written otherwise new one wud be created</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                Offline.save(existing_model, that.get_entity_name(incd_o), off_json)
+                                    .done(<span class="keyword">function</span>(off_model) {
+                                        dfd.resolve();
+                                    })
+                                    .fail(<span class="keyword">function</span>(error) {
+                                        dfd.reject(error);
+                                    });
+                            })
+                            .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>if foreign elements in this object could not be converted then create an empty dummy object with same online id to enable processing of other objects using this object as a foreign element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                Offline.save(existing_model, that.get_entity_name(incd_o), {
+                                    online_id: on_model.get(<span class="string">"id"</span>)
+                                })
+                                    .done(<span class="keyword">function</span>(off_model) {
+                                        dfd.resolve();
+                                    })
+                                    .fail(<span class="keyword">function</span>(error) {
+                                        dfd.reject(error);
+                                    });
+                            });
+                    })
+                    .fail(<span class="keyword">function</span>(response) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>console.log(&quot;INCD: Error fetching model from server - &quot;+response.statusText);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        dfd.reject(response);
+                    });
+            }
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>runs an edit-update on offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        incd_edit: <span class="keyword">function</span>(incd_o, dfd) {
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>fetch this object from offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.fetch_from_offline(<span class="keyword">this</span>.get_online_id(incd_o))
+                .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>fetch the object from server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.fetch_from_online(that.get_online_id(incd_o))
+                        .done(<span class="keyword">function</span>(on_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>convert namespace of foreign elements in server object from online to offline</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), <span class="string">"onlinetooffline"</span>)
+                                .done(<span class="keyword">function</span>(on_off_obj) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>save the edit on offline db - remove this and use offline_utils instead</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    that.edit_offline(off_model, on_off_obj.off_json)
+                                        .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p> successfully edited in offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            dfd.resolve();
+                                        })
+                                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>edit save failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            dfd.reject(error);
+                                        });
+                                })
+                                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>namespace conversion failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    dfd.reject(error);
+                                });
+                        })
+                        .fail(<span class="keyword">function</span>(response) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>server fetch failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            dfd.reject(response);
+                        });
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>object which was edited on server does not exist in offline DB...doing nothing...</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    dfd.reject(<span class="string">"Error fetching model(to be edited) from offline db. Moving on..."</span> + error);
+                });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>runs a delete-update on offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        incd_delete: <span class="keyword">function</span>(incd_o, dfd) {
+            console.log(<span class="string">"processing delete - "</span> + JSON.stringify(incd_o));
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>fetch object from offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.fetch_from_offline(<span class="keyword">this</span>.get_online_id(incd_o))
+                .done(<span class="keyword">function</span>(off_model) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>delete the object </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    off_model.destroy({
+                        success: <span class="keyword">function</span>() {
+                            dfd.resolve();
+                        },
+                        error: <span class="keyword">function</span>(error) {
+                            dfd.reject();
+                        }
+                    })
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>object to be deleted already doesn&#39;t exists in offline db </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    dfd.resolve(error);
+                });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>executed at end of the inc download process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        finish_download: <span class="keyword">function</span>(last_object_timestamp) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>possible if timestamp of last object in incd was not present or no objects were returned</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!last_object_timestamp)
+                last_object_timestamp = <span class="keyword">this</span>.start_timestamp;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>update timestamp of last inc download in meta_data table    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_inc_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                    set_timestamp(model);
+                })
+                .fail(<span class="keyword">function</span>(model, error) {
+                    set_timestamp(model);
+                });
+
+            <span class="function"><span class="keyword">function</span> <span class="title">set_timestamp</span><span class="params">(model)</span> {</span>
+                model.set(<span class="string">'timestamp'</span>, last_object_timestamp);
+                model.save(<span class="literal">null</span>, {
+                    success: <span class="keyword">function</span>() {
+                        dfd.resolve();
+                    },
+                    error: <span class="keyword">function</span>(model, error) {
+                        dfd.reject(<span class="string">"error updating last_full_download in meta_data objectStore"</span>);
+                    }
+                });
+            };
+
+            <span class="keyword">return</span> dfd;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <p>all of the following functions should be removed and offline_utils and online_utils should be used instead - the dependence on global offline_model and online_model would also have to be removed</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <p>fetch object with online_id=online_id from offline db</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_from_offline: <span class="keyword">function</span>(online_id) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.offline_model.clear();
+            <span class="keyword">this</span>.offline_model.set({
+                online_id: parseInt(online_id)
+            });
+            <span class="keyword">this</span>.offline_model.fetch({
+                success: <span class="keyword">function</span>(off_model) {
+                    dfd.resolve(off_model);
+                },
+                error: <span class="keyword">function</span>(model, error) {
+                    dfd.reject(error);
+                }
+            });
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <p>fetch object with id=online_id from server </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_from_online: <span class="keyword">function</span>(online_id) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.online_model.clear();
+            <span class="keyword">this</span>.online_model.set(<span class="string">'id'</span>, parseInt(online_id));
+            <span class="keyword">this</span>.online_model.fetch({
+                success: <span class="keyword">function</span>(on_model, response) {
+                    dfd.resolve(on_model);
+                },
+                error: <span class="keyword">function</span>(model, response, options) {
+                    dfd.reject(response);
+                }
+            });
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <p>adds json object in offline db using offline_model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        add_offline: <span class="keyword">function</span>(json) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.offline_model.clear();
+            <span class="keyword">this</span>.offline_model.set(json);
+            <span class="keyword">this</span>.offline_model.set(<span class="string">'online_id'</span>, parseInt(json.id));
+            <span class="keyword">this</span>.offline_model.unset(<span class="string">'id'</span>); <span class="comment">//new id would be generated, not saving by server id</span>
+            <span class="keyword">this</span>.offline_model.save(<span class="literal">null</span>, {
+                success: <span class="keyword">function</span>(off_model) {
+                    dfd.resolve(off_model);
+                },
+                error: <span class="keyword">function</span>(model, error) {
+                    dfd.reject(error);
+                }
+            });
+            <span class="keyword">return</span> dfd.promise();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              <p>edits the object in off_model to json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        edit_offline: <span class="keyword">function</span>(off_model, json) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> offline_id = off_model.get(<span class="string">"id"</span>);
+            <span class="keyword">var</span> online_id = json.id;
+            off_model.set(json);
+            off_model.set(<span class="string">'id'</span>, parseInt(offline_id));
+            off_model.set(<span class="string">'online_id'</span>, parseInt(online_id));
+            off_model.save(<span class="literal">null</span>, {
+                success: <span class="keyword">function</span>(off_model) {
+                    dfd.resolve(off_model);
+                },
+                error: <span class="keyword">function</span>(model, error) {
+                    dfd.reject(<span class="string">"ERRO EDITING model in IDB: "</span>);
+                }
+            });
+            <span class="keyword">return</span> dfd.promise();
+        },
+
+    });
+
+    <span class="keyword">return</span> IncrementalDownloadView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

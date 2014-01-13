@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>full_download.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="app.html">
+                app.js
+              </a>
+            
+              
+              <a class="source" href="auth.html">
+                auth.js
+              </a>
+            
+              
+              <a class="source" href="auth_offline_backend.html">
+                auth_offline_backend.js
+              </a>
+            
+              
+              <a class="source" href="upload_collection.html">
+                upload_collection.js
+              </a>
+            
+              
+              <a class="source" href="configs.html">
+                configs.js
+              </a>
+            
+              
+              <a class="source" href="convert_namespace.html">
+                convert_namespace.js
+              </a>
+            
+              
+              <a class="source" href="denormalize.html">
+                denormalize.js
+              </a>
+            
+              
+              <a class="source" href="indexeddb_backbone_config.html">
+                indexeddb_backbone_config.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="main_test.html">
+                main_test.js
+              </a>
+            
+              
+              <a class="source" href="user_model.html">
+                user_model.js
+              </a>
+            
+              
+              <a class="source" href="offline_utils.html">
+                offline_utils.js
+              </a>
+            
+              
+              <a class="source" href="online_utils.html">
+                online_utils.js
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.js
+              </a>
+            
+              
+              <a class="source" href="test_login.html">
+                test_login.js
+              </a>
+            
+              
+              <a class="source" href="user_initialize.html">
+                user_initialize.js
+              </a>
+            
+              
+              <a class="source" href="app_layout.html">
+                app_layout.js
+              </a>
+            
+              
+              <a class="source" href="dashboard.html">
+                dashboard.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="form_controller.html">
+                form_controller.js
+              </a>
+            
+              
+              <a class="source" href="full_download.html">
+                full_download.js
+              </a>
+            
+              
+              <a class="source" href="incremental_download.html">
+                incremental_download.js
+              </a>
+            
+              
+              <a class="source" href="list.html">
+                list.js
+              </a>
+            
+              
+              <a class="source" href="login.html">
+                login.js
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.js
+              </a>
+            
+              
+              <a class="source" href="status.html">
+                status.js
+              </a>
+            
+              
+              <a class="source" href="upload.html">
+                upload.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>full_download.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Performs the full database download. For each entity defined in configs, creates chunked requests to fetch data 
+from server and saves it in offline db. To make it resumable, it does not clear the database before starting downloading. 
+For each chunk request created, it checks if that chunk request was already downloaded by looking into the full_download_info store in offline DB. 
+Since it continues from the present state of database found - In order to do a fresh download, there needs to be some 
+external code which flushes the database before calling this module.</p>
+<p>To use the module, initialize a new object and call start_full_download on it.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+define([
+    <span class="string">'jquery'</span>,
+    <span class="string">'underscore'</span>,
+    <span class="string">'layoutmanager'</span>,
+    <span class="string">'indexeddb_backbone_config'</span>,
+    <span class="string">'configs'</span>,
+    <span class="string">'offline_utils'</span>,
+    <span class="string">'bootstrapjs'</span>
+], <span class="keyword">function</span>(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline) {
+
+
+    <span class="keyword">var</span> FullDownloadView = Backbone.Layout.extend({
+
+        initialize: <span class="keyword">function</span>() {
+            _.bindAll(<span class="keyword">this</span>);
+        },
+
+        template: <span class="string">"#download_template"</span>,
+
+        internet_connected: <span class="keyword">function</span>() {
+            <span class="keyword">return</span> navigator.onLine;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>send the list of entities to the template </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        serialize: <span class="keyword">function</span>() {
+            <span class="keyword">return</span> {
+                all_configs: all_configs
+            }
+        },
+
+        events: {
+            <span class="string">'click #stop_full_download'</span>: <span class="string">'stop_download'</span>
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>executed when user clicks stop donwload button </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        stop_download: <span class="keyword">function</span>() {
+            console.log(<span class="string">"stopping download"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>remove the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.remove_ui();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>abort all the network requests made by this module</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.each(<span class="keyword">this</span>.network_requests, <span class="keyword">function</span>(index, xhr) {
+                xhr.abort();
+            });
+
+            <span class="keyword">this</span>.full_download_dfd.reject(<span class="string">"User stopped download"</span>);
+
+        },
+
+        remove_ui: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>calling remove without hiding modal causes modal&#39;s backdrop to remain</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.$(<span class="string">'#full_download_modal'</span>).modal(<span class="string">'hide'</span>);
+            <span class="keyword">this</span>.remove();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Checks internet connectivity
+Initializes UI and objects used to update status. 
+Fetches the full_download_info objectStore to resume download, if that&#39;s the case
+Stores the start time for download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        initialize_download: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Django complains when Z is present in timestamp bcoz timezone capab is off</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.start_time = <span class="keyword">new</span> Date().toJSON().replace(<span class="string">"Z"</span>, <span class="string">""</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>check whether internet is accessible - if not, abort full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (!<span class="keyword">this</span>.internet_connected()) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>this function is expected to return a dfd, so create a new dfd, reject it and return it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+                dfd.reject(<span class="string">"Can't download database. Internet is not connected"</span>);
+                <span class="keyword">return</span> dfd;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>intialize UI objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.$(<span class="string">'#full_download_modal'</span>).modal({
+                keyboard: <span class="literal">false</span>,
+                backdrop: <span class="string">"static"</span>,
+            });
+            <span class="keyword">this</span>.$(<span class="string">'#full_download_modal'</span>).modal(<span class="string">'show'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>used to store the current download-status of each entity  </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.download_status = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>every request made to server will be stored in this, - to abort them if user chooses to stop download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.network_requests = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>get the list of chunks that exists already downloaded - to resume download </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> already_downloaded_chunks_dfd = <span class="keyword">this</span>.get_already_downloaded_chunks();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>get the original start time if download is resumed or else set th current time as the start time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> start_time_dfd = <span class="keyword">this</span>.fetch_or_set_download_start_time();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>return combined dfd </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> $.when.apply($, [already_downloaded_chunks_dfd, start_time_dfd]);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>fetching the full_download_info table to get all already downloaded chunks - to be used for resuming download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_already_downloaded_chunks: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            Offline.fetch_collection(<span class="string">"full_download_info"</span>)
+                .done(<span class="keyword">function</span>(coll) {
+                    that.full_download_info_coll = coll;
+                    dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    dfd.reject(error);
+                });
+            <span class="keyword">return</span> dfd;
+
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>if download is resuming then get the original start time other wise record current time as start time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_or_set_download_start_time: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download_start"</span>)
+                .fail(<span class="keyword">function</span>(model, error) {
+                    that.set_timestamp(model, that.start_time)
+                        .done(<span class="keyword">function</span>() {
+                            dfd.resolve();
+                        })
+                        .fail(<span class="keyword">function</span>(error) {
+                            dfd.reject(error);
+                        });
+                })
+                .done(<span class="keyword">function</span>(model) {
+                    that.start_time = model.get(<span class="string">"timestamp"</span>);
+                    dfd.resolve();
+                });
+            <span class="keyword">return</span> dfd;
+        },
+
+        set_timestamp: <span class="keyword">function</span>(model, timestamp) {
+            model.set(<span class="string">'timestamp'</span>, timestamp);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>returns a promise object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> model.save(); 
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>this starts the full download process </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        start_full_download: <span class="keyword">function</span>() {
+            <span class="keyword">this</span>.full_download_dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>run some intitialization logic - check internt, setup ui etc</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.initialize_download()
+                .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>iterate over entities and start their download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.iterate_object_stores()
+                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>run some finish logic - save the timsetamp </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.finish_download()
+                                .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>run any after download logic defined by user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    that.call_after_download()
+                                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>full download finised successfully</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            that.remove_ui();
+                                            that.full_download_dfd.resolve();
+                                        })
+                                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>user defined after download failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                            that.remove_ui();
+                                            that.full_download_dfd.reject(error);
+                                        });
+                                })
+                                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>something in finish download failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                    that.remove_ui();
+                                    that.full_download_dfd.reject(error);
+                                });
+                        })
+                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>soemthing failed while iterating entities and their download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            that.remove_ui();
+                            that.full_download_dfd.reject(error);
+                        })
+                })
+                .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>something failed in intialization</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.remove_ui();
+                    that.full_download_dfd.reject(error);
+                });
+
+            <span class="keyword">return</span> <span class="keyword">this</span>.full_download_dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>executed at the end of full download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        call_after_download: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>if user has defined afterFullDownload in configs, then execute it
+must return a promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (all_configs.misc.afterFullDownload)
+                <span class="keyword">return</span> all_configs.misc.afterFullDownload(<span class="keyword">this</span>.start_time, <span class="keyword">this</span>.download_status) 
+            <span class="keyword">else</span>
+                <span class="keyword">return</span> <span class="keyword">new</span> $.Deferred().resolve();
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Starts download for all tables defined in config object. Rejects when any of them fails, Resolves when all are 
+        successfully downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        iterate_object_stores: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.$(<span class="string">'#stop_full_download'</span>).prop(<span class="string">"disabled"</span>, <span class="literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>stores the dfds for each entity&#39;s download process</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> entity_dfds = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>iterate over the entities</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">for</span> (<span class="keyword">var</span> member <span class="keyword">in</span> all_configs) {
+                <span class="keyword">if</span> (member == <span class="string">"misc"</span>)
+                    <span class="keyword">continue</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>initialize the current download-status for entity    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.download_status[member] = {
+                    total: <span class="literal">null</span>,
+                    downloaded: <span class="number">0</span>
+                };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>start full download for entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> entity_dfd = <span class="keyword">this</span>.start_full_download_for_entity(all_configs[member][<span class="string">"entity_name"</span>]);
+                entity_dfds.push(entity_dfd);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>resolve when all entities have been downloaded, reject if any fails</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.when.apply($, entity_dfds)
+                .done(<span class="keyword">function</span>() {
+                    dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    dfd.reject(error);
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>updates the progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_pb_ui: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>can&#39;t fill progress bar untill total num of objects is known</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> ready_to_show = <span class="literal">true</span>;
+            <span class="keyword">var</span> total = <span class="number">0</span>;
+            <span class="keyword">var</span> downloaded = <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>calculate the current status of download by looking at status of each entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            _.each(<span class="keyword">this</span>.download_status, <span class="keyword">function</span>(status, entity) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>if total objects for any entity are not yet known, then can&#39;t show the progress</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (status.total == <span class="literal">null</span>) {
+                    ready_to_show = <span class="literal">false</span>;
+                    <span class="keyword">return</span>;
+                } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>calculate the total num of objects bieng downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    total += status.total;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>calculate the total num of objects that have been downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    downloaded += status.downloaded;
+                }
+            });
+
+            <span class="keyword">if</span> (!ready_to_show)
+                <span class="keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>set the progress bar with current progress    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> percent_complete = (downloaded / total) * <span class="number">100</span> + <span class="string">"%"</span>;
+            $(<span class="string">'#pbar'</span>).css(<span class="string">"width"</span>, percent_complete);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>updates download-status display for an entity - entity_name | status(In Progress/Done) | #downloaded/#total</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_status_ui: <span class="keyword">function</span>(entity_name) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>get the # of downloaded objects for thi entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> downloaded = <span class="keyword">this</span>.download_status[entity_name].downloaded;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>get the # of total objects for thi entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> total = <span class="keyword">this</span>.download_status[entity_name].total;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>set the text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> s_text = <span class="string">"In Progress"</span>;
+            <span class="keyword">if</span> (downloaded &gt;= total)
+                s_text = <span class="string">"Done"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>set the num</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> s_num = String(downloaded) + <span class="string">"/"</span> + String(total);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>update the view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.$(<span class="string">'#'</span> + entity_name).find(<span class="string">'.status_text'</span>).html(s_text);
+            <span class="keyword">this</span>.$(<span class="string">'#'</span> + entity_name).find(<span class="string">'.status_numbers'</span>).html(s_num);
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>starts download for an entity </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        start_full_download_for_entity: <span class="keyword">function</span>(entity_name) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>get the num of objects to be downloaded for this entity </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            that.get_num_of_objects_to_download(entity_name)
+                .done(<span class="keyword">function</span>(total_num_objects) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>do the chunked download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
+                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>entity successfully downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            console.log(<span class="string">"FINISHED DOWNLOADING - "</span> + entity_name);
+                            <span class="keyword">return</span> dfd.resolve();
+                        })
+                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>error while downloading entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">return</span> dfd.reject(error);
+                        });
+                })
+                .fail(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>error while retrieving total # of objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    console.log(<span class="string">"DASHBOARD:DOWNLOAD:UnexpectedError: Error fetching num of objects to download for - "</span> + entity_name);
+                    <span class="keyword">return</span> dfd.reject(<span class="string">"Failed to fetch num of objects for - "</span> + entity_name);
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>does a small GET request to retrieve total # of objects to be downloaded for an entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        get_num_of_objects_to_download: <span class="keyword">function</span>(entity_name) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            console.log(<span class="string">"DASHBOARD:DOWNLOAD: Fetching num of objects to download for - "</span> + entity_name);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>send GET request to download 1 object of entity type - the api must return the total # of objects info too</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> xhr = $.get(all_configs[entity_name].rest_api_url, {
+                limit: <span class="number">1</span>,
+                offset: <span class="number">0</span>
+            }, <span class="keyword">function</span>(data) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>return the total_count param</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">if</span> (data &amp;&amp; data.meta)
+                    <span class="keyword">return</span> dfd.resolve(data.meta.total_count);
+                <span class="keyword">else</span>
+                    <span class="keyword">return</span> dfd.reject();
+            });
+            <span class="keyword">this</span>.network_requests.push(xhr);
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>update the downlaod status of an entity - key= total/downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        update_download_status: <span class="keyword">function</span>(entity_name, key, increment) {
+            <span class="keyword">var</span> s_obj = <span class="keyword">this</span>.download_status[entity_name];
+            <span class="keyword">if</span> (!s_obj[key])
+                s_obj[key] = increment;
+            <span class="keyword">else</span>
+                s_obj[key] += increment;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>update the view     </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.update_status_ui(entity_name);
+            <span class="keyword">this</span>.update_pb_ui();
+
+        },
+
+        chunk_it_fetch_it_save_it: <span class="keyword">function</span>(entity_name, total_num_objects) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">this</span>.update_download_status(entity_name, <span class="string">"total"</span>, total_num_objects);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>default chunk size</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> limit = <span class="number">1500</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>get entity specific config if defined by user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (all_configs[entity_name].download_chunk_size) 
+                limit = all_configs[entity_name].download_chunk_size;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>else get global option if defined by user   </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">else</span> <span class="keyword">if</span> (all_configs.misc.download_chunk_size) 
+                limit = all_configs.misc.download_chunk_size;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>calc num of chunks    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> num_chunks = Math.ceil(total_num_objects / limit);
+            console.log(<span class="string">"Num of chunks for - "</span> + entity_name + <span class="string">" = "</span> + num_chunks);
+            <span class="keyword">var</span> offset = <span class="number">0</span>;
+            <span class="keyword">var</span> chunk_dfds = [];
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>process each chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num_chunks; i++) {
+                <span class="keyword">var</span> chunk_dfd = <span class="keyword">this</span>.process_chunk(entity_name, offset, limit);
+                chunk_dfd.done(<span class="keyword">function</span>(num_objects_saved) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>update download-status of this entity with the num of objects that were downloaded in this chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.update_download_status(entity_name, <span class="string">"downloaded"</span>, num_objects_saved);
+                });
+                chunk_dfds.push(chunk_dfd);
+                offset += limit;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>resolve when all chunks of this entity are processed...</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.when.apply($, chunk_dfds)
+                .done(<span class="keyword">function</span>() {
+                    <span class="keyword">return</span> dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    <span class="keyword">return</span> dfd.reject(error);
+                });
+            <span class="keyword">return</span> dfd;
+        },
+
+        process_chunk: <span class="keyword">function</span>(entity_name, offset, limit) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>check whether chunks is already downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> num_downloaded = <span class="keyword">this</span>.is_already_downloaded(entity_name, offset, limit);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>return if chunk already downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (num_downloaded != -<span class="number">1</span>)
+                dfd.resolve(num_downloaded);
+            <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>fetach and save the chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">this</span>.fetch_save(entity_name, offset, limit)
+                    .done(<span class="keyword">function</span>(num_downloaded) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>record the chunk as downloaded when successfully downloaded</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        that.save_as_downloaded(entity_name, offset, limit, num_downloaded);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>return the num of objects that were downloaded in this chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        dfd.resolve(num_downloaded);
+                    })
+                    .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>chunk download failed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        dfd.reject(error);
+                    });
+            }
+
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>checks if (entity_name, offset, limit) chunk exists in full_download_info</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        is_already_downloaded: <span class="keyword">function</span>(entity_name, offset, limit) {
+            <span class="keyword">var</span> exists = <span class="keyword">this</span>.full_download_info_coll.where({
+                entity_name: entity_name,
+                offset: offset,
+                limit: limit
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>return num of objects that were downloaded if it exists, -1 otherwise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (exists.length) {
+                console.log(<span class="string">"CHUNK ALREADY EXISTS DOWNLOADED"</span>);
+                <span class="keyword">return</span> exists[<span class="number">0</span>].get(<span class="string">"num_objects_downloaded"</span>);
+            }
+            <span class="keyword">return</span> -<span class="number">1</span>
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>creates (entity_name, offset, limit, num_downloaded) object in full_download_info </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        save_as_downloaded: <span class="keyword">function</span>(entity_name, offset, limit, num_downloaded) {
+            <span class="keyword">this</span>.full_download_info_coll.create({
+                entity_name: entity_name,
+                offset: offset,
+                limit: limit,
+                num_objects_downloaded: num_downloaded
+            }, {
+                success: <span class="keyword">function</span>(model) {
+                    console.log(<span class="string">"CHUNK SAVED AS DOWNLOADED-"</span> + JSON.stringify(model));
+                }
+            });
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>fetch and save the chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_save: <span class="keyword">function</span>(entity_name, offset, limit) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>fetches the chunk from server </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.fetch_collection(entity_name, offset, limit)
+                .done(<span class="keyword">function</span>(collection) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>saves the fetched chunk </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    that.save_collection(entity_name, collection)
+                        .done(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <p>successfully fetched and saved
+return the number of objects downloaded in this chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">return</span> dfd.resolve(collection.length);
+                        })
+                        .fail(<span class="keyword">function</span>(error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <p>error while saving chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                            <span class="keyword">return</span> dfd.reject(<span class="string">"DOWNLOAD: Failed to save an object of "</span> + entity_name + <span class="string">" - "</span> + error);
+                        });
+                })
+                .fail(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <p>error while fetching chunk</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    console.log(<span class="string">"DASHBOARD:DOWNLOAD: error fetching collection from server"</span>);
+                    <span class="keyword">return</span> dfd.reject(<span class="string">"DOWNLOAD: Failed to fetch collection for "</span> + entity_name);
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <p>shd be removed and online_utils shd be used instead
+fetches the chunk from server and returns as a backbone collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch_collection: <span class="keyword">function</span>(entity_name, offset, limit) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> generic_collection_online = Backbone.Collection.extend({
+                url: all_configs[entity_name].rest_api_url,
+                sync: Backbone.ajaxSync,
+                parse: <span class="keyword">function</span>(data) {
+                    <span class="keyword">return</span> data.objects;
+                }
+            });
+            <span class="keyword">var</span> collection_online = <span class="keyword">new</span> generic_collection_online();
+            <span class="keyword">var</span> xhr = collection_online.fetch({
+                data: {
+                    limit: limit,
+                    offset: offset
+                },
+                success: <span class="keyword">function</span>(collection) {
+                    <span class="keyword">return</span> dfd.resolve(collection);
+                },
+                error: <span class="keyword">function</span>() {
+                    <span class="keyword">return</span> dfd.reject();
+                }
+            });
+            <span class="keyword">this</span>.network_requests.push(xhr);
+            <span class="keyword">return</span> dfd;
+        },
+
+        save_collection: <span class="keyword">function</span>(entity_name, collection) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> objects = collection.toJSON();
+            <span class="keyword">var</span> dfds = [];
+            <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; objects.length; i++) {
+                objects[i][<span class="string">'id'</span>] = parseInt(objects[i][<span class="string">'id'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              <p>in each object, inject &#39;online_id&#39; </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                objects[i][<span class="string">'online_id'</span>] = parseInt(objects[i][<span class="string">'id'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-86">&#182;</a>
+              </div>
+              <p>save the object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="keyword">var</span> s_dfd = <span class="keyword">this</span>.save_object(entity_name, objects[i]);
+                dfds.push(s_dfd);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <p>resolve when all objects are successfully saved, reject if any save fails</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $.when.apply($, dfds)
+                .done(<span class="keyword">function</span>() {
+                    <span class="keyword">return</span> dfd.resolve();
+                })
+                .fail(<span class="keyword">function</span>(error) {
+                    console.log(error);
+                    <span class="keyword">return</span> dfd.reject();
+                });
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <p>custom save to allow constraint error fails - can&#39;t use the offline_utils save</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        save_object: <span class="keyword">function</span>(entity_name, json) {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            <span class="keyword">var</span> model = Offline.create_b_model(entity_name);
+            model.save(json, {
+                success: <span class="keyword">function</span>() {
+                    <span class="keyword">return</span> dfd.resolve();
+                },
+                error: <span class="keyword">function</span>(model, error) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>pass the save as successful if it is a constraint/unique_together error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="keyword">if</span> (error.srcElement.error.name == <span class="string">"ConstraintError"</span>) {
+                        <span class="keyword">return</span> dfd.resolve();
+                    }
+                    <span class="keyword">return</span> dfd.reject();
+                }
+            });
+            <span class="keyword">return</span> dfd;
+        },
+
+        finish_download: <span class="keyword">function</span>() {
+            <span class="keyword">var</span> dfd = <span class="keyword">new</span> $.Deferred();
+            console.log(<span class="string">"DASHBOARD:DOWNLOAD: In finish download"</span>);
+            <span class="keyword">var</span> that = <span class="keyword">this</span>;
+            that.db_downloaded();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p>save the start time of download in meta_data table - used later as an indicator that database has been fully downloaded and also as a timestamp for first inc download</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            Offline.fetch_object(<span class="string">"meta_data"</span>, <span class="string">"key"</span>, <span class="string">"last_full_download"</span>)
+                .done(<span class="keyword">function</span>(model) {
+                    that.set_timestamp(model, that.start_time)
+                        .done(<span class="keyword">function</span>() {
+                            dfd.resolve();
+                        })
+                        .fail(<span class="keyword">function</span>(error) {
+                            dfd.reject(error);
+                        });
+                })
+                .fail(<span class="keyword">function</span>(model, error) {
+                    that.set_timestamp(model, that.start_time)
+                        .done(<span class="keyword">function</span>() {
+                            dfd.resolve();
+                        })
+                        .fail(<span class="keyword">function</span>(error) {
+                            dfd.reject(error);
+                        });
+                });
+
+            <span class="keyword">return</span> dfd;
+        },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              <p>enable links in dashboard</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        db_downloaded: <span class="keyword">function</span>() {
+            $(<span class="string">'.list_items'</span>).unbind(<span class="string">'click'</span>, <span class="literal">false</span>);
+            $(<span class="string">'.list_items'</span>).removeClass(<span class="string">"disabled"</span>);
+            console.log(<span class="string">"Dashboard links enabled"</span>);
+            $(<span class="string">"#helptext"</span>).hide();
+        }
+
+
+
+
+    });
+
+    <span class="keyword">return</span> FullDownloadView;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
