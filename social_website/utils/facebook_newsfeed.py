@@ -4,7 +4,7 @@ import urllib
 import urllib2
 
 from dg.settings import MEDIA_ROOT, MEDIA_URL, PROJECT_PATH, STATIC_URL
-from dg.settings import FACEBOOK_APP_ID, FACEBOOK_API_SECRET
+from dg.settings import SOCIAL_AUTH_FACEBOOK_KEY, SOCIAL_AUTH_FACEBOOK_SECRET
 from libs.image_utils import ProcessedImage
 from social_website.utils.generate_activities import ActivityType
 from social_website.models import Activity, ImageSpec
@@ -109,7 +109,7 @@ def store_data(title, date, textContent, avatarURL, newsFeed, imageURL, altStrin
 
 def get_facebook_feed():
     logger = logging.getLogger('social_website')
-    TOKEN_URL = 'https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=' + FACEBOOK_APP_ID + '&client_secret=' + FACEBOOK_API_SECRET
+    TOKEN_URL = "".join(['https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id=', SOCIAL_AUTH_FACEBOOK_KEY, '&client_secret=', SOCIAL_AUTH_FACEBOOK_SECRET])
     response = urllib2.urlopen(TOKEN_URL)
     TOKEN = response.read()
     RESPONSE_URL = 'https://graph.facebook.com/digitalgreenorg/feed?' + TOKEN

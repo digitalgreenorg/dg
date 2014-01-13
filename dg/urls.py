@@ -13,7 +13,6 @@ from output.views import video_analytics
 from website_admin import website_admin
 import website_archive_urls
 
-from social_auth.urls import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -21,7 +20,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
-    url(r'', include('social_auth.urls')),
+    url(r'', include('social.apps.django_app.urls', namespace='social')),
 
     (r'^social/', include(social_website.api_urls)),
     (r'^bmgf/', include(feeds.urls)),

@@ -97,10 +97,10 @@
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                     <h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
                     <div class="layout-vr-sm">
-                        <a href="{% url 'socialauth_begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
+                        <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
                     </div>
                     <div class="layout-vr-tiny">
-                        <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
+                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
                     </div>
                 </div>
             </div>

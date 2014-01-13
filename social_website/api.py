@@ -1,15 +1,17 @@
-import datetime
+from functools import partial
 
-from tastypie.resources import ModelResource
-from tastypie import fields
-from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoLike
-from functools import partial
-from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from tastypie.exceptions import ImmediateHttpResponse
+from django.contrib.auth.models import User
 from django.http import HttpResponse
-from functools import partial
+
+from tastypie import fields
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.authentication import BasicAuthentication, Authentication
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.exceptions import ImmediateHttpResponse
+from tastypie.resources import ModelResource
+
+from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, VideoLike
+
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -141,7 +143,7 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
 
 class UserResource(ModelResource):
     class Meta:
-        queryset = UserProfile.objects.all()
+        queryset = User.objects.all()
         resource_name = 'user'
 
 class VideoLikeResource(ModelResource):
