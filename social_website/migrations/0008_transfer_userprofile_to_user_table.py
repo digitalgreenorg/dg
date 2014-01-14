@@ -18,10 +18,10 @@ class Migration(DataMigration):
                                                        last_login=userprofile.last_login, date_joined=userprofile.date_joined)
                 user_obj.save()
 
-
-                for social_auth_obj in orm['default.UserSocialAuth'].objects.filter(user_id=userprofile.id):
-                    social_auth_obj.user_id = user_obj.id
-                    social_auth_obj.save()
+                social_auth_objects = orm['default.UserSocialAuth'].objects.filter(user_id=userprofile.id)
+                social_auth_obj = social_auth_objects[len(social_auth_objects)-1]
+                social_auth_obj.user_id = user_obj.id
+                social_auth_obj.save()
     
                 for videolike_obj in orm['social_website.VideoLike'].objects.filter(user_id=userprofile.id):
                     videolike_obj.user_id = user_obj.id
@@ -30,7 +30,8 @@ class Migration(DataMigration):
                 for comment_obj in orm['social_website.Comment'].objects.filter(user_id=userprofile.id):
                     comment_obj.user_id = user_obj.id
                     comment_obj.save()
-            except :
+            except Exception, e:
+                print e
                 print userprofile.username
 
     def backwards(self, orm):
