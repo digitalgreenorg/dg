@@ -17,11 +17,12 @@ import website_archive_urls
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
+admin.site.login_template = 'login.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
-
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     (r'^social/', include(social_website.api_urls)),
     (r'^bmgf/', include(feeds.urls)),
     (r'^archive/', include(website_archive_urls)),
