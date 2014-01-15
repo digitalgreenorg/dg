@@ -30,4 +30,5 @@ def html_placeholder(field, args=None):
     if args == None:
         return field
     field.field.widget.attrs.update({"placeholder": args})
+    field.field.widget.attrs.update({"class": 'auth'})
     return field
