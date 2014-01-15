@@ -87,16 +87,11 @@
                             {% load app_tags %}
                             <form method="post" action="/login/">
                                 {% csrf_token %}
-                                <div class="inp-auth comment-bd inp-text">
-                                {% if form.errors %}{{ form.username.errors }}{% endif %}
-                                    {{ form.username.label_tag }}
-                                    {{ form.username|placeholder:form.username.label }}
-                                </div>
-                                <div class="inp-auth comment-bd inp-text">
-                                {% if form.errors %}{{ form.password.errors }}{% endif %}    
-                                    {{ form.password.label_tag }}
-                                    {{ form.password|placeholder:form.password.label }}
-                                  
+                                <div class="auth">
+                                    {% if form.errors %}{{ form.username.errors }}{% endif %}
+                                    {{ form.username|placeholder:form.username.label }}<br>
+                                    {% if form.errors %}{{ form.password.errors }}{% endif %}
+                                    {{ form.password|placeholder:form.password.label }}<br>
                                 </div>
                                     <input type="submit" value="Login" class="btn btn-large btn-primary" />
                                 {% if next %}

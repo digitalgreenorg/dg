@@ -3202,3 +3202,15 @@ body {
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
     font-size: 14px;
 }
+
+.auth{
+    height: 30px;
+    width: 170px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.auth::-webkit-input-placeholder {
+   font-size: 14px;
+   font-weight: bold;
+}
