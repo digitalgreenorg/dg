@@ -1,23 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head></head>
-    <body>
-                
-                    <form method="post" action="/login/">
-                    {% csrf_token %}
-                    	{{ form.username.label_tag }}
-                    	{{ form.username }}
-                    	{{ form.password.label_tag }}
-                    	{{ form.password }}
-                    	<input type="submit" value="Login" class="btn btn-large btn-primary" />
-                    {% if next %}
-                    	<input type="hidden" name="next" value="{{next}}" />
-                    {% else %}
-                    	<input type="hidden" name="next" value="/" />
-                    {% endif %}
-                    </form>
-                    
-                    <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook">Facebook</a>
-                    <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus">Google</a>
+    <head>
+        <meta property="og:image" content="http://www.digitalgreen.org/media/social_website/content/dg_transition.png"/>
+        <meta property="og:title" content="Digital Green"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="DigitalGreen"/>
+        <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
+        <meta property="fb:app_id" content="149405231925556" />
+        <!-- META DATA -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="MSSmartTagsPreventParsing" content="true" />
+        <meta http-equiv="imagetoolbar" content="no" />
+        <!--[if IE]><meta http-equiv="cleartype" content="on" /><![endif]-->
+
+        <!-- SEO -->
+        <title>Digital Green</title>
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+
+        <!-- HTML5 SHIV -->
+        <!--[if lt IE 9]><script type="text/javascript" src="{{STATIC_URL}}assets/scripts/html5shiv.js"></script><![endif]-->
+
+        <!-- ICONS -->
+        <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
+
+        <!-- STYLESHEETS -->
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
+        <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
+        <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
+        <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
+        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
+    </head>
+    <!--
+        =======================
+        | Implementation Note |
+        =======================
+
+        The body needs to have this "data-controller" attribute 
+        on it to control which JS controller is loaded.
+
+        Current list includes:
+            Home
+            About
+            Collections
+            ViewCollections
+            Profile
+    -->
+    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
+        <!-- Begin Main Wrapper -->
+        <div class="wrapper-main wrapper">
+            <div class="header-fixed">
+                <div class="header-wrapper clearfix">
+                    <header class="global-nav">
+                        <a class="skip-to-content" href="#main">Skip to content</a>
+                        <div class="wrapper">
+                            <nav class="inner-nav" role="navigation">
+                                <ul class="nav">
+                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
+                                    <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                                </ul>
+                            </nav> <!-- End .inner-nav -->
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>
+            </div>
+            <div class="header-margin"></div>
+        
+            <section class="about-bg about-bg-white"">
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md" style="font-weight:bold;">Sign In</h2>
+                        <div class="media layout-vr-xlg">
+                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook nav-size comment-bd"><img class="social-icon-small icon-fb-small">Facebook</a><br>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus nav-size comment-bd"><img class="social-icon-small icon-gp-small">Google</a>
+                            <p>OR</p>
+                            <form method="post" action="/login/">
+                                {% csrf_token %}
+                                <div class="inp-auth comment-bd inp-text">
+                                    {{ form.username.label_tag }}
+                                    {{ form.username }}
+                                </div>
+                                <div class="inp-auth comment-bd inp-text">    
+                                    {{ form.password.label_tag }}
+                                    {{ form.password }}
+                                  
+                                </div>
+                                    <input type="submit" value="Login" class="btn btn-large btn-primary" />
+                                {% if next %}
+                                    <input type="hidden" name="next" value="{{next}}" />
+                                {% else %}
+                                    <input type="hidden" name="next" value="/" />
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div> <!-- End .inner-wrapper -->
+                </div> <!-- End .wrapper -->
+            </section>
+        </div> <!-- End main wrapper-->
     </body>
-</html>

@@ -3165,3 +3165,40 @@ body {
 .ele-hide{
 	display: none;
 }
+
+
+/************** login ***************/
+.social-icon-small {
+    text-indent: -9999px;
+    display: inline;
+    height: 23px;
+    width: 23px;
+    margin: 0 auto;
+    margin-bottom: -5px;
+}
+
+.icon-fb-small {
+    background: url(../images/fbicon-small.png);
+}
+
+.icon-gp-small {
+    background: url(../images/gicon-small.png);
+}
+
+.no-border{
+    border-style: none;
+}
+
+.inp-auth{
+    height: 30px;
+    width: 170px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.inp-text{
+    text-transform: uppercase;
+    color: #047d0a;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+    font-size: 14px;
+}
