@@ -77,15 +77,16 @@
                             <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook nav-size comment-bd"><img class="social-icon-small icon-fb-small">Facebook</a><br>
                             <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus nav-size comment-bd"><img class="social-icon-small icon-gp-small">Google</a>
                             <p>OR</p>
+                            {% load app_tags %}
                             <form method="post" action="/login/">
                                 {% csrf_token %}
                                 <div class="inp-auth comment-bd inp-text">
                                     {{ form.username.label_tag }}
-                                    {{ form.username }}
+                                    {{ form.username|placeholder:form.username.label }}
                                 </div>
                                 <div class="inp-auth comment-bd inp-text">    
                                     {{ form.password.label_tag }}
-                                    {{ form.password }}
+                                    {{ form.password|placeholder:form.password.label }}
                                   
                                 </div>
                                     <input type="submit" value="Login" class="btn btn-large btn-primary" />
