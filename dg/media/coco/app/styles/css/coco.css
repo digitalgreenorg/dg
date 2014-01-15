@@ -175,10 +175,3 @@ h1 small{
 	  }
 }
 
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
-}
