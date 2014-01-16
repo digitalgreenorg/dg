@@ -3230,3 +3230,23 @@ body {
 .mrg-lt-650 {
     margin-left: 650px;
 }
+
+.section-ht {
+    height: 550px;
+}
+
+.signin-box {
+    height: 455px;
+    width: 200px;
+    background-color: rgba(0,0,0,0.1);
+    padding-left: 20px;
+}
+
+.login-bg{
+    background: url(https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-prn2/1467398_10152029744445219_1481307205_n.jpg) no-repeat;
+    background-size: 1024px 650px;
+}
+
+.err-bck {
+    background-color: rgba(0,0,0,0.6);
+}
