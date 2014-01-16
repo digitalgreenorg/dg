@@ -3174,7 +3174,6 @@ body {
     height: 23px;
     width: 23px;
     margin: 0 auto;
-    margin-bottom: -5px;
 }
 
 .icon-fb-small {
@@ -3187,13 +3186,6 @@ body {
 
 .no-border{
     border-style: none;
-}
-
-.inp-auth{
-    height: 30px;
-    width: 170px;
-    border-radius: 5px;
-    margin-top: 10px;
 }
 
 .inp-text{
@@ -3220,5 +3212,21 @@ body {
 }
 
 .login-margin{
-    margin-top: 100px;
+    margin-top: 130px;
+}
+
+.hdg-red {
+    color: #DF0101;
+}
+
+.mrg-top10 {
+    margin-top: 10px;
+}
+
+.mrg-btm-5 {
+    margin-bottom: -5px;
+}
+
+.mrg-lt-650 {
+    margin-left: 650px;
 }

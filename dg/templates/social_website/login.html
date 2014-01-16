@@ -61,6 +61,7 @@
                                 <ul class="nav">
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                                    <li class="copy copy-dk hdg-upper nav-small grid-rt mrg-lt-650"><a href="">Create an account</a></li>
                                 </ul>
                             </nav> <!-- End .inner-nav -->
                         </div>  <!-- End .wrapper -->
@@ -69,31 +70,32 @@
             </div>
             <div class="header-margin"></div>
         
-            <section class="about-bg about-bg-white"">
+            <section class="about-bg about-bg-white" style="margin-left: 356px;">
                 <div class="wrapper">
                     <div class="inner-wrapper">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md" style="font-weight:bold;">Sign In</h2>
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md hdg-bold">Sign In</h2>
                         <div class="media layout-vr-xlg">
-                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd"><img class="social-icon-small icon-fb-small"> Facebook</a><br>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd"><img class="social-icon-small icon-gp-small"> Google</a>
+                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd"><img class="social-icon-small icon-fb-small mrg-btm-5"> Facebook</a><br>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd"><img class="social-icon-small icon-gp-small mrg-btm-5"> Google</a>
                             <p class="hdg-e hdg-lt">OR</p>
                             
-                            {% if form.errors %}
-                                {% for error in form.non_field_errors %}
-                                    {{error}}
-                                {% endfor %}
-                            {% endif %}
-
+                                {% if form.errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <p class="hdg-source-reg hdg-red mrg-top10 mrg-btm-5"> Username and Password do not match </p>
+                                    {% endfor %}
+                                {% endif %}
+                            
                             {% load app_tags %}
                             <form method="post" action="/login/">
                                 {% csrf_token %}
-                                <div class="auth">
+                                <div class="auth hdg-source-reg hdg-red">
                                     {{ form.username|placeholder:form.username.label }}
                                     {% if form.errors %}{{ form.username.errors }}{% endif %}
                                     {{ form.password|placeholder:form.password.label }}
-                                    {% if form.errors %}{{ form.password.errors }}{% endif %}<br>
+                                    {% if form.errors %}{{ form.password.errors }}{% endif %}
+                                    <a href="">Forgot your password?</a>
                                 </div>
-                                    <input type="submit" value="Login" class="btn btn-large btn-primary login-margin" />
+                                <input type="submit" value="Login" class="btn btn-large btn-primary login-margin" />
                                 {% if next %}
                                     <input type="hidden" name="next" value="{{next}}" />
                                 {% else %}
