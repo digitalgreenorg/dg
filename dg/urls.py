@@ -10,15 +10,16 @@ from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
+from admin import admin
 from website_admin import website_admin
 import website_archive_urls
 
 
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
-admin.site.login_template = 'social_website/login.html'
-admin.site.logout_template = 'social_website/home.html'
+#from django.contrib import admin
+#admin.autodiscover()
+admin.login_template = 'social_website/login.html'
+admin.logout_template = 'social_website/home.html'
 website_admin.login_template = 'social_website/login.html'
 website_admin.logout_template = 'social_website/home.html'
 
@@ -33,7 +34,7 @@ urlpatterns = patterns('',
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
-    (r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
     
     (r'^coco/', include(coco.urls)),

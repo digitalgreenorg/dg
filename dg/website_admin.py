@@ -5,8 +5,11 @@ from human_resources.admin import GeographyAdmin, JobAdmin, MemberAdmin, PlaceAd
 from human_resources.models import Geography, Job, Member, Place
 from social_website.admin import Activity, ActivityAdmin, Collection, CollectionAdmin, FeaturedCollection, FeaturedCollectionAdmin, Partner, PartnerAdmin
 
+
 class WebsiteAdmin(AdminSite):
-    pass
+
+    def has_permission(self, request):
+        return request.user.is_active
 
 website_admin = WebsiteAdmin(name="admin_website")
 
