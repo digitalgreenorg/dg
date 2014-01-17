@@ -31,3 +31,11 @@
 ul{
     list-style-type: none;
 }
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
