@@ -9005,10 +9005,20 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 if (member == "misc") continue;
                 var listing = true;
                 var add = true;
+                var enable_months;
                 // check entity's config for whether to show list/add links for this entity
                 if (configs[member].dashboard_display) {
                     listing = configs[member].dashboard_display.listing;
                     add = configs[member].dashboard_display.add;
+                    enable_months = configs[member].dashboard_display.enable_months;
+                }
+                if(typeof enable_months != 'undefined'){
+                	var d = new Date();
+                    n = d.getMonth() + 1;
+                    res = $.inArray(n, enable_months);
+                    if(res === -1){
+                    	add = false;
+                    }
                 }
                 if (listing || add) {
                     if (listing) $('#dashboard_items')
@@ -10276,27 +10286,83 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
             });
         },
         list: function(entity_name) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_list_view(entity_name);
-            });
+        	//Check if entity present in url is valid or not and if list view of that entity is enable in case it is valid
+        	if(this.entity_valid(entity_name) && this.entity_list_enabled(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_list_view(entity_name);
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
         },
         add: function(entity_name) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_add_edit_view(entity_name, null);
-            });
+        	//Check if entity present in url is valid or not and if add view of that entity is enable in case it is valid
+        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view(entity_name, null);
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
+            
         },
         edit: function(entity_name, id) {
-            this.check_login_wrapper()
-                .done(function() {
-                AppLayout.render_add_edit_view(entity_name, parseInt(id));
-            });
+        	//Check if entity present in url is valid or not and if edit view of that entity is enable in case it is valid
+        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
+        		this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view(entity_name, parseInt(id));
+                });
+        	}
+        	else{
+        		alert("You are not authorized to view this page. Please contact your administrator.");
+        	}
         },
         login: function() {
             AppLayout.render_login();
         },
-
+        //Check if user entered wrong entity name in url.
+        entity_valid: function(entity_name){
+        	if(typeof configs[entity_name] == 'undefined'){
+        		return false;
+        	}
+        	else{
+        		return true;
+        	}
+        },
+        //Check if list view was allowed in configs so that user may not directly enter the url and access table
+        entity_list_enabled: function(entity_name){
+            var listing = true;
+            if(configs[entity_name].dashboard_display)
+            {
+            	listing = configs[entity_name].dashboard_display.listing;
+            }
+            return listing;
+        },
+      //Check if add view was allowed in configs so that user may not directly enter the url and access form
+        entity_add_enabled: function(entity_name){
+            var add = true;
+            var enable_months;
+            if(configs[entity_name].dashboard_display)
+            {
+                add = configs[entity_name].dashboard_display.add;
+                enable_months = configs[entity_name].dashboard_display.enable_months;
+            }
+            if(typeof enable_months != 'undefined'){
+            	var d = new Date();
+                n = d.getMonth();
+                n=n+1;
+                res=$.inArray(n, enable_months);
+                if(res === -1){
+                	add=false;
+                }
+            }
+            return add;
+        },
         //check_login wrapper for checking whether user is logged in before routing to any of the above defined routes 
         check_login_wrapper: function() {
             var dfd = new $.Deferred();
