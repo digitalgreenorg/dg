@@ -8041,7 +8041,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 if (member == "misc") continue;
                 var listing = true;
                 var add = true;
-                var enable_months = [];
+                var enable_months;
                 // check entity's config for whether to show list/add links for this entity
                 if (configs[member].dashboard_display) {
                     listing = configs[member].dashboard_display.listing;
@@ -9759,7 +9759,6 @@ require.config({
         'jquery_cookie': 'libs/jquery.cookie',
         'tabletools': 'libs/tabletools_media/js/Tabletools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
-        //'configs': '../../../configs',
     },
 
     //specifying dependencies of non-amd libraries
