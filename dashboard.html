@@ -9,7 +9,6 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
 	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
-	<!-- LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.min3.css" -->
 	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen/chosen.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
@@ -19,6 +18,14 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/nrlm.css">
     
     <SCRIPT DATA-MAIN="/media/coco/dist/scripts/main" SRC="/media/coco/app/scripts/libs/require.js"></SCRIPT>
+    <script type="text/javascript">
+	  require.config({
+	    paths: {
+	        "configs": "/media/configs"
+	    },
+	  });
+	</script>
+    
 	<META NAME="robots" CONTENT="NONE,NOARCHIVE">
 	<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
 
