@@ -17,7 +17,13 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
     <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
-	
+    <script type="text/javascript">
+	  require.config({
+	    paths: {
+	        "configs": "/media/configs"
+	    },
+	  });
+	</script>	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
