@@ -8642,7 +8642,7 @@ define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_co
                 .dataTable({
             		"sDom": 'T<"clear">lfrtip',
             		"oTableTools": {
-            				"sSwfPath": "../media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+            				"sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
             				"aButtons": [
             				             	{
 											    "sExtends":    "copy",
