@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 .dataTable({
             		"sDom": 'T<"clear">lfrtip',
             		"oTableTools": {
-            				"sSwfPath": "../media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+            				"sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
             				"aButtons": [
             				             	{
 											    "sExtends":    "copy",
