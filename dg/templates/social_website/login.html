@@ -53,7 +53,7 @@
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
             <div class="header-fixed">
-                <div class="header-wrapper clearfix">
+                <div class="clearfix">
                     <header class="global-nav">
                         <a class="skip-to-content" href="#main">Skip to content</a>
                         <div class="wrapper">
@@ -69,33 +69,36 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-        
-            <section class="about-bg about-bg-white" style="margin-left: 356px;">
+            <!-- <div class="about-bg grid-size2of3 grid-lt section-ht">
+            
+            </div> -->
+            <section class="about-bg about-bg-white login-bg section-ht">
                 <div class="wrapper">
                     <div class="inner-wrapper">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md hdg-bold">Sign In</h2>
+                    <div class="signin-box">
+                        <h2 class="hdg-a hdg-white layout-vr-md">Sign In</h2>
                         <div class="media layout-vr-xlg">
-                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd"><img class="social-icon-small icon-fb-small mrg-btm-5"> Facebook</a><br>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd"><img class="social-icon-small icon-gp-small mrg-btm-5"> Google</a>
-                            <p class="hdg-e hdg-lt">OR</p>
+                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd">Facebook</a><br>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd">Google</a>
+                            <p class="hdg-e hdg-lt hdg-white key">OR</p>
                             
                                 {% if form.errors %}
                                     {% for error in form.non_field_errors %}
-                                        <p class="hdg-source-reg hdg-red mrg-top10 mrg-btm-5"> Username and Password do not match </p>
+                                        <p class="hdg-source-reg hdg-white mrg-top10 mrg-btm-5 err-box"> Incorrect Username and Password</p>
                                     {% endfor %}
                                 {% endif %}
                             
                             {% load app_tags %}
                             <form method="post" action="/login/">
                                 {% csrf_token %}
-                                <div class="auth hdg-source-reg hdg-red">
+                                <div class="auth hdg-source-reg hdg-white">
                                     {{ form.username|placeholder:form.username.label }}
-                                    {% if form.errors %}{{ form.username.errors }}{% endif %}
+                                    {% if form.errors %}<div class="err-box">{{ form.username.errors }}</div>{% endif %}
                                     {{ form.password|placeholder:form.password.label }}
-                                    {% if form.errors %}{{ form.password.errors }}{% endif %}
-                                    <a href="">Forgot your password?</a>
+                                    {% if form.errors %}<div class="err-box">{{ form.password.errors }}</div>{% endif %}
+                                    <a href="" class="hdg-white">Forgot your password?</a>
                                 </div>
-                                <input type="submit" value="Login" class="btn btn-large btn-primary login-margin" />
+                                <input type="submit" value="Login" class="comment-btn login-margin" />
                                 {% if next %}
                                     <input type="hidden" name="next" value="{{next}}" />
                                 {% else %}
@@ -103,8 +106,10 @@
                                 {% endif %}
                             </form>
                         </div>
+                    </div>
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
             </section>
         </div> <!-- End main wrapper-->
     </body>
+</html>
