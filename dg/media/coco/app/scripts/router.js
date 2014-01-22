@@ -77,7 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         },
         //Check if list view was allowed in configs so that user may not directly enter the url and access table
         entity_list_enabled: function(entity_name){
-            var listing = false;
+            var listing = true;
             if(configs[entity_name].dashboard_display)
             {
             	listing = configs[entity_name].dashboard_display.listing;
@@ -87,7 +87,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
       //Check if add view was allowed in configs so that user may not directly enter the url and access form
         entity_add_enabled: function(entity_name){
             var add = true;
-            var enable_months = [];
+            var enable_months;
             if(configs[entity_name].dashboard_display)
             {
                 add = configs[entity_name].dashboard_display.add;
