@@ -3225,12 +3225,12 @@ body {
     margin-bottom: -5px;
 }
 
-.mrg-lt-650 {
-    margin-left: 650px;
+.mrg-lt-su {
+    margin-left: 60%;
 }
 
-.section-ht {
-    height: 550px;
+.section-dim {
+    height: 528px;
 }
 
 .signin-box {
@@ -3251,4 +3251,87 @@ body {
     border-color:red;
     border-width: 1px;
     width: 173px;
+}
+
+@media(max-width: 480px) {
+    
+    .wrapper {
+        width: 480px;
+    }
+    
+    .signin-box {
+        height: 430px;
+        margin-left: 15%;
+        margin-top: -40px;
+    }
+    
+    .login-bg{
+        background-size: 767px;
+    }
+    
+    .mrg-lt-su{
+        margin-left: 10%;
+    }
+   
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    
+    .wrapper {
+        width: 767px;
+    }
+    
+    .signin-box {
+        height: 430px;
+        margin-left: 30%;
+        margin-top: -40px;
+    }
+    
+    .login-bg{
+        background-size: 767px;
+    }
+    
+    .mrg-lt-su{
+        margin-left: 45%;
+    }
+   
+    .section-dim {
+        height: 400px;
+    }
+    
+    .footer-btn{
+        margin-right: 70px;
+    }
+    
+    .footer {
+        margin-top: -5px;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    
+    .signin-box {
+        margin-left: 35%;
+    }
+    
+    .login-bg {
+        background-size: 992px;
+    }
+    
+    .mrg-lt-su {
+        margin-left: 55%;
+    }
+    
+    .footer-btn {
+        margin-right: 100px;
+    }
+    
+    .wrapper {
+        width: 992px;
+    }
+    
+    .footer {
+        margin-top: -2px;
+    }
 }

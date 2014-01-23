@@ -18,6 +18,7 @@
         <title>Digital Green</title>
         <meta name="description" content="" />
         <meta name="author" content="" />
+        <meta name=”viewport” content=”width=device-width, initial-scale=1, maximum-scale=1″>
 
         <!-- HTML5 SHIV -->
         <!--[if lt IE 9]><script type="text/javascript" src="{{STATIC_URL}}assets/scripts/html5shiv.js"></script><![endif]-->
@@ -61,7 +62,7 @@
                                 <ul class="nav">
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
-                                    <li class="copy copy-dk hdg-upper nav-small grid-rt mrg-lt-650"><a href="">Create an account</a></li>
+                                    <li class="copy copy-dk hdg-upper nav-small grid-rt mrg-lt-su"><a href="">Create an account</a></li>
                                 </ul>
                             </nav> <!-- End .inner-nav -->
                         </div>  <!-- End .wrapper -->
@@ -72,7 +73,7 @@
             <!-- <div class="about-bg grid-size2of3 grid-lt section-ht">
             
             </div> -->
-            <section class="about-bg about-bg-white login-bg section-ht">
+            <section class="about-bg about-bg-white login-bg section-dim">
                 <div class="wrapper">
                     <div class="inner-wrapper">
                     <div class="signin-box">
@@ -109,7 +110,31 @@
                     </div>
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
-            </section>
+            </section>   
+            <footer>
+                <div class="footer" role="contentinfo">
+                    <div class="wrapper">
+                        <div class="inner-wrapper">
+                            <nav role="navigation">
+                                <ul class="copy-lt hdg-upper copy footer-links">
+                                    <li><a href="{% url 'career' %}">Careers</a></li>
+                                    <li><a href="{% url 'press' %}">Press</a></li>
+                                    <li><a href="{% url 'donate' %}">Donate</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                </ul>
+                            </nav>
+                            <a class="footer-btn" href="/coco/v2" target="_blank">Coco</a>
+                        </div>
+                    </div> <!-- End .inner-wrapper -->
+                </div>  <!-- End .wrapper -->
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <div class="copyright copy">
+                            <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a>
+                        </div>
+                    </div>
+                </div>  <!-- End .wrapper -->
+            </footer>
         </div> <!-- End main wrapper-->
-    </body>
+   </body>
 </html>
