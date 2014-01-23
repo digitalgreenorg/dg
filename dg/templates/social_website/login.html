@@ -62,7 +62,6 @@
                                 <ul class="nav">
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
-                                    <li class="copy copy-dk hdg-upper nav-small grid-rt mrg-lt-su"><a href="">Create an account</a></li>
                                 </ul>
                             </nav> <!-- End .inner-nav -->
                         </div>  <!-- End .wrapper -->
@@ -77,7 +76,7 @@
                 <div class="wrapper">
                     <div class="inner-wrapper">
                     <div class="signin-box">
-                        <h2 class="hdg-a hdg-white layout-vr-md">Sign In</h2>
+                        <h2 class="hdg-a hdg-white layout-vr-md">Sign In<span class="hdg-f mrg-lt-20">Sign Up</span></h2>
                         <div class="media layout-vr-xlg">
                             <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd">Facebook</a><br>
                             <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd">Google</a>
@@ -99,7 +98,7 @@
                                     {% if form.errors %}<div class="err-box">{{ form.password.errors }}</div>{% endif %}
                                     <a href="" class="hdg-white">Forgot your password?</a>
                                 </div>
-                                <input type="submit" value="Login" class="comment-btn login-margin" />
+                                <input type="submit" value="Sign In" class="comment-btn login-margin" />
                                 {% if next %}
                                     <input type="hidden" name="next" value="{{next}}" />
                                 {% else %}
