@@ -4,10 +4,14 @@ import json
 import urllib2
 
 from django.contrib.auth import logout
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.response import TemplateResponse
+from django.views.decorators.csrf import csrf_protect
 
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
@@ -193,3 +197,32 @@ def logout_view(request):
     next_url = request.GET.get('next', None)
     logout(request)
     return HttpResponseRedirect(next_url)
+
+
+@csrf_protect
+def signup_view(request, template_name='social_website/signup.html',
+                redirect_field_name=REDIRECT_FIELD_NAME,
+                signup_form=UserCreationForm,
+                current_app=None, extra_context=None):
+
+    redirect_to = request.REQUEST.get(redirect_field_name, '')
+
+    if request.method == "POST":
+        form = signup_form(data=request.POST)
+        if form.is_valid():
+            a = form.save()
+            a.email = a.username
+            a.save()
+            return HttpResponseRedirect(redirect_to)
+    else:
+        form = signup_form(None)
+
+    context = {
+        'form': form,
+    }
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context,
+                            current_app=current_app)
