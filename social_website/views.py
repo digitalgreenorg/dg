@@ -198,7 +198,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(next_url)
 
-
+from django.contrib.auth import authenticate, login
 @csrf_protect
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,
@@ -213,6 +213,10 @@ def signup_view(request, template_name='social_website/signup.html',
             a = form.save()
             a.email = a.username
             a.save()
+            
+            new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+            login(request, new_user)
+            
             return HttpResponseRedirect(redirect_to)
     else:
         form = signup_form(None)
