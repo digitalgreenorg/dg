@@ -3252,7 +3252,7 @@ body {
 
 @media(max-width: 480px) {
     
-    .wrapper {
+    .wrapper-res {
         width: 480px;
     }
     
@@ -3278,7 +3278,7 @@ body {
 
 @media (min-width: 481px) and (max-width: 767px) {
     
-    .wrapper {
+    .wrapper-res {
         width: 767px;
     }
     
@@ -3316,7 +3316,7 @@ body {
         margin-right: 500px;
     }
     
-    .wrapper {
+    .wrapper-res {
         width: 992px;
     }
 }
