@@ -7875,7 +7875,7 @@ define('views/incremental_download',[
                             })
                             .fail(function(error) {
                                 console.log("INCD: Failed convertnamespace..not saving ");
-								dfd.reject(error);
+                                dfd.reject(error);
                             });
                     })
                     .fail(function(response) {
