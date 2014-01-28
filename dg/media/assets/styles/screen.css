@@ -3161,32 +3161,6 @@ body {
 
 
 /************** login ***************/
-.social-icon-small {
-    text-indent: -9999px;
-    display: inline;
-    height: 23px;
-    width: 23px;
-    margin: 0 auto;
-}
-
-.icon-fb-small {
-    background: url(../images/fbicon-small.png);
-}
-
-.icon-gp-small {
-    background: url(../images/gicon-small.png);
-}
-
-.no-border{
-    border-style: none;
-}
-
-.inp-text{
-    text-transform: uppercase;
-    color: #047d0a;
-    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
-    font-size: 14px;
-}
 
 .auth{
     height: 30px;
@@ -3201,13 +3175,21 @@ body {
 }
 
 .social-width{
-    width: 137px;
+    width: 175px;
 }
 
-.login-margin{
-    margin-top: 130px;
+.social-width-fb {
+    width: 177px;
+}
+
+.signin-btn{
+    margin-top: 140px;
     margin-left: 37px;
     width: 100px;
+}
+
+.mrg-top20 {
+    margin-top: 20px;
 }
 
 .mrg-top10 {
@@ -3223,15 +3205,15 @@ body {
 }
 
 .signin-box {
-    height: 455px;
+    height: 580px;
     width: 200px;
     background-color: rgba(0,0,0,0.3);
     padding-left: 20px;
-    margin-left: 700px;
+    margin-left: 764px;
+    margin-top: -50px;
 }
 
 .login-bg{
-    background: url(https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-prn2/t1/1546170_10152118684550219_1408199878_n.jpg) no-repeat;
     background-size: 1024px 650px;
 }
 
@@ -3264,10 +3246,6 @@ body {
     
     .login-bg{
         background-size: 767px;
-    }
-    
-    .section-dim {
-        height: 
     }
     
     .section-dim {

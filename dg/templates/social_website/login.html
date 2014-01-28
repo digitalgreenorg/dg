@@ -20,9 +20,6 @@
         <meta name="author" content="" />
         <meta name=”viewport” content=”width=device-width, initial-scale=1, maximum-scale=1″>
 
-        <!-- HTML5 SHIV -->
-        <!--[if lt IE 9]><script type="text/javascript" src="{{STATIC_URL}}assets/scripts/html5shiv.js"></script><![endif]-->
-
         <!-- ICONS -->
         <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
 
@@ -30,26 +27,17 @@
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
         <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
-        <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
-        <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
-        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
+        
+        <!-- JavaScript -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript"> 
+            $(document).ready(function() {
+                var images = ['image0.jpg','image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg'];
+                $('.login-bg').css({'background': 'url(../media/social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ') no-repeat'});
+            });
+        </script>
     </head>
-    <!--
-        =======================
-        | Implementation Note |
-        =======================
-
-        The body needs to have this "data-controller" attribute 
-        on it to control which JS controller is loaded.
-
-        Current list includes:
-            Home
-            About
-            Collections
-            ViewCollections
-            Profile
-    -->
-    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
+    
     <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper wrapper-res">
@@ -60,7 +48,6 @@
                         <div class="wrapper wrapper-res">
                             <nav class="inner-nav" role="navigation">
                                 <ul class="nav">
-                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
                                 </ul>
                             </nav> <!-- End .inner-nav -->
@@ -69,44 +56,42 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-            <!-- <div class="about-bg grid-size2of3 grid-lt section-ht">
             
-            </div> -->
             <section class="about-bg about-bg-white login-bg section-dim">
                 <div class="wrapper wrapper-res">
                     <div class="inner-wrapper">
-                    <div class="signin-box">
-                        <h2 class="hdg-a hdg-white layout-vr-md">Sign In<span class="hdg-f mrg-lt-20">Sign Up</span></h2>
-                        <div class="media layout-vr-xlg">
-                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd">Facebook</a><br>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd">Google</a>
-                            <p class="hdg-e hdg-lt hdg-white key">OR</p>
-                            
-                                {% if form.errors %}
-                                    {% for error in form.non_field_errors %}
-                                        <p class="hdg-source-reg hdg-white mrg-top10 mrg-btm-5 err-box"> Incorrect Username and Password</p>
-                                    {% endfor %}
-                                {% endif %}
-                            
-                            {% load app_tags %}
-                            <form method="post" action="/login/">
-                                {% csrf_token %}
-                                <div class="auth hdg-source-reg hdg-white">
-                                    {{ form.username|placeholder:form.username.label }}
-                                    {% if form.errors %}<div class="err-box">{{ form.username.errors }}</div>{% endif %}
-                                    {{ form.password|placeholder:form.password.label }}
-                                    {% if form.errors %}<div class="err-box">{{ form.password.errors }}</div>{% endif %}
-                                    <a href="" class="hdg-white">Forgot your password?</a>
-                                </div>
-                                <input type="submit" value="Sign In" class="comment-btn login-margin" />
-                                {% if next %}
-                                    <input type="hidden" name="next" value="{{next}}" />
-                                {% else %}
-                                    <input type="hidden" name="next" value="/" />
-                                {% endif %}
-                            </form>
+                        <div class="signin-box">
+                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f mrg-lt-20">Sign Up</span></h2>
+                            <div class="media layout-vr-xlg">
+                                <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><img src="../media/social_website/content/fb_signin.png" class ="social-width-fb mrg-top20"alt="Facebook"></a><br>
+                                <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}"><img src="../media/social_website/content/google_signin.png" class="social-width" alt="Google"></a>
+                                <p class="hdg-e hdg-lt hdg-white key mrg-top20">OR</p>
+                                
+                                    {% if form.errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <p class="hdg-source-reg hdg-white mrg-top10 mrg-btm-5 err-box"> Incorrect Username and Password</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                
+                                {% load app_tags %}
+                                <form method="post" action="/login/" class="mrg-top20">
+                                    {% csrf_token %}
+                                    <div class="auth hdg-source-reg hdg-white">
+                                        {{ form.username|placeholder:form.username.label }}
+                                        {% if form.errors %}<div class="err-box">{{ form.username.errors }}</div>{% endif %}
+                                        {{ form.password|placeholder:form.password.label }}
+                                        {% if form.errors %}<div class="err-box">{{ form.password.errors }}</div>{% endif %}
+                                        <a href="" class="hdg-white">Forgot your password?</a>
+                                    </div>
+                                    <input type="submit" value="Sign In" class="comment-btn signin-btn"/>
+                                    {% if next %}
+                                        <input type="hidden" name="next" value="{{next}}" />
+                                    {% else %}
+                                        <input type="hidden" name="next" value="/" />
+                                    {% endif %}
+                                </form>
+                            </div>
                         </div>
-                    </div>
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
             </section>   
