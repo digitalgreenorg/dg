@@ -3164,7 +3164,7 @@ body {
 
 .auth{
     height: 30px;
-    width: 170px;
+    width: 160px;
     border-radius: 5px;
     margin-top: 10px;
 }
@@ -3172,6 +3172,7 @@ body {
 .auth::-webkit-input-placeholder {
    font-size: 14px;
    font-weight: bold;
+   padding-left: 10px;
 }
 
 .social-width{
@@ -3251,6 +3252,10 @@ body {
     .section-dim {
         height: 400px;
     }
+    
+    .mrg-top20 {
+        margin-top: 0px;
+    }
    
 }
 
@@ -3276,6 +3281,10 @@ body {
     
     .footer-btn{
         margin-right: 250px;
+    }
+    
+    .mrg-top20 {
+        margin-top: 0px;
     }
     
 }
