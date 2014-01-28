@@ -135,11 +135,11 @@ class ScreeningAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                                settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/screening_page.js",
-                #settings.ADMIN_MEDIA_PREFIX + "js/dynamicinline.js",
+                settings.STATIC_URL + "js/jquery-1.3.2.min.js",
+                                settings.STATIC_URL + "js/ui/ui.core.js",
+                settings.STATIC_URL + "js/ui/ui.sortable.js",
+                settings.STATIC_URL + "js/screening_page.js",
+                #settings.STATIC_URL + "js/dynamicinline.js",
 
         )
 
@@ -249,8 +249,8 @@ class VideoAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/video_filter.js",
+                settings.STATIC_URL + "js/jquery-1.3.2.min.js",
+                settings.STATIC_URL + "js/video_filter.js",
         )
 
 
@@ -290,11 +290,11 @@ class PersonGroupsForm(forms.ModelForm):
 
     class Media:
         js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/filter_village.js",
-                #settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                #settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
-                #settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
-                #settings.ADMIN_MEDIA_PREFIX + "js/dynamic_inlines_with_sort.js",
+                settings.STATIC_URL + "js/filter_village.js",
+                #settings.STATIC_URL + "js/jquery-1.3.2.min.js",
+                #settings.STATIC_URL + "js/ui/ui.core.js",
+                #settings.STATIC_URL + "js/ui/ui.sortable.js",
+                #settings.STATIC_URL + "js/dynamic_inlines_with_sort.js",
         )
 
         #css = {
@@ -412,8 +412,8 @@ class PersonAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/person_filter.js",
+                settings.STATIC_URL + "js/jquery-1.3.2.min.js",
+                settings.STATIC_URL + "js/person_filter.js",
         )
 
 
@@ -506,7 +506,7 @@ class TrainingAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
+                settings.STATIC_URL + "js/jquery-1.3.2.min.js",
         )
 
 class EquipmentAdmin(admin.ModelAdmin):
