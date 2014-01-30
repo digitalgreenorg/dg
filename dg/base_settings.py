@@ -55,6 +55,8 @@ STATICFILES_DIRS = (
    os.path.join(PROJECT_PATH, 'media'),                 
 )
 
+LOGIN_URL = '/login/'
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
