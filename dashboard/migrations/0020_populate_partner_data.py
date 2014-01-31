@@ -7,39 +7,54 @@ from dashboard.models import Block, CocoUser, Village, Partners
 
 def get_partner_from_eth(village_id):
     district_id = Village.objects.get(id = village_id).block.district.id
+    ##Return OA/SAA
     district_partner_map = {10000000000054: 10000000000016, 10000000000055: 10000000000016, 10000000000062: 10000000000016}
-    if district_partner_map.get(district_id, lambda:None):
+    if district_partner_map.get(district_id, None):
         return district_partner_map[district_id]
     else:
+        ##Return IDE
         return 10000000000012
 
 def get_partner_from_gha(village_id):
+    ##Only WCF in Ghana
     return 10000000000014
 
-def get_partner_from_ind(village_id):
-    state_id = Village.objects.get(id = village_id).block.district.id
-    states_mapping = {10000000000005: get_partner_from_kar, 10000000000001: get_partner_from_mp, 10000000000002: get_partner_from_job,
-                      10000000000003: get_partner_from_job, 10000000000007: get_partner_from_ap, 10000000000006: get_partner_from_job}
-    return state_mapping[state_id](village_id)
+def get_partner_from_india(village_id):
+    state_id = Village.objects.get(id = village_id).block.district.state.id
+    states_mapping = {10000000000005: get_partner_from_kar, 10000000000001: get_partner_from_mp, 10000000000002: get_partner_from_jo,
+                      10000000000003: get_partner_from_jo, 10000000000007: get_partner_from_ap, 10000000000006: get_partner_from_bihar,
+                      10000000000010: get_partner_from_up}
+    return states_mapping[state_id](village_id)
     
 def get_partner_from_ap(village_id):
+    ###SERP for AP
     return 10000000000011
 
-
-def get_partner_from_job(village_id):
+def get_partner_from_jo(village_id):
     user_assigned = CocoUser.objects.filter(villages__id__exact = village_id)
     if user_assigned:
         return user_assigned[0].partner.id
     else:
-        print 'village from Jharkhand, Odisha getting it from map', village_id
+        print 'For village from Jharkhand, Odisha getting it from partner map', village_id
         state_partner_map = {10000000000003:10000000000009, 10000000000002:10000000000001}
         state_id = Village.objects.get(id = village_id).block.district.state.id
         return state_partner_map[state_id]
 
+def get_partner_from_bihar(village_id):
+    block_id = Village.objects.get(id = village_id).block.id
+    #Only two blocks have ASA
+    block_partner_map = {10000000000079:10000000000008, 10000000000077:10000000000008, }
+    if block_partner_map.get(block_id, None):
+        return block_partner_map[block_id]
+    else:
+        #return BRLPS
+        return 10000000000013
+
+
 def get_partner_from_kar(village_id):
     block_id = Village.objects.get(id = village_id).block.id
     block_partner_map = {10000000000281:10000000000019}
-    if block_partner_map.get(block_id, lambda:None):
+    if block_partner_map.get(block_id, None):
         return block_partner_map[block_id]
     else:
         return 10000000000002
@@ -48,10 +63,37 @@ def get_partner_from_mp(village_id):
     block_id = Village.objects.get(id = village_id).block.id
     block_partner_map = {10000000000281:10000000000019}
     block_partner_map = {10000000000089:10000000000007,10000000000093:10000000000007,10000000000090:10000000000007,10000000000094:10000000000007,10000000000056:10000000000008,10000000000059:10000000000008,10000000000055:10000000000008,10000000000058:10000000000008,10000000000040:10000000000001,10000000000159:10000000000007,10000000000167:10000000000007,10000000000179:10000000000007,10000000000161:10000000000007,10000000000168:10000000000007,19000061774:10000000000004,10000000000034:10000000000004,19000061773:10000000000004,19000070563:10000000000004,10000000000144:10000000000001,32000017075:10000000000001,10000000000002:10000000000001,10000000000032:10000000000001,10000000000001:10000000000001,10000000000031:10000000000001,10000000000050:10000000000007,10000000000383:10000000000007,10000000000060:10000000000007,10000000000384:10000000000007,10000000000062:10000000000008,10000000000080:10000000000008,10000000000061:10000000000008,10000000000063:10000000000008,10000000000083:10000000000008,22000000007:10000000000008,10000000000303:10000000000020,10000000000302:10000000000020,10000000000181:10000000000004,10000000000091:10000000000008,10000000000003:10000000000001,10000000000178:10000000000001,10000000000065:10000000000008,10000000000041:10000000000008,10000000000064:10000000000008,10000000000042:10000000000008,10000000000175:10000000000007,10000000000212:10000000000007,10000000000170:10000000000007,10000000000211:10000000000007,10000000000214:10000000000007,10000000000172:10000000000007,10000000000174:10000000000007,10000000000176:10000000000007,10000000000213:10000000000007,10000000000171:10000000000007,10000000000173:10000000000007,10000000000048:10000000000007,10000000000086:10000000000007,10000000000149:10000000000007,10000000000046:10000000000007,10000000000049:10000000000007,10000000000123:10000000000007,10000000000235:10000000000017,10000000000234:10000000000017,10000000000236:10000000000017,10000000000066:10000000000008,10000000000043:10000000000008,10000000000067:10000000000008,10000000000164:10000000000007,10000000000166:10000000000007,10000000000180:10000000000007,10000000000165:10000000000007,10000000000169:10000000000007,10000000000069:10000000000008,10000000000068:10000000000008,10000000000072:10000000000008,10000000000209:10000000000007,10000000000208:10000000000007,10000000000177:10000000000007}
-    if block_partner_map.get(block_id, lambda:None):
+    if block_partner_map.get(block_id, None):
         return block_partner_map[block_id]
     else:
         print 'partner not found in MP for village: ', village_id
+
+def get_partner_from_up(village_id):
+    district_id = Village.objects.get(id = village_id).block.district.id
+    district_partner_map = {10000000000087:10000000000021, 10000000000088:10000000000021}
+    
+    if district_partner_map.get(district_id, None):
+        return district_partner_map[district_id]
+    #conflict in raebareli district
+    elif district_id == 10000000000041:
+        block_id = Village.objects.get(id = village_id).block.id
+        block_partner_map = {10000000000286: 10000000000015, 10000000000325:10000000000021}
+        #No confict in Khiro and Deeh blocks
+        if block_partner_map.get(block_id, None):
+            return block_partner_map[block_id]
+        else:
+            user_assigned = CocoUser.objects.filter(villages__id__exact = village_id)
+            if user_assigned:
+                return user_assigned[0].partner.id
+            else:
+                print 'village from Jharkhand, Odisha getting it from map', village_id
+                state_partner_map = {10000000000003:10000000000009, 10000000000002:10000000000001}
+                state_id = Village.objects.get(id = village_id).block.district.state.id
+                return state_partner_map[state_id]
+    else:
+        print 'partner not found in UP for village: ', village_id
+        return None
+
 
 def get_partner_id_for_village(village_id):
     countries_mapping = {1: get_partner_from_india, 2: get_partner_from_eth, 3: get_partner_from_gha}
@@ -62,20 +104,53 @@ class Migration(DataMigration):
     def forwards(self, orm):
         "Write your forwards methods here."
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
+        ##First populate partner using serverlog for data after 2013-06-01
         coco_model_list = [ 'video', 'screening', 'person_adopt_practice', 'person', 'person_groups']
         vils = Village.objects.all().values_list('id', flat=True)
+        users = CocoUser.objects.all().values_list('user_id', flat=True)
         for model in get_models(get_app('dashboard')):
             if model._meta.db_table in coco_model_list:
-                objs = model.objects.filter(partner__isnull = True)
-                print 'Before', model._meta.db_table, objs.count()
+                ##After DataLog roll out data to be migrated based on user entered
+                for user in users:
+                    try:
+                        partner = CocoUser.objects.get(user_id = user).partner.id
+                        print partner
+                        objs = model.objects.filter(partner__isnull = True, time_created__gte = '2013-06-01', user_created = user).update(partner = partner)
+                    except Exception as e:
+                        print 'partner does not exist for user', user, e
+                        continue
+                
+                ##Get Data from Partner Mapping sent by regional people
+                print 'After serverlog stuff', model._meta.db_table, model.objects.filter(partner__isnull = True).count()
                 for vil in vils:
                     partner_id = get_partner_id_for_village(vil)
-                    if model._meta.db_table == 'person_adopt_practice':
-                        objs = model.objects.filter(partner__isnull = True, person__village_id = vil).update(partner = Partners.objects.get(id = partner_id))
-                    else:
-                        objs = model.objects.filter(partner__isnull = True, village_id = vil).update(partner = Partners.objects.get(id = partner_id))
+                    if partner_id:
+                        try:
+                            partner = Partners.objects.get(id = partner_id)
+                        except:
+                            print 'partner does not exist', partner_id, vil
+                        if model._meta.db_table == 'person_adopt_practice':
+                            objs = model.objects.filter(partner__isnull = True, person__village_id = vil).update(partner = partner)
+                        else:
+                            objs = model.objects.filter(partner__isnull = True, village_id = vil).update(partner = partner)
                 objs = model.objects.filter(partner = 0)
-                print 'after',model._meta.db_table, objs.count()    
+                print 'After final migration',model._meta.db_table, objs.count()
+                
+                ##Special case Bihar Purnia District
+                if model._meta.db_table == 'person_adopt_practice':
+                    ## In Bhawanipur ASA worked till end of 2012
+                    objs = model.objects.filter(partner__isnull = True, date_of_adoption__lte = '2013-01-01', person__village__block_id = 10000000000157).update(partner = Partners.objects.get(id = 10000000000008))
+                    ## In Dhamdaha ASA worked till end of 2012
+                    objs = model.objects.filter(partner__isnull = True, date_of_adoption__lte = '2013-01-01', person__village__block_id = 10000000000076).update(partner = Partners.objects.get(id = 10000000000008))
+                
+                if model._meta.db_table == 'screening':
+                    ## In Bhawanipur ASA worked till end of 2012
+                    objs = model.objects.filter(partner__isnull = True, date__lte = '2013-01-01', village__block_id = 10000000000157).update(partner = Partners.objects.get(id = 10000000000008))
+                    ## In Dhamdaha ASA worked till end of 2012
+                    objs = model.objects.filter(partner__isnull = True, date__lte = '2013-01-01', village__block_id = 10000000000076).update(partner = Partners.objects.get(id = 10000000000008))
+                
+                    
+                   
                 
     def backwards(self, orm):
         "Write your backwards methods here."
