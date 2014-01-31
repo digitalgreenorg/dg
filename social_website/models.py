@@ -115,7 +115,6 @@ class Collection(models.Model):
         self.save()
     class Meta:
         unique_together = ("title", "partner", 'state', 'language')
-m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
 m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
 

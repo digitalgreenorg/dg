@@ -26,21 +26,19 @@ def video_add_activity(sender, **kwargs):
         add_video(video)
 
 
-def video_collection_activity(sender, **kwargs):
+def video_collection_activity(collection, videos):
     file = "".join([dg.settings.MEDIA_ROOT, "collection_dict.p"])
     collection_dict = pickle.load(open(file, "rb"))
-    instance = kwargs["instance"]
-    if kwargs["action"] == 'post_add':
-        collection = get_model('social_website', 'Collection').objects.get(uid=instance.uid)
-        if collection.uid not in collection_dict:
-            add_collection(collection)
-            collection_dict[collection.uid]=[]
-        videos = kwargs['pk_set']
-        for video_uid in videos:
-            video = get_model('social_website', 'Video').objects.get(uid=video_uid)
-            if video_uid not in collection_dict[collection.uid]:
-                add_video_collection(collection, video)
-                collection_dict[collection.uid].append(video.uid)
+
+    if collection.uid not in collection_dict:
+        add_collection(collection)
+        collection_dict[collection.uid]=[]
+
+    for video_uid in videos:
+        video = get_model('social_website', 'Video').objects.get(uid=video_uid)
+        if video_uid not in collection_dict[collection.uid]:
+            add_video_collection(collection, video)
+            collection_dict[collection.uid].append(video.uid)
     pickle.dump(collection_dict, open(file, "wb"))
 
 def collection_video_save(sender, **kwargs):

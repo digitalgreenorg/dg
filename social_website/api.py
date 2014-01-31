@@ -14,6 +14,7 @@ from tastypie.validation import FormValidation
 
 from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoinCollection, VideoLike
 from migration_functions import populate_collection_stats
+from post_save_funcs import video_collection_activity
 
 
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
@@ -210,7 +211,9 @@ class CollectionResource(BaseCorsResource):
                     vid_collection.save()
                 except Exception, e:
                     pass#raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
-            populate_collection_stats(Collection.objects.get(uid=collection_id))
+            Collection_obj = Collection.objects.get(uid=collection_id)
+            populate_collection_stats(Collection_obj)
+            video_collection_activity(Collection_obj, video_list)
             return bundle
         else:
             pass
