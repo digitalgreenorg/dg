@@ -13,7 +13,7 @@ define(function(require) {
     var Controller = require('framework/controllers/Controller');
     var viewRenderer = require('framework/ViewRenderer');
     var jQuery = require('jquery');
-    var Chosen = require('libs/external/chosen.jquery.min');
+    var Select2 = require('libs/external/select2');
     
     var PracticeMappingDataFeed = require('app/libs/PracticeMappingDataFeed');
     var CollectionVideoDropDownDataFeed = require('app/libs/CollectionVideoDropDownDataFeed');
@@ -78,8 +78,6 @@ define(function(require) {
                     $("#topiclist").val($('.js-collection-mapping-container').data('topic').trim()).change();
                     $("#subtopiclist").val($('.js-collection-mapping-container').data('subtopic').trim());
                     $("#subjectlist").val($('.js-collection-mapping-container').data('subject').trim());
-                    $("#subtopiclist").trigger("chosen:updated");
-                    $("#subjectlist").trigger("chosen:updated");
                 }
                 else{
                     $("#partnerlist").val($('.va-dropdown').data('collectionpartner')).change();
@@ -126,7 +124,6 @@ define(function(require) {
                 $("#vidlist").val(videos_collection[a]).change();
             }
             
-            $("#vidlist").trigger("chosen:updated");
             }
             
         },
@@ -210,7 +207,13 @@ define(function(require) {
 
         _dropdownChosen: function(){
         	var references = this._references;
-            $(".chosen-select").chosen({no_results_text: "No results match", width: "90%"});
+        	try{
+        	    $(".chosen-select").select2({no_results_text: "No results match", width: "90%"});
+        	   }
+        	catch(err){
+        	    $("select.chosen-select").select2({no_results_text: "No results match", width: "90%"});
+        	}
+            
         },
         
         _onDropDownChosen: function(){
@@ -351,11 +354,10 @@ define(function(require) {
                 };
         	viewRenderer.renderAppend($('.js-carousel-container'), carouselTemplate, renderData);
         	$('#vidlist option[value=' + vid + ']').remove();
-        	$("#vidlist").trigger("chosen:updated");
+        	$("#vidlist").select2("val", "");
         	
         	$('#sortable li .video-remove').click(function(){
         		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
-        		$("#vidlist").trigger("chosen:updated");
         		$(this).parent().remove();
                 
             });
