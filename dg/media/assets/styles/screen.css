@@ -3189,6 +3189,22 @@ body {
     width: 100px;
 }
 
+.signin-box {
+    height: 580px;
+    width: 200px;
+    background-color: rgba(0,0,0,0.3);
+    padding-left: 20px;
+    margin-left: 764px;
+    margin-top: -50px;
+}
+
+.err-box {
+    border-style:solid;
+    border-color:red;
+    border-width: 1px;
+    width: 173px;
+}
+
 .mrg-top20 {
     margin-top: 20px;
 }
@@ -3201,37 +3217,23 @@ body {
     margin-bottom: -5px;
 }
 
-.section-dim {
-    height: 528px;
+.mrg-lt-20 {
+    margin-left: 20px;
 }
 
-.signin-box {
-    height: 580px;
-    width: 200px;
-    background-color: rgba(0,0,0,0.3);
-    padding-left: 20px;
-    margin-left: 764px;
-    margin-top: -50px;
+.section-dim {
+    height: 528px;
 }
 
 .login-bg{
     background-size: 1024px 650px;
 }
 
-.err-box {
-    border-style:solid;
-    border-color:red;
-    border-width: 1px;
-    width: 173px;
-}
-
-.mrg-lt-20 {
-    margin-left: 20px;
-}
-
 .footer {
     margin-top: -5px;
 }
+
+/* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
 
 @media(max-width: 480px) {
     

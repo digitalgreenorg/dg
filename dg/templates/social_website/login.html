@@ -33,7 +33,7 @@
         <script type="text/javascript"> 
             $(document).ready(function() {
                 var images = ['image0.jpg','image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg','image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg', 'image10.jpg', 'image11.jpg'];
-                $('.login-bg').css({'background': 'url(../media/social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
+                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
             });
         </script>
     </head>
