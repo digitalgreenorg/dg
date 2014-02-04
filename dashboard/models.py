@@ -895,6 +895,9 @@ class PersonAdoptPractice(CocoModel):
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+    def __unicode__(self):
+        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
+
     def get_village(self):
         return self.person.village.id
     def get_partner(self):
