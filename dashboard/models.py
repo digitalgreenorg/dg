@@ -602,9 +602,12 @@ class Person(CocoModel):
             send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
 
     def __unicode__(self):
-        if (self.father_name is None or self.father_name==''):
-            return self.person_name
-        return  u'%s (%s)' % (self.person_name, self.father_name)
+        if (self.group is None):
+            if (self.father_name is None or self.father_name==''):
+                return "%s (%s)" % (self.person_name, self.village.village_name)
+            else:
+                return "%s (%s) (%s)" % (self.person_name, self.father_name, self.village.village_name)
+        return  "%s (%s) (%s) (%s)" % (self.person_name, self.father_name, self.group.group_name, self.village.village_name)
 post_save.connect(save_log, sender = Person)
 pre_delete.connect(delete_log, sender = Person)
 
