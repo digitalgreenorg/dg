@@ -322,6 +322,7 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     extra = 3
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
+    list_display = ('date_of_adoption', '__unicode__')
     search_fields = ['person__person_name', 'person__village__village_name', 'video__title']
 
 class PersonForm(forms.ModelForm):
