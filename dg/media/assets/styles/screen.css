@@ -3164,32 +3164,28 @@ body {
 
 .auth{
     height: 30px;
-    width: 160px;
+    width: 150px;
     border-radius: 5px;
     margin-top: 10px;
+    padding-left: 10px;
 }
 
 .auth::-webkit-input-placeholder {
    font-size: 14px;
    font-weight: bold;
-   padding-left: 10px;
 }
 
-.social-width{
+.auth-social-width {
     width: 175px;
 }
 
-.social-width-fb {
-    width: 177px;
-}
-
-.signin-btn{
+.auth-btn{
     margin-top: 140px;
     margin-left: 37px;
     width: 100px;
 }
 
-.signin-box {
+.auth-box {
     height: 580px;
     width: 200px;
     background-color: rgba(0,0,0,0.3);
@@ -3198,7 +3194,7 @@ body {
     margin-top: -50px;
 }
 
-.err-box {
+.auth-err-box {
     border-style:solid;
     border-color:red;
     border-width: 1px;
