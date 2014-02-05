@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^discover/$', DirectTemplateView.as_view(template_name='collections.html', extra_context={'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}), name='discover'),
     url(r'^donate/$', TemplateView.as_view(template_name='donate.html'), name='donate'),
     url(r'^example/$', TemplateView.as_view(template_name='example1.html')),
+    url(r'^events/$', DirectTemplateView.as_view(template_name='events.html', extra_context={'header':{'jsController':'Events', 'currentPage':'Events'}}), name='events'),
     url(r'^logout/?$', logout_view, name='logout'),
     url(r'^main.js$', TemplateView.as_view(template_name='main.js', content_type='text/javascript'), name='mainjs'),
     # TODO: There are no names used below
