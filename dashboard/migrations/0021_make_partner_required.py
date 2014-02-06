@@ -10,6 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'Person.partner'
+        # Make the default to GREEN FOUNDATION partner which is not active anymore
         db.alter_column(u'person', 'partner_id', self.gf('dashboard.fields.related.BigForeignKey')(default=10000000000003L, to=orm['dashboard.Partners']))
 
         # Changing field 'Video.partner'

@@ -17,6 +17,9 @@ from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, P
 class PMANotSaved(Exception):
     pass
 
+class PartnerDoesNotExist(Exception):
+    pass
+
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
 class ModelFormValidation(FormValidation):
     """
@@ -113,19 +116,17 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
-def get_user_partner_id(request):
-    if request.user.id:
-        partner_id = CocoUser.objects.filter(user__id = request.user.id).values_list('partner__id',flat=True)
-        if partner_id:
-            partner_id = partner_id[0]
-        else:
+def get_user_partner_id(user_id):
+    if user_id:
+        try:
+            partner_id = CocoUser.objects.get(user_id = user_id).partner.id
+        except Exception as e:
             partner_id = None
-            if request.user.id == 1 or request.user.id == 2:
-                partner_id = 10000000000001            
+            raise PartnerDoesNotExist('partner does not exist for user '+ request.user.id+" : "+ e)
+        
     return partner_id
 
 #Get User Districts for video download purpose
-
 def get_user_districts(request):
     if request:
         user_permissions = UserPermission.objects.filter(username = request.user)
@@ -145,32 +146,26 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
-    ###FIRST GET VIDEOS PRODUCED IN STATE
-    videos = Video.objects.filter(village__block__district__state__in = user_states)
-    ###FILTER IT FOR SAME PARTNER.
-    users_with_same_partner = CocoUser.objects.filter(partner_id = coco_user.partner_id).values_list('user_id', flat=True)
-    videos_with_user = videos.exclude(user_created = None).filter(user_created_id__in = users_with_same_partner).values_list('id', flat = True)
-    districts_assigned_to_partner = District.objects.filter(partner_id = coco_user.partner_id, state__in = user_states).values_list('id', flat = True)
-    videos_with_out_user = videos.filter(user_created = None, village__block__district__in = districts_assigned_to_partner).values_list('id', flat=True)
-    videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
+    ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
+    videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
     
-    return set(list(videos_with_user) + list(videos_with_out_user)+list(videos_seen))
+    return videos
     
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
-    mediators_from_assigned_villages = Animator.objects.filter(assigned_villages__in = villages).values_list('id', flat=True).distinct()
+    parter = get_user_partner_id(user_id)
     user_districts = District.objects.filter(block__village__in = villages).distinct().values_list('id', flat=True)
-    mediators_from_same_district = Animator.objects.filter(district__in = user_districts).values_list('id', flat = True)
+    mediators_from_same_district = Animator.objects.filter(district__in = user_districts, partner_id = partner).distinct().values_list('id', flat = True)
         
-    return set(list(mediators_from_assigned_villages) + list(mediators_from_same_district))
+    return mediators_from_same_district
 
 def assign_partner(bundle):
-    partner_id = get_user_partner_id(bundle.request)
+    partner_id = get_user_partner_id(bundle.request.user.id)
     if partner_id:
         bundle.data['partner'] = "/coco/api/v1/%s/%s/"%('partner', str(partner_id))
     else:
-        bundle.data['partner'] = 0
+        bundle.data['partner'] = None
     
     return bundle
     
@@ -182,14 +177,14 @@ class VillagePartnerAuthorization(Authorization):
         villages = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
         kwargs = {}
         kwargs[self.village_field] = villages
-        kwargs['partner_id'] = get_user_partner_id(bundle.request)
+        kwargs['partner_id'] = get_user_partner_id(bundle.request.user.id)
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
         kwargs[self.village_field] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
-        kwargs['partner_id'] = get_user_partner_id(bundle.request)
+        kwargs['partner_id'] = get_user_partner_id(bundle.request.user.id)
         obj = object_list.filter(**kwargs).distinct()
         if obj:
             return True
@@ -224,14 +219,8 @@ class MediatorAuthorization(Authorization):
         if bundle.obj.id in get_user_mediators(bundle.request.user.id):
             return True
         # Is the requested object owned by the user?
-        kwargs = {}
-        kwargs['assigned_villages__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
-        obj = object_list.filter(**kwargs).distinct()
-        if obj:
-            return True
         else:
             raise NotFound( "Not allowed to download Mediator")
-
 
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -240,12 +229,6 @@ class VideoAuthorization(Authorization):
     def read_detail(self, object_list, bundle):
         #To add adoption for the video seen which is outside user access
         if bundle.obj.id in get_user_videos(bundle.request.user.id):
-            return True
-        # Is the requested object owned by the user?
-        kwargs = {}
-        kwargs['village__in'] = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
-        obj = object_list.filter(**kwargs).distinct()
-        if obj:
             return True
         else:
             raise NotFound( "Not allowed to download video")
@@ -337,7 +320,7 @@ class MediatorResource(BaseResource):
         return bundle
         
     def hydrate_partner(self, bundle):
-        partner_id = get_user_partner_id(bundle.request)
+        partner_id = get_user_partner_id(bundle.request.user.id)
         if partner_id:
             bundle.data['partner'] ="/coco/api/v1/partner/"+str(partner_id)+"/"
         return bundle
