@@ -61,17 +61,17 @@
                             <nav class="inner-nav" role="navigation">
                                 <ul class="nav">
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logo"><a href="{% url home%}">Green Digital</a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url discover%}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url connect %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url tools %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url about %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
-                                    <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url career %}?header=true">Careers</a></li>
+                                    <li class="logo"><a href="{% url 'home' %}">Green Digital</a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url 'discover' %}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url 'connect' %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url 'tools' %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url 'about' %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
+                                    <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url 'career' %}?header=true">Careers</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
                                     {% else %}
                                         <li>
-                                            <a class="btn-sign-in btn-signed" href="{% url logout %}?next={{request.path}}">
+                                            <a class="btn-sign-in btn-signed" href="{% url 'logout' %}?next={{request.path}}">
                                                 <div class="media">
                                                     <div class="img">
                                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
@@ -98,10 +98,10 @@
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                     <h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
                     <div class="layout-vr-sm">
-                        <a href="{% url 'socialauth_begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
+                        <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
                     </div>
                     <div class="layout-vr-tiny">
-                        <a href="{% url 'socialauth_begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
+                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
                     </div>
                 </div>
             </div>

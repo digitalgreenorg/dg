@@ -1,5 +1,6 @@
 from functools import partial
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
@@ -12,7 +13,7 @@ from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
-from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, UserProfile, VideoinCollection, VideoLike
+from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, VideoinCollection, VideoLike
 from migration_functions import populate_collection_stats
 from post_save_funcs import video_collection_activity
 
@@ -107,7 +108,7 @@ class BaseCorsResource(ModelResource):
             allowed = []
  
         request_method = request.method.lower()
-        allows = ','.join(map(str.upper, allowed))
+        allows = ','.join([s.upper() for s in allowed])
  
         if request_method == 'options':
             response = HttpResponse(allows)
@@ -272,7 +273,7 @@ class ActivityResource(BaseResource):
 
 class UserResource(ModelResource):
     class Meta:
-        queryset = UserProfile.objects.all()
+        queryset = User.objects.all()
         resource_name = 'user'
 
 class VideoLikeResource(ModelResource):

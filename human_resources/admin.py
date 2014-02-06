@@ -9,7 +9,7 @@ class MemberAdmin(admin.ModelAdmin):
                                      'image', 'hierarchy_num']
                           }
                   )]
-    list_display = ('name', 'email', 'designation')
+    list_display = ('hierarchy_num', 'name', 'email', 'designation')
     search_fields = ['name']
     
 class PlaceAdmin(admin.ModelAdmin):

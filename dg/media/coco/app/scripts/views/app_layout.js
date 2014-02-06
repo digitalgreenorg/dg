@@ -1,3 +1,4 @@
+//The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
 define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView) {
 
     var AppLayout = Backbone.Layout.extend({
@@ -6,7 +7,7 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             console.log("initilizing app layout");
         },
 
-        //when layout is rendered, put the dashboard in the side panel - constant across all routes
+        //when layout is rendered, create and put the dashboard view in the side panel - constant across all routes
         afterRender: function() {
             console.log("app layout rendered");
             var dashboard_view = new DashboardView();
@@ -14,6 +15,7 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             dashboard_view.render();
         },
 
+        //content panel will be filled with a subview by one of the following functions based on the current url
         render_login: function() {
             var login_view = new LoginView();
             this.setView("#content", login_view);
@@ -37,7 +39,7 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
                 model_id: id,
             });
             this.setView("#content", formcontroller_view);
-            formcontroller_view.render();  //bcoz Its afterRender assumes its elements are in DOM
+            formcontroller_view.render(); //bcoz Its afterRender assumes its elements are in DOM
         }
 
     });

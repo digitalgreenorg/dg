@@ -30,6 +30,10 @@ class WebsiteFooter():
                                                 <li><a target='_blank' href="http://www.linkedin.com/company/619071">
                                                     <h4 class="social-icon icon-linkedin">Linked In</h4>
                                                     <h5 class="sub-text hdg-c">%s <span>Followers</span></h5></a></li>
+                                                <li><a target="_blank" href="https://plus.google.com/102360151388546073924/posts">
+                                                    <h4 class="social-icon icon-gplus grid-pad-rt-tiny">Google Plus</h4>
+                                                    <h5 class="sub-text hdg-c">112<span>Followers</span></h5>
+                                                </a></li>
                        """
         self.facebook = 0
         self.twitter = 0

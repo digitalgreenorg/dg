@@ -9,8 +9,17 @@ def member_view(request):
     support_team = delhi_team.filter(team="Support Team").all().order_by('hierarchy_num')
     programs_team = delhi_team.filter(team="Program Team").all().order_by('hierarchy_num')
     other_teams = Member.objects.exclude(place__name="Headquarters-Delhi").order_by('place__name')
-    other_teams_list = [{'name':member.name, 'designation':member.designation, 
-                            'image': {'url': member.image.url}, 'email':member.email, 'place':member.place.name} for member in other_teams]
+    other_teams_list = [{
+                            'name':member.name,
+                            'designation':member.designation, 
+                            'image': {
+                                'url': member.image.url,
+                            }, 
+                            'email':member.email, 
+                            'place':member.place.name,
+                            'hierarchy_num':member.hierarchy_num,
+                        } for member in other_teams]
+    other_teams_list = sorted(other_teams_list, key=lambda k: (k['place'], k['hierarchy_num']))
     context = {
         'elt': elt_team,
         'tech': tech_team,
