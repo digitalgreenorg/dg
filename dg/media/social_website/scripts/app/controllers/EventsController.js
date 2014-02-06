@@ -16,6 +16,7 @@ define(function(require) {
     var NCarousel = require('libs/NCarousel/NCarousel');
     
     require('libs/external/swfobject/swfobject');
+    var registrationFormTemplate = require('text!app/views/events/registration-form.html');
 
     var EventsController = DigitalGreenPageController.extend({
 
@@ -29,6 +30,7 @@ define(function(require) {
             
 
 
+            var references = this._references;
             return this;
         },
 
@@ -48,6 +50,9 @@ define(function(require) {
             
             // play button 
             references.$playButton = jQuery('.play-button');
+            
+            //register button
+            references.$registerButton = jQuery('.js-register-button');
         },
         
         _initEvents: function() {
@@ -58,6 +63,16 @@ define(function(require) {
             
             boundFunctions.onPlayButtonClick = this._onVideoPlayButtonClick.bind(this);
             references.$playButton.on('click', boundFunctions.onPlayButtonClick);
+            
+            boundFunctions.onRegisterButtonClick = this._onRegisterButtonClick.bind(this);
+            references.$registerButton.on('click', boundFunctions.onRegisterButtonClick);
+        },
+        
+        _onRegisterButtonClick: function () {
+            $("#form-box").remove();
+            this._references.$registerButton.closest('section.about-bg').after(registrationFormTemplate);
+            var body = jQuery("html, body");
+            body.animate({ scrollTop: $('#form-box').offset().top }, 1000);
         },
         
         _initVideoPlayer: function() {
