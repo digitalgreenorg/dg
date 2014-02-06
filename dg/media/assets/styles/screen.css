@@ -895,6 +895,11 @@ a {
     margin-bottom: 8px;
     display: block;
 }
+
+.v-list-sm > * + * {
+    margin-top: 3px;
+}
+
 .v-list-md > * + * {
     margin-top: 13px;
 }
@@ -3169,16 +3174,42 @@ body {
 /* ---------------------------------------------------------------------
  Events Page CSS - To be integrated
 ------------------------------------------------------------------------ */
-ul.new-list  { margin:20px 0;}
-ul.new-list li {  margin-bottom:10px;}
-ul.new-list li a { background:url(../images/icon-business.png) no-repeat left 0px; height:26px; padding-left:32px; line-height:26px; color:#434343; display:inline-block;}
-ul.new-list li a:hover { color:#047D0A;}
-ul.new-list li.pdf a { background-position: left -31px; }
-ul.new-list li.spk a { background-position: left -61px; }
-ul.new-list li.mail a { background-position: left -185px; color:#047D0A; }
-ul.new-list li.faq a { background-position: left -95px; }
-ul.new-list li.reg a { background-position: left -126px; }
 
+/* Event Icons */
+.list-icons-business li a { 
+    background:url(../images/icon-business.png) no-repeat left 0px;
+    padding-left:32px;
+    line-height:26px;
+    height:26px;
+    color:#434343;
+    display:inline-block;
+}
+
+.list-icons-business li a:hover {
+    color:#047D0A;
+}
+
+.list-icons-business li.pdf a { 
+    background-position: left -31px; 
+}
+
+.list-icons-business li.spk a { 
+    background-position: left -61px; 
+}
+
+.list-icons-business li.mail a { 
+    background-position: left -185px; 
+}
+
+.list-icons-business li.faq a { 
+    background-position: left -95px; 
+}
+
+.list-icons-business li.reg a { 
+    background-position: left -126px; 
+}
+
+/* Form Styles */
 .form-row { 
     width:550px;
     overflow:hidden; 
@@ -3186,13 +3217,8 @@ ul.new-list li.reg a { background-position: left -126px; }
     margin-bottom:6px; 
 }
 
-.form-txt { 
+.form-label { 
     width:200px; 
-    /*float:left;*/
-}
-
-.form-row input[type="text"] { 
-    /*float:left;*/
 }
 
 .form-box { 
@@ -3202,10 +3228,6 @@ ul.new-list li.reg a { background-position: left -126px; }
     position:relative; 
     z-index:998; 
     /*display:none;*/
-}
-
-#delhi-tab { 
-    /*display:block;*/ 
 }
 
 .form-box input[type="text"]{   
@@ -3224,43 +3246,24 @@ ul.new-list li.reg a { background-position: left -126px; }
     margin-bottom: 10px; 
     padding: 4px 6px;  
     vertical-align: middle; 
-    width:205px; 
+    width:300px; 
 }
 
-.new_btn {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background-color: #F5F5F5;
-    background-image: linear-gradient(to bottom, #FFFFFF, #E6E6E6);
-    background-repeat: repeat-x;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #B3B3B3;
-    border-image: none;
-    border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-    color: #333333;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 14px;
-    line-height: 20px;
-    margin-bottom: 0;
-	margin-right:10px;
-    padding: 4px 12px;
-    text-align: center;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-    vertical-align: middle;
+.form-result {
+    color: #3EA441;
+    font-weight:bold;
+    font-size:18px;
 }
 
-.new-tabs {  
+/* Form Tabs */
+
+.form-tabs {  
     margin-bottom:-6px;
 }
-.new-tabs li {
+.form-tabs li {
     margin-right:2px;
 }
-.new-tabs li a {
+.form-tabs li a {
     background:url(../images/tab_bg.jpg) 
     repeat-x #5cc25e;
     border: 1px solid #c6e7c4; 
@@ -3278,7 +3281,7 @@ ul.new-list li.reg a { background-position: left -126px; }
     position: relative; 
     z-index: 997;
 }
-.new-tabs li a.active{
+.form-tabs li a.active{
     background-image:none; 
     background-color: #f1faf1; 
     border-bottom: none; 
