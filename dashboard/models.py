@@ -604,9 +604,11 @@ class Person(CocoModel):
             send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
 
     def __unicode__(self):
-        if (self.father_name is None or self.father_name==''):
-            return self.person_name
-        return  u'%s (%s)' % (self.person_name, self.father_name)
+        display = "%s" % (self.person_name)
+        display += " (%s)" % self.father_name if self.father_name.strip()!="" else "" 
+        display += " (%s)" % self.group.group_name if self.group is not None else ""
+        display += " (%s)" % self.village.village_name
+        return  display
 post_save.connect(save_log, sender = Person)
 pre_delete.connect(delete_log, sender = Person)
 
@@ -899,6 +901,9 @@ class PersonAdoptPractice(CocoModel):
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     partner = BigForeignKey(Partners)
+
+    def __unicode__(self):
+        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
 
     def get_village(self):
         return self.person.village.id
