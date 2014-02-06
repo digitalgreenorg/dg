@@ -1,25 +1,76 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        Collection = orm['social_website.Collection']
-        VideoinCollection = orm['social_website.VideoinCollection']
 
-        for collection in Collection.objects.all():
-            for counter, video in enumerate(collection.videos.all()):
-                vid_collection = VideoinCollection(video=video, collection=collection, order=counter)
-                vid_collection.save()
+        # Changing field 'Collection.title'
+        db.alter_column('social_website_collection', 'title', self.gf('django.db.models.fields.CharField')(max_length=200))
+        # Removing M2M table for field videos on 'Collection'
+        db.delete_table('social_website_collection_videos')
+
+        # Adding unique constraint on 'Collection', fields ['partner', 'state', 'language', 'title']
+        db.create_unique('social_website_collection', ['partner_id', 'state', 'language', 'title'])
 
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Removing unique constraint on 'Collection', fields ['partner', 'state', 'language', 'title']
+        db.delete_unique('social_website_collection', ['partner_id', 'state', 'language', 'title'])
+
+
+        # Changing field 'Collection.title'
+        db.alter_column('social_website_collection', 'title', self.gf('django.db.models.fields.CharField')(max_length=500))
+        # Adding M2M table for field videos on 'Collection'
+        db.create_table('social_website_collection_videos', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('collection', models.ForeignKey(orm['social_website.collection'], null=False)),
+            ('video', models.ForeignKey(orm['social_website.video'], null=False))
+        ))
+        db.create_unique('social_website_collection_videos', ['collection_id', 'video_id'])
+
 
     models = {
+        u'auth.group': {
+            'Meta': {'object_name': 'Group'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
+            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
+        },
+        u'auth.permission': {
+            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
+            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        u'auth.user': {
+            'Meta': {'object_name': 'User'},
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
+            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
+        u'contenttypes.contenttype': {
+            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
+            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
         'social_website.activity': {
             'Meta': {'object_name': 'Activity'},
             'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
@@ -38,7 +89,7 @@ class Migration(DataMigration):
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
         },
         'social_website.collection': {
-            'Meta': {'object_name': 'Collection'},
+            'Meta': {'unique_together': "(('title', 'partner', 'state', 'language'),)", 'object_name': 'Collection'},
             'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
@@ -49,26 +100,26 @@ class Migration(DataMigration):
             'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videos': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['social_website.Video']", 'symmetrical': 'False'}),
+            'videos': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['social_website.Video']", 'through': "orm['social_website.VideoinCollection']", 'symmetrical': 'False'}),
             'views': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
         'social_website.comment': {
             'Meta': {'object_name': 'Comment'},
-            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 11, 19, 0, 0)'}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 12, 5, 0, 0)'}),
             'isOnline': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
             'text': ('django.db.models.fields.TextField', [], {}),
             'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
         },
         'social_website.crontimestamp': {
             'Meta': {'object_name': 'CronTimestamp'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_time': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 11, 19, 0, 0)'}),
+            'last_time': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 12, 5, 0, 0)'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '30'})
         },
         'social_website.featuredcollection': {
@@ -130,20 +181,6 @@ class Migration(DataMigration):
             'videoID': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'views': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'})
         },
-        'social_website.userprofile': {
-            'Meta': {'object_name': 'UserProfile'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
         'social_website.video': {
             'Meta': {'object_name': 'Video'},
             'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
@@ -170,7 +207,7 @@ class Migration(DataMigration):
             'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         'social_website.videoincollection': {
-            'Meta': {'object_name': 'VideoinCollection'},
+            'Meta': {'ordering': "['order']", 'object_name': 'VideoinCollection'},
             'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'order': ('django.db.models.fields.IntegerField', [], {}),
@@ -179,10 +216,9 @@ class Migration(DataMigration):
         'social_website.videolike': {
             'Meta': {'object_name': 'VideoLike'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.UserProfile']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
         }
     }
 
     complete_apps = ['social_website']
-    symmetrical = True
