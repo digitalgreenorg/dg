@@ -122,7 +122,7 @@ def get_user_partner_id(user_id):
             partner_id = CocoUser.objects.get(user_id = user_id).partner.id
         except Exception as e:
             partner_id = None
-            raise PartnerDoesNotExist('partner does not exist for user '+ request.user.id+" : "+ e)
+            raise PartnerDoesNotExist('partner does not exist for user '+ user_id+" : "+ e)
         
     return partner_id
 
@@ -154,7 +154,7 @@ def get_user_videos(user_id):
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
-    parter = get_user_partner_id(user_id)
+    partner = get_user_partner_id(user_id)
     user_districts = District.objects.filter(block__village__in = villages).distinct().values_list('id', flat=True)
     mediators_from_same_district = Animator.objects.filter(district__in = user_districts, partner_id = partner).distinct().values_list('id', flat = True)
         
