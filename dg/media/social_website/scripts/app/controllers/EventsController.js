@@ -69,10 +69,28 @@ define(function(require) {
         },
         
         _onRegisterButtonClick: function () {
-            $("#form-box").remove();
+            // Add a the Registration section
+            $("#registration").remove();
             this._references.$registerButton.closest('section.about-bg').after(registrationFormTemplate);
             var body = jQuery("html, body");
-            body.animate({ scrollTop: $('#form-box').offset().top }, 1000);
+            body.animate({ scrollTop: $('#registration').offset().top }, 1000);
+            
+            // Add click handlers to form-tabs
+            this._references.$registration_form_tabs = jQuery(".js-form-tab");
+            var boundFunctions = this._boundFunctions;
+            boundFunctions.onFormTabClick = this._onFormTabClick.bind(this);
+            this._references.$registration_form_tabs.on('click', boundFunctions.onFormTabClick);
+        },
+        
+        _onFormTabClick: function (event) {
+            event.preventDefault();
+            jQuery(".js-form-tab").removeClass("active");
+            jQuery(event.target).addClass('active');
+            this._references.$registration_form_tabs.index(jQuery(event.target));
+            
+            var index = jQuery('.js-form-tab').index(event.target);
+            jQuery('.js-form').addClass('hide');
+            jQuery(jQuery('.js-form')[index]).removeClass('hide')
         },
         
         _initVideoPlayer: function() {
