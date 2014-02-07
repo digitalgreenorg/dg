@@ -53,6 +53,8 @@ define(function(require) {
             
             //register button
             references.$registerButton = jQuery('.js-register-button');
+            
+            references.$registerSection = jQuery("#registration");
         },
         
         _initEvents: function() {
@@ -69,23 +71,57 @@ define(function(require) {
         },
         
         _onRegisterButtonClick: function () {
-            // Add a the Registration section
-            $("#registration").remove();
+            // Remove and add the Registration section
+            this._references.$registerSection.remove();
             this._references.$registerButton.closest('section.about-bg').after(registrationFormTemplate);
-            var body = jQuery("html, body");
-            body.animate({ scrollTop: $('#registration').offset().top }, 1000);
+            
+            this._references.$registrationFormTabs = jQuery(".js-form-tab");
+            this._references.$registerSubmitButtons = jQuery('.js-submit-registration');
+            
+            var boundFunctions = this._boundFunctions;
             
             // Add click handlers to form-tabs
-            this._references.$registration_form_tabs = jQuery(".js-form-tab");
-            var boundFunctions = this._boundFunctions;
             boundFunctions.onFormTabClick = this._onFormTabClick.bind(this);
-            this._references.$registration_form_tabs.on('click', boundFunctions.onFormTabClick);
+            this._references.$registrationFormTabs.on('click', boundFunctions.onFormTabClick);
+            
+            // Add click handlers to form submit buttons
+            boundFunctions.onSubmitRegistrationButtonClick = this._onSubmitRegistrationButtonClick.bind(this);
+            this._references.$registerSubmitButtons.on('click', boundFunctions.onSubmitRegistrationButtonClick);
+            
+            // Scroll to Registration section
+            var body = jQuery("html, body");
+            body.animate({ scrollTop: $('#registration').offset().top }, 1000);
+        },
+        
+        _onSubmitRegistrationButtonClick: function (event) {
+            event.preventDefault();
+            var submitButton = jQuery(event.target);
+            var form = submitButton.closest('form');
+            // TODO Validate fields
+            // Check that email not empty and matches Regular Expression
+            // Check that name, organization not empty
+            
+            var formQueryString = form.serialize();
+            jQuery.ajax
+            ({
+                type: "POST",
+                url: "data.php",
+                data: formQueryString,
+                cache: false,
+                success: function(html)
+                {
+                    //alert("thanks for contact us");
+                    //msg="thanks";
+                    //form.('.result_area').html(html);				  
+								   
+                }
+            });
         },
         
         _onFormTabClick: function (event) {
             event.preventDefault();
             var form_tab = jQuery(event.target);
-            var form_tabs = this._references.$registration_form_tabs;
+            var form_tabs = this._references.$registrationFormTabs;
             form_tabs.removeClass('active');
             form_tab.addClass('active');
             var index = form_tabs.index(form_tab);
