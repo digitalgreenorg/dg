@@ -37,7 +37,7 @@ class Mail:
         
 def event_registration(request):
     # Events email to send registrations
-    events_email = "events@digitalgreen.org"
+    events_email = "system@digitalgreen.org"
     
     email = request.POST["Email"]
     text = ""
