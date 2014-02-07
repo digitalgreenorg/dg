@@ -79,6 +79,8 @@ define(function(require) {
             this._references.$registrationFormTabs = jQuery(".js-form-tab");
             this._references.$registerSubmitButtons = jQuery('.js-submit-registration');
             
+            this._references.$csrfToken = this._references.$registerButton.attr('data-csrf-input');
+            
             var boundFunctions = this._boundFunctions;
             
             // Add click handlers to form-tabs
@@ -98,6 +100,7 @@ define(function(require) {
             event.preventDefault();
             var submitButton = jQuery(event.target);
             var form = submitButton.closest('form');
+            form.append(this._references.$csrfToken);
             
             /* TODO Validate fields
              * Check that email not empty and matches Regular Expression
