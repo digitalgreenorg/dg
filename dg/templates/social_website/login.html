@@ -1,5 +1,25 @@
-{% include "includes/auth_header.html" %}
-            
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Digital Green</title>
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+    </head>
+    
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>  
+        <div class="wrapper-main wrapper wrapper-res">
+            <div class="wrapper-res">
+                <div class="clearfix">
+                    <header class="global-nav">
+                        <div class="wrapper wrapper-res">
+                            <nav class="inner-nav">
+                                <ul class="nav">
+                                    <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                                </ul>
+                            </nav> <!-- End .inner-nav -->
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>
+            </div>
             <section class="about-bg about-bg-white login-bg section-dim">
                 <div class="wrapper wrapper-res">
                     <div class="inner-wrapper">
@@ -37,6 +57,26 @@
                         </div>
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
-            </section>   
-
-{% include "includes/footer.html" %}
+            </section>
+        </div>
+        <!-- JavaScript -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript"> 
+            $(document).ready(function() {
+                var images = ['image0.jpg', 'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg'];
+                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
+            });
+        </script>
+        <script type="text/javascript">
+    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    	</script>
+    	<script type="text/javascript">
+    		try {
+    			var pageTracker = _gat._getTracker("UA-16211208-1");
+    			pageTracker._trackPageview();
+    			} 
+            catch(err) {}
+    	</script>
+    </body>
+</html>
