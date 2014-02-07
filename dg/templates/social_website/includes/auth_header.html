@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta property="og:image" content="http://www.digitalgreen.org/media/social_website/content/dg_transition.png"/>
+        <meta property="og:title" content="Digital Green"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="DigitalGreen"/>
+        <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
+        <meta property="fb:app_id" content="149405231925556" />
+        <!-- META DATA -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="MSSmartTagsPreventParsing" content="true" />
+        <meta http-equiv="imagetoolbar" content="no" />
+        <!--[if IE]><meta http-equiv="cleartype" content="on" /><![endif]-->
+
+        <!-- SEO -->
+        <title>Digital Green</title>
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <meta name=”viewport” content=”width=device-width, initial-scale=1, maximum-scale=1″>
+
+        <!-- ICONS -->
+        <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
+
+        <!-- STYLESHEETS -->
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        
+        <!-- JavaScript -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript"> 
+            $(document).ready(function() {
+                var images = ['image0.jpg','image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg','image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg', 'image10.jpg', 'image11.jpg'];
+                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
+            });
+        </script>
+    </head>
+    
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
+        <!-- Begin Main Wrapper -->
+        <div class="wrapper-main wrapper wrapper-res">
+            <div class="header-fixed wrapper-res">
+                <div class="clearfix">
+                    <header class="global-nav">
+                        <a class="skip-to-content" href="#main">Skip to content</a>
+                        <div class="wrapper wrapper-res">
+                            <nav class="inner-nav" role="navigation">
+                                <ul class="nav">
+                                    <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                                </ul>
+                            </nav> <!-- End .inner-nav -->
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>
+            </div>
+            <div class="header-margin"></div>

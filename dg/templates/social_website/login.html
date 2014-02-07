@@ -1,115 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta property="og:image" content="http://www.digitalgreen.org/media/social_website/content/dg_transition.png"/>
-        <meta property="og:title" content="Digital Green"/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:site_name" content="DigitalGreen"/>
-        <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
-        <meta property="fb:app_id" content="149405231925556" />
-        <!-- META DATA -->
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="MSSmartTagsPreventParsing" content="true" />
-        <meta http-equiv="imagetoolbar" content="no" />
-        <!--[if IE]><meta http-equiv="cleartype" content="on" /><![endif]-->
-
-        <!-- SEO -->
         <title>Digital Green</title>
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-
-        <!-- HTML5 SHIV -->
-        <!--[if lt IE 9]><script type="text/javascript" src="{{STATIC_URL}}assets/scripts/html5shiv.js"></script><![endif]-->
-
-        <!-- ICONS -->
-        <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
-
-        <!-- STYLESHEETS -->
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
-        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
-        <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
-        <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
-        <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
-        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
     </head>
-    <!--
-        =======================
-        | Implementation Note |
-        =======================
-
-        The body needs to have this "data-controller" attribute 
-        on it to control which JS controller is loaded.
-
-        Current list includes:
-            Home
-            About
-            Collections
-            ViewCollections
-            Profile
-    -->
-    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
-    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
-        <!-- Begin Main Wrapper -->
-        <div class="wrapper-main wrapper">
-            <div class="header-fixed">
+    
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>  
+        <div class="wrapper-main wrapper wrapper-res">
+            <div class="wrapper-res">
                 <div class="clearfix">
                     <header class="global-nav">
-                        <a class="skip-to-content" href="#main">Skip to content</a>
-                        <div class="wrapper">
-                            <nav class="inner-nav" role="navigation">
+                        <div class="wrapper wrapper-res">
+                            <nav class="inner-nav">
                                 <ul class="nav">
-                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
-                                    <li class="copy copy-dk hdg-upper nav-small grid-rt mrg-lt-650"><a href="">Create an account</a></li>
                                 </ul>
                             </nav> <!-- End .inner-nav -->
                         </div>  <!-- End .wrapper -->
                     </header> <!-- End .global-nav -->
                 </div>
             </div>
-            <div class="header-margin"></div>
-            <!-- <div class="about-bg grid-size2of3 grid-lt section-ht">
-            
-            </div> -->
-            <section class="about-bg about-bg-white login-bg section-ht">
-                <div class="wrapper">
+            <section class="about-bg about-bg-white login-bg section-dim">
+                <div class="wrapper wrapper-res">
                     <div class="inner-wrapper">
-                    <div class="signin-box">
-                        <h2 class="hdg-a hdg-white layout-vr-md">Sign In</h2>
-                        <div class="media layout-vr-xlg">
-                            <a href="{% url 'social:begin' 'facebook' %}?next={{next}}" class="btn btn-facebook social-width comment-bd">Facebook</a><br>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}" class="btn btn-google-plus social-width comment-bd">Google</a>
-                            <p class="hdg-e hdg-lt hdg-white key">OR</p>
-                            
-                                {% if form.errors %}
-                                    {% for error in form.non_field_errors %}
-                                        <p class="hdg-source-reg hdg-white mrg-top10 mrg-btm-5 err-box"> Incorrect Username and Password</p>
-                                    {% endfor %}
-                                {% endif %}
-                            
-                            {% load app_tags %}
-                            <form method="post" action="/login/">
-                                {% csrf_token %}
-                                <div class="auth hdg-source-reg hdg-white">
-                                    {{ form.username|placeholder:form.username.label }}
-                                    {% if form.errors %}<div class="err-box">{{ form.username.errors }}</div>{% endif %}
-                                    {{ form.password|placeholder:form.password.label }}
-                                    {% if form.errors %}<div class="err-box">{{ form.password.errors }}</div>{% endif %}
-                                    <a href="" class="hdg-white">Forgot your password?</a>
-                                </div>
-                                <input type="submit" value="Login" class="comment-btn login-margin" />
-                                {% if next %}
-                                    <input type="hidden" name="next" value="{{next}}" />
-                                {% else %}
-                                    <input type="hidden" name="next" value="/" />
-                                {% endif %}
-                            </form>
+                        <div class="auth-box">
+                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f auth-mrg-lt-sm">Sign Up</span></h2>
+                            <div class="media layout-vr-xlg">
+                                <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><img src="../media/social_website/content/fb_signin.png" class ="auth-social-width auth-mrg-top-sm"alt="Facebook"></a><br>
+                                <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}"><img src="../media/social_website/content/google_signin.png" class="auth-social-width" alt="Google"></a>
+                                <p class="hdg-e hdg-lt hdg-white key auth-mrg-top-sm">OR</p>
+                                
+                                    {% if form.errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <p class="hdg-source-reg hdg-white auth-err-msg auth-err-box"> Wrong Username and Password</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                
+                                {% load app_tags %}
+                                <form method="post" action="/login/" class="auth-mrg-top-sm">
+                                    {% csrf_token %}
+                                    <div class="auth hdg-source-reg hdg-white">
+                                        {{ form.username|placeholder:form.username.label }}
+                                        {% if form.errors %}<div class="auth-err-box">{{ form.username.errors }}</div>{% endif %}
+                                        {{ form.password|placeholder:form.password.label }}
+                                        {% if form.errors %}<div class="auth-err-box">{{ form.password.errors }}</div>{% endif %}
+                                        <a href="" class="hdg-white">Forgot your password?</a>
+                                    </div>
+                                    <input type="submit" value="Sign In" class="comment-btn auth-btn"/>
+                                    {% if next %}
+                                        <input type="hidden" name="next" value="{{next}}" />
+                                    {% else %}
+                                        <input type="hidden" name="next" value="/" />
+                                    {% endif %}
+                                </form>
+                            </div>
                         </div>
-                    </div>
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
             </section>
-        </div> <!-- End main wrapper-->
+        </div>
+        <!-- JavaScript -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript"> 
+            $(document).ready(function() {
+                var images = ['image0.jpg', 'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg'];
+                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
+            });
+        </script>
+        <script type="text/javascript">
+    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    	</script>
+    	<script type="text/javascript">
+    		try {
+    			var pageTracker = _gat._getTracker("UA-16211208-1");
+    			pageTracker._trackPageview();
+    			} 
+            catch(err) {}
+    	</script>
     </body>
 </html>
