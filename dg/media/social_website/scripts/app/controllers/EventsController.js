@@ -1,7 +1,7 @@
 /**
- * AboutController Class File
+ * EventsController Class File
  *
- * @author rdeluca
+ * @author nandini
  * @version $Id$
  * @requires require.js
  * @requires jQuery
