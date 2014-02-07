@@ -49,7 +49,7 @@ def event_registration(request):
         html += "%s: %s <br />" % (field, value)
     
     subject = "Registration for Digital Green Workshop"
-    mail = Mail(to="events@digitalgreen.org", subject=subject, text=text, html=html, reply_to=email)
+    mail = Mail(to=events_email, subject=subject, text=text, html=html, reply_to=email)
     try:
         mail.send()
         message = "Form submitted successfully."
