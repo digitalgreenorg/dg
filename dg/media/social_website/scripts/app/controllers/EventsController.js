@@ -27,10 +27,8 @@ define(function(require) {
         constructor: function(bootstrapConfig, globalHelpers) {
             this.base(bootstrapConfig, globalHelpers);
 
-            
-
-
             var references = this._references;
+
             return this;
         },
 
@@ -98,27 +96,49 @@ define(function(require) {
         
         _onSubmitRegistrationButtonClick: function (event) {
             event.preventDefault();
-            var submitButton = jQuery(event.target);
-            var form = submitButton.closest('form');
-            form.append(this._references.$csrfToken);
+            var $submitButton = jQuery(event.target);
+            var $form = $submitButton.closest('form');
+            var $formResult = $form.find('.js-form-result');
+            var $inputsRequired = $form.find('.js-required');
+            var $inputsEmail = $form.find('.js-email')
             
-            /* TODO Validate fields
+            $formResult.html("");
+            $form.append(this._references.$csrfToken);
+            
+            /* Validate fields
              * Check that email not empty and matches Regular Expression
              * Check that name, organization not empty
             */
+            var error_messages = "";
+            $inputsRequired.each(function(){
+                if (this.value == "") {
+                    error_messages += $(this).attr("name") + " is required. It cannot be left blank.<br/>";
+                }
+            });
+            $inputsEmail.each(function(){
+                var email = this.value;
+                /* The world's greatest regular expression */
+                var emailRegExp = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+                var valid = emailRegExp.test(email);
+                if (!valid) {
+                    error_messages += $(this).attr("name") + " is not a valid email.<br/>";
+                }
+            });
+            if (error_messages!="") {
+                $formResult.append(error_messages);
+                return;
+            }
             
-            var formQueryString = form.serialize();
+            var formQueryString = $form.serialize();
             jQuery.ajax
             ({
                 type: "POST",
                 url: "registration/",
                 data: formQueryString,
                 cache: false,
-                success: function(html)
+                success: function(message)
                 {
-                    //alert("thanks for contact us");
-                    //msg="thanks";
-                    //form.('.js-form-result').html(html);
+                    $formResult.append(message);
                 }
             });
         },
