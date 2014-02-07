@@ -39,11 +39,12 @@ def event_registration(request):
     # Events email to send registrations
     events_email = "events@digitalgreen.org"
     
-    request.POST.pop('csrfmiddlewaretoken', None)
     email = request.POST["Email"]
     text = ""
     html = ""
     for field, value in request.POST.items():
+        if field=='csrfmiddlewaretoken':
+            pass
         text += "%s: %s\n" % (field, value)
         html += "%s: %s <br />" % (field, value)
     
