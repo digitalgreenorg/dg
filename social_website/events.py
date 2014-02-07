@@ -43,8 +43,8 @@ def event_registration(request):
     text = ""
     html = ""
     for field, value in request.POST.items():
-        if field=='csrfmiddlewaretoken':
-            pass
+        if field==u'csrfmiddlewaretoken':
+            continue
         text += "%s: %s\n" % (field, value)
         html += "%s: %s <br />" % (field, value)
     
