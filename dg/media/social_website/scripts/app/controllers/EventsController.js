@@ -72,6 +72,7 @@ define(function(require) {
         
         _onRegisterButtonClick: function () {
             // Remove and add the Registration section
+            /* TODO Adjust about-bg-white sequence */
             this._references.$registerSection.remove();
             this._references.$registerButton.closest('section.about-bg').after(registrationFormTemplate);
             
@@ -97,23 +98,24 @@ define(function(require) {
             event.preventDefault();
             var submitButton = jQuery(event.target);
             var form = submitButton.closest('form');
-            // TODO Validate fields
-            // Check that email not empty and matches Regular Expression
-            // Check that name, organization not empty
+            
+            /* TODO Validate fields
+             * Check that email not empty and matches Regular Expression
+             * Check that name, organization not empty
+            */
             
             var formQueryString = form.serialize();
             jQuery.ajax
             ({
                 type: "POST",
-                url: "data.php",
+                url: "registration/",
                 data: formQueryString,
                 cache: false,
                 success: function(html)
                 {
                     //alert("thanks for contact us");
                     //msg="thanks";
-                    //form.('.result_area').html(html);				  
-								   
+                    //form.('.js-form-result').html(html);
                 }
             });
         },
