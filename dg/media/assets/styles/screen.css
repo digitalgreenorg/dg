@@ -3164,10 +3164,11 @@ body {
 
 .auth{
     height: 30px;
-    width: 150px;
+    width: 160px;
     border-radius: 5px;
     margin-top: 10px;
     padding-left: 10px;
+    margin-left: -5px;
 }
 
 .auth::-webkit-input-placeholder {
@@ -3198,22 +3199,19 @@ body {
     border-style:solid;
     border-color:red;
     border-width: 1px;
-    width: 173px;
+    width: 163px;  
 }
 
-.mrg-top20 {
-    margin-top: 20px;
-}
-
-.mrg-top10 {
+.auth-err-msg {
     margin-top: 10px;
-}
-
-.mrg-btm-5 {
     margin-bottom: -5px;
 }
 
-.mrg-lt-20 {
+.auth-mrg-top-sm {
+    margin-top: 20px;
+}
+
+.auth-mrg-lt-sm {
     margin-left: 20px;
 }
 
@@ -3237,7 +3235,7 @@ body {
         width: 480px;
     }
     
-    .signin-box {
+    .auth-box {
         height: 430px;
         margin-left: 10%;
         margin-top: -40px;
@@ -3251,7 +3249,7 @@ body {
         height: 400px;
     }
     
-    .mrg-top20 {
+    .auth-mrg-top-sm {
         margin-top: 0px;
     }
    
@@ -3263,7 +3261,7 @@ body {
         width: 767px;
     }
     
-    .signin-box {
+    .auth-box {
         height: 430px;
         margin-left: 30%;
         margin-top: -40px;
@@ -3281,7 +3279,7 @@ body {
         margin-right: 250px;
     }
     
-    .mrg-top20 {
+    .auth-mrg-top-sm {
         margin-top: 0px;
     }
     
@@ -3289,7 +3287,7 @@ body {
 
 @media (min-width: 768px) and (max-width: 992px) {
     
-    .signin-box {
+    .auth-box {
         margin-left: 35%;
     }
     

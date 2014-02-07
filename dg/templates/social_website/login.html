@@ -4,20 +4,20 @@
                 <div class="wrapper wrapper-res">
                     <div class="inner-wrapper">
                         <div class="auth-box">
-                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f mrg-lt-20">Sign Up</span></h2>
+                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f auth-mrg-lt-sm">Sign Up</span></h2>
                             <div class="media layout-vr-xlg">
-                                <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><img src="../media/social_website/content/fb_signin.png" class ="auth-social-width mrg-top20"alt="Facebook"></a><br>
+                                <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><img src="../media/social_website/content/fb_signin.png" class ="auth-social-width auth-mrg-top-sm"alt="Facebook"></a><br>
                                 <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}"><img src="../media/social_website/content/google_signin.png" class="auth-social-width" alt="Google"></a>
-                                <p class="hdg-e hdg-lt hdg-white key mrg-top20">OR</p>
+                                <p class="hdg-e hdg-lt hdg-white key auth-mrg-top-sm">OR</p>
                                 
                                     {% if form.errors %}
                                         {% for error in form.non_field_errors %}
-                                            <p class="hdg-source-reg hdg-white mrg-top10 mrg-btm-5 auth-err-box"> Incorrect Username and Password</p>
+                                            <p class="hdg-source-reg hdg-white auth-err-msg auth-err-box"> Wrong Username and Password</p>
                                         {% endfor %}
                                     {% endif %}
                                 
                                 {% load app_tags %}
-                                <form method="post" action="/login/" class="mrg-top20">
+                                <form method="post" action="/login/" class="auth-mrg-top-sm">
                                     {% csrf_token %}
                                     <div class="auth hdg-source-reg hdg-white">
                                         {{ form.username|placeholder:form.username.label }}
