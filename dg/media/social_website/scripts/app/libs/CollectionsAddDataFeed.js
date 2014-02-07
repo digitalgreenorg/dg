@@ -26,6 +26,14 @@ define(function(require) {
             this.base(null, customCallback);
         },
 
+        _onFetchError: function(error) {
+            this.base(error);
+            if(error.status == 400){
+                $('body').scrollTop(0);
+                $(".coltitle").notify(error.responseText);
+            }
+        },
+        
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
             
