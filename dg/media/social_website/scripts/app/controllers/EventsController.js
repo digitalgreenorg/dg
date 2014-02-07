@@ -84,13 +84,14 @@ define(function(require) {
         
         _onFormTabClick: function (event) {
             event.preventDefault();
-            jQuery(".js-form-tab").removeClass("active");
-            jQuery(event.target).addClass('active');
-            this._references.$registration_form_tabs.index(jQuery(event.target));
-            
-            var index = jQuery('.js-form-tab').index(event.target);
-            jQuery('.js-form').addClass('hide');
-            jQuery(jQuery('.js-form')[index]).removeClass('hide')
+            var form_tab = jQuery(event.target);
+            var form_tabs = this._references.$registration_form_tabs;
+            form_tabs.removeClass('active');
+            form_tab.addClass('active');
+            var index = form_tabs.index(form_tab);
+            var forms = jQuery('.js-form');
+            forms.addClass('hide');
+            jQuery(forms[index]).removeClass('hide');
         },
         
         _initVideoPlayer: function() {
