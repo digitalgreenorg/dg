@@ -411,6 +411,7 @@ class PersonGroups(CocoModel):
     timings = models.TimeField(db_column='TIMINGS',null=True, blank=True)
     time_updated = models.DateTimeField(db_column='TIME_UPDATED',auto_now=True)
     village = BigForeignKey(Village)
+    partner = BigForeignKey(Partners)
     class Meta:
         db_table = u'person_groups'
         verbose_name = "Person group"
@@ -444,6 +445,7 @@ class Person(CocoModel):
     
     objects = models.Manager() #The default manager
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook
+    partner = BigForeignKey(Partners)
     
     class Meta:
         db_table = u'person'
@@ -729,6 +731,7 @@ class Video(CocoModel):
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
     viewers = models.PositiveIntegerField(default=0, editable=False)
+    partner = BigForeignKey(Partners)
     
     @staticmethod
     def update_viewer_count(sender, **kwargs):
@@ -874,6 +877,7 @@ class Screening(CocoModel):
     farmer_groups_targeted = BigManyToManyField(PersonGroups)
     videoes_screened = BigManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
+    partner = BigForeignKey(Partners)
     class Meta:
         db_table = u'screening'
         unique_together = ("date", "start_time", "end_time","animator","village")
@@ -896,6 +900,7 @@ class PersonAdoptPractice(CocoModel):
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    partner = BigForeignKey(Partners)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
