@@ -31,15 +31,19 @@ define(function(require) {
         _initReferences: function() {
             this.base();
             var references = this._references;
+            var $collectionWrapper = jQuery('.js-collection-outer-wrapper');
+            var $sortable = jQuery('#sortable');
             
             // Initializing Sortable for Dragging around videos
-            $( "#sortable" ).sortable({
-            	                delay: 100,
-            	                revert: 300
-            	            });
-            $( "#sortable" ).disableSelection();
             
-            var $collectionWrapper = jQuery('.js-collection-outer-wrapper');
+            $( $sortable ).sortable({
+            	                delay: 100,
+            	                scroll: false,
+            	                cursorAt: { top:0, left: 0 },
+            	            });
+            $( $sortable ).disableSelection();
+            
+            
             references.CollectionAddViewController = new CollectionAddViewController($collectionWrapper);
         },
 
