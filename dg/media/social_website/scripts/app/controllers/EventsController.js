@@ -14,6 +14,7 @@ define(function(require) {
     var jQuery = require('jquery');
 
     var NCarousel = require('libs/NCarousel/NCarousel');
+    var notify = require('libs/external/notify.min')
     
     require('libs/external/swfobject/swfobject');
     var registrationFormTemplate = require('text!app/views/events/registration-form.html');
@@ -112,7 +113,8 @@ define(function(require) {
             var error_messages = "";
             $inputsRequired.each(function(){
                 if (this.value == "") {
-                    error_messages += $(this).attr("name") + " is required. It cannot be left blank.<br/>";
+                    $(this).notify("This Field is required. It cannot be left blank.");
+                    //error_messages += $(this).attr("name") + " is required. It cannot be left blank.<br/>";
                 }
             });
             $inputsEmail.each(function(){
@@ -121,7 +123,8 @@ define(function(require) {
                 var emailRegExp = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
                 var valid = emailRegExp.test(email);
                 if (!valid) {
-                    error_messages += $(this).attr("name") + " is not a valid email.<br/>";
+                    $(this).notify("This is not a valid email");
+                    //error_messages += $(this).attr("name") + " is not a valid email.<br/>";
                 }
             });
             if (error_messages!="") {
