@@ -141,7 +141,10 @@ define(function(require) {
                 cache: false,
                 success: function(message)
                 {
-                    $formResult.append(message);
+                    $form.find('input[type=text], textarea').val('');
+                    $formResult.notify(message, { position:"bottom center", arrowShow: false, className: 'success' });
+                    var body = jQuery("html, body");
+                    body.animate({ scrollTop: $('#registration').offset().top }, 1000);
                 }
             });
         },
