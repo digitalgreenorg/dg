@@ -808,6 +808,10 @@ a {
 	margin-bottom: 14px;
 }
 
+.copy-bold{
+	font-weight: bold;
+}
+
 .link-list > li a {
     font-weight: bold;
     background: url(../images/list-bg.png) no-repeat 0 2px;
