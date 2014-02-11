@@ -114,7 +114,7 @@ define(function(require) {
             $inputsRequired.each(function(){
                 if (this.value == "") {
                     $(this).notify("This Field is required. It cannot be left blank.");
-                    //error_messages += $(this).attr("name") + " is required. It cannot be left blank.<br/>";
+                    error_messages += $(this).attr("name") + " is required. It cannot be left blank.<br/>";
                 }
             });
             $inputsEmail.each(function(){
@@ -124,11 +124,11 @@ define(function(require) {
                 var valid = emailRegExp.test(email);
                 if (!valid) {
                     $(this).notify("This is not a valid email");
-                    //error_messages += $(this).attr("name") + " is not a valid email.<br/>";
+                    error_messages += $(this).attr("name") + " is not a valid email.<br/>";
                 }
             });
             if (error_messages!="") {
-                $formResult.append(error_messages);
+                //$formResult.append(error_messages);
                 return;
             }
             
