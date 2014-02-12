@@ -159,7 +159,7 @@ class DevelopmentManagerAdmin(admin.ModelAdmin):
 
 class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
-                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary']}),
+                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary', 'partner']}),
                 ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),

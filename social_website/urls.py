@@ -3,8 +3,8 @@ from django.views.generic import TemplateView
 
 from communications.views import media_view
 from human_resources.views import job_view, member_view
+from events import event_registration
 from views import social_home, collection_view, logout_view, partner_view, search_view, collection_add_view, collection_edit_view
-
 
 class DirectTemplateView(TemplateView):
     extra_context = None
@@ -45,6 +45,7 @@ urlpatterns = patterns('',
     url(r'^donate/$', TemplateView.as_view(template_name='donate.html'), name='donate'),
     url(r'^example/$', TemplateView.as_view(template_name='example1.html')),
     url(r'^events/$', DirectTemplateView.as_view(template_name='events.html', extra_context={'header':{'jsController':'Events', 'currentPage':'Events'}}), name='events'),
+    url(r'^events/registration/$', event_registration, name='event_registration'),
     url(r'^logout/?$', logout_view, name='logout'),
     url(r'^main.js$', TemplateView.as_view(template_name='main.js', content_type='text/javascript'), name='mainjs'),
     # TODO: There are no names used below
