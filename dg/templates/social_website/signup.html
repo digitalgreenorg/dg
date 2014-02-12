@@ -41,10 +41,10 @@
                                     {% csrf_token %}
                                     <div class="auth hdg-source-reg hdg-white">
                                         {{ form.username|placeholder:form.username.label }}
-                                        {% if form.errors %}{{ form.username.errors }}{% endif %}
+                                        {% if form.errors %}<div class="auth-err-box">{{ form.username.errors }}</div>{% endif %}
                                         {{ form.password1|placeholder:form.password1.label }}
                                         {{ form.password2|placeholder:"Confirm Password" }}
-                                        {% if form.errors %}{{ form.password2.errors }}{% endif %}
+                                        {% if form.errors %}<div class="auth-err-box">{{ form.password2.errors }}</div>{% endif %}
                                     </div>
                                         <input type="submit" value="sign up" class="comment-btn auth-btn-su" />
                                     {% if next %}
