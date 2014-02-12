@@ -3186,6 +3186,11 @@ body {
     width: 100px;
 }
 
+.auth-btn-su {
+    margin-top : 200px;
+    margin-left: 37px;
+}
+
 .auth-box {
     height: 700px;
     width: 200px;
@@ -3236,7 +3241,7 @@ body {
     }
     
     .auth-box {
-        height: 430px;
+        height: 500px;
         margin-left: 10%;
         margin-top: -40px;
     }
@@ -3262,7 +3267,7 @@ body {
     }
     
     .auth-box {
-        height: 430px;
+        height: 500px;
         margin-left: 30%;
         margin-top: -40px;
     }
