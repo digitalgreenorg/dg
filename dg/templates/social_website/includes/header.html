@@ -70,7 +70,7 @@
                                         <li><a class="btn-sign-in" data-toggle="modal" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
                                         <li>
-                                            <a class="btn-sign-in btn-signed" href="{% url 'logout' %}?next={{request.path}}">
+                                            <a class="btn-sign-in btn-signed" href="{% url 'logout' %}">
                                                 <div class="media">
                                                     <div class="img">
                                                         {% if "facebook" == request.user.social_auth.all.0.provider %}

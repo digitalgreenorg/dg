@@ -46,7 +46,6 @@ urlpatterns = patterns('',
     url(r'^example/$', TemplateView.as_view(template_name='example1.html')),
     url(r'^events/$', DirectTemplateView.as_view(template_name='events.html', extra_context={'header':{'jsController':'Events', 'currentPage':'Events'}}), name='events'),
     url(r'^events/registration/$', event_registration, name='event_registration'),
-    url(r'^logout/?$', logout_view, name='logout'),
     url(r'^main.js$', TemplateView.as_view(template_name='main.js', content_type='text/javascript'), name='mainjs'),
     # TODO: There are no names used below
     url(r'^press/$', media_view, name='press'),

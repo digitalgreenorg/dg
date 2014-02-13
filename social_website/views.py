@@ -3,6 +3,7 @@ import datetime
 import json
 import urllib2
 
+from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import UserCreationForm
@@ -193,12 +194,6 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
-def logout_view(request):
-    next_url = request.GET.get('next', None)
-    logout(request)
-    return HttpResponseRedirect(next_url)
-
-from django.contrib.auth import authenticate, login
 @csrf_protect
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,

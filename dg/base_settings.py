@@ -48,6 +48,8 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_URL = '/login/'
+LOGOUT_URL = '/'
+PERMISSION_DENIED_URL = '/permission_denied'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
