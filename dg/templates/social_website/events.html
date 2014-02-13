@@ -1,0 +1,95 @@
+{% include "includes/header.html" %}
+    {% include "includes/partials/mainCarousel.html" %}
+        
+        <section id="about" role="main" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Events</h2>
+                    <div class="media layout-vr-xlg">
+                        <div class='bd'>
+                            <div class="grid-col grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#workshop_addis" class="link1">Addis Ababa, Ethiopia - 7 February, 2014</a></li>
+                                    <li><a href="#workshop_delhi" class="link2">New Delhi, India - 6-7 March, 2014</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="workshop_addis" class='about-bg'>
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Scaling up Digital Green in Ethiopia</h2>    
+                    <div class='media layout-vr-xlg'>
+                        <div class="grid-lt grid-size1of3">
+                            <img src="{{STATIC_URL}}social_website/content/video_production_africa.jpg" alt="Scaling up Digital Green in Ethiopia">
+                        </div>
+                        <div class="grid-lt grid-size2of3">
+                            <p class="layout-vr-md">Consultative workshop to share experiences and collaboratively source insights for strengthening the Digital Green approach in Ethiopia.</p>
+                            <ul class="v-list list-icons-business">
+                                <li class="cal"><a href="javascript:void(0);">February 7, 2014 at ILRI Campus, Addis Ababa, Ethiopia</a></li>
+                                <li class="pdf"><a href="{{STATIC_URL}}docs/events/Scaling up Digital Green in Ethiopia - workshop agenda.pdf" target="_blank">Agenda</a></li>
+                                <!-- li class="spk"><a href="javascript:void(0);">List of Speakers</a></li> -->
+                                <li class="mail"><a href="mailto:events@digitalgreen.org">events@digitalgreen.org</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="workshop_delhi" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Effectiveness of ICT for rural development</h2>
+                    <div class='media layout-vr-xlg'>
+                        <div class="grid-lt grid-size1of3">
+                            <img src="{{STATIC_URL}}social_website/content/rice_farming.jpg" alt="Effectiveness of ICT for rural developement">
+                        </div>
+                        <div class="grid-lt grid-size2of3">
+                            <p class="layout-vr-md">Consultative workshop to share experiences on using ICT for rural development and build a community of learning based on the Digital Green approach.</p>
+                            <ul class="v-list list-icons-business">
+                                <li class="cal">
+                                    <a href="javascript:void(0);">March 6-7, 2014 at Hotel Claridges, New Delhi</a>
+                                </li>
+                                <!-- <li class="pdf">
+                                    <a href="javascript:void(0);">Agenda</a>
+                                </li-->
+                                <!--li class="spk">
+                                    <a href="javascript:void(0);">List of Speakers</a>
+                                </li> -->
+                                <li class="faq">
+                                    <a href="{{STATIC_URL}}docs/events/Frequently Asked Questions.pdf" target="_blank";>FAQs</a>
+                                </li>
+                                <li class="reg js-register-button" data-csrf-input="{% csrf_token %}">
+                                    <a href="#">Register Now</a>
+                                </li>
+                                <li class="mail">
+                                    <a href="mailto:events@digitalgreen.org">events@digitalgreen.org</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        
+
+        
+        <section id="contact" class='about-bg about-bg-white'>
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Contact</h2>    
+                    <div class='layout-vr-xlg'>
+                        <p>For further information please write to us at</p><br/>
+                        <a href="mailto:events@digitalgreen.org">events@digitalgreen.org</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+{% include "includes/footer.html" %}
