@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from communications.views import media_view
 from human_resources.views import job_view, member_view
 from events import event_registration
-from views import social_home, collection_view, logout_view, partner_view, search_view
+from views import social_home, collection_view, partner_view, search_view
 
 class DirectTemplateView(TemplateView):
     extra_context = None
