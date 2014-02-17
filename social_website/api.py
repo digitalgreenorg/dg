@@ -14,7 +14,7 @@ from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
 from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, VideoinCollection, VideoLike
-from migration_functions import populate_collection_stats
+from migration_functions import populate_collection_stats, populate_partner_stats
 from post_save_funcs import video_collection_activity
 
 
@@ -215,6 +215,7 @@ class CollectionResource(BaseCorsResource):
             Collection_obj = Collection.objects.get(uid=collection_id)
             populate_collection_stats(Collection_obj)
             video_collection_activity(Collection_obj, video_list)
+            populate_partner_stats(Collection_obj.partner)
             return bundle
         else:
             pass
@@ -235,7 +236,10 @@ class CollectionResource(BaseCorsResource):
                     vid_collection.save()
                 except Exception, e:
                     pass
-            populate_collection_stats(Collection.objects.get(uid=collection_id))
+            Collection_obj = Collection.objects.get(uid=collection_id)
+            populate_collection_stats(Collection_obj)
+            video_collection_activity(Collection_obj, video_list)
+            populate_partner_stats(Collection_obj.partner)
             return bundle
 
         else:

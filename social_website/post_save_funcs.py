@@ -1,6 +1,9 @@
-import dg.settings
 import pickle
+
 from django.db.models import get_model
+
+import dg.settings
+
 from social_website.utils.generate_activities import add_collection, add_video, add_video_collection
 
 
@@ -40,12 +43,3 @@ def video_collection_activity(collection, videos):
             add_video_collection(collection, video)
             collection_dict[collection.uid].append(video.uid)
     pickle.dump(collection_dict, open(file, "wb"))
-
-def collection_video_save(sender, **kwargs):
-    if kwargs['action'] == 'post_add' or kwargs['action'] == 'post_remove':
-        from migration_functions import populate_collection_stats, populate_partner_stats
-        collection = kwargs["instance"]
-        populate_collection_stats(collection)
-        populate_partner_stats(collection.partner)
-        collection.save()
-        collection.partner.save()

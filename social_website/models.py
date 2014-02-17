@@ -3,10 +3,9 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import m2m_changed, post_save
-from django.utils import timezone
+from django.db.models.signals import post_save
 
-from post_save_funcs import collection_video_save, increase_online_video_like, video_add_activity, video_collection_activity
+from post_save_funcs import increase_online_video_like, video_add_activity, video_collection_activity
 
 
 #===============================================================================
@@ -114,7 +113,6 @@ class Collection(models.Model):
         self.save()
     class Meta:
         unique_together = ("title", "partner", 'state', 'language')
-m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
 
 
 class VideoinCollection(models.Model):
