@@ -60,7 +60,7 @@ class ScreeningForm(forms.ModelForm):
         model = Screening
 
 class ScreeningAdmin(admin.ModelAdmin):
-    fields = ('date','start_time','end_time','location','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions','fieldofficer',)
+    fields = ('date','start_time','end_time','location','partner','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions','fieldofficer',)
     inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
     list_display = ('date', 'village', 'location')
