@@ -3229,6 +3229,10 @@ body {
     margin-left: 650px;
 }
 
+.mrg-lt40 {
+    margin-left: 40px;
+}
+
 .section-ht {
     height: 550px;
 }
@@ -3251,4 +3255,40 @@ body {
     border-color:red;
     border-width: 1px;
     width: 173px;
+}
+
+.user-image {
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.user-dropdown {
+    position: absolute;
+    display: none;
+    background-color: white;
+    margin-left: -99px;
+    border: 1px solid #dbdad5;
+    border-top: 0;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -moz-border-radius-bottomleft: 4px;
+}
+
+.user-dropdown:before {
+  position: absolute;
+  top: -7px;
+  left: 120px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.user-dropdown-option {
+    text-align: right;
+    padding: 10px 30px;
+    border-top: 1px solid #dbdad5;
 }
