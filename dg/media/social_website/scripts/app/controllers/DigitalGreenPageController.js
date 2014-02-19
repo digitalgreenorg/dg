@@ -53,14 +53,32 @@ define(function(require) {
 
             var $searchContainer = jQuery(".js-search-wrapper");
             
+            references.$userImage = jQuery('.user-image');
+            references.$userDropDown = jQuery('.user-dropdown')
+            
             // helpers
             //TODO: Not sure if we need to do much else than instantiate
             references.searchViewController = new SearchViewController($searchContainer);
+        },
+        
+        _initEvents: function() {
+            this.base();
+            
+            var references = this._references;
+            var boundFunctions = this._boundFunctions;
+
+            boundFunctions.onUserImageClick = this._onUserImageClick.bind(this);
+            references.$userImage.on('click', boundFunctions.onUserImageClick);
         },
 
         _onOptionChanged: function(value) {
             Util.Cookie.set('language__name', value);
             globalEventManager.trigger('languageChanged', value);
+        },
+
+        _onUserImageClick: function(e) {
+            e.preventDefault();
+            this._references.$userDropDown.toggle();
         },
 
         /**

@@ -49,7 +49,7 @@
             Profile
     -->
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
-    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
+    <body data-controller="{% if header.jsController %} {{header.jsController}} {% else %}Default{% endif %}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
             <div class="header-fixed">
@@ -106,25 +106,7 @@
                     </header> <!-- End .global-nav -->
                 </div>
             
-                {% load url from future %}
-                <div id="login_modal" class="modal-login modal hide" >
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
-                    <div class="layout-vr-sm">
-                        <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
-                    </div>
-                    <div class="layout-vr-tiny">
-                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
-                    </div>
-                </div>
             </div>
             <div class="header-margin"></div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script>
-    
-    $('.user-image').click(function(e){
-        $('.user-dropdown').toggle();
-        e.preventDefault();
-    });
-</script>
+
