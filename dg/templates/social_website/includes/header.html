@@ -73,7 +73,7 @@
                                         <div class="">
                                             
                                             <!-- <a class="mrg-lt40" href="{% url 'logout' %}?next={{request.path}}"> -->
-                                            <a class="mrg-lt40">
+                                            <div class="mrg-lt40">
                                                 <div class="media">
                                                     <div class="img">
                                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
@@ -86,11 +86,11 @@
                                                         </div>
                                                         {% endif %}
                                                         <div class="user-dropdown filterOptions">
-                                                            <p class="user-dropdown-option">{{request.user.username}}</p>
+                                                            <a class="user-dropdown-option">{{request.user.username}}</a>
                                                             {% if not request.user.social_auth %}
-                                                                <p class="user-dropdown-option">Change Password</p>
+                                                                <a class="user-dropdown-option">Change Password</a>
                                                             {% endif %}
-                                                            <p class="user-dropdown-option">Sign Out</p> 
+                                                            <a href="{% url 'logout' %}" class="user-dropdown-option">Sign Out</a> 
                                                         </div>
                                                         
                                                     </div>
@@ -98,7 +98,7 @@
                                                         Sign Out
                                                     </div-->
                                                 </div>
-                                            </a>
+                                            </div>
                                         </div>
                                         </li>
                                     {% endif %}
