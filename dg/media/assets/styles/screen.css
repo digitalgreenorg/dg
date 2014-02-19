@@ -3262,6 +3262,10 @@ body {
     border-radius: 3px;
 }
 
+.user-image-fb {
+    width: 40px;
+}
+
 .user-dropdown {
     position: absolute;
     display: none;
