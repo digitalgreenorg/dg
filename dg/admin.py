@@ -4,6 +4,7 @@ from dashboard.admin import *
 from video_practice_map.admin import *
 from django.contrib.auth.admin import *
 
+
 class Admin(AdminSite):
 
     def has_permission(self, request):

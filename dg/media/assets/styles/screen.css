@@ -619,12 +619,12 @@ a {
     float: right;
 }
 
-.grid-pad-lt-sm {
-    padding-left: 15px;
-}
-
 .grid-pad-lt-tiny{
 	padding-left: 7px;
+}
+
+.grid-pad-lt-sm {
+    padding-left: 15px;
 }
 
 .grid-pad-rt-tiny{
@@ -808,6 +808,10 @@ a {
 	margin-bottom: 14px;
 }
 
+.copy-bold{
+	font-weight: bold;
+}
+
 .link-list > li a {
     font-weight: bold;
     background: url(../images/list-bg.png) no-repeat 0 2px;
@@ -895,6 +899,11 @@ a {
     margin-bottom: 8px;
     display: block;
 }
+
+.v-list-sm > * + * {
+    margin-top: 3px;
+}
+
 .v-list-md > * + * {
     margin-top: 13px;
 }
@@ -2727,13 +2736,6 @@ textarea.comment-text {
 	height: 0;
 }
 
-
-
-
-
-
-
-
 /* Carousel Styles */
 
 .main-carousel {
@@ -3166,40 +3168,15 @@ body {
 	display: none;
 }
 
-
 /************** login ***************/
-.social-icon-small {
-    text-indent: -9999px;
-    display: inline;
-    height: 23px;
-    width: 23px;
-    margin: 0 auto;
-}
-
-.icon-fb-small {
-    background: url(../images/fbicon-small.png);
-}
-
-.icon-gp-small {
-    background: url(../images/gicon-small.png);
-}
-
-.no-border{
-    border-style: none;
-}
-
-.inp-text{
-    text-transform: uppercase;
-    color: #047d0a;
-    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
-    font-size: 14px;
-}
 
 .auth{
     height: 30px;
-    width: 170px;
+    width: 160px;
     border-radius: 5px;
     margin-top: 10px;
+    padding-left: 10px;
+    margin-left: -5px;
 }
 
 .auth::-webkit-input-placeholder {
@@ -3207,54 +3184,144 @@ body {
    font-weight: bold;
 }
 
-.social-width{
-    width: 137px;
+.auth-social-width {
+    width: 175px;
 }
 
-.login-margin{
-    margin-top: 130px;
+.auth-btn{
+    margin-top: 140px;
     margin-left: 37px;
     width: 100px;
 }
 
-.mrg-top10 {
-    margin-top: 10px;
+.auth-btn-su {
+    margin-top : 200px;
+    margin-left: 37px;
 }
 
-.mrg-btm-5 {
-    margin-bottom: -5px;
-}
-
-.mrg-lt-650 {
-    margin-left: 650px;
-}
-
-.mrg-lt40 {
-    margin-left: 40px;
-}
-
-.section-ht {
-    height: 550px;
-}
-
-.signin-box {
-    height: 455px;
+.auth-box {
+    height: 700px;
     width: 200px;
     background-color: rgba(0,0,0,0.3);
     padding-left: 20px;
-    margin-left: 700px;
+    margin-left: 764px;
+    margin-top: -50px;
 }
 
-.login-bg{
-    background: url(https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-prn2/t1/1546170_10152118684550219_1408199878_n.jpg) no-repeat;
-    background-size: 1024px 650px;
-}
-
-.err-box {
+.auth-err-box {
     border-style:solid;
     border-color:red;
     border-width: 1px;
-    width: 173px;
+    width: 163px;  
+}
+
+.auth-err-msg {
+    margin-top: 10px;
+    margin-bottom: -5px;
+}
+
+.auth-mrg-top-sm {
+    margin-top: 20px;
+}
+
+.auth-mrg-lt-sm {
+    margin-left: 20px;
+}
+
+.section-dim {
+    height: 650px;
+}
+
+.login-bg{
+    background-size: 1024px 650px;
+}
+
+.footer {
+    margin-top: -5px;
+}
+
+/* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
+
+@media(max-width: 480px) {
+    
+    .wrapper-res {
+        width: 480px;
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 10%;
+        margin-top: -40px;
+    }
+    
+    .login-bg{
+        background-size: 480px;
+    }
+    
+    .section-dim {
+        height: 500px;
+    }
+    
+    .auth-mrg-top-sm {
+        margin-top: 0px;
+    }
+   
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    
+    .wrapper-res {
+        width: 767px;
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 30%;
+        margin-top: -40px;
+    }
+    
+    .login-bg{
+        background-size: 767px;
+    }
+   
+    .section-dim {
+        height: 600px;
+    }
+    
+    .footer-btn{
+        margin-right: 250px;
+    }
+    
+    .auth-mrg-top-sm {
+        margin-top: 0px;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    
+    .auth-box {
+        margin-left: 35%;
+    }
+    
+    .login-bg {
+        width: 992px;
+        background-size: contain;
+    }
+    
+    .footer-btn {
+        margin-right: 500px;
+    }
+    
+    .wrapper-res {
+        width: 992px;
+    }
+}
+
+/****** User Dropdown Menu *************/
+
+.mrg-lt40 {
+    margin-left: 40px;
 }
 
 .user-image {
@@ -3295,4 +3362,130 @@ body {
     text-align: right;
     padding: 10px 30px;
     border-top: 1px solid #dbdad5;
+}
+
+/* ---------------------------------------------------------------------
+ Events Page CSS - To be integrated
+------------------------------------------------------------------------ */
+
+/* Event Icons */
+.list-icons-business li a { 
+    background:url(../images/icon-business.png) no-repeat left 0px;
+    padding-left:32px;
+    line-height:26px;
+    height:26px;
+    color:#434343;
+    display:inline-block;
+}
+
+.list-icons-business li a:hover {
+    color:#047D0A;
+}
+
+.list-icons-business li.pdf a { 
+    background-position: left -31px; 
+}
+
+.list-icons-business li.spk a { 
+    background-position: left -61px; 
+}
+
+.list-icons-business li.mail a { 
+    background-position: left -185px; 
+}
+
+.list-icons-business li.faq a { 
+    background-position: left -95px; 
+}
+
+.list-icons-business li.reg a { 
+    background-position: left -126px; 
+}
+
+/* Form Styles */
+.form-row { 
+    width:550px;
+    overflow:hidden; 
+    line-height:30px; 
+    margin-bottom:6px; 
+}
+
+.form-label { 
+    width:200px; 
+}
+
+.form-box { 
+    border:1px solid #82d184; 
+    border-top:5px solid #82d184;  
+    background-color:#f1faf1; 
+    position:relative; 
+    z-index:998; 
+    /*display:none;*/
+}
+
+.form-box input[type="text"]{   
+    background-color: #FFFFFF; 
+    border: 1px solid #CCCCCC;  
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; 
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; 
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    border-radius: 4px; 
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px; 
+    color: #555555;  display: 
+    inline-block; font-size: 14px;
+    height: 20px; 
+    line-height: 20px; 
+    margin-bottom: 10px; 
+    padding: 4px 6px;  
+    vertical-align: middle; 
+    width:300px; 
+}
+
+.form-result {
+    color: #3EA441;
+    font-weight:bold;
+    font-size:18px;
+}
+
+/* Form Tabs */
+
+.form-tabs {  
+    margin-bottom:-6px;
+}
+.form-tabs li {
+    margin-right:2px;
+}
+.form-tabs li a {
+    background:url(../images/tab_bg.jpg) 
+    repeat-x #5cc25e;
+    border: 1px solid #c6e7c4; 
+    width:130px;
+    height:45px;
+    line-height:42px; color:#fff;
+    border-radius:7px; 
+    -moz-border-radius:10px; 
+    -webkit-border-radius:10px; 
+    
+    font-size: 14px;
+    text-align: center;
+     
+    display: block; 
+    position: relative; 
+    z-index: 997;
+}
+.form-tabs li a.active{
+    background-image:none; 
+    background-color: #f1faf1; 
+    border-bottom: none; 
+    color: #3ea441; 
+    -webkit-border-bottom-right-radius: 0;  
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-bottom-right-radius: 0;  
+    -moz-border-bottom-left-radius: 0; 
+    border-bottom-right-radius: 0; 
+    border-bottom-left-radius:0; 
+
+    position: relative; 
+    z-index: 999;
 }

@@ -61,6 +61,10 @@ app/controllers/AboutController.js
 ----------------
 app/controllers/AboutController.js
 
+app/controllers/EventsController.js
+----------------
+app/controllers/EventsController.js
+
 app/controllers/CollectionsController.js
 ----------------
 app/libs/SearchFiltersDataFeed.js

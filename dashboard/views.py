@@ -182,7 +182,7 @@ def feed_person_prac_pg_anim(request):
     if(mode==0): return HttpResponse(cjson.encode(dict(prac_list=prac)))
     if 'vil_id' in request.GET:
         vil_id=int(request.GET.get('vil_id'))
-        village = Village.objects.select_related(depth=1).get(id=int(vil_id))
+        village = Village.objects.select_related().get(id=int(vil_id))
         anim = serializers.serialize("json", Animator.objects.filter(assigned_villages=village))
         pg = serializers.serialize("json", PersonGroups.objects.filter(village=village))
         p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
