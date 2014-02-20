@@ -87,7 +87,7 @@
                             <div class="layout-vr-sm">
                                 <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
                                 {% if not request.user.is_authenticated %}
-                                    <a class="btn like-btn js-like-button" data-toggle="modal" href="#login_modal" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                    <a class="btn like-btn js-like-button" data-toggle="modal" href="/login/?next={{request.path}}" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
                                 {% else %}
                                     <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
                                 {% endif %}
@@ -194,7 +194,7 @@
                                             {% if not request.user.is_authenticated %}
                                                 <div class="layout-vr-md"></div>
                                                 <div class="centered layout-vr-md">
-                                                    <a class="comment-btn" data-toggle="modal" href="#login_modal">Add a Comment</a>
+                                                    <a class="comment-btn" data-toggle="modal" href="/login/?next={{request.path}}">Add a Comment</a>
                                                 </div>
                                             {% else %}
                                                 <div class="grid layout-vr-md">
