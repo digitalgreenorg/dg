@@ -3173,7 +3173,6 @@ body {
 .auth{
     height: 30px;
     width: 160px;
-    border-radius: 5px;
     margin-top: 10px;
     padding-left: 10px;
     margin-left: -5px;
@@ -3182,10 +3181,6 @@ body {
 .auth::-webkit-input-placeholder {
    font-size: 14px;
    font-weight: bold;
-}
-
-.auth-social-width {
-    width: 175px;
 }
 
 .auth-btn{
@@ -3238,6 +3233,41 @@ body {
 
 .footer {
     margin-top: -5px;
+}
+
+ div.social-wrap button {
+    padding-left: 35px;
+    height: 35px;
+    background: none;
+    display: block;
+    background-size: 30px 30px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    margin-bottom: 15px;
+    width: 170px;
+    height: 30px;
+    border-bottom: 2px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    box-shadow: 0 4px 2px -2px gray;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+button#facebook {
+    border-color: white;
+    background-color: #FFFFFF;
+    background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
+}
+
+button#googleplus {
+    border-color: white;
+    background-color: white;
+    background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
+}
+
+div.social-wrap button:active {
+    background-color: #222;
 }
 
 /* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
