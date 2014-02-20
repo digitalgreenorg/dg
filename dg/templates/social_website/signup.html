@@ -26,11 +26,9 @@
                         <div class="auth-box">
                             <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign Up<span class="hdg-f auth-mrg-lt-sm"><a href="{% url 'signin'%}">Sign In</a></span></h2>
                             <div class="media layout-vr-xlg">
-                                <!-- <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><img src="../media/social_website/content/fb_signin.png" class ="auth-social-width auth-mrg-top-sm"alt="Facebook"></a><br>
-                                <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}"><img src="../media/social_website/content/google_signin.png" class="auth-social-width" alt="Google"></a> -->
                                 <div class="social-wrap a">
-                                    <button id="facebook">Connect using Facebook</button>
-                                    <button id="googleplus">Connect using Google</button>
+                                    <a href="{% url 'social:begin' 'facebook' %}?next=/"><button id="facebook">Connect using Facebook</button></a>
+                                    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/"><button id="googleplus">Connect using Google</button></a>
                                 </div>
                                 <p class="hdg-e hdg-lt hdg-white key auth-mrg-top-sm">OR</p>
                                 
