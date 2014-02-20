@@ -3357,9 +3357,6 @@ div.social-wrap button:active {
 .user-image {
     cursor: pointer;
     border-radius: 3px;
-}
-
-.user-image-fb {
     width: 40px;
 }
 

@@ -78,7 +78,7 @@
                                                     <div class="img">
                                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
                                                         <div class="img-effects">
-                                                            <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image user-image-fb">
+                                                            <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image">
                                                         </div>
                                                         {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
                                                         <div class="img-effects">
