@@ -3,6 +3,7 @@ import datetime
 import json
 import urllib2
 
+from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -16,6 +17,11 @@ from django.views.decorators.csrf import csrf_protect
 
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
+
+
+class CustomUserCreationForm(UserCreationForm):
+    username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
+
 
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
@@ -194,10 +200,12 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
+
+
 @csrf_protect
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,
-                signup_form=UserCreationForm,
+                signup_form=CustomUserCreationForm,
                 current_app=None, extra_context=None):
 
     redirect_to = request.REQUEST.get(redirect_field_name, '')
