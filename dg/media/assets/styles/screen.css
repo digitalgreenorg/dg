@@ -3258,12 +3258,14 @@ button#facebook {
     border-color: white;
     background-color: #FFFFFF;
     background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
+    cursor: pointer;
 }
 
 button#googleplus {
     border-color: white;
     background-color: white;
     background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
+    cursor: pointer;
 }
 
 div.social-wrap button:active {
