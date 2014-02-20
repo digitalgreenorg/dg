@@ -68,7 +68,7 @@ define(function(require) {
 
             references.$likeButton = jQuery('.js-like-button');
             references.$commentBox = jQuery('#comment');
-            references.$commentButton = jQuery('.comment-btn');
+            references.$commentButton = jQuery('.js-comment-btn');
 
             references.$videoTarget = jQuery('#video-target');
 

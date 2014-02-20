@@ -67,12 +67,10 @@
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url 'about' %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
                                     <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url 'career' %}?header=true">Careers</a></li>
                                     {% if not request.user.is_authenticated %}
-                                        <li><a class="btn-sign-in" data-toggle="modal" href="/login/?next={{request.path}}">Sign in</a></li>
+                                        <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
                                         <li>
                                         <div class="">
-                                            
-                                            <!-- <a class="mrg-lt40" href="{% url 'logout' %}?next={{request.path}}"> -->
                                             <div class="mrg-lt40">
                                                 <div class="media">
                                                     <div class="img">
