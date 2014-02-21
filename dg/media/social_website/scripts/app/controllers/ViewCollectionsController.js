@@ -10,7 +10,7 @@
 define(function(require) {
     'use strict';
 
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
     var Util = require('framework/Util');
     var jQuery = require('jquery');
 
