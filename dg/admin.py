@@ -1,9 +1,12 @@
 from django.contrib.admin.sites import AdminSite
+from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 
-from dashboard.admin import * 
-from video_practice_map.admin import *
-from django.contrib.auth.admin import *
+from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DevelopmentManagerAdmin, DistrictAdmin, EquipmentAdmin, FieldOfficerAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupsAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, TargetAdmin, TrainingAdmin, UserPermissionAdmin, VideoAdmin, VillageAdmin
 
+from dashboard.models import Animator, AnimatorAssignedVillage, Block, CocoUser, Country, DevelopmentManager, District, Equipment, EquipmentHolder, FieldOfficer, Language, Partners, Person, PersonAdoptPractice, PersonGroups, Practices, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic, Region, State, Screening, Target, Training, UserPermission, Video, Village
+
+from video_practice_map.admin import SkippedVideoAdmin, VideoPracticeAdmin
+from video_practice_map.models import SkippedVideo, VideoPractice
 
 class Admin(AdminSite):
 
@@ -44,9 +47,6 @@ admin.register(PracticeTopic, PracticeTopicAdmin)
 admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 admin.register(PracticeSubject, PracticeSubjectAdmin)
 admin.register(CocoUser, CocoUserAdmin)
-#admin.site.register(Reviewer)
-#admin.site.register(Random)
-#admin.site.register(Message, MessageAdmin)
 
-admin.register(VideoPractice,VideoPracticeAdmin)
-admin.register(SkippedVideo,SkippedVideoAdmin)
+admin.register(VideoPractice, VideoPracticeAdmin)
+admin.register(SkippedVideo, SkippedVideoAdmin)

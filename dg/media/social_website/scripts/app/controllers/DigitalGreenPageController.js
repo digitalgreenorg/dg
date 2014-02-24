@@ -44,6 +44,7 @@ define(function(require) {
                 // on initial load to get the information out
                 //globalEventManager.trigger('languageChanged', languageCookie);
             }
+            return this;
         },
 
         _initReferences: function($referenceBase) {
