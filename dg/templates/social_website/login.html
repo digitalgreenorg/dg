@@ -5,7 +5,7 @@
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
     </head>
     
-    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>  
+    <body>
         <div class="wrapper-main wrapper wrapper-res">
             <div class="wrapper-res">
                 <div class="clearfix">
@@ -20,18 +20,18 @@
                     </header> <!-- End .global-nav -->
                 </div>
             </div>
-            <section class="about-bg about-bg-white login-bg section-dim">
+            <section class="about-bg login-bg section-dim">
                 <div class="wrapper wrapper-res">
                     <div class="inner-wrapper">
                         <div class="auth-box">
-                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f auth-mrg-lt-sm"><a href="{% url 'signup'%}" class="hdg-white hdg-bold">Sign Up</a></span></h2>
+                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign In<span class="hdg-f auth-mrg-lt"><a href="{% url 'signup'%}" class="hdg-white hdg-bold">Sign Up</a></span></h2>
                             <div class="media layout-vr-xlg">
-                                <div class="social-wrap a">
+                                <div class="social-wrap">
                                     <a href="{% url 'social:begin' 'facebook' %}?next={{next}}"><button id="facebook">Connect using Facebook</button></a>
                                     <a href="{% url 'social:begin' 'google-oauth2' %}?next={{next}}"><button id="googleplus">Connect using Google</button></a>
                                 </div>
                                 
-                                <p class="hdg-e hdg-lt hdg-white key auth-mrg-top-sm">OR</p>
+                                <p class="hdg-e hdg-lt hdg-white key auth-mrg-top">OR</p>
                                 
                                     {% if form.errors %}
                                         {% for error in form.non_field_errors %}
@@ -40,13 +40,21 @@
                                     {% endif %}
                                 
                                 {% load app_tags %}
-                                <form method="post" action="/login/" class="auth-mrg-top-sm">
+                                <form method="post" action="/login/" class="auth-mrg-top">
                                     {% csrf_token %}
                                     <div class="auth hdg-source-reg hdg-white">
-                                        {{ form.username|placeholder:form.username.label }}
-                                        {% if form.errors %}<div class="auth-err-box">{{ form.username.errors }}</div>{% endif %}
+                                        {{ form.username|placeholder:"Email address/Username" }}
+                                        {% if form.username.errors %}
+                                            <div class="auth-err-box">
+                                                {{ form.username.errors }}
+                                            </div>
+                                        {% endif %}
                                         {{ form.password|placeholder:form.password.label }}
-                                        {% if form.errors %}<div class="auth-err-box">{{ form.password.errors }}</div>{% endif %}
+                                        {% if form.password.errors %}
+                                            <div class="auth-err-box">
+                                                {{ form.password.errors }}
+                                            </div>
+                                        {% endif %}
                                         <!-- <a href="" class="hdg-white">Forgot your password?</a> -->
                                     </div>
                                     <input type="submit" value="Sign In" class="comment-btn auth-btn"/>
@@ -62,24 +70,6 @@
                 </div> <!-- End .wrapper -->
             </section>
         </div>
-        <!-- JavaScript -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script type="text/javascript"> 
-            $(document).ready(function() {
-                var images = ['image0.jpg', 'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg'];
-                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 10)%images.length] + ')'});
-            });
-        </script>
-        <script type="text/javascript">
-    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script>
-    	<script type="text/javascript">
-    		try {
-    			var pageTracker = _gat._getTracker("UA-16211208-1");
-    			pageTracker._trackPageview();
-    			} 
-            catch(err) {}
-    	</script>
+        {% include "includes/auth-js.html" %}
     </body>
 </html>

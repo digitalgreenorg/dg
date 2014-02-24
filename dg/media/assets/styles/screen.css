@@ -3171,10 +3171,11 @@ body {
 
 .auth{
     height: 30px;
-    width: 160px;
+    width: 150px;
     margin-top: 10px;
-    padding-left: 10px;
+    padding: 1px 10px;
     margin-left: -5px;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
 }
 
 .auth::-webkit-input-placeholder {
@@ -3185,7 +3186,6 @@ body {
 .auth-btn{
     margin-top: 140px;
     margin-left: 37px;
-    width: 100px;
 }
 
 .auth-btn-su {
@@ -3210,28 +3210,20 @@ body {
 }
 
 .auth-err-msg {
-    margin-top: 10px;
-    margin-bottom: -5px;
+    margin-top: 15px;
+    margin-bottom: -15px;
 }
 
-.auth-mrg-top-sm {
+.auth-mrg-top {
     margin-top: 20px;
 }
 
-.auth-mrg-lt-sm {
+.auth-mrg-lt {
     margin-left: 20px;
 }
 
 .section-dim {
     height: 650px;
-}
-
-.login-bg{
-    background-size: 1024px 650px;
-}
-
-.footer {
-    margin-top: -5px;
 }
 
  div.social-wrap button {
@@ -3285,15 +3277,11 @@ div.social-wrap button:active {
         margin-top: -40px;
     }
     
-    .login-bg{
-        background-size: 480px;
-    }
-    
     .section-dim {
         height: 500px;
     }
     
-    .auth-mrg-top-sm {
+    .auth-mrg-top {
         margin-top: 0px;
     }
    
@@ -3310,20 +3298,12 @@ div.social-wrap button:active {
         margin-left: 30%;
         margin-top: -40px;
     }
-    
-    .login-bg{
-        background-size: 767px;
-    }
    
     .section-dim {
         height: 600px;
     }
     
-    .footer-btn{
-        margin-right: 250px;
-    }
-    
-    .auth-mrg-top-sm {
+    .auth-mrg-top {
         margin-top: 0px;
     }
     
@@ -3333,15 +3313,6 @@ div.social-wrap button:active {
     
     .auth-box {
         margin-left: 35%;
-    }
-    
-    .login-bg {
-        width: 992px;
-        background-size: contain;
-    }
-    
-    .footer-btn {
-        margin-right: 500px;
     }
     
     .wrapper-res {
