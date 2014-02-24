@@ -6,6 +6,7 @@ import coco.urls
 import feeds.urls
 import social_website.api_urls
 import social_website.urls
+
 from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
@@ -14,10 +15,6 @@ from admin import admin
 from website_admin import website_admin
 import website_archive_urls
 
-
-# Uncomment the next two lines to enable the admin:
-#from django.contrib import admin
-#admin.autodiscover()
 admin.login_template = 'social_website/login.html'
 admin.logout_template = 'social_website/home.html'
 website_admin.login_template = 'social_website/login.html'

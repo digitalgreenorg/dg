@@ -13,7 +13,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
-from django.views.decorators.csrf import csrf_protect
 
 from elastic_search import get_related_collections
 from social_website.models import  Collection, Partner, FeaturedCollection
@@ -200,9 +199,6 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
-
-
-@csrf_protect
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,
                 signup_form=CustomUserCreationForm,
