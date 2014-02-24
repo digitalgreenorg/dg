@@ -51,14 +51,12 @@ define(function(require) {
             this.base($referenceBase);
 
             var references = this._references;
-
-            var $searchContainer = jQuery(".js-search-wrapper");
             
             references.$userImage = jQuery('.user-image');
             references.$userDropDown = jQuery('.user-dropdown')
             
             // helpers
-            //TODO: Not sure if we need to do much else than instantiate
+            var $searchContainer = jQuery(".js-search-wrapper");
             references.searchViewController = new SearchViewController($searchContainer);
         },
         
