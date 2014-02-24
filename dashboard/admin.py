@@ -1,27 +1,21 @@
-from django.contrib import admin
-from dashboard.models import *
+import operator
 
 from django import forms
-from django.contrib.contenttypes import generic
-
-
-# django-ajax filtered fields
-from ajax_filtered_fields.forms import AjaxForeignKeyField
 from django.conf import settings
-from ajax_filtered_fields.forms import FilteredSelect
-from forms import CocoUserForm
-
-
-# autocomplete widget
-import operator
+from django.conf.urls.defaults import patterns
+from django.contrib import admin
+from django.contrib.contenttypes import generic
 from django.db import models
-#from django.contrib.auth.models import Message
-from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
+from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 
+from ajax_filtered_fields.forms import AjaxForeignKeyField, FilteredSelect
+
+from dashboard.models import *
+from dashboard.forms import CocoUserForm
 from dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
-from django.conf.urls.defaults import *
+
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
