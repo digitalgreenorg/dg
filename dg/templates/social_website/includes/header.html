@@ -52,6 +52,19 @@
     <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}Default{% endif %}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
+            <div class="user-dropdown-div">
+                <div class="user-dropdown">
+                    <ul>
+                        <li class="user-dropdown-option"><a>{{request.user.username}}</a></li>
+                        {% if not request.user.social_auth.all.0 %}
+                        <li class="user-dropdown-option">
+                            <a href="{% url 'change_password' %}">Change Password</a>
+                        </li>
+                        {% endif %}
+                        <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="header-fixed">
                 <div class="header-wrapper clearfix">
                     <header class="global-nav">
@@ -69,10 +82,8 @@
                                     {% if not request.user.is_authenticated %}
                                         <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
-                                        <li>
-                                        <div class="">
-                                            <div class="mrg-lt40">
-                                                <div class="media">
+                                        <li class="grid-rt" style="float:right;">
+                                                <div class="media grid-rt">
                                                     <div class="img">
                                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
                                                         <div class="img-effects">
@@ -87,21 +98,8 @@
                                                             <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image">
                                                         </div>
                                                         {% endif %}
-                                                        <div class="user-dropdown filterOptions">
-                                                            <a class="user-dropdown-option">{{request.user.username}}</a>
-                                                            {% if not request.user.social_auth.all.0 %}
-                                                                <a href="{% url 'change_password' %}" class="user-dropdown-option">Change Password</a>
-                                                            {% endif %}
-                                                            <a href="{% url 'logout' %}" class="user-dropdown-option">Sign Out</a> 
-                                                        </div>
-                                                        
                                                     </div>
-                                                    <!--div class="bd">
-                                                        Sign Out
-                                                    </div-->
                                                 </div>
-                                            </div>
-                                        </div>
                                         </li>
                                     {% endif %}
                                 </ul>
