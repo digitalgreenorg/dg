@@ -10,7 +10,7 @@
 define(function(require) {
     'use strict';
 
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
     var CollectionAddViewController = require('app/view-controllers/CollectionAddViewController')
     var jQuery = require('jquery');
     var sortable = require('libs/external/jquery-ui');
