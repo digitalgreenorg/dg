@@ -7,12 +7,15 @@ from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
+
+from dg.settings import PERMISSION_DENIED_URL
 
 from dashboard.models import Practices 
 from dashboard.models import Video as Dashboard_Video
@@ -203,6 +206,8 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url=PERMISSION_DENIED_URL)
 def collection_edit_view(request, collection):
     try:
         collection = Collection.objects.get(uid=collection)
@@ -229,6 +234,8 @@ def collection_edit_view(request, collection):
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 
 
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url=PERMISSION_DENIED_URL)
 def collection_add_view(request):
     video = Video.objects.all()
     language = video.values_list('language',flat=True)
