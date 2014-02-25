@@ -80,6 +80,7 @@ define(function(require) {
             e.preventDefault();
             this._references.$userDropDown.toggle();
             this._references.$userDropDownArrow.toggle();
+            $('html, body').animate({scrollTop:0}, 'slow');
         },
 
         /**
