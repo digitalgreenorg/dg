@@ -9,7 +9,6 @@
 
 define(function(require) {
     'use strict';
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
     var Controller = require('framework/controllers/Controller');
     var viewRenderer = require('framework/ViewRenderer');
     var jQuery = require('jquery');
@@ -47,6 +46,9 @@ define(function(require) {
             references.$saveButton = $referenceBase.find('.collection-save-button');
             references.$collectionTitle = $referenceBase.find('.coltitle');
             references.$dropDown = $referenceBase.find('.js-dropdown');
+            references.$partnerList = $referenceBase.find('#partnerlist');
+            references.$stateList = $referenceBase.find('#statelist');
+            references.$langList = $referenceBase.find('#langlist');
         },
 
         _initEvents: function() {
@@ -71,18 +73,19 @@ define(function(require) {
         },
         
         checkforedit: function(key){
+            var references = this._references;
             if ($('.js-uid').data('collectionuid')){
                 if (key == 'mapping'){
-                    $("#catlist").val($('.js-collection-mapping-container').data('category').trim()).change();
-                    $("#subcatlist").val($('.js-collection-mapping-container').data('subcategory').trim()).change();
-                    $("#topiclist").val($('.js-collection-mapping-container').data('topic').trim()).change();
-                    $("#subtopiclist").val($('.js-collection-mapping-container').data('subtopic').trim());
-                    $("#subjectlist").val($('.js-collection-mapping-container').data('subject').trim());
+                    references.$catList.val($('.js-collection-mapping-container').data('category').trim()).change();
+                    references.$subCatList.val($('.js-collection-mapping-container').data('subcategory').trim()).change();
+                    references.$topicList.val($('.js-collection-mapping-container').data('topic').trim()).change();
+                    references.$subTopicList.val($('.js-collection-mapping-container').data('subtopic').trim());
+                    references.$subjectList.val($('.js-collection-mapping-container').data('subject').trim());
                 }
                 else{
-                    $("#partnerlist").val($('.va-dropdown').data('collectionpartner')).change();
-                    $("#statelist").val($('.va-dropdown').data('collectionstate')).change();
-                    $("#langlist").val($('.va-dropdown').data('collectionlanguage')).change();
+                    references.$partnerList.val($('.va-dropdown').data('collectionpartner')).change();
+                    references.$stateList.val($('.va-dropdown').data('collectionstate')).change();
+                    references.$langList.val($('.va-dropdown').data('collectionlanguage')).change();
                 }
                 
             }
@@ -182,6 +185,7 @@ define(function(require) {
         	
         },
         _renderPracticeMapping: function(practicemappingData) {
+            var references = this._references;
             var category = [];
             var arr;
             for (arr in practicemappingData){
@@ -193,6 +197,22 @@ define(function(require) {
             var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
             this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             this._references.category = category.sort();
+            
+            references.$catList = jQuery('#catlist');
+            references.$subCatList = jQuery('#subcatlist');
+            references.$topicList = jQuery('#topiclist');
+            references.$subTopicList = jQuery('#subtopiclist');
+            references.$subjectList = jQuery('#subjectlist');
+            
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            references.$catList.on('change', this._boundFunctions.onCategoryChosen);
+            
+            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            references.$subCatList.on('change', this._boundFunctions.onsubCategoryChosen);
+            
+            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            references.$topicList.on('change', this._boundFunctions.onTopicChosen);
+            
             
         },
         
@@ -235,104 +255,73 @@ define(function(require) {
         },
         
         _onCategoryChosen: function(){
-            var category_name = $("#catlist").val();
+            var references = this._references
+            var category_name = references.$catList.val();
+            
             var mapping_data = this._references.mapping;
             
-            var subcategory = [];
+            references.$subCatList.find('option:not(:first)').remove();
+            references.$topicList.find('option:not(:first)').remove();
+            references.$subTopicList.find('option:not(:first)').remove();
+            references.$subjectList.find('option:not(:first)').remove();
+            
+            var subcategory = mapping_data[category_name]
             var arr;
-            for (arr in mapping_data[category_name]){
+            for (arr in subcategory){
                 if (arr != 'subject'){
-                    subcategory.push(arr);
+                    references.$subCatList.append( new Option(arr,arr) );
                 }
             }
             
-            var renderData = {
-                    category: this._references.category,
-                    subcategory: subcategory.sort(),
-                    subject: mapping_data[category_name]['subject'].sort()
-            };
-            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
-            this._references.$practiceMappingContainer.empty();
-            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
-            $("#catlist").val(category_name);
-            this._dropdownChosen();
-            this._references.subcategory = subcategory.sort();
-            this._references.subject = mapping_data[category_name]['subject'].sort();
-            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
-            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
+            var subject = (mapping_data[category_name]['subject']).sort();
+            var i;
+            for (i in subject){
+                references.$subjectList.append( new Option(subject[i],subject[i]) );
+            }
             
-            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
-            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
+            this._dropdownChosen();
+
         },
         
         _onsubCategoryChosen: function(){
-            var category_name = $("#catlist").val();
-            var subcategory_name = $("#subcatlist").val();
-            var subject_name = $("#subjectlist").val();
-            var mapping_data = this._references.mapping;
+            var references = this._references
+            
+            var category_name = references.$catList.val();
+            var subcategory_name = references.$subCatList.val();
+            var subject_name = references.$subjectList.val();
+            var mapping_data = references.mapping;
+            
+            references.$topicList.find('option:not(:first)').remove();
+            references.$subTopicList.find('option:not(:first)').remove();
+            
             var topic=[];
             var arr;
             for (arr in mapping_data[category_name][subcategory_name]){
                 topic.push(arr);
+                references.$topicList.append( new Option(arr,arr) );
             }
-            
-            var renderData = {
-                    category: this._references.category,
-                    subcategory: this._references.subcategory,
-                    subject: this._references.subject,
-                    topic:topic.sort()
-            };
-            
-            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
-            this._references.$practiceMappingContainer.empty();
-            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
-            $("#catlist").val(category_name);
-            $("#subcatlist").val(subcategory_name);
-            $("#subjectlist").val(subject_name);
             this._dropdownChosen();
-            this._references.topic = topic.sort();
-            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
-            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
-            
-            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
-            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
-            
-            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
-            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);
         },
         
         _onTopicChosen: function(){
-            var category_name = $("#catlist").val();
-            var subcategory_name = $("#subcatlist").val();
-            var subject_name = $("#subjectlist").val();
-            var topic_name = $("#topiclist").val();
-            var mapping_data = this._references.mapping;
+            var references = this._references
+            
+            var category_name = references.$catList.val();
+            var subcategory_name = references.$subCatList.val();
+            var subject_name = references.$subjectList.val();
+            var topic_name = references.$topicList.val();
+            var mapping_data = references.mapping;
+            
             var subtopic=mapping_data[category_name][subcategory_name][topic_name];
+            subtopic=subtopic.sort()
             
-            var renderData = {
-                    category: this._references.category,
-                    subcategory: this._references.subcategory,
-                    subject: this._references.subject,
-                    topic: this._references.topic,
-                    subtopic: subtopic.sort()
-            };
+            references.$subTopicList.find('option:not(:first)').remove();
             
-            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
-            this._references.$practiceMappingContainer.empty();
-            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
-            $("#catlist").val(category_name);
-            $("#subcatlist").val(subcategory_name);
-            $("#subjectlist").val(subject_name);
-            $("#topiclist").val(topic_name);
+            var i;
+            for (i in subtopic){
+                references.$subTopicList.append( new Option(subtopic[i],subtopic[i]) );
+            }
             this._dropdownChosen();
-            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
-            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
-            
-            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
-            $("#subcatlist").on('change', this._boundFunctions.onsubCategoryChosen);
-            
-            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
-            $("#topiclist").on('change', this._boundFunctions.onTopicChosen);
         },
         
         _onVideoChosen: function(){
