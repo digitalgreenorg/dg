@@ -1,27 +1,21 @@
-from django.contrib import admin
-from dashboard.models import *
+import operator
 
 from django import forms
-from django.contrib.contenttypes import generic
-
-
-# django-ajax filtered fields
-from ajax_filtered_fields.forms import AjaxForeignKeyField
 from django.conf import settings
-from ajax_filtered_fields.forms import FilteredSelect
-from forms import CocoUserForm
-
-
-# autocomplete widget
-import operator
+from django.conf.urls.defaults import patterns
+from django.contrib import admin
+from django.contrib.contenttypes import generic
 from django.db import models
-#from django.contrib.auth.models import Message
-from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
+from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 
+from ajax_filtered_fields.forms import AjaxForeignKeyField, FilteredSelect
+
+from dashboard.models import *
+from dashboard.forms import CocoUserForm
 from dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
-from django.conf.urls.defaults import *
+
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -60,7 +54,7 @@ class ScreeningForm(forms.ModelForm):
         model = Screening
 
 class ScreeningAdmin(admin.ModelAdmin):
-    fields = ('date','start_time','end_time','location','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions','fieldofficer',)
+    fields = ('date','start_time','end_time','location','partner','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions','fieldofficer',)
     inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
     list_display = ('date', 'village', 'location')
@@ -407,35 +401,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
 
-admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
-admin.site.register(Video, VideoAdmin)
-admin.site.register(Region)
-admin.site.register(Country)
-admin.site.register(State, StateAdmin)
-admin.site.register(District, DistrictAdmin)
-admin.site.register(Block, BlockAdmin)
-admin.site.register(DevelopmentManager, DevelopmentManagerAdmin)
-admin.site.register(FieldOfficer, FieldOfficerAdmin)
-admin.site.register(Village, VillageAdmin)
-admin.site.register(Partners)
-admin.site.register(Person, PersonAdmin)
-admin.site.register(PersonGroups, PersonGroupsAdmin)
-admin.site.register(Animator, AnimatorAdmin)
-admin.site.register(Language)
-admin.site.register(Practices, PracticesAdmin)
-admin.site.register(Screening, ScreeningAdmin)
-admin.site.register(Training, TrainingAdmin)
-admin.site.register(Equipment, EquipmentAdmin)
-admin.site.register(Target, TargetAdmin)
-admin.site.register(UserPermission, UserPermissionAdmin)
-admin.site.register(EquipmentHolder)
-admin.site.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
-admin.site.register(PracticeSector,PracticeSectorAdmin)
-admin.site.register(PracticeSubSector,PracticeSubSectorAdmin)
-admin.site.register(PracticeTopic,PracticeTopicAdmin)
-admin.site.register(PracticeSubtopic,PracticeSubtopicAdmin)
-admin.site.register(PracticeSubject,PracticeSubjectAdmin)
-admin.site.register(CocoUser, CocoUserAdmin)
-#admin.site.register(Reviewer)
-#admin.site.register(Random)
-#admin.site.register(Message, MessageAdmin)

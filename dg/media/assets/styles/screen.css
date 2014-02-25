@@ -411,7 +411,6 @@ a {
     border: 1px solid #ebe9d9;
     margin-top: 7px;
     background: #f3f2eb url(../images/icon-sprite.png) no-repeat 10px -255px;
-
     cursor: pointer;
 }
 
@@ -2736,13 +2735,6 @@ textarea.comment-text {
 	height: 0;
 }
 
-
-
-
-
-
-
-
 /* Carousel Styles */
 
 .main-carousel {
@@ -3173,6 +3165,216 @@ body {
 
 .ele-hide{
 	display: none;
+}
+
+/************** login ***************/
+
+.auth{
+    height: 30px;
+    width: 150px;
+    margin-top: 10px;
+    padding: 1px 10px;
+    margin-left: -5px;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+}
+
+.auth::-webkit-input-placeholder {
+   font-size: 14px;
+   font-weight: bold;
+}
+
+.auth-btn{
+    margin-top: 140px;
+    margin-left: 37px;
+}
+
+.auth-btn-su {
+    margin-top : 200px;
+    margin-left: 37px;
+}
+
+.auth-box {
+    height: 700px;
+    width: 200px;
+    background-color: rgba(0,0,0,0.3);
+    padding-left: 20px;
+    margin-left: 764px;
+    margin-top: -50px;
+}
+
+.auth-err-box {
+    border-style:solid;
+    border-color:red;
+    border-width: 1px;
+    width: 163px;  
+}
+
+.auth-err-msg {
+    margin-top: 15px;
+    margin-bottom: -15px;
+}
+
+.auth-mrg-top {
+    margin-top: 20px;
+}
+
+.auth-mrg-lt {
+    margin-left: 20px;
+}
+
+.section-dim {
+    height: 650px;
+}
+
+ div.social-wrap button {
+    padding-left: 35px;
+    height: 35px;
+    background: none;
+    display: block;
+    background-size: 30px 30px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    margin-bottom: 15px;
+    width: 170px;
+    height: 30px;
+    border-bottom: 2px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    box-shadow: 0 4px 2px -2px gray;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+button#facebook {
+    border-color: white;
+    background-color: #FFFFFF;
+    background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
+    cursor: pointer;
+}
+
+button#googleplus {
+    border-color: white;
+    background-color: white;
+    background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
+    cursor: pointer;
+}
+
+div.social-wrap button:active {
+    background-color: #222;
+}
+
+/* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
+
+@media(max-width: 480px) {
+    
+    .wrapper-res {
+        width: 480px;
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 10%;
+        margin-top: -40px;
+    }
+    
+    .section-dim {
+        height: 500px;
+    }
+    
+    .auth-mrg-top {
+        margin-top: 0px;
+    }
+   
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    
+    .wrapper-res {
+        width: 767px;
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 30%;
+        margin-top: -40px;
+    }
+   
+    .section-dim {
+        height: 600px;
+    }
+    
+    .auth-mrg-top {
+        margin-top: 0px;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    
+    .auth-box {
+        margin-left: 35%;
+    }
+    
+    .wrapper-res {
+        width: 992px;
+    }
+}
+
+/****** User Dropdown Menu *************/
+
+.mrg-lt40 {
+    margin-left: 40px;
+}
+
+.wrap-word {
+    word-wrap: break-word;
+}
+
+.user-image {
+    cursor: pointer;
+    border-radius: 3px;
+    width: 40px;
+}
+
+.user-dropdown-div {
+    position: relative;
+    right: 0;
+}
+
+.user-dropdown {
+    position: absolute;
+    display: none;
+    right: 0;
+    top: 7px;
+    background-color: white;
+    z-index: 1000;
+    border: 1px solid #dbdad5;
+    border-top: 0;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -moz-border-radius-bottomleft: 4px;
+}
+
+.user-dropdown:before {
+  position: absolute;
+  top: -7px;
+  right: 10px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.user-dropdown-option {
+    text-align: right;
+    padding: 15px 20px !important;
+    border-top: 1px solid #dbdad5;
+    font-family: source_sans_probold, arial, helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 12px;
 }
 
 /* ---------------------------------------------------------------------
