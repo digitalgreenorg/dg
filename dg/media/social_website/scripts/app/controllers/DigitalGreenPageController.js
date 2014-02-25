@@ -53,7 +53,8 @@ define(function(require) {
             var references = this._references;
             
             references.$userImage = jQuery('.user-image');
-            references.$userDropDown = jQuery('.user-dropdown')
+            references.$userDropDown = jQuery('.user-dropdown');
+            references.$userDropDownArrow = jQuery('.user-dropdown-arrow');
             
             // helpers
             var $searchContainer = jQuery(".js-search-wrapper");
@@ -78,6 +79,7 @@ define(function(require) {
         _onUserImageClick: function(e) {
             e.preventDefault();
             this._references.$userDropDown.toggle();
+            this._references.$userDropDownArrow.toggle();
         },
 
         /**
