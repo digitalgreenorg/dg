@@ -3322,18 +3322,18 @@ div.social-wrap button:active {
 
 /****** User Dropdown Menu *************/
 
-.mrg-lt40 {
-    margin-left: 40px;
-}
-
-.wrap-word {
-    word-wrap: break-word;
-}
-
 .user-image {
     cursor: pointer;
     border-radius: 3px;
     width: 40px;
+}
+
+.grid-rt .media .img .user-dropdown-arrow {
+    display: none; 
+    position: absolute;
+    right: 20px;
+    top: 55px;
+    width: 16px;
 }
 
 .user-dropdown-div {
@@ -3345,7 +3345,6 @@ div.social-wrap button:active {
     position: absolute;
     display: none;
     right: 0;
-    top: 7px;
     background-color: white;
     z-index: 1000;
     border: 1px solid #dbdad5;
@@ -3355,7 +3354,7 @@ div.social-wrap button:active {
     -moz-border-radius-bottomright: 4px;
     -moz-border-radius-bottomleft: 4px;
 }
-
+/*
 .user-dropdown:before {
   position: absolute;
   top: -7px;
@@ -3367,7 +3366,7 @@ div.social-wrap button:active {
   border-bottom-color: rgba(0, 0, 0, 0.2);
   content: '';
 }
-
+*/
 .user-dropdown-option {
     text-align: right;
     padding: 15px 20px !important;
