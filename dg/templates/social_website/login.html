@@ -29,7 +29,7 @@
                             <form method="post" action="/login/">
                                 {% csrf_token %}
                                 <div class="auth hdg-source-reg hdg-white">
-                                    {{ form.username|placeholder:"Email address/Username" }}
+                                    {{ form.username|placeholder:"Email or Username" }}
                                 {% if form.username.errors %}
                                     <div class="auth-err-box">
                                         {{ form.username.errors }}
