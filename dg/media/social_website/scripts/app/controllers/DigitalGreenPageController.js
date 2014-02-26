@@ -52,9 +52,9 @@ define(function(require) {
 
             var references = this._references;
             
-            references.$userImage = jQuery('.user-image');
-            references.$userDropDown = jQuery('.user-dropdown');
-            references.$userDropDownArrow = jQuery('.user-dropdown-arrow');
+            references.$userImage = jQuery('.js-user-image');
+            references.$userDropDown = jQuery('.js-user-dropdown');
+            references.$userDropDownArrow = jQuery('.js-user-dropdown-arrow');
             
             // helpers
             var $searchContainer = jQuery(".js-search-wrapper");

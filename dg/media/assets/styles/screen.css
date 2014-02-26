@@ -3227,9 +3227,9 @@ body {
 }
 
  div.social-wrap button {
+    background-color: white;
     padding-left: 35px;
     height: 35px;
-    background: none;
     display: block;
     background-size: 30px 30px;
     background-position: left center;
@@ -3245,29 +3245,25 @@ body {
     font-size: 12px;
 }
 
-button#facebook {
-    border-color: white;
-    background-color: #FFFFFF;
+div.social-wrap button:active {
+    background-color: #FFF;
+}
+
+div.social-wrap button.facebook {
     background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
     cursor: pointer;
 }
 
-button#googleplus {
-    border-color: white;
-    background-color: white;
+div.social-wrap button.googleplus {
     background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
     cursor: pointer;
-}
-
-div.social-wrap button:active {
-    background-color: #222;
 }
 
 /* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
 
 @media(max-width: 480px) {
     
-    .wrapper-res {
+    .wrapper-responsive {
         width: 480px;
     }
     
@@ -3289,7 +3285,7 @@ div.social-wrap button:active {
 
 @media (min-width: 481px) and (max-width: 767px) {
     
-    .wrapper-res {
+    .wrapper-responsive {
         width: 767px;
     }
     
@@ -3315,7 +3311,7 @@ div.social-wrap button:active {
         margin-left: 35%;
     }
     
-    .wrapper-res {
+    .wrapper-responsive {
         width: 992px;
     }
 }
@@ -3328,8 +3324,8 @@ div.social-wrap button:active {
     width: 40px;
 }
 
-.grid-rt .media .img .user-dropdown-arrow {
-    display: none; 
+.media .img .user-dropdown-arrow {
+    display: none;
     position: absolute;
     right: 20px;
     top: 58px;
@@ -3377,7 +3373,7 @@ div.social-wrap button:active {
 }
 
 /* ---------------------------------------------------------------------
- Events Page CSS - To be integrated
+ Events Page CSS
 ------------------------------------------------------------------------ */
 
 /* Event Icons */

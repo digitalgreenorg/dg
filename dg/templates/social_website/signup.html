@@ -6,11 +6,11 @@
     </head>
     
     <body>  
-        <div class="wrapper-main wrapper wrapper-res">
-            <div class="wrapper-res">
+        <div class="wrapper-main wrapper wrapper-responsive">
+            <div class="wrapper-responsive">
                 <div class="clearfix">
                     <header class="global-nav">
-                        <div class="wrapper wrapper-res">
+                        <div class="wrapper wrapper-responsive">
                             <nav class="inner-nav">
                                 <ul class="nav">
                                     <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
@@ -21,14 +21,14 @@
                 </div>
             </div>
             <section class="about-bg login-bg section-dim">
-                <div class="wrapper wrapper-res">
+                <div class="wrapper wrapper-responsive">
                     <div class="inner-wrapper">
                         <div class="auth-box">
                             <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign Up<span class="hdg-f auth-mrg-lt"><a href="{% url 'signin'%}" class="hdg-white hdg-bold">Sign In</a></span></h2>
                             <div class="media layout-vr-xlg">
                                 <div class="social-wrap">
-                                    <a href="{% url 'social:begin' 'facebook' %}?next=/"><button id="facebook">Connect using Facebook</button></a>
-                                    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/"><button id="googleplus">Connect using Google</button></a>
+                                    <a href="{% url 'social:begin' 'facebook' %}?next=/"><button class="facebook">Sign up with Facebook</button></a>
+                                    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/"><button class="googleplus">Sign up with Google</button></a>
                                 </div>
                                 <p class="hdg-e hdg-lt hdg-white key auth-mrg-top">OR</p>
                                 

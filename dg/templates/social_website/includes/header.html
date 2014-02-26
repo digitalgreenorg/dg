@@ -53,7 +53,7 @@
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
             <div class="user-dropdown-div">
-                <div class="user-dropdown">
+                <div class="user-dropdown js-user-dropdown">
                     <ul>
                         <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
                         {% if not request.user.social_auth.all.0 %}
@@ -91,14 +91,14 @@
                                                     </div>
                                                     {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
                                                     <div class="img-effects">
-                                                        <img src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=40" class="user-image">
+                                                        <img src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=40" class="user-image js-user-image">
                                                     </div>
                                                     {% else %}
                                                     <div class="img-effects">
                                                         <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image">
                                                     </div>
                                                     {% endif %}
-                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow">
+                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow js-user-dropdown-arrow">
                                                 </div>
                                             </div>
                                         </li>
