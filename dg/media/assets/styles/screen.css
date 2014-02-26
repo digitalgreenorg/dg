@@ -3203,6 +3203,12 @@ body {
     margin-top: -50px;
 }
 
+.auth-separator {
+    height: 65px;
+    line-height: 65px;
+    padding-left: 75px;
+}
+
 .auth-err-box {
     border-style:solid;
     border-color:red;
@@ -3210,20 +3216,17 @@ body {
     width: 163px;  
 }
 
-
-.auth-separator {
-    height: 65px;
-    line-height: 65px;
-    padding-left: 75px;
-}
-
 .auth-err-msg {
     margin-top: 15px;
     margin-bottom: -15px;
 }
 
-.auth-mrg-lt {
-    margin-left: 20px;
+.auth-link {
+    margin-left: 10px;
+}
+
+.auth-link a:hover {
+    color: #047d0a;
 }
 
 div.social-wrap button {

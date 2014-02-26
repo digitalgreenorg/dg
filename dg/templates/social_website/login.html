@@ -2,7 +2,7 @@
 {% block content %}
                         <h2 class="hdg-a hdg-white layout-vr-md push-top-md">
                             Sign In
-                            <span class="hdg-f auth-mrg-lt">
+                            <span class="hdg-f auth-link">
                                 <a href="{% url 'signup'%}" class="hdg-white hdg-bold">Sign Up</a>
                             </span>
                         </h2>
@@ -19,7 +19,6 @@
                             <div class="auth-separator">
                                 <p class="hdg-e hdg-lt hdg-white">OR</p>
                             </div>
-                            
                     {% if form.errors %}
                         {% for error in form.non_field_errors %}
                             <p class="hdg-source-reg hdg-white auth-err-msg auth-err-box">Wrong Username and Password</p>
