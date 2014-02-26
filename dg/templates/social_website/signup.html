@@ -1,27 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Digital Green</title>
-        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
-    </head>
-    
-    <body>  
-        <div class="wrapper-main wrapper wrapper-responsive">
-            <div class="wrapper-responsive">
-                <div class="clearfix">
-                    <header class="global-nav">
-                        <div class="wrapper wrapper-responsive">
-                            <nav class="inner-nav">
-                                <ul class="nav">
-                                    <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
-                                </ul>
-                            </nav> <!-- End .inner-nav -->
-                        </div>  <!-- End .wrapper -->
-                    </header> <!-- End .global-nav -->
-                </div>
-            </div>
-            <section class="about-bg login-bg section-dim">
-                <div class="wrapper wrapper-responsive">
+{% extends "responsive/base_auth.html" %}
+{% block content %}
+            <section class="about-bg login-bg">
                     <div class="inner-wrapper">
                         <div class="auth-box">
                             <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign Up<span class="hdg-f auth-mrg-lt"><a href="{% url 'signin'%}" class="hdg-white hdg-bold">Sign In</a></span></h2>
@@ -68,7 +47,4 @@
                     </div> <!-- End .inner-wrapper -->
                 </div> <!-- End .wrapper -->
             </section>
-        </div>
-        {% include "includes/auth-js.html" %}
-    </body>
-</html>
+{% endblock %}

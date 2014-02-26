@@ -3222,11 +3222,7 @@ body {
     margin-left: 20px;
 }
 
-.section-dim {
-    height: 650px;
-}
-
- div.social-wrap button {
+div.social-wrap button {
     background-color: white;
     padding-left: 35px;
     height: 35px;
@@ -3265,16 +3261,14 @@ div.social-wrap button.googleplus {
     
     .wrapper-responsive {
         width: 480px;
+        height: 500px;
+        
     }
     
     .auth-box {
         height: 500px;
         margin-left: 10%;
         margin-top: -40px;
-    }
-    
-    .section-dim {
-        height: 500px;
     }
     
     .auth-mrg-top {
@@ -3287,6 +3281,8 @@ div.social-wrap button.googleplus {
     
     .wrapper-responsive {
         width: 767px;
+        height: 600px;
+        
     }
     
     .auth-box {
@@ -3295,10 +3291,6 @@ div.social-wrap button.googleplus {
         margin-top: -40px;
     }
    
-    .section-dim {
-        height: 600px;
-    }
-    
     .auth-mrg-top {
         margin-top: 0px;
     }
@@ -3313,6 +3305,8 @@ div.social-wrap button.googleplus {
     
     .wrapper-responsive {
         width: 992px;
+        height: 650px;
+        
     }
 }
 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Digital Green</title>
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+    </head>
+    
+    <body>
+        <div class="wrapper-main wrapper wrapper-responsive">
+            <header class="global-nav clearfix">
+                <nav class="inner-nav">
+                    <ul class="nav">
+                        <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                    </ul>
+                </nav> <!-- End .inner-nav -->
+            </header> <!-- End .global-nav -->
+            {% block content %}
+            {% endblock %}
+        </div>
+        {% include "includes/auth-js.html" %}
+    </body>
+</html>
