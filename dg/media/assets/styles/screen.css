@@ -3226,6 +3226,10 @@ body {
     height: 650px;
 }
 
+.auth-link-hover:hover {
+    color: #047d0a;
+}
+
  div.social-wrap button {
     padding-left: 35px;
     height: 35px;
