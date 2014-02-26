@@ -3,6 +3,7 @@
     <head>
         <title>Digital Green</title>
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     
     <body>
@@ -14,8 +15,14 @@
                     </ul>
                 </nav> <!-- End .inner-nav -->
             </header> <!-- End .global-nav -->
+            <section class="about-bg login-bg">
+                <div class="inner-wrapper">
+                    <div class="auth-box">
             {% block content %}
             {% endblock %}
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </section>
         </div>
         {% include "includes/auth-js.html" %}
     </body>

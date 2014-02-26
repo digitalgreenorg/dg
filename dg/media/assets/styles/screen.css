@@ -3167,7 +3167,7 @@ body {
 	display: none;
 }
 
-/************** login ***************/
+/************** AUTH: login/signup/password change ***************/
 
 .auth{
     height: 30px;
@@ -3179,6 +3179,7 @@ body {
 }
 
 .auth::-webkit-input-placeholder {
+   font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
    font-size: 14px;
    font-weight: bold;
 }
@@ -3188,7 +3189,7 @@ body {
     margin-left: 37px;
 }
 
-.auth-btn-su {
+.auth-btn-lg {
     margin-top : 200px;
     margin-left: 37px;
 }
@@ -3209,13 +3210,16 @@ body {
     width: 163px;  
 }
 
+
+.auth-separator {
+    height: 65px;
+    line-height: 65px;
+    padding-left: 75px;
+}
+
 .auth-err-msg {
     margin-top: 15px;
     margin-bottom: -15px;
-}
-
-.auth-mrg-top {
-    margin-top: 20px;
 }
 
 .auth-mrg-lt {
@@ -3271,8 +3275,9 @@ div.social-wrap button.googleplus {
         margin-top: -40px;
     }
     
-    .auth-mrg-top {
-        margin-top: 0px;
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
     }
    
 }
@@ -3280,9 +3285,7 @@ div.social-wrap button.googleplus {
 @media (min-width: 481px) and (max-width: 767px) {
     
     .wrapper-responsive {
-        width: 767px;
-        height: 600px;
-        
+        width: 767px;        
     }
     
     .auth-box {
@@ -3291,23 +3294,30 @@ div.social-wrap button.googleplus {
         margin-top: -40px;
     }
    
-    .auth-mrg-top {
-        margin-top: 0px;
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
     }
     
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
     
-    .auth-box {
-        margin-left: 35%;
-    }
-    
     .wrapper-responsive {
         width: 992px;
         height: 650px;
         
     }
+    
+    .auth-box {
+        margin-left: 35%;
+    }
+    
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
+    }
+    
 }
 
 /****** User Dropdown Menu *************/
