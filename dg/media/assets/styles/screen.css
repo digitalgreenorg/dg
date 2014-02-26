@@ -2000,10 +2000,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 /* Slide Show */
 
-.main-carousel-video-player {
-    margin-top:-7px;
-}
-
 .slide {
     position: relative;
     height: 424px;
