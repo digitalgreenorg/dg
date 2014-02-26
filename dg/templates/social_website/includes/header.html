@@ -56,11 +56,11 @@
             <div class="user-dropdown-div">
                 <div class="user-dropdown">
                     <ul>
-                        <li class="user-dropdown-option"><a>{{request.user.username}}</a></li>
+                        <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
                         {% if not request.user.social_auth.all.0 %}
-                        <li class="user-dropdown-option">
-                            <a href="{% url 'change_password' %}">Change Password</a>
-                        </li>
+                            <li class="user-dropdown-option">
+                                <a href="{% url 'change_password' %}">Change Password</a>
+                            </li>
                         {% endif %}
                         <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign Out</a></li>
                     </ul>
@@ -84,23 +84,24 @@
                                         <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
                                         <li class="grid-rt" style="float:right;">
-                                                <div class="media grid-rt">
-                                                    <div class="img">
-                                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                                        <div class="img-effects">
-                                                            <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image">
-                                                        </div>
-                                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                                        <div class="img-effects">
-                                                            <img src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=40" class="user-image">
-                                                        </div>
-                                                        {% else %}
-                                                        <div class="img-effects">
-                                                            <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image">
-                                                        </div>
-                                                        {% endif %}
+                                            <div class="media grid-rt">
+                                                <div class="img">
+                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image">
                                                     </div>
+                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=40" class="user-image">
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="img-effects">
+                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image">
+                                                    </div>
+                                                    {% endif %}
+                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow">
                                                 </div>
+                                            </div>
                                         </li>
                                     {% endif %}
                                 </ul>
@@ -108,7 +109,6 @@
                         </div>  <!-- End .wrapper -->
                     </header> <!-- End .global-nav -->
                 </div>
-            
             </div>
             <div class="header-margin"></div>
 
