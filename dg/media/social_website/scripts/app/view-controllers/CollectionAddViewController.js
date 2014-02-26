@@ -42,6 +42,9 @@ define(function(require) {
             references.videodataFeed = new CollectionVideoDropDownDataFeed();
             references.addDataFeed = new CollectionAddDataFeed();
             references.$collectionAddWrapper = $referenceBase;
+            references.$collectionUid = $referenceBase.find('.js-uid').data('collectionuid');
+            references.$metaInformationContainer = $referenceBase.find('.js-meta-dropdown');
+            references.$videoDropDownContainer = $referenceBase.find('.js-collection-video-dropdown-container');
             references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
             references.$collectionTitle = $referenceBase.find('.coltitle');
@@ -74,18 +77,18 @@ define(function(require) {
         
         checkforedit: function(key){
             var references = this._references;
-            if ($('.js-uid').data('collectionuid')){
+            if (references.$collectionUid){
                 if (key == 'mapping'){
-                    references.$catList.val($('.js-collection-mapping-container').data('category').trim()).change();
-                    references.$subCatList.val($('.js-collection-mapping-container').data('subcategory').trim()).change();
-                    references.$topicList.val($('.js-collection-mapping-container').data('topic').trim()).change();
-                    references.$subTopicList.val($('.js-collection-mapping-container').data('subtopic').trim());
-                    references.$subjectList.val($('.js-collection-mapping-container').data('subject').trim());
+                    references.$catList.val(references.$practiceMappingContainer.data('category').trim()).change();
+                    references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
+                    references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
+                    references.$subTopicList.val(references.$practiceMappingContainer.data('subtopic').trim());
+                    references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
                 }
                 else{
-                    references.$partnerList.val($('.va-dropdown').data('collectionpartner')).change();
-                    references.$stateList.val($('.va-dropdown').data('collectionstate')).change();
-                    references.$langList.val($('.va-dropdown').data('collectionlanguage')).change();
+                    references.$partnerList.val(references.$metaInformationContainer.data('collectionpartner')).change();
+                    references.$stateList.val(references.$metaInformationContainer.data('collectionstate')).change();
+                    references.$langList.val(references.$metaInformationContainer.data('collectionlanguage')).change();
                 }
                 
             }
@@ -100,9 +103,6 @@ define(function(require) {
             this._references.mapping = practicemappingData;
             this._renderPracticeMapping(practicemappingData);
             
-            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
-            $("#catlist").on('change', this._boundFunctions.onCategoryChosen);
-            
             this.checkforedit('mapping');
             this._dropdownChosen();
             
@@ -110,17 +110,16 @@ define(function(require) {
         },
 
         getCollectionVideoDropDown: function() {
-        	var collectionvideodropdownData = this._references.videodataFeed.getCollectionVideoDropDown();
+            var references = this._references
+            var collectionvideodropdownData = references.videodataFeed.getCollectionVideoDropDown();
             if (collectionvideodropdownData == false) {
                 return false;
             }
-            this._references.videoarray = collectionvideodropdownData;
+            references.videoarray = collectionvideodropdownData;
             this._renderVideoCollectionDropDown(collectionvideodropdownData);
-            this._boundFunctions.onVideoChosen = this._onVideoChosen.bind(this);
-            $("#vidlist").on('change', this._boundFunctions.onVideoChosen);
             
-            if ($('.js-uid').data('collectionuid')){
-            var videos_collection = $('.js-collection-video-dropdown-container').data('videos');
+            if (references.$collectionUid){
+            var videos_collection = references.$videoDropDownContainer.data('videos');
             var a;
             for (a in videos_collection){
                 console.log(videos_collection[a]);
@@ -148,9 +147,9 @@ define(function(require) {
         	e.preventDefault();
         	var order = $( "#sortable" ).sortable('toArray');
         	var references = this._references;
-        	if ($('.js-uid').data('collectionuid')){
-        	    references.addDataFeed.addInputParam('uid', false, $('.js-uid').data('collectionuid'));
-        	    references.addDataFeed.setInputParam('uid', $('.js-uid').data('collectionuid'), true);
+        	if (references.$collectionUid){
+        	    references.addDataFeed.addInputParam('uid', false, references.$collectionUid);
+        	    references.addDataFeed.setInputParam('uid', references.$collectionUid, true);
         	}
         	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
             references.addDataFeed.addInputParam('partner', false, $("#partnerlist").val());
@@ -175,7 +174,7 @@ define(function(require) {
             references.addDataFeed.setInputParam('subtopic', $("#subtopiclist").val(), true);
             references.addDataFeed.setInputParam('subject', $("#subjectlist").val(), true);
             
-            if ($('.js-uid').data('collectionuid')){
+            if (references.$collectionUid){
                 references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'PUT');
             }
             else{
@@ -217,11 +216,21 @@ define(function(require) {
         },
         
         _renderVideoCollectionDropDown: function(collectionvideodropdownData) {
-        	 var renderData = {
+            var references = this._references
+            
+            var renderData = {
                      video: collectionvideodropdownData
-                 };
+            };
+            
             var renderedCollectionVideoDropDown = viewRenderer.render(collectionVideoDropDownTemplate, renderData);
-            $('.js-collection-video-dropdown-container').html(renderedCollectionVideoDropDown);
+            
+            references.$videoDropDownContainer.html(renderedCollectionVideoDropDown);
+            
+            references.$vidList = jQuery('#vidlist')
+            
+            this._boundFunctions.onVideoChosen = this._onVideoChosen.bind(this);
+            references.$vidList.on('change', this._boundFunctions.onVideoChosen);
+            
             this._dropdownChosen();
         },
 
@@ -325,25 +334,27 @@ define(function(require) {
         },
         
         _onVideoChosen: function(){
-        	var vid = $("#vidlist").val();
-        	var vidarray = this._references.videoarray;
-        	var image;
-        	for (var i=0; i<vidarray.length; i++)
-        	{
-        		if (vidarray[i].uid == vid){
-        			image = vidarray[i].thumbnailURL16by9;
-        		}
+            var references = this._references
+            var vid = references.$vidList.val();
+            var vidarray = this._references.videoarray;
+            var image;
+            var title;
+            for (var i=0; i<vidarray.length; i++)
+            {
+                if (vidarray[i].uid == vid){
+                    title = vidarray[i].title;
+                    image = vidarray[i].thumbnailURL16by9;
+                }
+            }
         	
-        	}
-        	
-        	var renderData = {
-                    title: $("#vidlist option:selected").text(),
-        			uid:vid,
-        			thumbnailURL:image,
+            var renderData = {
+                    title: title,
+                    uid:vid,
+                    thumbnailURL:image,
                 };
         	viewRenderer.renderAppend($('.js-carousel-container'), carouselTemplate, renderData);
-        	$('#vidlist option[value=' + vid + ']').remove();
-        	$("#vidlist").select2("val", "");
+        	references.$vidList.find('option[value=' + vid + ']').remove();
+        	references.$vidList.select2("val", "");
         	
         	$('#sortable li .video-remove').click(function(){
         		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
