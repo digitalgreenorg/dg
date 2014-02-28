@@ -23,7 +23,7 @@ website_admin.logout_template = 'social_website/home.html'
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'social_website/login.html'}, name='signin'),
+    url(r'^login/$', 'social_website.views.custom_login_view', {'template_name': 'social_website/login.html'}, name='signin'),
     url(r'^signup/$', 'social_website.views.signup_view', {'template_name': 'social_website/signup.html'}, name='signup'),
     url(r'^denied/$', 'django.views.defaults.permission_denied', {'template_name': 'social_website/403.html'}),
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'social_website/password_change.html', 'post_change_redirect':'/',}, name='change_password'),

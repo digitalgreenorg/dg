@@ -1,74 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Digital Green</title>
-        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
-    </head>
-    
-    <body>  
-        <div class="wrapper-main wrapper wrapper-res">
-            <div class="wrapper-res">
-                <div class="clearfix">
-                    <header class="global-nav">
-                        <div class="wrapper wrapper-res">
-                            <nav class="inner-nav">
-                                <ul class="nav">
-                                    <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
-                                </ul>
-                            </nav> <!-- End .inner-nav -->
-                        </div>  <!-- End .wrapper -->
-                    </header> <!-- End .global-nav -->
-                </div>
-            </div>
-            <section class="about-bg login-bg section-dim">
-                <div class="wrapper wrapper-res">
-                    <div class="inner-wrapper">
-                        <div class="auth-box">
-                            <h2 class="hdg-a hdg-white layout-vr-md push-top-md">Sign Up<span class="hdg-f auth-mrg-lt"><a href="{% url 'signin'%}" class="hdg-white hdg-bold">Sign In</a></span></h2>
-                            <div class="media layout-vr-xlg">
-                                <div class="social-wrap">
-                                    <a href="{% url 'social:begin' 'facebook' %}?next=/"><button id="facebook">Connect using Facebook</button></a>
-                                    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/"><button id="googleplus">Connect using Google</button></a>
-                                </div>
-                                <p class="hdg-e hdg-lt hdg-white key auth-mrg-top">OR</p>
-                                
-                                    {% if form.errors %}
-                                        {% for error in form.non_field_errors %}
-                                             <div class="auth-err-box">{{error}}</div>
-                                        {% endfor %}
-                                    {% endif %}
-                                
-                                {% load app_tags %}
-                                <form method="post" action="/signup/" class="auth-mrg-top">
-                                    {% csrf_token %}
-                                    <div class="auth hdg-source-reg hdg-white">
-                                        {{ form.username|placeholder:"Email address" }}
-                                        {% if form.username.errors %}
-                                            <div class="auth-err-box">
-                                                {{ form.username.errors }}
-                                            </div>
-                                        {% endif %}
-                                        {{ form.password1|placeholder:form.password1.label }}
-                                        {{ form.password2|placeholder:"Confirm Password" }}
-                                        {% if form.password2.errors %}
-                                            <div class="auth-err-box">
-                                                {{ form.password2.errors }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                        <input type="submit" value="sign up" class="comment-btn auth-btn-su" />
-                                    {% if next %}
-                                        <input type="hidden" name="next" value="{{next}}" />
-                                    {% else %}
-                                        <input type="hidden" name="next" value="/" />
-                                    {% endif %}
-                                </form>
+{% extends "responsive/base_auth.html" %}
+{% block content %}
+                        <h2 class="hdg-a hdg-white layout-vr-md push-top-md">
+                            Sign Up
+                            <span class="hdg-f auth-link">
+                                <a href="{% url 'signin'%}" class="hdg-white hdg-bold">Sign In</a>
+                            </span>
+                        </h2>
+                        <div class="media layout-vr-xlg">
+                            <div class="social-wrap">
+                                <a href="{% url 'social:begin' 'facebook' %}?next=/">
+                                    <button class="facebook">Sign up with Facebook</button>
+                                </a>
+                                <a href="{% url 'social:begin' 'google-oauth2' %}?next=/">
+                                    <button class="googleplus">Sign up with Google</button>
+                                </a>
                             </div>
+                            
+                            <p class="hdg-e hdg-lt hdg-white auth-separator">OR</p>
+                            
+                    {% if form.errors %}
+                        {% for error in form.non_field_errors %}
+                            <p class="hdg-source-reg hdg-white auth-err-msg auth-err-box">{{error}}</p>
+                        {% endfor %}
+                    {% endif %}
+                            
+                            {% load app_tags %}
+                            <form method="post" action="/signup/">
+                                {% csrf_token %}
+                                <div class="auth hdg-source-reg hdg-white">
+                                    {{ form.username|placeholder:"Email address" }}
+                                {% if form.username.errors %}
+                                    <div class="auth-err-box">
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                                    {{ form.password1|placeholder:form.password1.label }}
+                                    {{ form.password2|placeholder:"Confirm Password" }}
+                                {% if form.password2.errors %}
+                                    <div class="auth-err-box">
+                                        {{ form.password2.errors }}
+                                    </div>
+                                {% endif %}
+                                </div>
+                                <input type="submit" value="sign up" class="comment-btn auth-btn-lg" />
+                            {% if next %}
+                                <input type="hidden" name="next" value="{{next}}" />
+                            {% else %}
+                                <input type="hidden" name="next" value="/" />
+                            {% endif %}
+                            </form>
                         </div>
-                    </div> <!-- End .inner-wrapper -->
-                </div> <!-- End .wrapper -->
-            </section>
-        </div>
-        {% include "includes/auth-js.html" %}
-    </body>
-</html>
+{% endblock %}

@@ -2000,10 +2000,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 /* Slide Show */
 
-.main-carousel-video-player {
-    margin-top:-7px;
-}
-
 .slide {
     position: relative;
     height: 424px;
@@ -3167,7 +3163,7 @@ body {
 	display: none;
 }
 
-/************** login ***************/
+/************** AUTH: login/signup/password change ***************/
 
 .auth{
     height: 30px;
@@ -3179,6 +3175,7 @@ body {
 }
 
 .auth::-webkit-input-placeholder {
+   font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
    font-size: 14px;
    font-weight: bold;
 }
@@ -3188,7 +3185,7 @@ body {
     margin-left: 37px;
 }
 
-.auth-btn-su {
+.auth-btn-lg {
     margin-top : 200px;
     margin-left: 37px;
 }
@@ -3200,6 +3197,12 @@ body {
     padding-left: 20px;
     margin-left: 764px;
     margin-top: -50px;
+}
+
+.auth-separator {
+    height: 65px;
+    line-height: 65px;
+    padding-left: 75px;
 }
 
 .auth-err-box {
@@ -3214,22 +3217,18 @@ body {
     margin-bottom: -15px;
 }
 
-.auth-mrg-top {
-    margin-top: 20px;
+.auth-link {
+    margin-left: 10px;
 }
 
-.auth-mrg-lt {
-    margin-left: 20px;
+.auth-link a:hover {
+    color: #047d0a;
 }
 
-.section-dim {
-    height: 650px;
-}
-
- div.social-wrap button {
+div.social-wrap button {
+    background-color: white;
     padding-left: 35px;
     height: 35px;
-    background: none;
     display: block;
     background-size: 30px 30px;
     background-position: left center;
@@ -3245,30 +3244,28 @@ body {
     font-size: 12px;
 }
 
-button#facebook {
-    border-color: white;
-    background-color: #FFFFFF;
+div.social-wrap button:active {
+    background-color: #FFF;
+}
+
+div.social-wrap button.facebook {
     background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
     cursor: pointer;
 }
 
-button#googleplus {
-    border-color: white;
-    background-color: white;
+div.social-wrap button.googleplus {
     background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
     cursor: pointer;
-}
-
-div.social-wrap button:active {
-    background-color: #222;
 }
 
 /* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
 
 @media(max-width: 480px) {
     
-    .wrapper-res {
+    .wrapper-responsive {
         width: 480px;
+        height: 500px;
+        
     }
     
     .auth-box {
@@ -3277,20 +3274,17 @@ div.social-wrap button:active {
         margin-top: -40px;
     }
     
-    .section-dim {
-        height: 500px;
-    }
-    
-    .auth-mrg-top {
-        margin-top: 0px;
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
     }
    
 }
 
 @media (min-width: 481px) and (max-width: 767px) {
     
-    .wrapper-res {
-        width: 767px;
+    .wrapper-responsive {
+        width: 767px;        
     }
     
     .auth-box {
@@ -3299,25 +3293,30 @@ div.social-wrap button:active {
         margin-top: -40px;
     }
    
-    .section-dim {
-        height: 600px;
-    }
-    
-    .auth-mrg-top {
-        margin-top: 0px;
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
     }
     
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
     
+    .wrapper-responsive {
+        width: 992px;
+        height: 650px;
+        
+    }
+    
     .auth-box {
         margin-left: 35%;
     }
     
-    .wrapper-res {
-        width: 992px;
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
     }
+    
 }
 
 /****** User Dropdown Menu *************/
@@ -3328,8 +3327,8 @@ div.social-wrap button:active {
     width: 40px;
 }
 
-.grid-rt .media .img .user-dropdown-arrow {
-    display: none; 
+.media .img .user-dropdown-arrow {
+    display: none;
     position: absolute;
     right: 20px;
     top: 58px;
@@ -3516,7 +3515,7 @@ div.social-wrap button:active {
  font-size: 1em;
  text-align: center; }
  
- Events Page CSS - To be integrated
+ Events Page CSS
 ------------------------------------------------------------------------ */
 
 /* Event Icons */
