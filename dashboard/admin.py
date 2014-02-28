@@ -159,7 +159,7 @@ class DevelopmentManagerAdmin(admin.ModelAdmin):
 
 class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
-                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary', 'partner']}),
+                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary', 'partner', 'related_practice']}),
                 ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
@@ -167,7 +167,7 @@ class VideoAdmin(admin.ModelAdmin):
     ]
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
     search_fields = ['title', 'village__village_name']
-    raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown',)
+    raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
 
 
 class AnimatorAssignedVillages(admin.StackedInline):
@@ -348,8 +348,8 @@ class EquipmentAdmin(admin.ModelAdmin):
 
 
 class PracticesAdmin(admin.ModelAdmin):
-    list_display = ('practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
-    search_fields = ['practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
+    list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
+    search_fields = ['id', 'practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
 
 class UserPermissionAdmin(admin.ModelAdmin):
 	list_display = ('username','role','region_operated','district_operated')

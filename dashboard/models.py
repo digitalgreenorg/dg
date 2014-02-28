@@ -857,10 +857,14 @@ class Practices(CocoModel):
         db_table = u'practices'
         verbose_name = "Practice"
         unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
-
-
+    
     def __unicode__(self):
-        return self.practice_sector.name
+        practice_sector = '' if self.practice_sector is None else self.practice_sector.name
+        practice_subject = '' if self.practice_subject is None else self.practice_subject.name
+        practice_subsector = '' if self.practice_subsector is None else self.practice_subsector.name
+        practice_topic = '' if self.practice_topic is None else self.practice_topic.name
+        practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
+        return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
 class Screening(CocoModel):
     id = BigAutoField(primary_key = True)
