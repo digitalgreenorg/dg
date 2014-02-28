@@ -348,7 +348,8 @@ class EquipmentAdmin(admin.ModelAdmin):
 
 
 class PracticesAdmin(admin.ModelAdmin):
-    search_fields = ['practice_name']
+    list_display = ('practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
+    search_fields = ['practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
 
 class UserPermissionAdmin(admin.ModelAdmin):
 	list_display = ('username','role','region_operated','district_operated')
