@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.views import login as login_view
+from django.contrib.auth.views import login as django_login_view
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -200,7 +200,7 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
-def custom_login_view(request, template_name='registration/login.html',
+def login_view(request, template_name='registration/login.html',
                       redirect_field_name=REDIRECT_FIELD_NAME,
                       authentication_form=AuthenticationForm,
                       current_app=None, extra_context=None):
@@ -208,7 +208,7 @@ def custom_login_view(request, template_name='registration/login.html',
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
     else:
-        return login_view(request, template_name, redirect_field_name, authentication_form, current_app, extra_context)
+        return django_login_view(request, template_name, redirect_field_name, authentication_form, current_app, extra_context)
 
 
 def signup_view(request, template_name='social_website/signup.html',
