@@ -123,7 +123,7 @@ define(function(require) {
             var a;
             for (a in videos_collection){
                 console.log(videos_collection[a]);
-                $("#vidlist").val(videos_collection[a]).change();
+                references.$vidList.val(videos_collection[a]).change();
             }
             
             }
@@ -152,15 +152,15 @@ define(function(require) {
         	    references.addDataFeed.setInputParam('uid', references.$collectionUid, true);
         	}
         	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
-            references.addDataFeed.addInputParam('partner', false, $("#partnerlist").val());
-            references.addDataFeed.addInputParam('language', false, $("#langlist").val());
-            references.addDataFeed.addInputParam('state', false, $("#statelist").val());
+            references.addDataFeed.addInputParam('partner', false, references.$partnerList.val());
+            references.addDataFeed.addInputParam('language', false, references.$langList.val());
+            references.addDataFeed.addInputParam('state', false, references.$stateList.val());
             references.addDataFeed.addInputParam('videos', false, order);
-            references.addDataFeed.addInputParam('category', false, $("#catlist").val());
-            references.addDataFeed.addInputParam('subcategory', false, $("#subcatlist").val());
-            references.addDataFeed.addInputParam('topic', false, $("#topiclist").val());
-            references.addDataFeed.addInputParam('subtopic', false, $("#subtopiclist").val());
-            references.addDataFeed.addInputParam('subject', false, $("#subjectlist").val());
+            references.addDataFeed.addInputParam('category', false, references.$catList.val());
+            references.addDataFeed.addInputParam('subcategory', false, references.$subCatList.val());
+            references.addDataFeed.addInputParam('topic', false, references.$topicList.val());
+            references.addDataFeed.addInputParam('subtopic', false, references.$subTopicList.val());
+            references.addDataFeed.addInputParam('subject', false, references.$subjectList.val());
             
             
             references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
