@@ -845,10 +845,8 @@ class PracticeSubject(CocoModel):
 
 class Practices(CocoModel):
     id = BigAutoField(primary_key = True)
-    practice_name = models.CharField(null=True, max_length=200, unique='True', db_column='PRACTICE_NAME')
-    seasonality = models.CharField(null=True, max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
-    summary = models.TextField(db_column='SUMMARY', blank=True)
-    practice_sector = BigForeignKey(PracticeSector,default=1) 
+    practice_name = models.CharField(null=True, max_length=200, db_column='PRACTICE_NAME')
+    practice_sector = BigForeignKey(PracticeSector, default=1) 
     practice_subsector = BigForeignKey(PracticeSubSector, null=True)
     practice_topic = BigForeignKey(PracticeTopic, null=True)
     practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
