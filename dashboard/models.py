@@ -847,10 +847,10 @@ class Practices(CocoModel):
     id = BigAutoField(primary_key = True)
     practice_name = models.CharField(null=True, max_length=200, db_column='PRACTICE_NAME')
     practice_sector = BigForeignKey(PracticeSector, default=1) 
-    practice_subsector = BigForeignKey(PracticeSubSector, null=True)
-    practice_topic = BigForeignKey(PracticeTopic, null=True)
-    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
-    practice_subject = BigForeignKey(PracticeSubject, null=True)    
+    practice_subsector = BigForeignKey(PracticeSubSector, null=True, blank=True)
+    practice_topic = BigForeignKey(PracticeTopic, null=True, blank=True)
+    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True, blank=True)
+    practice_subject = BigForeignKey(PracticeSubject, null=True, blank=True)    
     class Meta:
         db_table = u'practices'
         verbose_name = "Practice"
