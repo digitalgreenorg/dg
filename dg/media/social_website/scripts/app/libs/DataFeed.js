@@ -255,6 +255,13 @@ define(function(require) {
             }
             
             Util.Object.extend(inputParamData, overrideData);
+            
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", Util.Cookie.get('csrftoken'));
+                }
+            });
+            
             $.ajax({
                 type: type,
                 contentType: content_type, 
