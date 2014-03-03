@@ -164,15 +164,15 @@ define(function(require) {
             
             
             references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
-            references.addDataFeed.setInputParam('partner', $("#partnerlist").val(), true);
-            references.addDataFeed.setInputParam('language', $("#langlist").val(), true);
-            references.addDataFeed.setInputParam('state', $("#statelist").val(), true);
+            references.addDataFeed.setInputParam('partner', references.$partnerList.val(), true);
+            references.addDataFeed.setInputParam('language', references.$langList.val(), true);
+            references.addDataFeed.setInputParam('state', references.$stateList.val(), true);
             references.addDataFeed.setInputParam('videos', order, true);
-            references.addDataFeed.setInputParam('category', $("#catlist").val(), true);
-            references.addDataFeed.setInputParam('subcategory', $("#subcatlist").val(), true);
-            references.addDataFeed.setInputParam('topic', $("#topiclist").val(), true);
-            references.addDataFeed.setInputParam('subtopic', $("#subtopiclist").val(), true);
-            references.addDataFeed.setInputParam('subject', $("#subjectlist").val(), true);
+            references.addDataFeed.setInputParam('category', references.$catList.val(), true);
+            references.addDataFeed.setInputParam('subcategory', references.$subCatList.val(), true);
+            references.addDataFeed.setInputParam('topic', references.$topicList.val(), true);
+            references.addDataFeed.setInputParam('subtopic', references.$subTopicList.val(), true);
+            references.addDataFeed.setInputParam('subject', references.$subjectList.val(), true);
             
             if (references.$collectionUid){
                 references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'PUT');
@@ -247,15 +247,16 @@ define(function(require) {
         
         _onDropDownChosen: function(){
         	var references = this._references;
-        	if( $("#partnerlist").val()!="" && $("#statelist").val()!="" && $("#langlist").val()!=""){
+        	
+        	if( references.$partnerList.val()!="" && references.$stateList.val()!="" && references.$langList.val()!=""){
         		references.videodataFeed.addInputParam('limit', false, 0);
         		references.videodataFeed.setInputParam('limit', 0, false);
-        		references.videodataFeed.addInputParam('state', false, $("#statelist").val());
-        		references.videodataFeed.setInputParam('state', $("#statelist").val(), false);
-				references.videodataFeed.addInputParam('partner', false, $("#partnerlist").val());
-				references.videodataFeed.setInputParam('partner', $("#partnerlist").val(), false);
-				references.videodataFeed.addInputParam('language', false, $("#langlist").val());
-				references.videodataFeed.setInputParam('language', $("#langlist").val(), false);
+        		references.videodataFeed.addInputParam('state', false, references.$stateList.val());
+        		references.videodataFeed.setInputParam('state', references.$stateList.val(), false);
+        		references.videodataFeed.addInputParam('partner', false, references.$partnerList.val());
+        		references.videodataFeed.setInputParam('partner', references.$partnerList.val(), false);
+        		references.videodataFeed.addInputParam('language', false, references.$langList.val());
+        		references.videodataFeed.setInputParam('language', references.$langList.val(), false);
 				this.getCollectionVideoDropDown();
         	}
         	else{

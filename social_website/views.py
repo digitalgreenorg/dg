@@ -208,7 +208,7 @@ def footer_view(request):
 
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url=PERMISSION_DENIED_URL)
+@user_passes_test(lambda u: u.groups.filter(name='Collection Czars').count() > 0, login_url=PERMISSION_DENIED_URL)
 def collection_edit_view(request, collection):
     try:
         collection = Collection.objects.get(uid=collection)
@@ -236,7 +236,7 @@ def collection_edit_view(request, collection):
 
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url=PERMISSION_DENIED_URL)
+@user_passes_test(lambda u: u.groups.filter(name='Collection Czars').count() > 0, login_url=PERMISSION_DENIED_URL)
 def collection_add_view(request):
     video = Video.objects.all()
     language = video.values_list('language',flat=True)
