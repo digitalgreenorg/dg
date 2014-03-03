@@ -9,7 +9,7 @@
                     <div class="js-collection-outer-wrapper">
 	                    <div class="grid layout-vr-sm">
 	                        <div class="grid-col grid-size2of3">
-	                            <h1 class="hdg-bold hdg-a" style="display:inline;">Collection Title</h1><span><input type="text" name="title" class="coltitle" value="{{collection.title}}"></span>
+	                            <h1 class="hdg-bold hdg-a display-inline">Collection Title</h1><span><input type="text" name="title" class="collec-title" value="{{collection.title}}"></span>
 	                        </div>
 	                    </div>
 	                    <div class="media layout-vr-md">
@@ -23,25 +23,25 @@
                                </div>
 	                        </div>
 	                        <div class="bd">
-	                            <div class="media va-dropdown js-meta-dropdown" data-collectionpartner="{{collection.partner.uid}}" data-collectionlanguage="{{collection.language}}" data-collectionstate="{{collection.state}}">
+	                            <div class="media js-meta-dropdown" data-collectionpartner="{{collection.partner.uid}}" data-collectionlanguage="{{collection.language}}" data-collectionstate="{{collection.state}}">
 	                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
 	                                    <select id = "partnerlist" class="chosen-select js-dropdown" >
-	                                      <option value='' selected='selected'>---------</option>
-	                                      {% for pa in partner%} 
-	                                      <option value = "{{pa.uid}}">{{pa.name}}</option>
-	                                      {% endfor %}                                    </select><br><br>
+	                                    <option value='' selected='selected'>---------</option>
+	                                    {% for pa in partner%} 
+                                            <option value = "{{pa.uid}}">{{pa.name}}</option>
+	                                    {% endfor %}                                    </select><br><br>
 	                                <label class="copy hdg-bold layout-vr-tiny">State</label>
 	                                    <select id = "statelist" class="chosen-select js-dropdown">
 	                                    <option value='' selected='selected'>---------</option>
-	                                      {% for st in state%} 
-	                                      <option value = "{{st}}">{{st}}</option>
-	                                      {% endfor %}                                    </select><br><br>
+	                                    {% for st in state%} 
+                                            <option value = "{{st}}">{{st}}</option>
+	                                    {% endfor %}                                    </select><br><br>
 	                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
 	                                    <select id = "langlist" class="chosen-select js-dropdown">
 	                                    <option value='' selected='selected'>---------</option>
-	                                      {% for lang in language%} 
-	                                      <option value = "{{lang}}">{{lang}}</option>
-	                                      {% endfor %}
+	                                    {% for lang in language%} 
+                                            <option value = "{{lang}}">{{lang}}</option>
+	                                    {% endfor %}
 	                                    </select><br><br>
 	                                <label class="copy hdg-bold layout-vr-tiny">Add Video</label>
                                     <div class='js-collection-video-dropdown-container' data-videos='[{{collection_videos|join:","}}]'>

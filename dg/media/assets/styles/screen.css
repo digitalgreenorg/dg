@@ -3379,40 +3379,17 @@ div.social-wrap button.googleplus {
   Video App
  ------------------------------------------------------------------------ */
  
- .coltitle{
+ .collec-title{
      width: 300px;
      height: 25px;
      margin-left: 20px;
      font-size: 20px;
      padding: 5px;
  }
- 
- .va-dropdown{
-     font-size: 14px;
-     height: 395px;
- }
- 
- .desc{
-     width: 930px;
-     height: 60px;
-     font-size: 14px;
-     margin-bottom: 25px;
- }
- 
- .add-more-link{
-     margin-top: 30px;
-     display: inline-block;
-     text-transform: uppercase;
-     color: #047d0a;
-     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
-     font-size: 14px;
-     padding: 10px 18px 9px 0px;
-     text-align: center;
-     background: #ffffff;
-     border-color: #ffffff;
-     border: 0px;
-     cursor:pointer;
- }
+
+.display-inline {
+    display: inline;
+}
  
  .carousel-border {
      border: 2px solid #DEDEDE;
@@ -3426,14 +3403,14 @@ div.social-wrap button.googleplus {
  }
  
  .video-remove {
- position: absolute;
- top: 15px;
- left:165px;
- background: url(../images/slideshow-x.png) no-repeat 0 0;
- height : 32px;
- width: 32px;
- padding: 3px 0 0 4px;
- opacity: 0.5;
+     position: absolute;
+     top: 15px;
+     left:165px;
+     background: url(../images/slideshow-x.png) no-repeat 0 0;
+     height : 32px;
+     width: 32px;
+     padding: 3px 0 0 4px;
+     opacity: 0.5;
  }
  
  .video-remove:hover {
@@ -3485,10 +3462,6 @@ div.social-wrap button.googleplus {
 
  .mrg-lt{
     margin-left: 325px;
-}
-
-.dropdown-ht{
-    height: 530px;
 }
 
  /*------------------ Sortable ------------------*/
