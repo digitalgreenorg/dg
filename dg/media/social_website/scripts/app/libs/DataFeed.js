@@ -296,7 +296,7 @@ define(function(require) {
          * This function is called upon an AJAX fetch error
          * @return {void}
          */
-        _onFetchError: function() {
+        _onFetchError: function(error) {
             this._state.failureCounter++;
         },
 
