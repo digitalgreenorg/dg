@@ -280,7 +280,8 @@ def spring_analytics(request):
     from django.db.models import Count, Sum, Max, Min
     import datetime
     
-    videos = [6000017889,6000017713,6000017896,6000016589,6000008464,6000007313]
+    videos = [10000000021208,10000000021093,10000000021146,10000000021176,10000000021096,10000000021196,10000000021195,10000000021156,10000000021157,10000000021217
+]
     if request.GET.get('from_date', None) and request.GET.get('to_date', None):
         from_date = request.GET.get('from_date', None)
         to_date = request.GET.get('to_date', None)
