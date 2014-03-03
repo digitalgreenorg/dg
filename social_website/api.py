@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict, ModelChoiceField
 
 from tastypie import fields
 from tastypie.authorization import Authorization
-from tastypie.authentication import Authentication
+from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
@@ -91,6 +91,13 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     bundle.data[field_name] = "/social/api/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict))
     return bundle
+
+
+class WebsiteSessionAuthentication(SessionAuthentication):
+    def is_authenticated(self, request, **kwargs):
+        if request.method == 'GET':
+            return True
+        return super(WebsiteSessionAuthentication, self).is_authenticated(request, **kwargs)
 
 
 class BaseCorsResource(ModelResource):
@@ -193,7 +200,7 @@ class CollectionResource(BaseCorsResource):
         queryset = Collection.objects.all()
         resource_name = 'collections'
         ordering = {'likes', 'views', 'adoptions'}
-        authentication = Authentication()
+        authentication = WebsiteSessionAuthentication()
         authorization = Authorization()
         validation = ModelFormValidation(form_class=CollectionForm)
 
@@ -289,7 +296,7 @@ class VideoLikeResource(ModelResource):
         always_return_data = True
         queryset = VideoLike.objects.all()
         resource_name = 'updateVideoLike'
-        authentication = Authentication()
+        authentication = WebsiteSessionAuthentication()
         authorization = Authorization()
         filtering = {
                    'video':ALL_WITH_RELATIONS,
@@ -329,7 +336,7 @@ class CommentResource(BaseResource):
         always_return_data = True
         queryset = Comment.objects.order_by('-date', '-uid').all()
         resource_name = 'comment'
-        authentication = Authentication()
+        authentication = WebsiteSessionAuthentication()
         authorization = Authorization()
         filtering={
                    'video':ALL_WITH_RELATIONS,
