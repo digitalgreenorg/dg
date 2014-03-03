@@ -1,7 +1,6 @@
 import datetime
 
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import m2m_changed, post_save
@@ -156,29 +155,6 @@ class Milestone(models.Model):
     screeningNumber = models.IntegerField()
     viewerNumber = models.IntegerField()
 
-class UserProfile(models.Model):  
-    username = models.CharField( max_length=30, unique=True)
-    first_name = models.CharField( max_length=30, blank=True)
-    last_name = models.CharField( max_length=30, blank=True)
-    email = models.EmailField( blank=True)
-    password = models.CharField( max_length=128)
-    is_staff = models.BooleanField( default=False)
-    is_active = models.BooleanField( default=True)
-    is_superuser = models.BooleanField( default=False)
-    last_login = models.DateTimeField( default=timezone.now)
-    date_joined = models.DateTimeField( default=timezone.now)
-    objects = UserManager()
-
-
-    def is_authenticated(self):
-        """
-        Always return True. This is a way to tell if the user has been
-        authenticated in templates.
-        """
-        return True
-
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
 
 class Comment(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -187,11 +163,11 @@ class Comment(models.Model):
     isOnline = models.BooleanField()
     video = models.ForeignKey(Video)
     person = models.ForeignKey(Person, null=True, blank=True)
-    user = models.ForeignKey(UserProfile, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
 
 class VideoLike(models.Model):
     video = models.ForeignKey(Video)
-    user = models.ForeignKey(UserProfile)
+    user = models.ForeignKey(User)
 post_save.connect(increase_online_video_like, sender = VideoLike)
 
 class CronTimestamp(models.Model):

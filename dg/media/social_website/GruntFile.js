@@ -48,6 +48,10 @@ module.exports = function( grunt ) {
 	    		        	  exclude: ["main"]
 	    		          },
 	    		          {
+	    		        	  name: 'controllers/EventsController',
+	    		        	  exclude: ["main"]
+	    		          },
+	    		          {
 	    		        	  name: 'controllers/CollectionsController',
 	    		        	  exclude: ["main"]
 	    		          },

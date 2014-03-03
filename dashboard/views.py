@@ -182,7 +182,7 @@ def feed_person_prac_pg_anim(request):
     if(mode==0): return HttpResponse(cjson.encode(dict(prac_list=prac)))
     if 'vil_id' in request.GET:
         vil_id=int(request.GET.get('vil_id'))
-        village = Village.objects.select_related(depth=1).get(id=int(vil_id))
+        village = Village.objects.select_related().get(id=int(vil_id))
         anim = serializers.serialize("json", Animator.objects.filter(assigned_villages=village))
         pg = serializers.serialize("json", PersonGroups.objects.filter(village=village))
         p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
@@ -1307,8 +1307,10 @@ def save_animator_online(request, id):
         else:
             form_animator = AnimatorForm(request.POST)
         if form_animator.is_valid():
-            saved_animator = form_animator.save(user = request.session.get('user_id'), id = id)
-            animator = Animator.objects.get(pk=saved_animator.id)
+            saved_animator = form_animator.save(user = request.session.get('user_id'), id = id, commit = False)
+            saved_animator.district = District.objects.get(block__village = saved_animator.village)
+            saved_animator.save()
+            animator = Animator.objects.get(pk = saved_animator.id)
             formset_animator_assigned_village = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
             if formset_animator_assigned_village.is_valid():
                 animator_assigned_village_instances = formset_animator_assigned_village.save(commit = False)
