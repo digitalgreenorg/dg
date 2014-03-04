@@ -1,7 +1,7 @@
 from collections import defaultdict
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-from django.utils import simplejson
+import json
 from dashboard.models import *
 from django.db.models import Count
 import datetime
@@ -152,7 +152,7 @@ def get_villages_with_images(request):
         village_details.append({"id":i, "name": vil_details[0][1], "latitude":random_lat, 
                                 "longitude": random_lng, "grade": vil_details[0][3]})
     
-    return HttpResponse(simplejson.dumps(village_details), mimetype="application/json")
+    return HttpResponse(json.dumps(village_details), mimetype="application/json")
 
 def get_videos_produced(request):
     village_id = int(request.GET['village_id'])

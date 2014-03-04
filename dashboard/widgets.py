@@ -21,10 +21,10 @@ class ForeignKeySearchInput(forms.HiddenInput):
             'all': ('/media/css/jquery.autocomplete.css',)
         }
         js = (
-            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.js',
-            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.bgiframe.min.js',
-            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.ajaxQueue.js',
-            settings.ADMIN_MEDIA_PREFIX + 'js/jquery.autocomplete.js'
+            settings.STATIC_URL + 'js/lib/jquery.js',
+            settings.STATIC_URL + 'js/lib/jquery.bgiframe.min.js',
+            settings.STATIC_URL + 'js/lib/jquery.ajaxQueue.js',
+            settings.STATIC_URL + 'js/jquery.autocomplete.js'
         )
 
     def label_for_value(self, value):
@@ -86,7 +86,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
             </script>
         ''') % {
             'search_fields': ','.join(self.search_fields),
-            'admin_media_prefix': settings.ADMIN_MEDIA_PREFIX,
+            'admin_media_prefix': settings.STATIC_URL,
             'model_name': self.rel.to._meta.module_name,
             'app_label': self.rel.to._meta.app_label,
             'label': label,

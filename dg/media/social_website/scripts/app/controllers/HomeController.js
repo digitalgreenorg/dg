@@ -139,7 +139,7 @@ define(function(require) {
         
         _initVideoPlayer: function() {
 
-            var videoId = 'ICxPW-OoSFI';
+            var videoId = 'RjMTx1fzpMU';
 
             var params = { allowScriptAccess: "always" };
             var atts = { id: "player", 
