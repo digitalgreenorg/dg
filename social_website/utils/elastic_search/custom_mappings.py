@@ -1,4 +1,4 @@
-from dg.settings import COMPLETION_INDEX, FACET_INDEX
+from dg.settings import COMPLETION_INDEX, FACET_INDEX, VIDEO_INDEX
 
 SETTINGS = {
             "analysis":{
@@ -164,3 +164,36 @@ COMPLETION_MAPPING = {
                                                   }
                                     }
                       }
+
+VIDEO_MAPPING = {
+         VIDEO_INDEX :{
+                 "properties":{
+                               "category" : {
+                                             "type":"string",
+                                             "analyzer":"keyword"
+                                            },
+                               "topic" :    {
+                                             "type":"string",
+                                             "analyzer":"keyword"
+                                            },
+                               "language" : {
+                                             "type":"string",
+                                             "analyzer":"keyword"
+                                            },
+                               "title" :    {
+                                             "fields":{
+                                                       "title":{
+                                                                "type":"string",
+                                                                "analyzer":"standard"
+                                                               },
+                                                       "partial":{
+                                                                  "search_analyzer":"full_name",
+                                                                  "index_analyzer":"partial_name",
+                                                                  "type":"string"
+                                                                 }
+                                                      },
+                                             "type":"multi_field"
+                                             },
+                               }
+                       }
+                 }

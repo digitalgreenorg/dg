@@ -9,8 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from elastic_search import get_related_collections
-from social_website.models import  Collection, Partner, FeaturedCollection
+from elastic_search import get_related_collections, get_related_videos 
+from social_website.models import  Collection, Partner, FeaturedCollection, Video
 
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
@@ -173,6 +173,32 @@ def featuredCollection(request):
     }
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
+
+def video_view(request, uid):
+    try:
+        video = Video.objects.get(uid=uid)
+    except Video.DoesNotExist:
+        return HttpResponseRedirect(reverse('discover'))
+
+    tags = [x for x in [video.category, video.subcategory, video.topic, video.subtopic, video.subject] if x is not u'']
+    related_collection = Collection.objects.filter(partner=video.partner)
+    related_collection_list = []
+    for collection in related_collection:
+        duration = sum([v.duration for v in collection.videos.all()])
+        url = collection.get_absolute_url()
+        related_collection_list.append([collection, duration, url])
+    related_videos_dict = get_related_videos(video)
+    context = {
+               'header': {
+                          'jsController':'ViewCollections',
+                          'currentPage':'Discover',
+                          },
+               'video': video,
+               'related_videos': related_videos_dict,
+               'tags': tags,
+               'related_collections': related_collection_list[:4], # restricting to 4 related collections for now
+               }
+    return render_to_response('video_view.html' , context, context_instance = RequestContext(request))
 
 def footer_view(request):
     response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
