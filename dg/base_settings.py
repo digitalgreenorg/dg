@@ -9,7 +9,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -46,6 +45,10 @@ STATICFILES_DIRS = (
    # Don't forget to use absolute paths, not relative paths.
    os.path.join(PROJECT_PATH, 'media'),                 
 )
+
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/'
+PERMISSION_DENIED_URL = '/denied/'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',

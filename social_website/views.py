@@ -3,14 +3,25 @@ import datetime
 import json
 import urllib2
 
+from django import forms
+from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.views import login as django_login_view
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.response import TemplateResponse
 
 from elastic_search import get_related_collections, get_related_videos 
 from social_website.models import  Collection, Partner, FeaturedCollection, Video
+
+
+class CustomUserCreationForm(UserCreationForm):
+    username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
+
 
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
@@ -215,7 +226,47 @@ def footer_view(request):
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
 
 
-def logout_view(request):
-    next_url = request.GET.get('next', None)
-    logout(request)
-    return HttpResponseRedirect(next_url)
+def login_view(request, template_name='registration/login.html',
+                      redirect_field_name=REDIRECT_FIELD_NAME,
+                      authentication_form=AuthenticationForm,
+                      current_app=None, extra_context=None):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+    else:
+        return django_login_view(request, template_name, redirect_field_name, authentication_form, current_app, extra_context)
+
+
+def signup_view(request, template_name='social_website/signup.html',
+                redirect_field_name=REDIRECT_FIELD_NAME,
+                signup_form=CustomUserCreationForm,
+                current_app=None, extra_context=None):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+
+    redirect_to = request.REQUEST.get(redirect_field_name, '')
+
+    if request.method == "POST":
+        form = signup_form(data=request.POST)
+        if form.is_valid():
+            a = form.save()
+            a.email = a.username
+            a.save()
+            
+            new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+            login(request, new_user)
+            
+            return HttpResponseRedirect(redirect_to)
+    else:
+        form = signup_form(None)
+
+    context = {
+        'form': form,
+    }
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context,
+                            current_app=current_app)

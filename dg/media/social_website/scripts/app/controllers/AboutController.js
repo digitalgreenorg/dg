@@ -10,7 +10,7 @@
 define(function(require) {
     'use strict';
 
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
     var jQuery = require('jquery');
 
     var NCarousel = require('libs/NCarousel/NCarousel');

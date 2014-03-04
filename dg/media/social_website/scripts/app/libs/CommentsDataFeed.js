@@ -52,6 +52,14 @@ define(function(require) {
             this.base(null, customCallback);
         },
 
+        _onFetchError: function(error) {
+            this.base(error);
+            if(error.status == 401){
+                var url = "/login/?next=" + window.location.pathname
+                window.location.assign(url)
+            }
+        },
+        
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
             // If this was a post of a comment, then an object is returned not an array.

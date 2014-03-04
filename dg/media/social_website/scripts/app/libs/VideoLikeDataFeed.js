@@ -28,6 +28,14 @@ define(function(require) {
 
             this.base(null, customCallback, type);
         },
+        
+        _onFetchError: function(error) {
+            this.base(error);
+            if(error.status == 401){
+                var url = "/login/?next=" + window.location.pathname
+                window.location.assign(url)
+            }
+        },
 
         _initConfig: function() {
             this.base();
