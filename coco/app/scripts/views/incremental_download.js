@@ -377,16 +377,8 @@ define([
                                     });
                             })
                             .fail(function(error) {
-                                //if foreign elements in this object could not be converted then create an empty dummy object with same online id to enable processing of other objects using this object as a foreign element
-                                Offline.save(existing_model, that.get_entity_name(incd_o), {
-                                    online_id: on_model.get("id")
-                                })
-                                    .done(function(off_model) {
-                                        dfd.resolve();
-                                    })
-                                    .fail(function(error) {
-                                        dfd.reject(error);
-                                    });
+                            	console.log("INCD: Failed convertnamespace..not saving ");
+                            	dfd.reject(error);
                             });
                     })
                     .fail(function(response) {
