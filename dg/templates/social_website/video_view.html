@@ -20,12 +20,12 @@
                         <div class="bd">
                             <div class="media">
                                 <div class="img img-size-sq-small">
-                                    <a href="{% url partner video.partner.name %}"><img src="{{ video.partner.logoURL.url }}" alt="" /></a>
+                                    <a href="{% url 'partner' video.partner.name %}"><img src="{{ video.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
-                                    <a href="{% url partner video.partner.name %}"><h2 class="copy hdg-bold layout-vr-tiny">{{ video.partner.name }}</h2></a>
+                                    <a href="{% url 'partner' video.partner.name %}"><h2 class="copy hdg-bold layout-vr-tiny">{{ video.partner.name }}</h2></a>
                                     <p class="copy layout-vr-tiny">Member since {{ video.partner.joinDate.year }}</p>
-                                    <a href="{% url partner video.partner.name %}" class="hdg-bold copy">{{ video.partner.video_count }} Videos</a>
+                                    <a href="{% url 'partner' video.partner.name %}" class="hdg-bold copy">{{ video.partner.video_count }} Videos</a>
                                 </div>
                             </div> <!-- End .media -->
                             <h3 class="copy hdg-bold layout-vr-tiny">{{ video.state}}</h3>
