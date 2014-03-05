@@ -116,7 +116,7 @@ def enter_data_into_video_search(conn, index_name):
                            "subcategory" : obj.subcategory, 
                            "topic": obj.topic, 
                            "subject" : obj.subject, 
-                           "thumbnailURL" : obj.thumbnailURL16by9,
+                           "thumbnailURL16by9" : obj.thumbnailURL16by9,
                            "uid" : obj.uid,
                            "duration" : obj.duration,
                            "description" : obj.description

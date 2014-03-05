@@ -181,8 +181,8 @@ def get_related_videos(video):
     q = {
         "query": {
                  "bool": {
-                           "must_not": {"term": {"uid": video.uid }},
                            "should": [
+                                       {"term"  : { "uid" : video.uid } },
                                        {"terms" : { "category" : [video.category]}},
                                        {"terms" : { "topic" : [video.topic]}},
                                        {"terms" : { "language" : [video.language]}}
