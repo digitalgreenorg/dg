@@ -15,8 +15,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
 
-from elastic_search import get_related_collections
-from social_website.models import  Collection, Partner, FeaturedCollection
+from elastic_search import get_related_collections, get_related_videos 
+from social_website.models import  Collection, Partner, FeaturedCollection, Video
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -48,21 +48,53 @@ def collection_view(request, partner, state, language, title, video=1):
         video = collection.videos.all()[video_index - 1]    
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
-    related_collection_dict = get_related_collections(collection)
+    related_collections = get_related_collections(collection)
     context= {
               'header': {
                          'jsController':'ViewCollections',
                          'currentPage':'Discover',
                          'loggedIn':False
                          },
-              'collection': collection,
-              'duration' : duration,
+              'is_collection': True,
+              'object': collection,
+              'video_list': collection.videos.all(),
+              'collection_duration' : duration,
               'video' : video,
               'video_index' : video_index,
               'tags' : tags,
-              'related_collections' : related_collection_dict[:4], # restricting to 4 related collections for now
+              'related_collections' : related_collections[:4], # restricting to 4 related collections for now
               }
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
+
+
+def video_view(request, uid):
+    try:
+        video = Video.objects.get(uid=uid)
+    except Video.DoesNotExist:
+        return HttpResponseRedirect(reverse('discover'))
+
+    tags = [x for x in [video.category, video.subcategory, video.topic, video.subtopic, video.subject] if x is not u'']
+    if Collection.objects.filter(partner=video.partner).count():
+        collection = Collection.objects.filter(partner=video.partner)[0]
+    else:
+        collection = Collection.objects.all()[0]
+    related_collections = get_related_collections(collection)
+    related_videos = get_related_videos(video)
+    context = {
+               'header': {
+                          'jsController':'ViewCollections',
+                          'currentPage':'Discover',
+                          },
+              'is_collection': False,
+              'object': video,
+              'video_list': related_videos,
+              'video' : video,
+              'video_index' : 1,
+              'tags' : tags,
+              'related_collections' : related_collections[:4], # restricting to 4 related collections for now
+               }
+    return render_to_response('collections-view.html' , context, context_instance = RequestContext(request))
+
 
 def partner_view(request, partner):
     try:
@@ -184,6 +216,8 @@ def featuredCollection(request):
     }
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
+
+
 
 def footer_view(request):
     response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')

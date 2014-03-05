@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from communications.views import media_view
 from human_resources.views import job_view, member_view
 from events import event_registration
-from views import social_home, collection_view, partner_view, search_view
+from views import social_home, collection_view, partner_view, search_view, video_view
 
 class DirectTemplateView(TemplateView):
     extra_context = None
@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^connect/(?P<partner>.+)/$', partner_view, name='partner'),
     url(r'^connect/$', DirectTemplateView.as_view(template_name='connect.html', extra_context={'header': {'currentPage':'Connect'}}), name='connect'),
     url(r'^contact/$', TemplateView.as_view(template_name='contact.html'), name='contact'),
+    url(r'^discover/video/(?P<uid>.+)/$', video_view, name="video_page"),
     url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
     url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"), 
     url(r'^discover/?$', search_view, name='search'),

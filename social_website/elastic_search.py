@@ -2,7 +2,7 @@ import datetime, json, urllib2
 from django.http import HttpResponse
 from pyes import ES
 from social_website.models import Partner
-from dg.settings import COMPLETION_INDEX, FACET_INDEX
+from dg.settings import COMPLETION_INDEX, FACET_INDEX, VIDEO_INDEX
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
@@ -171,3 +171,33 @@ def searchCompletions(request):
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
+
+
+def get_related_videos(video):
+    related_videos = []
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices = VIDEO_INDEX
+    conn.refresh(VIDEO_INDEX)
+    q = {
+        "query": {
+                 "bool": {
+                           "should": [
+                                       {"term"  : { "uid" : video.uid } },
+                                       {"terms" : { "category" : [video.category]}},
+                                       {"terms" : { "topic" : [video.topic]}},
+                                       {"terms" : { "language" : [video.language]}}
+                                       ],
+                           "minimum_should_match" : 1
+                           }
+                 }
+        }
+    try:
+        query = json.dumps(q)
+        url = "http://localhost:9200/%s/_search" % VIDEO_INDEX
+        response = urllib2.urlopen(url, query)
+        result = json.loads(response.read())
+        for res in result['hits']['hits']:
+            related_videos.append(res['_source'])
+    except Exception:
+        pass
+    return related_videos
