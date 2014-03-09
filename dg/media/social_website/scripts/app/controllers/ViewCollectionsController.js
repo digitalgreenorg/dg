@@ -113,7 +113,7 @@ define(function(require) {
             this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
             
             state.updateVideoWatchedTimeInterval = undefined;
-            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
+            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
         },
 
         _initVideoStats: function() {

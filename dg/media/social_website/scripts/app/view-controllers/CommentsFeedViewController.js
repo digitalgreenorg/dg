@@ -110,6 +110,8 @@ define(function(require) {
             var dataFeed = this._references.dataFeed;
             dataFeed.setInputParam('offset', page*commentsPerPage, true)
             dataFeed.setInputParam('limit', commentsPerPage, true);
+            dataFeed.addInputParam('video', false,jQuery('.js-comment-wrapper').attr('data-video-uid'));
+            dataFeed.setInputParam('video', jQuery('.js-comment-wrapper').attr('data-video-uid') , true);
 
             var commentsArray = dataFeed.getComments();
             var totalCount = dataFeed.getTotalCount();
