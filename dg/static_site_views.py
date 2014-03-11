@@ -302,7 +302,7 @@ def spring_analytics(request):
     groups = PersonGroups.objects.filter(person__in = viewers).values_list('id', flat = True)
     adoptions = PersonAdoptPractice.objects.filter(video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('id', flat = True)
     unique_adoptions = PersonAdoptPractice.objects.filter(video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('person__id', flat = True).distinct()
-    villages  = Village.objects.filter(person__in = viewers).values_list('id', flat = True).distinct()
+    villages  = Village.objects.filter(screening__in = screenings, block__district__district_name = 'Keonjhar').values_list('id', flat = True).distinct()
     from_date = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
     to_date = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
     days_diff = (to_date - from_date).days
