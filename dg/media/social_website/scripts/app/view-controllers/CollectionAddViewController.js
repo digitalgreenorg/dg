@@ -47,7 +47,7 @@ define(function(require) {
             references.$videoDropDownContainer = $referenceBase.find('.js-collection-video-dropdown-container');
             references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
-            references.$collectionTitle = $referenceBase.find('.coltitle');
+            references.$collectionTitle = $referenceBase.find('.js-collection-title');
             references.$dropDown = $referenceBase.find('.js-dropdown');
             references.$partnerList = $referenceBase.find('#partnerlist');
             references.$stateList = $referenceBase.find('#statelist');
