@@ -138,8 +138,8 @@ define(function(require) {
         },
 
         afterCollectionAdd: function(){
-            alert('added')
-            var url = "/discover" +"/"+ $("#partnerlist :selected").text() +"/"+ $("#statelist").val() +"/"+ $("#langlist").val() +"/"+ $('.coltitle').val()
+            var references = this._references;
+            var url = "/discover" +"/"+ $("#partnerlist :selected").text() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
             window.location.assign(url)
         },
         
