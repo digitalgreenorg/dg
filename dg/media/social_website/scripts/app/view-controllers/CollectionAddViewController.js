@@ -44,6 +44,7 @@ define(function(require) {
             references.$collectionAddWrapper = $referenceBase;
             references.$collectionUid = $referenceBase.find('.js-uid').data('collectionuid');
             references.$metaInformationContainer = $referenceBase.find('.js-meta-dropdown');
+            references.$videoContainer = $referenceBase.find('.js-video-container');
             references.$videoDropDownContainer = $referenceBase.find('.js-collection-video-dropdown-container');
             references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
@@ -78,7 +79,7 @@ define(function(require) {
         checkforedit: function(key){
             var references = this._references;
             if (references.$collectionUid){
-                if (key == 'mapping'){
+                if (key == 'mapping' && references.$practiceMappingContainer.data('category').trim()){
                     references.$catList.val(references.$practiceMappingContainer.data('category').trim()).change();
                     references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
                     references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
@@ -139,14 +140,14 @@ define(function(require) {
 
         afterCollectionAdd: function(){
             var references = this._references;
-            var url = "/discover" +"/"+ $("#partnerlist :selected").text() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
+            var url = "/discover" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
             window.location.assign(url)
         },
         
         _onSaveCollectionClick: function(e) {
         	e.preventDefault();
-        	var order = $( "#sortable" ).sortable('toArray');
         	var references = this._references;
+        	var order = references.$videoContainer.sortable('toArray');
         	if (references.$collectionUid){
         	    references.addDataFeed.addInputParam('uid', false, references.$collectionUid);
         	    references.addDataFeed.setInputParam('uid', references.$collectionUid, true);
@@ -353,7 +354,7 @@ define(function(require) {
                     uid:vid,
                     thumbnailURL:image,
                 };
-        	viewRenderer.renderAppend($('.js-carousel-container'), carouselTemplate, renderData);
+        	viewRenderer.renderAppend(references.$videoContainer, carouselTemplate, renderData);
         	references.$vidList.find('option[value=' + vid + ']').remove();
         	references.$vidList.select2("val", "");
         	

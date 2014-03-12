@@ -32,7 +32,7 @@ define(function(require) {
             this.base();
             var references = this._references;
             var $collectionWrapper = jQuery('.js-collection-outer-wrapper');
-            var $sortable = jQuery('#sortable');
+            var $sortable = jQuery('.js-video-container');
             
             // Initializing Sortable for Dragging around videos
             

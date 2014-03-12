@@ -3472,14 +3472,14 @@ div.social-wrap button.googleplus {
     margin-right: 30px;
  }
  
- #sortable { 
+ .sortable { 
  list-style-type: none;
  margin: 5px;
  padding: 5px;
  width: 600px;
  }
  
- #sortable li {
+ .sortable li {
  margin: 3px 3px 3px 3px;
  padding: 30px;
  float: left;
