@@ -280,8 +280,7 @@ def spring_analytics(request):
     from django.db.models import Count, Sum, Max, Min
     import datetime
     
-    videos = [10000000021208,10000000021093,10000000021146,10000000021176,10000000021096,10000000021196,10000000021195,10000000021156,10000000021157,10000000021217
-]
+    videos = [10000000021208,10000000021093,10000000021146,10000000021176,10000000021096,10000000021196,10000000021195,10000000021156,10000000021157,10000000021217]
     if request.GET.get('from_date', None) and request.GET.get('to_date', None):
         from_date = request.GET.get('from_date', None)
         to_date = request.GET.get('to_date', None)
@@ -297,11 +296,13 @@ def spring_analytics(request):
     search_box_params['to_date'] = str(to_date)
     search_box_params['is_date_selected'] = 1
     
-    screenings = Screening.objects.filter(videoes_screened__id__in = videos, date__lte = to_date, date__gte = from_date).values_list('id', flat = True).distinct()
-    viewers = PersonMeetingAttendance.objects.filter(screening__id__in = screenings).values_list('person__id').distinct()#annotate(person = Count('person', distinct=True)).count()#values_list('screening__videoes_screened__id','interested', 'expressed_question')   
-    groups = PersonGroups.objects.filter(person__in = viewers).values_list('id', flat = True)
-    adoptions = PersonAdoptPractice.objects.filter(video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('id', flat = True)
-    unique_adoptions = PersonAdoptPractice.objects.filter(video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('person__id', flat = True).distinct()
+    screenings = Screening.objects.filter(village__block__district__district_name = 'Keonjhar', videoes_screened__id__in = videos, date__lte = to_date, date__gte = from_date).values_list('id', flat = True).distinct()
+    scr = list(screenings)
+    viewers = PersonMeetingAttendance.objects.filter(screening__id__in = scr).values_list('person__id', flat=True).distinct()   
+    persons = list(viewers)
+    groups = PersonGroups.objects.filter(person__in = persons).values_list('id', flat = True)
+    adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('id', flat = True)
+    unique_adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('person__id', flat = True).distinct()
     villages  = Village.objects.filter(screening__in = screenings, block__district__district_name = 'Keonjhar').values_list('id', flat = True).distinct()
     from_date = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
     to_date = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
@@ -310,9 +311,9 @@ def spring_analytics(request):
     total_numbers = {}
     total_numbers.update(adoptions = len(adoptions))
     total_numbers.update(unique_adoptions = len(unique_adoptions))
-    total_numbers.update(screenings = len(screenings))
+    total_numbers.update(screenings = len(scr))
     total_numbers.update(videos = len(videos))
-    total_numbers.update(viewers = len(viewers))
+    total_numbers.update(viewers = len(persons))
     total_numbers.update(groups = len(groups))
     total_numbers.update(villages = len(villages))
     total_numbers.update(avg_screenings = avg_screenings)
