@@ -10,6 +10,7 @@ from dashboard.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
+from static_site_views import spring_analytics
 from website_admin import website_admin
 import website_archive_urls
 
@@ -44,6 +45,8 @@ urlpatterns = patterns('',
     (r'^get/person/$', get_person),
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
+    ##Special page.needs to be deleted
+    (r'^spring/analytics/?$', spring_analytics),
     
     # Imports from farmerbook
     (r'^farmerbook/$', farmer_book_views.get_home_page),
