@@ -6,32 +6,29 @@
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
                     <div class="media layout-vr-xlg">
                         <div class='bd'>
-                        <ul class="link-list">
-                            <li>
-                                <a href="#annualreport12">Annual Report 2012
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#annualreport10-11">Annual Report 2010-2011
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#annualreport09-10">Annual Report 2009-2010
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#keyfacts">Key Facts
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#sop">Standard Operating Procedures
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#qaf">Quality Assurance Framework
-                                </a>
-                            </li>
-                        </ul>
+                            <div class="grid-col grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="#annualreport12">Annual Report 2012</a></li>
+                                    <li><a href="#annualreport10-11">Annual Report 2010-2011</a></li>
+                                    <li><a href="#annualreport09-10">Annual Report 2009-2010</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/Digital-Green-Key-Facts.pdf"  target="_blank">Key Facts</a></li>
+                                    <li><a href="#sop">Standard Operating Procedures</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/Quality-Assurance.pdf"  target="_blank">Quality Assurance Framework</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/Training.pdf"  target="_blank">Training</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/success_stories/Voices.pdf"  target="_blank">Voices from the Field- March, 2014</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="grid-rt grid-size2of4">
+                                <ul class="link-list">
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/Africa.pdf"  target="_blank">Digtal Green in Africa</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/Ethiopia.pdf"  target="_blank">Digital Green in Ethiopia</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/Ghana.pdf"  target="_blank">Digital Green in Ghana</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/Health.pdf"  target="_blank">Digital Green in Health</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/DFID.pdf"  target="_blank">DFID in India</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/digital_green/NRLM-Partnership.pdf"  target="_blank">NRLM Partnership</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,21 +84,7 @@
             </div> <!-- End .wrapper -->
         </section>
 		
-        <section id="keyfacts" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Key Facts</h2>
-                    <div class="layout-vr-md">
-                        <iframe src="http://www.scribd.com/embeds/154431570/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless></iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Key-Facts.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-		
-        <section id="sop" class="about-bg">
+        <section id="sop" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Standard Operating Procedures</h2>
@@ -116,18 +99,4 @@
             </div> <!-- End .wrapper -->
         </section>
 		
-        <section id="qaf" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Quality Assurance Framework</h2>
-                    <div class="media layout-vr-md">
-                        <iframe class="scribd_iframe_embed" src="http://www.scribd.com/embeds/77227319/content?start_page=1&view_mode=list&access_key=key-1vvdkztjcuy5zv44q65n" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0"></iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Quality-Assurance-Framework.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-
 {% include "includes/footer.html" %}
