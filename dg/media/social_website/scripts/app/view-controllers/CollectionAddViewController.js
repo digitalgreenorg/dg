@@ -116,7 +116,7 @@ define(function(require) {
             if (collectionvideodropdownData == false) {
                 return false;
             }
-            references.videoarray = collectionvideodropdownData;
+            references.videoArray = collectionvideodropdownData;
             this._renderVideoCollectionDropDown(collectionvideodropdownData);
             
             if (references.$collectionUid){
@@ -338,7 +338,7 @@ define(function(require) {
         _onVideoChosen: function(){
             var references = this._references;
             var vid = references.$vidList.val();
-            var vidarray = this._references.videoarray;
+            var vidarray = this._references.videoArray;
             var image;
             var title;
             for (var i=0; i<vidarray.length; i++)
