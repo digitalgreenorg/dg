@@ -31,7 +31,7 @@ define(function(require) {
         constructor: function($referenceBase) {
             this.base($referenceBase);
             this.getPracticeMapping();
-            this._dropdownChosen();
+            this.initSelect2();
             return this;
         },
 
@@ -105,7 +105,7 @@ define(function(require) {
             this._renderPracticeMapping(practicemappingData);
             
             this.checkforedit('mapping');
-            this._dropdownChosen();
+            this.initSelect2();
             
             
         },
@@ -235,7 +235,7 @@ define(function(require) {
             this._dropdownChosen();
         },
 
-        _dropdownChosen: function(){
+        initSelect2: function(){
         	var references = this._references;
         	try{
         	    $(".chosen-select").select2({no_results_text: "No results match", width: "90%"});
@@ -290,7 +290,7 @@ define(function(require) {
                 references.$subjectList.append( new Option(subject[i],subject[i]) );
             }
             
-            this._dropdownChosen();
+            this.initSelect2();
 
         },
         
@@ -311,7 +311,7 @@ define(function(require) {
                 topic.push(arr);
                 references.$topicList.append( new Option(arr,arr) );
             }
-            this._dropdownChosen();
+            this.initSelect2();
         },
         
         _onTopicChosen: function(){
@@ -332,7 +332,7 @@ define(function(require) {
             for (i in subtopic){
                 references.$subTopicList.append( new Option(subtopic[i],subtopic[i]) );
             }
-            this._dropdownChosen();
+            this.initSelect2();
         },
         
         _onVideoChosen: function(){
