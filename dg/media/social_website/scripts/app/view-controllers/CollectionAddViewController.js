@@ -217,7 +217,7 @@ define(function(require) {
         },
         
         _renderVideoCollectionDropDown: function(collectionvideodropdownData) {
-            var references = this._references
+            var references = this._references;
             
             var renderData = {
                      video: collectionvideodropdownData
@@ -266,7 +266,7 @@ define(function(require) {
         },
         
         _onCategoryChosen: function(){
-            var references = this._references
+            var references = this._references;
             var category_name = references.$catList.val();
             
             var mapping_data = this._references.mapping;
@@ -295,7 +295,7 @@ define(function(require) {
         },
         
         _onsubCategoryChosen: function(){
-            var references = this._references
+            var references = this._references;
             
             var category_name = references.$catList.val();
             var subcategory_name = references.$subCatList.val();
@@ -315,7 +315,7 @@ define(function(require) {
         },
         
         _onTopicChosen: function(){
-            var references = this._references
+            var references = this._references;
             
             var category_name = references.$catList.val();
             var subcategory_name = references.$subCatList.val();
@@ -336,7 +336,7 @@ define(function(require) {
         },
         
         _onVideoChosen: function(){
-            var references = this._references
+            var references = this._references;
             var vid = references.$vidList.val();
             var vidarray = this._references.videoarray;
             var image;
