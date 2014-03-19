@@ -85,6 +85,16 @@ define(function(require) {
             }
         },
         
+        selectCollectionMapping: function(){
+            var references = this._references;
+            if (references.$collectionUid && references.$practiceMappingContainer.data('category').trim()){
+                references.$catList.val(references.$practiceMappingContainer.data('category').trim()).change();
+                references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
+                references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
+                references.$subTopicList.val(references.$practiceMappingContainer.data('subtopic').trim());
+                references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
+            }
+        },
         
         getPracticeMapping: function() {
             var practicemappingData = this._references.dataFeed.getPracticeMapping();
