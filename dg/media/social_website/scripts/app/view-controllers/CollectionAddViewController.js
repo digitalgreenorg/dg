@@ -280,14 +280,14 @@ define(function(require) {
             var arr;
             for (arr in subcategory){
                 if (arr != 'subject'){
-                    references.$subCatList.append( new Option(arr,arr) );
+                    references.$subCatList.append(new Option(arr,arr));
                 }
             }
             
             var subject = (mapping_data[category_name]['subject']).sort();
             var i;
             for (i in subject){
-                references.$subjectList.append( new Option(subject[i],subject[i]) );
+                references.$subjectList.append(new Option(subject[i],subject[i]));
             }
             
             this.initSelect2();
@@ -299,7 +299,6 @@ define(function(require) {
             
             var category_name = references.$catList.val();
             var subcategory_name = references.$subCatList.val();
-            var subject_name = references.$subjectList.val();
             var mapping_data = references.mapping;
             
             references.$topicList.find('option:not(:first)').remove();
@@ -309,7 +308,7 @@ define(function(require) {
             var arr;
             for (arr in mapping_data[category_name][subcategory_name]){
                 topic.push(arr);
-                references.$topicList.append( new Option(arr,arr) );
+                references.$topicList.append(new Option(arr,arr));
             }
             this.initSelect2();
         },
@@ -319,7 +318,6 @@ define(function(require) {
             
             var category_name = references.$catList.val();
             var subcategory_name = references.$subCatList.val();
-            var subject_name = references.$subjectList.val();
             var topic_name = references.$topicList.val();
             var mapping_data = references.mapping;
             
@@ -330,7 +328,7 @@ define(function(require) {
             
             var i;
             for (i in subtopic){
-                references.$subTopicList.append( new Option(subtopic[i],subtopic[i]) );
+                references.$subTopicList.append(new Option(subtopic[i],subtopic[i]));
             }
             this.initSelect2();
         },
