@@ -72,26 +72,16 @@ define(function(require) {
             this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
             references.$dropDown.on('change', this._boundFunctions.onDropDownChosen);
             
-            this.checkforedit();
+            this.selectVideoSelectionCriteria();
             
         },
         
-        checkforedit: function(key){
+        selectVideoSelectionCriteria: function(){
             var references = this._references;
             if (references.$collectionUid){
-                if (key == 'mapping' && references.$practiceMappingContainer.data('category').trim()){
-                    references.$catList.val(references.$practiceMappingContainer.data('category').trim()).change();
-                    references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
-                    references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
-                    references.$subTopicList.val(references.$practiceMappingContainer.data('subtopic').trim());
-                    references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
-                }
-                else{
-                    references.$partnerList.val(references.$metaInformationContainer.data('collectionpartner')).change();
-                    references.$stateList.val(references.$metaInformationContainer.data('collectionstate')).change();
-                    references.$langList.val(references.$metaInformationContainer.data('collectionlanguage')).change();
-                }
-                
+                references.$partnerList.val(references.$metaInformationContainer.data('collectionpartner')).change();
+                references.$stateList.val(references.$metaInformationContainer.data('collectionstate')).change();
+                references.$langList.val(references.$metaInformationContainer.data('collectionlanguage')).change();
             }
         },
         
@@ -104,7 +94,7 @@ define(function(require) {
             this._references.mapping = practicemappingData;
             this._renderPracticeMapping(practicemappingData);
             
-            this.checkforedit('mapping');
+            this.selectCollectionMapping();
             this.initSelect2();
             
             
