@@ -1,7 +1,7 @@
 <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm copy-margin">Practice Mapping</h2>
 <div class="grid-size1of5 grid-col">
                                     <label class="copy layout-vr-tiny">Category</label>
-                                    <select id = "catlist" class="chosen-select">
+                                    <select id = "catlist" class="chosen-select js-catlist">
                                     <option value='' selected='selected'>---------</option>
                                     {{#category}}
                                         <option value = "{{.}}">{{.}}</option>
@@ -10,7 +10,7 @@
                                 </div>
                                 <div class="grid-size1of5 grid-col">
                                     <label class="copy layout-vr-tiny">Subcategory</label>
-                                    <select id = "subcatlist" class="chosen-select">
+                                    <select id = "subcatlist" class="chosen-select js-subcatlist">
                                     <option value='' selected='selected'>---------</option>
                                     {{#subcategory}}
                                         <option value = "{{.}}">{{.}}</option>
@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="grid-size1of5 grid-col">
                                     <label class="copy layout-vr-tiny">Topic</label>
-                                    <select id = "topiclist" class="chosen-select">
+                                    <select id = "topiclist" class="chosen-select js-topiclist">
                                     <option value='' selected='selected'>---------</option>
                                     {{#topic}}
                                         <option value = "{{.}}">{{.}}</option>
@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="grid-size1of5 grid-col">
                                     <label class="copy layout-vr-tiny">Subtopic</label>
-                                    <select id = "subtopiclist" class="chosen-select">
+                                    <select id = "subtopiclist" class="chosen-select js-subtopiclist">
                                     <option value='' selected='selected'>---------</option>
                                     {{#subtopic}}
                                         <option value = "{{.}}">{{.}}</option>
@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="grid-size1of5 grid-col">
                                     <label class="copy layout-vr-tiny">Subject</label>
-                                    <select id = "subjectlist" class="chosen-select">
+                                    <select id = "subjectlist" class="chosen-select js-subjectlist">
                                     <option value='' selected='selected'>---------</option>
                                     {{#subject}}
                                         <option value = "{{.}}">{{.}}</option>

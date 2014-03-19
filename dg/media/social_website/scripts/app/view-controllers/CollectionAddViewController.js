@@ -50,9 +50,9 @@ define(function(require) {
             references.$saveButton = $referenceBase.find('.collection-save-button');
             references.$collectionTitle = $referenceBase.find('.js-collection-title');
             references.$dropDown = $referenceBase.find('.js-dropdown');
-            references.$partnerList = $referenceBase.find('#partnerlist');
-            references.$stateList = $referenceBase.find('#statelist');
-            references.$langList = $referenceBase.find('#langlist');
+            references.$partnerList = $referenceBase.find('.js-partnerlist');
+            references.$stateList = $referenceBase.find('.js-statelist');
+            references.$langList = $referenceBase.find('.js-langlist');
         },
 
         _initEvents: function() {
@@ -198,11 +198,11 @@ define(function(require) {
             this._references.$practiceMappingContainer.html(renderedPracticeMapping);
             this._references.category = category.sort();
             
-            references.$catList = jQuery('#catlist');
-            references.$subCatList = jQuery('#subcatlist');
-            references.$topicList = jQuery('#topiclist');
-            references.$subTopicList = jQuery('#subtopiclist');
-            references.$subjectList = jQuery('#subjectlist');
+            references.$catList = jQuery('.js-catlist');
+            references.$subCatList = jQuery('.js-subcatlist');
+            references.$topicList = jQuery('.js-topiclist');
+            references.$subTopicList = jQuery('.js-subtopiclist');
+            references.$subjectList = jQuery('.js-subjectlist');
             
             this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
             references.$catList.on('change', this._boundFunctions.onCategoryChosen);
@@ -227,12 +227,12 @@ define(function(require) {
             
             references.$videoDropDownContainer.html(renderedCollectionVideoDropDown);
             
-            references.$vidList = jQuery('#vidlist')
+            references.$vidList = jQuery('.js-vidlist')
             
             this._boundFunctions.onVideoChosen = this._onVideoChosen.bind(this);
             references.$vidList.on('change', this._boundFunctions.onVideoChosen);
             
-            this._dropdownChosen();
+            this.initSelect2();
         },
 
         initSelect2: function(){
