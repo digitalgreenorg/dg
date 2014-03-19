@@ -25,19 +25,19 @@
 	                        <div class="bd">
 	                            <div class="media js-meta-dropdown" data-collectionpartner="{{collection.partner.uid}}" data-collectionlanguage="{{collection.language}}" data-collectionstate="{{collection.state}}">
 	                                <label class="copy hdg-bold layout-vr-tiny">Partner</label>
-	                                    <select id = "partnerlist" class="chosen-select js-dropdown js-partnerlist">
+	                                    <select id = "partnerlist" class="chosen-select js-video-criteria js-partnerlist">
 	                                    <option value='' selected='selected'>---------</option>
 	                                    {% for pa in partner%} 
                                             <option value = "{{pa.uid}}">{{pa.name}}</option>
 	                                    {% endfor %}                                    </select><br><br>
 	                                <label class="copy hdg-bold layout-vr-tiny">State</label>
-	                                    <select id = "statelist" class="chosen-select js-dropdown js-statelist">
+	                                    <select id = "statelist" class="chosen-select js-video-criteria js-statelist">
 	                                    <option value='' selected='selected'>---------</option>
 	                                    {% for st in state%} 
                                             <option value = "{{st}}">{{st}}</option>
 	                                    {% endfor %}                                    </select><br><br>
 	                                <label class="copy hdg-bold layout-vr-tiny">Language</label>
-	                                    <select id = "langlist" class="chosen-select js-dropdown js-langlist">
+	                                    <select id = "langlist" class="chosen-select js-video-criteria js-langlist">
 	                                    <option value='' selected='selected'>---------</option>
 	                                    {% for lang in language%} 
                                             <option value = "{{lang}}">{{lang}}</option>
