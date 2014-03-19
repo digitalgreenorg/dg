@@ -13,6 +13,7 @@ from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
 import website_archive_urls
+import deoanalytics.urls
 
 
 # Uncomment the next two lines to enable the admin:
@@ -60,6 +61,8 @@ urlpatterns = patterns('',
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
+    
+    (r'^deo/',include(deoanalytics.urls)),
 )
 
 # Static files serving locally
