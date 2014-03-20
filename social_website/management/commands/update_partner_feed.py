@@ -4,7 +4,10 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from dashboard.models import Partners, Screening, ServerLog, Village
+from activities.models import Screening
+from coco.models import ServerLog
+from geographies.models import Village
+from programs.models import Partner
 from dg.settings import MEDIA_ROOT
 from social_website.models import Activity, Partner
 from social_website.utils.generate_activities import ActivityType, add_milestone, add_village

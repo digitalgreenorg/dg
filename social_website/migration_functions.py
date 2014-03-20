@@ -14,7 +14,7 @@ DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10I
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
 
 def initial_personvideorecord():
-    from dashboard.models import PersonAdoptPractice, PersonMeetingAttendance
+    from activities.models import PersonAdoptPractice, PersonMeetingAttendance
     person_video_adoption_dict = defaultdict(dict)
     paps = PersonAdoptPractice.objects.all().values('person_id', 'video_id')
     for pap_row in paps:

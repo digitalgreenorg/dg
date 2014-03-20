@@ -2,13 +2,18 @@ import glob, os
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from dashboard.models import *
 from django.db.models import Count
 from datetime import datetime, timedelta
 import datetime
 import time
 import csv
 from farmerbook import get_id_with_images
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 def grade1(village_info):
     target_disseminations = 2

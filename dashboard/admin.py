@@ -1,5 +1,12 @@
 from django.contrib import admin
-from dashboard.models import *
+
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
+
 
 from django import forms
 from django.contrib.contenttypes import generic

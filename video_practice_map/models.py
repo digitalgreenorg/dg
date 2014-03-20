@@ -1,5 +1,5 @@
 from dashboard.fields import *
-from dashboard.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, \
+from videos.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, \
     PracticeSubSector, PracticeSubject, Video
 from django.contrib.auth.models import User
 from django.db import models

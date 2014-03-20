@@ -144,4 +144,5 @@ def join_sql_ds(sql_ds):
     if(sql_ds['having']):
         return_val.append("HAVING "+" AND ".join(sql_ds['having']))
 
+    print '\n'.join(return_val), '/n'
     return '\n'.join(return_val)

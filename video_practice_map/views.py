@@ -7,7 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import Template, Context
 
-from dashboard.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, State, Video
+from geographies.models import State
+from videos.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
 from video_practice_map.models import VideoPractice,SkippedVideo
 from django.views.decorators.csrf import csrf_exempt
 

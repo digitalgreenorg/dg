@@ -2,7 +2,9 @@ from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
 
-from dashboard.models import District, PersonAdoptPractice, Video
+from geographies.models import District 
+from activities.modles import PersonAdoptPractice
+from videos.models import  Video
 
 
 class CombinedCustomFeedGenerator(Atom1Feed):

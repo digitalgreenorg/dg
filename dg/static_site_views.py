@@ -276,7 +276,11 @@ def nexus(request):
     return HttpResponseRedirect('https://sites.google.com/a/digitalgreen.org/inside-digital-green/nexus')
 
 def spring_analytics(request):
-    from dashboard.models import PersonAdoptPractice, Video, PersonMeetingAttendance, Screening, PersonGroups, Village 
+    from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
+    from geographies.models import Village
+    from programs.models import Partner
+    from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+    from videos.models import Video
     from django.db.models import Count, Sum, Max, Min
     import datetime
     
