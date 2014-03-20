@@ -11,54 +11,58 @@ class Migration(DataMigration):
 
         chunk = 1000
         dashboard_screening = orm['dashboard.Screening'].objects.all()
-        for i in range(0, dashboard_screening.count()/chunk + 1):
-            dashboard_screening_slice = dashboard_screening[i*chunk:(i+1)*chunk]
-            print "Screening Added %d" % (i*chunk)
-            Screening.objects.bulk_create([Screening(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
-                                                     old_coco_id=x.id, date=x.date, start_time=x.start_time,
-                                                     end_time=x.end_time, location=x.location,
-                                                     target_person_attendance=x.target_person_attendance,
-                                                     target_audience_interest=x.target_audience_interest,
-                                                     target_adoptions=x.target_adoptions,
-                                                     village=orm['geographies.Village'].objects.get(old_coco_id=x.village_id),
-                                                     animator=orm['people.Animator'].objects.get(old_coco_id=x.animator_id),
-                                                     partner=orm['programs.Partner'].objects.get(old_coco_id=x.partner_id))
-                                           for x in dashboard_screening_slice])
-        print "Screening Completed"
-        db.create_index('activities_screening', ['old_coco_id'])
-        print "index created for screening"
-
-        video_screened = Screening.videoes_screened.through
-        dashboard_video_screened = orm['dashboard.Screening'].videoes_screened.through.objects.all()
-        for i in range(0, dashboard_video_screened.count()/chunk + 1):
-            dashboard_video_screened_slice = dashboard_video_screened[i*chunk:(i+1)*chunk]
-            print "Video Screened %d" % (i*chunk)
-            video_screened.objects.bulk_create([video_screened(screening=Screening.objects.get(old_coco_id=x.screening_id),
-                                                               video=orm['videos.Video'].objects.get(old_coco_id=x.video_id)) 
-                                     for x in dashboard_video_screened_slice])
-        print "Video Screened Added"
-
-        screening_groups = Screening.farmer_groups_targeted.through
-        dashboard_screening_groups = orm['dashboard.Screening'].farmer_groups_targeted.through.objects.all()
-        for i in range(0, dashboard_screening_groups.count()/chunk + 1):
-            dashboard_screening_groups_slice = dashboard_screening_groups[i*chunk:(i+1)*chunk]
-            print "Screening Groups %d" % (i*chunk)
-            screening_groups.objects.bulk_create([screening_groups(screening=Screening.objects.get(old_coco_id=x.screening_id),
-                                                                   persongroup=orm['people.PersonGroup'].objects.get(old_coco_id=x.persongroups_id)) 
-                                     for x in dashboard_screening_groups_slice])
-        print "Groups in Screening Added"
+#===============================================================================
+#         for i in range(0, dashboard_screening.count()/chunk + 1):
+#             dashboard_screening_slice = dashboard_screening[i*chunk:(i+1)*chunk]
+#             print "Screening Added %d" % (i*chunk)
+#             Screening.objects.bulk_create([Screening(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
+#                                                      old_coco_id=x.id, date=x.date, start_time=x.start_time,
+#                                                      end_time=x.end_time, location=x.location,
+#                                                      target_person_attendance=x.target_person_attendance,
+#                                                      target_audience_interest=x.target_audience_interest,
+#                                                      target_adoptions=x.target_adoptions,
+#                                                      village=orm['geographies.Village'].objects.get(old_coco_id=x.village_id),
+#                                                      animator=orm['people.Animator'].objects.get(old_coco_id=x.animator_id),
+#                                                      partner=orm['programs.Partner'].objects.get(old_coco_id=x.partner_id))
+#                                            for x in dashboard_screening_slice])
+#         print "Screening Completed"
+#         db.create_index('activities_screening', ['old_coco_id'])
+#         print "index created for screening"
+# 
+#         video_screened = Screening.videoes_screened.through
+#         dashboard_video_screened = orm['dashboard.Screening'].videoes_screened.through.objects.all()
+#         for i in range(0, dashboard_video_screened.count()/chunk + 1):
+#             dashboard_video_screened_slice = dashboard_video_screened[i*chunk:(i+1)*chunk]
+#             print "Video Screened %d" % (i*chunk)
+#             video_screened.objects.bulk_create([video_screened(screening=Screening.objects.get(old_coco_id=x.screening_id),
+#                                                                video=orm['videos.Video'].objects.get(old_coco_id=x.video_id)) 
+#                                      for x in dashboard_video_screened_slice])
+#         print "Video Screened Added"
+# 
+#         screening_groups = Screening.farmer_groups_targeted.through
+#         dashboard_screening_groups = orm['dashboard.Screening'].farmer_groups_targeted.through.objects.all()
+#         for i in range(0, dashboard_screening_groups.count()/chunk + 1):
+#             dashboard_screening_groups_slice = dashboard_screening_groups[i*chunk:(i+1)*chunk]
+#             print "Screening Groups %d" % (i*chunk)
+#             screening_groups.objects.bulk_create([screening_groups(screening=Screening.objects.get(old_coco_id=x.screening_id),
+#                                                                    persongroup=orm['people.PersonGroup'].objects.get(old_coco_id=x.persongroups_id)) 
+#                                      for x in dashboard_screening_groups_slice])
+#         print "Groups in Screening Added"
+#===============================================================================
 
         PMA = Screening.farmers_attendance.through
         dashboard_PMA = orm['dashboard.Screening'].farmers_attendance.through.objects.all()
         for i in range(0, dashboard_PMA.count()/chunk + 1):
             dashboard_PMA_slice = dashboard_PMA[i*chunk:(i+1)*chunk]
             print "PMA %d" % (i*chunk)
+            db.start_transaction()
             PMA.objects.bulk_create([PMA(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
                                          old_coco_id=x.id, screening = Screening.objects.get(old_coco_id=x.screening_id),
                                          person=orm['people.Person'].objects.get(old_coco_id=x.person_id),
                                          interested=x.interested, expressed_question=x.expressed_question,
                                          expressed_adoption_video=None if x.expressed_adoption_video_id is None else orm['videos.Video'].objects.get(old_coco_id=x.expressed_adoption_video_id)) 
                                      for x in dashboard_PMA_slice])
+            db.commit_transaction()
         print "PMA Added"
 
 
