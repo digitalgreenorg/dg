@@ -154,7 +154,7 @@ class VideoAdmin(admin.ModelAdmin):
                 ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
-                ('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks','youtubeid']}),
+                ('Review', {'fields': ['approval_date','supplementary_video_produced','video_suitable_for','remarks','youtubeid']}),
     ]
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
     search_fields = ['title', 'village__village_name']
