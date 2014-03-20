@@ -13,7 +13,7 @@ from output.database.utility import run_query, run_query_dict, run_query_dict_li
 def overview_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
+    geog_list = [None,'country','state','district','block','village']
     if(geog is not None and geog not in geog_list):
         raise Http404()
     geog_child = geog_par = "NULL"
