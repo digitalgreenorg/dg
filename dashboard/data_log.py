@@ -4,7 +4,7 @@ from django.core import serializers
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from models import User
+from django.contrib.auth.models import User
 
 class TimestampException(Exception):
     pass

@@ -21,8 +21,13 @@ from django.views.decorators.csrf import csrf_exempt
 from libs.filter_utils import filter_objects_for_date
 from output.database.utility import run_query, run_query_dict
 
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from geographies.models import Village, Block, Region, District, State, Country
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from programs.models import Partner
+from videos.models import Language, Practice, Video
+
 from forms import *
-from models import *
 
 def search(request):
     """
