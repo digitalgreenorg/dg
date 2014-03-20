@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-from dashboard.base_models import CocoModel
+from base_models import CocoModel
 from geographies.models import Village
 from programs.models import Partner
 

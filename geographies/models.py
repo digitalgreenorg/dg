@@ -2,14 +2,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
-from dashboard.base_models import CocoModel
-from dashboard.data_log import delete_log, save_log
-from dashboard.models import VillageFarmerbookManager
+from coco.base_models import CocoModel
+from coco.data_log import delete_log, save_log
+from farmerbook.managers import VillageFarmerbookManager
 from libs.geocoder import Geocoder
 from programs.models import Partner
 
 import logging
-
 
 class Country(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -84,7 +83,6 @@ class Block(CocoModel):
     def __unicode__(self):
         return self.block_name
 
-
 class Village(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField()
@@ -113,4 +111,6 @@ class Village(CocoModel):
         return self.village_name
 post_save.connect(save_log, sender = Village)
 pre_delete.connect(delete_log, sender = Village)
+
+
 

@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
-from dashboard.data_log import delete_log, save_log
-from dashboard.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE
+from coco.data_log import delete_log, save_log
+from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -122,7 +122,7 @@ class Video(CocoModel):
     youtubeid = models.CharField(max_length=20, blank=True)
     viewers = models.PositiveIntegerField(default=0, editable=False)
     partner = models.ForeignKey(Partner)
-
+    
     class Meta:
         unique_together = ("title", "video_production_start_date", "video_production_end_date", "village")
 

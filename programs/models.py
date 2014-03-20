@@ -1,6 +1,5 @@
 from django.db import models
-
-from dashboard.base_models import CocoModel
+from coco.base_models import CocoModel
 
 
 class Partner(CocoModel):

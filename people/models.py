@@ -1,12 +1,11 @@
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
-from dashboard.data_log import delete_log, save_log
-from dashboard.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES
-from dashboard.models import FarmerbookManager
+from coco.data_log import delete_log, save_log
+from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES
+from farmerbook.managers import FarmerbookManager
 from geographies.models import District, Village
 from programs.models import Partner
-
 
 class Animator(CocoModel):
     id = models.AutoField(primary_key = True)
@@ -47,7 +46,6 @@ class AnimatorAssignedVillage(CocoModel):
     village = models.ForeignKey(Village)
     start_date = models.DateField(null=True, blank=True)
 
-
 class PersonGroup(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField()
@@ -66,7 +64,6 @@ class PersonGroup(CocoModel):
         return  u'%s (%s)' % (self.group_name, self.village)
 post_save.connect(save_log, sender=PersonGroup)
 pre_delete.connect(delete_log, sender=PersonGroup)
-
 
 class Person(CocoModel):
     id = models.AutoField(primary_key=True)
