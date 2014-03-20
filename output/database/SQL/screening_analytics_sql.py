@@ -41,7 +41,7 @@ def screening_practice_scatter(geog,id, from_date, to_date, partners):
     sql_ds['select'].extend(["practice_name AS name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub","COUNT(DISTINCT SCM.screening_id) AS count"]);
     sql_ds['from'].append("screening_myisam SCM")
     sql_ds['force index'].append("(screening_myisam_village_id)")
-    sql_ds['join'].append(["PRACTICES P", "P.id = SCM.practice_id"])
+    sql_ds['join'].append(["videos_practice P", "P.id = SCM.practice_id"])
     sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
     sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])
     sql_ds['lojoin'].append(["practice_topic top","top.id = P.practice_topic_id"])

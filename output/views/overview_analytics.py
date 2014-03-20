@@ -13,7 +13,7 @@ from output.database.utility import run_query, run_query_dict, run_query_dict_li
 def overview_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = [None,'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
     if(geog is not None and geog not in geog_list):
         raise Http404()
     geog_child = geog_par = "NULL"
@@ -110,7 +110,7 @@ def overview_module(request):
     if(geog_child != "NULL"):
         header_geog = geog_child
     else:
-        header_geog = "Village"
+        header_geog = "geographies_village"
     
     return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
                                                            country_data = country_data, \
@@ -123,15 +123,15 @@ def overview_module(request):
 def get_parent_geog_id(geog, id):
     if geog is None:
         return "Total", None
-    elif geog == "COUNTRY":
+    elif geog == "geographies_country":
         return Country.objects.get(pk=id).country_name, None
-    elif geog == "STATE":
+    elif geog == "geographies_state":
         vls = State.objects.filter(pk=id).values_list('state_name','country')[0]
-    elif geog == "DISTRICT":
+    elif geog == "geographies_district":
         vls = District.objects.filter(pk=id).values_list("district_name", "state_id")[0]
-    elif geog == "BLOCK":
+    elif geog == "geographies_block":
         vls = Block.objects.filter(pk=id).values_list("block_name", "district_id")[0]
-    elif geog == "VILLAGE":
+    elif geog == "geographies_village":
         vls = Village.objects.filter(pk=id).values_list("village_name", "block_id")[0]
     else:
         return None, None

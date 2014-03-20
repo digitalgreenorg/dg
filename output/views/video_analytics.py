@@ -21,7 +21,7 @@ def video_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     
-    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
     if(geog not in geog_list):
         raise Http404()
 
@@ -79,7 +79,7 @@ def video_type_wise_pie(request):
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -96,7 +96,7 @@ def video_geog_pie_data(request):
     return_val = []
     return_val.append(["title","val",'url'])
     for item in vid_prod:
-        if(geog is None or geog.upper()!= "VILLAGE"):
+        if(geog is None or geog.lower()!= "geographies_village"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
             return_val.append([geog_name[item['id']][0], float(item['tot_pro']), url+'&'.join(temp_get_req_url)])
@@ -257,16 +257,16 @@ def video_search(request):
         vids = vids.filter(related_practice__id__in = map(int,prac_arr))
         search_box_params['prac'] = prac_arr
     if(geog):
-        geog = geog.upper();
-        if(geog=="COUNTRY"):
+        geog = geog.lower();
+        if(geog=="geographies_country"):
             vids = vids.filter(village__block__district__state__country__id = int(id))
-        if(geog=="STATE"):
+        if(geog=="geographies_state"):
             vids = vids.filter(village__block__district__state__id = int(id))
-        elif(geog=="DISTRICT"):
+        elif(geog=="geographies_district"):
             vids = vids.filter(village__block__district__id = int(id))
-        elif(geog=="BLOCK"):
+        elif(geog=="geographies_block"):
             vids = vids.filter(village__block__id = int(id))
-        elif(geog=="VILLAGE"):
+        elif(geog=="geographies_village"):
             vids = vids.filter(village__id = int(id))
         search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
     else:
