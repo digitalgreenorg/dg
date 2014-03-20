@@ -46,14 +46,14 @@ class AnalyticsSync():
                                         village_id, block_id, district_id, state_id, country_id)
                                         SELECT sc.id, date, svs.video_id, vid.related_practice_id, persongroups_id, sc.village_id, block_id,
                                         district_id, state_id, country_id
-                                        FROM SCREENING sc
-                                        JOIN SCREENING_videoes_screened svs on svs.screening_id = sc.id
-                                        JOIN SCREENING_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
-                                        JOIN VIDEO vid on vid.id = svs.video_id
-                                        JOIN VILLAGE v on v.id = sc.village_id
-                                        JOIN BLOCK b on b.id = v.block_id
-                                        JOIN DISTRICT d on d.id = b.district_id
-                                        JOIN STATE s on s.id = d.state_id""")
+                                        FROM activities_screening sc
+                                        JOIN activities_screening_videoes_screened svs on svs.screening_id = sc.id
+                                        JOIN activities_screening_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
+                                        JOIN videos_video vid on vid.id = svs.video_id
+                                        JOIN geographies_village v on v.id = sc.village_id
+                                        JOIN geographies_block b on b.id = v.block_id
+                                        JOIN geographies_district d on d.id = b.district_id
+                                        JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into Screening_myisam"
             #video_myisam
             self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_end_date, prod_duration, practice_id, video_type,
@@ -61,13 +61,13 @@ class AnalyticsSync():
                                         select vid.id, VIDEO_PRODUCTION_END_DATE, datediff(VIDEO_PRODUCTION_END_DATE, VIDEO_PRODUCTION_START_DATE) + 1,
                                         related_practice_id, VIDEO_TYPE, language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
                                         state_id, country_id
-                                        FROM VIDEO vid
-                                        JOIN VIDEO_farmers_shown vfs on vfs.video_id = vid.id
-                                        JOIN PERSON p on p.id = vfs.person_id
-                                        JOIN VILLAGE v on v.id = vid.village_id
-                                        JOIN BLOCK b on b.id = v.block_id
-                                        JOIN DISTRICT d on d.id = b.district_id
-                                        JOIN STATE s on s.id = d.state_id
+                                        FROM videos_video vid
+                                        JOIN videos_video_farmers_shown vfs on vfs.video_id = vid.id
+                                        JOIN people_person p on p.id = vfs.person_id
+                                        JOIN geographies_village v on v.id = vid.village_id
+                                        JOIN geographies_block b on b.id = v.block_id
+                                        JOIN geographies_district d on d.id = b.district_id
+                                        JOIN geographies_state s on s.id = d.state_id
                                         WHERE vid.VIDEO_SUITABLE_FOR = 1""")
             print "Finished insert into Video_myisam"
                                         
@@ -76,13 +76,13 @@ class AnalyticsSync():
                                         village_id, block_id, district_id, state_id, country_id)
                                         SELECT pma.id, pma.person_id, sc.id, GENDER, date, p.village_id, block_id,
                                         district_id, state_id, country_id
-                                        FROM PERSON_MEETING_ATTENDANCE pma 
-                                        JOIN SCREENING sc on sc.id = pma.screening_id
-                                        JOIN PERSON p on p.id = pma.person_id
-                                        JOIN VILLAGE v on v.id = p.village_id
-                                        JOIN BLOCK b on b.id = v.block_id
-                                        JOIN DISTRICT d on d.id = b.district_id
-                                        JOIN STATE s on s.id = d.state_id""")
+                                        FROM activities_personmeetingattendance pma 
+                                        JOIN activities_screening sc on sc.id = pma.screening_id
+                                        JOIN people_person p on p.id = pma.person_id
+                                        JOIN geographies_village v on v.id = p.village_id
+                                        JOIN geographies_block b on b.id = v.block_id
+                                        JOIN geographies_district d on d.id = b.district_id
+                                        JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into person_meeting_attendance_myisam"
                                         
             #person_adopt_practice_myisam
@@ -90,12 +90,12 @@ class AnalyticsSync():
                                         village_id, block_id, district_id, state_id, country_id)
                                         SELECT pap.id, pap.person_id, video_id, GENDER, date_of_adoption, p.village_id, block_id,
                                         district_id, state_id, country_id
-                                        FROM PERSON_ADOPT_PRACTICE pap 
-                                        JOIN PERSON p on p.id = pap.person_id
-                                        JOIN VILLAGE v on v.id = p.village_id
-                                        JOIN BLOCK b on b.id = v.block_id
-                                        JOIN DISTRICT d on d.id = b.district_id
-                                        JOIN STATE s on s.id = d.state_id""")
+                                        FROM activities_personadoptpractice pap 
+                                        JOIN people_person p on p.id = pap.person_id
+                                        JOIN geographies_village v on v.id = p.village_id
+                                        JOIN geographies_block b on b.id = v.block_id
+                                        JOIN geographies_district d on d.id = b.district_id
+                                        JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into person_adopt_practice_myisam"
 
             # main_data_dst stores all the counts for every date and every village                                        
@@ -244,291 +244,6 @@ class AnalyticsSync():
             sys.exit(1)
         
         print "Total Time = ", time.time() - start_time
-    
-    def _calculate_date_changes(self, sql):
-        return_list = []
-        self.db_cursor.execute(sql)
-        rs = self.db_cursor.fetchall()
-        if len(rs) > 0:
-            for i in range(1, len(rs)):
-                # Delete followed by insert with date changed.
-                if rs[i-1][1] == rs[i][1] and rs[i-1][0] == -1 and rs[i][0] == 1 and rs[i-1][2] != rs[i][2]:
-                    return_list.append((rs[i][1], rs[i-1][2], rs[i][2]))
-        return_list.sort(key=lambda x: x[0])
-        # Merge multiple changes for same video/screening
-        if len(return_list) > 0:
-            i = 1
-            while i < len(return_list):
-                if return_list[i-1][0] == return_list[i][0] and return_list[i-1][2] == return_list[i][1]:
-                    return_list[i-1][2] = return_list[i][2]
-                    return_list.pop(i)
-                else:
-                    i = i + 1
-        return return_list
-    
-    def get_video_date_changes(self):
-        if self.video_date_changes is None:
-            sql = """SELECT dml_type, ID, VIDEO_PRODUCTION_END_DATE FROM flexviews.digitalgreen_VIDEO"""
-            self.video_date_changes = _calculate_date_changes(sql)
-        return self.video_date_changes
-        
-    def get_screening_date_changes(self):
-        if self.screening_date_changes is None:
-            sql = """SELECT dml_type, ID, DATE FROM flexviews.digitalgreen_SCREENING"""
-            self.screening_date_changes = _calculate_date_changes(sql)
-        return self.screening_date_changes
-                    
-    def get_person_gender_changes(self):
-        if self.person_gender_changes is not None:
-            self.person_gender_changes = []
-            self.db_cursor.execute("""SELECT dml_type, ID, gender FROM flexviews.digitalgreen_PERSON""")
-            rs = self.db_cursor.fetchall()
-            if len(rs) > 0:
-                for i in range(1, len(rs)):
-                    #delete followed by insert with gender changed.
-                    if rs[i-1][1] == rs[i][1] and rs[i-1][0] == -1 and rs[i][0] == 1 and rs[i-1][2] != rs[i][2]:
-                        self.person_gender_changes.append((rs[i][1], rs[i-1][2], rs[i][2]))
-            self.person_gender_changes.sort(key=lambda x: x[0])
-            # Remove gender changed twice (e.g. M->F and F->M)
-            if len(return_list) > 0:
-                i = 1
-                while i < len(return_list):
-                    if return_list[i-1][0] == return_list[i][0] and return_list[i-1][2] == return_list[i][1]:
-                        return_list.pop(i)
-                    else:
-                        i = i + 1
-        
-        return self.person_gender_changes
-                
-        
-    
-    def update_screening_myisam(self):
-        changed_sc_ids = set(self._get_flat_query_result("SELECT DISTINCT ID FROM flexviews.digitalgreen_SCREENING"))
-        changed_sc_ids.udpate(set(self._get_flat_query_result("SELECT DISTINCT SCREENING_ID FROM flexviews.digitalgreen_SCREENING_videoes_screened")))
-        changed_sc_ids.udpate(set(self._get_flat_query_result("SELECT DISTINCT SCREENING_ID FROM flexviews.digitalgreen_SCREENING_farmer_groups_targeted")))
-        changed_sc_ids.update(set(self._get_flat_query_result("""SELECT DISTINCT screening_id FROM screening_myisam SCM 
-                                                                JOIN flexviews.digitalgreen_VIDEO_related_agricultural_practices F_VRAP ON F_VRAP.VIDEO_ID = SCM.video_id""")))
-        #Delete all changed from myisam
-        id_str = ','.join(map(str, list(changed_sc_ids)))
-        self.db_cursor.execute("DELETE FROM screening_myisam where screening_id in (%s)" % (id_str))
-        #Refill them up
-        self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
-                                village_id, block_id, district_id, state_id, country_id)
-                                SELECT sc.id, date, svs.video_id, practices_id, persongroups_id, sc.village_id, block_id,
-                                district_id, state_id, country_id
-                                FROM SCREENING sc
-                                JOIN SCREENING_videoes_screened svs on svs.screening_id = sc.id
-                                JOIN SCREENING_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
-                                JOIN VIDEO_related_agricultural_practices vrap on vrap.video_id = svs.video_id
-                                JOIN VILLAGE v on v.id = sc.village_id
-                                JOIN BLOCK b on b.id = v.block_id
-                                JOIN DISTRICT d on d.id = b.district_id
-                                JOIN STATE s on s.id = d.state_id
-                                WHERE sc.id in (%s)""" %(id_str))
-                                
-    def update_video_myisam(self):
-        changed_vid_ids = set(self._get_flat_query_results("SELECT DISTINCT ID FROM flexviews.digitalgreen_VIDEO"))
-        changed_vid_ids.update(set(self._get_flat_query_results("SELECT DISTINCT VIDEO_ID FROM flexviews.digitalgreen_VIDEO_farmers_shown")))
-        changed_vid_ids.update(set(self._get_flat_query_results("SELECT DISTINCT VIDEO_ID FROM flexviews.digitalgreen_VIDEO_related_agricultural_practices")))
-        changed_vid_ids.update(set(self._get_flat_query_results("""SELECT DISTINCT video_id FROM video_myisam VIDM
-                                                    JOIN flexviews.digitalgreen_PERSON F_P ON VIDM.person_id = F_P.ID""")))
-        #Delete all changed from myisam
-        id_str = ','.join(map(str, list(changed_vid_ids)))
-        self.db_cursor.execute("DELETE FROM video_myisam where video_id in (%s)" % (id_str))
-        #Refill them up
-        self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_end_date, prod_duration, practice_id, video_type,
-                                language_id, actor_id, gender, actor_type, village_id, block_id, district_id, state_id, country_id)
-                                select vid.id, VIDEO_PRODUCTION_END_DATE, datediff(VIDEO_PRODUCTION_END_DATE, VIDEO_PRODUCTION_START_DATE) + 1,
-                                practices_id, VIDEO_TYPE, language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
-                                state_id, country_id
-                                FROM VIDEO vid
-                                JOIN VIDEO_farmers_shown vfs on vfs.video_id = vid.id
-                                JOIN PERSON p on p.id = vfs.person_id
-                                JOIN VIDEO_related_agricultural_practices vrap on vrap.video_id = vid.id
-                                JOIN VILLAGE v on v.id = vid.village_id
-                                JOIN BLOCK b on b.id = v.block_id
-                                JOIN DISTRICT d on d.id = b.district_id
-                                JOIN STATE s on s.id = d.state_id
-                                WHERE vid.id in (%s)""" %(id_str))
-        
-    def udpate_person_meeting_attendance_myisam(self):
-        changed_pma_ids = set(self._get_flat_query_results("SELECT DISTINCT ID FROM flexviews.digitalgreen_PERSON_MEETING_ATTENDANCE"))
-        changed_pma_ids.update(set(self._get_flat_query_results("""SELECT DISTINCT pma_id FROM person_meeting_attendance_myisam PMAM
-                                                        JOIN flexviews.digitalgreen_SCREENING F_SC ON F_SC.ID = PMAM.screening_id""")))
-        changed_pma_ids.update(set(self._get_flat_query_results("""SELECT DISTINCT pma_id FROM person_meeting_attendance_myisam PMAM
-                                                        JOIN flexviews.digitalgreen_PERSON F_P ON F_P.ID = PMAM.person_id""")))
-
-        #Delete all changed from myisam
-        id_str = ','.join(map(str, list(changed_pma_ids)))
-        self.db_cursor.execute("DELETE FROM person_meeting_attendance_myisam where pma_id in (%s)" % (id_str))
-        
-        #Refill them up
-        self.db_cursor.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
-                                village_id, block_id, district_id, state_id, country_id)
-                                SELECT pma.id, pma.person_id, sc.id, GENDER, date, p.village_id, block_id,
-                                district_id, state_id, country_id
-                                FROM PERSON_MEETING_ATTENDANCE pma 
-                                JOIN SCREENING sc on sc.id = pma.screening_id
-                                JOIN PERSON p on p.id = pma.person_id
-                                JOIN VILLAGE v on v.id = p.village_id
-                                JOIN BLOCK b on b.id = v.block_id
-                                JOIN DISTRICT d on d.id = b.district_id
-                                JOIN STATE s on s.id = d.state_id
-                                WHERE pma.id in (%s)""" %(id_str))
-        
-    def update_person_adopt_practice_myisam(self):
-        changed_pap_ids = set(self._get_flat_query_results("SELECT DISTINCT ID FROM flexviews.digitalgreen_PERSON_ADOPT_PRACTICE"))
-        changed_pap_ids.update(set(self._get_flat_query_results("""SELECT DISTINCT adoption_id FROM person_adopt_practice_myisam PAPM
-                                                        JOIN flexviews.digitalgreen_PERSON F_P ON F_P.ID = PAPM.person_id""")))
-        
-        #Delete all changed from myisam
-        id_str = ','.join(map(str, list(changed_pap_ids)))
-        self.db_cursor.execute("DELETE FROM person_adopt_practice_myisam where adoption_id in (%s)" % (id_str))
-        
-        #Refill them up
-        self.db_cursor.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, practice_id, gender, date_of_adoption, 
-                                village_id, block_id, district_id, state_id, country_id)
-                                SELECT pap.id, pap.person_id, video_id, practice_id, GENDER, date_of_adoption, p.village_id, block_id,
-                                district_id, state_id, country_id
-                                FROM PERSON_ADOPT_PRACTICE pap 
-                                JOIN PERSON p on p.id = pap.person_id
-                                JOIN VILLAGE v on v.id = p.village_id
-                                JOIN BLOCK b on b.id = v.block_id
-                                JOIN DISTRICT d on d.id = b.district_id
-                                JOIN STATE s on s.id = d.state_id
-                                WHERE pap.id in (%s)""" %(id_str))
-                                
-    def update_village_precalculation_copy(self):
-        changed_vals = defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0, tot_male_act = 0,
-            tot_fem_act = 0, tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
-            tot_exp_att=0, tot_int=0, tot_exp_ado = 0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0)))
-        
-    def calculate_total_screening_change(self, changed_vals):
-        # total_screening change
-        self.db_cursor.execute("""SELECT dml_type, DATE, VILLAGE_ID, COUNT(*) as COUNT FROM flexviews.digitalgreen_SCREENING F_SC 
-                    GROUP BY dml_type, DATE, VILLAGE_ID""")
-        for dml_type, date, village_id, count in self.db_cursor.fetchall():
-            if dml_type == -1:
-                changed_vals[date][village_id]['tot_sc'] = changed_vals[date][village_id]['tot_sc'] - count
-            elif dml_type == 1:
-                changed_vals[date][village_id]['tot_sc'] = changed_vals[date][village_id]['tot_sc'] + count
-        
-    def calculate_total_video_change(self, changed_vals):        
-        # total_video change
-        self.db_cursor.execute("""SELECT dml_type, VIDEO_PRODUCTION_END_DATE, VILLAGE_ID, COUNT(*) as COUNT FROM flexviews.digitalgreen_VIDEO F_VID
-                    GROUP BY dml_type, VIDEO_PRODUCTION_END_DATE, VILLAGE_ID""")
-        for dml_type, date, village_id, count in self.db_cursor.fetchall():
-            if dml_type == -1:
-                changed_vals[date][village_id]['tot_vid'] = changed_vals[date][village_id]['tot_vid'] - count
-            elif dml_type == 1:
-                changed_vals[date][village_id]['tot_vid'] = changed_vals[date][village_id]['tot_vid'] + count
-        
-    def calculate_total_actor_change(self, changed_vals):
-        # Decrement for the all deleted video-actor association considering earlier video dates
-        self.db_cursor.execute("""SELECT video_production_end_date, village_id, gender, COUNT(*) as COUNT 
-                    FROM flexviews.VIDEO_farmers_shown F_VFS
-                    JOIN video_myisam VIDM ON VIDM.video_id = F_VFS.video_id and VIDM.actor_id = F_VFS.actor_id
-                    GROUP BY video_production_end_date, village_id, F_VFS.gender
-                    WHERE dml_type = -1""")
-        
-        for date, village_id, gender, count in self.db_cursor.fetchall():
-            if gender == 'M':
-                key = 'tot_male_act'
-            elif gender == 'F':
-                key = 'tot_fem_act'
-            changed_vals[date][village_id][key] = changed_vals[date][village_id][key] - count
-        
-        # Increment for the inserts for the new video dates
-        self.db_cursor.execute("""SELECT VIDEO_PRODUCTION_END_DATE, VILLAGE_ID, gender, COUNT(*) as COUNT 
-                    FROM flexviews.VIDEO_farmers_shown F_VFS
-                    JOIN VIDEO VID ON VID.ID = F_VFS.video_id
-                    JOIN PERSON P ON P.ID = F_VFS.person_id
-                    GROUP BY VIDEO_PRODUCTION_END_DATE, VILLAGE_ID, F_VFS.gender
-                    WHERE dml_type = 1""")
-        
-        for date, village_id, gender, count in self.db_cursor.fetchall():
-            if gender == 'M':
-                key = 'tot_male_act'
-            elif gender == 'F':
-                key = 'tot_fem_act'
-            changed_vals[date][village_id][key] = changed_vals[date][village_id][key] + count
-        
-        # Only gender changes
-        person_gender_changes = self.get_person_gender_changes()
-        self.db_cursor.execute("""SELECT DISTINCT PERSON_ID FROM flexviews.VIDEO_farmers_shown F_VFS""")
-        person_accounted = set([i[0] for i in self.db_cursor.fetchall()])
-       
-        # Fetch the video dates for these actors (one actor can be in multiple videos). Discounting the actors which
-        # have been accounted in above.
-        final_person_set = set([i[0] for i in person_gender_changes]) - person_accounted 
-        self.db_cursor.execute("""SELECT PERSON_ID, VIDEO_PRODUCTION_END_DATE, VID.VILLAGE_ID
-                    FROM VIDEO_farmers_shown VFS
-                    JOIN VIDEO VID VID.ID = VFS.VIDEO_ID
-                    WHERE PERSON_ID IN (%s)""" % (', '.join(map(str, final_person_set))))
-        person_date_dict = defaultdict(list)
-        for person_id, dt, village_id in self.db_cursor.fetchall():
-            person_date_dict[person_id].append((dt, village_id))
-        
-        for person_id, prev_gender, cur_gender in person_gender_changes:
-            if person_id not in final_person_set:
-                continue
-            for dt, vil_id in person_date_dict[person_id]:
-                if prev_gender == 'M':
-                    changed_vals[dt][vil_id]['tot_male_act'] = changed_vals[dt][vil_id]['tot_male_act'] - 1
-                    changed_vals[dt][vil_id]['tot_fem_act'] = changed_vals[dt][vil_id]['tot_fem_act'] + 1
-                elif prev_gender == 'F':
-                    changed_vals[dt][vil_id]['tot_fem_act'] = changed_vals[dt][vil_id]['tot_fem_act'] - 1
-                    changed_vals[dt][vil_id]['tot_male_act'] = changed_vals[dt][vil_id]['tot_male_act'] + 1
-        # Not accounting for date or village change in video. Saving video in COCO/Admin causes reinsertion in VIDEO_farmers_show.
-    
-       
-    #includes gender-wise total_adoption change also - tot_ado, tot_male_ado, tot_fem_ado
-    def calculate_total_adoption_change(self, changed_vals):
-        # 1. Substract for all deleted adoptions considering previous gender & village
-        # 2. Increment for new adoptions considering current person gender & village
-        # 3. Discount 1 & 2 and change for the remaining gender & village changes
-        self.db_cursor.execute("""SELECT DATE_OF_ADOPTION, VILLAGE_ID, gender, COUNT(*) as COUNT FROM flexviews.digitalgreen_PERSON_ADOPT_PRACTICE F_PAP
-                    JOIN person_adopt_practice_myisam PAPM on PAPM.adoption_id = F_PAP.ID
-                    WHERE dml_type = -1
-                    GROUP BY DATE_OF_ADOPTION, VILLAGE_ID, gender""")
-        for dt, vil_id, gender, count in self.db_cursor.fetchall():
-            if gender == 'M':
-                key = 'tot_male_ado'
-            elif gender == 'F':
-                key = 'tot_fem_ado'
-            changed_vals[dt][vil_id][key] = changed_vals[dt][vil_id][key] - count
-            changed_vals[dt][vil_id]['tot_ado'] = changed_vals[dt][vil_id]['tot_ado'] - count
-            
-        self.db_cursor.execute("""SELECT DATE_OF_ADOPTION, VILLAGE_ID, gender, COUNT(*) as COUNT FROM flexviews.digitalgreen_PERSON_ADOPT_PRACTICE F_PAP
-                    JOIN PERSON P on P.ID = F_PAP.person_id
-                    WHERE dml_type = 1
-                    GROUP BY DATE_OF_ADOPTION, VILLAGE_ID, gender""")
-        
-        for dt, vil_id, gender, count in self.db_cursor.fetchall():
-            if gender == 'M':
-                key = 'tot_male_ado'
-            elif gender == 'F':
-                key = 'tot_fem_ado'
-            changed_vals[dt][vil_id][key] = changed_vals[dt][vil_id][key] + count
-            changed_vals[dt][vil_id]['tot_ado'] = changed_vals[dt][vil_id]['tot_ado'] + count
-        
-        self.db_cursor.execute("""SELECT DISTINCT PERSON_ID FROM flexviews.digitalgreen_PERSON_ADOPT_PRACTICE F_PAP""")
-        person_accounted = set([i[0] for i in self.db_cursor.fetchall()])
-            
-        # TODO: Gender change of person - Discount above. Fetch date & village of adoptions and update counts 
-        person_gender_changes = self.get_person_gender_changes()
-        final_person_set = set([i[0] for i in person_gender_changes]) - person_accounted 
-        
-        #TODO: Village change of person - Discount above. Fetch gender of Person, date of adoptions and update counts
-        
-                
-    def handle_geography_changes(self):
-        pass
-    def clean_tables_and_binlogs(self):
-        pass
-    def run_flexcdc(self):
-        pass
-
 
 class Command(BaseCommand):
     help = '''This command updates statistics displayed on Analytics dashboards.
