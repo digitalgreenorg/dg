@@ -130,10 +130,10 @@ def child_geog_list(geog, id, from_date, to_date, partners):
 #Query for the table in overview module and pie graphs.
 #Parameter Required:'type' can be (production/screening/adoption/practice/person/village)
 def overview(geog, id, from_date, to_date, partners, type):
-    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
+    geog_list = [None,'country','state','district','block','village']
 
-    if(geog == 'geographies_village'):
-        geog_child = 'geographies_village'
+    if(geog == 'village'):
+        geog_child = 'village'
     else:
         geog_child = geog_list[geog_list.index(geog)+1]
 

@@ -80,7 +80,7 @@ def get_init_sql_ds():
 def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date):
     if(from_date and to_date):
         sql_ds['where'].append(date_filter_field +" BETWEEN '"+from_date+"' AND '"+to_date+"'")
-    geog_list = ['geographies_village','geographies_block','geographies_district','geographies_state','geographies_country'];
+    geog_list = ['village','block','district','state','country'];
     if(geog is None or geog not in geog_list):
         return
 
@@ -111,9 +111,9 @@ def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_
             partner_sql = ["SELECT id FROM geographies_district WHERE partner_id in ("+','.join(partner_id)+")"]
             attach_geog_date(sql_ds,par_table_id,date_filter_field,'geographies_district',partner_sql,from_date,to_date)
             return
-        elif(geog=="geographies_state"  or geog=="COUNTRY"):
+        elif(geog=="state"  or geog=="country"):
             dist_part = []
-            if geog=="geographies_country":
+            if geog=="country":
                 dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
             else:
                 dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district WHERE state_id = "+str(id))
