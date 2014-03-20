@@ -18,7 +18,7 @@ class Migration(DataMigration):
                                          video=orm['videos.Video'].objects.get(old_coco_id=x.video_id),
                                          prior_adoption_flag=x.prior_adoption_flag, date_of_adoption=x.date_of_adoption,
                                          quality=x.quality, quantity=x.quantity, quantity_unit=x.quantity_unit, time_updated=x.time_updated,
-                                         partner=orm['programmes.Partner'].objects.get(old_coco_id=x.partner_id))
+                                         partner=orm['programs.Partner'].objects.get(old_coco_id=x.partner_id))
                                      for x in dashboard_pap_slice])
 
     def backwards(self, orm):
@@ -30,7 +30,7 @@ class Migration(DataMigration):
             'date_of_adoption': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Person']"}),
             'prior_adoption_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
@@ -67,7 +67,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'target_adoptions': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'target_audience_interest': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -746,7 +746,7 @@ class Migration(DataMigration):
             'latitude': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '31', 'decimal_places': '28', 'blank': 'True'}),
             'longitude': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '32', 'decimal_places': '28', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.State']"}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
@@ -810,7 +810,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
@@ -842,7 +842,7 @@ class Migration(DataMigration):
             'image_exists': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
@@ -857,7 +857,7 @@ class Migration(DataMigration):
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
@@ -866,7 +866,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'people_persongroup_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'village': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.Village']"})
         },
-        u'programmes.partner': {
+        u'programs.partner': {
             'Meta': {'object_name': 'Partner'},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'date_of_association': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -876,8 +876,8 @@ class Migration(DataMigration):
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
         u'videos.language': {
             'Meta': {'object_name': 'Language'},
@@ -972,7 +972,7 @@ class Migration(DataMigration):
             'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'movie_maker_project_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programmes.Partner']"}),
+            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'picture_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'raw_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
             'related_practice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Practice']", 'null': 'True', 'blank': 'True'}),

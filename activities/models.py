@@ -4,7 +4,7 @@ from django.db.models.signals import pre_delete, post_save
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel
 from geographies.models import Village
-from programmes.models import Partner
+from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
 

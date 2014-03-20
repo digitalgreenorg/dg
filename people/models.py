@@ -5,7 +5,7 @@ from dashboard.data_log import delete_log, save_log
 from dashboard.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES
 from dashboard.models import FarmerbookManager
 from geographies.models import District, Village
-from programmes.models import Partner
+from programs.models import Partner
 
 
 class Animator(CocoModel):

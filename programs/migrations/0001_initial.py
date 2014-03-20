@@ -9,10 +9,10 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Partner'
-        db.create_table(u'programmes_partner', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'programmes_partner_created', null=True, to=orm['auth.User'])),
+        db.create_table(u'programs_partner', (
+            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'programs_partner_created', null=True, to=orm['auth.User'])),
             ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'programmes_partner_related_modified', null=True, to=orm['auth.User'])),
+            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'programs_partner_related_modified', null=True, to=orm['auth.User'])),
             ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('old_coco_id', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
@@ -21,12 +21,12 @@ class Migration(SchemaMigration):
             ('phone_no', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('address', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
         ))
-        db.send_create_signal(u'programmes', ['Partner'])
+        db.send_create_signal(u'programs', ['Partner'])
 
 
     def backwards(self, orm):
         # Deleting model 'Partner'
-        db.delete_table(u'programmes_partner')
+        db.delete_table(u'programs_partner')
 
 
     models = {
@@ -66,7 +66,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'programmes.partner': {
+        u'programs.partner': {
             'Meta': {'object_name': 'Partner'},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'date_of_association': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -76,9 +76,9 @@ class Migration(SchemaMigration):
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         }
     }
 
-    complete_apps = ['programmes']
+    complete_apps = ['programs']

@@ -6,7 +6,7 @@ from dashboard.base_models import CocoModel
 from dashboard.data_log import delete_log, save_log
 from dashboard.models import VillageFarmerbookManager
 from libs.geocoder import Geocoder
-from programmes.models import Partner
+from programs.models import Partner
 
 import logging
 

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from dashboard.base_models import CocoModel
 from geographies.models import Village
-from programmes.models import Partner
+from programs.models import Partner
 
 
 class FullDownloadStats(models.Model):

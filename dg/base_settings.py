@@ -93,7 +93,7 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-    'programmes',
+    'programs',
     'geographies',
     'people',
     'videos',

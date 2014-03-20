@@ -7,12 +7,12 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        Partner = orm['programmes.Partner']
+        Partner = orm['programs.Partner']
         Partner.objects.bulk_create([Partner(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
                                              old_coco_id=x.id,  partner_name=x.partner_name, date_of_association=x.date_of_association, phone_no=x.phone_no, address=x.address) for x in orm['dashboard.Partners'].objects.all()])
         print 'partner added'
         
-        db.create_index('programmes_partner', ['old_coco_id'])
+        db.create_index('programs_partner', ['old_coco_id'])
         print 'index for partner created'
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -655,7 +655,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'dashboard_villageprecalculation_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'village': ('dashboard.fields.related.BigForeignKey', [], {'to': u"orm['dashboard.Village']"})
         },
-        u'programmes.partner': {
+        u'programs.partner': {
             'Meta': {'object_name': 'Partner'},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'date_of_association': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -665,10 +665,10 @@ class Migration(DataMigration):
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programmes_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         }
     }
 
-    complete_apps = ['dashboard', 'programmes']
+    complete_apps = ['dashboard', 'programs']
     symmetrical = True
