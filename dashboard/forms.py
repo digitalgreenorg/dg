@@ -78,10 +78,10 @@ class EquipmentForm(CocoModelForm):
     class Meta:
         model = Equipment
 
-class PersonGroupsForm(CocoModelForm):
+class PersonGroupForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
-        model = PersonGroups
+        model = PersonGroup
       
 class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))

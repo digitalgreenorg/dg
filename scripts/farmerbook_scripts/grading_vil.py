@@ -67,7 +67,7 @@ def grade3(village_info):
     grade = []
     for vill_id in village_info:
         farmer = PersonMeetingAttendance.objects.filter(person__village = vill_id, screening__date__range = [grading_start_date, grading_end_date]).values('person').annotate(screenings_attended = Count('screening'))
-        groups = PersonGroups.objects.filter(village = vill_id).values_list('id', flat = True)
+        groups = PersonGroup.objects.filter(village = vill_id).values_list('id', flat = True)
         ratio = 0
         if groups:
             for group in groups:

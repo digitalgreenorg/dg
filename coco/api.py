@@ -12,7 +12,7 @@ from dashboard.models import Animator, AnimatorAssignedVillage, CocoUser, Distri
 PersonAdoptPractice, PersonGroups, PersonMeetingAttendance, UserPermission, Video, Village, Screening, State
 
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
 
 class PMANotSaved(Exception):
     pass
@@ -391,11 +391,11 @@ class PersonGroupResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     class Meta:
         max_limit = None
-        queryset = PersonGroups.objects.prefetch_related('village').all()
+        queryset = PersonGroup.objects.prefetch_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
-        validation = ModelFormValidation(form_class=PersonGroupsForm)
+        validation = ModelFormValidation(form_class=PersonGroupForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])

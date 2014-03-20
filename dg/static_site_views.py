@@ -300,7 +300,7 @@ def spring_analytics(request):
     scr = list(screenings)
     viewers = PersonMeetingAttendance.objects.filter(screening__id__in = scr).values_list('person__id', flat=True).distinct()   
     persons = list(viewers)
-    groups = PersonGroups.objects.filter(person__in = persons).values_list('id', flat = True)
+    groups = PersonGroup.objects.filter(person__in = persons).values_list('id', flat = True)
     adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('id', flat = True)
     unique_adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('person__id', flat = True).distinct()
     villages  = Village.objects.filter(screening__in = screenings, block__district__district_name = 'Keonjhar').values_list('id', flat = True).distinct()

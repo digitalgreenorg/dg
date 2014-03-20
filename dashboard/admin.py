@@ -47,13 +47,13 @@ class ScreeningForm(forms.ModelForm):
     #village  = AjaxForeignKeyField(Village, (('village_name',{}),),default_index=0, select_related= None, widget=FilteredSelect(attrs={'onchange':'temp();'}))
     #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter();'}))
     #animator = DynamicChoiceField(widget=forms.Select(attrs={'disabled': 'true'}))
-    farmer_groups_targeted = forms.ModelMultipleChoiceField(PersonGroups.objects, widget=forms.SelectMultiple(attrs={'onchange': 'filter_person();'}))
+    farmer_groups_targeted = forms.ModelMultipleChoiceField(PersonGroup.objects, widget=forms.SelectMultiple(attrs={'onchange': 'filter_person();'}))
     #farmer_groups_targeted = DynamicMultipleChoiceField(widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
-    #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroups.objects.none())
+    #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroup.objects.none())
     #animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
     animator = forms.ModelChoiceField(Animator.objects)
 
-    #farmers_groups_targeted = forms.ModelChoiceField(PersonGroups.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
+    #farmers_groups_targeted = forms.ModelChoiceField(PersonGroup.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
 
 
     class Meta:
@@ -179,8 +179,8 @@ class AnimatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'partner', 'district',)
     search_fields = ['name','village__village_name', 'partner__partner_name']
 
-class PersonGroupsInline(admin.TabularInline):
-    model = PersonGroups
+class PersonGroupInline(admin.TabularInline):
+    model = PersonGroup
     extra = 5
 
 class AnimatorInline(admin.TabularInline):
@@ -191,7 +191,7 @@ class AnimatorInline(admin.TabularInline):
 class VillageAdmin(admin.ModelAdmin):
     list_display = ('village_name', 'block')
     search_fields = ['village_name', 'block__block_name']
-    inlines = [PersonGroupsInline, AnimatorInline]
+    inlines = [PersonGroupInline, AnimatorInline]
 
 
 class PersonInline(admin.TabularInline):
@@ -199,9 +199,9 @@ class PersonInline(admin.TabularInline):
     extra = 30
 
 
-class PersonGroupsForm(forms.ModelForm):
+class PersonGroupForm(forms.ModelForm):
     class Meta:
-        model = PersonGroups
+        model = PersonGroup
 
     class Media:
         js = (
@@ -218,11 +218,11 @@ class PersonGroupsForm(forms.ModelForm):
 
 
 
-class PersonGroupsAdmin(admin.ModelAdmin):
+class PersonGroupAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
     list_display = ('group_name','village')
     search_fields = ['group_name','village__village_name']
-    form = PersonGroupsForm
+    form = PersonGroupForm
 
 
 class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
@@ -420,7 +420,7 @@ admin.site.register(FieldOfficer, FieldOfficerAdmin)
 admin.site.register(Village, VillageAdmin)
 admin.site.register(Partner)
 admin.site.register(Person, PersonAdmin)
-admin.site.register(PersonGroups, PersonGroupsAdmin)
+admin.site.register(PersonGroup, PersonGroupAdmin)
 admin.site.register(Animator, AnimatorAdmin)
 admin.site.register(Language)
 admin.site.register(Practice, PracticesAdmin)

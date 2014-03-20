@@ -86,7 +86,7 @@ def feed_animators(request, village_id):
     return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def feeds_persons(request, group_id):
-    group = PersonGroups.objects.get(pk=int(group_id))
+    group = PersonGroup.objects.get(pk=int(group_id))
     persons = Person.objects.filter(group=group)
     json_subcat = serializers.serialize("json", persons)
     return HttpResponse(json_subcat, mimetype="application/javascript")
@@ -106,7 +106,7 @@ def feed_person_html_on_person_group(request):
     all_persons = Person.objects.all()
     persons = []
     if group_id[0]:
-        persons = Person.objects.all().filter(group__in = (PersonGroups.objects.all().filter(pk__in = group_id)))
+        persons = Person.objects.all().filter(group__in = (PersonGroup.objects.all().filter(pk__in = group_id)))
 
 
     html = get_template('feeds/screening_view_person.txt')
@@ -161,7 +161,7 @@ def get_prac():
 # requires a person group or list of person groups.
 def get_person(request):
     groups = request.GET.getlist('groups')
-    persongroups = PersonGroups.objects.filter(id__in = groups)
+    persongroups = PersonGroup.objects.filter(id__in = groups)
     villages = Village.objects.none()
     for persongroup in persongroups:
         villages = villages | Village.objects.filter(id = persongroup.village.id)
@@ -184,7 +184,7 @@ def feed_person_prac_pg_anim(request):
         vil_id=int(request.GET.get('vil_id'))
         village = Village.objects.select_related().get(id=int(vil_id))
         anim = serializers.serialize("json", Animator.objects.filter(assigned_villages=village))
-        pg = serializers.serialize("json", PersonGroups.objects.filter(village=village))
+        pg = serializers.serialize("json", PersonGroup.objects.filter(village=village))
         p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
         per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}} ({{p.village}})</option>{% endfor %}""")
         if(mode==1):
@@ -1191,7 +1191,7 @@ def save_equipment_offline(request, id):
 
 @csrf_exempt
 def save_village_online(request, id):
-    PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
+    PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroup,extra=5)
     AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
     if request.method == "POST":
         if(id):
@@ -1461,18 +1461,18 @@ def save_animatorassignedvillage_offline(request, id):
 
 @csrf_exempt
 def save_persongroup_online(request,id):
-    PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations',), extra=30)
+    PersonFormSet = inlineformset_factory(PersonGroup, Person,exclude=('relations',), extra=30)
     if request.method == 'POST':
         if(id):
-            persongroup = PersonGroups.objects.get(id = id)
-            form = PersonGroupsForm(request.POST, instance = persongroup)
+            persongroup = PersonGroup.objects.get(id = id)
+            form = PersonGroupForm(request.POST, instance = persongroup)
             formset = PersonFormSet(request.POST, request.FILES, instance = persongroup)
         else:
-            form = PersonGroupsForm(request.POST)
+            form = PersonGroupForm(request.POST)
             formset = PersonFormSet(request.POST, request.FILES)
         if form.is_valid() and formset.is_valid():
             saved_persongroup = form.save(user = request.session.get('user_id'), id = id)
-            persongroup = PersonGroups.objects.get(pk=saved_persongroup.id)
+            persongroup = PersonGroup.objects.get(pk=saved_persongroup.id)
             formset = PersonFormSet(request.POST, request.FILES, instance=persongroup)
             person_instances = formset.save(commit=False)
             save_all(person_instances, user = request.session.get('user_id'), id = id)
@@ -1485,11 +1485,11 @@ def save_persongroup_online(request,id):
             return HttpResponse(errors, status=201)
     else:
         if(id):
-            persongroup = PersonGroups.objects.get(id = id)
-            form = PersonGroupsForm(instance = persongroup)
+            persongroup = PersonGroup.objects.get(id = id)
+            form = PersonGroupForm(instance = persongroup)
             formset = PersonFormSet(instance = persongroup)
         else:
-            form = PersonGroupsForm()
+            form = PersonGroupForm()
             formset = PersonFormSet()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
@@ -1504,14 +1504,14 @@ def get_persongroups_online(request, offset, limit):
     else:
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        count = PersonGroups.objects.filter(village__in = villages).distinct().count()
-        persongroups = PersonGroups.objects.filter(village__in = villages)
+        count = PersonGroup.objects.filter(village__in = villages).distinct().count()
+        persongroups = PersonGroup.objects.filter(village__in = villages)
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
             count = persongroups.filter(Q(village__in = vil) | Q(group_name__icontains = searchText)).count()
             persongroups = persongroups.filter(Q(village__in = vil) | Q(group_name__icontains = searchText)).order_by("group_name")[offset:limit]
         else:
-            persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+            persongroups = PersonGroup.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persongroups):
             json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
         else:
@@ -1522,7 +1522,7 @@ def get_persongroups_online(request, offset, limit):
 
 @csrf_exempt
 def get_persongroups_for_village_online(request, village_id):
-    person_groups = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name').order_by('group_name')
+    person_groups = PersonGroup.objects.filter(village__id = village_id).values_list('id', 'group_name').order_by('group_name')
                                                     
     html_template = """
     <option value='' selected='selected'>---------</option><option value='null'>No Group</option>
@@ -1537,7 +1537,7 @@ def get_persongroups_for_village_online(request, village_id):
 def save_persongroup_offline(request, id):
     if request.method == 'POST':
         if(not id):
-            form = PersonGroupsForm(request.POST)
+            form = PersonGroupForm(request.POST)
             if form.is_valid():
                 new_form  = form.save(user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
@@ -1547,8 +1547,8 @@ def save_persongroup_offline(request, id):
             else:
                 return HttpResponse("0")
         else:
-            persongroup = PersonGroups.objects.get(id=id)
-            form = PersonGroupsForm(request.POST, instance = persongroup)
+            persongroup = PersonGroup.objects.get(id=id)
+            form = PersonGroupForm(request.POST, instance = persongroup)
             if form.is_valid():
                 form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
@@ -1577,7 +1577,7 @@ def save_person_online(request, id):
             form = PersonForm()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
+        form.fields['group'].queryset = PersonGroup.objects.filter(village__in = villages).distinct().order_by('group_name')
         return HttpResponse(form.as_table())
 
 @csrf_exempt
@@ -1591,7 +1591,7 @@ def get_persons_online(request, offset, limit):
         persons = Person.objects.filter(village__in = villages)
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
-            personGroups = PersonGroups.objects.filter(Q(village__in = villages) & Q(group_name__icontains = searchText))
+            personGroups = PersonGroup.objects.filter(Q(village__in = villages) & Q(group_name__icontains = searchText))
             count = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = personGroups) ).count()
             persons = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = personGroups) ).order_by("person_name")[offset:limit]
         else:
@@ -1698,7 +1698,7 @@ def get_personadoptpractices_online(request, offset, limit):
         villages = get_user_villages(request)
         personadoptpractices = PersonAdoptPractice.objects.filter(person__village__in = villages).distinct().order_by("-id")
         if(searchText):
-            persongroups = PersonGroups.objects.filter(village__in = villages).filter(group_name__icontains = searchText)
+            persongroups = PersonGroup.objects.filter(village__in = villages).filter(group_name__icontains = searchText)
             vil = villages.filter(village_name__icontains = searchText)
             per = Person.objects.filter(village__in = villages).filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = persongroups) )                        
             videos = Video.objects.filter(title__icontains = searchText)
@@ -1776,17 +1776,17 @@ def save_screening_online(request,id):
         form = ScreeningForm(instance = screening)
         formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
         form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=screening.village).distinct().order_by('name')
-        form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = screening.village).distinct().order_by('group_name')
+        form.fields['farmer_groups_targeted'].queryset = PersonGroup.objects.filter(village = screening.village).distinct().order_by('group_name')
     else:
         form = ScreeningForm()
         form.fields['animator'].queryset = Animator.objects.none()
-        form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.none()
+        form.fields['farmer_groups_targeted'].queryset = PersonGroup.objects.none()
     if "village" in request.POST:
         village_id = request.POST["village"]
         try:
             village = Village.objects.get(id=village_id)
             form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=village).distinct().order_by('name')
-            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = village).distinct().order_by('group_name')
+            form.fields['farmer_groups_targeted'].queryset = PersonGroup.objects.filter(village = village).distinct().order_by('group_name')
         except:
             pass
     villages = get_user_villages(request)
@@ -2509,7 +2509,7 @@ def farmers_in_groups(request):
         person_ids = []
         for group_id in persongroup_ids:
             try:
-                group = PersonGroups.objects.get(id=group_id)
+                group = PersonGroup.objects.get(id=group_id)
             except:
                 # log an error
                 continue
@@ -2568,7 +2568,7 @@ def filters_for_village (request, village_id):
             data['animators'] = []
             for anim in animators:
                 data['animators'].append({'value':anim.id,'string':anim.name})
-            groups = PersonGroups.objects.filter(village=village).distinct().order_by('group_name')
+            groups = PersonGroup.objects.filter(village=village).distinct().order_by('group_name')
             data['groups'] = []
             for group in groups:
                 data['groups'].append({'value':group.id,'string':group.group_name})
