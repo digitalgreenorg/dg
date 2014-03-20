@@ -2,7 +2,9 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
+
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from coco.base_models import CocoModel
 from geographies.models import Village, Block, Region, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
