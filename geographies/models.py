@@ -12,7 +12,7 @@ import logging
 
 class Country(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     country_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
 
@@ -25,7 +25,7 @@ class Country(CocoModel):
 
 class Region(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     region_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
 
@@ -35,7 +35,7 @@ class Region(CocoModel):
 
 class State(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     state_name = models.CharField(max_length=100, unique='True')
     region = models.ForeignKey(Region)
     country = models.ForeignKey(Country)
@@ -47,7 +47,7 @@ class State(CocoModel):
 
 class District(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     district_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
     state = models.ForeignKey(State)
@@ -75,7 +75,7 @@ class District(CocoModel):
 
 class Block(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     block_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
     district = models.ForeignKey(District)
@@ -85,7 +85,7 @@ class Block(CocoModel):
 
 class Village(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     village_name = models.CharField(max_length=100)
     block = models.ForeignKey(Block)
     no_of_households = models.IntegerField(null=True, blank=True)

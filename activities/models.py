@@ -11,7 +11,7 @@ from videos.models import Video
 
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -40,7 +40,7 @@ pre_delete.connect(delete_log, sender=Screening)
 
 class PersonMeetingAttendance(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
     interested = models.BooleanField(db_index=True)
@@ -57,7 +57,7 @@ class PersonMeetingAttendance(CocoModel):
 
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person)
     video = models.ForeignKey(Video)
     prior_adoption_flag = models.NullBooleanField(null=True, blank=True)

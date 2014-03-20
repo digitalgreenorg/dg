@@ -10,7 +10,7 @@ from people.models import Animator, Person
 
 class PracticeSector(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=500)
 
     def __unicode__(self):
@@ -19,7 +19,7 @@ class PracticeSector(CocoModel):
 
 class PracticeSubSector(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=500)
 
     def __unicode__(self):
@@ -28,7 +28,7 @@ class PracticeSubSector(CocoModel):
 
 class PracticeTopic(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=500)
 
     def __unicode__(self):
@@ -37,7 +37,7 @@ class PracticeTopic(CocoModel):
 
 class PracticeSubtopic(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=500)
 
     def __unicode__(self):
@@ -46,7 +46,7 @@ class PracticeSubtopic(CocoModel):
 
 class PracticeSubject(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=500)
 
     def __unicode__(self):
@@ -55,7 +55,7 @@ class PracticeSubject(CocoModel):
 
 class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     practice_name = models.CharField(null=True, max_length=200)
     practice_sector = models.ForeignKey(PracticeSector, default=1) 
     practice_subsector = models.ForeignKey(PracticeSubSector, null=True, blank=True)
@@ -89,7 +89,7 @@ pre_delete.connect(delete_log, sender=Language)
 
 class Video(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     title = models.CharField(max_length=200)
     video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE)
     duration = models.TimeField(null=True, blank=True)

@@ -9,7 +9,7 @@ from programs.models import Partner
 
 class Animator(CocoModel):
     id = models.AutoField(primary_key = True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=100)
     age = models.IntegerField(max_length=3, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
@@ -48,7 +48,7 @@ class AnimatorAssignedVillage(CocoModel):
 
 class PersonGroup(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     group_name = models.CharField(max_length=100)
     days = models.CharField(max_length=9, choices=DAY_CHOICES, blank=True)
     timings = models.TimeField(null=True, blank=True)
@@ -67,7 +67,7 @@ pre_delete.connect(delete_log, sender=PersonGroup)
 
 class Person(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     person_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100, blank=True)
     age = models.IntegerField(max_length=3, null=True, blank=True)
