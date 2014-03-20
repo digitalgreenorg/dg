@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
 
 from geographies.models import District 
-from activities.modles import PersonAdoptPractice
+from activities.models import PersonAdoptPractice
 from videos.models import  Video
 
 
