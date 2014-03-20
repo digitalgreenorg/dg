@@ -50,19 +50,31 @@ class Migration(DataMigration):
 #         print "Groups in Screening Added"
 #===============================================================================
 
-        PMA = Screening.farmers_attendance.through
-        dashboard_PMA = orm['dashboard.Screening'].farmers_attendance.through.objects.all()
-        for i in range(0, dashboard_PMA.count()/chunk + 1):
-            dashboard_PMA_slice = dashboard_PMA[i*chunk:(i+1)*chunk]
-            print "PMA %d" % (i*chunk)
-            db.start_transaction()
-            PMA.objects.bulk_create([PMA(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
-                                         old_coco_id=x.id, screening = Screening.objects.get(old_coco_id=x.screening_id),
-                                         person=orm['people.Person'].objects.get(old_coco_id=x.person_id),
-                                         interested=x.interested, expressed_question=x.expressed_question,
-                                         expressed_adoption_video=None if x.expressed_adoption_video_id is None else orm['videos.Video'].objects.get(old_coco_id=x.expressed_adoption_video_id)) 
-                                     for x in dashboard_PMA_slice])
-            db.commit_transaction()
+        # PMA = Screening.farmers_attendance.through
+#         dashboard_PMA = orm['dashboard.Screening'].farmers_attendance.through.objects.all()
+#         for i in range(0, dashboard_PMA.count()/chunk + 1):
+#             dashboard_PMA_slice = dashboard_PMA[i*chunk:(i+1)*chunk]
+#             print "PMA %d" % (i*chunk)
+#             db.start_transaction()
+#             PMA.objects.bulk_create([PMA(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
+#                                          old_coco_id=x.id, screening = Screening.objects.get(old_coco_id=x.screening_id),
+#                                          person=orm['people.Person'].objects.get(old_coco_id=x.person_id),
+#                                          interested=x.interested, expressed_question=x.expressed_question,
+#                                          expressed_adoption_video=None if x.expressed_adoption_video_id is None else orm['videos.Video'].objects.get(old_coco_id=x.expressed_adoption_video_id)) 
+#                                      for x in dashboard_PMA_slice])
+#             db.commit_transaction()
+        db.execute('''
+        INSERT INTO activities_personmeetingattendance 
+        (old_coco_id, person_id, screening_id, interested, expressed_question, 
+        expressed_adoption_video_id, user_created_id, time_created, user_modified_id, time_modified)
+
+        SELECT pma.id, p.id, sc.id, pma.interested, pma.expressed_question,
+        v.id, pma.user_created_id, pma.time_created, pma.user_modified_id, pma.time_modified
+        FROM person_meeting_attendance pma
+        JOIN activities_screening sc on sc.old_coco_id = pma.screening_id
+        JOIN people_person p on p.old_coco_id = pma.person_id
+        Left Outer JOIN videos_video v on pma.expressed_adoption_video = v.old_coco_id;
+        ''')
         print "PMA Added"
 
 
