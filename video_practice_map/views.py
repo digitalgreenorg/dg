@@ -118,7 +118,7 @@ def form_submit(request):
             selected_vals = []
             for field in field_arr:
                 selected_vals.append(int(request.POST[field]) if request.POST[field] != "None" else None)
-            pr = Practices.objects.get(*zip(field_arr, selected_vals))
+            pr = Practice.objects.get(*zip(field_arr, selected_vals))
             vid = Video.objects.get(id=int(request.POST['vid_id']))
             if request.POST['action'] == 'review':
                 vid_pr = VideoPractice.objects.get(video=vid, review_user=None)
@@ -145,7 +145,7 @@ def form_submit(request):
 
 
 def practice_filter_options(request):
-    pr = Practices.objects.all()
+    pr = Practice.objects.all()
     field_arr = ['practice_sector', 'practice_subsector', 'practice_topic', 'practice_subtopic', 'practice_subject']
     model_arr = [PracticeSector, PracticeSubSector, PracticeTopic, PracticeSubtopic, PracticeSubject]
     output_arr = []
@@ -217,7 +217,7 @@ def add_new(request):
                         for main_practice in main_practices:
                             for sub_practice in sub_practices:
                                 for subject in subjects:
-                                    obj, created = Practices.objects.get_or_create(practice_sector_id=sector, practice_subsector_id=sub_sector,practice_topic_id=main_practice, practice_subtopic_id=sub_practice,practice_subject_id=subject)
+                                    obj, created = Practice.objects.get_or_create(practice_sector_id=sector, practice_subsector_id=sub_sector,practice_topic_id=main_practice, practice_subtopic_id=sub_practice,practice_subject_id=subject)
                                     if created:
                                         count = count + 1
                                     
@@ -238,7 +238,7 @@ def add_new(request):
     all_subsectors = PracticeSubSector.objects.values_list('id', 'name').order_by('name')
     all_main = PracticeTopic.objects.values_list('id', 'name').order_by('name')
     all_subpr = PracticeSubtopic.objects.values_list('id', 'name').order_by('name')
-    sector_subject_tups = Practices.objects.exclude(practice_subject=None). values_list('practice_sector__name', 
+    sector_subject_tups = Practice.objects.exclude(practice_subject=None). values_list('practice_sector__name', 
                                                                                  'practice_subject__id', 
                                                                                  'practice_subject__name').distinct().order_by('practice_subject__name')
     all_subjects = defaultdict(list)

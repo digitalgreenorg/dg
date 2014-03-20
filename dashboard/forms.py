@@ -117,7 +117,7 @@ class AnimatorAssignedVillageForm(CocoModelForm):
 
 class PracticeForm(CocoModelForm):
     class Meta:
-        model = Practices
+        model = Practice
 
 class VillageForm(CocoModelForm):
     class Meta:

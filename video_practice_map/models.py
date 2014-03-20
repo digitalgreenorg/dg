@@ -8,7 +8,7 @@ from django.db import models
 class VideoPractice(models.Model):
     id = BigAutoField(primary_key = True)
     video = BigForeignKey(Video)
-    practice = BigForeignKey(Practices)
+    practice = BigForeignKey(Practice)
     user = models.ForeignKey(User, null=True)
     review_user = models.ForeignKey(User, null=True, related_name='reviewed_practices')
     review_approved = models.NullBooleanField(null=True)

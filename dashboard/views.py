@@ -154,7 +154,7 @@ def feed_person_html_on_person_group_modified(request):
 
 #return Practices in Options <options ..>...</option>
 def get_prac():
-    pracs = Practices.objects.all().order_by('practice_name')
+    pracs = Practice.objects.all().order_by('practice_name')
     prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
     return prac_list.render(Context(dict(practices=pracs)))
 
@@ -554,7 +554,7 @@ def save_fieldofficer_offline(request, id):
 def save_practice_online(request,id):
     if request.method == 'POST':
         if(id):
-            practice = Practices.objects.get(id = id)
+            practice = Practice.objects.get(id = id)
             form = PracticeForm(request.POST, instance = practice)
         else:
             form  = PracticeForm(request.POST)
@@ -565,7 +565,7 @@ def save_practice_online(request,id):
             return HttpResponse(form.errors.as_text(),status = 201)
     else:
         if(id):
-            practice = Practices.objects.get(id = id)
+            practice = Practice.objects.get(id = id)
             form = PracticeForm(instance = practice)
         else:
             form  = PracticeForm()
@@ -580,12 +580,12 @@ def get_practices_online(request, offset, limit):
         return redirect('practice')
     else:
         searchText = request.GET.get('searchText')
-        count = Practices.objects.count()
+        count = Practice.objects.count()
         if(searchText):
-            count = Practices.objects.filter(Q(practice_name__icontains = searchText)).count()
-            practices = Practices.objects.filter(Q(practice_name__icontains = searchText)).order_by("practice_name")[offset:limit]
+            count = Practice.objects.filter(Q(practice_name__icontains = searchText)).count()
+            practices = Practice.objects.filter(Q(practice_name__icontains = searchText)).order_by("practice_name")[offset:limit]
         else:
-             practices = Practices.objects.order_by("-id")[offset:limit]
+             practices = Practice.objects.order_by("-id")[offset:limit]
         if(practices):
             json_subcat = serializers.serialize("json", practices)
         else:
@@ -608,7 +608,7 @@ def save_practice_offline(request, id):
             else:
                 return HttpResponse("0")
         else:
-            practice = Practices.objects.get(id=id)
+            practice = Practice.objects.get(id=id)
             form = PracticeForm(request.POST, instance = practice)
             if form.is_valid():
                 form.save(user = request.session.get('user_id'), id = id)
@@ -1805,7 +1805,7 @@ def get_attendance(request, id):
 	screening = Screening.objects.get(id = id)
 	formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
 	personInMeeting = screening.farmers_attendance.distinct().order_by('person_name')
-	practices = Practices.objects.all().order_by('practice_name')
+	practices = Practice.objects.all().order_by('practice_name')
 	for form_person_meeting_attendance in formset.forms:
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
 	return render_to_response('feeds/attendance.html',{'formset':formset})
