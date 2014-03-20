@@ -6,7 +6,8 @@ from django.core import serializers
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from models import ServerLog
+
+ServerLog = get_model('coco', 'ServerLog')
 
 class TimestampException(Exception):
     pass
