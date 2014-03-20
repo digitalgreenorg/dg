@@ -243,7 +243,7 @@ class BlockAdmin(admin.ModelAdmin):
     search_fields = ['block_name', 'district__district_name']
 
 class DistrictAdmin(admin.ModelAdmin):
-    list_display = ('district_name', 'state','fieldofficer', 'partner')
+    list_display = ('district_name', 'state', 'partner')
     search_fields = ['district_name', 'state__state_name']
 
 class StateAdmin(admin.ModelAdmin):
