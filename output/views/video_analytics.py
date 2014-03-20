@@ -272,7 +272,7 @@ def video_search(request):
     if(partners):
         vids = vids.filter(village__block__district__partner__id__in = map(int,partners))
         search_box_params['sel_partners'] = partners
-    search_box_params['all_partners'] = Partners.objects.all().values('id','partner_name')
+    search_box_params['all_partners'] = Partner.objects.all().values('id','partner_name')
     
     if(sort == None):
         vids  = vids.order_by('id')

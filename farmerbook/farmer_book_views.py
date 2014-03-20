@@ -68,7 +68,7 @@ def get_home_page(request, type=None, id=None):
                                          'photo_link': photo_link,
                                          'adoptions': obj[1][3]})
     top_partner_stats = defaultdict(lambda:[0, 0, 0, 0])     
-    partner_info = Partners.objects.all().annotate(num_vill = Count('district__block__village', distinct = True),
+    partner_info = Partner.objects.all().annotate(num_vill = Count('district__block__village', distinct = True),
                                                    num_farmers = Count('district__block__village__person')).values_list('id',
                                                                                                              'partner_name',
                                                                                                              'num_vill',
@@ -188,7 +188,7 @@ def get_village_page(request):
     left_panel_stats['num_of_groups'] = PersonGroups.objects.filter(village__id = village_id).count()
     #group_id_list = get_id_with_images.get_group_list()
     left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
-    left_panel_stats['partner'] = Partners.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
+    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
     startdate = Person.objects.filter(village__id = village_id).annotate(sd = Min('date_of_joining')).values_list('sd', flat=True)
@@ -292,7 +292,7 @@ def get_person_page(request):
     left_panel_stats['videos_watched'] = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().count()
     left_panel_stats['questions_asked'] = PersonMeetingAttendance.objects.filter(person__id = person_id).exclude(expressed_question = '').count()
     left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__person__id = person_id).distinct().count()
-    left_panel_stats['partner'] = Partners.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
+    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
     #For FBConnect to check if user already subscribed to the farmer
     left_panel_stats['subscribed'] = False
@@ -674,7 +674,7 @@ def get_partner_page(request):
     #left panel stats dict hold values related to left panel of village page
     left_panel_stats = {} 
     left_panel_stats['site_link'] = site_link[partner_id][0]
-    left_panel_stats['partner_details'] = Partners.objects.filter(id= partner_id).values_list('id',
+    left_panel_stats['partner_details'] = Partner.objects.filter(id= partner_id).values_list('id',
                                                                                               'partner_name',
                                                                                               'district__state__state_name',
                                                                                               'district__id',
@@ -707,7 +707,7 @@ def get_partner_page(request):
 
     id_list = get_id_with_images.get_partner_list()
     partner_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0, 0])
-    other_partner_info = Partners.objects.filter(id__in = id_list).exclude(id = partner_id).values_list('id','partner_name','date_of_association')
+    other_partner_info = Partner.objects.filter(id__in = id_list).exclude(id = partner_id).values_list('id','partner_name','date_of_association')
     for partner_id,partner_name,startdate in other_partner_info:
         partner_stats_dict[partner_id][0] = partner_id
         partner_stats_dict[partner_id][1] = partner_name
