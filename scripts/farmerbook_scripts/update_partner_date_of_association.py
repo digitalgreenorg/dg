@@ -2,7 +2,12 @@ import glob, os
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from dashboard.models import *
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 
 partner = Partner.objects.all().values_list('id','date_of_association')

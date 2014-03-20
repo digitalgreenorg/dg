@@ -4,7 +4,7 @@ from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
-from dashboard.models import CocoUser
+from models import CocoUser
 from datetime import datetime
 
 def coco_v2(request):

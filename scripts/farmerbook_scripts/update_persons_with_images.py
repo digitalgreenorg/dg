@@ -6,7 +6,13 @@ from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
 
-from dashboard.models import *
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
+
 ACCESS_KEY = '01GE4NJEXRFQTBCFG782'
 SECRET_KEY = 'bK8gt4siHBryH/cRagSMtcDPwNbfB0l2E/KXVhYy'
 BUCKET_NAME = 'dg_farmerbook'

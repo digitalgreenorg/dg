@@ -23,7 +23,12 @@ import dg.settings
 
 setup_environ(dg.settings)
 from django.db import connection, IntegrityError
-from dashboard.models import *
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 cursor = connection.cursor()
 

@@ -5,7 +5,7 @@ from datetime import timedelta, date, datetime
 import gdata.youtube.service
 from boto.s3.connection import S3Connection
 
-from dashboard.models import Video
+from videos.models import Video
 from dg.settings import ACCESS_KEY, SECRET_KEY, MEDIA_ROOT, YOUTUBE_SIMPLE_ACCESS
 from libs.image_utils import ProcessedImage
 from libs.s3_utils import add_to_s3

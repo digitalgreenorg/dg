@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from dashboard.models import Video
+from videos.models import Video
 from social_website.models import Video as Website_video
 from social_website.migration_functions import update_website_video
 

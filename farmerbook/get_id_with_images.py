@@ -1,5 +1,12 @@
 import glob, os
-from dashboard.models import *
+
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
+
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 ACCESS_KEY = '01GE4NJEXRFQTBCFG782'

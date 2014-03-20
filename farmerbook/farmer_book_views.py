@@ -1,17 +1,24 @@
+import datetime
+import random
+import json
 from collections import defaultdict
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-import json
-from dashboard.models import *
 from django.db.models import Count
-import datetime
-import random
 from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
-import get_id_with_images
 from django.core.cache import cache
+
+from activities.models import *
+from coco.models import *
 from fbconnect.models import *
 from fbconnect.views import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
+
+import get_id_with_images
 
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
