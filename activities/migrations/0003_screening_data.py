@@ -28,19 +28,6 @@ class Migration(DataMigration):
         db.create_index('activities_screening', ['old_coco_id'])
         print "index created for screening"
 
-        PMA = Screening.farmers_attendance.through
-        dashboard_PMA = orm['dashboard.Screening'].farmers_attendance.through.objects.all()
-        for i in range(0, dashboard_PMA.count()/chunk + 1):
-            dashboard_PMA_slice = dashboard_PMA[i*chunk:(i+1)*chunk]
-            print "PMA %d" % (i*chunk)
-            PMA.objects.bulk_create([PMA(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
-                                         old_coco_id=x.id, screening = Screening.objects.get(old_coco_id=x.screening_id),
-                                         person=orm['people.Person'].objects.get(old_coco_id=x.person_id),
-                                         interested=x.interested, expressed_question=x.expressed_question,
-                                         expressed_adoption_video=None if x.expressed_adoption_video_id is None else orm['videos.Video'].objects.get(old_coco_id=x.expressed_adoption_video_id)) 
-                                     for x in dashboard_PMA_slice])
-        print "PMA Added"
-
         video_screened = Screening.videoes_screened.through
         dashboard_video_screened = orm['dashboard.Screening'].videoes_screened.through.objects.all()
         for i in range(0, dashboard_video_screened.count()/chunk + 1):
@@ -59,6 +46,21 @@ class Migration(DataMigration):
             screening_groups.objects.bulk_create([screening_groups(screening=Screening.objects.get(old_coco_id=x.screening_id),
                                                                    persongroup=orm['people.PersonGroup'].objects.get(old_coco_id=x.persongroups_id)) 
                                      for x in dashboard_screening_groups_slice])
+        print "Groups in Screening Added"
+
+        PMA = Screening.farmers_attendance.through
+        dashboard_PMA = orm['dashboard.Screening'].farmers_attendance.through.objects.all()
+        for i in range(0, dashboard_PMA.count()/chunk + 1):
+            dashboard_PMA_slice = dashboard_PMA[i*chunk:(i+1)*chunk]
+            print "PMA %d" % (i*chunk)
+            PMA.objects.bulk_create([PMA(user_created_id=x.user_created_id, time_created=x.time_created, user_modified_id=x.user_modified_id, time_modified=x.time_modified,
+                                         old_coco_id=x.id, screening = Screening.objects.get(old_coco_id=x.screening_id),
+                                         person=orm['people.Person'].objects.get(old_coco_id=x.person_id),
+                                         interested=x.interested, expressed_question=x.expressed_question,
+                                         expressed_adoption_video=None if x.expressed_adoption_video_id is None else orm['videos.Video'].objects.get(old_coco_id=x.expressed_adoption_video_id)) 
+                                     for x in dashboard_PMA_slice])
+        print "PMA Added"
+
 
     def backwards(self, orm):
         "Write your backwards methods here."
