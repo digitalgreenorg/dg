@@ -104,7 +104,7 @@ class FieldOfficerForm(CocoModelForm):
 
 class PartnerForm(CocoModelForm):
     class Meta:
-        model = Partners
+        model = Partner
 
 class AnimatorForm(CocoModelForm):
     class Meta:

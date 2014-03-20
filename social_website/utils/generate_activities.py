@@ -247,7 +247,7 @@ if __name__ == '__main__':
     collection_dict = {}
     for partner in Partner.objects.all():
         try:
-            dashboard.models.Partners.objects.get(id=partner.coco_id)
+            dashboard.models.Partner.objects.get(id=partner.coco_id)
         except:
             continue
         #Initial entry for milestone table

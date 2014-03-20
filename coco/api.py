@@ -258,7 +258,7 @@ class BaseResource(ModelResource):
 class PartnerResource(ModelResource):    
     class Meta:
         max_limit = None
-        queryset = Partners.objects.all()
+        queryset = Partner.objects.all()
         resource_name = 'partner'
         authentication = SessionAuthentication()
         authorization = Authorization()

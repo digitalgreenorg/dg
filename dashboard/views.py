@@ -694,7 +694,7 @@ def save_language_offline(request,id):
 def save_partner_online(request,id):
     if request.method == 'POST':
         if(id):
-            partner = Partners.objects.get(id = id)
+            partner = Partner.objects.get(id = id)
             form = PartnerForm(request.POST, instance = partner)
         else:
             form  = PartnerForm(request.POST)
@@ -705,7 +705,7 @@ def save_partner_online(request,id):
             return HttpResponse(form.errors.as_text(),status = 201)
     else:
         if(id):
-            partner = Partners.objects.get(id = id)
+            partner = Partner.objects.get(id = id)
             form = PartnerForm(instance = partner)
         else:
             form  = PartnerForm()
@@ -719,8 +719,8 @@ def get_partners_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('partner')
     else:
-        count = Partners.objects.count()
-        partners = Partners.objects.order_by("-id")[offset:limit]
+        count = Partner.objects.count()
+        partners = Partner.objects.order_by("-id")[offset:limit]
         if(partners):
             json_subcat = serializers.serialize("json", partners)
         else:
@@ -743,7 +743,7 @@ def save_partner_offline(request, id):
             else:
                 return HttpResponse("0")
         else:
-            partner = Partners.objects.get(id=id)
+            partner = Partner.objects.get(id=id)
             form = PartnerForm(request.POST, instance = partner)
             if form.is_valid():
                 form.save(user = request.session.get('user_id'), id = id)
@@ -1351,7 +1351,7 @@ def get_animators_online(request, offset, limit):
         animators = Animator.objects.filter(district__in = districts).distinct()
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
-            partners = Partners.objects.filter(partner_name__icontains = searchText)
+            partners = Partner.objects.filter(partner_name__icontains = searchText)
             count = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).count()
             animators = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).distinct().order_by("name")[offset:limit]
         else:
