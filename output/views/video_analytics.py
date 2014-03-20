@@ -1,12 +1,15 @@
-from dashboard.models import *
 from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
+
+from activities.models import PersonMeetingAttendance
 from output import views
 from output.database.SQL import video_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, \
     run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
+from programs.models import Partner
+from videos.models import Language, Video
 import datetime
 import json
 import math

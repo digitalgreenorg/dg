@@ -7,8 +7,11 @@ import time
 from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Min, Count
-from dashboard.models import *
 
+from people.models import Person
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from geographies.models import Village
+from videos.models import Video
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class AnalyticsSync():

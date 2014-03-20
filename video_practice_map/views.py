@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 from django.template import Template, Context
 
 from geographies.models import State
-from videos.models import Language, Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
+from videos.models import Language, Practice, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
 from video_practice_map.models import VideoPractice,SkippedVideo
 from django.views.decorators.csrf import csrf_exempt
 
