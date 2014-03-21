@@ -286,9 +286,9 @@ def get_village_page(request):
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
     try:
-        person_id = Person.objects.get(id = vil_id).id
+        person_id = Person.objects.get(id = person_id).id
     except:
-        person_id = Person.objects.get(old_coco_id = vil_id).id
+        person_id = Person.objects.get(old_coco_id = person_id).id
     fuid = request.GET.get('fuid', None)
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
