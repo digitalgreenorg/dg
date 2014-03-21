@@ -55,8 +55,8 @@ def delete_log(sender, **kwargs ):
 def send_updated_log(request):
     timestamp = request.GET.get('timestamp', None)
     if timestamp:
-        CocoUser = get_model('dashboard','CocoUser')
-        CocoUserVillages = get_model('dashboard','CocoUser_villages')
+        CocoUser = get_model('coco','CocoUser')
+        CocoUserVillages = get_model('coco','CocoUser_villages')
         try:
             coco_user = CocoUser.objects.get(user_id=request.user.id)
         except Exception as e:
