@@ -57,8 +57,9 @@ def get_home_page(request, type=None, id=None):
     
     csp_leader_stats= []                         
     for obj in top_csp_stats:
-        if(obj[0] in id_list):
-                photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
+        old_coco_id = Animator.objects.get(id = obj[0]).old_coco_id
+        if(old_coco_id in id_list):
+                photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(old_coco_id) + ".jpg"
         else:
                 photo_link =  "/media/farmerbook/images/sample_csp.jpg"
 
@@ -69,7 +70,7 @@ def get_home_page(request, type=None, id=None):
                                          'adoptions': obj[1][3]})
     top_partner_stats = defaultdict(lambda:[0, 0, 0, 0])     
     partner_info = Partner.objects.all().annotate(num_vill = Count('district__block__village', distinct = True),
-                                                   num_farmers = Count('district__block__village__person')).values_list('id',
+                                                   num_farmers = Count('district__block__village__person')).values_list('old_coco_id',
                                                                                                              'partner_name',
                                                                                                              'num_vill',
                                                                                                              'num_farmers')
@@ -138,7 +139,7 @@ def get_villages_with_images(request):
     for i in village_list:
         vil_details = Village.objects.filter(id = i).values_list('id', 'village_name', 
                                                                  'block__district__id', 'grade')
-        district_id = vil_details[0][2]
+        district_id = District.objects.get(id = vil_details[0][2]).old_coco_id
         try:
             if district_lat_lng[district_id]:
                 district_lat= float(district_lat_lng[district_id][1])
@@ -151,9 +152,10 @@ def get_villages_with_images(request):
         random_lat = "%.4f" % random.uniform(district_lat - angle, district_lat + angle)
         random_lng = "%.4f" % random.uniform(district_lng - angle, district_lng + angle)
         try:
-            if village_lat_lng[i]:
-                random_lat = village_lat_lng[i][0]
-                random_lng = village_lat_lng[i][1]
+            old_coco_id = Village.objects.get(id = i).old_coco_id
+            if village_lat_lng[old_coco_id]:
+                random_lat = village_lat_lng[old_coco_id][0]
+                random_lng = village_lat_lng[old_coco_id][1]
         except:
             pass
         village_details.append({"id":i, "name": vil_details[0][1], "latitude":random_lat, 
@@ -190,7 +192,7 @@ def get_village_page(request):
     left_panel_stats['vil_groups'] = PersonGroup.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
     left_panel_stats['partner'] = Partner.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
-    left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
+    left_panel_stats['vil_details'] = Village.objects.filter(old_coco_id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
     startdate = Person.objects.filter(village__id = village_id).annotate(sd = Min('date_of_joining')).values_list('sd', flat=True)
     if(startdate):
         left_panel_stats['start_date'] = startdate[0]
