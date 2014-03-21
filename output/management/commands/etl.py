@@ -44,7 +44,7 @@ class AnalyticsSync():
             #screening_myisam
             self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id)
-                                        SELECT sc.id, date, svs.video_id, vid.related_practice_id, persongroups_id, sc.village_id, block_id,
+                                        SELECT sc.id, date, svs.video_id, vid.related_practice_id, persongroup_id, sc.village_id, block_id,
                                         district_id, state_id, country_id
                                         FROM activities_screening sc
                                         JOIN activities_screening_videoes_screened svs on svs.screening_id = sc.id
