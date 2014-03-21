@@ -303,7 +303,7 @@ def get_person_page(request):
     left_panel_stats['views_adoptions'] = [person_views, person_adoptions, adoption_rate]
     left_panel_stats['videos_watched'] = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().count()
     left_panel_stats['questions_asked'] = PersonMeetingAttendance.objects.filter(person__id = person_id).exclude(expressed_question = '').count()
-    left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__person__id = person_id).distinct().count()
+    left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__id = person_id).distinct().count()
     left_panel_stats['partner'] = Partner.objects.filter(district__block__village__person__id = person_id).values_list('old_coco_id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('old_coco_id', 'name')[:1]
     #For FBConnect to check if user already subscribed to the farmer
