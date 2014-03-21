@@ -6,7 +6,7 @@ import coco.urls
 import feeds.urls
 import social_website.api_urls
 import social_website.urls
-from dashboard.data_log import send_updated_log
+from coco.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
