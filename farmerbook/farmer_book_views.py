@@ -6,7 +6,7 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from django.db.models import Count
 from django.template.loader import render_to_string
-from django.db.models import Sum,Max,Count
+from django.db.models import Sum,Max,Count, Min
 from django.core.cache import cache
 
 from activities.models import *
@@ -176,11 +176,16 @@ def get_videos_produced(request):
         return HttpResponse("")
 
 def get_village_page(request):
-    village_id = int(request.GET['village_id'])
+    vil_id = int(request.GET['village_id'])
+    try:
+        village_id = Village.objects.get(id = vil_id).id
+    except:
+        village_id = Village.objects.get(old_coco_id = vil_id).id
     #left panel stats dict hold values related to left panel of village page
     left_panel_stats = {}
     farmerbook_farmers = Person.farmerbook_objects.all().values_list('id', flat=True)
-    tot_farmers = VillagePrecalculation.objects.filter(village__id = village_id, date = datetime.date(2012,1,1)).values_list('total_active_attendees', flat=True)
+    tot_farmers = PersonMeetingAttendance.objects.filter(person__village__id = village_id).values_list('person', flat = True).distinct().count()
+    print tot_farmers
     if tot_farmers:
         left_panel_stats['tot_farmers'] = tot_farmers
     else:
@@ -189,10 +194,10 @@ def get_village_page(request):
 
     left_panel_stats['num_of_groups'] = PersonGroup.objects.filter(village__id = village_id).count()
     #group_id_list = get_id_with_images.get_group_list()
-    left_panel_stats['vil_groups'] = PersonGroup.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
-    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
-    left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
-    left_panel_stats['vil_details'] = Village.objects.filter(old_coco_id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
+    left_panel_stats['vil_groups'] = PersonGroup.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('old_coco_id', 'group_name')
+    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__id = village_id).values_list('old_coco_id', 'partner_name')
+    left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('old_coco_id', 'name')[:1]
+    left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('old_coco_id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
     startdate = Person.objects.filter(village__id = village_id).annotate(sd = Min('date_of_joining')).values_list('sd', flat=True)
     if(startdate):
         left_panel_stats['start_date'] = startdate[0]
@@ -201,6 +206,7 @@ def get_village_page(request):
 
     #rightpanel top contents
     vids_details = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id','title', 'youtubeid')
+    print vids_details
     vids_id = set(i[0] for i in vids_details)
     left_panel_stats['tot_videos'] = len(vids_id)
     vid_adoptions = PersonAdoptPractice.objects.filter(person__village__id = village_id).values('video__id').annotate(
@@ -265,7 +271,7 @@ def get_village_page(request):
         else:
             views_dict[related_id[0]][4] = float(views_dict[related_id[0]][3]) / views_dict[related_id[0]][2]
         views_dict[related_id[0]][5] = (views_dict[related_id[0]][4]* 100)/5.0 
-        views_dict[related_id[0]][6] = "http://s3.amazonaws.com/dg_farmerbook/village/" + str(related_id[0]) + ".jpg"
+        views_dict[related_id[0]][6] = "http://s3.amazonaws.com/dg_farmerbook/village/" + str(Village.objects.get(id = related_id[0]).old_coco_id) + ".jpg"
         min_joining = Person.objects.filter(village__id = vil_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat = True)
         if min_joining:
             views_dict[related_id[0]][7] = min_joining[0]
@@ -402,6 +408,10 @@ def get_person_page(request):
 
 def get_group_page(request):
     group_id = int(request.GET['group_id'])
+    try:
+        group_id = PersonGroup.objects.get(id = group_id).id
+    except:
+        group_id = PersonGroup.objects.get(old_coco_id = group_id).id
     
     left_panel_stats = {}
     left_panel_stats['group_details'] = PersonGroup.objects.filter(id = group_id).values_list('group_name',
@@ -409,11 +419,11 @@ def get_group_page(request):
                                                                                               'village__village_name',
                                                                                               'village__block__district__district_name',
                                                                                               'village__block__district__state__state_name',
-                                                                                              'village__block__district__partner__id',
+                                                                                              'village__block__district__partner__old_coco_id',
                                                                                               'village__block__district__partner__partner_name',
-                                                                                              'village__animatorassignedvillage__animator__id',
+                                                                                              'village__animatorassignedvillage__animator__old_coco_id',
                                                                                               'village__animatorassignedvillage__animator__name',
-                                                                                              'id')
+                                                                                              'old_coco_id')
     
     left_panel_stats['members_count'] = Person.objects.filter(group = group_id).count()
     left_panel_stats['screenings'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).distinct().count()
@@ -482,11 +492,12 @@ def get_group_page(request):
     views_dict = defaultdict(lambda: {'id': 0, 'name': 0, 'title': 0, 'date_of_adoption': 0, 'date_of_joining': 0, 'views': 0, 'adoptions': 0, 'adoption_rate': 0})
     
     # Add details for all person in the group
-    person_details = Person.objects.filter(group__id=group_id, image_exists=True).values('id', 'person_name', 'date_of_joining')
+    person_details = Person.objects.filter(group__id=group_id, image_exists=True).values('old_coco_id', 'id', 'person_name', 'date_of_joining')
     for person in person_details:
         views_dict[person['id']]['id'] = person['id']
         views_dict[person['id']]['name'] = person['person_name']   
         views_dict[person['id']]['date_of_joining'] = person['date_of_joining']
+        views_dict[person['id']]['old_coco_id'] = person['old_coco_id']
     # Get all attendances for people in the group
     screenings_attended = PersonMeetingAttendance.objects.filter(person__image_exists=True, person__group__id = group_id).values('person__id', 'person__person_name', 'person__date_of_joining')
     # Get number of viewings for each farmer
@@ -515,6 +526,10 @@ def get_group_page(request):
 
 def get_csp_page(request):
     csp_id = int(request.GET['csp_id'])
+    try:
+        csp_id = Animator.objects.get(id = csp_id).id
+    except:
+        csp_id = Animator.objects.get(old_coco_id = csp_id).id
   
         #left panel stats dict hold values related to left panel of village page
     left_panel_stats = {}
@@ -527,8 +542,8 @@ def get_csp_page(request):
     left_panel_stats['screenings_disseminated'] =  Screening.objects.filter(animator__id = csp_id).count()
     left_panel_stats['nalloted_groups'] = PersonGroup.objects.filter(village__id__in = assigned_vill_id).count()
     group_id_list = get_id_with_images.get_group_list()
-    left_panel_stats['alloted_groups'] = PersonGroup.objects.filter(village__id__in = assigned_vill_id,id__in = group_id_list).values_list('id', 'group_name')
-    left_panel_stats['csp_details'] = Animator.objects.filter(id = csp_id).values_list('id', 'name')
+    left_panel_stats['alloted_groups'] = PersonGroup.objects.filter(village__id__in = assigned_vill_id,id__in = group_id_list).values_list('old_coco_id', 'group_name')
+    left_panel_stats['csp_details'] = Animator.objects.filter(id = csp_id).values_list('old_coco_id', 'name')
     left_panel_stats['csp_villages'] = [i[1] for i in animator_villages]
     left_panel_stats['vil_details'] = Village.objects.filter(id__in = assigned_vill_id).values_list('block__district__district_name', 
                                                                                                     'block__district__state__state_name')[0]
@@ -623,7 +638,7 @@ def get_csp_page(request):
     sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[3],k), reverse=True)
     top_related_list = sorted_list_stats[:10] 
     
-    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name')
+    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__old_coco_id','partner__partner_name')
      
     # For those in list(image of csp exists), give s3 link , otherwise sample image   
 #    id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
@@ -636,7 +651,7 @@ def get_csp_page(request):
     top_related_stats = []
     for obj in top_related_list:
         if(obj[0] in id_list):
-            photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
+            photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(Animator.objects.get(id = obj[0]).old_coco_id) + ".jpg"
         else:
             photo_link =  "/media/farmerbook/images/sample_csp.jpg"
         top_related_stats.append({'id': obj[0],
@@ -660,6 +675,11 @@ def get_partner_page(request):
         
     partner_id = int(request.GET['partner_id'])
     
+    try:
+        partner_id = Partner.objects.get(id = partner_id).id
+    except:
+        partner_id = Partner.objects.get(old_coco_id = partner_id).id
+        
     site_link = defaultdict(lambda:[0])
     site_link[10000000000001][0] = "http://www.pradan.net/"
     site_link[10000000000002][0] = "http://www.baif.org.in/aspx_pages/index.asp"
@@ -675,8 +695,8 @@ def get_partner_page(request):
     
     #left panel stats dict hold values related to left panel of village page
     left_panel_stats = {} 
-    left_panel_stats['site_link'] = site_link[partner_id][0]
-    left_panel_stats['partner_details'] = Partner.objects.filter(id= partner_id).values_list('id',
+    left_panel_stats['site_link'] = site_link[Partner.objects.get(id = partner_id).old_coco_id][0]
+    left_panel_stats['partner_details'] = Partner.objects.filter(id= partner_id).values_list('old_coco_id',
                                                                                               'partner_name',
                                                                                               'district__state__state_name',
                                                                                               'district__id',
@@ -698,7 +718,7 @@ def get_partner_page(request):
     else:
         left_panel_stats['rate'] = 0
         left_panel_stats['pbar_width'] = 0
-    left_panel_stats['photo_link'] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
+    left_panel_stats['photo_link'] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(Partner.objects.get(id = partner_id).old_coco_id) + ".jpg"
     
     vill_id_list = get_id_with_images.get_village_list()
     top_vill = Village.objects.filter(id__in = vill_id_list,
@@ -723,7 +743,7 @@ def get_partner_page(request):
             partner_stats_dict[partner_id][3] = ""
             partner_stats_dict[partner_id][4]= 0
             partner_stats_dict[partner_id][5]= 0
-        partner_stats_dict[partner_id][6] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
+        partner_stats_dict[partner_id][6] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(Partner.objects.get(id = partner_id).old_coco_id) + ".jpg"
         
     sorted_partner_list = sorted(partner_stats_dict.items(), key = lambda(k, v):(v[4],k), reverse=True)   
     
