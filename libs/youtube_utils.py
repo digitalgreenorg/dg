@@ -67,11 +67,11 @@ def update_video_youtubeid_s3(vid):
     Creates/updates duration in duration field
     '''
     # Create S3 Connection
-    bucket_name = 'video_thumbnail'
+    bucket_name = 'digitalgreen'
     bucket = S3Connection(ACCESS_KEY, SECRET_KEY).create_bucket(bucket_name)
     bucket.set_acl('public-read')
-    location_raw_images = 'raw/'
-    location_16by9_images = '16by9/'
+    location_raw_images = 'video_thumbnail/raw/'
+    location_16by9_images = 'video_thumbnail/16by9/'
 
     file_save_dir = os.path.join(MEDIA_ROOT, 'youtube')
 
