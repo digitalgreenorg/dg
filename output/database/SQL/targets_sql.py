@@ -5,15 +5,15 @@ import datetime
 def old_attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date):
     if(from_date and to_date):
         sql_ds['where'].append(date_filter_field +" BETWEEN '"+from_date+"' AND '"+to_date+"'")
-    geog_list = ["geographies_village","geographies_block","geographies_district","geographies_state", "geographies_country"];
+    geog_list = ["VILLAGE","BLOCK","DISTRICT","STATE", "COUNTRY"];
     if(geog is None or geog not in geog_list):
         return
 
-    if(geog=="geographies_village"):
+    if(geog=="VILLAGE"):
         sql_ds['where'].append(par_table_id+".village_id = "+str(id))
         return
 
-    sql_ds['lojoin'].append(["geographies_village V","V.id = "+par_table_id+".village_id"])
+    sql_ds['lojoin'].append(["VILLAGE V","V.id = "+par_table_id+".village_id"])
     for g in geog_list[1:]:
         prev_geog = geog_list[geog_list.index(g)-1];
         if(geog == g):
@@ -29,18 +29,18 @@ def old_attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date
 def old_filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partner_id):
     if(partner_id):
         if(geog == None):
-            partner_sql = ["SELECT id FROM geographies_district WHERE partner_id in ("+','.join(partner_id)+")"]
-            attach_geog_date(sql_ds,par_table_id,date_filter_field,'geographies_district',partner_sql,from_date,to_date)
+            partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partner_id)+")"]
+            attach_geog_date(sql_ds,par_table_id,date_filter_field,'DISTRICT',partner_sql,from_date,to_date)
             return
-        elif(geog=="geographies_state"  or geog=="geographies_country"):
+        elif(geog=="STATE"  or geog=="COUNTRY"):
             dist_part = []
-            if geog=="geographies_country":
-                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
+            if geog=="COUNTRY":
+                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
             else:
-                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district WHERE state_id = "+str(id))
+                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
             if(dist_part_list):
-                partner_sql = ["SELECT id FROM geographies_district WHERE partner_id in ("+','.join(dist_part_list)+")"]
+                partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
                 sql_ds['where'].append("district_id in ("+partner_sql[0]+")")
 
     old_attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
@@ -96,33 +96,33 @@ def get_interest_per_dissemination(geog, id, from_date, to_date, partners):
 def get_village_identified(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(VIL.ID) as count")
-    sql_ds['from'].append("geographies_village VIL")
+    sql_ds['from'].append("VILLAGE VIL")
     if(from_date and to_date):
         sql_ds['where'].append("VIL.START_DATE BETWEEN '"+from_date+"' AND '"+to_date+"'")
         
-    if(geog=="geographies_country"):
-        sql_ds['join'].append(["geographies_block B", "B.id = VIL.block_id"])
-        sql_ds['join'].append(["geographies_district D", "D.id = B.district_id"])
-        sql_ds['join'].append(["geographies_state S", "S.id = D.state_id"])
+    if(geog=="COUNTRY"):
+        sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
+        sql_ds['join'].append(["DISTRICT D", "D.id = B.district_id"])
+        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
         sql_ds['where'].append("S.country_id = "+str(id))
-    elif(geog=="geographies_state"):
-        sql_ds['join'].append(["geographies_block B", "B.id = VIL.block_id"])
-        sql_ds['join'].append(["geographies_district D", "D.id = B.district_id"])
+    elif(geog=="STATE"):
+        sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
+        sql_ds['join'].append(["DISTRICT D", "D.id = B.district_id"])
         sql_ds['where'].append("D.state_id = "+str(id))
-    elif(geog=='geographies_district'):
-        sql_ds['join'].append(["geographies_block B", "B.id = VIL.block_id"])
+    elif(geog=='DISTRICT'):
+        sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
         sql_ds['where'].append("B.district_id = "+str(id))
 
     if(partners):
-        partner_sql = "SELECT id FROM geographies_district WHERE partner_id IN ("+','.join(partners)+")"
-        if(geog is None or geog == "geographies_country"):
-            sql_ds['join'].append(["geographies_block B", "B.id = VIL.block_id"])
+        partner_sql = "SELECT id FROM DISTRICT WHERE partner_id IN ("+','.join(partners)+")"
+        if(geog is None or geog == "COUNTRY"):
+            sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
             sql_ds['where'].append("B.district_id IN ("+partner_sql+")")
         elif(geog == 'STATE'):
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district WHERE state_id = "+str(id))
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(dist_part_list):
-                partner_sql = "SELECT id FROM geographies_district WHERE partner_id in ("+','.join(dist_part_list)+")"
+                partner_sql = "SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"
                 sql_ds['where'].append("D.id in ("+partner_sql+")")
                 
     return join_sql_ds(sql_ds);
