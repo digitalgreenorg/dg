@@ -76,9 +76,9 @@ def get_partners_sql(geog, id):
     sql_ds['select'].extend(["DISTINCT P.id", "P.PARTNER_NAME"])
     sql_ds['from'].append("geographies_DISTRICT D")
     sql_ds['join'].append(["programs_PARTNER P", "P.id = D.partner_id"])
-    if (geog=="geographies_STATE"):
+    if (geog=="STATE"):
         sql_ds['where'].append("D.state_id = "+str(id))
-    elif(geog=="geographies_COUNTRY"):
+    elif(geog=="COUNTRY"):
         sql_ds['join'].append(["geographies_STATE S", "S.id = D.state_id"])
         sql_ds['where'].append("S.country_id = " + str(id))
 
