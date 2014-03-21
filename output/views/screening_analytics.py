@@ -11,7 +11,7 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, ru
 def screening_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
@@ -141,7 +141,7 @@ def screening_mf_ratio(request):
 def screening_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = [None,'geographies_country','geographies_state','geographies_district','geographies_block','geographies_village', 'DUMMY']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -157,7 +157,7 @@ def screening_geog_pie_data(request):
     return_val = []
     return_val.append(['title','value','url'])
     for item in scr_geog:
-        if(geog is None or geog.lower()!= "geographies_village"):
+        if(geog is None or geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
             return_val.append([geog_name[item['id']][0], float(item['tot_scr']), url+'&'.join(temp_get_req_url)])
