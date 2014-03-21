@@ -285,10 +285,14 @@ def get_village_page(request):
 
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
+    try:
+        person_id = Person.objects.get(id = vil_id).id
+    except:
+        person_id = Person.objects.get(old_coco_id = vil_id).id
     fuid = request.GET.get('fuid', None)
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
-    left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
+    left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('old_coco_id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
     person_views = PersonMeetingAttendance.objects.filter(person__id = person_id).distinct().count()
     person_adoptions = PersonAdoptPractice.objects.filter(person__id = person_id).distinct().count()
     if(person_views):
@@ -300,8 +304,8 @@ def get_person_page(request):
     left_panel_stats['videos_watched'] = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().count()
     left_panel_stats['questions_asked'] = PersonMeetingAttendance.objects.filter(person__id = person_id).exclude(expressed_question = '').count()
     left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__person__id = person_id).distinct().count()
-    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
-    left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
+    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__person__id = person_id).values_list('old_coco_id', 'partner_name')
+    left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('old_coco_id', 'name')[:1]
     #For FBConnect to check if user already subscribed to the farmer
     left_panel_stats['subscribed'] = False
     if fuid:
@@ -371,13 +375,14 @@ def get_person_page(request):
         screenings_attended = PersonMeetingAttendance.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__village__id = village_id).values('person__id', 'person__person_name', 'person__date_of_joining')
         adoptions = PersonAdoptPractice.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__village__id = village_id).values_list('person_id', flat=True)
     else:
-        person_details = Person.objects.exclude(id = person_id).filter(group__id=group_id, image_exists=True).values('id', 'person_name', 'date_of_joining')
+        person_details = Person.objects.exclude(id = person_id).filter(group__id=group_id, image_exists=True).values('id', 'person_name', 'date_of_joining', 'old_coco_id')
         screenings_attended = PersonMeetingAttendance.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__group__id = group_id).values('person__id', 'person__person_name', 'person__date_of_joining')
         adoptions = PersonAdoptPractice.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__group__id = group_id).values_list('person_id', flat=True)
     for person in person_details:
         views_dict[person['id']]['id'] = person['id']
         views_dict[person['id']]['name'] = person['person_name']   
         views_dict[person['id']]['date_of_joining'] = person['date_of_joining']
+        views_dict[person['id']]['old_coco_id'] = person['old_coco_id']
     
     for attendance in screenings_attended:
         views_dict[attendance['person__id']]['views'] += 1
