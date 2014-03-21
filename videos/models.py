@@ -78,7 +78,7 @@ class Practice(CocoModel):
 
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField()
+    old_coco_id = models.BigIntegerField(editable=False, null=True)
     language_name = models.CharField(max_length=100, unique='True')
 
     def __unicode__(self):
