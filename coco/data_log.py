@@ -7,14 +7,11 @@ from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
 
-ServerLog = get_model('coco', 'ServerLog')
-
 class TimestampException(Exception):
     pass
 
 class UserDoesNotExist(Exception):
     pass
-
 
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
@@ -30,6 +27,7 @@ def save_log(sender, **kwargs ):
         instance.get_village()
     except Exception as e:
         print type(e), e
+    ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
                     model_id = instance.id, partner = instance.get_partner())
     log.save()
@@ -46,6 +44,7 @@ def delete_log(sender, **kwargs ):
             user = User.objects.get(id = instance.user_modified_id) 
         else:
             user = User.objects.get(id = instance.user_created_id)
+    ServerLog = get_model('coco', 'ServerLog')
     try:
         log = ServerLog(village = instance.get_village(), user = user, action = -1, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
         log.save()
@@ -63,6 +62,7 @@ def send_updated_log(request):
             raise UserDoesNotExist('User with id: '+str(request.user.id) + 'does not exist')
         partner_id = coco_user.partner_id
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
+        ServerLog = get_model('coco', 'ServerLog')
         rows = ServerLog.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Animator', 'Video'])
         if partner_id:
             rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
@@ -74,5 +74,6 @@ def send_updated_log(request):
     return HttpResponse("0")
 
 def get_latest_timestamp():
+    ServerLog = get_model('coco', 'ServerLog')
     timestamp = ServerLog.objects.latest('id')
     return timestamp.timestamp
