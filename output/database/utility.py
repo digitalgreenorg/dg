@@ -115,6 +115,7 @@ def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_
             dist_part = []
             dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
             if geog=="COUNTRY":
+                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT D JOIN geographies_STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
             else:
                 dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district WHERE state_id = "+str(id))
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
