@@ -78,6 +78,12 @@ function(pass, configs) {
                 console.log("indexeddb database created");
                 next();
             }
+        },
+        {
+                version: 2,
+                migrate: function(transaction, next) {
+                    window.indexedDB.deleteDatabase('offline-database')
+                }
         }]
     };
 
