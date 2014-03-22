@@ -381,7 +381,7 @@ function() {
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
         'entity_name': 'group',
-        'inc_table_name': 'persongroups',
+        'inc_table_name': 'persongroup',
         'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
         'foreign_entities': {
