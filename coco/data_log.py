@@ -32,8 +32,9 @@ def save_log(sender, **kwargs ):
                     model_id = instance.id, partner = instance.get_partner())
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-    if previous_time_stamp > log.timestamp:
-        raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
+    if previous_time_stamp:        
+        if previous_time_stamp.timestamp > log.timestamp:
+            raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
 #    
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
@@ -75,5 +76,8 @@ def send_updated_log(request):
 
 def get_latest_timestamp():
     ServerLog = get_model('coco', 'ServerLog')
-    timestamp = ServerLog.objects.latest('id')
-    return timestamp.timestamp
+    try:
+        timestamp = ServerLog.objects.latest('id')
+    except Exception as e:
+        timestamp = None
+    return timestamp
