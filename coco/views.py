@@ -1,6 +1,4 @@
-# Create your views here.
-import datetime
-
+from datetime import datetime
 from django.contrib import auth
 from django.core import urlresolvers
 from django.db.models import Max
@@ -8,7 +6,6 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
 from models import CocoUser
-from datetime import datetime
 
 def coco_v2(request):
     return render(request,'dashboard.html')
@@ -41,16 +38,17 @@ def reset_database_check(request):
     if not(request.user):
         return HttpResponse("0")
     cocouser = CocoUser.objects.get(user = request.user)
-    last_download_time = FullDownloadStats.objects.filter(user = request.user).aggregate(time = Max('end_time'))
-    if last_download_time < datetime.datetime('2014, 3, 22, 9, 0, 0'):
+    last_download_time = FullDownloadStats.objects.filter(user = request.user).aggregate(time = Max('end_time'))['time']
+    # Database tables were migrated to new tables with new ids. Fresh download was mandatory for all data downloaded before Mar 22, 2014.
+    if last_download_time < datetime(2014, 3, 22, 10, 0, 0):
         return HttpResponse("1")
     if not(cocouser and cocouser.time_modified):
         return HttpResponse("0")
     lastdownloadtime = request.GET["lastdownloadtimestamp"]
     lastdownloadtimestamp = datetime.strptime(lastdownloadtime, '%Y-%m-%dT%H:%M:%S.%f')
-    if lastdownloadtimestamp<=cocouser.time_modified:
+    if lastdownloadtimestamp <= cocouser.time_modified:
         return HttpResponse("1")
-    return HttpResponse("0")    
+    return HttpResponse("0")
     
                
 def html_decorator(func):

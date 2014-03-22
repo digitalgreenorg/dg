@@ -22,7 +22,7 @@ function(pass, configs) {
         id: "offline-database",
         description: "The offline database for COCO",
         migrations: [{
-            version: 2,
+            version: 3,
             migrate: function(transaction, next) {
                 for (var member in configs) {
                     //creating an objectstore for each entity defined in config file
