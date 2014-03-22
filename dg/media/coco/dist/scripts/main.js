@@ -19,10 +19,10 @@ define('indexeddb_backbone_config',['jquery', 'configs'],
 function(pass, configs) {
     var idb = {
         nolog: true,
-        id: "offline-database",
+        id: "offline-database-v2",
         description: "The offline database for COCO",
         migrations: [{
-            version: 3,
+            version: 1,
             migrate: function(transaction, next) {
                 for (var member in configs) {
                     //creating an objectstore for each entity defined in config file
@@ -3486,7 +3486,7 @@ function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
         
         //completely deletes the offline database and refreshes the page 
         reset_database: function(){
-            var request = indexedDB.deleteDatabase("offline-database");
+            var request = indexedDB.deleteDatabase("offline-database-v2");
             request.onerror = function(event) {
                 console.log(event);
                 console.log("RESET DATABASE:Error!");

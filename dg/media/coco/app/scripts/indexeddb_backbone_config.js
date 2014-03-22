@@ -4,10 +4,10 @@ define(['jquery', 'configs'],
 function(pass, configs) {
     var idb = {
         nolog: true,
-        id: "offline-database",
+        id: "offline-database-v2",
         description: "The offline database for COCO",
         migrations: [{
-            version: 2,
+            version: 1,
             migrate: function(transaction, next) {
                 for (var member in configs) {
                     //creating an objectstore for each entity defined in config file
