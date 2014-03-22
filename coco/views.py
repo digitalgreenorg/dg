@@ -1,6 +1,9 @@
 # Create your views here.
+import datetime
+
 from django.contrib import auth
 from django.core import urlresolvers
+from django.db.models import Max
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
@@ -37,7 +40,10 @@ def record_full_download_time(request):
 def reset_database_check(request):
     if not(request.user):
         return HttpResponse("0")
-    cocouser = CocoUser.objects.get(user = request.user)    
+    cocouser = CocoUser.objects.get(user = request.user)
+    last_download_time = FullDownloadStats.objects.filter(user = request.user).aggregate(time = Max('end_time'))
+    if last_download_time < datetime.datetime('2014, 3, 22, 9, 0, 0'):
+        return HttpResponse("1")
     if not(cocouser and cocouser.time_modified):
         return HttpResponse("0")
     lastdownloadtime = request.GET["lastdownloadtimestamp"]
