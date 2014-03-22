@@ -41,6 +41,6 @@ CACHE:
 /media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf
  
 NETWORK:
-/api/v1/
+/api/v2/
 *
 http://rpm-images.newrelic.com/42/eum/rum.js
