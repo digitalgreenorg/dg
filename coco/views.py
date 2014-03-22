@@ -38,10 +38,6 @@ def reset_database_check(request):
     if not(request.user):
         return HttpResponse("0")
     cocouser = CocoUser.objects.get(user = request.user)
-    last_download_time = FullDownloadStats.objects.filter(user = request.user).aggregate(time = Max('end_time'))['time']
-    # Database tables were migrated to new tables with new ids. Fresh download was mandatory for all data downloaded before Mar 22, 2014.
-    if last_download_time < datetime(2014, 3, 22, 10, 0, 0):
-        return HttpResponse("1")
     if not(cocouser and cocouser.time_modified):
         return HttpResponse("0")
     lastdownloadtime = request.GET["lastdownloadtimestamp"]
