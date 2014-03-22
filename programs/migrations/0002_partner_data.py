@@ -12,7 +12,7 @@ class Migration(DataMigration):
                                              old_coco_id=x.id,  partner_name=x.partner_name, date_of_association=x.date_of_association, phone_no=x.phone_no, address=x.address) for x in orm['dashboard.Partners'].objects.all()])
         print 'partner added'
         
-        #db.create_index('programs_partner', ['old_coco_id'])
+        db.create_index('programs_partner', ['old_coco_id'])
         print 'index for partner created'
     def backwards(self, orm):
         "Write your backwards methods here."

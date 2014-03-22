@@ -1,7 +1,6 @@
 from datetime import datetime
 from django.contrib import auth
 from django.core import urlresolvers
-from django.db.models import Max
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
