@@ -2,7 +2,13 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
-from models import *
+
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from coco.base_models import CocoModel
+from geographies.models import Village, Block, Region, District, State, Country
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from programs.models import Partner
+from videos.models import Language, Practice, Video
 
 # function for saving formsets with user information
 def save_all(instances, user, id):
@@ -58,10 +64,6 @@ class RegionForm(CocoModelForm):
     class Meta:
         model = Region
 
-class RegionTestForm(CocoModelForm):
-    class Meta:
-        model = RegionTest
-
 class StateForm(CocoModelForm):
     class Meta:
         model = State
@@ -74,14 +76,10 @@ class BlockForm(CocoModelForm):
     class Meta:
         model = Block
 
-class EquipmentForm(CocoModelForm):
-    class Meta:
-        model = Equipment
-
-class PersonGroupsForm(CocoModelForm):
+class PersonGroupForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
-        model = PersonGroups
+        model = PersonGroup
       
 class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
@@ -93,18 +91,10 @@ class PersonForm(CocoModelForm):
     class Meta:
         model = Person    
         exclude=('equipmentholder','relations','adopted_agricultural_practices',)
-          
-class DevelopmentManagerForm(CocoModelForm):
-    class Meta:
-        model = DevelopmentManager
-
-class FieldOfficerForm(CocoModelForm):
-    class Meta:
-        model = FieldOfficer
 
 class PartnerForm(CocoModelForm):
     class Meta:
-        model = Partners
+        model = Partner
 
 class AnimatorForm(CocoModelForm):
     class Meta:
@@ -117,7 +107,7 @@ class AnimatorAssignedVillageForm(CocoModelForm):
 
 class PracticeForm(CocoModelForm):
     class Meta:
-        model = Practices
+        model = Practice
 
 class VillageForm(CocoModelForm):
     class Meta:
@@ -128,55 +118,11 @@ class VideoForm(CocoModelForm):
         model = Video
         exclude = ('related_practice',)
 
-class PersonShownInVideoForm(CocoModelForm):
-    class Meta:
-        model = PersonShownInVideo
-
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance')
+        exclude = ('farmers_attendance')   
 
-class GroupsTargetedInScreeningForm(CocoModelForm):
-    class Meta:
-        model = GroupsTargetedInScreening        
-        
-class VideosScreenedInScreeningForm(CocoModelForm):
-    class Meta:
-        model = VideosScreenedInScreening        
-        
-class TrainingForm(CocoModelForm):
-    class Meta:
-        model = Training
-        
-class TrainingAnimatorsTrainedForm(CocoModelForm):
-    class Meta:
-        model = TrainingAnimatorsTrained    
-
-class MonthlyCostPerVillageForm(CocoModelForm):
-    class Meta:
-        model = MonthlyCostPerVillage
-        
-class PersonRelationsForm(CocoModelForm):
-    class Meta:
-        model = PersonRelations
-
-class AnimatorSalaryPerMonthForm(CocoModelForm):
-    class Meta:
-        model = AnimatorSalaryPerMonth
-        
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
-        
-class EquipmentHolderForm(CocoModelForm):
-    class Meta:
-        model = EquipmentHolder
-        
-class ReviewerForm(CocoModelForm):
-    class Meta:
-        model = Reviewer
-
-class TargetForm(CocoModelForm):
-    class Meta:
-        model = Target

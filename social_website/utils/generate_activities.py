@@ -4,7 +4,11 @@ setup_environ(dg.settings)
 import logging
 import pickle
 from django.db.models import get_model, Max
-import dashboard.models
+
+import activities.models
+import geographies.models
+import programs.models
+import videos.models
 #from social_website.models import Collection, ImageSpec, Milestone, Partner, Video
 logger = logging.getLogger('social_website')
 
@@ -29,7 +33,7 @@ def add_collection(collection):
         collection_name = (collection.title)
         video_number = len(collection.videos.all())
         state_name = collection.state
-        country_name = (dashboard.models.State.objects.get(state_name=state_name)).country.country_name
+        country_name = (geographies.models.State.objects.get(state_name=state_name)).country.country_name
         textContent = "Watch our new collection on %s with %s videos, produced in %s, %s." % (collection_name, video_number, state_name, country_name)
         date = collection.videos.aggregate(Max('date'))['date__max']
         newsFeed = 0
@@ -46,7 +50,7 @@ def add_video(video):
     title = "%s shared a new video" % (video.partner.name)
     video_title = (video.title).title()
     language_name = video.language
-    village_name = (dashboard.models.Video.objects.get(id=video.coco_id)).village.village_name
+    village_name = (videos.models.Video.objects.get(id=video.coco_id)).village.village_name
     textContent = "Watch our new video on %s in %s. It has been created by community members of %s village." % (video_title, language_name, village_name)
     date = video.date
     newsFeed = 0
@@ -82,7 +86,7 @@ def add_village(village, partner):
     file = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
     village_partner_list = pickle.load(open(file, "rb"))
     Activity = get_model('social_website', 'Activity')
-    screenings = dashboard.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
+    screenings = activities.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     if (len(screenings) > 0):
         title = partner.name
         date = screenings[0].date
@@ -140,7 +144,7 @@ def add_milestone(partner):
         title = (video.partner.name) + " has produced %s+ videos" % (next_video_milestone)
         video_title = (video.title).title()
         language_name = video.language
-        village_name = (dashboard.models.Video.objects.get(id=video.coco_id)).village.village_name
+        village_name = (videos.models.Video.objects.get(id=video.coco_id)).village.village_name
         textContent = "Watch our new video on %s in %s. It has been created by community members of %s village." % (video_title, language_name, village_name)
         date = video.date
         newsFeed = 0
@@ -162,7 +166,7 @@ def add_milestone(partner):
         next_video_milestone = milestone_video_village[milestone_video_village.index(videoNumber) + 1]
 
     #village milestone
-    villages = dashboard.models.Village.objects.exclude(start_date__isnull=True).filter(user_created__cocouser__partner_id=partner.coco_id).order_by('start_date')
+    villages = geographies.models.Village.objects.exclude(start_date__isnull=True).filter(user_created__cocouser__partner_id=partner.coco_id).order_by('start_date')
     dashboard_partner_states = list(set(villages.values_list('block__district__state__state_name', flat=True)))
     next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
     while (len(villages) >= next_village_milestone):
@@ -186,7 +190,7 @@ def add_milestone(partner):
         next_village_milestone = milestone_video_village[milestone_video_village.index(villageNumber) + 1]
 
     #screening milestone
-    screenings = dashboard.models.Screening.objects.filter(user_created__cocouser__partner_id=partner.coco_id).order_by('date')
+    screenings = activities.models.Screening.objects.filter(user_created__cocouser__partner_id=partner.coco_id).order_by('date')
     next_screening_milestone = milestone_screening_viewer[milestone_screening_viewer.index(screeningNumber) + 1]
     while (len(screenings) >= next_screening_milestone):
         screening = screenings[next_screening_milestone - 1]
@@ -208,7 +212,7 @@ def add_milestone(partner):
         next_screening_milestone = milestone_screening_viewer[milestone_screening_viewer.index(screeningNumber) + 1]
 
     #viwer milestone
-    viewers = dashboard.models.PersonMeetingAttendance.objects.prefetch_related('screening').filter(screening__user_created__cocouser__partner_id=partner.coco_id).order_by('screening__date')
+    viewers = activities.models.PersonMeetingAttendance.objects.prefetch_related('screening').filter(screening__user_created__cocouser__partner_id=partner.coco_id).order_by('screening__date')
     next_viewer_milestone = milestone_screening_viewer[milestone_screening_viewer.index(viewerNumber) + 1]
     while (len(viewers) >= next_viewer_milestone):
         viewer = viewers[next_viewer_milestone - 1]
@@ -247,14 +251,14 @@ if __name__ == '__main__':
     collection_dict = {}
     for partner in Partner.objects.all():
         try:
-            dashboard.models.Partners.objects.get(id=partner.coco_id)
+            programs.models.Partner.objects.get(id=partner.coco_id)
         except:
             continue
         #Initial entry for milestone table
         milestone_object = Milestone(partner=partner, videoNumber=0, villageNumber=0, screeningNumber=0, viewerNumber=0)
         milestone_object.save()
         #Adding Village Added Activities for each partner
-        for village in dashboard.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
+        for village in geographies.models.Village.objects.exclude(start_date__isnull = True).order_by('-start_date')[:10]:
             add_village(village, partner)
 
         #Adding Collection Added Activities for each partner

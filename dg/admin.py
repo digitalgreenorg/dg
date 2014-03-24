@@ -1,12 +1,15 @@
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 
-from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DevelopmentManagerAdmin, DistrictAdmin, EquipmentAdmin, FieldOfficerAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupsAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, TargetAdmin, TrainingAdmin, UserPermissionAdmin, VideoAdmin, VillageAdmin
+from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DistrictAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, VideoAdmin, VillageAdmin
 
-from dashboard.models import Animator, AnimatorAssignedVillage, Block, CocoUser, Country, DevelopmentManager, District, Equipment, EquipmentHolder, FieldOfficer, Language, Partners, Person, PersonAdoptPractice, PersonGroups, Practices, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic, Region, State, Screening, Target, Training, UserPermission, Video, Village
+from activities.models import PersonAdoptPractice, Screening
+from coco.models import CocoUser
+from geographies.models import Block, Country, District, Region, State, Village
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from programs.models import Partner
+from videos.models import Language, Practice, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic,  Video
 
-from video_practice_map.admin import SkippedVideoAdmin, VideoPracticeAdmin
-from video_practice_map.models import SkippedVideo, VideoPractice
 
 class Admin(AdminSite):
 
@@ -18,35 +21,28 @@ admin = Admin(name="admin")
 admin.register(User, UserAdmin)
 admin.register(Group, GroupAdmin)
 
-admin.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
-admin.register(Video, VideoAdmin)
-admin.register(Region)
-admin.register(Country)
-admin.register(State, StateAdmin)
-admin.register(District, DistrictAdmin)
-admin.register(Block, BlockAdmin)
-admin.register(DevelopmentManager, DevelopmentManagerAdmin)
-admin.register(FieldOfficer, FieldOfficerAdmin)
-admin.register(Village, VillageAdmin)
-admin.register(Partners)
-admin.register(Person, PersonAdmin)
-admin.register(PersonGroups, PersonGroupsAdmin)
-admin.register(Animator, AnimatorAdmin)
-admin.register(Language)
-admin.register(Practices, PracticesAdmin)
-admin.register(Screening, ScreeningAdmin)
-admin.register(Training, TrainingAdmin)
-admin.register(Equipment, EquipmentAdmin)
-admin.register(Target, TargetAdmin)
-admin.register(UserPermission, UserPermissionAdmin)
-admin.register(EquipmentHolder)
-admin.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
-admin.register(PracticeSector, PracticeSectorAdmin)
-admin.register(PracticeSubSector, PracticeSubSectorAdmin)
-admin.register(PracticeTopic, PracticeTopicAdmin)
-admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
-admin.register(PracticeSubject, PracticeSubjectAdmin)
-admin.register(CocoUser, CocoUserAdmin)
-
-admin.register(VideoPractice, VideoPracticeAdmin)
-admin.register(SkippedVideo, SkippedVideoAdmin)
+admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
+admin.site.register(Video, VideoAdmin)
+admin.site.register(Region)
+admin.site.register(Country)
+admin.site.register(State, StateAdmin)
+admin.site.register(District, DistrictAdmin)
+admin.site.register(Block, BlockAdmin)
+admin.site.register(Village, VillageAdmin)
+admin.site.register(Partner)
+admin.site.register(Person, PersonAdmin)
+admin.site.register(PersonGroup, PersonGroupAdmin)
+admin.site.register(Animator, AnimatorAdmin)
+admin.site.register(Language)
+admin.site.register(Practice, PracticesAdmin)
+admin.site.register(Screening, ScreeningAdmin)
+admin.site.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
+admin.site.register(PracticeSector, PracticeSectorAdmin)
+admin.site.register(PracticeSubSector, PracticeSubSectorAdmin)
+admin.site.register(PracticeTopic, PracticeTopicAdmin)
+admin.site.register(PracticeSubtopic, PracticeSubtopicAdmin)
+admin.site.register(PracticeSubject, PracticeSubjectAdmin)
+admin.site.register(CocoUser, CocoUserAdmin)
+#admin.site.register(Reviewer)
+#admin.site.register(Random)
+#admin.site.register(Message, MessageAdmin)

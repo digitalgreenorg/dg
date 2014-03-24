@@ -274,3 +274,54 @@ def latestupdate(request):
 
 def nexus(request):
     return HttpResponseRedirect('https://sites.google.com/a/digitalgreen.org/inside-digital-green/nexus')
+
+def spring_analytics(request):
+    from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
+    from geographies.models import Village
+    from programs.models import Partner
+    from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+    from videos.models import Video
+    from django.db.models import Count, Sum, Max, Min
+    import datetime
+    
+    videos = [10000000021208,10000000021093,10000000021146,10000000021176,10000000021096,10000000021196,10000000021195,10000000021156,10000000021157,10000000021217]
+    if request.GET.get('from_date', None) and request.GET.get('to_date', None):
+        from_date = request.GET.get('from_date', None)
+        to_date = request.GET.get('to_date', None)
+    else:
+        screenings = Screening.objects.filter(videoes_screened__id__in = videos).values_list('id', flat = True).distinct()
+        min_max_date = Screening.objects.filter(id__in = screenings).aggregate(Max('date'), Min('date'))
+        from_date = min_max_date['date__min']
+        to_date = min_max_date['date__max']        
+        
+    
+    search_box_params = {}
+    search_box_params['from_date'] = str(from_date)
+    search_box_params['to_date'] = str(to_date)
+    search_box_params['is_date_selected'] = 1
+    
+    screenings = Screening.objects.filter(village__block__district__district_name = 'Keonjhar', videoes_screened__id__in = videos, date__lte = to_date, date__gte = from_date).values_list('id', flat = True).distinct()
+    scr = list(screenings)
+    viewers = PersonMeetingAttendance.objects.filter(screening__id__in = scr).values_list('person__id', flat=True).distinct()   
+    persons = list(viewers)
+    groups = PersonGroup.objects.filter(person__in = persons).values_list('id', flat = True)
+    adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('id', flat = True)
+    unique_adoptions = PersonAdoptPractice.objects.filter(person__village__block__district__district_name = 'Keonjhar', video__id__in = videos, date_of_adoption__lte = to_date, date_of_adoption__gte = from_date).values_list('person__id', flat = True).distinct()
+    villages  = Village.objects.filter(screening__in = screenings, block__district__district_name = 'Keonjhar').values_list('id', flat = True).distinct()
+    from_date = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
+    to_date = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
+    days_diff = (to_date - from_date).days
+    avg_screenings = float(len(screenings))/ days_diff if days_diff else 0
+    total_numbers = {}
+    total_numbers.update(adoptions = len(adoptions))
+    total_numbers.update(unique_adoptions = len(unique_adoptions))
+    total_numbers.update(screenings = len(scr))
+    total_numbers.update(videos = len(videos))
+    total_numbers.update(viewers = len(persons))
+    total_numbers.update(groups = len(groups))
+    total_numbers.update(villages = len(villages))
+    total_numbers.update(avg_screenings = avg_screenings)
+    total_numbers.update(avg_adoption_screening = float(len(adoptions))/ len(screenings) if len(screenings) else 0)
+    total_numbers.update(avg_adoption_video = float(len(adoptions))/ len(videos) if len(videos) else 0)
+        
+    return render_to_response('spring_analytics.html', dict(search_box_params = search_box_params, total_numbers = total_numbers))

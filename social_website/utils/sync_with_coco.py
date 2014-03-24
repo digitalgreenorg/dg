@@ -4,7 +4,10 @@ setup_environ(dg.settings)
 
 import datetime
 import logging
-from dashboard import models
+from activities.models import Screening
+from coco.models import ServerLog
+from people.models import Person
+from videos.models import Video
 from social_website.models import CronTimestamp, PersonVideoRecord
 from social_website.migration_functions import delete_person, delete_video, initial_personvideorecord, populate_farmers, update_questions_asked, update_website_video
 
@@ -21,11 +24,11 @@ def process_log(objects, logger):
         logger.info(object.entry_table)
         if object.entry_table == 'Screening':
             try:
-                screening_object = models.Screening.objects.get(id = object.model_id)
+                screening_object = Screening.objects.get(id = object.model_id)
                 for pma in screening_object.personmeetingattendance_set.all():
                     update_questions_asked(pma)
                     logger.info(' Added Pma ')
-            except models.Screening.DoesNotExist:
+            except Screening.DoesNotExist:
                 continue
 #        elif object.entry_table == "PersonAdoptPractice":
 #            pap_object = models.PersonAdoptPractice.objects.get(id = object.model_id)
@@ -33,25 +36,25 @@ def process_log(objects, logger):
 #            logfile.write(' Added Pap ')
         elif object.entry_table == 'Video':
             try:
-                video_object = models.Video.objects.get(id = object.model_id)
+                video_object = Video.objects.get(id = object.model_id)
                 if object.action == -1:
                     delete_video(video_object)
                     logger.info(' Deleted Video ')
                 else:
                     update_website_video(video_object)
                     logger.info(' Added Video ')
-            except models.Video.DoesNotExist:
+            except Video.DoesNotExist:
                 continue
         elif object.entry_table == 'Person':
             try:
-                person_object = models.Person.objects.get(id = object.model_id)
+                person_object = Person.objects.get(id = object.model_id)
                 if object.action == -1:
                     delete_person(person_object)
                     logger.info(' Deleted Person ')
                 elif person_object.image_exists :
                     populate_farmers(person_object)
                     logger.info(' Added Person ')
-            except models.Person.DoesNotExist:
+            except Person.DoesNotExist:
                 continue
         logger.info('\n')
 
@@ -69,7 +72,7 @@ def sync_with_serverlog():
     except CronTimestamp.DoesNotExist:
         crontimestamp = CronTimestamp(last_time=datetime.datetime(2013, 7, 22, 3, 30), name=script_name)
     timestamp = crontimestamp.last_time
-    serverlog_objects = models.ServerLog.objects.filter(timestamp__gte = timestamp)
+    serverlog_objects = ServerLog.objects.filter(timestamp__gte = timestamp)
     
     # Update last_time but dont save
     crontimestamp.last_time = datetime.datetime.now()

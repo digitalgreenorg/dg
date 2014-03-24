@@ -1,0 +1,173 @@
+{% extends "base_analytics.html" %}
+{% load analytics_extra_tags %}
+
+{% block title %} Digital Green - Overall Statistics  {% endblock %}
+
+{% block cssfile %}  
+    {{block.super}}   
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/overview.css' />
+{% endblock cssfile %}
+
+{% block jsfile %}  
+    {{block.super}}   
+    <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>
+	<script type="text/javascript">
+	window.onload = function(){
+			//Calling code for tablesorter
+			$('#searchtitletable').hide();
+			$('#selectbody').hide();
+			$('#Reset1').hide();
+			$('#analyticsnav').hide();
+			};
+	
+	</script>
+{% endblock jsfile %}
+
+	{% block contentbody %}
+		{{block.super}}
+		<div id='contentstat'>	
+			<div id='table1'>
+				<div id='divstattitle'>
+					<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='divtitletablename'> <div id='divstattitlename'>SPRING Key Health Statistics</div> </td>
+							<td class='divtitletableimg'>  </td>
+						</tr>
+					</table>								
+				</div>
+				<table id='table1stat' cellspacing='3' cellpadding='0'> 				
+					<tr>
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	 Disseminations</div>
+								<div id='statdescimg' > 	
+									<div id='statdescimg1' style="display: none;">	
+										 Total number of screenings conducted					
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.screenings}} 	</div>
+							</div>																				
+						</td>
+						<td class='table1statdesc'>
+                            <div class='statdesc'>
+                                <div class='statdescname'> Number of videos shown </div>
+                                <div id='statdescimg'> 
+                                    <div id='statdescimg1'> 
+                                        Total number of videos that have been disseminated
+                                    </div>                              
+                                </div>
+                            </div>
+                            <div class='statnumber'>
+                                <div class='statdesnumber'> {{total_numbers.videos}}   </div>
+                            </div>                                                  
+                        </td>
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Adoptions </div>
+								<div id='statdescimg'> 
+									<div id='statdescimg1'>	
+									   Number of adoptions recorded.
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.adoptions}}	</div>
+							</div>													
+						</td>
+						</tr>
+						<tr>
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Unique Adoptions </div>
+								<div id='statdescimg'> 
+									<div id='statdescimg1'>	
+									   Number of unique adoptions recorded.
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.unique_adoptions}} 	</div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+                            <div class='statdesc'>
+                                <div class='statdescname'>  Average disseminations per day </div>
+                                <div id='statdescimg'>
+                                    <div id='statdescimg1'> 
+                                        Average number of disseminations taking place in a day.                        
+                                    </div>                                                                      
+                                </div>                                                              
+                            </div>
+                            <div class='statnumber'>
+                                <div class='statdesnumber'> {{total_numbers.avg_screenings|floatformat:2}}</div>
+                            </div>                                                                          
+                        </td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Average adoptions per dissemination </div>
+								<div id='statdescimg'>
+									<div id='statdescimg1'>	
+										Average number of adoptions recorded per dissemination.						
+									</div>									 									
+								</div>																
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.avg_adoption_screening|floatformat:2}}</div>
+							</div>																			
+						</td>
+						</tr>
+						<tr>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Villages with disseminations </div>
+								<div id='statdescimg'>  
+                                    <div id='statdescimg1'> 
+                                        Total number of villages that had at least one dissemination from the begining of the project                     
+                                    </div>
+                                </div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.villages}} </div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Viewers </div>
+								<div id='statdescimg'>  
+                                    <div id='statdescimg1'> 
+                                        Total number of viewers who are watching health videos                     
+                                    </div>
+                                </div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.viewers}} </div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Adoptions per video </div>
+								<div id='statdescimg'>
+									<div id='statdescimg1'>	
+										Average number of adoptions recorded per video.						
+									</div>									 									
+								</div>																
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{total_numbers.avg_adoption_video|floatformat:2}}</div>
+							</div>																			
+						</td>
+						
+					</tr>
+					
+				</table>				
+			</div>
+					
+		</div>		
+{% endblock contentbody %}	

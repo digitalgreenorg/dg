@@ -75,6 +75,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
     os.path.join(PROJECT_PATH, 'media/coco/app'),
     os.path.join(PROJECT_PATH, 'templates/social_website'),
+	os.path.join(PROJECT_PATH, 'media/'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -95,13 +96,18 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
+    'programs',
+    'geographies',
+    'people',
+    'videos',
+    'activities',
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
     'south',
     'farmerbook',
-    'video_practice_map',
-    'path',
+    #'video_practice_map',
+    #'path',
     'fbconnect',
     'tastypie',
     'coco',

@@ -9,7 +9,7 @@ from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
-from data_log import delete_log, save_log
+from coco.data_log import delete_log, save_log
 from libs.geocoder import Geocoder
 
 import logging
@@ -632,7 +632,7 @@ class Animator(CocoModel):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
     partner = BigForeignKey(Partners)
     village = BigForeignKey(Village, db_column = 'home_village_id', null=True, blank=True)
-    district = BigForeignKey(District, null = True, blank=True)
+    district = BigForeignKey(District, null = True, blank=True, help_text='Please select this')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     

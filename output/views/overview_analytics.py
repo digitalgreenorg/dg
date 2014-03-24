@@ -1,7 +1,8 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-from dashboard.models import *
 import datetime
+
+from geographies.models import Block, Country, District, State, Village
 from output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, video_analytics_sql, screening_analytics_sql
 from output import views
 from output.views.common import get_geog_id
