@@ -14,7 +14,10 @@ require.config({
         'chosen': 'libs/chosen/chosen.jquery.min',
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
-        'jquery_cookie': 'libs/jquery.cookie'
+        'jquery_cookie': 'libs/jquery.cookie',
+        'tabletools': 'libs/tabletools_media/js/Tabletools',
+        'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
+        'configs': '../../../configs',
     },
 
     //specifying dependencies of non-amd libraries
@@ -40,7 +43,12 @@ require.config({
         'datatable': {
             deps: ["jquery"]
         },
-
+        'zeroclipboard': {
+    		deps:['jquery']
+        },
+        'tabletools': {
+    		deps:['jquery', 'datatable','zeroclipboard']
+        },
         'form_field_validator': {
             deps: ["jquery"]
         },

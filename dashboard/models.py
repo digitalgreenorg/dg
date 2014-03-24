@@ -9,7 +9,7 @@ from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
-from data_log import delete_log, save_log
+from coco.data_log import delete_log, save_log
 from libs.geocoder import Geocoder
 
 import logging
@@ -632,7 +632,7 @@ class Animator(CocoModel):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
     partner = BigForeignKey(Partners)
     village = BigForeignKey(Village, db_column = 'home_village_id', null=True, blank=True)
-    district = BigForeignKey(District, null = True, blank=True)
+    district = BigForeignKey(District, null = True, blank=True, help_text='Please select this')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
@@ -845,22 +845,24 @@ class PracticeSubject(CocoModel):
 
 class Practices(CocoModel):
     id = BigAutoField(primary_key = True)
-    practice_name = models.CharField(null=True, max_length=200, unique='True', db_column='PRACTICE_NAME')
-    seasonality = models.CharField(null=True, max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
-    summary = models.TextField(db_column='SUMMARY', blank=True)
-    practice_sector = BigForeignKey(PracticeSector,default=1) 
-    practice_subsector = BigForeignKey(PracticeSubSector, null=True)
-    practice_topic = BigForeignKey(PracticeTopic, null=True)
-    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
-    practice_subject = BigForeignKey(PracticeSubject, null=True)    
+    practice_name = models.CharField(null=True, max_length=200, db_column='PRACTICE_NAME')
+    practice_sector = BigForeignKey(PracticeSector, default=1) 
+    practice_subsector = BigForeignKey(PracticeSubSector, null=True, blank=True)
+    practice_topic = BigForeignKey(PracticeTopic, null=True, blank=True)
+    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True, blank=True)
+    practice_subject = BigForeignKey(PracticeSubject, null=True, blank=True)    
     class Meta:
         db_table = u'practices'
         verbose_name = "Practice"
         unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
-
-
+    
     def __unicode__(self):
-        return self.practice_sector.name
+        practice_sector = '' if self.practice_sector is None else self.practice_sector.name
+        practice_subject = '' if self.practice_subject is None else self.practice_subject.name
+        practice_subsector = '' if self.practice_subsector is None else self.practice_subsector.name
+        practice_topic = '' if self.practice_topic is None else self.practice_topic.name
+        practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
+        return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
 class Screening(CocoModel):
     id = BigAutoField(primary_key = True)

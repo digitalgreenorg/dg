@@ -87,7 +87,7 @@
                                                 <div class="img">
                                                     {% if "facebook" == request.user.social_auth.all.0.provider %}
                                                     <div class="img-effects">
-                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image">
+                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image js-user-image">
                                                     </div>
                                                     {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
                                                     <div class="img-effects">
@@ -95,7 +95,7 @@
                                                     </div>
                                                     {% else %}
                                                     <div class="img-effects">
-                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image">
+                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image js-user-image">
                                                     </div>
                                                     {% endif %}
                                                     <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow js-user-dropdown-arrow">

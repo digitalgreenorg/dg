@@ -1,5 +1,5 @@
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone'], function($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone','tabletools', 'zeroclipboard'], function($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
 
     var ListView = Backbone.Layout.extend({
 
@@ -56,7 +56,23 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 .append(tbody);
             //initialize datatable lib on the table    
             this.$('#list_table')
-                .dataTable();
+                .dataTable({
+            		"sDom": 'T<"clear">lfrtip',
+            		"oTableTools": {
+            				"sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+            				"aButtons": [
+            				             	{
+											    "sExtends":    "copy",
+											    "sButtonText": "Copy to Clipboard"
+            				             	},
+            				                {
+            				                    "sExtends":    "xls",
+            				                    "sButtonText": "Download in Excel"
+            				                }
+            				            ]
+            				
+            			}
+            	});
             $("#loaderimg")
                 .hide();
 			$("#sort-helptext").show();

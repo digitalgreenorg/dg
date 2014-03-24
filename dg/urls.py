@@ -7,11 +7,12 @@ import feeds.urls
 import social_website.api_urls
 import social_website.urls
 
-from dashboard.data_log import send_updated_log
+from admin import admin
+from coco.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
-from admin import admin
+from static_site_views import spring_analytics
 from website_admin import website_admin
 import website_archive_urls
 
@@ -23,7 +24,7 @@ website_admin.logout_template = 'social_website/home.html'
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'social_website/login.html'}, name='signin'),
+    url(r'^login/$', 'social_website.views.login_view', {'template_name': 'social_website/login.html'}, name='signin'),
     url(r'^signup/$', 'social_website.views.signup_view', {'template_name': 'social_website/signup.html'}, name='signup'),
     url(r'^denied/$', 'django.views.defaults.permission_denied', {'template_name': 'social_website/403.html'}),
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'social_website/password_change.html', 'post_change_redirect':'/',}, name='change_password'),
@@ -50,6 +51,8 @@ urlpatterns = patterns('',
     (r'^get/person/$', get_person),
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
+    ##Special page.needs to be deleted
+    (r'^spring/analytics/?$', spring_analytics),
     
     # Imports from farmerbook
     (r'^farmerbook/$', farmer_book_views.get_home_page),

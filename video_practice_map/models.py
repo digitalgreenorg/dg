@@ -1,5 +1,5 @@
 from dashboard.fields import *
-from dashboard.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, \
+from videos.models import Practice, PracticeTopic, PracticeSubtopic, PracticeSector, \
     PracticeSubSector, PracticeSubject, Video
 from django.contrib.auth.models import User
 from django.db import models
@@ -8,7 +8,7 @@ from django.db import models
 class VideoPractice(models.Model):
     id = BigAutoField(primary_key = True)
     video = BigForeignKey(Video)
-    practice = BigForeignKey(Practices)
+    practice = BigForeignKey(Practice)
     user = models.ForeignKey(User, null=True)
     review_user = models.ForeignKey(User, null=True, related_name='reviewed_practices')
     review_approved = models.NullBooleanField(null=True)
