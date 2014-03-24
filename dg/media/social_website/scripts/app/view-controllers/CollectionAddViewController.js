@@ -355,11 +355,11 @@ define(function(require) {
         	viewRenderer.renderAppend(references.$videoContainer, carouselTemplate, renderData);
         	references.$vidList.find('option[value=' + vid + ']').remove();
         	references.$vidList.select2("val", "");
-        	
-        	$('#sortable li .video-remove').click(function(){
+        	var that = this;
+        	$('.sortable li .video-remove').click(function(){
         		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
         		$(this).parent().remove();
-                
+        		that.initSelect2();
             });
         	
         },
