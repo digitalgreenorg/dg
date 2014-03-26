@@ -12,6 +12,7 @@ define(function(require) {
     var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
     var DataModel = require('app/libs/DataModel');
     var Util = require('framework/Util');
+    var notify = require('libs/external/notify.min');
 
     var CollectionAddDataFeed = DigitalGreenDataFeed.extend({
 

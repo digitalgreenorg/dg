@@ -5,7 +5,6 @@ define(function(require) {
     var DataModel = require('app/libs/DataModel');
     var Util = require('framework/Util');
     var jQuery = require('jquery');
-    var notify = require('libs/external/notify.min');
 
     var DataFeed = EventManager.extend({
 
