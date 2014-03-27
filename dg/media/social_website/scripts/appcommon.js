@@ -30,7 +30,7 @@ require([
 			'text',
 			'text!app/views/searchCompletion.html',
 			'app/view-controllers/SearchViewController',
-			'app/controllers/DigitalGreenPageController'
+			'controllers/DigitalGreenPageController'
 ],
 function () {
     //Just an empty function, this is a place holder

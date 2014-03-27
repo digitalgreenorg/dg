@@ -52,9 +52,9 @@ def merge_screenings(scr1,scr2):
 #    print 'migration complete..Dups remaining:',len(dup_list)
 
 def clean_person_group_screening():
-    grp_dupes=PersonGroups.objects.values('village','group_name').annotate(sameper=Count('village')).filter(sameper__gt=1)
+    grp_dupes=PersonGroup.objects.values('village','group_name').annotate(sameper=Count('village')).filter(sameper__gt=1)
     for i in grp_dupes:
-        make_unique=PersonGroups.objects.filter(group_name=i['group_name'],village=i['village'])
+        make_unique=PersonGroup.objects.filter(group_name=i['group_name'],village=i['village'])
         for j in range(len(make_unique)):
             temp= make_unique[j].group_name + unicode(j)
             make_unique[j].group_name=temp

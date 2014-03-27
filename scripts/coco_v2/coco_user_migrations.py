@@ -3,7 +3,12 @@ from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
 
-from dashboard.models import *
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 for user in User.objects.all():
     user_permissions = UserPermission.objects.filter(username = user.id)
@@ -15,7 +20,7 @@ for user in User.objects.all():
         if(user_permission.role=='D'):
             states = State.objects.filter(region = user_permission.region_operated)
             districts = District.objects.filter(state__in = states)
-            partner =  Partners.objects.filter(district__in = districts).values_list('id')
+            partner =  Partner.objects.filter(district__in = districts).values_list('id')
             partner = partner[0][0] if partner else None
             print 'partner for dm role', partner
             blocks = Block.objects.filter(district__in = districts)

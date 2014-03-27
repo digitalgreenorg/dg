@@ -4,7 +4,7 @@ define(['jquery', 'configs'],
 function(pass, configs) {
     var idb = {
         nolog: true,
-        id: "offline-database",
+        id: "offline-database-v2",
         description: "The offline database for COCO",
         migrations: [{
             version: 1,

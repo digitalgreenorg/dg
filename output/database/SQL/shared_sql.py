@@ -5,7 +5,7 @@ from output.database.utility import *
 def search_drop_down_list(geog, geog_parent, id):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(['id', geog.upper()+'_NAME as name'])
-    sql_ds['from'].append(geog.upper())
+    sql_ds['from'].append('geographies_%s' % geog.upper())
     if(geog.upper() != "COUNTRY"):
         sql_ds['where'].append(geog_parent.lower()+'_id = '+str(id))
     sql_ds['order by'].append('name')
@@ -21,20 +21,20 @@ def breadcrumbs_options_sql(geog, id, is_child):
     geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE','COUNTRY'];
 
     if(geog=='COUNTRY'):
-        return 'SELECT id, COUNTRY_NAME as name FROM COUNTRY'
+        return 'SELECT id, COUNTRY_NAME as name FROM geographies_COUNTRY'
 
     par_geog = geog_list[geog_list.index(geog)+1];
 
     sql_ds = get_init_sql_ds()
     if(is_child == 1):
         sql_ds['select'].extend(['id', geog+'_NAME'])
-        sql_ds['from'].append(geog)
+        sql_ds['from'].append('geographies_%s' % geog)
         sql_ds['where'].append(par_geog.lower()+'_id = '+str(id))
     else:
         #SQL for filtering all geography below the parent geog. For e.g. - Will filter all India states, if Bihar is passed in geog, id
         sql_ds['select'].extend([geog[0] + '1.id' ,"%s1.%s_NAME" %(geog[0], geog.upper()), "%s1.%s_id" % (geog[0], par_geog)])
-        sql_ds['from'].append("%s %s1" % (geog, geog[0]))
-        sql_ds['join'].append(["%s %s2" % (geog, geog[0]),'%s1.%s_id = %s2.%s_id' %(geog[0], par_geog, geog[0], par_geog)])
+        sql_ds['from'].append("geographies_%s %s1" % (geog, geog[0]))
+        sql_ds['join'].append(["geographies_%s %s2" % (geog, geog[0]),'%s1.%s_id = %s2.%s_id' %(geog[0], par_geog, geog[0], par_geog)])
         sql_ds['where'].append("%s2.id = %s" % (geog[0], str(id)))
 
     return join_sql_ds(sql_ds)
@@ -46,13 +46,13 @@ def breadcrumbs_options_sql(geog, id, is_child):
 def practice_options_sql(sec, subsec, top, subtop, sub):
     sql_ds =  get_init_sql_ds()
     sql_ds['select'].extend(["S.ID","S.name","SS.ID","SS.name","T.ID","T.name","ST.ID","ST.name","SUB.ID","SUB.name"])
-    sql_ds['from'].append("PRACTICES P")
-    sql_ds['lojoin'].append(["practice_sector S", "S.id = P.practice_sector_id"])
-    sql_ds['lojoin'].append(["practice_subsector SS", "SS.id = P.practice_subsector_id"])
-    sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
-    sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
-    sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
-    sql_ds['join'].append(["VIDEO vid", "vid.related_practice_id = P.id"])
+    sql_ds['from'].append("videos_practice P")
+    sql_ds['lojoin'].append(["videos_practicesector S", "S.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["videos_practicesubsector SS", "SS.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["videos_practicesubtopic ST", "ST.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["videos_practicetopic T", "T.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["videos_practicesubject SUB", "SUB.id = P.practice_subject_id"])
+    sql_ds['join'].append(["videos_video vid", "vid.related_practice_id = P.id"])
     if(sec):
         sql_ds['where'].append('practice_sector_id = %s' % sec)
     if(subsec):
@@ -74,12 +74,12 @@ def get_partners_sql(geog, id):
 
     sql_ds = get_init_sql_ds()
     sql_ds['select'].extend(["DISTINCT P.id", "P.PARTNER_NAME"])
-    sql_ds['from'].append("DISTRICT D")
-    sql_ds['join'].append(["PARTNERS P", "P.id = D.partner_id"])
+    sql_ds['from'].append("geographies_DISTRICT D")
+    sql_ds['join'].append(["programs_PARTNER P", "P.id = D.partner_id"])
     if (geog=="STATE"):
         sql_ds['where'].append("D.state_id = "+str(id))
     elif(geog=="COUNTRY"):
-        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
+        sql_ds['join'].append(["geographies_STATE S", "S.id = D.state_id"])
         sql_ds['where'].append("S.country_id = " + str(id))
 
     return join_sql_ds(sql_ds);
@@ -88,43 +88,43 @@ def child_geog_list(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds()
     if(geog == None):
         sql_ds['select'].extend(['DISTINCT C.id', 'COUNTRY_NAME AS name'])
-        sql_ds['from'].append("COUNTRY C")
+        sql_ds['from'].append("geographies_COUNTRY C")
         if(partners):
-            sql_ds['join'].append(['STATE S', 'S.country_id = C.id'])
-            sql_ds['join'].append(['DISTRICT D', 'D.state_id = S.id'])
+            sql_ds['join'].append(['geographies_STATE S', 'S.country_id = C.id'])
+            sql_ds['join'].append(['geographies_DISTRICT D', 'D.state_id = S.id'])
             sql_ds['where'].append("D.partner_id in ("+','.join(partners)+")")
     elif(geog == "COUNTRY"):
         sql_ds['select'].extend(['DISTINCT S.id', 'STATE_NAME AS name'])
-        sql_ds['from'].append("STATE S")
+        sql_ds['from'].append("geographies_STATE S")
         sql_ds['where'].append("S.country_id = " + str(id))
         if(partners):
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT D JOIN geographies_STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
             filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(filtered_partner_list):
-                sql_ds['join'].append(["DISTRICT D", "S.id = D.state_id"])
+                sql_ds['join'].append(["geographies_DISTRICT D", "S.id = D.state_id"])
                 sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == "STATE"):
         sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
-        sql_ds['from'].append("DISTRICT D")
+        sql_ds['from'].append("geographies_DISTRICT D")
         sql_ds['where'].append("state_id = " + str(id))
         if(partners):
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT WHERE state_id = "+str(id))
             filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(filtered_partner_list):
                 sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == 'DISTRICT'):
         sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
-        sql_ds['from'].append('BLOCK B')
+        sql_ds['from'].append('geographies_BLOCK B')
         sql_ds['where'].append("district_id = " + str(id))
     elif(geog == "BLOCK"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
-        sql_ds['from'].append("VILLAGE V")
+        sql_ds['from'].append("geographies_VILLAGE V")
         sql_ds['where'].append("block_id = " + str(id))
     elif(geog == "VILLAGE"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
-        sql_ds['from'].append("VILLAGE V")
+        sql_ds['from'].append("geographies_VILLAGE V")
         sql_ds['where'].append("id = " + str(id))
-        sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE id = "+str(id);
+        sql="SELECT id, VILLAGE_NAME AS name FROM geographies_VILLAGE WHERE id = "+str(id);
 
     return join_sql_ds(sql_ds);
 
@@ -296,10 +296,10 @@ def get_start_date(geog, id):
     sql_ds = get_init_sql_ds()
     if geog is None:
         sql_ds['select'].append("MIN(START_DATE) AS date")
-        sql_ds['from'].append("COUNTRY C")
+        sql_ds['from'].append("geographies_COUNTRY C")
     elif geog in ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']:
         sql_ds['select'].append("START_DATE AS date")
-        sql_ds['from'].append(geog + " " + geog[0])
+        sql_ds['from'].append("geographies_" + geog + " " + geog[0])
         sql_ds['where'].append("id = " + str(id))
     else:
         raise Exception("Invalid Geography " + geog)

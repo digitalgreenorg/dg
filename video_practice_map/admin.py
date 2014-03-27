@@ -7,6 +7,3 @@ class VideoPracticeAdmin(admin.ModelAdmin):
 
 class SkippedVideoAdmin(admin.ModelAdmin):
     search_fields = ['video__title','user__username']
-
-admin.site.register(VideoPractice,VideoPracticeAdmin)
-admin.site.register(SkippedVideo,SkippedVideoAdmin)

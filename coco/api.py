@@ -8,11 +8,15 @@ from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
 
-from dashboard.models import Animator, AnimatorAssignedVillage, CocoUser, District, Language, Partners, Person, \
-PersonAdoptPractice, PersonGroups, PersonMeetingAttendance, UserPermission, Video, Village, Screening, State
+from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
+from geographies.models import Village, District, State
+from programs.models import Partner
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from videos.models import Video, Language
+from models import CocoUser
 
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
 
 class PMANotSaved(Exception):
     pass
@@ -99,7 +103,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('id'):
-        bundle.data[field_name] = "/coco/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
+        bundle.data[field_name] = "/coco/api/v2/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict.get('id')))
     else:
         bundle.data[field_name] = None
@@ -110,7 +114,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/coco/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+            resource_uri_list.append("/coco/api/v2/%s/%s/"%(resource_name, str(item.get('id'))))
         except:
             return bundle
     bundle.data[field_name] = resource_uri_list
@@ -125,21 +129,6 @@ def get_user_partner_id(user_id):
             raise PartnerDoesNotExist('partner does not exist for user '+ user_id+" : "+ e)
         
     return partner_id
-
-#Get User Districts for video download purpose
-def get_user_districts(request):
-    if request:
-        user_permissions = UserPermission.objects.filter(username = request.user)
-        districts = District.objects.none()
-        for user_permission in user_permissions:
-            if(user_permission.role=='A'):
-                districts = districts | District.objects.all()
-            if(user_permission.role=='D'):
-                states = State.objects.filter(region = user_permission.region_operated)
-                districts = districts | District.objects.filter(state__in = states)
-            if(user_permission.role=='F'):
-                districts = District.objects.filter(district_name = user_permission.district_operated)
-        return districts
 
 def get_user_videos(user_id):
     ###Videos produced by partner with in the same state
@@ -164,7 +153,7 @@ def get_user_mediators(user_id):
 def assign_partner(bundle):
     partner_id = get_user_partner_id(bundle.request.user.id)
     if partner_id:
-        bundle.data['partner'] = "/coco/api/v1/%s/%s/"%('partner', str(partner_id))
+        bundle.data['partner'] = "/coco/api/v2/%s/%s/"%('partner', str(partner_id))
     else:
         bundle.data['partner'] = None
     
@@ -258,7 +247,7 @@ class BaseResource(ModelResource):
 class PartnerResource(ModelResource):    
     class Meta:
         max_limit = None
-        queryset = Partners.objects.all()
+        queryset = Partner.objects.all()
         resource_name = 'partner'
         authentication = SessionAuthentication()
         authorization = Authorization()
@@ -323,7 +312,7 @@ class MediatorResource(BaseResource):
     def hydrate_partner(self, bundle):
         partner_id = get_user_partner_id(bundle.request.user.id)
         if partner_id:
-            bundle.data['partner'] ="/coco/api/v1/partner/"+str(partner_id)+"/"
+            bundle.data['partner'] ="/coco/api/v2/partner/"+str(partner_id)+"/"
         return bundle
 
 class VillageResource(ModelResource):
@@ -391,11 +380,11 @@ class PersonGroupResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     class Meta:
         max_limit = None
-        queryset = PersonGroups.objects.prefetch_related('village').all()
+        queryset = PersonGroup.objects.prefetch_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
-        validation = ModelFormValidation(form_class=PersonGroupsForm)
+        validation = ModelFormValidation(form_class=PersonGroupForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
@@ -413,7 +402,7 @@ class PersonGroupResource(BaseResource):
         if village and not hasattr(bundle,'village_flag'):
             try:
                 village_id = village.get('id')
-                bundle.data['village'] = "/coco/api/v1/village/"+str(village_id)+"/"
+                bundle.data['village'] = "/coco/api/v2/village/"+str(village_id)+"/"
                 bundle.village_flag = True
             except:
                 bundle.data['village'] = None
