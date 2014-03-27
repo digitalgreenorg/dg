@@ -142,7 +142,11 @@ def video_monthwise_bar_data(request):
 
 def video(request):
     id = int(request.GET['id'])
-    vid = Video.objects.select_related().get(pk=id)
+    try:
+        vid = Video.objects.select_related().get(pk=id)
+    except Video.DoesNotExist:
+        vid = Video.objects.select_related().get(old_coco_id=id)
+        return HttpResponseRedirect("?id=" + str(vid.id))
     vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
     
     tot_vid_scr = vid.screening_set.count()

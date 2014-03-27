@@ -19,11 +19,11 @@ class ProcessedImage():
         # As a hack, we are cropping the sides so that these lines may get cropped at the outset.
         image = self.image.crop((size[0] + 10, size[1] + 10, size[2] - 10, size[3] - 10))
         # Convert image to grayscale
-        img_gray = self.image.convert('L')
+        img_gray = image.convert('L')
         # Convert dark areas to black, on a 127 threshold
         img_dull = img_gray.point(lambda x: 0 if x < 127 else x)
         box = img_dull.getbbox()
-        return ProcessedImage(image=self.image.crop(box))
+        return ProcessedImage(image=image.crop(box))
     
     def crop(self, new_width, new_height):
         ratio = new_width * 1.0 / new_height

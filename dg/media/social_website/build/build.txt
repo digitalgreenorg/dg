@@ -63,6 +63,8 @@ app/controllers/AboutController.js
 
 app/controllers/EventsController.js
 ----------------
+libs/external/notify.min.js
+text!app/views/events/registration-form.html
 app/controllers/EventsController.js
 
 app/controllers/CollectionsController.js
