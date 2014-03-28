@@ -2,7 +2,7 @@ import operator
 
 from django import forms
 from django.conf import settings
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns
 from django.contrib import admin
 from django.contrib.contenttypes import generic
 from django.db import models
@@ -10,19 +10,13 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 
-# django-ajax filtered fields
-from ajax_filtered_fields.forms import AjaxForeignKeyField
-from ajax_filtered_fields.forms import FilteredSelect
+from ajax_filtered_fields.forms import AjaxForeignKeyField, FilteredSelect
 
-from activities.models import *
-from coco.models import *
-from geographies.models import *
-from programs.models import *
-from people.models import *
-from videos.models import *
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from dashboard.forms import CocoUserForm
 from dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
 
-from forms import CocoUserForm
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -273,29 +267,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
-
-admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
-admin.site.register(Video, VideoAdmin)
-admin.site.register(Region)
-admin.site.register(Country)
-admin.site.register(State, StateAdmin)
-admin.site.register(District, DistrictAdmin)
-admin.site.register(Block, BlockAdmin)
-admin.site.register(Village, VillageAdmin)
-admin.site.register(Partner)
-admin.site.register(Person, PersonAdmin)
-admin.site.register(PersonGroup, PersonGroupAdmin)
-admin.site.register(Animator, AnimatorAdmin)
-admin.site.register(Language)
-admin.site.register(Practice, PracticesAdmin)
-admin.site.register(Screening, ScreeningAdmin)
-admin.site.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
-admin.site.register(PracticeSector,PracticeSectorAdmin)
-admin.site.register(PracticeSubSector,PracticeSubSectorAdmin)
-admin.site.register(PracticeTopic,PracticeTopicAdmin)
-admin.site.register(PracticeSubtopic,PracticeSubtopicAdmin)
-admin.site.register(PracticeSubject,PracticeSubjectAdmin)
-admin.site.register(CocoUser, CocoUserAdmin)
-#admin.site.register(Reviewer)
-#admin.site.register(Random)
-#admin.site.register(Message, MessageAdmin)
