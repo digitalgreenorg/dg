@@ -353,14 +353,17 @@ define(function(require) {
                     thumbnailURL:image,
                 };
         	viewRenderer.renderAppend(references.$videoContainer, carouselTemplate, renderData);
+        	var that = this;
+            $('.sortable li .video-remove').click(function(){
+                references.$vidList.append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
+                $(this).parent().remove();
+                that.initSelect2();
+            });
+            
+            // Remove from Drop-Down
         	references.$vidList.find('option[value=' + vid + ']').remove();
         	references.$vidList.select2("val", "");
-        	var that = this;
-        	$('.sortable li .video-remove').click(function(){
-        		$('#vidlist').append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
-        		$(this).parent().remove();
-        		that.initSelect2();
-            });
+        	
         	
         },
 
