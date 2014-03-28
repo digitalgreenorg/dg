@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from views import overview_analytics, screening_analytics, video_analytics, adoption_analytics, targets
+from views import overview_analytics, screening_analytics, video_analytics, adoption_analytics
 from views.common import drop_down_val, overview_line_graph, practice_change
 
 urlpatterns = patterns('',
@@ -31,7 +31,6 @@ urlpatterns = patterns('',
     (r'^adoption_practice_wise_scatter/?$',adoption_analytics.adoption_practice_wise_scatter),
     (r'^adoption_monthwise_bar_data/?$',adoption_analytics.adoption_monthwise_bar_data),
     (r'^adoption_rate_line/?$',adoption_analytics.adoption_rate_line),
-    (r'^target_table/?$',targets.target_table),
     (r'^drop_down_val/?$',drop_down_val),
     (r'^overview_line_graph/?$',overview_line_graph),
     (r'^practice_change/?$',practice_change),

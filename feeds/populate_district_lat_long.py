@@ -7,7 +7,7 @@ from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
 
-from dashboard.models import District
+from geographies.models import District
 from libs.geocoder import Geocoder
 
 geocoder = Geocoder()

@@ -377,8 +377,8 @@ define([
                                     });
                             })
                             .fail(function(error) {
-                                console.log("INCD: Failed convertnamespace..not saving ");
-                                dfd.reject(error);
+                            	console.log("INCD: Failed convertnamespace..not saving ");
+                            	dfd.reject(error);
                             });
                     })
                     .fail(function(response) {

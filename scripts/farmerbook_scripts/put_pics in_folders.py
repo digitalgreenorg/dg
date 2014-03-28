@@ -6,7 +6,13 @@ import dg.settings
 import shutil
 setup_environ(dg.settings)
 import sys, os, glob , string
-from dashboard.models import *
+
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 source_dir = r'C:\Users\Yash\Desktop\DG\scripts\to_be_uploaded'
 dst_dir = r'C:\Users\Yash\Desktop\DG\scripts\village_wise'

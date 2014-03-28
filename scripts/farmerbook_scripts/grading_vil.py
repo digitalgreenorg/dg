@@ -2,13 +2,18 @@ import glob, os
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from dashboard.models import *
 from django.db.models import Count
 from datetime import datetime, timedelta
 import datetime
 import time
 import csv
 from farmerbook import get_id_with_images
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 def grade1(village_info):
     target_disseminations = 2
@@ -67,7 +72,7 @@ def grade3(village_info):
     grade = []
     for vill_id in village_info:
         farmer = PersonMeetingAttendance.objects.filter(person__village = vill_id, screening__date__range = [grading_start_date, grading_end_date]).values('person').annotate(screenings_attended = Count('screening'))
-        groups = PersonGroups.objects.filter(village = vill_id).values_list('id', flat = True)
+        groups = PersonGroup.objects.filter(village = vill_id).values_list('id', flat = True)
         ratio = 0
         if groups:
             for group in groups:
