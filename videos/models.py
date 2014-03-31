@@ -82,7 +82,7 @@ class Language(CocoModel):
     language_name = models.CharField(max_length=100, unique='True')
 
     def __unicode__(self):
-        return self.name
+        return self.language_name
 post_save.connect(save_log, sender=Language)
 pre_delete.connect(delete_log, sender=Language)
 
