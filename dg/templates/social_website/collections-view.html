@@ -192,7 +192,7 @@
                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
                                            	 <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
 									    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-									         <img  src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=60">
+									         <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
 								        {% endif %}
                                                 
                                     </div>

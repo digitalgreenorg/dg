@@ -185,7 +185,7 @@ class CommentResource(BaseResource):
             except Exception, ex:
                 return None
             if provider == 'google-oauth2':
-                url =  'https://plus.google.com/s2/photos/profile/%s?sz=75' % bundle.obj.user.social_auth.all()[0].extra_data['id']
+                url =  '%s?sz=75' % bundle.obj.user.social_auth.all()[0].extra_data['picture']
             elif provider == 'facebook':
                 url = 'https://graph.facebook.com/%s/picture?type=large' % bundle.obj.user.social_auth.all()[0].uid
             return url

@@ -91,7 +91,7 @@
                                                     </div>
                                                     {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
                                                     <div class="img-effects">
-                                                        <img src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=40" class="user-image js-user-image">
+                                                        <img src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=40" class="user-image js-user-image">
                                                     </div>
                                                     {% else %}
                                                     <div class="img-effects">
