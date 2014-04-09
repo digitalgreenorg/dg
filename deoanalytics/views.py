@@ -35,10 +35,7 @@ def mainpage(request):
             deodetails = CocoUser.objects.get(user_id=deo)
             state = deodetails.villages.values_list('block__district__state__state_name', flat=True).distinct()
             if state[0] == "Bihar":
-                deos_working_in_Bihar.append(deo) 
-    '''deonames = []   
-    for deoid in deos_working_in_Bihar:
-        deoname = ServerLog.objects.get(user)'''
+                deos_working_in_Bihar.append(deo)
     
     screenings = Screening.objects.filter(user_created_id=126).count()   
     adoptions = PersonAdoptPractice.objects.filter(user_created_id=126).count()                                                                                                            
