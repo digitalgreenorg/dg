@@ -72,6 +72,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
     os.path.join(PROJECT_PATH, 'media/coco/app'),
     os.path.join(PROJECT_PATH, 'templates/social_website'),
+    os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
 	os.path.join(PROJECT_PATH, 'media/'),
 )
 

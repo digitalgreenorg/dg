@@ -1,0 +1,145 @@
+ {% include "includes/header_for_deo.html" %}
+ 
+ 
+ <section id="main" role="main" class="wrapper">
+ 
+ 	<div class="inner-wrapper">
+ 	
+ 	   <div class="featured layout-vr-xlg">
+ 	   
+			<select id = "partnerlist" onchange="districtfilter(); deofilter();">			
+               <option value='' selected='selected'>Choose Partner</option>
+               {% for pa in partners%} 
+                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
+               {% endfor %}
+            </select>
+
+			<select id = "districtlist" onchange="deofilter()">			
+               <option value='' selected='selected'>Choose District</option>     
+	        </select>
+	        
+	        <select id = "deolist">			
+               <option value='' selected='selected'>Choose DEOs</option>
+                        
+	        </select>     
+	        
+	        
+        <div style="float:right;">
+	      <a class="btn" onclick="runquery()">GO</a>
+        </div>       
+
+
+	    <script>
+	     // JavaScript Document
+
+        function districtfilter()
+        {
+                
+           console.log("Function districtfilter entered...");
+           
+           var e = document.getElementById('partnerlist');
+           var partnerval = e.options[e.selectedIndex].value;
+
+           console.log("The selected partner is: " + partnerval);  
+           
+           $.ajax(
+              {
+                 type:'GET',
+                 data:{ 
+                 'partner': partnerval,
+                 },
+                 url:"http://127.0.0.1:8000/deo/api/getdistrict",
+                 
+                 success: function(data){
+
+                     var options = '';
+                     for (var i = 0; i < data.length; i++) 
+                     {
+                       options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
+                     }
+                     $("select#districtlist").html(options);
+                 },
+                 error: function(data){
+                         console.log("ERRORIS:" + data);
+                         alert("There was an error in recording your input!");
+                 }
+              });
+        }
+ 
+        function deofilter()
+        {
+                
+           console.log("Function deofilter entered...");
+           
+           var e = document.getElementById('partnerlist');
+           var partnerval = e.options[e.selectedIndex].value;
+           console.log("The selected partner is: " + partnerval);
+           
+           var f = document.getElementById('districtlist');
+           var districtval = f.options[f.selectedIndex].value;           
+           console.log("The selected district is: " + districtval);  
+           
+           $.ajax(
+              {
+                 type:'GET',
+                 data:{ 
+                 'partner': partnerval,
+                 'district': districtval,
+                 },
+                 url:"http://127.0.0.1:8000/deo/api/getdeo",
+                 
+                 success: function(data){
+
+                     var options = '';
+                     for (var j = 0; j < data.length; j++) 
+                     {
+                       options += '<option value="' + data[j].deo_name+  '">' + data[j].deo_name + '</option>';
+                     }
+                     $("select#deolist").html(options);
+                 },
+                 error: function(data){
+                        console.log("ERRORIS:" + data);
+                        alert("There was an error in recording your input!");
+                }
+              });
+        }
+	     
+	    </script>   
+         
+        <ul class="filterOptions hdg-upper copy clearfix js-most-filters" style="float:right; padding:0 10px;">
+           <li><a href="#" class="js-most-filter active"><span><span class="icon"></span>Daily</span></a></li>
+           <li><a href="#" class="js-most-filter"><span><span class="icon"></span>Weekly</span></a></li>
+           <li><a href="#" class="js-most-filter"><span><span class="icon"></span>Monthly</span></a></li>
+        </ul>
+        
+        <div class="grid" style="width:100%;">
+			<div class="grid-col grid-size1of4 js-filters-wrapper" style="padding-top:50px;">
+                <div class="sorting">
+                    <ul class="sorting-list v-list js-filters-container">                            
+                    	<li class="js-filter-category " data-category-id="DEO 1">
+                            <div class="filter-category-label js-filter-category-label">DEO 1</div>
+                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
+                        </li>
+                    	<li class="js-filter-category " data-category-id="DEO 2">
+                            <div class="filter-category-label js-filter-category-label">DEO 2</div>
+                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
+                        </li>
+                    	<li class="js-filter-category " data-category-id="DEO 3">
+                            <div class="filter-category-label js-filter-category-label">DEO 3</div>
+                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
+                        </li>                           
+				   </ul>
+               </div> <!-- End .sorting -->
+         	</div>
+         
+         	<div class="grid-size3of4" style="float:left; padding-top:50px;">
+         
+         		<p>No. of Screenings: {{screenings}}</p>
+         		<p>No. of Adoptions: {{adoptions}}</p>
+         	</div>
+         </div>
+     </div>
+	</div>
+</section>    
+ 
+ {% include "includes/footer_for_deo.html"%}
