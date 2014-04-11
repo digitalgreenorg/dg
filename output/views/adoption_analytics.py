@@ -1,4 +1,3 @@
-from dashboard.models import *
 from django.db.models import Min
 from django.http import Http404, HttpResponse
 from django.shortcuts import *

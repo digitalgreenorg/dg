@@ -44,23 +44,43 @@ define(function(require) {
                 // on initial load to get the information out
                 //globalEventManager.trigger('languageChanged', languageCookie);
             }
+            return this;
         },
 
         _initReferences: function($referenceBase) {
             this.base($referenceBase);
 
             var references = this._references;
-
-            var $searchContainer = jQuery(".js-search-wrapper");
+            
+            references.$userImage = jQuery('.js-user-image');
+            references.$userDropDown = jQuery('.js-user-dropdown');
+            references.$userDropDownArrow = jQuery('.js-user-dropdown-arrow');
             
             // helpers
-            //TODO: Not sure if we need to do much else than instantiate
+            var $searchContainer = jQuery(".js-search-wrapper");
             references.searchViewController = new SearchViewController($searchContainer);
+        },
+        
+        _initEvents: function() {
+            this.base();
+            
+            var references = this._references;
+            var boundFunctions = this._boundFunctions;
+
+            boundFunctions.onUserImageClick = this._onUserImageClick.bind(this);
+            references.$userImage.on('click', boundFunctions.onUserImageClick);
         },
 
         _onOptionChanged: function(value) {
             Util.Cookie.set('language__name', value);
             globalEventManager.trigger('languageChanged', value);
+        },
+
+        _onUserImageClick: function(e) {
+            e.preventDefault();
+            this._references.$userDropDown.toggle();
+            this._references.$userDropDownArrow.toggle();
+            $('html, body').animate({scrollTop:0}, 'slow');
         },
 
         /**

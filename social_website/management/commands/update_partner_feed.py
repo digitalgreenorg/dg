@@ -4,7 +4,10 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from dashboard.models import Partners, Screening, ServerLog, Village
+from activities.models import Screening
+from coco.models import ServerLog
+from geographies.models import Village
+from programs.models import Partner
 from dg.settings import MEDIA_ROOT
 from social_website.models import Activity, Partner
 from social_website.utils.generate_activities import ActivityType, add_milestone, add_village
@@ -18,7 +21,7 @@ class Command(BaseCommand):
         logger = logging.getLogger('social_website')
         for partner in Partner.objects.all():
             try:
-                Partners.objects.get(id=partner.coco_id)
+                Partner.objects.get(id=partner.coco_id)
             except:
                 continue
             types = [ActivityType.video_milestone, ActivityType.village_milestone, ActivityType.screening_milestone, ActivityType.viewer_milestone]

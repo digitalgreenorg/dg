@@ -10,7 +10,7 @@
 define(function(require) {
     'use strict';
 
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
     var CollectionFiltersViewController = require('app/view-controllers/CollectionFiltersViewController');
     var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
     var CollectionViewController = require('app/view-controllers/CollectionViewController');

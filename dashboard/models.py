@@ -9,7 +9,7 @@ from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
-from data_log import delete_log, save_log
+from coco.data_log import delete_log, save_log
 from libs.geocoder import Geocoder
 
 import logging

@@ -255,6 +255,13 @@ define(function(require) {
             }
             
             Util.Object.extend(inputParamData, overrideData);
+            
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", Util.Cookie.get('csrftoken'));
+                }
+            });
+            
             $.ajax({
                 type: type,
                 contentType: content_type, 
@@ -289,7 +296,7 @@ define(function(require) {
          * This function is called upon an AJAX fetch error
          * @return {void}
          */
-        _onFetchError: function() {
+        _onFetchError: function(error) {
             this._state.failureCounter++;
         },
 

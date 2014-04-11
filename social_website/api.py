@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 
 from tastypie import fields
-from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.authentication import BasicAuthentication, Authentication
+from tastypie.authorization import Authorization
+from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
@@ -16,6 +16,14 @@ from social_website.models import Activity, Collection, Comment, ImageSpec, Part
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
+
+
+class WebsiteSessionAuthentication(SessionAuthentication):
+    def is_authenticated(self, request, **kwargs):
+        if request.method == 'GET':
+            return True
+        return super(WebsiteSessionAuthentication, self).is_authenticated(request, **kwargs)
+
 
 class BaseCorsResource(ModelResource):
     """
@@ -155,7 +163,7 @@ class VideoLikeResource(ModelResource):
         always_return_data = True
         queryset = VideoLike.objects.all()
         resource_name = 'updateVideoLike'
-        authentication = Authentication()
+        authentication = WebsiteSessionAuthentication()
         authorization = Authorization()
         filtering = {
                    'video':ALL_WITH_RELATIONS,
@@ -177,7 +185,7 @@ class CommentResource(BaseResource):
             except Exception, ex:
                 return None
             if provider == 'google-oauth2':
-                url =  'https://plus.google.com/s2/photos/profile/%s?sz=75' % bundle.obj.user.social_auth.all()[0].extra_data['id']
+                url =  '%s?sz=75' % bundle.obj.user.social_auth.all()[0].extra_data['picture']
             elif provider == 'facebook':
                 url = 'https://graph.facebook.com/%s/picture?type=large' % bundle.obj.user.social_auth.all()[0].uid
             return url
@@ -195,7 +203,7 @@ class CommentResource(BaseResource):
         always_return_data = True
         queryset = Comment.objects.order_by('-date', '-uid').all()
         resource_name = 'comment'
-        authentication = Authentication()
+        authentication = WebsiteSessionAuthentication()
         authorization = Authorization()
         filtering={
                    'video':ALL_WITH_RELATIONS,

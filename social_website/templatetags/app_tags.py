@@ -23,3 +23,12 @@ def seconds_to_duration(seconds):
         return time.strftime('%H:%M:%S', time.gmtime(seconds))
     else:
         return time.strftime('%M:%S', time.gmtime(seconds))
+
+
+@register.filter(name='placeholder')
+def html_placeholder(field, args=None):
+    if args == None:
+        return field
+    field.field.widget.attrs.update({"placeholder": args})
+    field.field.widget.attrs.update({"class": 'auth'})
+    return field

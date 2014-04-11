@@ -2,9 +2,15 @@ import glob, os
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
-from dashboard.models import *
 import csv
-import numpy 
+import numpy
+
+from activities.models import *
+from coco.models import *
+from geographies.models import *
+from programs.models import *
+from people.models import *
+from videos.models import *
 
 reader = csv.reader(open('grd_file_5_6.csv', 'rb'), delimiter=',')
 scores = []

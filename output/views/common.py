@@ -1,4 +1,3 @@
-from dashboard.models import *
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
 from django.template import Template, Context
@@ -9,6 +8,9 @@ from output.database.SQL.shared_sql import practice_options_sql
 from output.database.utility import run_query, run_query_raw, run_query_dict, \
     run_query_dict_list, construct_query, get_dates_partners
 from copy import deepcopy
+from activities.models import Screening
+from people.models import Person
+from videos.models import Video
 import datetime
 import json
 import random

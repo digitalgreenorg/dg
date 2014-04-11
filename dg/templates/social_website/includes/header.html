@@ -49,9 +49,22 @@
             Profile
     -->
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
-    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
+    <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
+            <div class="user-dropdown-div">
+                <div class="user-dropdown js-user-dropdown">
+                    <ul>
+                        <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
+                        {% if not request.user.social_auth.all.0 %}
+                            <li class="user-dropdown-option">
+                                <a href="{% url 'change_password' %}">Change Password</a>
+                            </li>
+                        {% endif %}
+                        <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="header-fixed">
                 <div class="header-wrapper clearfix">
                     <header class="global-nav">
@@ -67,23 +80,27 @@
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url 'about' %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
                                     <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url 'career' %}?header=true">Careers</a></li>
                                     {% if not request.user.is_authenticated %}
-                                        <li><a class="btn-sign-in" data-toggle="modal" href="#login_modal">Sign in</a></li>
+                                        <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
-                                        <li>
-                                            <a class="btn-sign-in btn-signed" href="{% url 'logout' %}?next={{request.path}}">
-                                                <div class="media">
-                                                    <div class="img">
-                                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                                            <img class="profile-image" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
-                                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                                            <img class="profile-image" src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=16">
-                                                        {% endif %}
+                                        <li class="grid-rt" style="float:right;">
+                                            <div class="media grid-rt">
+                                                <div class="img">
+                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image js-user-image">
                                                     </div>
-                                                    <div class="bd">
-                                                        Sign Out
+                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=40" class="user-image js-user-image">
                                                     </div>
+                                                    {% else %}
+                                                    <div class="img-effects">
+                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image js-user-image">
+                                                    </div>
+                                                    {% endif %}
+                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow js-user-dropdown-arrow">
                                                 </div>
-                                            </a>
+                                            </div>
                                         </li>
                                     {% endif %}
                                 </ul>
@@ -91,17 +108,7 @@
                         </div>  <!-- End .wrapper -->
                     </header> <!-- End .global-nav -->
                 </div>
-            
-                {% load url from future %}
-                <div id="login_modal" class="modal-login modal hide" >
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h3 class="hdg-a hdg-source-lt layout-vr-sm">Sign In</h3>
-                    <div class="layout-vr-sm">
-                        <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}" class="btn btn-facebook">Facebook</a>
-                    </div>
-                    <div class="layout-vr-tiny">
-                        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{request.path}}" class="btn btn-google-plus">Google</a>
-                    </div>
-                </div>
             </div>
             <div class="header-margin"></div>
+
+
