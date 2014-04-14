@@ -149,7 +149,6 @@ def searchFilters(request):
         params = request.POST
         facets_json = json.loads(request.body)
         facets = facets_json['facets']
-        print facets
     facet_dict = {}
     if facets:
         facet_dict = {}
