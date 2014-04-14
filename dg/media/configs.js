@@ -124,7 +124,7 @@ function() {
         'rest_api_url': '/coco/api/v2/village/',
         'entity_name': 'village',
         'dashboard_display': {
-            listing: false,
+            listing: true,
             add: false
         },
         'sort_field': 'village_name'
