@@ -86,7 +86,7 @@ define(function(require) {
             }
             set_filters.addInputParam('facets', true, 0, true);
             set_filters.setInputParam('facets', facets, true);
-            this._references.collectionFiltersViewController._fetchFilters();
+            this._references.collectionFiltersViewController._fetchFilters("POST");
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
             // Only if data attributes are to be used, go inside this loop
             if (this._references.collectionFiltersViewController._references.filters_cleared == 0){
