@@ -142,8 +142,13 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
     return filters
 
 def searchFilters(request):
-    params = request.GET
-    facets = params.get('facets', None)
+    if request.method == 'GET':
+        params = request.GET
+        facets = params.get('facets', None)
+    else:
+        params = request.POST
+        facets_json = json.loads(request.body)
+        facets = facets_json['facets']
     facet_dict = {}
     if facets:
         facet_dict = {}
