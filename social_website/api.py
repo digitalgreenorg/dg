@@ -14,8 +14,7 @@ from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
 from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, VideoinCollection, VideoLike
-from migration_functions import populate_collection_stats, populate_partner_stats
-from post_save_funcs import video_collection_activity
+from social_website.utils.api_functions import add_video_collection
 
 
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
@@ -210,47 +209,21 @@ class CollectionResource(BaseCorsResource):
             bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
             collection_id = getattr(bundle.obj,'uid')
-
-            VideoinCollection.objects.filter(collection_id=collection_id).delete()
-            for index, video in enumerate(video_list):
-                try:
-                    vid_collection = VideoinCollection(collection_id=collection_id, video_id=video,
-                                                  order=index)
-                    vid_collection.save()
-                except Exception, e:
-                    pass#raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
-            Collection_obj = Collection.objects.get(uid=collection_id)
-            populate_collection_stats(Collection_obj)
-            video_collection_activity(Collection_obj, video_list)
-            populate_partner_stats(Collection_obj.partner)
+            add_video_collection(collection_id, video_list)
             return bundle
         else:
-            pass
+            return bundle
 
     def obj_update(self, bundle, **kwargs):
-        #Edit case many to many handling. First clear out the previous related objects and create new objects
         video_list = bundle.data.get('videos')
         if video_list:
             bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
             bundle = super(CollectionResource, self).obj_update(bundle, **kwargs)
             collection_id = bundle.data.get('uid')
-
-            VideoinCollection.objects.filter(collection_id=collection_id).delete()
-            for index, video in enumerate(video_list):
-                try:
-                    vid_collection = VideoinCollection(collection_id=collection_id, video_id=video,
-                                                  order=index)
-                    vid_collection.save()
-                except Exception, e:
-                    pass
-            Collection_obj = Collection.objects.get(uid=collection_id)
-            populate_collection_stats(Collection_obj)
-            video_collection_activity(Collection_obj, video_list)
-            populate_partner_stats(Collection_obj.partner)
+            add_video_collection(collection_id, video_list)
             return bundle
-
         else:
-            pass
+            return bundle
 
 
 class ActivityResource(BaseResource):
