@@ -33,11 +33,16 @@ def collection_add_activity(sender, **kwargs):
 
 
 def video_collection_activity(sender, **kwargs):
+    instance = kwargs["instance"]
+    if kwargs["created"]:
+        collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
+        video = get_model('social_website', 'Video').objects.get(uid=instance.video_id)
+        add_video_collection(collection, video)
+
+
+def update_stats(sender, **kwargs):
     from migration_functions import populate_collection_stats, populate_partner_stats
     instance = kwargs["instance"]
     collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
-    if kwargs["created"]:
-        video = get_model('social_website', 'Video').objects.get(uid=instance.video_id)
-        add_video_collection(collection, video)
     populate_collection_stats(collection)
     populate_partner_stats(collection.partner)

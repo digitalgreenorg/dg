@@ -3,9 +3,9 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 
-from post_save_funcs import increase_online_video_like, video_add_activity, collection_add_activity, video_collection_activity
+from post_save_funcs import increase_online_video_like, update_stats, video_add_activity, collection_add_activity, video_collection_activity
 
 
 #===============================================================================
@@ -128,6 +128,8 @@ class VideoinCollection(models.Model):
     class Meta:
         ordering = ['order']
 post_save.connect(video_collection_activity, sender=VideoinCollection)
+post_save.connect(update_stats, sender=VideoinCollection)
+post_delete.connect(update_stats, sender=VideoinCollection)
 
 
 class FeaturedCollection(models.Model):
