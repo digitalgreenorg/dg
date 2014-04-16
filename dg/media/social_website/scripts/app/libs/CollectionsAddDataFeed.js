@@ -31,7 +31,7 @@ define(function(require) {
             this.base(error);
             if(error.status == 400){
                 $('body').scrollTop(0);
-                $(".coltitle").notify(error.responseText);
+                $(".js-collection-title").notify(error.responseText);
             }
         },
         
