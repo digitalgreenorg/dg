@@ -1,8 +1,4 @@
-import pickle
-
 from django.db.models import get_model
-
-import dg.settings
 
 from social_website.utils.generate_activities import add_collection, add_video, add_video_collection
 
@@ -29,17 +25,19 @@ def video_add_activity(sender, **kwargs):
         add_video(video)
 
 
-def video_collection_activity(collection, videos):
-    file = "".join([dg.settings.MEDIA_ROOT, "collection_dict.p"])
-    collection_dict = pickle.load(open(file, "rb"))
-
-    if collection.uid not in collection_dict:
+def collection_add_activity(sender, **kwargs):
+    instance = kwargs["instance"]
+    if kwargs["created"]:
+        collection = get_model('social_website', 'Collection').objects.get(uid=instance.uid)
         add_collection(collection)
-        collection_dict[collection.uid]=[]
 
-    for video_uid in videos:
-        video = get_model('social_website', 'Video').objects.get(uid=video_uid)
-        if video_uid not in collection_dict[collection.uid]:
-            add_video_collection(collection, video)
-            collection_dict[collection.uid].append(video.uid)
-    pickle.dump(collection_dict, open(file, "wb"))
+
+def video_collection_activity(sender, **kwargs):
+    from migration_functions import populate_collection_stats, populate_partner_stats
+    instance = kwargs["instance"]
+    collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
+    if kwargs["created"]:
+        video = get_model('social_website', 'Video').objects.get(uid=instance.video_id)
+        add_video_collection(collection, video)
+    populate_collection_stats(collection)
+    populate_partner_stats(collection.partner)

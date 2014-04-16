@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
 
-from post_save_funcs import increase_online_video_like, video_add_activity, video_collection_activity
+from post_save_funcs import increase_online_video_like, video_add_activity, collection_add_activity, video_collection_activity
 
 
 #===============================================================================
@@ -117,15 +117,17 @@ class Collection(models.Model):
         self.save()
     class Meta:
         unique_together = ("title", "partner", 'state', 'language')
+post_save.connect(collection_add_activity, sender=Collection)
 
 
 class VideoinCollection(models.Model):
     video = models.ForeignKey(Video)
     collection = models.ForeignKey(Collection)
     order = models.IntegerField()
-    
+
     class Meta:
         ordering = ['order']
+post_save.connect(video_collection_activity, sender=VideoinCollection)
 
 
 class FeaturedCollection(models.Model):
