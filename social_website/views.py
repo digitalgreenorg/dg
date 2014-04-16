@@ -45,15 +45,14 @@ def collection_view(request, partner, state, language, title, video=1):
         return HttpResponseRedirect(reverse('discover'))
     try:
         video_index = int(video)
-        video_collection = collection.videoincollection_set.all()[video_index - 1]
-        video = video_collection.video
     except (IndexError, AssertionError):
         video_index = 1
-        video_collection = collection.videoincollection_set.all()[video_index - 1]
-        video = video_collection.video    
+    finally:
+        video = collection.videoincollection_set.all()[video_index - 1].video
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
     related_collections = get_related_collections(collection)
+    video_list = [i.video for i in collection.videoincollection_set.all()]
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -62,7 +61,7 @@ def collection_view(request, partner, state, language, title, video=1):
                          },
               'is_collection': True,
               'object': collection,
-              'video_list': collection.videos.all(),
+              'video_list': video_list,
               'collection_duration' : duration,
               'video' : video,
               'video_index' : video_index,
@@ -246,7 +245,7 @@ def collection_edit_view(request, collection):
         collection = Collection.objects.get(uid=collection)
     except Collection.DoesNotExist:
         return HttpResponseRedirect(reverse('create_collection'))
-    collection_videos = collection.videos.values_list('uid', flat=True)
+    collection_videos = [i.video_id for i in collection.videoincollection_set.all()]
     video = Video.objects.all()
     language = video.values_list('language',flat=True)
     language = sorted(set(language))
