@@ -310,7 +310,7 @@ def mapping(request):
                     subsector_dictionary[a.practice_topic.name] = []
                 topic_list = subsector_dictionary[a.practice_topic.name]
                 if a.practice_subtopic:
-                    if a.practice_subtopic not in topic_list:
+                    if a.practice_subtopic.name not in topic_list:
                         topic_list.append(a.practice_subtopic.name)
 
     resp = json.dumps({"mapping_dropdown": practice_dictionary})
