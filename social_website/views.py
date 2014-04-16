@@ -18,11 +18,9 @@ from django.template.response import TemplateResponse
 
 from dg.settings import PERMISSION_DENIED_URL
 
-from dashboard.models import Practices 
-from dashboard.models import Video as Dashboard_Video
 from elastic_search import get_related_collections, get_related_videos 
 from social_website.models import  Collection, Partner, FeaturedCollection, Video
-
+from videos.models import Practice, Video as Dashboard_Video
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
@@ -292,32 +290,28 @@ def collection_add_view(request):
 
 def mapping(request):
     practice_dictionary = {}
-    
+
     query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
-    for a in Practices.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
+    for a in Practice.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector', 'practice_subject').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
 
-        if a.practice_sector.name in practice_dictionary: #sector will be key
-            sector_dictionary = practice_dictionary[a.practice_sector.name]
-            subject_list = practice_dictionary[a.practice_sector.name]['subject']
-
-            if a.practice_subject and a.practice_subject.name not in subject_list:
-                practice_dictionary[a.practice_sector.name]['subject'].append(a.practice_subject.name)
-
-            if a.practice_subsector.name in sector_dictionary: #subsector will be key
-                subsector_dictionary = sector_dictionary[a.practice_subsector.name]
-
-                if a.practice_topic and a.practice_topic.name in subsector_dictionary:# topic will be key
-                    subtopic_list = subsector_dictionary[a.practice_topic.name]
-
-                    if a.practice_subtopic and a.practice_subtopic.name not in subtopic_list:
-                        subsector_dictionary[a.practice_topic.name].append(a.practice_subtopic.name)
-
-                elif a.practice_topic:
-                    subsector_dictionary[a.practice_topic.name] = []
-            else:
-                sector_dictionary[a.practice_subsector.name] = {}
-        else:
+        if a.practice_sector.name not in practice_dictionary: #sector will be key
             practice_dictionary[a.practice_sector.name] = {'subject': []}
+        sector_dictionary = practice_dictionary[a.practice_sector.name]
+        if a.practice_subject:
+            subject_list = practice_dictionary[a.practice_sector.name]['subject']
+            if a.practice_subject.name not in subject_list:
+                subject_list.append(a.practice_subject.name)
+        if a.practice_subsector:
+            if a.practice_subsector.name not in sector_dictionary:
+                sector_dictionary[a.practice_subsector.name] = {}
+            subsector_dictionary = sector_dictionary[a.practice_subsector.name]
+            if a.practice_topic:
+                if a.practice_topic.name not in subsector_dictionary:
+                    subsector_dictionary[a.practice_topic.name] = []
+                topic_list = subsector_dictionary[a.practice_topic.name]
+                if a.practice_subtopic:
+                    if a.practice_subtopic not in topic_list:
+                        topic_list.append(a.practice_subtopic.name)
 
     resp = json.dumps({"mapping_dropdown": practice_dictionary})
     return HttpResponse(resp)
