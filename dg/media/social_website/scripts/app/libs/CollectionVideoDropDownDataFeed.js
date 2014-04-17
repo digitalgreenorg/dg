@@ -12,6 +12,7 @@ define(function(require) {
     var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
     var DataModel = require('app/libs/DataModel');
     var Util = require('framework/Util');
+    var notify = require('libs/external/notify.min');
 
     var CollectionVideoDropDownDataFeed = DigitalGreenDataFeed.extend({
 
@@ -30,7 +31,9 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
-            
+            if (!unprocessedData.objects.length){
+                $(".js-partner-label").notify("No Video for this selection of Partner, State and Language", {position:"left"});
+            }
             // local references
             var dataModel = this._dataModel;
             var collectionDropDownModel = dataModel.get('collectionVideoDropDown');

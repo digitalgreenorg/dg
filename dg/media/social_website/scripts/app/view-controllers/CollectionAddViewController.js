@@ -148,6 +148,11 @@ define(function(require) {
         	e.preventDefault();
         	var references = this._references;
         	var order = references.$videoContainer.sortable('toArray');
+        	// Atleast 2 Videos in a Collection
+        	if (order.length < 2){
+        	    references.$videoContainer.notify("Collection Should Have Atleast 2 Videos", {position:"bottom"});
+        	    return
+        	}
         	if (references.$collectionUid){
         	    references.addDataFeed.addInputParam('uid', false, references.$collectionUid);
         	    references.addDataFeed.setInputParam('uid', references.$collectionUid, true);
