@@ -305,8 +305,8 @@ define(function(require) {
             return $filterOption;
         },
 
-        _fetchFilters: function() {
-            this._references.dataFeed.fetch(null, this._onDataProcessed.bind(this));
+        _fetchFilters: function(type) {
+            this._references.dataFeed.fetch(null, this._onDataProcessed.bind(this), type);
         },
 
         _onDataProcessed: function() {

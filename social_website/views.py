@@ -7,6 +7,7 @@ from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import login as django_login_view
 from django.core.urlresolvers import reverse
@@ -15,9 +16,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
 
+from dg.settings import PERMISSION_DENIED_URL
+
 from elastic_search import get_related_collections, get_related_videos 
 from social_website.models import  Collection, Partner, FeaturedCollection, Video
-
+from videos.models import Practice, Video as Dashboard_Video
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
@@ -42,13 +45,14 @@ def collection_view(request, partner, state, language, title, video=1):
         return HttpResponseRedirect(reverse('discover'))
     try:
         video_index = int(video)
-        video = collection.videos.all()[video_index - 1]
     except (IndexError, AssertionError):
         video_index = 1
-        video = collection.videos.all()[video_index - 1]    
+    finally:
+        video = collection.videoincollection_set.all()[video_index - 1].video
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
     related_collections = get_related_collections(collection)
+    video_list = [i.video for i in collection.videoincollection_set.all()]
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -57,7 +61,7 @@ def collection_view(request, partner, state, language, title, video=1):
                          },
               'is_collection': True,
               'object': collection,
-              'video_list': collection.videos.all(),
+              'video_list': video_list,
               'collection_duration' : duration,
               'video' : video,
               'video_index' : video_index,
@@ -142,8 +146,13 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
     return filters
 
 def searchFilters(request):
-    params = request.GET
-    facets = params.get('facets', None)
+    if request.method == 'GET':
+        params = request.GET
+        facets = params.get('facets', None)
+    else:
+        params = request.POST
+        facets_json = json.loads(request.body)
+        facets = facets_json['facets']
     facet_dict = {}
     if facets:
         facet_dict = {}
@@ -232,6 +241,84 @@ def footer_view(request):
         'footer_dict':footer_dict
         }
     return render_to_response('footer.html' , context,context_instance = RequestContext(request))
+
+
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='Collection Czars').count() > 0, login_url=PERMISSION_DENIED_URL)
+def collection_edit_view(request, collection):
+    try:
+        collection = Collection.objects.get(uid=collection)
+    except Collection.DoesNotExist:
+        return HttpResponseRedirect(reverse('create_collection'))
+    collection_videos = [i.video_id for i in collection.videoincollection_set.all()]
+    video = Video.objects.all()
+    language = video.values_list('language',flat=True)
+    language = sorted(set(language))
+    partner = Partner.objects.values('name', 'uid')
+    partner = sorted(partner)
+    state = video.values_list('state',flat=True)
+    state = sorted(set(state))
+    context= {
+              'header': {
+                         'jsController':'CollectionAdd',
+                         },
+              'collection': collection,
+              'collection_videos': collection_videos,
+              'language': language,
+              'partner' : partner,
+              'state' : state,
+              }
+    return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
+
+
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='Collection Czars').count() > 0, login_url=PERMISSION_DENIED_URL)
+def collection_add_view(request):
+    video = Video.objects.all()
+    language = video.values_list('language',flat=True)
+    language = sorted(set(language))
+    partner = Partner.objects.values('name', 'uid')
+    partner = sorted(partner)
+    state = video.values_list('state',flat=True)
+    state = sorted(set(state))
+    context= {
+              'header': {
+                         'jsController':'CollectionAdd',
+                         },
+              'language': language,
+              'partner' : partner,
+              'state' : state,
+              }
+    return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
+
+
+def mapping(request):
+    practice_dictionary = {}
+
+    query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
+    for a in Practice.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector', 'practice_subject').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
+
+        if a.practice_sector.name not in practice_dictionary: #sector will be key
+            practice_dictionary[a.practice_sector.name] = {'subject': []}
+        sector_dictionary = practice_dictionary[a.practice_sector.name]
+        if a.practice_subject:
+            subject_list = practice_dictionary[a.practice_sector.name]['subject']
+            if a.practice_subject.name not in subject_list:
+                subject_list.append(a.practice_subject.name)
+        if a.practice_subsector:
+            if a.practice_subsector.name not in sector_dictionary:
+                sector_dictionary[a.practice_subsector.name] = {}
+            subsector_dictionary = sector_dictionary[a.practice_subsector.name]
+            if a.practice_topic:
+                if a.practice_topic.name not in subsector_dictionary:
+                    subsector_dictionary[a.practice_topic.name] = []
+                topic_list = subsector_dictionary[a.practice_topic.name]
+                if a.practice_subtopic:
+                    if a.practice_subtopic.name not in topic_list:
+                        topic_list.append(a.practice_subtopic.name)
+
+    resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    return HttpResponse(resp)
 
 
 def login_view(request, template_name='registration/login.html',

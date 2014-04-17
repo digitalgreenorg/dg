@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.management import setup_environ
 import dg.settings
 setup_environ(dg.settings)
@@ -26,21 +27,19 @@ class ActivityType:
 
 
 def add_collection(collection):
-    if len(collection.videos.all()) > 0:
-        Activity = get_model('social_website','Activity')
-        partner = collection.partner
-        title = "%s shared a new collection" % (collection.partner.name)
-        collection_name = (collection.title)
-        video_number = len(collection.videos.all())
-        state_name = collection.state
-        country_name = (geographies.models.State.objects.get(state_name=state_name)).country.country_name
-        textContent = "Watch our new collection on %s with %s videos, produced in %s, %s." % (collection_name, video_number, state_name, country_name)
-        date = collection.videos.aggregate(Max('date'))['date__max']
-        newsFeed = 0
-        titleURL = collection.get_absolute_url()
-        activity_type = ActivityType.new_collection
-        activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, titleURL=titleURL, type=activity_type)
-        activity.save()
+    Activity = get_model('social_website','Activity')
+    partner = collection.partner
+    title = "%s shared a new collection" % (collection.partner.name)
+    collection_name = (collection.title)
+    state_name = collection.state
+    country_name = (geographies.models.State.objects.get(state_name=state_name)).country.country_name
+    textContent = "Watch our new collection on %s, produced in %s, %s." % (collection_name, state_name, country_name)
+    date = datetime.utcnow().strftime("%Y-%m-%d")
+    newsFeed = 0
+    titleURL = collection.get_absolute_url()
+    activity_type = ActivityType.new_collection
+    activity = Activity(partner_id=partner.uid, title=title, textContent=textContent, date=date, newsFeed=newsFeed, collection_id=collection.uid, titleURL=titleURL, type=activity_type)
+    activity.save()
 
 
 def add_video(video):
@@ -74,7 +73,7 @@ def add_video_collection(collection, video):
     collection_name = (collection.title).title()
     video_title = (video.title).title()
     textContent = "We've added a new video to %s titled %s." % (collection_name, video_title)
-    date = video.date
+    date = datetime.utcnow().strftime("%Y-%m-%d")
     newsFeed = 0
     titleURL = collection.get_absolute_url()
     activity_type = ActivityType.new_video_collection

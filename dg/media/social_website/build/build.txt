@@ -105,3 +105,17 @@ app/libs/CommentsDataFeed.js
 text!app/views/comment.html
 app/view-controllers/CommentsFeedViewController.js
 app/controllers/ViewCollectionsController.js
+
+app/controllers/CollectionAddController.js
+----------------
+libs/external/select2.js
+app/libs/PracticeMappingDataFeed.js
+libs/external/notify.min.js
+app/libs/CollectionVideoDropDownDataFeed.js
+app/libs/CollectionsAddDataFeed.js
+text!app/views/practice-mapping.html
+text!app/views/collection-add-video-dropdown.html
+text!app/views/collection-add-video-carousel.html
+app/view-controllers/CollectionAddViewController.js
+libs/external/jquery-ui.js
+app/controllers/CollectionAddController.js

@@ -12,7 +12,7 @@
                         {% if is_collection %}
                         
                         <div class="grid-col grid-size1of3">
-                            <div class="push-top-sm">
+                            <div class="push-top-sm grid-lt grid-size3of4">
                                 <div class="featured-ft-videoDetails" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
                                        <li>{{ object.videos.all|length }} Videos</li>
@@ -20,6 +20,17 @@
                                    </ul>
                                 </div>
                             </div>
+                            {% for group in user.groups.all %}
+                                {% if group.name == 'Collection Czars' %}
+                                    <div class="grid-rt grid-size1of4">
+                                        <ul class="filterOptions hdg-upper copy clearfix js-most-filters">
+                                            <li><a href="{% url 'edit_collection' object.uid %}" class="icon-coll-edit icon-addedit" title="Edit this Collection"></a></li>
+                                            <!-- <li><a href="{% url 'about' %}" class="icon-video-edit icon-addedit" title="Edit this Video"></a></li> -->
+                                        </ul>
+                                    </div>        
+                                {% endif %}
+                            {% endfor %}
+                            
                         </div>
                         {% endif %}
                     </div>
@@ -166,9 +177,9 @@
                         </div>
                     </div>
                     <div class="layout-vr-lg">
-                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{ video.title }}</h2>
-                        <p class="copy copy-lt layout-vr-sm">{{ video.date }}</p>
-                        <p class="copy copy-margin">{{ video.description }}</p>
+                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{ video_collection.video.title }}</h2>
+                        <p class="copy copy-lt layout-vr-sm">{{ video_collection.video.date }}</p>
+                        <p class="copy copy-margin">{{ video_collection.video.description }}</p>
                         <h3 class="tag">Tag</h3>
                         <ul class="h-list h-list-sm push-top-tiny">
                             {% for tag in tags %}
@@ -192,7 +203,7 @@
                                         {% if "facebook" == request.user.social_auth.all.0.provider %}
                                            	 <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
 									    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-									         <img  src=" https://plus.google.com/s2/photos/profile/{{request.user.social_auth.all.0.extra_data.id}}?sz=60">
+									         <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
 								        {% endif %}
                                                 
                                     </div>

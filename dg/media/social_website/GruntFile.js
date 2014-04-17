@@ -62,7 +62,11 @@ module.exports = function( grunt ) {
 	    		          {
 	    		        	  name: 'controllers/ViewCollectionsController',
 	    		        	  exclude: ["main"]
-	    		          }
+	    		          },
+	    		          {
+                              name: 'controllers/CollectionAddController',
+                              exclude: ["main"]
+                          }
 	    		         ]
         	}
         }

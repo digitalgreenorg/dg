@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 import json
-from social_website.models import Collection, Video, Partner
+from social_website.models import Collection, Video, Partner, VideoinCollection
 
 def get_absolute_url_for_completion(self):
     return reverse('social_website.views.search_view')
@@ -10,7 +10,8 @@ def enter_data_into_facet_search(conn, index_name):
     for obj in Collection.objects.all():
         vid_data = []
         time = 0
-        for index, vid in enumerate(obj.videos.all()):
+        for index, vid_collection in enumerate(obj.videoincollection_set.all()):
+            vid = vid_collection.video
             vid_id = index+1 
             url = obj.get_absolute_url_for_video(vid_id)
             vid_data.append({"title" : vid.title, 
