@@ -110,8 +110,8 @@ app/controllers/CollectionAddController.js
 ----------------
 libs/external/select2.js
 app/libs/PracticeMappingDataFeed.js
-app/libs/CollectionVideoDropDownDataFeed.js
 libs/external/notify.min.js
+app/libs/CollectionVideoDropDownDataFeed.js
 app/libs/CollectionsAddDataFeed.js
 text!app/views/practice-mapping.html
 text!app/views/collection-add-video-dropdown.html
