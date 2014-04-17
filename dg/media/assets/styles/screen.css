@@ -3386,6 +3386,10 @@ div.social-wrap button.googleplus {
      font-size: 20px;
      padding: 5px;
  }
+ 
+ .collec-hidden{
+     display: none;
+ }
 
 .display-inline {
     display: inline;

@@ -44,10 +44,12 @@ define(function(require) {
             references.$collectionAddWrapper = $referenceBase;
             references.$collectionUid = $referenceBase.find('.js-uid').data('collectionuid');
             references.$metaInformationContainer = $referenceBase.find('.js-meta-dropdown');
+            references.$collectionContainer = $referenceBase.find('.js-collection-container');
             references.$videoContainer = $referenceBase.find('.js-video-container');
             references.$videoDropDownContainer = $referenceBase.find('.js-collection-video-dropdown-container');
             references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
             references.$saveButton = $referenceBase.find('.collection-save-button');
+            references.$resetButton = $referenceBase.find('.collection-reset-button');
             references.$collectionTitle = $referenceBase.find('.js-collection-title');
             references.$dropDown = $referenceBase.find('.js-video-criteria');
             references.$partnerList = $referenceBase.find('.js-partnerlist');
@@ -68,6 +70,9 @@ define(function(require) {
             
             boundFunctions.onSaveCollectionClick = this._onSaveCollectionClick.bind(this);
             references.$saveButton.on("click", boundFunctions.onSaveCollectionClick);
+            
+            boundFunctions.onResetCollectionClick = this._onResetCollectionClick.bind(this);
+            references.$resetButton.on("click", boundFunctions.onResetCollectionClick);
             
             this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
             references.$dropDown.on('change', this._boundFunctions.onDropDownChosen);
@@ -118,6 +123,10 @@ define(function(require) {
             }
             references.videoArray = collectionvideodropdownData;
             this._renderVideoCollectionDropDown(collectionvideodropdownData);
+            
+            references.$partnerList.prop("disabled", true);
+            references.$stateList.prop("disabled", true);
+            references.$langList.prop("disabled", true);
             
             if (references.$collectionUid){
             var videos_collection = references.$videoDropDownContainer.data('videos');
@@ -189,6 +198,30 @@ define(function(require) {
             
         	
         },
+        
+        _onResetCollectionClick: function(e) {
+            e.preventDefault();
+            var references = this._references;
+            
+            references.$videoContainer.empty();
+            references.$videoDropDownContainer.empty();
+            references.$partnerList.prop("disabled", false);
+            references.$stateList.prop("disabled", false);
+            references.$langList.prop("disabled", false);
+            references.$partnerList.val("").change();
+            references.$stateList.val("").change();
+            references.$langList.val("").change();
+            references.$catList.val("");
+            references.$subCatList.find('option:not(:first)').remove();
+            references.$topicList.find('option:not(:first)').remove();
+            references.$subTopicList.find('option:not(:first)').remove();
+            references.$subjectList.find('option:not(:first)').remove();
+            references.$collectionContainer.hide();
+            references.$videoDropDownContainer.data('videos', []);
+            this.initSelect2();
+            
+        },
+        
         _renderPracticeMapping: function(practicemappingData) {
             var references = this._references;
             var category = [];
@@ -357,6 +390,7 @@ define(function(require) {
                     uid:vid,
                     thumbnailURL:image,
                 };
+            references.$collectionContainer.show();
         	viewRenderer.renderAppend(references.$videoContainer, carouselTemplate, renderData);
         	var that = this;
             $('.sortable li .video-remove').click(function(){
