@@ -56,7 +56,7 @@ class PracticeSubject(CocoModel):
 class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
-    practice_name = models.CharField(null=True, max_length=200)
+    practice_name = models.CharField(null=True, blank=True, max_length=200)
     practice_sector = models.ForeignKey(PracticeSector, default=1) 
     practice_subsector = models.ForeignKey(PracticeSubSector, null=True, blank=True)
     practice_topic = models.ForeignKey(PracticeTopic, null=True, blank=True)
@@ -82,7 +82,7 @@ class Language(CocoModel):
     language_name = models.CharField(max_length=100, unique='True')
 
     def __unicode__(self):
-        return self.name
+        return self.language_name
 post_save.connect(save_log, sender=Language)
 pre_delete.connect(delete_log, sender=Language)
 
