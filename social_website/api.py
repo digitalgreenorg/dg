@@ -168,7 +168,7 @@ class VideoResource(BaseResource):
     class Meta:
         queryset = Video.objects.all()
         resource_name = 'video'
-        excludes = ['category','subcategory','topic','subtopic','subject','state']
+        excludes = ['category','subcategory','topic','subtopic','subject']
         filtering={
                    'uid':ALL,
                    'partner':ALL_WITH_RELATIONS,
