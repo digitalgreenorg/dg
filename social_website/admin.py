@@ -26,7 +26,7 @@ class CollectionAdmin(admin.ModelAdmin):
                   )]
     inlines = [VideoCollectionInline,]
     list_display = ('title', 'category', 'partner', 'state', 'language')
-    search_fields = ['title']
+    search_fields = ['title', 'partner__name', 'state', 'language']
     filter_horizontal = ('videos',)
 
 class FeaturedCollectionAdmin(admin.ModelAdmin):
