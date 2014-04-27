@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^deomain/', views.mainpage, name='mainpage'),
     url(r'^api/getdistrict', views.districtsetter, name='districtsetter'),
-    url(r'^api/getdeo', views.deosetter, name='deosetter')
+    url(r'^api/getdeo', views.deosetter, name='deosetter'),
+    url(r'^api/getthedeo', views.deodatasetter, name='deodatasetter')
 )

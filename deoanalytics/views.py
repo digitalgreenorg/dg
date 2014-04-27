@@ -1,6 +1,6 @@
 # Create your views here.
 
-import json
+import json, datetime
 
 from django.http import HttpResponse
 from django.template import RequestContext, loader
@@ -80,4 +80,31 @@ def deosetter(request):
     print resp
     return HttpResponse(json.dumps(list(resp)), mimetype="application/json")
 
+def deodatasetter(request):
+    selecteddeo = request.GET.get('deo',None)
+    sdate = request.GET.get ('sdate',None)
+    print sdate
+    edate = request.GET.get ('edate',None)
+    print edate
+    mode = request.GET.get ('mode',None)
     
+    start_date = datetime.datetime.strptime(sdate, "%Y-%m-%d")
+    print "start_date as in view: "
+    print start_date
+    end_date = datetime.datetime.strptime(edate, "%Y-%m-%d")
+    
+    if mode == 1:       
+        screenings = Screening.objects.filter(user_created__username=selecteddeo, time_created=start_date).count()
+        adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created=start_date).count()
+
+    else:
+        '''mydate = datetime.datetime.strptime(selecteddate, "%Y-%m-%d")
+        start_date = mydate - datetime.timedelta(days=7)'''       
+        screenings = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+        adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+        '''video,person''' 
+    
+    return HttpResponse(json.dumps({
+        "screenings": screenings, 
+        "adoptions": adoptions}),
+    content_type="application/json")

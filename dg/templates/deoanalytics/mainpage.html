@@ -7,7 +7,7 @@
  	
  	   <div class="featured layout-vr-xlg">
  	   
-			<select id = "partnerlist" onchange="districtfilter(); deofilter();">			
+			<select id = "partnerlist" onchange="districtfilter();">			
                <option value='' selected='selected'>Choose Partner</option>
                {% for pa in partners%} 
                  <option value = "{{pa.id}}">{{pa.partner_name}}</option>
@@ -18,128 +18,505 @@
                <option value='' selected='selected'>Choose District</option>     
 	        </select>
 	        
-	        <select id = "deolist">			
+	        <select id = "deolist" multiple>			
                <option value='' selected='selected'>Choose DEOs</option>
                         
 	        </select>     
 	        
 	        
         <div style="float:right;">
-	      <a class="btn" onclick="runquery()">GO</a>
+	      <a class="btn" onclick="goclicked()">GO</a>
         </div>       
-
-
-	    <script>
-	     // JavaScript Document
-
-        function districtfilter()
-        {
-                
-           console.log("Function districtfilter entered...");
-           
-           var e = document.getElementById('partnerlist');
-           var partnerval = e.options[e.selectedIndex].value;
-
-           console.log("The selected partner is: " + partnerval);  
-           
-           $.ajax(
-              {
-                 type:'GET',
-                 data:{ 
-                 'partner': partnerval,
-                 },
-                 url:"http://127.0.0.1:8000/deo/api/getdistrict",
-                 
-                 success: function(data){
-
-                     var options = '';
-                     for (var i = 0; i < data.length; i++) 
-                     {
-                       options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
-                     }
-                     $("select#districtlist").html(options);
-                 },
-                 error: function(data){
-                         console.log("ERRORIS:" + data);
-                         alert("There was an error in recording your input!");
-                 }
-              });
-        }
- 
-        function deofilter()
-        {
-                
-           console.log("Function deofilter entered...");
-           
-           var e = document.getElementById('partnerlist');
-           var partnerval = e.options[e.selectedIndex].value;
-           console.log("The selected partner is: " + partnerval);
-           
-           var f = document.getElementById('districtlist');
-           var districtval = f.options[f.selectedIndex].value;           
-           console.log("The selected district is: " + districtval);  
-           
-           $.ajax(
-              {
-                 type:'GET',
-                 data:{ 
-                 'partner': partnerval,
-                 'district': districtval,
-                 },
-                 url:"http://127.0.0.1:8000/deo/api/getdeo",
-                 
-                 success: function(data){
-
-                     var options = '';
-                     for (var j = 0; j < data.length; j++) 
-                     {
-                       options += '<option value="' + data[j].deo_name+  '">' + data[j].deo_name + '</option>';
-                     }
-                     $("select#deolist").html(options);
-                 },
-                 error: function(data){
-                        console.log("ERRORIS:" + data);
-                        alert("There was an error in recording your input!");
-                }
-              });
-        }
-	     
-	    </script>   
          
         <ul class="filterOptions hdg-upper copy clearfix js-most-filters" style="float:right; padding:0 10px;">
-           <li><a href="#" class="js-most-filter active"><span><span class="icon"></span>Daily</span></a></li>
-           <li><a href="#" class="js-most-filter"><span><span class="icon"></span>Weekly</span></a></li>
-           <li><a href="#" class="js-most-filter"><span><span class="icon"></span>Monthly</span></a></li>
+           <li><a href="#" class="js-most-filter active" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
+           <li><a href="#" class="js-most-filter" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
+           <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
         </ul>
-        
+
+  		<!-- Date: <input type="date" name="dateentry" id="dateentry"> -->
+		
         <div class="grid" style="width:100%;">
 			<div class="grid-col grid-size1of4 js-filters-wrapper" style="padding-top:50px;">
                 <div class="sorting">
-                    <ul class="sorting-list v-list js-filters-container">                            
-                    	<li class="js-filter-category " data-category-id="DEO 1">
-                            <div class="filter-category-label js-filter-category-label">DEO 1</div>
-                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
-                        </li>
-                    	<li class="js-filter-category " data-category-id="DEO 2">
-                            <div class="filter-category-label js-filter-category-label">DEO 2</div>
-                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
-                        </li>
-                    	<li class="js-filter-category " data-category-id="DEO 3">
-                            <div class="filter-category-label js-filter-category-label">DEO 3</div>
-                            <div class="filter-subcategory-wrapper js-subcategory-wrapper"></div>
-                        </li>                           
+                    <ul id="deobox" class="sorting-list v-list js-filters-container">  
+                                                                                      
 				   </ul>
                </div> <!-- End .sorting -->
          	</div>
          
          	<div class="grid-size3of4" style="float:left; padding-top:50px;">
-         
-         		<p>No. of Screenings: {{screenings}}</p>
-         		<p>No. of Adoptions: {{adoptions}}</p>
+         	
+         	<div id="datepanel" style="width:35%; margin: 0 auto;">
+		         	<button type="previous" style="float:left" onclick="moveprev()">Prev</button>
+		         		<div id="dateshow" style="float:left;"></div>
+		         	<button type="next" style="float:left;" onclick="movenext()">Next</button>
+		    </div>
+         		<p id="screenings"></p>
+         		<p id="adoptions"></p>
          	</div>
          </div>
      </div>
 	</div>
 </section>    
+ 
+ 
+ <script>
+ // JavaScript Document
+ 
+   function onbodyload()
+   {
+	  var today = new Date();
+	  setdate(0, today);
+   }
+ 
+   function settheday()
+   {
+	   var userdate = document.getElementById('dateshow').innerHTML;
+	   var first = userdate.split(" ");
+
+	   if (first[0] == parseInt(first[0])) //coming to DAILY view from WEEKLY view
+	   {
+		   dates = userdate.split("-");
+		   date1 = getdateonscreenforweek(1, dates[0]);		   
+		   setdate(0, date1);
+	   }
+	   else if (first[0] == "Jan" || first[0] == "Feb" || first[0] == "Mar" || first[0] == "Apr" || first[0] == "May" || 
+			   first[0] == "Jun" || first[0] == "Jul" || first[0] == "Aug" || first[0] == "Sep" || first[0] == "Oct" || 
+			   first[0] == "Nov" || first[0] == "Dec") 
+		   //coming to DAILY from MONTHLY			   
+	   {
+		   d = getfirstdateofselectedmonth(1);
+		   
+		   var day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		   var dayofweek = day[d.getDay()];
+		   console.log("day is: " + dayofweek);
+
+			var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+			var mon = month[d.getMonth()];
+		   
+		   d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
+		   $("div#dateshow").html(d);
+		   
+	   }
+   }
+   
+	function settheweek()
+ 	{
+ 	   var userdate = document.getElementById('dateshow').innerHTML;
+	   var first = userdate.split(" ");
+	   
+	   if (first[0] == "Sun" || first[0] == "Mon" || first[0] == "Tue" || first[0] == "Wed" || first[0] == "Thu"
+		   || first[0] == "Fri" || first[0] == "Sat") //coming to WEEKLY view from DAILY view	   
+	   {
+			var mydate = getdateonscreen(1);	
+			setweekfromsingledate(mydate);
+	   }
+	   else if (first[0] == "Jan" || first[0] == "Feb" || first[0] == "Mar" || first[0] == "Apr" || first[0] == "May" || 
+			   first[0] == "Jun" || first[0] == "Jul" || first[0] == "Aug" || first[0] == "Sep" || first[0] == "Oct" || 
+			   first[0] == "Nov" || first[0] == "Dec") //coming to WEEKLY from MONTHLY view
+	   {
+		   d = getfirstdateofselectedmonth(1);	   
+		   setweekfromsingledate(d);
+	   }
+ 	}
+	
+	function setthemonth()
+	{
+	   var userdate = document.getElementById('dateshow').innerHTML;
+	   var first = userdate.split(" ");
+
+	   if (first[0] == "Sun" || first[0] == "Mon" || first[0] == "Tue" || first[0] == "Wed" || first[0] == "Thu"
+		   || first[0] == "Fri" || first[0] == "Sat") //coming to MONTHLY view from DAILY view
+	   {
+			var mydate = getdateonscreen(1);
+			setmonthfromdate(mydate);
+	   }
+	   else if (first[0] == parseInt(first[0])) //coming to MONTHLY view from WEEKLY view
+	   {
+		   dates = userdate.split("-");
+		   date2 = getdateonscreenforweek(1, dates[1]);		   
+		   setmonthfromdate(date2);
+	   }		
+	}
+	
+	function getfirstdateofselectedmonth(cn)
+	{
+	   var data = document.getElementById('dateshow').innerHTML;
+	   var usermonth = data.split(" ");
+	   
+	   d = new Date (usermonth[1], getmonthnofromname(usermonth[0]), '01');
+	   
+       if (cn == 2)
+		 {    	   
+    	   mm = d.getMonth() + 1;
+		   d = d.getFullYear()+'-'+mm+'-'+d.getDate();
+		 }   
+	   return d;
+	}
+	
+	function getlastdateofselectedmonth()
+	{
+		var d = getfirstdateofselectedmonth(1);
+		
+		var ld = new Date(d.getFullYear(), d.getMonth()+1, 0);
+		
+		ldmm = ld.getMonth() + 1;
+		ld = ld.getFullYear()+'-'+ldmm+'-'+ld.getDate();
+		
+		return ld;
+		
+	}
+	function setmonthfromdate(d)
+	{
+		var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+		var mon = month[d.getMonth()];
+		
+		var yyyy = d.getFullYear();
+
+   	    d = mon +' '+ yyyy;
+		$("div#dateshow").html(d);
+	}
+	
+ 	function setdate(counter, d)
+ 	{
+ 	   if (counter == -1)  {d.setDate(d.getDate() - 1);}
+ 	   else if (counter == 1)  {d.setDate(d.getDate() + 1);}
+ 	   
+	   var dd = d.getDate();
+	   
+	   var day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+	   var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+	   var day = day[d.getDay()];
+	   var mon = month[d.getMonth()];
+
+	   var yyyy = d.getFullYear();
+
+	   if(dd<10) {dd='0'+dd} 
+
+	   d = day+' '+ dd+' '+mon+' '+yyyy;
+	   $("div#dateshow").html(d);
+ 	}
+ 
+ 	function getdateonscreen(cn)
+ 	{
+ 	   var userdate = document.getElementById('dateshow').innerHTML; 
+	   datesplitted = userdate.split(" ");
+
+	   var dd = datesplitted[1];
+	   
+	   var yyyy = datesplitted[3];
+	   var mm = getmonthnofromname(datesplitted[2]);
+   
+	   if (cn == 2) {mm = mm+1}
+	   if(mm<10) {mm='0'+mm}
+   
+	   if (cn==1)
+		 {
+		   dateformatted = new Date (yyyy, mm, dd);		   
+		 }
+	   else if (cn == 2)
+		 {
+		   dateformatted = yyyy+'-'+mm+'-'+dd;
+		 }
+	   return dateformatted;
+ 	}
+ 	
+	
+ 	function setweekfromsingledate(d)
+ 	{
+ 	  var day = d.getDay();
+
+ 	  var startweek = new Date(d);
+ 	  var endweek = new Date(d);
+ 	  
+ 	  if (day == 0) {startweek.setDate(d.getDate() - 6); endweek.setDate(d.getDate());}
+ 	  else if (day == 1) {startweek.setDate(d.getDate()); endweek.setDate(d.getDate() + 6);}
+ 	  else if (day == 2) {startweek.setDate(d.getDate() - 1); endweek.setDate(d.getDate() + 5);}
+ 	  else if (day == 3) {startweek.setDate(d.getDate() - 2); endweek.setDate(d.getDate() + 4);}
+ 	  else if (day == 4) {startweek.setDate(d.getDate() - 3); endweek.setDate(d.getDate() + 3);}
+ 	  else if (day == 5) {startweek.setDate(d.getDate() - 4); endweek.setDate(d.getDate() + 2);}
+ 	  else if (day == 6) {endweek.setDate(d.getDate() + 1); startweek.setDate(d.getDate() - 5);}
+ 	  
+	  setweekfromtwodates(0, startweek, endweek)
+ 	}
+
+ 	function setweekfromtwodates(counter, startweek, endweek)
+ 	{
+ 		
+  	  if (counter == -1)  {startweek.setDate(startweek.getDate() - 7); endweek.setDate(endweek.getDate() - 7);}
+ 	  else if (counter == 1)  {startweek.setDate(startweek.getDate() + 7); endweek.setDate(endweek.getDate() + 7);}
+  	   
+ 	  var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+ 	  var startweekmon = month[startweek.getMonth()];
+ 	  var endweekmon = month[endweek.getMonth()];
+ 	 
+	  var yrstartweek = startweek.getFullYear();
+	  var yrendweek = endweek.getFullYear();
+
+	  d = startweek.getDate()+ ' ' + startweekmon + ' ' + yrstartweek + '-'+ endweek.getDate() +' '+ endweekmon + ' '+ yrstartweek;  
+
+	  $("div#dateshow").html(d);	
+ 	}
+ 	
+ 	function getdateonscreenforweek(cn, rdate)
+ 	{
+	   date = rdate.split(" ");
+	   
+	   var dd = date[0];	   
+	   var yyyy = date[2];
+	   var mm = getmonthnofromname(date[1]);
+	   if (cn == 2) {mm = mm+1}
+	   if(mm<10) {mm='0'+mm}
+   
+	   if (cn==1)
+		 {
+		   dateformatted = new Date (yyyy, mm, dd);		   
+		 }
+	   else if (cn == 2)
+		 {
+		   dateformatted = yyyy+'-'+mm+'-'+dd;
+		 }	
+	   return dateformatted;
+ 	}
+ 	
+ 	function getmonthnofromname(mon)
+ 	{
+ 	   if (mon == "Jan") {mm = 0;}
+	   else if (mon == "Feb") {mm = 1;}
+	   else if (mon == "Mar") {mm = 2;}
+	   else if (mon == "Apr") {mm = 3;}
+	   else if (mon == "May") {mm = 4;}
+	   else if (mon == "Jun") {mm = 5;}
+	   else if (mon == "Jul") {mm = 6;}
+	   else if (mon == "Aug") {mm = 7;}
+	   else if (mon == "Sep") {mm = 8;}
+	   else if (mon == "Oct") {mm = 9;}
+	   else if (mon == "Nov") {mm = 10;}
+	   else if (mon == "Dec") {mm = 11;}
+ 
+	   return mm;
+ 	}
+ 	
+   function movenext()
+   {
+
+	   if ($("#daily").hasClass("active") == true)
+	   {
+			setdate(1, getdateonscreen(1));	   
+	   }
+	   else if ($("#weekly").hasClass("active") == true)
+	   {
+	  	   var userdate = document.getElementById('dateshow').innerHTML; 
+		   dates = userdate.split("-");
+		   
+		   date1 = getdateonscreenforweek(1, dates[0]);
+		   date2 = getdateonscreenforweek(1, dates[1]);
+		   
+		   setweekfromtwodates(1, date1, date2);
+	   }
+	   else if ($("#monthly").hasClass("active") == true)
+	   {
+		   var d = getfirstdateofselectedmonth(1);	   
+		   console.log("First date of selected month: " + d);
+		   d.setMonth(d.getMonth() + 1);		   
+		   console.log("Date after incrementing month: " + d);
+		   setmonthfromdate(d);		   
+	   }	   
+   }
+
+   function moveprev()
+   {
+	   if ($("#daily").hasClass("active") == true)
+	   {
+			setdate(-1, getdateonscreen(1));	   
+	   }
+	   else if ($("#weekly").hasClass("active") == true)
+	   {
+	  	   var userdate = document.getElementById('dateshow').innerHTML; 
+		   dates = userdate.split("-");
+		   
+		   date1 = getdateonscreenforweek(1, dates[0]);
+		   date2 = getdateonscreenforweek(1, dates[1]);
+
+		   setweekfromtwodates(-1, date1, date2);
+	   }	
+	   else if ($("#monthly").hasClass("active") == true)
+	   {
+		   var d = getfirstdateofselectedmonth(1);	   
+		   d.setMonth(d.getMonth() - 1);	
+		   console.log ("Date after -1month: "+d)
+		   setmonthfromdate(d);		   
+	   }
+   }
+   
+   function districtfilter()
+   {
+           
+      console.log("Function districtfilter entered...");
+      
+      var e = document.getElementById('partnerlist');
+      var partnerval = e.options[e.selectedIndex].value;
+
+      console.log("The selected partner is: " + partnerval);  
+      
+      $.ajax(
+         {
+            type:'GET',
+            data:{ 
+            'partner': partnerval,
+            },
+            url:"http://127.0.0.1:8000/deo/api/getdistrict",
+            
+            success: function(data){
+
+                var options = '';
+                for (var i = 0; i < data.length; i++) 
+                {
+                  options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
+                }
+                $("select#districtlist").html(options);
+            },
+            error: function(data){
+                    console.log("ERRORIS:" + data);
+                    alert("There was an error in recording your input!");
+            }
+         });
+   }
+
+   function deofilter()
+   {
+           
+      console.log("Function deofilter entered...");
+      
+      var e = document.getElementById('partnerlist');
+      var partnerval = e.options[e.selectedIndex].value;
+      console.log("The selected partner is: " + partnerval);
+      
+      var f = document.getElementById('districtlist');
+      var districtval = f.options[f.selectedIndex].value;           
+      console.log("The selected district is: " + districtval);  
+      
+      $.ajax(
+         {
+            type:'GET',
+            data:{ 
+            'partner': partnerval,
+            'district': districtval,
+            },
+            url:"http://127.0.0.1:8000/deo/api/getdeo",
+            
+            success: function(data){
+
+                var options = '';
+                for (var j = 0; j < data.length; j++) 
+                {
+                  options += '<option value="' + data[j].deo_name+  '">' + data[j].deo_name + '</option>';
+                }
+                $("select#deolist").html(options);
+            },
+            error: function(data){
+                   console.log("ERRORIS:" + data);
+                   alert("There was an error in recording your input!");
+           }
+         });
+   }
+ 
+   function goclicked()
+   {
+       console.log("Function goclicked entered...");
+       
+       var values = $('#deolist').val();
+       console.log(values); 
+
+       var list = '';
+       for (var j = 0; j < values.length; j++) 
+       {
+       	list += '<li onclick='+ "analyzedeo(this)" + '>' + '<div class="' + "filter-category-label js-filter-category-label" + '">' + values[j] + '</div></li>';
+       }
+       $("ul#deobox").html(list);
+   }
+
+   function analyzedeo(deoname_element)
+   {	
+   	console.log("Analyze deo entered...");
+   	deoname = deoname_element.innerText.trim();
+   	
+   	var mode;
+   	
+   	if ($("#daily").hasClass("active") == true)
+    { 
+   		mode = 1;
+   	   	start_date = getdateonscreen(2);
+   	   	console.log(typeof(start_date));
+   	 	end_date = getdateonscreen(2);
+   	 	console.log(end_date);
+    }
+   	else if ($("#weekly").hasClass("active") == true) 
+   	{ 
+   		mode = 2;
+	  	var userdate = document.getElementById('dateshow').innerHTML; 
+		dates = userdate.split("-");
+		   
+		start_date = getdateonscreenforweek(2, dates[0]);
+		console.log(typeof(start_date));
+		end_date = getdateonscreenforweek(2, dates[1]);		
+   	}
+   	else if ($("#monthly").hasClass("active") == true) 
+   	{ 
+   		mode = 3;
+   		start_date = getfirstdateofselectedmonth(2);
+   		console.log(start_date);
+   		end_date = getlastdateofselectedmonth();
+   		console.log(end_date);
+   	}
+  	
+    $.ajax(
+            {
+               type:'GET',
+               data:{ 
+               'deo': deoname,
+               'sdate': start_date,
+               'edate': end_date,
+               'mode': mode,
+               },
+               url:"http://127.0.0.1:8000/deo/api/getthedeo",
+               
+               success: function(data){
+            	   lin1 = "No. of screeings: " + data.screenings;
+            	   lin2 = "No. of adoptions: " + data.adoptions;
+            	   $("p#screenings").html(lin1);
+            	   $("p#adoptions").html(lin2);
+               },
+               error: function(data){
+                      console.log("ERRORIS:" + data);
+                      alert("There was an error in recording your input!");
+              }
+            });        	
+   }
+   
+   function makeactive(num)
+   {
+	   if (num==1)
+	   {
+		   document.getElementById('daily').classList.add('active');
+		   document.getElementById('weekly').classList.remove('active');
+		   document.getElementById('monthly').classList.remove('active');
+	   }
+	   else if (num==2)
+	   {
+		   document.getElementById('weekly').classList.add('active');
+		   document.getElementById('daily').classList.remove('active');
+		   document.getElementById('monthly').classList.remove('active');
+	   }
+	   else if (num==3)
+	   {
+		   document.getElementById('monthly').classList.add('active');
+		   document.getElementById('weekly').classList.remove('active');
+		   document.getElementById('daily').classList.remove('active');
+	   }	   
+   }
+</script>   
  
  {% include "includes/footer_for_deo.html"%}

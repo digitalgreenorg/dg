@@ -49,7 +49,7 @@
             Profile
     -->
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
-    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}}>
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}} onload="onbodyload()">
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper">
             <div class="header-fixed">
