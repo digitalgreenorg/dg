@@ -391,7 +391,7 @@
             data:{ 
             'partner': partnerval,
             },
-            url:"http://127.0.0.1:8000/deo/api/getdistrict",
+            url: window.location.origin + "/deo/api/getdistrict",
             
             success: function(data){
 
@@ -429,7 +429,7 @@
             'partner': partnerval,
             'district': districtval,
             },
-            url:"http://127.0.0.1:8000/deo/api/getdeo",
+            url: window.location.origin + "/deo/api/getdeo",
             
             success: function(data){
 
@@ -527,7 +527,7 @@
                'edate': end_date,
                'mode': mode,
                },
-               url:"http://127.0.0.1:8000/deo/api/getthedeo",
+               url:window.location.origin + "/deo/api/getthedeo",
                
                success: function(data){
             	   lin1 = "No. of screenings entered: " + data.screenings;
