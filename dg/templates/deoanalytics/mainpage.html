@@ -5,23 +5,32 @@
  
  	<div class="inner-wrapper">
  	
- 	   <div class="featured layout-vr-xlg">
+ 	   <div class="featured layout-vr-xlg" style="background:white; padding-top:50px;">
  	   
+ 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="icon"></div>
+ 	   		<!-- <div class="selected-item-label js-selected-item-label">Choose Partner</div>  -->
 			<select id = "partnerlist" onchange="districtfilter();">			
                <option value='' selected='selected'>Choose Partner</option>
                {% for pa in partners%} 
                  <option value = "{{pa.id}}">{{pa.partner_name}}</option>
                {% endfor %}
             </select>
+            </div>
 
+ 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="icon"></div>
 			<select id = "districtlist" onchange="deofilter()">			
                <option value='' selected='selected'>Choose District</option>     
 	        </select>
+	        </div>
 	        
+ 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="icon"></div>	        
 	        <select id = "deolist" multiple>			
-               <option value='' selected='selected'>Choose DEOs</option>
-                        
+               <option value='' selected='selected'>Choose DEOs</option>                        
 	        </select>     
+	        </div>
 	        
 	        
         <div style="float:right;">
@@ -36,30 +45,34 @@
 
   		<!-- Date: <input type="date" name="dateentry" id="dateentry"> -->
 		
-        <div class="grid" style="width:100%;">
-			<div class="grid-col grid-size1of4 js-filters-wrapper" style="padding-top:50px;">
-                <div class="sorting">
-                    <ul id="deobox" class="sorting-list v-list js-filters-container">  
-                                                                                      
-				   </ul>
-               </div> <!-- End .sorting -->
-         	</div>
-         
-         	<div class="grid-size3of4" style="float:left; padding-top:50px;">
-         	
-         	<div id="datepanel" style="width:35%; margin: 0 auto;">
-		         	<button type="previous" style="float:left" onclick="moveprev()">Prev</button>
-		         		<div id="dateshow" style="float:left;"></div>
-		         	<button type="next" style="float:left;" onclick="movenext()">Next</button>
-		    </div>
-         		<p id="screenings"></p>
-         		<p id="adoptions"></p>
-         	</div>
-         </div>
+		<div style="margin-top:100px">
+		        <div class="grid" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
+					<div class="grid-col js-filters-wrapper" style="padding-top:20px; width:25%">
+		                <div class="sorting">
+		                    <ul id="deobox" class="sorting-list v-list js-filters-container">  
+		                                                                                      
+						   </ul>
+		               </div> <!-- End .sorting -->
+		         	</div>
+		         
+		         	<div class="grid-size3of4" style="float:left; padding-top:20px; width:70%">
+		         	
+		         	<div id="datepanel" style="width:40%; margin: 0 auto;">
+				         	<button type="previous" style="float:left" onclick="moveprev()">Prev</button>
+				         		<div id="dateshow" style="float:left;"></div>
+				         	<button type="next" style="float:left;" onclick="movenext()">Next</button>
+				    </div>
+				     <div style="clear:both">
+		         		<p id="screenings"></p>
+		         		<p id="adoptions"></p>
+		         		<p id="persons"></p>
+		         	 </div>
+		         	</div>
+		         </div>
+		 </div>
      </div>
 	</div>
 </section>    
- 
  
  <script>
  // JavaScript Document
@@ -96,8 +109,7 @@
 			var mon = month[d.getMonth()];
 		   
 		   d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
-		   $("div#dateshow").html(d);
-		   
+		   $("div#dateshow").html(d);		   
 	   }
    }
    
@@ -218,6 +230,18 @@
 		 }
 	   else if (cn == 2)
 		 {
+		   dateformatted = yyyy+'-'+mm+'-'+dd;
+		 }
+	   else if (cn == 3)
+		 {
+		   dateformatted = new Date (yyyy, mm, dd);
+		   dateformatted.setDate(dateformatted.getDate() + 1);
+		   
+		   yyyy = dateformatted.getFullYear();
+		   mm = dateformatted.getMonth() + 1;
+		   if(mm<10) {mm='0'+mm}
+		   dd = dateformatted.getDate();
+		   
 		   dateformatted = yyyy+'-'+mm+'-'+dd;
 		 }
 	   return dateformatted;
@@ -433,14 +457,36 @@
        var list = '';
        for (var j = 0; j < values.length; j++) 
        {
-       	list += '<li onclick='+ "analyzedeo(this)" + '>' + '<div class="' + "filter-category-label js-filter-category-label" + '">' + values[j] + '</div></li>';
+    	   htmlline = '<li id =' + j + ' ' + 'onclick="'+ 'analyzedeo(this); makedeoactive(' + values.length + ',' + j + ');">' + '<div class="' + "categorylabelunselected js-filter-category-label" + '">' + values[j] + '</div></li>';
+       	   list += htmlline;
        }
        $("ul#deobox").html(list);
    }
 
+   function makedeoactive(total, val)
+   {
+       for (var j = 0; j < total; j++) 
+       {	  
+    	   if (j == val)
+    	   {
+    		   document.getElementById(j).classList.remove('categorylabelunselected');
+    		   document.getElementById(j).classList.add('categorylabelselected');   		   
+    	   }
+    	   else
+    	  {
+    		   document.getElementById(j).classList.add('categorylabelunselected');
+    		   document.getElementById(j).classList.remove('categorylabelselected');    		   
+    	  }   
+       }
+       //document.getElementById('0').style.background = "#c2c1bc";
+	   //document.getElementById('1').style.background = "#c2c1bc";
+	   //document.getElementById('2').style.background = "#c2c1bc";
+   }
+   
    function analyzedeo(deoname_element)
    {	
    	console.log("Analyze deo entered...");
+	   
    	deoname = deoname_element.innerText.trim();
    	
    	var mode;
@@ -449,8 +495,8 @@
     { 
    		mode = 1;
    	   	start_date = getdateonscreen(2);
-   	   	console.log(typeof(start_date));
-   	 	end_date = getdateonscreen(2);
+   	   	console.log(start_date);
+   	 	end_date = getdateonscreen(3);
    	 	console.log(end_date);
     }
    	else if ($("#weekly").hasClass("active") == true) 
@@ -484,10 +530,12 @@
                url:"http://127.0.0.1:8000/deo/api/getthedeo",
                
                success: function(data){
-            	   lin1 = "No. of screeings: " + data.screenings;
-            	   lin2 = "No. of adoptions: " + data.adoptions;
+            	   lin1 = "No. of screenings entered: " + data.screenings;
+            	   lin2 = "No. of adoptions entered : " + data.adoptions;
+            	   lin3 = "No. of persons entered   : " + data.persons;
             	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
+            	   $("p#persons").html(lin3);
                },
                error: function(data){
                       console.log("ERRORIS:" + data);
