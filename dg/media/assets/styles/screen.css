@@ -2739,7 +2739,7 @@ textarea.comment-text {
     height: 150px;
     left: 0;
     bottom: 0;
-    background: url('../images/main-carousel-background.png') 0 0 repeat-x;
+    /* background: url('../images/main-carousel-background.png') 0 0 repeat-x; */
     overflow: hidden;
 }
 
