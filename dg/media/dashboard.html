@@ -1,34 +1,38 @@
 <!DOCTYPE HTML>
-<!-- manifest="/media/coco/coco-offline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache">
+<!-- manifest="/media/coco/cocooffline.appcache" -->
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-
-	<TITLE>Dashboard</TITLE>
-	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
+	
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="robots" content="NONE,NOARCHIVE">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <TITLE>Dashboard</TITLE>
+	
+    <LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
 	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/chosen-bootstrap.css">
 	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen/chosen.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    
     <script type="text/javascript">
 	  require.config({
 	    paths: {
 	        "configs": "/media/configs"
 	    },
 	  });
-	</script>	
-	
+	</script>
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                                        <!--Core Framework templates end here -->    
+                                        <!--Core Framework templates end here -->
     <!--Page layout, full download, incremental download, background inc download, upload, notifications, status, dashboard,    form page, list page, login, select-options template, -->            
 
 <script type="text/template" id="header">
@@ -58,50 +62,58 @@
     </div>
 </script>
 <script type="text/template" id="upload_template">
-    <div id="upload_modal" class="modal hide fade" >
-      <div class="modal-header">
-        <h3>Uploading</h3>
-      </div>
-      <div class="modal-body">
-          Data items to be uploaded = <span id="num_upload"> </span>
-          <br>
-        <div class="progress progress-info progress-striped">
-          <div class="bar" id = "pbar" style="width: 0%"></div>
+    <div id="upload_modal" class="modal fade" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Uploading</h3>
+                </div>
+                <div class="modal-body">
+                    Data items to be uploaded = <span id="num_upload"> </span>
+                    <br>
+                    <div class="progress progress-info progress-striped">
+                        <div class="progress-bar" id = "pbar" style="width: 0%"></div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td id="upl_action"> </td>
+                            <td id="upl_status"> </td>
+                        </tr>
+                    </table>
+                    <p id= "error_msg"> </p>
+                    <div id= "upload_form">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="stop_upload" type="button" class="btn">Stop It!</button>
+                </div>
+            </div>
         </div>
-        <table class="table">
-            <tr>
-                <td id="upl_action"> </td>
-                <td id="upl_status"> </td>
-            </tr>
-        </table>
-        <p id= "error_msg"> </p>
-        <div id= "upload_form">
-        </div>
-      </div>
-      <div class="modal-footer">
-          <button id="stop_upload" type="button" class="btn">Stop It!</button>
-      </div>
     </div>
 </script>
 <script type="text/template" id="incremental_download_template">
-    <div id="incremental_download_modal" class="modal hide fade" >
-      <div class="modal-header">
-        <h3>Downloading</h3>
-      </div>
-      <div class="modal-body">
-        <div class="progress progress-info progress-striped">
-          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+    <div id="incremental_download_modal" class="modal fade" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Downloading</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="progress progress-info progress-striped">
+                        <div class="progress-bar" id = "inc_pbar" style="width: 0%"></div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td id="inc_action"> </td>
+                            <td id="inc_status"> </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="stop_inc_download" type="button" class="btn">Stop It!</button>
+                </div>
+            </div>
         </div>
-        <table class="table">
-            <tr>
-                <td id="inc_action"> </td>
-                <td id="inc_status"> </td>
-            </tr>
-        </table>
-      </div>
-      <div class="modal-footer">
-          <button id="stop_inc_download" type="button" class="btn">Stop It!</button>
-      </div>
     </div>
 </script>
 <script type="text/template" id="incremental_download_background_template">
@@ -110,92 +122,126 @@
     Downloading...
       <div>
         <div class="progress progress-info progress-striped">
-          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+          <div class="progress-bar" id = "inc_pbar" style="width: 0%"></div>
         </div>
       </div>
     </div>
 </div>    
 </script>
 <script type="text/template" id="download_template">
-    <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
-        <h3>Download</h3>
-      </div>
-      <div class="modal-body">
-        <p >Please wait...</p>
-        <div class="progress progress-info progress-striped">
-          <div class="bar" id = "pbar" style="width: 0%"></div>
-        </div>
-        <div id="d_status">
-            <table class="table" style="width:100%">
-                <%$.each(all_configs, function(key,val) {
-                    if(key!="misc"){
-					var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
-					%>
-				    <tr id="<%=key%>">
-                        <td><%= keyCap %>s</td>
-                        <td class="status_text">In Progress</td>
-                        <td class="status_numbers"></td>
-                    </tr>
-                <%}});%>
-            </table>   
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Pause download</button>
-      </div>
+    <div id="full_download_modal" class="modal fade" tabindex="-1" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Download</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="progress progress-info progress-striped">
+                      <div class="progress-bar" id = "pbar" style="width: 0%"></div>
+                    </div>
+                    <div id="d_status">
+                        <table class="table" style="width:100%">
+                            <%$.each(all_configs, function(key,val) {
+                                if(key!="misc"){
+                                var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
+                                %>
+                                <tr id="<%=key%>">
+                                    <td><%= keyCap %>s</td>
+                                    <td class="status_text">In Progress</td>
+                                    <td class="status_numbers"></td>
+                                </tr>
+                            <%}});%>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Pause download</button>
+                </div>
+            </div> <!-- modal-content -->
+        </div> <!-- modal-dialog -->
     </div>
 </script>
 <script type="text/template" id="dashboard_item_template">
         <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
 </script>
+
 <script  type="text/template" id="dashboard">
-    <div id="coco_sidebar" class="coco_sidebar affix">
-		<table border = '0'>
-			<tr>
-				<td style="vertical-align:top;"><div>
-					<img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
-					<img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
-				</div></td>
-				<td>
-					<div id="coco_userinfo">
-					<%if(typeof(username)!=undefined){%>
+            <div id="coco_sidebar" class="coco_sidebar">
+                <!-- <table border = '0'>
+                    <tr>
+                        <td style="vertical-align:top;"><div>
+                            <img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
+                            <img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
+                        </div></td>
+                        <td>
+                            <div id="coco_userinfo">
+                            <%if(typeof(username)!=undefined){%>
+                            Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
+                            <%}%>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div id="coco_brand">
+                    <a href="#">COCO</a>
+                </div>
+                <div id="coco_sync" class="row">
+                    <button class="btn pull-left" id= "sync">Sync
+                    <span class="badge" id="upload_num"><%=upload_entries%></span>
+                    </button>
+                </div>
+                <p id="helptext">
+                Please download the database<br>
+                by clicking on the sync button
+                </p> -->
+
+                <nav class="navbar navbar-default coco_main_nav" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".coco_main_nav .navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">
+                            <div id="coco_sync">
+                                <button type="button" class="btn btn-default" id= "sync">Sync
+                                    <span class="badge" id="upload_num"><%=upload_entries%></span>
+                                </button>
+                            </div>
+                        </a>
+                    </div>
+                    <div id="coco_nav" class="pull-left collapse navbar-collapse">
+                        <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
+
+                        </ul>
+                    </div>
+                    <div id="coco_nav_add" class="pull-right collapse navbar-collapse ">
+                        <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked" title= "Click to add data">
+
+                        </ul>
+                    </div>
+                    
+                </nav>
+                <div id="coco_userinfo">
+                    <%if(typeof(username)!=undefined){%>
                     Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
-					<%}%>
-					</div>
-				</td>
-			</tr>
-		</table>
-        <div id="coco_brand">
-            <a href="#">COCO</a>
-        </div>
-        <div id="coco_sync" class="row">
-            <button class="btn pull-left" id= "sync">Sync
-			<span class="badge" id="upload_num"><%=upload_entries%></span>
-			</button>
-        </div>
-		<p id="helptext">
-		Please download the database<br>
-		by clicking on the sync button
-		</p>
-        <div id="coco_nav" class="pull-left">
-            <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
-        
-            </ul>
-        </div>
-        <div id="coco_nav_add" class="pull-right">
-            <ul id = "dashboard_items_add" class="nav nav-list" title= "Click to add data">
-        
-            </ul>
-        </div>
-		<div id="faq">
-			Need Help? Check out the <a href="{% url 'faq' %}">FAQ</a>
-		</div>
-    </div>
+                    <%}%>
+                </div>
+            </div>
 </script>
 
 <script type="text/template" id="page_layout">
-    <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
-    <div id = "content" class="span10" ></div>
+    <div class="row global-header">
+        <div class="col-xs-4"><img src="/media/coco/app/images/logo.png" class="img-responsive mrg-lt-5"></div>
+        <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
+        <div class="col-xs-4 align-right"><a href="{% url 'faq' %}"> FAQ </a><img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5"></div>
+    </div>
+
+    <div class="row">
+        <div id = "side_panel" class="col-md-2 col-sm-3"></div>
+        <div id = "content" class="col-md-10 col-sm-9"></div>
+    </div>
 </script>
 
 <script type="text/template" id="status">
@@ -318,10 +364,10 @@
             <% } %>
         
             <div class="form-actions">
-              <button id='button1' type="submit" class="btn btn-primary action_button" data-loading-text="Saving..."><%=button1%></button>
-              <%if(button2){%>
-                  <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
-              <%}%>
+                <button id='button1' type="submit" class="btn btn-primary action_button" data-loading-text="Saving..."><%=button1%></button>
+                <%if(button2){%>
+                    <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
+                <%}%>
             </div>
         </form>
 	
@@ -364,31 +410,34 @@
 </script>
 <script type="text/template" id="login">
 
-<div id="login_modal" class="modal hide fade" >
-  <div class="modal-header">
-    <h3>Login</h3>
-  </div>
-  <div class="modal-body">
-  <span class="text-error" id="error_msg"></span>
-  <form action="">
-    <fieldset>
-      <div class="clearfix">
-      <%if(typeof(username)=="undefined"){%>
-        <input id="username" type="text" placeholder="Username">
-      <%}else{%>    
-        <input id="username" type="text" placeholder="Username" value="<%= username%>" disabled>
-      <%}%>
-      </div>
-      <div class="clearfix">
-        <input id="password" type="password" placeholder="Password">
-      </div>
-      <button id= "login_button" class="btn primary" type="submit" data-loading-text="Logging In...">Sign in</button>
-	  <br><a id="change_user">Sign in as a different user</a>
-    </fieldset>
-  </form>
-  </div>
+<div id="login_modal" class="modal fade" >
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login</h3>
+            </div>
+            <div class="modal-body">
+                <span class="text-error" id="error_msg"></span>
+                <form action="" role="form">
+                    <fieldset>
+                        <div class="clearfix form-group">
+                            <%if(typeof(username)=="undefined"){%>
+                            <input id="username" type="text" placeholder="Username" class="form-control">
+                            <%}else{%>
+                            <input id="username" type="text" placeholder="Username" class= "form-control" value="<%= username%>" disabled>
+                            <%}%>
+                        </div>
+                        <div class="clearfix form-group">
+                            <input id="password" type="password" placeholder="Password" class="form-control">
+                        </div>
+                        <button id= "login_button" class="btn btn-primary" type="submit" data-loading-text="Logging In...">Sign in</button>
+                        <br><a id="change_user">Sign in as a different user</a>
+                    </fieldset>
+                </form>
+          </div>
+        </div>
+    </div>
 </div>
-
 
 </script>
 
@@ -433,44 +482,31 @@
     <fieldset>
         <legend>Add Mediator</legend>
 		<p class="bold-helptext"> All fields in bold are required</p>
-        <div class="control-group"> 
-		<label class="control-label"><b>Name</b></label>
-        	<div class="controls">
-         	<input type="text" name="name" placeholder="Name">
-         	</div>
-         </div>
-         <div class="control-group"> 
-            <label class="control-label"><b>Gender</b></label>
-            <div class="controls">
-            <select name="gender">
-    			<option value='' selected='selected'>---------</option> 
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Name*" class="form-control">
+        </div>
+        <div class="form-group">
+            <select name="gender" class="form-control">
+    			<option value='' selected='selected'>Select Gender*</option> 
     			<option value='M'>Male</option> 
     			<option value='F'>Female</option> 
             </select>
-            </div>
-         </div> 
-         <div class="control-group"> 
-             <label class="control-label"><b>Assigned Villages</b></label>
-             <div class="controls"> 
-             <select id = "id_ass_villages" name="assigned_villages" class = "chzn-select" multiple>
+        </div> 
+        <div class="form-group"> 
+            <label class="control-label"><b>Assigned Villages</b></label>
+            <select id = "id_ass_villages" name="assigned_villages" class = "form-control chzn-select" multiple>
             
             </select>
-            </div>
         </div>
-        <div class="control-group"> 
+        <div class="form-group"> 
             <label class="control-label"><b>District</b></label>
-            <div class="controls"> 
-                <select id = "id_district" name="district" class = "chzn-select">
+            <select id = "id_district" name="district" class = "form-control">
            
-               </select>
-           </div>
-       </div>
-        <div class="control-group">
-             <label class="control-label">Phone Number</label>
-             <div class="controls">
-             <input name="phone_no" type="text" placeholder="Phone Number">
-             </div>
-         </div>
+            </select>
+        </div>
+        <div class="form-group">
+            <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
+        </div>
     </fieldset>
 </script>
 
@@ -1257,7 +1293,8 @@
     <div id = "notifications">
         
     </div>
-    <div id="app">
+    <div id="app" class='container-fluid'>
+
     </div>
 	
 	
