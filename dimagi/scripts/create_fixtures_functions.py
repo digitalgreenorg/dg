@@ -6,7 +6,10 @@ import time
 import xlrd
 import xlsxwriter
 
-from dashboard.models import Animator, Person, PersonGroups, PersonMeetingAttendance, Screening, Video, Village
+from activities.models import PersonMeetingAttendance, Screening
+from geographies.models import Village
+from people.models import Animator, Person, PersonGroup
+from videos.models import Video
 from dg.settings import MEDIA_ROOT
 
 from dimagi.models import CommCareUser, CommCareUserVillage
@@ -133,7 +136,7 @@ def write_group_info(cluster_dict, workbook):
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
-            village_persongroup_info = PersonGroups.objects.filter(village = vill).values_list('id','group_name','village')
+            village_persongroup_info = PersonGroup.objects.filter(village = vill).values_list('id','group_name','village')
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:         
                 group_id = group[0]

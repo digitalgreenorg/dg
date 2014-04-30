@@ -7,7 +7,7 @@ setup_environ(dg.settings)
 from xml.dom import minidom
 import time
 from datetime import datetime,timedelta
-from dashboard.models import Screening, PersonMeetingAttendance, PersonAdoptPractice
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from dimagi.models import XMLSubmission
 from dimagi.models import error_list
 from django.core.exceptions import ValidationError

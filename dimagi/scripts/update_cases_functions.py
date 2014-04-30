@@ -19,11 +19,11 @@ def close_case(persons, filename):
 def update_case(persons, filename): #this will just update cases that are already on our and commcare database  
     file = codecs.open(filename, "w",'utf-8')
     write_opening_meta(file, len(persons))
-    PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
-    PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
+    PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
+    PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
     i = 0
     CommCareCase = get_model('dimagi', 'CommCareCase')
-    Person = get_model('dashboard','Person')
+    Person = get_model('people','Person')
     for person in persons:
         case_id = CommCareCase.objects.get(person=person).guid
         owner_id = CommCareCase.objects.get(person=person).user.guid
@@ -46,6 +46,8 @@ def update_case(persons, filename): #this will just update cases that are alread
 def write_new_case(persons, filename): #this creates new cases both in our and commcare database
     file = codecs.open(filename, "w",'utf-8')
     write_opening_meta(file, len(persons))
+    PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
+    PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
     CommCareUserVillage=get_model('dimagi','CommCareUserVillage')
     CommCareUser = get_model('dimagi','CommCareUser')
     CommCareCase = get_model('dimagi','CommCareCase')

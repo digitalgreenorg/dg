@@ -4,8 +4,8 @@ from django.db import models
 from poster.streaminghttp import register_openers
 from poster.encode import multipart_encode
 
-from dashboard.fields import BigForeignKey
-from dashboard.models import Person, Village
+from people.models import Person
+from geographies.models import Village
 
 error_list = dict({'UNIDENTIFIED_FORM'     : -1,
                    'SCREENING_SAVE_ERROR'  : -2,
@@ -75,13 +75,13 @@ class CommCareUserVillage(models.Model):
     this was not possible because Village.id is a BigAutoField and user.id is a AutoField.
     This is a way to simulate ManyToBigManyField.
     '''
-    village = BigForeignKey(Village)
+    village = models.ForeignKey(Village)
     user = models.ForeignKey(CommCareUser)
 
 class CommCareCase(models.Model):
     guid = models.CharField(max_length=100)
     is_open = models.BooleanField(default=True)
-    person = BigForeignKey(Person)
+    person = models.ForeignKey(Person)
     project = models.ForeignKey(CommCareProject)
     user = models.ForeignKey(CommCareUser)
     class Meta:

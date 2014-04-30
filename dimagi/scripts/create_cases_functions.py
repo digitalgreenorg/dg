@@ -10,9 +10,9 @@ from write_xml_content import write_closing_meta, write_opening_meta, write_pers
   
 def write_full_case_list(person_list, filename, user_id, project_id): #for generating cases
     file = codecs.open(filename, "w",'utf-8')
-    Person = get_model('dashboard','Person')
-    PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
-    PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
+    Person = get_model('people','Person')
+    PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
+    PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
     CommCareCase = get_model('dimagi','CommCareCase')
     CommCareUser = get_model('dimagi','CommCareUser')
     write_opening_meta(file, len(person_list))
@@ -52,7 +52,7 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
     file.close()
 
 def make_upload_file(villages, filename, user_id, project_id):
-    Person = get_model('dashboard','Person')
+    Person = get_model('people','Person')
     person_ids = Person.objects.filter(village__in = villages).values_list('id',flat=True).exclude(group__isnull = True)    
     file = write_full_case_list(person_ids, filename, user_id, project_id)
     
