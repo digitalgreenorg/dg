@@ -1,16 +1,20 @@
 from django.contrib import admin
 #from forms import ImageAdminForm
-from models import ExperienceQualification, Job, KeyResponsibility
+from models import Geography, ExperienceQualification, Job, KeyResponsibility, Place
 
 class MemberAdmin(admin.ModelAdmin):
     #form = ImageAdminForm
     fieldsets = [(None,  {'fields': ['name', 'email', 'designation',
-                                     'team', 'personal_intro', 'location',
+                                     'team', 'personal_intro', 'place',
                                      'image', 'hierarchy_num']
                           }
                   )]
-    list_display = ('name', 'email', 'designation')
+    list_display = ('hierarchy_num', 'name', 'email', 'designation')
     search_fields = ['name']
+    
+class PlaceAdmin(admin.ModelAdmin):
+    fieldsets = [(None, { 'fields': ['name']})]
+    list_display = ('name',)
 
 class KeyResponsibilityInline(admin.TabularInline):
     model = KeyResponsibility
@@ -21,7 +25,11 @@ class ExperienceQualificationInline(admin.TabularInline):
     extra = 10
     
 class JobAdmin(admin.ModelAdmin):
-    fieldsets = [(None, {'fields':['title','description','conclusion']})]
+    fieldsets = [(None, {'fields':['title','description','conclusion','hierarchy_num', 'geography']})]
     inlines = [ExperienceQualificationInline, KeyResponsibilityInline]
-    list_display = ('title',)
+    list_display = ('hierarchy_num','title', 'geography')
     search_fields = ['title']
+
+class GeographyAdmin(admin.ModelAdmin):
+    fieldsets = [(None, { 'fields': ['name', 'description', 'hierarchy_number']})]
+    list_display = ('name', 'hierarchy_number', )

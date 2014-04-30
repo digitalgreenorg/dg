@@ -1,3 +1,6 @@
+// This is the implementation of offline backend for authentication. Like the db on server has server/Django which provides an authentication wrapper over it, similarly this module provides that wrapper around the offline db. 
+// It provides an interface to let user - login, logout, check_login against this offline backend. The user should be logged into this backend before making any requests on the offline db as the offline_utils module makes use of this module before processing any db request
+// Uses a User table in offline db to store the username, password and login-state of the user
 define([
     'models/user_model',  
   ], function(User){
@@ -22,7 +25,7 @@ define([
       return dfd;
   }
   
-  // if u, p matches that in off db sets login state = true else false
+  // if u, p matches that in user table, sets login state = true 
   var login = function(username, password){
       var dfd = new $.Deferred();
       User.fetch({
@@ -49,6 +52,7 @@ define([
       return dfd.promise();
   }
   
+  // register a new user - store its info in User table
   var register = function(username, password){
       var dfd = new $.Deferred();
       User.save({
@@ -83,7 +87,7 @@ define([
       return dfd;
   }
   
-  
+  // check whther user is logged in or not
   var check_login = function(){
       var dfd = new $.Deferred();
       User.fetch({
@@ -100,6 +104,7 @@ define([
       return dfd;
   }
   
+  // check whether user is logged in or not without gettinf fresh state of User table
   var check_login_approx = function(){
       return User.get("loggedin");
   }

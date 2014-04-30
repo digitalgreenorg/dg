@@ -9,10 +9,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-SERIALIZATION_MODULES = {
-    'json': 'wadofstuff.django.serializers.json'
-}
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -36,11 +32,6 @@ APPEND_SLASH = True
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/social_website/uploads/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
-
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -55,6 +46,10 @@ STATICFILES_DIRS = (
    os.path.join(PROJECT_PATH, 'media'),                 
 )
 
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/'
+PERMISSION_DENIED_URL = '/denied/'
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,12 +62,8 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'dg.urls'
 
-SOUTH_MIGRATION_MODULES = {
-    'social_auth': 'ignore',
-}
-
-SOCIAL_AUTH_USER_MODEL = 'social_website.UserProfile'
-GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id') ]
+# Google ID is required for fetching the user profile image
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id'), ('picture', 'picture') ]
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -84,6 +75,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
     os.path.join(PROJECT_PATH, 'media/coco/app'),
     os.path.join(PROJECT_PATH, 'templates/social_website'),
+	os.path.join(PROJECT_PATH, 'media/'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -91,10 +83,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.contrib.auth.context_processors.auth',
-    'social_auth.context_processors.social_auth_by_name_backends',
-    'social_auth.context_processors.social_auth_backends',
-    'social_auth.context_processors.social_auth_by_type_backends',
-    'social_auth.context_processors.social_auth_login_redirect',
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
 )
 
 INSTALLED_APPS = (
@@ -106,21 +96,27 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
+    'programs',
+    'geographies',
+    'people',
+    'videos',
+    'activities',
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
     'south',
     'farmerbook',
-    'video_practice_map',
-    'path',
+    #'video_practice_map',
+    #'path',
     'fbconnect',
     'dimagi',
     'tastypie',
     'coco',
     'social_website',
-    'social_auth',
+    'social.apps.django_app.default',
     'communications',
     'human_resources',
+    'feeds',
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
@@ -128,9 +124,9 @@ SESSION_COOKIE_HTTPONLY = False
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuthBackend',
-    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.google.GoogleOAuth2',
 )
 
 LOGGING = {
@@ -161,6 +157,10 @@ LOGGING = {
     },
     'loggers': {
         'social_website': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
+        'dashboard': {
             'handlers': ['logfile'],
             'level': 'DEBUG',
         },

@@ -1,0 +1,20 @@
+<!-- JavaScript -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+        /* To add images to the list, just add the image name to the array 'images' */
+            $(document).ready(function() {
+                var images = ['image0.jpg', 'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg', 'image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg', 'image10.jpg', 'image11.jpg', 'image12.jpg', 'image13.jpg', 'image14.jpg', 'image15.jpg', 'image16.jpg', 'image17.jpg', 'image18.jpg'];
+                $('.login-bg').css({'background': 'url({{STATIC_URL}}social_website/content/login-background/' + images[Math.round(Math.random() * 100)%images.length] + ')'});
+            });
+        </script>
+        <script type="text/javascript">
+    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    	</script>
+    	<script type="text/javascript">
+    		try {
+    			var pageTracker = _gat._getTracker("UA-16211208-1");
+    			pageTracker._trackPageview();
+    			} 
+            catch(err) {}
+    	</script>

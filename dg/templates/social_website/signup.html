@@ -1,0 +1,53 @@
+{% extends "responsive/base_auth.html" %}
+{% block content %}
+                        <h2 class="hdg-a hdg-white layout-vr-md push-top-md">
+                            Sign Up
+                            <span class="hdg-f auth-link">
+                                <a href="{% url 'signin'%}" class="hdg-white hdg-bold">Sign In</a>
+                            </span>
+                        </h2>
+                        <div class="media layout-vr-xlg">
+                            <div class="social-wrap">
+                                <a href="{% url 'social:begin' 'facebook' %}?next=/">
+                                    <button class="facebook">Sign up with Facebook</button>
+                                </a>
+                                <a href="{% url 'social:begin' 'google-oauth2' %}?next=/">
+                                    <button class="googleplus">Sign up with Google</button>
+                                </a>
+                            </div>
+                            
+                            <p class="hdg-e hdg-lt hdg-white auth-separator">OR</p>
+                            
+                    {% if form.errors %}
+                        {% for error in form.non_field_errors %}
+                            <p class="hdg-source-reg hdg-white auth-err-msg auth-err-box">{{error}}</p>
+                        {% endfor %}
+                    {% endif %}
+                            
+                            {% load app_tags %}
+                            <form method="post" action="/signup/">
+                                {% csrf_token %}
+                                <div class="auth hdg-source-reg hdg-white">
+                                    {{ form.username|placeholder:"Email address" }}
+                                {% if form.username.errors %}
+                                    <div class="auth-err-box">
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                                    {{ form.password1|placeholder:form.password1.label }}
+                                    {{ form.password2|placeholder:"Confirm Password" }}
+                                {% if form.password2.errors %}
+                                    <div class="auth-err-box">
+                                        {{ form.password2.errors }}
+                                    </div>
+                                {% endif %}
+                                </div>
+                                <input type="submit" value="sign up" class="comment-btn auth-btn-lg" />
+                            {% if next %}
+                                <input type="hidden" name="next" value="{{next}}" />
+                            {% else %}
+                                <input type="hidden" name="next" value="/" />
+                            {% endif %}
+                            </form>
+                        </div>
+{% endblock %}

@@ -4,7 +4,7 @@ setup_environ(dg.settings)
 
 import csv
 
-from dashboard.models import Person
+from people.models import Person
 
 csvfile = open('path/scripts/List.csv', 'rb')
 csvfile_write = open('path/scripts/Not Deleted.csv', 'wb')

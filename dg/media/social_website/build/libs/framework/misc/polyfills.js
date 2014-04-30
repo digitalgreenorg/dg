@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------------
+Bind.js
+Copyright 2010, WebReflection
+License: http://www.opensource.org/licenses/mit-license.php
+------------------------------------------------------------------------ */
+
+if(Function.prototype.bind===null||Function.prototype.bind===undefined)Function.prototype.bind=function(e){function t(t){var n=this;if(1<arguments.length){var r=e.call(arguments,1);return function(){return n.apply(t,arguments.length?r.concat(e.call(arguments)):r)}}return function(){return arguments.length?n.apply(t,arguments):n.call(t)}}return t}(Array.prototype.slice);Array.prototype.indexOf||(Array.prototype.indexOf=function(e){var t=this.length>>>0,n=Number(arguments[1])||0;n=n<0?Math.ceil(n):Math.floor(n),n<0&&(n+=t);for(;n<t;n++)if(n in this&&this[n]===e)return n;return-1}),typeof String.prototype.trimLeft!="function"&&(String.prototype.trimLeft=function(){return this.replace(/^\s+/,"")}),typeof String.prototype.trimRight!="function"&&(String.prototype.trimRight=function(){return this.replace(/\s+$/,"")}),typeof Array.prototype.map!="function"&&(Array.prototype.map=function(e,t){for(var n=0,r=this.length,i=[];n<r;n++)n in this&&(i[n]=e.call(t,this[n]));return i});

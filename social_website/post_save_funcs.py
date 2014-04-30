@@ -1,7 +1,6 @@
-import dg.settings
-import pickle
 from django.db.models import get_model
-from social_website.scripts.generate_activities import add_collection, add_video, add_video_collection
+
+from social_website.utils.generate_activities import add_collection, add_video, add_video_collection
 
 
 def increase_online_video_like(sender, **kwargs):
@@ -26,28 +25,24 @@ def video_add_activity(sender, **kwargs):
         add_video(video)
 
 
-def video_collection_activity(sender, **kwargs):
-    file = "".join([dg.settings.MEDIA_ROOT, "collection_dict.p"])
-    collection_dict = pickle.load(open(file, "rb"))
+def collection_add_activity(sender, **kwargs):
     instance = kwargs["instance"]
-    if kwargs["action"] == 'post_add':
+    if kwargs["created"]:
         collection = get_model('social_website', 'Collection').objects.get(uid=instance.uid)
-        if collection.uid not in collection_dict:
-            add_collection(collection)
-            collection_dict[collection.uid]=[]
-        videos = kwargs['pk_set']
-        for video_uid in videos:
-            video = get_model('social_website', 'Video').objects.get(uid=video_uid)
-            if video_uid not in collection_dict[collection.uid]:
-                add_video_collection(collection, video)
-                collection_dict[collection.uid].append(video.uid)
-    pickle.dump(collection_dict, open(file, "wb"))
+        add_collection(collection)
 
-def collection_video_save(sender, **kwargs):
-    if kwargs['action'] == 'post_add' or kwargs['action'] == 'post_remove':
-        from migration_functions import populate_collection_stats, populate_partner_stats
-        collection = kwargs["instance"]
-        populate_collection_stats(collection)
-        populate_partner_stats(collection.partner)
-        collection.save()
-        collection.partner.save()
+
+def video_collection_activity(sender, **kwargs):
+    instance = kwargs["instance"]
+    if kwargs["created"]:
+        collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
+        video = get_model('social_website', 'Video').objects.get(uid=instance.video_id)
+        add_video_collection(collection, video)
+
+
+def update_stats(sender, **kwargs):
+    from migration_functions import populate_collection_stats, populate_partner_stats
+    instance = kwargs["instance"]
+    collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
+    populate_collection_stats(collection)
+    populate_partner_stats(collection.partner)

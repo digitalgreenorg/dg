@@ -7,11 +7,17 @@ from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
-from data_log import delete_log, save_log
+from coco.data_log import delete_log, save_log
+from libs.geocoder import Geocoder
+
+import logging
+import sys, traceback, datetime
+
 
 # Variables
 GENDER_CHOICES = (
@@ -308,11 +314,28 @@ class District(CocoModel):
     fieldofficer = BigForeignKey(FieldOfficer)
     fieldofficer_startday = models.DateField(null=True, db_column='FIELDOFFICER_STARTDAY', blank=True)
     partner = BigForeignKey(Partners)
+    latitude = models.DecimalField(max_digits=31, decimal_places=28, null=True, blank=True,
+                                   validators=[MaxValueValidator(90), MinValueValidator(-90)])
+    longitude = models.DecimalField(max_digits=32, decimal_places=28, null=True, blank=True,
+                                    validators=[MaxValueValidator(180), MinValueValidator(-180)])
+
     class Meta:
         db_table = u'district'
 
     def __unicode__(self):
         return self.district_name
+
+    def clean(self):
+        logger = logging.getLogger('dashboard')
+        if(self.latitude is None or self.longitude is None):
+            geocoder = Geocoder()
+            address = u"%s,%s,%s" % (self.district_name, self.state.state_name, self.state.country.country_name)
+            if (geocoder.convert(address)):
+                try:
+                    (self.latitude, self.longitude) = geocoder.getLatLng()
+                    logger.info("%s: Lat Long Added" % self.district_name)
+                except:
+                    logger.error("Geocodes not found for %s, %s" % (self.district_name, self.state.state_name))
                   
 class Block(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -389,6 +412,7 @@ class PersonGroups(CocoModel):
     timings = models.TimeField(db_column='TIMINGS',null=True, blank=True)
     time_updated = models.DateTimeField(db_column='TIME_UPDATED',auto_now=True)
     village = BigForeignKey(Village)
+    partner = BigForeignKey(Partners)
     class Meta:
         db_table = u'person_groups'
         verbose_name = "Person group"
@@ -422,6 +446,7 @@ class Person(CocoModel):
     
     objects = models.Manager() #The default manager
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook
+    partner = BigForeignKey(Partners)
     
     class Meta:
         db_table = u'person'
@@ -580,9 +605,11 @@ class Person(CocoModel):
             send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
 
     def __unicode__(self):
-        if (self.father_name is None or self.father_name==''):
-            return self.person_name
-        return  u'%s (%s)' % (self.person_name, self.father_name)
+        display = "%s" % (self.person_name)
+        display += " (%s)" % self.father_name if self.father_name.strip()!="" else "" 
+        display += " (%s)" % self.group.group_name if self.group is not None else ""
+        display += " (%s)" % self.village.village_name
+        return  display
 post_save.connect(save_log, sender = Person)
 pre_delete.connect(delete_log, sender = Person)
 
@@ -606,7 +633,7 @@ class Animator(CocoModel):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
     partner = BigForeignKey(Partners)
     village = BigForeignKey(Village, db_column = 'home_village_id', null=True, blank=True)
-    district = BigForeignKey(District, null = True, blank=True)
+    district = BigForeignKey(District, null = True, blank=True, help_text='Please select this')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
@@ -705,6 +732,7 @@ class Video(CocoModel):
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
     viewers = models.PositiveIntegerField(default=0, editable=False)
+    partner = BigForeignKey(Partners)
     
     @staticmethod
     def update_viewer_count(sender, **kwargs):
@@ -818,22 +846,24 @@ class PracticeSubject(CocoModel):
 
 class Practices(CocoModel):
     id = BigAutoField(primary_key = True)
-    practice_name = models.CharField(null=True, max_length=200, unique='True', db_column='PRACTICE_NAME')
-    seasonality = models.CharField(null=True, max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
-    summary = models.TextField(db_column='SUMMARY', blank=True)
-    practice_sector = BigForeignKey(PracticeSector,default=1) 
-    practice_subsector = BigForeignKey(PracticeSubSector, null=True)
-    practice_topic = BigForeignKey(PracticeTopic, null=True)
-    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
-    practice_subject = BigForeignKey(PracticeSubject, null=True)    
+    practice_name = models.CharField(null=True, max_length=200, db_column='PRACTICE_NAME')
+    practice_sector = BigForeignKey(PracticeSector, default=1) 
+    practice_subsector = BigForeignKey(PracticeSubSector, null=True, blank=True)
+    practice_topic = BigForeignKey(PracticeTopic, null=True, blank=True)
+    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True, blank=True)
+    practice_subject = BigForeignKey(PracticeSubject, null=True, blank=True)    
     class Meta:
         db_table = u'practices'
         verbose_name = "Practice"
         unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
-
-
+    
     def __unicode__(self):
-        return self.practice_sector.name
+        practice_sector = '' if self.practice_sector is None else self.practice_sector.name
+        practice_subject = '' if self.practice_subject is None else self.practice_subject.name
+        practice_subsector = '' if self.practice_subsector is None else self.practice_subsector.name
+        practice_topic = '' if self.practice_topic is None else self.practice_topic.name
+        practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
+        return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
 class Screening(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -850,6 +880,7 @@ class Screening(CocoModel):
     farmer_groups_targeted = BigManyToManyField(PersonGroups)
     videoes_screened = BigManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
+    partner = BigForeignKey(Partners)
     class Meta:
         db_table = u'screening'
         unique_together = ("date", "start_time", "end_time","animator","village")
@@ -872,6 +903,10 @@ class PersonAdoptPractice(CocoModel):
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    partner = BigForeignKey(Partners)
+
+    def __unicode__(self):
+        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
 
     def get_village(self):
         return self.person.village.id

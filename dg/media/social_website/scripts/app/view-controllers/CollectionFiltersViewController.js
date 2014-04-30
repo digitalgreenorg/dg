@@ -89,6 +89,7 @@ define(function(require) {
                     height: '0px'
                 }, 1000);
             	$newOpenFilterCategory.removeClass('open');
+            	filterCategories[newOpenCategoryId].categoryOpen = false;
                 return;
             }
 
@@ -304,8 +305,8 @@ define(function(require) {
             return $filterOption;
         },
 
-        _fetchFilters: function() {
-            this._references.dataFeed.fetch(null, this._onDataProcessed.bind(this));
+        _fetchFilters: function(type) {
+            this._references.dataFeed.fetch(null, this._onDataProcessed.bind(this), type);
         },
 
         _onDataProcessed: function() {
@@ -323,10 +324,16 @@ define(function(require) {
             var currentActiveFilters = this._getActiveFilters();
 
             var categories = filterData.categories;
-
-            var categoryId;
+            
             var i;
-            for (categoryId in categories) {
+            
+            var filterorder = ['state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject'];
+            
+            var index;
+            
+            for (index in filterorder) {
+                var categoryId = filterorder[index];
+                
                 var currentCategory = Util.Object.clone(categories[categoryId], true);
                 currentCategory._categoryId = categoryId;
 

@@ -17,19 +17,21 @@
                             <div class="grid-col grid-size2of4">
                                 <ul class="link-list">
                                     <li><a href="#values">Our values</a></li>
-                                    <li><a href="{% url ourwork %}">Our work</a></li>
-                                    <li><a href="{% url connect %}">Our partners</a></li>
-                                    <li><a href="{% url board %}">Our board</a></li>
-                                    <li><a href="{% url team %}">Our team</a></li>
+                                    <li><a href="{% url 'ourwork' %}">Our work</a></li>
+                                    <li><a href="{% url 'connect' %}">Our partners</a></li>
+                                    <li><a href="{% url 'board' %}">Our board</a></li>
+                                    <li><a href="{% url 'team' %}">Our team</a></li>
                                 </ul>
                             </div>
                             <div class="grid-rt grid-size2of4">
                                 <ul class="link-list">
-                                    <li><a href="#keyfacts">Key facts</a></li>
-                                    <li><a href="{% url resources %}#annualreport12">Annual report</a></li>
-                                    <li><a href="{% url press %}">Media coverage</a></li>
-                                    <li><a href="{% url resources %}">Resources</a></li>
-                                    <li><a href="{% url contact %}">Contact Us</a></li>
+                                    <li><a href="{{STATIC_URL}}docs/Digital-Green-Key-Facts.pdf"  target="_blank">Key Facts</a></li>
+                                    <li><a href="{% url 'resources' %}#annualreport12">Annual report</a></li>
+                                    <li><a href="{% url 'press' %}">Media coverage</a></li>
+                                    <li><a href="{% url 'resources' %}">Resources</a></li>
+                                    <li><a href="{% url 'events' %}">Events</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                    <li><a href="{% url 'donate' %}">Donate</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -58,20 +60,6 @@
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <section id="keyfacts" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Key Facts</h2>
-                    <div class="layout-vr-md">
-                        <iframe src="http://www.scribd.com/embeds/154431570/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless></iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Key-Facts.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
         </section>
         
 {% include "includes/footer.html" %}
