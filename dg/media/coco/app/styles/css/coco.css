@@ -1,3 +1,37 @@
+/* ---------- header -----------*/
+
+.global-header {
+    border-bottom: 4px solid #047d0a;
+    padding-top : 1%;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.coco-brand {
+    color: #047d0a;
+    font-size: 28px;
+    margin-top: -8px;
+}
+
+.img-user {
+    display: inline;
+    width: 35px;
+    margin-top: -8px;
+}
+
+/* ----------- Margins -------- */
+
+.mrg-lt-5 {
+    margin-left: 5%;
+}
+
+/* ----------- Rest ------------*/
 .coco_form .control-label {
     font-weight:bold;
 }
@@ -42,14 +76,6 @@
 	display: none;
 }
 
-#coco_brand {
-    font-size:32px;
-    height: 50px;
-    width: 100px;
-    padding-top: 20px;
-	margin-left:22%;
-}
-
 #coco_userinfo {
 	width: 10em;
     font-size: 11px;
@@ -89,10 +115,7 @@
 }
 
 #content{
-	padding-top:20px;
-	padding-bottom:20px;
-	padding-right:50px;
-	padding-left:230px;
+	padding: 20px;
 }
 
 #change_user{
@@ -166,11 +189,4 @@ h1 small{
 .form_error{
     color:red;
     width: 100%;
-}
-
-
-@media (min-width: 1200px) and (max-width: 1240px) {
-	  .span10 {
-	    width:900px;
-	  }
 }
