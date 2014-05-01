@@ -66,10 +66,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (add) $('#dashboard_items_add')
                         .append(this.item_template({
                         name: member + "/add",
-                        title: '<i class="icon-plus-sign"></i>'
+                        title: '<i class="glyphicon glyphicon-plus-sign"></i>'
                     }));
                     else $('#dashboard_items_add')
-                        .append("<li><i class='icon-white icon-plus-sign'></li>");
+                        .append("<li class='disabled'><a><i class='glyphicon glyphicon-plus-sign' title='You are not allowed to add this currently'></a></li>");
                 }
             }
             
