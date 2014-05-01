@@ -1,13 +1,12 @@
  {% include "includes/header_for_deo.html" %}
  
- 
  <section id="main" role="main" class="wrapper">
  
  	<div class="inner-wrapper">
  	
  	   <div class="featured layout-vr-xlg" style="background:white; padding-top:50px;">
  	   
- 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="custom-select-container leftrelative">
  	   		<div class="icon"></div>
  	   		<!-- <div class="selected-item-label js-selected-item-label">Choose Partner</div>  -->
 			<select id = "partnerlist" onchange="districtfilter();">			
@@ -18,23 +17,22 @@
             </select>
             </div>
 
- 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="custom-select-container leftrelative">
  	   		<div class="icon"></div>
 			<select id = "districtlist" onchange="deofilter()">			
                <option value='' selected='selected'>Choose District</option>     
 	        </select>
 	        </div>
 	        
- 	   		<div class="custom-select-container" style="position:relative; float:left;">
+ 	   		<div class="custom-select-container leftrelative">
  	   		<div class="icon"></div>	        
 	        <select id = "deolist" multiple>			
                <option value='' selected='selected'>Choose DEOs</option>                        
 	        </select>     
 	        </div>
 	        
-	        
         <div style="float:right;">
-	      <a class="btn" onclick="goclicked()">GO</a>
+	      <a id="gobutton" class="btn" onclick="goclicked()">GO</a>
         </div>       
          
         <ul class="filterOptions hdg-upper copy clearfix js-most-filters" style="float:right; padding:0 10px;">
@@ -42,8 +40,6 @@
            <li><a href="#" class="js-most-filter" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
         </ul>
-
-  		<!-- Date: <input type="date" name="dateentry" id="dateentry"> -->
 		
 		<div style="margin-top:100px">
 		        <div class="grid" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
@@ -58,15 +54,20 @@
 		         	<div class="grid-size3of4" style="float:left; padding-top:20px; width:70%">
 		         	
 		         	<div id="datepanel" style="width:40%; margin: 0 auto;">
-				         	<button type="previous" style="float:left" onclick="moveprev()">Prev</button>
+				         	<button id="pbtn" class="fleft "type="previous" onclick="moveprev()">Prev</button>
 				         		<div id="dateshow" style="float:left;"></div>
-				         	<button type="next" style="float:left;" onclick="movenext()">Next</button>
+				         	<button id="nbtn" class="fleft" type="next" onclick="movenext()">Next</button>
 				    </div>
-				     <div style="clear:both">
+				    
+				    
+				     <div id="databox" style="width:28%">
 		         		<p id="screenings"></p>
 		         		<p id="adoptions"></p>
 		         		<p id="persons"></p>
+		         		<p id="videos"></p>
 		         	 </div>
+					
+					 <div id="chartcontainer" style="width: 55%; float: left; margin: 10px; padding: 10px; height: 400px;"></div>
 		         	</div>
 		         </div>
 		 </div>
@@ -82,7 +83,12 @@
 	  var today = new Date();
 	  setdate(0, today);
    }
- 
+
+	$('#gobutton').click(function(){
+		//e.preventDefault();
+
+	    });
+
    function settheday()
    {
 	   var userdate = document.getElementById('dateshow').innerHTML;
@@ -461,6 +467,7 @@
        	   list += htmlline;
        }
        $("ul#deobox").html(list);
+      
    }
 
    function makedeoactive(total, val)
@@ -490,15 +497,29 @@
    	deoname = deoname_element.innerText.trim();
    	
    	var mode;
+   	var s_list = [];
+   	var datelist = [];
+   	var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
    	
    	if ($("#daily").hasClass("active") == true)
     { 
    		mode = 1;
    	   	start_date = getdateonscreen(2);
-   	   	console.log(start_date);
    	 	end_date = getdateonscreen(3);
-   	 	console.log(end_date);
+   	 	
+   	    s_list.push(0);
+   	    
+   	 	date_for_datelist = getdateonscreen(1);
+
+		date = date_for_datelist.getDate();		   
+		mon = month[date_for_datelist.getMonth()];
+		
+		k = date + " "+ mon;
+		console.log(k);
+		
+		datelist.push(k);	
     }
+   	
    	else if ($("#weekly").hasClass("active") == true) 
    	{ 
    		mode = 2;
@@ -506,16 +527,39 @@
 		dates = userdate.split("-");
 		   
 		start_date = getdateonscreenforweek(2, dates[0]);
-		console.log(typeof(start_date));
 		end_date = getdateonscreenforweek(2, dates[1]);		
+		
+		start_date_for_datelist = getdateonscreenforweek(1, dates[0]);
+	   
+		for (var i = 0; i <= 6; i++) 
+		{
+			s_list.push(0);
+					
+			date = start_date_for_datelist.getDate();		   
+			mon = month[start_date_for_datelist.getMonth()];
+			
+			k = date + " "+ mon;
+			console.log(k);
+			
+			datelist.push(k);	
+			
+			start_date_for_datelist.setDate(start_date_for_datelist.getDate() + 1);
+		}	
+		console.log(datelist);
    	}
    	else if ($("#monthly").hasClass("active") == true) 
    	{ 
    		mode = 3;
    		start_date = getfirstdateofselectedmonth(2);
-   		console.log(start_date);
    		end_date = getlastdateofselectedmonth();
-   		console.log(end_date);
+
+   		lastdate = end_date.split("-")[2];
+   				
+		for (var i = 1; i <= lastdate; i++) 
+		{
+			datelist.push(i);
+			s_list.push(0);
+		}
    	}
   	
     $.ajax(
@@ -530,18 +574,119 @@
                url:window.location.origin + "/deo/api/getthedeo",
                
                success: function(data){
-            	   lin1 = "No. of screenings entered: " + data.screenings;
+
+            	   var sumscreenings = 0;
+            	   if (mode == 1)
+           		   {
+  						for (var key in data.screenings)
+   						{
+	 					   s_list[0] = data.screenings[key];
+	 					   sumscreenings += data.screenings[key];
+	 					   console.log("Daily s list: " + s_list);
+   						}
+           		   }
+            	   if (mode == 2)
+        		   {
+   						for (var key in data.screenings)
+   						{
+		 					console.log(key+': '+data.screenings[key]);
+		 				    keydate = key.split("-")[2];
+		 					keydate = keydate.replace(/^0+/, '');
+		 					console.log(keydate);
+		 					
+		 					for (var i = 0; i <= 6; i++)
+		 					{
+		 						if (datelist[i].split(" ")[0] == keydate)
+	 							{
+	 								s_list[i] = data.screenings[key];
+	 							}
+		 					}			 					
+		 					sumscreenings += data.screenings[key];
+		 					console.log("Weekly s list: " + s_list);	   							
+   						}
+        		   }            	   
+            	   if (mode == 3)
+            		   {
+		   					for (var key in data.screenings) 
+		   					{
+		 					   console.log(key+': '+data.screenings[key]);
+		 					   keydate = key.split("-")[2];
+		 					   keydate = keydate.replace(/^0+/, '');
+		 					   console.log(keydate);
+		 					   s_list[keydate-1] = data.screenings[key];
+		 					   sumscreenings += data.screenings[key];
+		 					   console.log("Monthly s list: " + s_list);
+		 					}            		   
+            		   }
+					
+            	   lin1 = "No. of screenings entered: " + sumscreenings;
             	   lin2 = "No. of adoptions entered : " + data.adoptions;
             	   lin3 = "No. of persons entered   : " + data.persons;
+            	   lin4 = "No. of videos entered    : " + data.videos;
             	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
             	   $("p#persons").html(lin3);
+            	   $("p#videos").html(lin4);
+            	   makechart(datelist,s_list);
                },
                error: function(data){
                       console.log("ERRORIS:" + data);
                       alert("There was an error in recording your input!");
               }
-            });        	
+            });
+   }
+   
+   function makechart(datelist,s_list)
+   {
+    	var chart1 = new Highcharts.Chart({	    	
+        chart: {
+            renderTo: 'chartcontainer'
+         },
+          title: {
+               text: 'DEO Performance',
+               x: -20 //center
+           },
+           xAxis: {
+               categories: datelist
+           },
+           yAxis: {
+               title: {
+                   text: 'Entries made'
+               },
+               plotLines: [{
+                   value: 0,
+                   width: 1,
+                   color: '#808080'
+               }]
+           },
+           //tooltip: {
+           //    valueSuffix: 'C'
+           //},
+           //legend: {
+               //layout: 'vertical',
+               //align: 'right',
+               //verticalAlign: 'middle',
+               //borderWidth: 0
+           //},
+           series: [{
+               name: 'Screenings',
+               data: s_list
+           }]
+           //,
+           //{
+           //   name: 'Adoptions',
+           //   data: [0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+           //}
+           //, {
+           //    name: 'Berlin',
+           //    data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+           //}, {
+           //    name: 'London',
+           //    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+           //}
+           //
+    	});	   
+	  
    }
    
    function makeactive(num)

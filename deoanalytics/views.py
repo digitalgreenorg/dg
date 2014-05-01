@@ -5,6 +5,7 @@ import json, datetime
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
+from django.db.models import Count
 
 from dashboard.models import Screening
 from dashboard.models import Partners
@@ -13,6 +14,7 @@ from dashboard.models import ServerLog
 from dashboard.models import CocoUser
 from dashboard.models import PersonAdoptPractice
 from dashboard.models import Person
+from dashboard.models import Video
 
 
 def index(request):
@@ -73,13 +75,24 @@ def deodatasetter(request):
     
     start_date = datetime.datetime.strptime(sdate, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(edate, "%Y-%m-%d")
-         
-    screenings = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+    
+    '''screenings1 = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()'''    
+    screenings = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)
+    listofscreeningdates = []
+    for screening in screenings:
+        listofscreeningdates.append(str(screening.date()))
+        
+    s_dict = dict((i,listofscreeningdates.count(i)) for i in listofscreeningdates)
+    print s_dict
+        
     adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
     persons = Person.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+    videos = Video.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
     
     return HttpResponse(json.dumps({
-        "screenings": screenings, 
+        "screenings":s_dict,
         "adoptions": adoptions,
-        "persons": persons}),
+        "persons": persons,
+        "videos": videos}),
     content_type="application/json")
+    '''return HttpResponse(json.dumps(p), mimetype="application/json")'''
