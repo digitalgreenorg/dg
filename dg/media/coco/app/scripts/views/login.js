@@ -40,8 +40,8 @@ define([
       },
       
       scrap_view: function(){
-           this.$('#login_modal').modal('hide');  
-           this.remove();   
+           this.$('#login_modal').modal('hide');
+           $('.modal-backdrop').remove();
       },
       
       afterRender: function(){
