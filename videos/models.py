@@ -81,6 +81,12 @@ class Language(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     language_name = models.CharField(max_length=100, unique='True')
 
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
     def __unicode__(self):
         return self.language_name
 post_save.connect(save_log, sender=Language)
