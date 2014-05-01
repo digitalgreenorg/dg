@@ -25,12 +25,26 @@
     margin-top: -8px;
 }
 
-/* ----------- Margins -------- */
+/* ----------- Margins and Paddings-------- */
 
 .mrg-lt-5 {
     margin-left: 5%;
 }
 
+.pdg-0 {
+    padding: 0px;
+}
+
+/* ----------- Sidebar for Navigation -------*/
+
+.white-bgd {
+    background-color: white;
+    border-color: white;
+}
+
+.flt-lt {
+    float:left;
+}
 /* ----------- Rest ------------*/
 .coco_form .control-label {
     font-weight:bold;
@@ -91,7 +105,6 @@
 
 #coco_nav_add {
     width:10%;
-	padding-right:15%;
 }
 
 #helptext{
@@ -189,4 +202,24 @@ h1 small{
 .form_error{
     color:red;
     width: 100%;
+}
+
+/*----------- Media Queries -----------*/
+
+@media(max-width:767px){
+    .flt-rt {
+        float: right;
+    }
+}
+
+@media(min-width:768px){
+
+}
+
+@media(min-width:992px){
+
+}
+
+@media(min-width:1200px){
+
 }

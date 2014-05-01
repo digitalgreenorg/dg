@@ -195,7 +195,7 @@
                 by clicking on the sync button
                 </p> -->
 
-                <nav class="navbar navbar-default coco_main_nav" role="navigation">
+                <nav class="navbar navbar-default coco_main_nav white-bgd" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".coco_main_nav .navbar-collapse">
                             <span class="sr-only">Toggle navigation</span>
@@ -211,19 +211,16 @@
                             </div>
                         </a>
                     </div>
-                    <div class="row">
-                            <div id="coco_nav" class="pull-left collapse navbar-collapse">
-                                <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
+                    <div id="coco_nav" class="pull-left collapse navbar-collapse pdg-0">
+                        <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
 
-                                </ul>
-                            </div>
-                            <div id="coco_nav_add" class="pull-right collapse navbar-collapse ">
-                                <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked" title= "Click to add data">
-
-                                </ul>
-                            </div>
+                        </ul>
                     </div>
-                    
+                    <div id="coco_nav_add" class="flt-lt collapse navbar-collapse pdg-0 flt-rt">
+                        <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked" title= "Click to add data">
+
+                        </ul>
+                    </div>
                 </nav>
                 <div id="coco_userinfo">
                     <%if(typeof(username)!=undefined){%>
