@@ -165,7 +165,7 @@
         <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
 </script>
 
-<script  type="text/template" id="dashboard">
+<script type="text/template" id="dashboard">
             <div id="coco_sidebar" class="coco_sidebar">
                 <!-- <table border = '0'>
                     <tr>
@@ -195,7 +195,7 @@
                 by clicking on the sync button
                 </p> -->
 
-                <nav class="navbar navbar-default coco_main_nav white-bgd" role="navigation">
+                <nav class="navbar navbar-default coco_main_nav white-bgd mrg-top-nav-50" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".coco_main_nav .navbar-collapse">
                             <span class="sr-only">Toggle navigation</span>
@@ -211,12 +211,12 @@
                             </div>
                         </a>
                     </div>
-                    <div id="coco_nav" class="pull-left collapse navbar-collapse pdg-0">
+                    <div id="coco_nav" class="pull-left collapse navbar-collapse pdg-0 mrg-top-nav-30">
                         <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
 
                         </ul>
                     </div>
-                    <div id="coco_nav_add" class="flt-lt collapse navbar-collapse pdg-0 flt-rt">
+                    <div id="coco_nav_add" class="flt-lt collapse navbar-collapse pdg-0 flt-rt mrg-top-nav-30">
                         <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked" title= "Click to add data">
 
                         </ul>
@@ -1001,166 +1001,166 @@
     </tr>
 </script>
 <script type="text/template" id="video_add_edit_template">
-                            <fieldset>
-                                <legend>Add Video</legend>
-								<p class="bold-helptext"> All fields in bold are required</p>
-                                <div class="control-group"> 
-					<label class="control-label"><b>Title</b></label>
-                                	<div class="controls">
-                                 	<input type="text" name="title" placeholder="Title">
-                                 	</div>
-                                 </div>
-                                 <div class="control-group"> 
-	                                <label class="control-label"><b>Video Type</b></label>
- 	                                <div class="controls">
- 	                                <select name="video_type">
-                                        <option value="" selected="selected">
-                                            ---------
-                                        </option>
+        <fieldset>
+            <legend>Add Video</legend>
+            <p class="bold-helptext"> All fields in bold are required</p>
+            <div class="control-group"> 
+<label class="control-label"><b>Title</b></label>
+                <div class="controls">
+                <input type="text" name="title" placeholder="Title">
+                </div>
+             </div>
+             <div class="control-group"> 
+                <label class="control-label"><b>Video Type</b></label>
+                <div class="controls">
+                <select name="video_type">
+                    <option value="" selected="selected">
+                        ---------
+                    </option>
 
-                                        <option value="3">
-                                            Activity Introduction
-                                        </option>
-										<option value="1">
-                                            Demonstration
-                                        </option>
-                                        <option value="4">
-                                            Discussion
-                                        </option>
-                                        <option value="5">
-                                            General Awareness
-                                        </option>
-										<option value="2">
-                                            Success Story/Testimonial
-                                        </option>
-                                    </select>
- 	                                </div>
-                                 </div> 
-                                 <div class="control-group">
-                                     <label class="control-label"><b>Production Start Date</b></label>
-                                     <div class="controls">
-                                         <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
-                                     </div>
-                                     <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
-                                 </div>
-                                 <div class="control-group">
-                                     <label class="control-label"><b>Production End Date</b></label>
-                                     <div class="controls">
-                                         <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
-                                     </div>
-                                     <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
-                                 </div>
-                                 
-                                 <div class="control-group">
-                                             <label class="control-label"><b>Language</b></label>
-                                             <div class="controls">
-                                                 <select id = "id_language" name="language">
-                                                     <option selected="selected" value="">
-                                                         ---------
-                                                     </option>
-                                                 </select>
-                                             </div>
-                                         </div>
-                                
-                                 <div class="control-group">
-                                 <label>Summary</label>
-                                 <div class="controls">
-                                     <textarea name="summary" class="input-xlarge" rows="4" placeholder="Summary"></textarea>
-                                 </div>
-                             </div>
-                             <div class="control-group">
-                                 <label class="control-label"><b>Village</b></label>
-                                 <div class="controls">
-                                     <select id = "id_village" name="village" class="chzn-select">
-                                     	<option value="">---------- </option>
-                                     </select>
-                                 </div>
-                             </div>
-                             <div class="control-group">
-                                 <label class="control-label"><b>Facilitator</b></label>
-                                 <div class="controls">
-                                     <select id = "id_facilitator" name="facilitator" class="chzn-select">
-                                         <option selected="selected" value="">
-                                             ---------
-                                         </option>
-                                     </select>
-                                 </div>
-                             </div>                     
-                             <div class="control-group">
-                                 <label class="control-label"><b>Camera Operator</b></label>
-                                 <div class="controls">
-                                     <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select">
-                                         <option selected="selected" value="">
-                                             ---------
-                                         </option>
-                                                                         
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label"><b>Persons Shown</b></label>
-                                <div class="controls">
-                                    <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label"><b>Actors</b></label>
-                                    <div class="controls">
-                                        <select class="input-medium" name="actors">
-                                            <option value="" selected="selected">
-                                                ---------
-                                            </option>
-                                            <option value="F">
-                                                Family
-                                            </option>
-                                            <option value="G">
-                                                Group
-                                            </option>
-											<option value="I">
-                                                Individual
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label"><b>Video Suitable For</b></label>
-                                    <div class="controls">
-                                        <select name="video_suitable_for">
-                                            <option value="" selected="selected">
-                                                ---------
-                                            </option>
-                                            <option value="1">
-                                                Dissemination
-                                            </option>
-                                            <option value="3">
-                                                Dissemination Training
-                                            </option>
-                                            <option value="4">
-                                                Nothing
-                                            </option>
-                                            <option value="5">
-                                                Pending For Approval
-                                            </option>
-                                            <option value="2">
-                                                Video Production Training
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label>Approval Date</label>
-                                    <div class="controls">
-                                        <input class="date-picker input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
-                                    </div>
-                                    <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
-                                </div>
-                                <div class="control-group">
-                                    <label>Youtube Id</label>
-                                    <div class="controls">
-                                        <input name="youtubeid" type="text" placeholder="youtubeid"><br>
-                                    </div>
-                                </div>
-							</fieldset>
+                    <option value="3">
+                        Activity Introduction
+                    </option>
+                    <option value="1">
+                        Demonstration
+                    </option>
+                    <option value="4">
+                        Discussion
+                    </option>
+                    <option value="5">
+                        General Awareness
+                    </option>
+                    <option value="2">
+                        Success Story/Testimonial
+                    </option>
+                </select>
+                </div>
+             </div> 
+             <div class="control-group">
+                 <label class="control-label"><b>Production Start Date</b></label>
+                 <div class="controls">
+                     <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
+                 </div>
+                 <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+             </div>
+             <div class="control-group">
+                 <label class="control-label"><b>Production End Date</b></label>
+                 <div class="controls">
+                     <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
+                 </div>
+                 <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+             </div>
+             
+             <div class="control-group">
+                         <label class="control-label"><b>Language</b></label>
+                         <div class="controls">
+                             <select id = "id_language" name="language">
+                                 <option selected="selected" value="">
+                                     ---------
+                                 </option>
+                             </select>
+                         </div>
+                     </div>
+            
+             <div class="control-group">
+             <label>Summary</label>
+             <div class="controls">
+                 <textarea name="summary" class="input-xlarge" rows="4" placeholder="Summary"></textarea>
+             </div>
+         </div>
+         <div class="control-group">
+             <label class="control-label"><b>Village</b></label>
+             <div class="controls">
+                 <select id = "id_village" name="village" class="chzn-select">
+                    <option value="">---------- </option>
+                 </select>
+             </div>
+         </div>
+         <div class="control-group">
+             <label class="control-label"><b>Facilitator</b></label>
+             <div class="controls">
+                 <select id = "id_facilitator" name="facilitator" class="chzn-select">
+                     <option selected="selected" value="">
+                         ---------
+                     </option>
+                 </select>
+             </div>
+         </div>                     
+         <div class="control-group">
+             <label class="control-label"><b>Camera Operator</b></label>
+             <div class="controls">
+                 <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select">
+                     <option selected="selected" value="">
+                         ---------
+                     </option>
+                                                     
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><b>Persons Shown</b></label>
+            <div class="controls">
+                <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"><b>Actors</b></label>
+                <div class="controls">
+                    <select class="input-medium" name="actors">
+                        <option value="" selected="selected">
+                            ---------
+                        </option>
+                        <option value="F">
+                            Family
+                        </option>
+                        <option value="G">
+                            Group
+                        </option>
+                        <option value="I">
+                            Individual
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"><b>Video Suitable For</b></label>
+                <div class="controls">
+                    <select name="video_suitable_for">
+                        <option value="" selected="selected">
+                            ---------
+                        </option>
+                        <option value="1">
+                            Dissemination
+                        </option>
+                        <option value="3">
+                            Dissemination Training
+                        </option>
+                        <option value="4">
+                            Nothing
+                        </option>
+                        <option value="5">
+                            Pending For Approval
+                        </option>
+                        <option value="2">
+                            Video Production Training
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Approval Date</label>
+                <div class="controls">
+                    <input class="date-picker input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
+                </div>
+                <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+            </div>
+            <div class="control-group">
+                <label>Youtube Id</label>
+                <div class="controls">
+                    <input name="youtubeid" type="text" placeholder="youtubeid"><br>
+                </div>
+            </div>
+        </fieldset>
                         
 
 </script>
