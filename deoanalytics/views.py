@@ -84,14 +84,22 @@ def deodatasetter(request):
         
     s_dict = dict((i,listofscreeningdates.count(i)) for i in listofscreeningdates)
     print s_dict
+
+    adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)
+    listofadoptiondates = []
+    for adoption in adoptions:
+        listofadoptiondates.append(str(adoption.date()))
         
-    adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+    a_dict = dict((i,listofadoptiondates.count(i)) for i in listofadoptiondates)
+    print a_dict
+            
+    '''adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()'''
     persons = Person.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
     videos = Video.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
     
     return HttpResponse(json.dumps({
         "screenings":s_dict,
-        "adoptions": adoptions,
+        "adoptions": a_dict,
         "persons": persons,
         "videos": videos}),
     content_type="application/json")

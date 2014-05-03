@@ -28,6 +28,13 @@
     cursor: pointer;
 }
 
+.myicon {
+	width: 14px;
+	height: 11px;
+	top: 10px;
+	right: 10px;
+	background-position: -86px -567px;
+}
 .leftrelative {
 	position:relative; 
 	float:left;
@@ -37,12 +44,71 @@
 	float:left;
 }
 
-#databox
+.fright {
+	float:right;
+}
+
+.boxdesign
 {
 	clear:both;
 	border: 1px solid #c2c1bc;
 	border-width: 3px;
 	float: left;
 	margin: 10px;
-	padding: 10PX;
+	padding: 10px;
+}
+
+#dateshow
+{
+	margin:10px;
+}
+
+.pnbtns
+{
+	width: 25px;
+}
+
+.hidden
+{
+	visibility: hidden;
+}
+
+.outer-center {
+    float: right;
+    right: 50%;
+    position: relative;
+    margin-top:10px;
+}
+.inner-center {
+    float: right;
+    right: -50%;
+    position: relative;
+}
+.clear {
+    clear: both;
+}
+
+.gridleft
+{
+	width: 25%;
+	display: inline-block;
+	float: left;
+	margin-top:10px;
+}
+
+.gridright
+{
+	width: 75%;
+	display: inline-block;
+	float: left;	
+}
+
+#databox
+{
+	width:77%;
+}
+
+#photobox
+{
+	margin-left:38px;
 }

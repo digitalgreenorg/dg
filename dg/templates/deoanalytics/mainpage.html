@@ -6,71 +6,99 @@
  	
  	   <div class="featured layout-vr-xlg" style="background:white; padding-top:50px;">
  	   
- 	   		<div class="custom-select-container leftrelative">
- 	   		<div class="icon"></div>
- 	   		<!-- <div class="selected-item-label js-selected-item-label">Choose Partner</div>  -->
-			<select id = "partnerlist" onchange="districtfilter();">			
-               <option value='' selected='selected'>Choose Partner</option>
-               {% for pa in partners%} 
-                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
-               {% endfor %}
-            </select>
-            </div>
+ 	   		<!-- <div class="custom-select js-custom-select leftrelative">
+
+				<select id = "partnerlist" onchange="districtfilter();">			
+	               <option value='' selected='selected'>Choose Partner</option>
+	               {% for pa in partners%} 
+	                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
+	               {% endfor %}
+	            </select>
+	            
+                <div class="custom-select-container">
+                    <div class="icon"></div>
+                    <div class="selected-item-label js-selected-item-label">Choose Partner</div>
+                    <ul class="options js-options" style='overflow-y:scroll;height:218px;'>
+		               {% for pa in partners%} 
+		                 <li class="item">{{pa.partner_name}}</li>
+		               {% endfor %}
+                    </ul>
+                </div>	            
+
+            </div>  -->
 
  	   		<div class="custom-select-container leftrelative">
- 	   		<div class="icon"></div>
+			<select id = "partnerlist" onchange="districtfilter()">			
+               <option value='' selected='selected'>Choose Partner</option>     
+	               {% for pa in partners%} 
+	                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
+	               {% endfor %}
+	        </select>
+	        </div>
+	        
+ 	   		<div class="custom-select-container leftrelative">
 			<select id = "districtlist" onchange="deofilter()">			
                <option value='' selected='selected'>Choose District</option>     
 	        </select>
 	        </div>
 	        
- 	   		<div class="custom-select-container leftrelative">
- 	   		<div class="icon"></div>	        
+ 	   		<div class="custom-select-container leftrelative">	        
 	        <select id = "deolist" multiple>			
                <option value='' selected='selected'>Choose DEOs</option>                        
 	        </select>     
 	        </div>
 	        
-        <div style="float:right;">
+        <div class="fright">
 	      <a id="gobutton" class="btn" onclick="goclicked()">GO</a>
         </div>       
          
-        <ul class="filterOptions hdg-upper copy clearfix js-most-filters" style="float:right; padding:0 10px;">
+        <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright" style="padding:0 10px;">
            <li><a href="#" class="js-most-filter active" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
         </ul>
 		
 		<div style="margin-top:100px">
-		        <div class="grid" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
-					<div class="grid-col js-filters-wrapper" style="padding-top:20px; width:25%">
-		                <div class="sorting">
-		                    <ul id="deobox" class="sorting-list v-list js-filters-container">  
-		                                                                                      
-						   </ul>
-		               </div> <!-- End .sorting -->
-		         	</div>
-		         
-		         	<div class="grid-size3of4" style="float:left; padding-top:20px; width:70%">
-		         	
-		         	<div id="datepanel" style="width:40%; margin: 0 auto;">
-				         	<button id="pbtn" class="fleft "type="previous" onclick="moveprev()">Prev</button>
-				         		<div id="dateshow" style="float:left;"></div>
-				         	<button id="nbtn" class="fleft" type="next" onclick="movenext()">Next</button>
-				    </div>
-				    
-				    
-				     <div id="databox" style="width:28%">
-		         		<p id="screenings"></p>
-		         		<p id="adoptions"></p>
-		         		<p id="persons"></p>
-		         		<p id="videos"></p>
-		         	 </div>
+		
+		    <ul id="deobox" class="filterOptions hdg-upper copy clearfix js-most-filters hidden" style="padding:0 10px;">
+		        
+		    </ul>
+	         			
+	        <div id="thegrid" class="grid hidden" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
+				
+				<div class="gridleft">
+					<div id="photobox" class="boxdesign">
+						<img class="fleft" src="{{STATIC_URL}}assets/images/face.png">
 					
-					 <div id="chartcontainer" style="width: 55%; float: left; margin: 10px; padding: 10px; height: 400px;"></div>
-		         	</div>
-		         </div>
-		 </div>
+					
+					</div>				    
+				    <div id="databox" class="boxdesign">
+		         	
+			         	<p id="screenings"></p>
+			         	<p id="adoptions"></p>
+			         	<p id="persons"></p>
+			         	<p id="videos"></p>
+			         	
+			        </div>
+				</div>
+				
+				<div class="gridright">
+				
+				   	<div class="outer-center">
+	       				<div class="inner-center">
+	       				
+				         	<img class="fleft" src="{{STATIC_URL}}assets/images/carousel-arrow-lt.png" onclick="moveprev()">
+				         		<div class="fleft" id="dateshow"></div>
+				         	<img class="fleft" src="{{STATIC_URL}}assets/images/carousel-arrow-rt.png" onclick="movenext()">
+	       				
+	       				</div>
+   					</div>
+					
+					<div id="chartcontainer" style="float: left; margin: 10px; padding: 10px; height: 400px;"></div>
+				</div>
+	         	
+	        </div>
+		</div>
      </div>
 	</div>
 </section>    
@@ -78,6 +106,7 @@
  <script>
  // JavaScript Document
  
+ 	var selecteddeoname;
    function onbodyload()
    {
 	  var today = new Date();
@@ -117,6 +146,7 @@
 		   d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
 		   $("div#dateshow").html(d);		   
 	   }
+	   analyzedeo();
    }
    
 	function settheweek()
@@ -137,6 +167,7 @@
 		   d = getfirstdateofselectedmonth(1);	   
 		   setweekfromsingledate(d);
 	   }
+	   analyzedeo();
  	}
 	
 	function setthemonth()
@@ -155,7 +186,8 @@
 		   dates = userdate.split("-");
 		   date2 = getdateonscreenforweek(1, dates[1]);		   
 		   setmonthfromdate(date2);
-	   }		
+	   }
+	   analyzedeo();
 	}
 	
 	function getfirstdateofselectedmonth(cn)
@@ -353,7 +385,8 @@
 		   d.setMonth(d.getMonth() + 1);		   
 		   console.log("Date after incrementing month: " + d);
 		   setmonthfromdate(d);		   
-	   }	   
+	   }	
+	   analyzedeo();
    }
 
    function moveprev()
@@ -379,6 +412,7 @@
 		   console.log ("Date after -1month: "+d)
 		   setmonthfromdate(d);		   
 	   }
+	   analyzedeo();
    }
    
    function districtfilter()
@@ -457,47 +491,60 @@
    {
        console.log("Function goclicked entered...");
        
+       document.getElementById("thegrid").classList.remove('hidden');
+       document.getElementById("deobox").classList.remove('hidden');
+       
        var values = $('#deolist').val();
        console.log(values); 
 
        var list = '';
        for (var j = 0; j < values.length; j++) 
        {
-    	   htmlline = '<li id =' + j + ' ' + 'onclick="'+ 'analyzedeo(this); makedeoactive(' + values.length + ',' + j + ');">' + '<div class="' + "categorylabelunselected js-filter-category-label" + '">' + values[j] + '</div></li>';
+           htmlline = '<li><a id=' + j + ' '+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' + 'analyzedeo(); makedeoactive(this'+ ',' + values.length + ',' + j + ');">' + '<span><span class="' + 'icon"' + '></span>' + values[j]+ '</span></a></li>';
+    	   //htmlline = '<li id =' + j + ' ' + 'onclick="'+ 'analyzedeo(); makedeoactive(this'+ ',' + values.length + ',' + j + ');">' + '<div class="' + "categorylabelunselected js-filter-category-label" + '">' + values[j] + '</div></li>';
        	   list += htmlline;
        }
        $("ul#deobox").html(list);
+       document.getElementById(0).classList.add('active');
+       
+       deoname = document.getElementById(0).innerText.trim();
       
+       selecteddeoname = deoname;
+              
+       analyzedeo();
    }
 
-   function makedeoactive(total, val)
+   function makedeoactive(deoname_element, total, val)
    {
+       console.log("make deo active entered...");
+	   deoname = deoname_element.innerText.trim();
+	   	
+	   selecteddeoname = deoname;
+	   
        for (var j = 0; j < total; j++) 
        {	  
     	   if (j == val)
     	   {
-    		   document.getElementById(j).classList.remove('categorylabelunselected');
-    		   document.getElementById(j).classList.add('categorylabelselected');   		   
+    		   document.getElementById(j).classList.add('active');   		   
     	   }
     	   else
     	  {
-    		   document.getElementById(j).classList.add('categorylabelunselected');
-    		   document.getElementById(j).classList.remove('categorylabelselected');    		   
+    		   document.getElementById(j).classList.remove('active');    		   
     	  }   
        }
+       
        //document.getElementById('0').style.background = "#c2c1bc";
 	   //document.getElementById('1').style.background = "#c2c1bc";
 	   //document.getElementById('2').style.background = "#c2c1bc";
    }
    
-   function analyzedeo(deoname_element)
-   {	
-   	console.log("Analyze deo entered...");
-	   
-   	deoname = deoname_element.innerText.trim();
-   	
+   function analyzedeo()
+   {	     
+    console.log("analyze deo entered...");
+    console.log("Selected deo name is: " + selecteddeoname);
    	var mode;
    	var s_list = [];
+   	var a_list = [];
    	var datelist = [];
    	var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
    	
@@ -508,6 +555,7 @@
    	 	end_date = getdateonscreen(3);
    	 	
    	    s_list.push(0);
+   	 	a_list.push(0);
    	    
    	 	date_for_datelist = getdateonscreen(1);
 
@@ -534,7 +582,8 @@
 		for (var i = 0; i <= 6; i++) 
 		{
 			s_list.push(0);
-					
+			a_list.push(0);
+			
 			date = start_date_for_datelist.getDate();		   
 			mon = month[start_date_for_datelist.getMonth()];
 			
@@ -558,6 +607,7 @@
 		for (var i = 1; i <= lastdate; i++) 
 		{
 			datelist.push(i);
+			a_list.push(0);
 			s_list.push(0);
 		}
    	}
@@ -566,7 +616,7 @@
             {
                type:'GET',
                data:{ 
-               'deo': deoname,
+               'deo': selecteddeoname,
                'sdate': start_date,
                'edate': end_date,
                'mode': mode,
@@ -576,21 +626,28 @@
                success: function(data){
 
             	   var sumscreenings = 0;
+            	   var sumadoptions = 0;
             	   if (mode == 1)
            		   {
-  						for (var key in data.screenings)
+  						for (var key1 in data.screenings)
    						{
-	 					   s_list[0] = data.screenings[key];
-	 					   sumscreenings += data.screenings[key];
+	 					   s_list[0] = data.screenings[key1];
+	 					   sumscreenings += data.screenings[key1];
 	 					   console.log("Daily s list: " + s_list);
    						}
+  						for (var key2 in data.adoptions)
+   						{
+	 					   a_list[0] = data.adoptions[key2];
+	 					   sumadoptions += data.adoptions[key2];
+	 					   console.log("Daily a list: " + a_list);
+   						}  						
            		   }
             	   if (mode == 2)
         		   {
-   						for (var key in data.screenings)
+   						for (var key1 in data.screenings)
    						{
-		 					console.log(key+': '+data.screenings[key]);
-		 				    keydate = key.split("-")[2];
+		 					console.log(key1+': '+data.screenings[key1]);
+		 				    keydate = key1.split("-")[2];
 		 					keydate = keydate.replace(/^0+/, '');
 		 					console.log(keydate);
 		 					
@@ -598,36 +655,65 @@
 		 					{
 		 						if (datelist[i].split(" ")[0] == keydate)
 	 							{
-	 								s_list[i] = data.screenings[key];
+	 								s_list[i] = data.screenings[key1];
 	 							}
 		 					}			 					
-		 					sumscreenings += data.screenings[key];
+		 					sumscreenings += data.screenings[key1];
 		 					console.log("Weekly s list: " + s_list);	   							
    						}
+   						
+   						for (var key2 in data.adoptions)
+   						{
+		 					console.log(key2+': '+data.adoptions[key2]);
+		 				    keydate = key2.split("-")[2];
+		 					keydate = keydate.replace(/^0+/, '');
+		 					console.log(keydate);
+		 					
+		 					for (var i = 0; i <= 6; i++)
+		 					{
+		 						if (datelist[i].split(" ")[0] == keydate)
+	 							{
+	 								a_list[i] = data.adoptions[key2];
+	 							}
+		 					}			 					
+		 					sumadoptions += data.adoptions[key2];
+		 					console.log("Weekly a list: " + a_list);	   							
+   						}   						
         		   }            	   
             	   if (mode == 3)
             		   {
-		   					for (var key in data.screenings) 
+		   					for (var key1 in data.screenings) 
 		   					{
-		 					   console.log(key+': '+data.screenings[key]);
-		 					   keydate = key.split("-")[2];
+		 					   console.log(key1+': '+data.screenings[key1]);
+		 					   keydate = key1.split("-")[2];
 		 					   keydate = keydate.replace(/^0+/, '');
 		 					   console.log(keydate);
-		 					   s_list[keydate-1] = data.screenings[key];
-		 					   sumscreenings += data.screenings[key];
+		 					   s_list[keydate-1] = data.screenings[key1];
+		 					   sumscreenings += data.screenings[key1];
 		 					   console.log("Monthly s list: " + s_list);
-		 					}            		   
+		 					}
+		   					
+		   					for (var key2 in data.adoptions) 
+		   					{
+		 					   console.log(key2+': '+data.adoptions[key2]);
+		 					   keydate = key2.split("-")[2];
+		 					   keydate = keydate.replace(/^0+/, '');
+		 					   console.log(keydate);
+		 					   a_list[keydate-1] = data.adoptions[key2];
+		 					   sumadoptions += data.adoptions[key2];
+		 					   console.log("Monthly a list: " + a_list);
+		 					} 		   					
             		   }
 					
             	   lin1 = "No. of screenings entered: " + sumscreenings;
-            	   lin2 = "No. of adoptions entered : " + data.adoptions;
+            	   lin2 = "No. of adoptions entered : " + sumadoptions;
             	   lin3 = "No. of persons entered   : " + data.persons;
             	   lin4 = "No. of videos entered    : " + data.videos;
             	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
             	   $("p#persons").html(lin3);
             	   $("p#videos").html(lin4);
-            	   makechart(datelist,s_list);
+            	   makechart(datelist,s_list,a_list);
                },
                error: function(data){
                       console.log("ERRORIS:" + data);
@@ -636,7 +722,7 @@
             });
    }
    
-   function makechart(datelist,s_list)
+   function makechart(datelist,s_list,a_list)
    {
     	var chart1 = new Highcharts.Chart({	    	
         chart: {
@@ -671,6 +757,9 @@
            series: [{
                name: 'Screenings',
                data: s_list
+           }, {
+        	   name: 'Adoptions',
+        	   data: a_list
            }]
            //,
            //{
