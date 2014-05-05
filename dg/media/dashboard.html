@@ -478,33 +478,46 @@
     </tr>
 </script>
 <script type="text/template" id="mediator_add_edit_template">
-    <fieldset>
+    <fieldset class="form-horizontal">
         <legend>Add Mediator</legend>
 		<p class="bold-helptext"> All fields in bold are required</p>
         <div class="form-group">
-            <input type="text" name="name" placeholder="Name*" class="form-control">
+            <label class="control-label col-sm-2"><b>Name</b></label>
+            <div class="col-sm-4">
+                <input type="text" name="name" class="form-control">
+            </div>
         </div>
         <div class="form-group">
-            <select name="gender" class="form-control">
-    			<option value='' selected='selected'>Select Gender*</option> 
-    			<option value='M'>Male</option> 
-    			<option value='F'>Female</option> 
-            </select>
+            <label class="control-label col-sm-2"><b>Gender</b></label>
+            <div class="col-sm-4">
+                <select name="gender" class="form-control">
+                    <option value='' selected='selected'>----------</option> 
+                    <option value='M'>Male</option> 
+                    <option value='F'>Female</option> 
+                </select>
+            </div>
         </div> 
         <div class="form-group"> 
-            <label class="control-label"><b>Assigned Villages</b></label>
-            <select id = "id_ass_villages" name="assigned_villages" class = "form-control chzn-select" multiple>
-            
-            </select>
+            <label class="control-label col-sm-2"><b>Assigned Villages</b></label>
+            <div class="col-sm-7">
+                <select id = "id_ass_villages" name="assigned_villages" class = "form-control chzn-select" multiple>
+                
+                </select>
+            </div>
         </div>
         <div class="form-group"> 
-            <label class="control-label"><b>District</b></label>
-            <select id = "id_district" name="district" class = "form-control">
-           
-            </select>
+            <label class="control-label col-sm-2"><b>District</b></label>
+            <div class="col-sm-4">
+                <select id = "id_district" name="district" class = "form-control">
+               
+                </select>
+            </div>
         </div>
         <div class="form-group">
-            <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
+            <label class="control-label col-sm-2">Phone number</label>
+            <div class="col-sm-4">
+                <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
+            </div>
         </div>
     </fieldset>
 </script>
@@ -1004,20 +1017,16 @@
         <fieldset>
             <legend>Add Video</legend>
             <p class="bold-helptext"> All fields in bold are required</p>
-            <div class="control-group"> 
-<label class="control-label"><b>Title</b></label>
-                <div class="controls">
-                <input type="text" name="title" placeholder="Title">
-                </div>
-             </div>
-             <div class="control-group"> 
-                <label class="control-label"><b>Video Type</b></label>
-                <div class="controls">
-                <select name="video_type">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Video Type</label>
+                <select name="video_type" class="form-control">
                     <option value="" selected="selected">
-                        ---------
+                        ------------
                     </option>
-
                     <option value="3">
                         Activity Introduction
                     </option>
@@ -1034,98 +1043,76 @@
                         Success Story/Testimonial
                     </option>
                 </select>
-                </div>
-             </div> 
-             <div class="control-group">
-                 <label class="control-label"><b>Production Start Date</b></label>
-                 <div class="controls">
-                     <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
-                 </div>
-                 <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
-             </div>
-             <div class="control-group">
-                 <label class="control-label"><b>Production End Date</b></label>
-                 <div class="controls">
-                     <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
-                 </div>
-                 <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
-             </div>
-             
-             <div class="control-group">
-                         <label class="control-label"><b>Language</b></label>
-                         <div class="controls">
-                             <select id = "id_language" name="language">
-                                 <option selected="selected" value="">
-                                     ---------
-                                 </option>
-                             </select>
-                         </div>
-                     </div>
-            
-             <div class="control-group">
-             <label>Summary</label>
-             <div class="controls">
-                 <textarea name="summary" class="input-xlarge" rows="4" placeholder="Summary"></textarea>
-             </div>
-         </div>
-         <div class="control-group">
-             <label class="control-label"><b>Village</b></label>
-             <div class="controls">
-                 <select id = "id_village" name="village" class="chzn-select">
-                    <option value="">---------- </option>
-                 </select>
-             </div>
-         </div>
-         <div class="control-group">
-             <label class="control-label"><b>Facilitator</b></label>
-             <div class="controls">
-                 <select id = "id_facilitator" name="facilitator" class="chzn-select">
-                     <option selected="selected" value="">
-                         ---------
-                     </option>
-                 </select>
-             </div>
-         </div>                     
-         <div class="control-group">
-             <label class="control-label"><b>Camera Operator</b></label>
-             <div class="controls">
-                 <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select">
-                     <option selected="selected" value="">
-                         ---------
-                     </option>
-                                                     
+            </div> 
+            <div class="form-group">
+                <label class="control-label dis-block">Production Start Date</label>
+                <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control">
+                <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+            </div>
+            <div class="form-group">
+                <label class="dis-block">Production End Date</label>
+                <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control">
+                <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+            </div>
+            <div class="form-group">
+                <label>Language</label>
+                <select id = "id_language" name="language" class="form-control">
+                    <option selected="selected" value="">
+                        Language
+                    </option>
                 </select>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label"><b>Persons Shown</b></label>
-            <div class="controls">
-                <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
-                </div>
+            <div class="form-group">
+                <label>Summary</label>
+                <textarea name="summary" class="input-xlarge form-control" rows="4" placeholder="Summary"></textarea>
             </div>
-            <div class="control-group">
-                <label class="control-label"><b>Actors</b></label>
-                <div class="controls">
-                    <select class="input-medium" name="actors">
-                        <option value="" selected="selected">
-                            ---------
-                        </option>
-                        <option value="F">
-                            Family
-                        </option>
-                        <option value="G">
-                            Group
-                        </option>
-                        <option value="I">
-                            Individual
-                        </option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label class="control-label dis-block">Village</label>
+                <select id = "id_village" name="village" class="chzn-select form-control">
+                    <option value="">---------- </option>
+                </select>
             </div>
-            <div class="control-group">
-                <label class="control-label"><b>Video Suitable For</b></label>
-                <div class="controls">
-                    <select name="video_suitable_for">
+            <div class="form-group">
+                <label class="control-label dis-block">Facilitator</label>
+                <select id = "id_facilitator" name="facilitator" class="chzn-select form-control">
+                    <option selected="selected" value="">
+                        ---------
+                    </option>
+                </select>
+            </div>                     
+            <div class="form-group">
+                <label class="control-label dis-block">Camera Operator</label>
+                <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select form-control">
+                    <option selected="selected" value="">
+                        ---------
+                    </option>                    
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block"><b>Persons Shown</b></label>
+                <select size="20" multiple="multiple" class="input-xlarge chzn-select form-control" id = "id_farmers_shown" name="farmers_shown" >
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block">Actors</label>
+                <select class="input-medium form-control" name="actors">
+                    <option value="" selected="selected">
+                        ---------
+                    </option>
+                    <option value="F">
+                        Family
+                    </option>
+                    <option value="G">
+                        Group
+                    </option>
+                    <option value="I">
+                        Individual
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block">Video Suitable For</label>
+                    <select name="video_suitable_for" class="form-control">
                         <option value="" selected="selected">
                             ---------
                         </option>
@@ -1145,20 +1132,15 @@
                             Video Production Training
                         </option>
                     </select>
-                </div>
             </div>
-            <div class="control-group">
-                <label>Approval Date</label>
-                <div class="controls">
-                    <input class="date-picker input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
-                </div>
+            <div class="form-group">
+                <label class="dis-block">Approval Date</label>
+                <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
                 <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
             </div>
-            <div class="control-group">
-                <label>Youtube Id</label>
-                <div class="controls">
-                    <input name="youtubeid" type="text" placeholder="youtubeid"><br>
-                </div>
+            <div class="form-group">
+                <label class="dis-block">Youtube Id</label>
+                <input name="youtubeid" type="text" placeholder="youtubeid" class="form-control"><br>
             </div>
         </fieldset>
                         

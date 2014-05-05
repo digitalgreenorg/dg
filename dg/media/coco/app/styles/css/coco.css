@@ -75,6 +75,10 @@
 	display:none;
 }
 
+.dis-block {
+    display: block;
+}
+
 .notbold{
 	font-weight: normal !important;
 }
