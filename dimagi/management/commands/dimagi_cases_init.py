@@ -26,7 +26,7 @@ class Command(BaseCommand):
             commcare_users = CommCareUser.objects.filter(project=commcare_project).filter(is_user=False)
             for user in commcare_users:
                 filename = user.username+"_"+commcare_project_name
-                villages = CommCareUserVillage.objects.filter(user = user).values_list('village__id', flat = True).distinct('village__id')
+                villages = CommCareUserVillage.objects.filter(user = user).values_list('village__id', flat = True).distinct()
                 filename = os.path.join(MEDIA_ROOT, "dimagi", "%s.xml" % (filename))
                 file_to_upload = make_upload_file(
                     villages,
