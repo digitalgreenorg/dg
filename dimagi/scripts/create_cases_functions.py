@@ -35,7 +35,7 @@ def write_full_case_list(person_list, filename, user_id, project_id): #for gener
             pass #what should be here????
             
         # Getting list of videos seen
-        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True).distinct('screening__videoes_screened')
+        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True).distinct()
         videos_seen = ''
         for vid in vids:
             videos_seen = videos_seen + unicode(vid) + ' '
