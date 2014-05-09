@@ -226,7 +226,7 @@ def video_search(request):
     search_box_params = {}
     
 
-    vids = Video.objects.annotate(adoptions=Count('personadoptpractice'))
+    vids = Video.objects.all()
     
     if(query):
         vids = vids.filter(title__icontains = query)
@@ -286,6 +286,7 @@ def video_search(request):
     if(sort == None):
         vids  = vids.order_by('id')
     elif(sort == "viewers"):
+        vids = vids.annotate(viewers=Count('screening__personmeetingattendance__id'))
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order
@@ -300,6 +301,7 @@ def video_search(request):
         else:
             vids = vids.order_by('-video_production_end_date', 'id')
     elif(sort == 'adoptions'):
+        vids = vids.annotate(adoptions=Count('personadoptpractice'))
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order
