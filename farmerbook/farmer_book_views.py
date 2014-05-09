@@ -166,10 +166,10 @@ def get_villages_with_images(request):
 def get_videos_produced(request):
     village_id = int(request.GET['village_id'])
     #return title, duration, youtube thumbnail, production date, viewers, adoptions
-    vids_details = Video.objects.filter(village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'video_production_end_date','viewers').annotate(adoptions=Count('personadoptpractice'))
+    vids_details = Video.objects.filter(village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'video_production_end_date').annotate(adoptions=Count('personadoptpractice'))
     videos_produced_stats = []
     for obj in vids_details:
-        videos_produced_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 'productiondate':obj[3],'viewers':obj[4], 'adopters': obj[5]})
+        videos_produced_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 'productiondate':obj[3], 'adopters': obj[4]})
     if len(videos_produced_stats):
         return render_to_response('videos_produced.html', dict(videos_produced_stats=videos_produced_stats))
     else:
