@@ -32,6 +32,7 @@ def social_home(request):
     context= {
         'header': {
             'jsController':'Home',
+            'currentPage':'Home',
             'loggedIn':False
              },
         'language':language,
