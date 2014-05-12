@@ -126,7 +126,6 @@ class Video(CocoModel):
     actors = models.CharField(max_length=1, choices=ACTORS)
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, blank=True)
-    viewers = models.PositiveIntegerField(default=0, editable=False)
     partner = models.ForeignKey(Partner)
     
     class Meta:

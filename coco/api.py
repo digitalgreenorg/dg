@@ -369,7 +369,7 @@ class VideoResource(BaseResource):
         excludes = ['duration', 'picture_quality ', 'audio_quality', 'editing_quality', 'edit_start_date ', 'edit_start_date', 
                     'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
                     'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
-                    'last_modified', 'viewers','time_created', 'time_modified', 'duration' ]
+                    'last_modified', 'time_created', 'time_modified', 'duration' ]
     
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]

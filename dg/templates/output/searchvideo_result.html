@@ -48,9 +48,14 @@
                            Produced On: {{ vid.video_production_end_date|date:"d M Y" }}
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
+	                        {% if vid.viewers %}
 	                        {{vid.viewers}} viewer{{vid.viewers|pluralize}}
-                            &nbsp; | &nbsp;
+	                        &nbsp; |  
+	                        {% endif %}
+                            {% if vid.adoptions %}
+                            &nbsp;
                             {{vid.adoptions}} Adoption{{vid.adoptions|pluralize}}
+                            {% endif %}
 	                    </div>
 	                 </div>
 	              </td>
