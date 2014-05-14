@@ -31,6 +31,10 @@
     margin-left: 5%;
 }
 
+.mrg-btm-sm {
+    margin-bottom: 20px;
+}
+
 .mrg-top-nav-50 {
     margin-top: 50px;
 }
@@ -191,10 +195,6 @@ legend{
 
 h1 small{
 	font-size: 18px;
-}
-
-.alert {
-  margin-bottom: 3px;
 }
 
 .chzn-container{

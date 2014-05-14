@@ -358,7 +358,7 @@
         
                     </tbody>
                 </table>
-                <button id='add_rows' type= "button" class="btn btn-info btn-small">Add empty rows</button>
+                <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm">Add empty rows</button>
             <% } %>
         
             <div class="form-actions">
@@ -966,7 +966,7 @@
             </div></div>
         </td>
         <td><div class="form-group"><div class="controls">
-                <select value = 'M'  class="donotvalidate form-control input-small" name="gender<%=index%>" required >
+                <select value = 'M'  class="donotvalidate form-control input-sm" name="gender<%=index%>" required >
                 <option value='' selected='selected'>---------</option> 
                 <option value='M'>Male</option> 
                 <option value='F'>Female</option>
@@ -1053,15 +1053,13 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Production Start Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control">
-                    <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                    <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control" placeholder="yyyy-mm-dd">
                 </div>
             </div>
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2">Production End Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control">
-                    <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                    <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control"  placeholder="yyyy-mm-dd">
                 </div>
             </div>
             <div class="form-group">
@@ -1162,8 +1160,7 @@
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2 notbold">Approval Date</label>
                 <div class="col-sm-4">
-                <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
-                <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="yyyy-mm-dd">
                 </div>
             </div>
             <div class="form-group">
