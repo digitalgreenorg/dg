@@ -358,11 +358,11 @@
         
                     </tbody>
                 </table>
-                <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm">Add empty rows</button>
+                <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm col-sm-offset-2">Add empty rows</button>
             <% } %>
         
             <div class="form-actions">
-                <button id='button1' type="submit" class="btn btn-primary action_button" data-loading-text="Saving..."><%=button1%></button>
+                <button id='button1' type="submit" class="btn btn-primary action_button col-sm-offset-2" data-loading-text="Saving..."><%=button1%></button>
                 <%if(button2){%>
                     <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
                 <%}%>
@@ -1160,13 +1160,13 @@
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2 notbold">Approval Date</label>
                 <div class="col-sm-4">
-                <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="yyyy-mm-dd">
+                    <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="yyyy-mm-dd">
                 </div>
             </div>
             <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold">Youtube Id</label>
                 <div class="col-sm-4">
-                <input name="youtubeid" type="text" placeholder="youtubeid" class="form-control"><br>
+                    <input name="youtubeid" type="text" placeholder="youtubeid" class="form-control"><br>
                 </div>
             </div>
         </fieldset>
@@ -1206,7 +1206,7 @@
 </script>
 <!--//////////////////////////////////////////////////// VILLAGE TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// PERSON TEMPLATES START ///////////////////////////////////////////////-->
 <script type="text/template" id="person_list_item_template">
 <tr>
     <%if(typeof(online_id)!="undefined"){%>
@@ -1236,57 +1236,57 @@
 </script>
 
 <script type="text/template" id="person_add_edit_template">
-        <fieldset>
+        <fieldset class="form-horizontal">
             <legend>Add Person</legend>
 			<p class="bold-helptext"> All fields in bold are required</p>
-            <div class="control-group"> 
-		<label class="control-label"><b>Name</b></label>
-            	<div class="controls">
-             	<input type="text" name="person_name" placeholder="Person Name">
+            <div class="form-group"> 
+                <label class="control-label col-sm-2">Name</label>
+            	<div class="col-sm-4">
+                    <input type="text" name="person_name" class="form-control">
              	</div>
-             </div>
-             <div class="control-group"> 
-                 <label class="control-label"><b>Father Name</b></label>
-                 <div class="controls"> 
-                 	<input type="text" name="father_name" placeholder="Father Name">
-                 </div>
-             </div>
-             <div class="control-group"> 
-                 <label class="control-label"><b>Village</b></label>
-                 <div class="controls"> 
-                 <select id = "id_village" name="village" class="chzn-select">
-                    
-                </select>
+            </div>
+            <div class="form-group"> 
+                <label class="control-label col-sm-2">Father Name</label>
+                <div class="col-sm-4"> 
+                    <input type="text" name="father_name" placeholder="Father Name" class="form-control">
                 </div>
             </div>
-            <div class="control-group"> 
-                <label class="control-label"><b>Gender</b></label>
-                <div class="controls">
-                <select name="gender">
-					<option value='' selected='selected'>---------</option> 
-					<option value='M'>Male</option> 
-					<option value='F'>Female</option> 
-                </select>
+            <div class="form-group"> 
+                <label class="control-label col-sm-2">Village</label>
+                <div class="col-sm-4"> 
+                    <select id = "id_village" name="village" class="chzn-select form-control">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"> 
+                <label class="control-label col-sm-2">Gender</label>
+                <div class="col-sm-4">
+                    <select name="gender" class="form-control">
+                        <option value='' selected='selected'>---------</option> 
+                        <option value='M'>Male</option> 
+                        <option value='F'>Female</option> 
+                    </select>
                 </div>
             </div> 
-            <div class="control-group">
-            	<label class="control-label">Age</label>
-            	<div class="controls"> 
-            	<input class="input-mini" name="age" type="text" placeholder="Age">
+            <div class="form-group">
+            	<label class="control-label col-sm-2 notbold">Age</label>
+            	<div class="col-sm-4"> 
+                    <input class="input-mini form-control" name="age" type="text" placeholder="Age">
             	</div>
             </div>
-            <div class="control-group">
-                 <label class="control-label">Phone Number</label>
-                 <div class="controls">
-                 <input name="phone_no" type="text" placeholder="Phone Number">
-                 </div>
-             </div>
-			<div class="control-group"> 
-                 <label class="control-label">Group</label> 
-                 <div class="controls">
-                 <select id = "id_group" name="group" class="chzn-select">
+            <div class="form-group">
+                <label class="control-label col-sm-2 notbold">Phone Number</label>
+                <div class="col-sm-4">
+                    <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
+                </div>
+            </div>
+			<div class="form-group"> 
+                <label class="control-label col-sm-2 notbold">Group</label> 
+                <div class="col-sm-4">
+                    <select id = "id_group" name="group" class="chzn-select form-control">
                     
-                </select>
+                    </select>
                 </div>
             </div>
         </fieldset>
