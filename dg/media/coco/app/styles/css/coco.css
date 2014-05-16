@@ -47,6 +47,10 @@
     padding: 0px;
 }
 
+.mrg-lt-auto {
+    margin-left: auto !important;
+}
+
 /* ----------- Sidebar for Navigation -------*/
 
 .white-bgd {
@@ -63,6 +67,11 @@
 }
 
 /* ----------- Rest ------------*/
+
+.pointer-hand {
+    cursor: pointer
+}
+
 .coco_form .control-label {
     font-weight:bold;
 }

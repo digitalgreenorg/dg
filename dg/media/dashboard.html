@@ -570,63 +570,62 @@
     </tr>
 </script>
 <script type="text/template" id="screening_add_edit_template">
-            <fieldset>
+            <fieldset class="form-horizontal">
                 <legend>Add Screening</legend>
 				<p class="bold-helptext"> All fields in bold are required</p>
-                <div class="control-group"> 
-			<label class="control-label"><b>Date</b></label>
-                	<div class="controls">
-                 	<input class="date-picker input-small" id="date" type="text" placeholder="Date" name="date">  
+                <div class="form-group"> 
+                    <label class="control-label col-sm-2">Date</label>
+                	<div class="col-sm-4">
+                        <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
                  	</div>
-                 	<span class="help-block">Enter the date in the form of YYYY-MM-DD</span>
-                 </div>
-                 <div class="control-group ">
-			<label class="control-label"><b>Start Time</b></label>
-                 	<div class="controls bootstrap-timepicker">
-				<input class="time-picker input-mini" id="start_time" type="text" placeholder="hh:mm" name="start_time">
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-sm-2">Start Time</label>
+                 	<div class="controls bootstrap-timepicker col-sm-4">
+                        <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
                  	</div>
-                 	<span class="help-block">Enter the time in the form of HH:MM. Use 24 hour format</span>
-                 </div>
-                 <div class="control-group "> 
-			<label class="control-label"><b>End Time</b></label>
-                 	<div class="controls bootstrap-timepicker"> 
-                 		<input class="time-picker input-mini" id="end_time_picker" type="text" placeholder="hh:mm" name="end_time">
+                 	<span class="help-block">Use 24 hour format</span>
+                </div>
+                <div class="form-group "> 
+                    <label class="control-label col-sm-2">End Time</label>
+                 	<div class="controls bootstrap-timepicker col-sm-4"> 
+                 		<input class="time-picker form-control" id="end_time_picker" type="text" placeholder="HH:MM" name="end_time">
                  	</div>
-                 	<span class="help-block">Enter the time in the form of HH:MM. Use 24 hour format</span>
-                 </div>
-                 <div class="control-group">
-			<label class="control-label"><b>Village</b></label>
-                	<div class="controls"> 
-                	<select name="village" id="id_village" class="chzn-select" placeholder="Enter animator to enable">
-                    <option value='' selected='selected'>---------</option> 
-                    </select>
+                 	<span class="help-block">Use 24 hour format</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Village</label>
+                	<div class="col-sm-4"> 
+                        <select name="village" id="id_village" class="chzn-select form-control" placeholder="Enter animator to enable">
+                        <option value='' selected='selected'>---------</option> 
+                        </select>
                 	</div>
                 </div>
-                <div class="control-group">
-			<label class="control-label"><b>Mediator</b></label>
-                 	<div class="controls"> 
-                 	<select name="animator" id="id_animator" class="chzn-select">
-                       <option value='' selected='selected'>---------</option> 
-     				</select > 
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Mediator</label>
+                 	<div class="col-sm-4"> 
+                        <select name="animator" id="id_animator" class="chzn-select form-control">
+                            <option value='' selected='selected'>---------</option> 
+                        </select > 
                	    </div>
-               </div>
-               <div class="control-group"> 
-			<label class="control-label"><b>Videos Screened</b></label>
-                	<div class="controls"> 
+                </div>
+                <div class="form-group"> 
+                    <label class="control-label col-sm-2">Videos Screened</label>
+                	<div class="col-sm-4"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chzn-select">
                         </select> 
                     </div>
                 </div>
-                <div class="control-group">
-			<label><b>Groups Attended</b></label>
-                    <div class="controls">
-                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chzn-select"></select> 
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Groups Attended</label>
+                    <div class="col-sm-4">
+                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chzn-select form-control"></select> 
                     </div>
                 </div>
-                <div class="control-group">
-                	<label>Person</label>
-                	<div class="controls">
-                        <select id="id_person" name = "person" class="chzn-select" multiple="multiple"></select>
+                <div class="form-group">
+                	<label class="control-label col-sm-2 notbold">Person</label>
+                	<div class="col-sm-4">
+                        <select id="id_person" name = "person" class="chzn-select form-control" multiple="multiple"></select>
                     </div>
                 </div>
                     <br>
@@ -664,36 +663,36 @@
 
 <script type="text/template" id="person_pma_template">
     <tr id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
-    <td>
-    <div class="control-group">
-        <div class="controls">
-            <i class="icon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
-        </div>
-    </div>
-    </td>
-    <td>
-    <div class="control-group">
-        <div class="controls">
-        <input type="text" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
-		<%=index+1%>
-        </div>
-    </div>
-    </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
+                <div class="controls">
+                    <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
+                <%=index+1%>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
                 <div class="controls">
 				<% 
 					var person_label="";
 					person_label =person_name+"("+father_name+")";
 				%>
-                    <input type="text" class="input-xlarge" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
+                    <input type="text" class="input-sm form-control" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
                 </div>
             </div>
         </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
                 <div class="controls">
-                    <select  name="expressed_adoption_video" class="chzn-select">
+                    <select  name="expressed_adoption_video" class="chzn-select form-control">
                         <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
@@ -707,25 +706,24 @@
             </div>
         </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
                 <div class="controls">
                 <%if(typeof(expressed_question)!="undefined"){%>
-                    <input type="text"  name="expressed_question" value ="<%=expressed_question%>">
+                    <input type="text"  name="expressed_question" value ="<%=expressed_question%>" class="form-control input-sm">
                 <%} else{%>
-                    <input type="text"  name="expressed_question" >
+                    <input type="text"  name="expressed_question" class="form-control input-sm">
                 <%}%>    
                 </div>
             </div>
         </td>
         <td>
-            <div class="control-group">
-                <div class="controls">
+            <div class="form-group">
+                <div class="checkbox">
                     <%if(typeof(interested)!="undefined"&&interested){%>
-                        <input type="checkbox" name="interested" checked>
+                        <input class="mrg-lt-auto" type="checkbox" name="interested" checked>
                     <%} else{%>
-                        <input type="checkbox" name="interested">
-                    <%}%>    
-                    
+                        <input class="mrg-lt-auto" type="checkbox" name="interested">
+                    <%}%>
                 </div>
             </div>
         </td>
@@ -1053,13 +1051,13 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Production Start Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control" placeholder="yyyy-mm-dd">
+                    <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control" placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2">Production End Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control"  placeholder="yyyy-mm-dd">
+                    <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control"  placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
@@ -1160,7 +1158,7 @@
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2 notbold">Approval Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="yyyy-mm-dd">
+                    <input class="date-picker input-small form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
