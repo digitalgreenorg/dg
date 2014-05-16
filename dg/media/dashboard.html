@@ -790,57 +790,57 @@
     
 </script>
 <script type="text/template" id="adoption_add_template">
-                            <fieldset>
-                                <legend>Add Adoption</legend>
-								<p class="bold-helptext"> All fields in bold are required</p>
-                                <div class="control-group">
-					<label class="control-label"><b>Village</b></label>
-                                	<div class="controls"> 
-                                	<select name="village" id="id_village" class="chzn-select">
-                                    <option value="">---------- </option>
-                                    </select>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-					<label><b>Groups Attended</b></label>
-	                                <div class="controls">
-	                                    <select name="group" id="id_group" multiple="multiple" class="chzn-select"></select>
-	                                </div>
-                                </div>
-                                <div class="control-group">
-                                	<label>Person</label>
-                                	<div class="controls">
-		                                <select name="float_person" id="id_person" multiple="multiple" class="chzn-select"></select>
-	                                </div>
-                                </div>
-                                    <br>
-                            </fieldset>
-                            <fieldset class = "inline_table">
-                            	<h5>Adoptions</h5>
-                                <table id="adoptions_table" class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class= "notbold">
-                                                Delete?
-                                            </th>
-                                            <th class = "notbold">
-                                                Sr No.
-                                            </th>
-                                            <th>
-                                                Person
-                                            </th>
-                                            <th>
-                                                Video
-                                            </th>
-                                            <th>
-                                                Date of Adoption
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="bulk">
-                                    </tbody>
-                                </table>
-                            </fieldset>
+        <fieldset class="form-horizontal">
+            <legend>Add Adoption</legend>
+            <p class="bold-helptext"> All fields in bold are required</p>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Village</label>
+                <div class="col-sm-4"> 
+                <select name="village" id="id_village" class="chzn-select form-control">
+                <option value="">---------- </option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Groups Attended</label>
+                <div class="col-sm-4">
+                    <select name="group" id="id_group" multiple="multiple" class="chzn-select form-control"></select>
+                </div>
+            </div>
+            <div class="form-control-group">
+                <label class="control-label col-sm-2 notbold">Person</label>
+                <div class="col-sm-4">
+                    <select name="float_person" id="id_person" multiple="multiple" class="chzn-select form-control"></select>
+                </div>
+            </div>
+                <br>
+        </fieldset>
+        <fieldset class = "inline_table">
+            <h5>Adoptions</h5>
+            <table id="adoptions_table" class="table">
+                <thead>
+                    <tr class="hide-header">
+                        <th class= "notbold">
+                            Delete?
+                        </th>
+                        <th class = "notbold">
+                            Sr No.
+                        </th>
+                        <th>
+                            Person
+                        </th>
+                        <th>
+                            Video
+                        </th>
+                        <th>
+                            Date of Adoption
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="bulk">
+                </tbody>
+            </table>
+        </fieldset>
 </script>
 
 <script type="text/template" id="adoption_inline_header">
@@ -848,37 +848,37 @@
 </script>
 
 <script type="text/template" id="adoption_inline">
-    <tr class="" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
+    <tr class="adoptionadd" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
     <td>
-    <div class="control-group">
+    <div class="form-group">
         <div class="controls">
-            <i class="icon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
+            <i class="glyphicon glyphicon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
         </div>
     </div>
     </td>
     <td>
-    <div class="control-group">
+    <div class="form-group">
         <div class="controls">
-        <input type="text" style="display:none;" id="person_row<%=index%>" name="person<%=index%>" value = "<%=id%>" disabled>
+        <input class="form-control" type="text" style="display:none;" id="person_row<%=index%>" name="person<%=index%>" value = "<%=id%>" disabled>
         <%=index%>
         </div>
     </div>
     </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
                 <div class="controls">
                     <% 
                         var person_label="";
                         person_label =person_name+"("+father_name+")";
                     %>
-                    <input type="text" class="imput-xlarge" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
+                    <input type="text" class="form-control" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
                 </div>
             </div>
         </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
                 <div class="controls">
-                    <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select" required>
+                    <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select form-control" required>
                         <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
@@ -892,9 +892,9 @@
             </div>
         </td>
         <td>
-            <div class="control-group">
+            <div class="form-group">
                 <div class="controls">
-                    <input type="text" class="date-picker input-small inl_date" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required validateDate>
+                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required validateDate>
                 </div>
             </div>
         </td>
