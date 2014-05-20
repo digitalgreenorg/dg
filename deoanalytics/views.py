@@ -5,7 +5,6 @@ import json, datetime
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
-from django.db.models import Count
 
 from dashboard.models import Screening
 from dashboard.models import Partners
@@ -14,8 +13,6 @@ from dashboard.models import ServerLog
 from dashboard.models import CocoUser
 from dashboard.models import PersonAdoptPractice
 from dashboard.models import Person
-from dashboard.models import Video
-
 
 def index(request):
     template = loader.get_template('deoanalytics/index.html')
@@ -67,6 +64,12 @@ def deodatasetter(request):
         listofscreeningdates.append(str(screening.date()))
         
     s_dict = dict((i,listofscreeningdates.count(i)) for i in listofscreeningdates)
+    
+    '''screeningtelecast = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('date', flat=True)
+    listofscreeningtelecastdates = []
+    for tscreening in screeningtelecast:
+        listofscreeningtelecastdates.append(str(tscreening.date()))    
+    print listofscreeningtelecastdates;'''
 
     adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)
     listofadoptiondates = []
