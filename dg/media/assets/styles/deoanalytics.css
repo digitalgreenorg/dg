@@ -117,3 +117,104 @@
 	font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
 	font-size: 13px;
 }
+
+.makecursor {
+	cursor: pointer; cursor: hand;
+}
+
+.blockdisplay
+{
+	display:block;
+}
+
+
+
+/* my select */
+.my-select,
+.my-select .selected-item-label,
+.my-select .options .item {
+    width: 126px;
+    height: 20px;
+}
+
+.my-select {
+    margin-right: 42px;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+.my-select-container {
+    position: absolute;
+
+    text-align: left;
+    border: 1px solid #dbdad5;
+    background: #ffffff;
+
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    -moz-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 5px;
+}
+
+.my-select .selected-item-label,
+.my-select .options .item {
+    padding: 5px 20px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.my-select select {
+    display: none;
+}
+
+.my-select .selected-item-label {
+    color: #047d0a;
+    text-transform: uppercase;
+}
+
+/*.my-select .options {
+    display: none;
+}*/
+
+.my-select .options .item {
+    border-top: 1px solid #dbdad5;
+}
+
+.my-select .options .item:hover {
+    color: #047d0a;
+    background-color: #f3f9ed;
+}
+
+.my-select .options .item.selected {
+    font-weight: bold;
+}
+
+.nodisplay {
+	display:none;
+}
+
+.my-icon {
+    position: absolute;
+    background-image: url(../images/icon-sprite.png);
+    background-repeat: no-repeat;
+}
+
+.my-select .my-icon {
+    width: 14px;
+    height: 11px;
+    top: 10px;
+    right: 10px;
+    background-position: -86px -567px;
+}
+
+.deoselected {
+	background-color: #f3f9ed;
+}
+
+.deonotselected {
+	background-color: #ffffff;
+}
+
+

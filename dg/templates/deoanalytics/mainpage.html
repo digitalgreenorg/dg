@@ -6,58 +6,54 @@
  	
  	   <div class="featured layout-vr-xlg" style="background:white; padding-top:50px;">
  	   
- 	   		<!-- <div class="custom-select js-custom-select leftrelative">
+ 	   		<div class="my-select js-custom-select leftrelative">
 
-				<select id = "partnerlist" onchange="districtfilter();">			
-	               <option value='' selected='selected'>Choose Partner</option>
-	               {% for pa in partners%} 
-	                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
-	               {% endfor %}
-	            </select>
-	            
-                <div class="custom-select-container">
-                    <div class="icon"></div>
-                    <div class="selected-item-label js-selected-item-label">Choose Partner</div>
-                    <ul class="options js-options" style='overflow-y:scroll;height:218px;'>
-		               {% for pa in partners%} 
-		                 <li class="item">{{pa.partner_name}}</li>
-		               {% endfor %}
-                    </ul>
-                </div>	            
+                <div class="my-select-container" onclick="partnersetter();">
+                    <div class="my-icon"></div>
+                    <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
+	                             
+                    <ul id="partnerlist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    
+                    </ul>                  
+                </div>
+            </div>
 
-            </div>  -->
 
- 	   		<div class="custom-select-container leftrelative">
-			<select id = "partnerlist" onchange="districtfilter()">			
-               <option value='' selected='selected'>Choose Partner</option>     
-	               {% for pa in partners%} 
-	                 <option value = "{{pa.id}}">{{pa.partner_name}}</option>
-	               {% endfor %}
-	        </select>
-	        </div>
-	        
- 	   		<div class="custom-select-container leftrelative">
-			<select id = "districtlist" onchange="deofilter()">			
-               <option value='' selected='selected'>Choose District</option>     
-	        </select>
-	        </div>
-	        
- 	   		<div class="custom-select-container leftrelative">	        
-	        <select id = "deolist" multiple>			
-               <option value='' selected='selected'>Choose DEOs</option>                        
-	        </select>     
-	        </div>
-	        
+ 	   		<div class="my-select js-custom-select leftrelative">
+
+                <div class="my-select-container" onclick="districtsetter();">
+                    <div class="my-icon"></div>
+                    <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
+	                             
+                    <ul id="districtlist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    
+                    </ul>                  
+                </div>
+            </div>
+            
+
+ 	   		<div class="my-select js-custom-select leftrelative">
+
+                <div class="my-select-container">
+                    <div class="my-icon"></div>
+                    <div id="deoname" class="selected-item-label js-selected-item-label" onclick="deosetter();">Choose DEOs</div>
+	                             
+                    <ul id="deolist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    
+                    </ul>                  
+                </div>
+            </div>
+		        	        
         <div class="fright">
 	      <a id="gobutton" class="btn" onclick="goclicked()">GO</a>
-        </div>       
-         
+        </div>  
+        
         <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright" style="padding:0 10px;">
            <li><a href="#" class="js-most-filter active" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
-        </ul>
-		
+		</ul>
+         
 		<div style="margin-top:100px">
 		
 		    <ul id="deobox" class="filterOptions hdg-upper copy clearfix js-most-filters hidden" style="padding:0 10px;">
@@ -67,36 +63,30 @@
 	        <div id="thegrid" class="grid hidden" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
 				
 				<div class="gridleft">
+				
 					<div id="photobox" class="boxdesign">
-						<img class="fleft" src="{{STATIC_URL}}assets/images/face.png">
-					
-					
-					</div>				    
-				    <div id="databox" class="boxdesign">
-		         	
+						<img class="fleft" src="{{STATIC_URL}}assets/images/face.png">				
+					</div>		
+							    
+				    <div id="databox" class="boxdesign">		         	
 			         	<p class="fontforbox" id="screenings"></p>
 			         	<p class="fontforbox" id="adoptions"></p>
-			         	<p class="fontforbox" id="persons"></p>
-			         	<p class="fontforbox" id="videos"></p>
-			         	
+			         	<p class="fontforbox" id="persons"></p>			         	
 			        </div>
 				</div>
 				
-				<div class="gridright">
-				
+				<div class="gridright">	
+					        	    
 				   	<div class="outer-center">
-	       				<div class="inner-center fontforbox">
-	       				
-				         	<img class="fleft" src="{{STATIC_URL}}assets/images/carousel-arrow-lt.png" onclick="moveprev()">
+	       				<div class="inner-center fontforbox">   				
+				         	<img class="fleft makecursor" src="{{STATIC_URL}}assets/images/carousel-arrow-lt.png" onclick="moveprev()">
 				         		<div class="fleft" id="dateshow"></div>
-				         	<img class="fleft" src="{{STATIC_URL}}assets/images/carousel-arrow-rt.png" onclick="movenext()">
-	       				
+				         	<img class="fleft makecursor" src="{{STATIC_URL}}assets/images/carousel-arrow-rt.png" onclick="movenext()">  						               				
 	       				</div>
    					</div>
-					
+   					
 					<div id="chartcontainer" style="float: left; margin: 10px; padding: 10px; height: 400px;"></div>
-				</div>
-	         	
+				</div>	         	
 	        </div>
 		</div>
      </div>
@@ -107,16 +97,184 @@
  // JavaScript Document
  
  	var selecteddeoname;
+ 
+    var pflag = 0;
+    var diflag = 0;
+    var deflag = 0;
+    var chosendeos = [];
+    
+    function partnersetter()
+    {  	
+    	if (pflag == 0)
+    	{
+        	document.getElementById('partnerlist').classList.remove('nodisplay');
+        	document.getElementById('partnerlist').classList.add('blockdisplay');
+        	pflag = 1;            		
+    	}
+    	else if (pflag == 1)
+		{
+        	document.getElementById('partnerlist').classList.remove('blockdisplay');
+        	document.getElementById('partnerlist').classList.add('nodisplay');
+        	pflag = 0;            		
+    	}  
+    	
+        $.ajax(
+        {
+         type:'GET',
+         url: window.location.origin + "/deo/api/getpartner",
+        
+         success: function(data){
+             var listitems = '';
+             for (var j = 0; j < data.length; j++) 
+             {                         
+               listitems += '<li class=' + '"item"' + 'id="' + data[j].partner_name+  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
+             }
+             $("ul#partnerlist").html(listitems);
+         },
+         error: function(data){
+             alert("Sorry there was an error!");
+        }
+        });
+    }
+
+    function setpartnerlistdiv(text)
+    {    	
+    	//ASA partner_id = 10000000000008, BRLPS partner_id = 10000000000013
+ 	    var partner_name = text.innerText.trim();
+ 	    var partner_id;
+ 	    
+ 	    if (partner_name == "ASA") {partner_id = 10000000000008;}
+ 	    else if (partner_name == "BRLPS") {partner_id = 10000000000013;}
+    	$("div#partnername").html(partner_name); 
+    	document.getElementById('districtlist').classList.remove('nodisplay');
+    	document.getElementById('districtlist').classList.add('blockdisplay');
+    	diflag = 1;
+    	districtfilter(partner_id);
+    }
+
+    function districtsetter()
+    {
+    	if (diflag == 0)
+    	{
+        	document.getElementById('districtlist').classList.remove('nodisplay');
+        	document.getElementById('districtlist').classList.add('blockdisplay');
+        	diflag = 1;
+    	}
+    	else if (diflag == 1)
+		{
+        	document.getElementById('districtlist').classList.remove('blockdisplay');
+        	document.getElementById('districtlist').classList.add('nodisplay');
+        	diflag = 0;
+    	}     	
+    }
+    
+    function districtfilter(partner_id)
+    {           
+       $.ajax(
+       {
+        type:'GET',
+        data:{ 
+        'partner': partner_id,
+        },
+        url: window.location.origin + "/deo/api/getdistrict",
+        
+        success: function(data){
+
+            var listitems = '';
+            for (var i = 0; i < data.length; i++) 
+            {
+           	 
+              listitems += '<li class=' + '"item"' + 'id="' + data[i].district_name+  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i].district_name + '</li>';
+              //options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
+            }
+            //$("select#districtlist").html(options);
+            $("ul#districtlist").html(listitems);
+        },
+        error: function(data){
+                alert("Sorry there was an error!");
+        }
+      });
+    }
+    
+    function setdistrictlistdiv(text, partner_id)
+    {	
+    	chosendeos = [];    	
+ 	    var district_name = text.innerText.trim();
+    	$("div#districtname").html(district_name);   
+    	deofilter(district_name, partner_id);
+    	document.getElementById('deolist').classList.remove('nodisplay');
+    	document.getElementById('deolist').classList.add('blockdisplay');
+    	deflag = 1;    	
+    }    
+
+    function deofilter(district_name, partner_id)
+    {       
+       $.ajax(
+       {
+          type:'GET',
+          data:{ 
+          'partner': partner_id,
+          'district': district_name,
+          },
+          url: window.location.origin + "/deo/api/getdeo",
+          
+          success: function(data){
+
+              var listitems = '';
+              for (var i = 0; i < data.length; i++) 
+              {
+             	 listitems += '<li id="' + i + data[i].deo_name + '"class=' + '"item deonotselected"' + 'onclick="' 
+             	 + "makedeochecked('" + i + data[i].deo_name + "','" + data[i].deo_name + "')" + '">' + 
+             	 '<input id ="' + data[i].deo_name + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
+              }
+              $("ul#deolist").html(listitems);
+          },
+          error: function(data){
+                 alert("Sorry there was an error!");
+         }
+       });
+    }
+    
+    function makedeochecked(itemid, deo_name)
+    {
+    	if ($('#' + itemid).hasClass("deonotselected"))
+    		{
+    			$('#' + itemid).removeClass("deonotselected");
+    			$('#' + itemid).addClass("deoselected");
+    			$('#' + deo_name).prop('checked', true);
+    			chosendeos.push(deo_name);	
+    		}
+    	else if ($('#' + itemid).hasClass("deoselected"))
+    		{
+    			$('#' + itemid).removeClass("deoselected");
+    			$('#' + itemid).addClass("deonotselected");
+    			$('#' + deo_name).prop('checked', false);
+    			var index = chosendeos.indexOf(deo_name);
+	 	    	chosendeos.splice(index,1);
+    		}
+    }
+    
+    function deosetter()
+    {
+    	if (deflag == 0)
+    	{
+        	document.getElementById('deolist').classList.remove('nodisplay');
+        	document.getElementById('deolist').classList.add('blockdisplay');
+        	deflag = 1;
+    	}
+    	else if (deflag == 1)
+		{
+        	document.getElementById('deolist').classList.remove('blockdisplay');
+        	document.getElementById('deolist').classList.add('nodisplay');
+        	deflag = 0;
+    	}     	
+    }
+    
    function onbodyload()
    {
 	  var today = new Date();
 	  setdate(0, today);
    }
-
-	$('#gobutton').click(function(){
-		//e.preventDefault();
-
-	    });
 
    function settheday()
    {
@@ -138,10 +296,8 @@
 		   
 		   var day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 		   var dayofweek = day[d.getDay()];
-		   console.log("day is: " + dayofweek);
-
-			var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-			var mon = month[d.getMonth()];
+		   var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+		   var mon = month[d.getMonth()];
 		   
 		   d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
 		   $("div#dateshow").html(d);		   
@@ -380,10 +536,8 @@
 	   }
 	   else if ($("#monthly").hasClass("active") == true)
 	   {
-		   var d = getfirstdateofselectedmonth(1);	   
-		   console.log("First date of selected month: " + d);
-		   d.setMonth(d.getMonth() + 1);		   
-		   console.log("Date after incrementing month: " + d);
+		   var d = getfirstdateofselectedmonth(1);
+		   d.setMonth(d.getMonth() + 1);
 		   setmonthfromdate(d);		   
 	   }	
 	   analyzedeo();
@@ -408,100 +562,22 @@
 	   else if ($("#monthly").hasClass("active") == true)
 	   {
 		   var d = getfirstdateofselectedmonth(1);	   
-		   d.setMonth(d.getMonth() - 1);	
-		   console.log ("Date after -1month: "+d)
+		   d.setMonth(d.getMonth() - 1);
 		   setmonthfromdate(d);		   
 	   }
 	   analyzedeo();
    }
-   
-   function districtfilter()
-   {
-           
-      console.log("Function districtfilter entered...");
-      
-      var e = document.getElementById('partnerlist');
-      var partnerval = e.options[e.selectedIndex].value;
-
-      console.log("The selected partner is: " + partnerval);  
-      
-      $.ajax(
-         {
-            type:'GET',
-            data:{ 
-            'partner': partnerval,
-            },
-            url: window.location.origin + "/deo/api/getdistrict",
-            
-            success: function(data){
-
-                var options = '';
-                for (var i = 0; i < data.length; i++) 
-                {
-                  options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
-                }
-                $("select#districtlist").html(options);
-            },
-            error: function(data){
-                    console.log("ERRORIS:" + data);
-                    alert("There was an error in recording your input!");
-            }
-         });
-   }
-
-   function deofilter()
-   {
-           
-      console.log("Function deofilter entered...");
-      
-      var e = document.getElementById('partnerlist');
-      var partnerval = e.options[e.selectedIndex].value;
-      console.log("The selected partner is: " + partnerval);
-      
-      var f = document.getElementById('districtlist');
-      var districtval = f.options[f.selectedIndex].value;           
-      console.log("The selected district is: " + districtval);  
-      
-      $.ajax(
-         {
-            type:'GET',
-            data:{ 
-            'partner': partnerval,
-            'district': districtval,
-            },
-            url: window.location.origin + "/deo/api/getdeo",
-            
-            success: function(data){
-
-                var options = '';
-                for (var j = 0; j < data.length; j++) 
-                {
-                  options += '<option value="' + data[j].deo_name+  '">' + data[j].deo_name + '</option>';
-                }
-                $("select#deolist").html(options);
-            },
-            error: function(data){
-                   console.log("ERRORIS:" + data);
-                   alert("There was an error in recording your input!");
-           }
-         });
-   }
  
    function goclicked()
-   {
-       console.log("Function goclicked entered...");
-       
+   {	   
+	   document.getElementById('deolist').classList.add('nodisplay');      
        document.getElementById("thegrid").classList.remove('hidden');
        document.getElementById("deobox").classList.remove('hidden');
        
-       var values = $('#deolist').val();
-       console.log(values); 
-
        var list = '';
-       for (var j = 0; j < values.length; j++) 
+       for (var j = 0; j < chosendeos.length; j++) 
        {
-           htmlline = '<li><a id=' + j + ' '+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' + 'analyzedeo(); makedeoactive(this'+ ',' + values.length + ',' + j + ');">' + '<span><span class="' + 'icon"' + '></span>' + values[j]+ '</span></a></li>';
-    	   //htmlline = '<li id =' + j + ' ' + 'onclick="'+ 'analyzedeo(); makedeoactive(this'+ ',' + values.length + ',' + j + ');">' + '<div class="' + "categorylabelunselected js-filter-category-label" + '">' + values[j] + '</div></li>';
+           htmlline = '<li><a id=' + j + ' '+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' + 'analyzedeo(); makedeoactive(this'+ ',' + chosendeos.length + ',' + j + ');">' + '<span><span class="' + 'icon"' + '></span>' + chosendeos[j]+ '</span></a></li>';
        	   list += htmlline;
        }
        $("ul#deobox").html(list);
@@ -516,7 +592,6 @@
 
    function makedeoactive(deoname_element, total, val)
    {
-       console.log("make deo active entered...");
 	   deoname = deoname_element.innerText.trim();
 	   	
 	   selecteddeoname = deoname;
@@ -532,16 +607,10 @@
     		   document.getElementById(j).classList.remove('active');    		   
     	  }   
        }
-       
-       //document.getElementById('0').style.background = "#c2c1bc";
-	   //document.getElementById('1').style.background = "#c2c1bc";
-	   //document.getElementById('2').style.background = "#c2c1bc";
    }
    
    function analyzedeo()
    {	     
-    console.log("analyze deo entered...");
-    console.log("Selected deo name is: " + selecteddeoname);
    	var mode;
    	var s_list = [];
    	var a_list = [];
@@ -563,7 +632,6 @@
 		mon = month[date_for_datelist.getMonth()];
 		
 		k = date + " "+ mon;
-		console.log(k);
 		
 		datelist.push(k);	
     }
@@ -588,13 +656,11 @@
 			mon = month[start_date_for_datelist.getMonth()];
 			
 			k = date + " "+ mon;
-			console.log(k);
 			
 			datelist.push(k);	
 			
 			start_date_for_datelist.setDate(start_date_for_datelist.getDate() + 1);
-		}	
-		console.log(datelist);
+		}
    	}
    	else if ($("#monthly").hasClass("active") == true) 
    	{ 
@@ -633,23 +699,19 @@
    						{
 	 					   s_list[0] = data.screenings[key1];
 	 					   sumscreenings += data.screenings[key1];
-	 					   console.log("Daily s list: " + s_list);
    						}
   						for (var key2 in data.adoptions)
    						{
 	 					   a_list[0] = data.adoptions[key2];
 	 					   sumadoptions += data.adoptions[key2];
-	 					   console.log("Daily a list: " + a_list);
    						}  						
            		   }
             	   if (mode == 2)
         		   {
    						for (var key1 in data.screenings)
    						{
-		 					console.log(key1+': '+data.screenings[key1]);
 		 				    keydate = key1.split("-")[2];
 		 					keydate = keydate.replace(/^0+/, '');
-		 					console.log(keydate);
 		 					
 		 					for (var i = 0; i <= 6; i++)
 		 					{
@@ -658,16 +720,13 @@
 	 								s_list[i] = data.screenings[key1];
 	 							}
 		 					}			 					
-		 					sumscreenings += data.screenings[key1];
-		 					console.log("Weekly s list: " + s_list);	   							
+		 					sumscreenings += data.screenings[key1]; 							
    						}
    						
    						for (var key2 in data.adoptions)
    						{
-		 					console.log(key2+': '+data.adoptions[key2]);
 		 				    keydate = key2.split("-")[2];
 		 					keydate = keydate.replace(/^0+/, '');
-		 					console.log(keydate);
 		 					
 		 					for (var i = 0; i <= 6; i++)
 		 					{
@@ -676,48 +735,38 @@
 	 								a_list[i] = data.adoptions[key2];
 	 							}
 		 					}			 					
-		 					sumadoptions += data.adoptions[key2];
-		 					console.log("Weekly a list: " + a_list);	   							
+		 					sumadoptions += data.adoptions[key2];	   							
    						}   						
         		   }            	   
             	   if (mode == 3)
             		   {
 		   					for (var key1 in data.screenings) 
 		   					{
-		 					   console.log(key1+': '+data.screenings[key1]);
 		 					   keydate = key1.split("-")[2];
 		 					   keydate = keydate.replace(/^0+/, '');
-		 					   console.log(keydate);
 		 					   s_list[keydate-1] = data.screenings[key1];
 		 					   sumscreenings += data.screenings[key1];
-		 					   console.log("Monthly s list: " + s_list);
 		 					}
 		   					
 		   					for (var key2 in data.adoptions) 
 		   					{
-		 					   console.log(key2+': '+data.adoptions[key2]);
 		 					   keydate = key2.split("-")[2];
 		 					   keydate = keydate.replace(/^0+/, '');
-		 					   console.log(keydate);
 		 					   a_list[keydate-1] = data.adoptions[key2];
 		 					   sumadoptions += data.adoptions[key2];
-		 					   console.log("Monthly a list: " + a_list);
 		 					} 		   					
             		   }
 					
             	   lin1 = "No. of screenings entered: " + sumscreenings;
             	   lin2 = "No. of adoptions entered : " + sumadoptions;
             	   lin3 = "No. of persons entered   : " + data.persons;
-            	   lin4 = "No. of videos entered    : " + data.videos;
             	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
             	   $("p#persons").html(lin3);
-            	   $("p#videos").html(lin4);
             	   makechart(datelist,s_list,a_list);
                },
                error: function(data){
-                      console.log("ERRORIS:" + data);
-                      alert("There was an error in recording your input!");
+                      alert("Sorry! There was an error!");
               }
             });
    }
@@ -745,15 +794,6 @@
                    color: '#808080'
                }]
            },
-           //tooltip: {
-           //    valueSuffix: 'C'
-           //},
-           //legend: {
-               //layout: 'vertical',
-               //align: 'right',
-               //verticalAlign: 'middle',
-               //borderWidth: 0
-           //},
            series: [{
                name: 'Screenings',
                data: s_list
@@ -761,19 +801,6 @@
         	   name: 'Adoptions',
         	   data: a_list
            }]
-           //,
-           //{
-           //   name: 'Adoptions',
-           //   data: [0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-           //}
-           //, {
-           //    name: 'Berlin',
-           //    data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-           //}, {
-           //    name: 'London',
-           //    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-           //}
-           //
     	});	   
 	  
    }
