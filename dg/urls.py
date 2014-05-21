@@ -7,8 +7,11 @@ import feeds.urls
 import social_website.api_urls
 import social_website.urls
 
-from admin import admin
+from django.contrib import admin
+admin.autodiscover()
+
 from coco.data_log import send_updated_log
+from coco_admin import coco_admin
 from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
@@ -16,8 +19,10 @@ from static_site_views import spring_analytics
 from website_admin import website_admin
 import website_archive_urls
 
-admin.login_template = 'social_website/login.html'
-admin.logout_template = 'social_website/home.html'
+coco_admin.index_template = 'social_website/index.html'
+coco_admin.login_template = 'social_website/login.html'
+coco_admin.logout_template = 'social_website/home.html'
+website_admin.index_template = 'social_website/index.html'
 website_admin.login_template = 'social_website/login.html'
 website_admin.logout_template = 'social_website/home.html'
 
@@ -35,9 +40,9 @@ urlpatterns = patterns('',
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
-    (r'^admin/', include(admin.urls)),
+    (r'^admin/', include(coco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
-    
+    (r'^adminblog/', include(admin.site.urls)),
     (r'^coco/', include(coco.urls)),
     (r'^path/', include('path.urls')),
     (r'^analytics/', include('output.urls')),
@@ -66,6 +71,7 @@ urlpatterns = patterns('',
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
+    (r"^", include("mezzanine.urls")),
 )
 
 # Static files serving locally
