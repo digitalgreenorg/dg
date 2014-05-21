@@ -65,9 +65,9 @@
 						
 						<td id='videodatadiv1td'>
 							<div id='videodatadiv1div'>
-								<span class='numberstyle'> {{vid.viewers}} </span> Viewer{{vid.viewers|pluralize}}
+								<span class='numberstyle'> {{tot_vid_views}} </span> View{{tot_vid_views|pluralize}}
 								<div id='videodatadiv1help'>
-									Total number of farmers who watched the video
+									Total number of times video is watched by people
 								</div>
 							</div>														
 						</td>
@@ -260,9 +260,6 @@
                                         <div id='contentdivrighttddiv22'>
                                            {{v.related_practice.practice_name|default:''}}
                                         </div>
-                                        <div id='contentdivrighttddiv22'>
-                                            {{v.viewers}} viewer{{v.viewers|pluralize}}
-                                        </div>               
                                     </div>                       
                                 </td></tr>
                          {%empty%}

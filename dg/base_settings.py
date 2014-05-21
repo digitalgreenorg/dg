@@ -9,7 +9,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -47,6 +46,10 @@ STATICFILES_DIRS = (
    os.path.join(PROJECT_PATH, 'media'),                 
 )
 
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/'
+PERMISSION_DENIED_URL = '/denied/'
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +63,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'dg.urls'
 
 # Google ID is required for fetching the user profile image
-SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id') ]
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id'), ('picture', 'picture') ]
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -94,13 +97,18 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
+    'programs',
+    'geographies',
+    'people',
+    'videos',
+    'activities',
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
     'south',
     'farmerbook',
-    'video_practice_map',
-    'path',
+    #'video_practice_map',
+    #'path',
     'fbconnect',
     'tastypie',
     'coco',

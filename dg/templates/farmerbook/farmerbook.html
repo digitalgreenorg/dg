@@ -170,9 +170,9 @@
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
 					server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid				
-				}
-				personPageLoad(server_url);
+				}				
 			});
+			personPageLoad(server_url);
 		}
 		
 		function groupClick(group_id) {

@@ -1,5 +1,5 @@
 from django.db import models
-from dashboard.models import Person
+from people.models import Person
 from dashboard.fields import BigAutoField, BigForeignKey, PositiveBigIntegerField
 # Create your models here.
 

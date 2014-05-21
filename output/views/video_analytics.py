@@ -1,12 +1,15 @@
-from dashboard.models import *
 from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
+
+from activities.models import PersonMeetingAttendance
 from output import views
 from output.database.SQL import video_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, \
     run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
+from programs.models import Partner
+from videos.models import Language, Video
 import datetime
 import json
 import math
@@ -139,7 +142,11 @@ def video_monthwise_bar_data(request):
 
 def video(request):
     id = int(request.GET['id'])
-    vid = Video.objects.select_related().get(pk=id)
+    try:
+        vid = Video.objects.select_related().get(pk=id)
+    except Video.DoesNotExist:
+        vid = Video.objects.select_related().get(old_coco_id=id)
+        return HttpResponseRedirect("?id=" + str(vid.id))
     vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
     
     tot_vid_scr = vid.screening_set.count()
@@ -152,8 +159,10 @@ def video(request):
     #in title and question
     title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
     #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
-    
-    ques = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid).exclude(expressed_question =  '')
+
+    views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
+    tot_vid_views = views.count()
+    ques = views.exclude(expressed_question =  '')
     ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
                        'person__village__block__district__state__state_name','screening__date')
     if(len(ques) > 0):
@@ -173,7 +182,7 @@ def video(request):
     #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
     
     
-    rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('-viewers')
+    rel_vids_all = Video.objects.exclude(pk=vid.pk)
     rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
@@ -184,10 +193,10 @@ def video(request):
         if(len(rel_vids)< 9):
             rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
 
-    rel_vids = sorted(list(rel_vids), key=lambda x: x.viewers, reverse=True)        
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
                                                      tot_vid_adopt = tot_vid_adopt, \
+                                                     tot_vid_views = tot_vid_views, \
                                                      actors = actor_data, \
                                                      ques = ques, \
                                                      rel_vids = rel_vids))
@@ -217,7 +226,7 @@ def video_search(request):
     search_box_params = {}
     
 
-    vids = Video.objects.annotate(adoptions=Count('personadoptpractice'))
+    vids = Video.objects.all()
     
     if(query):
         vids = vids.filter(title__icontains = query)
@@ -272,11 +281,12 @@ def video_search(request):
     if(partners):
         vids = vids.filter(village__block__district__partner__id__in = map(int,partners))
         search_box_params['sel_partners'] = partners
-    search_box_params['all_partners'] = Partners.objects.all().values('id','partner_name')
+    search_box_params['all_partners'] = Partner.objects.all().values('id','partner_name')
     
     if(sort == None):
         vids  = vids.order_by('id')
     elif(sort == "viewers"):
+        vids = vids.annotate(viewers=Count('screening__personmeetingattendance__id'))
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order
@@ -291,6 +301,7 @@ def video_search(request):
         else:
             vids = vids.order_by('-video_production_end_date', 'id')
     elif(sort == 'adoptions'):
+        vids = vids.annotate(adoptions=Count('personadoptpractice'))
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order

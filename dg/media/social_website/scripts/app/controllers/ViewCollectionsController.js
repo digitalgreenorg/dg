@@ -10,7 +10,7 @@
 define(function(require) {
     'use strict';
 
-    var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
     var Util = require('framework/Util');
     var jQuery = require('jquery');
 
@@ -68,7 +68,7 @@ define(function(require) {
 
             references.$likeButton = jQuery('.js-like-button');
             references.$commentBox = jQuery('#comment');
-            references.$commentButton = jQuery('.comment-btn');
+            references.$commentButton = jQuery('.js-comment-btn');
 
             references.$videoTarget = jQuery('#video-target');
 
@@ -113,7 +113,7 @@ define(function(require) {
             this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
             
             state.updateVideoWatchedTimeInterval = undefined;
-            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-videoid')-1)/5),{stopAutoPlay: false});
+            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
         },
 
         _initVideoStats: function() {

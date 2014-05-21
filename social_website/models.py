@@ -3,10 +3,9 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import m2m_changed, post_save
-from django.utils import timezone
+from django.db.models.signals import post_delete, post_save
 
-from post_save_funcs import collection_video_save, increase_online_video_like, video_add_activity, video_collection_activity
+from post_save_funcs import increase_online_video_like, update_stats, video_add_activity, collection_add_activity, video_collection_activity
 
 
 #===============================================================================
@@ -62,6 +61,10 @@ class Video(models.Model):
 
     def __unicode__(self):
         return "%s (%s)" % (self.title, self.coco_id)
+
+    def get_absolute_url(self):
+        return reverse('video_page', 
+                       args=[str(self.uid)])
 post_save.connect(video_add_activity, sender=Video)
 
 class Person(models.Model):
@@ -87,12 +90,12 @@ class PersonVideoRecord(models.Model):
 #===============================================================================
 class Collection(models.Model):
     uid = models.AutoField(primary_key = True)
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
     language = models.CharField(max_length=20)
-    videos = models.ManyToManyField(Video) #,related_name='video_collections')
+    videos = models.ManyToManyField(Video, through='VideoinCollection')
     category = models.CharField(max_length=500, blank=True)
     subcategory = models.CharField(max_length=500, blank=True)
     topic = models.CharField(max_length=500, blank=True)
@@ -112,8 +115,22 @@ class Collection(models.Model):
     def increase_likes(self):
         self.likes += 1
         self.save()
-m2m_changed.connect(video_collection_activity, sender=Collection.videos.through)
-m2m_changed.connect(collection_video_save, sender = Collection.videos.through)
+    class Meta:
+        unique_together = ("title", "partner", 'state', 'language')
+post_save.connect(collection_add_activity, sender=Collection)
+
+
+class VideoinCollection(models.Model):
+    video = models.ForeignKey(Video)
+    collection = models.ForeignKey(Collection)
+    order = models.IntegerField()
+
+    class Meta:
+        ordering = ['order']
+post_save.connect(video_collection_activity, sender=VideoinCollection)
+post_save.connect(update_stats, sender=VideoinCollection)
+post_delete.connect(update_stats, sender=VideoinCollection)
+
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)

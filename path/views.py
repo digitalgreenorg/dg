@@ -4,9 +4,9 @@ from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 
-from dashboard.models import Person
 from dg.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from path.models import *
+from people.models import Person
 import gdata.spreadsheet.service
 
 def page(request):

@@ -411,7 +411,6 @@ a {
     border: 1px solid #ebe9d9;
     margin-top: 7px;
     background: #f3f2eb url(../images/icon-sprite.png) no-repeat 10px -255px;
-
     cursor: pointer;
 }
 
@@ -2001,10 +2000,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 /* Slide Show */
 
-.main-carousel-video-player {
-    margin-top:-7px;
-}
-
 .slide {
     position: relative;
     height: 424px;
@@ -2736,13 +2731,6 @@ textarea.comment-text {
 	height: 0;
 }
 
-
-
-
-
-
-
-
 /* Carousel Styles */
 
 .main-carousel {
@@ -3175,8 +3163,336 @@ body {
 	display: none;
 }
 
+/************** AUTH: login/signup/password change ***************/
+
+.auth{
+    height: 30px;
+    width: 150px;
+    margin-top: 10px;
+    padding: 1px 10px;
+    margin-left: -5px;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+}
+
+.auth::-webkit-input-placeholder {
+   font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+   font-size: 14px;
+   font-weight: bold;
+}
+
+.auth-btn{
+    margin-top: 140px;
+    margin-left: 37px;
+}
+
+.auth-btn-lg {
+    margin-top : 200px;
+    margin-left: 37px;
+}
+
+.auth-box {
+    height: 700px;
+    width: 200px;
+    background-color: rgba(0,0,0,0.3);
+    padding-left: 20px;
+    margin-left: 764px;
+    margin-top: -50px;
+}
+
+.auth-separator {
+    height: 65px;
+    line-height: 65px;
+    padding-left: 75px;
+}
+
+.auth-err-box {
+    border-style:solid;
+    border-color:red;
+    border-width: 1px;
+    width: 163px;  
+}
+
+.auth-err-msg {
+    margin-top: 15px;
+    margin-bottom: -15px;
+}
+
+.auth-link {
+    margin-left: 10px;
+}
+
+.auth-link a:hover {
+    color: #047d0a;
+}
+
+div.social-wrap button {
+    background-color: white;
+    padding-left: 35px;
+    height: 35px;
+    display: block;
+    background-size: 30px 30px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    margin-bottom: 15px;
+    width: 170px;
+    height: 30px;
+    border-bottom: 2px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    box-shadow: 0 4px 2px -2px gray;
+    font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+div.social-wrap button:active {
+    background-color: #FFF;
+}
+
+div.social-wrap button.facebook {
+    background-image: url(http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png);
+    cursor: pointer;
+}
+
+div.social-wrap button.googleplus {
+    background-image:url(http://cdn.business2community.com/wp-content/uploads/2013/06/Marketing-Best-Practice-with-Google-Plus-Business-pages.png);
+    cursor: pointer;
+}
+
+/* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
+
+@media(max-width: 480px) {
+    
+    .wrapper-responsive {
+        width: 480px;
+        height: 500px;
+        
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 10%;
+        margin-top: -40px;
+    }
+    
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
+    }
+   
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    
+    .wrapper-responsive {
+        width: 767px;        
+    }
+    
+    .auth-box {
+        height: 500px;
+        margin-left: 30%;
+        margin-top: -40px;
+    }
+   
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    
+    .wrapper-responsive {
+        width: 992px;
+        height: 650px;
+        
+    }
+    
+    .auth-box {
+        margin-left: 35%;
+    }
+    
+    .auth-separator {
+        height: 40px;
+        line-height: 40px;
+    }
+    
+}
+
+/****** User Dropdown Menu *************/
+
+.user-image {
+    cursor: pointer;
+    border-radius: 3px;
+    width: 40px;
+}
+
+.media .img .user-dropdown-arrow {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 58px;
+    width: 16px;
+}
+
+.user-dropdown-div {
+    position: relative;
+    right: 0;
+}
+
+.user-dropdown {
+    position: absolute;
+    display: none;
+    right: 0;
+    background-color: white;
+    z-index: 1000;
+    border: 1px solid #dbdad5;
+    border-top: 0;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -moz-border-radius-bottomleft: 4px;
+}
+/*
+.user-dropdown:before {
+  position: absolute;
+  top: -7px;
+  right: 10px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+*/
+.user-dropdown-option {
+    text-align: right;
+    padding: 15px 20px !important;
+    border-top: 1px solid #dbdad5;
+    font-family: source_sans_probold, arial, helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
 /* ---------------------------------------------------------------------
- Events Page CSS - To be integrated
+  Video App
+ ------------------------------------------------------------------------ */
+ 
+ .collec-title{
+     width: 300px;
+     height: 25px;
+     margin-left: 20px;
+     font-size: 20px;
+     padding: 5px;
+ }
+ 
+ .collec-hidden{
+     display: none;
+ }
+
+.display-inline {
+    display: inline;
+}
+ 
+ .carousel-border {
+     border: 2px solid #DEDEDE;
+     padding: 10px 10px 10px 10px;
+     border-radius: 10px;
+     box-shadow: 4px 4px 4px #9f9f9f;
+ }
+ 
+ .top-mar {
+     margin-top: 20px;
+ }
+ 
+ .video-remove {
+     position: absolute;
+     top: 15px;
+     left:165px;
+     background: url(../images/slideshow-x.png) no-repeat 0 0;
+     height : 32px;
+     width: 32px;
+     padding: 3px 0 0 4px;
+     opacity: 0.5;
+ }
+ 
+ .video-remove:hover {
+     opacity: 1;
+     cursor: pointer;
+ }
+ 
+ .cursor-move{
+    cursor: move;
+ }
+ 
+ .icon-addedit{
+    height : 25px;
+    width: 25px;
+    overflow: hidden;
+ }
+ 
+ .icon-coll-add{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -80px;
+ }
+ 
+ .icon-coll-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat 0 -120px;
+ }
+ 
+ .icon-video-add{
+    background: url(../images/addedit-sprite.png) no-repeat -40px 4px;
+ }
+ 
+ .icon-video-add:hover{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -39px;
+ }
+ 
+ .icon-coll-edit{
+    background: url(../images/addedit-sprite.png) no-repeat 0 0;
+ }
+ 
+ .icon-coll-edit:hover{
+    background: url(../images/addedit-sprite.png) no-repeat 1px -40px;
+ }
+ 
+ .icon-video-edit{
+    background: url(../images/addedit-sprite.png) no-repeat -40px -82px;
+ }
+ 
+ .icon-video-edit:hover{
+    background: url(../images/addedit-sprite.png) no-repeat -41px -121px;
+ }
+
+ .mrg-lt{
+    margin-left: 325px;
+}
+
+ /*------------------ Sortable ------------------*/
+ 
+ .video-wrapper-sortable{
+    float: left;
+    width: 703px;
+    margin-right: 30px;
+ }
+ 
+ .sortable { 
+ list-style-type: none;
+ margin: 5px;
+ padding: 5px;
+ width: 600px;
+ }
+ 
+ .sortable li {
+ margin: 3px 3px 3px 3px;
+ padding: 30px;
+ float: left;
+ width: 120px;
+ height: 90px;
+ font-size: 1em;
+ text-align: center; }
+ 
+ Events Page CSS
 ------------------------------------------------------------------------ */
 
 /* Event Icons */

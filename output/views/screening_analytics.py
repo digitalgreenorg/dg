@@ -1,7 +1,6 @@
 from django.shortcuts import *
 from django.db.models import Count, Min, Max
 from django.http import Http404, HttpResponse
-from dashboard.models import *
 import datetime,json
 from output.database.SQL  import screening_analytics_sql, shared_sql
 from output import views
