@@ -25,7 +25,7 @@
 
 {% block blog_post_detail_postedby %}
 {% editable blog_post.publish_date %}
-<h6 class="post-meta">
+<h6 class="copy layout-vr-sm">
     {% trans "Posted by" %}:
     {% with blog_post.user as author %}
     <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
@@ -35,7 +35,7 @@
 {% endeditable %}
 {% endblock %}
 {% block blog_post_detail_commentlink %}
-<p>
+<p class="copy layout-vr-sm">
     {% if blog_post.allow_comments %}
         {% if settings.COMMENTS_DISQUS_SHORTNAME %}
             (<a href="{{ blog_post.get_absolute_url }}#disqus_thread"
@@ -62,7 +62,9 @@
 
 {% block blog_post_detail_content %}
 {% editable blog_post.content %}
+<div class="layout-vr-md">
 {{ blog_post.content|richtext_filters|safe }}
+</div>
 {% endeditable %}
 {% endblock %}
 
@@ -80,18 +82,21 @@
 {% endif %}
 {% endblock %}
 
-{% block blog_post_detail_rating %}
+<!-- {% block blog_post_detail_rating %}
 <div class="panel panel-default rating">
     <div class="panel-body">
     {% rating_for blog_post %}
     </div>
 </div>
-{% endblock %}
+{% endblock %} -->
 
 {% block blog_post_detail_sharebuttons %}
 {% set_short_url_for blog_post %}
-<a class="btn btn-sm share-twitter" target="_blank" href="http://twitter.com/home?status={{ blog_post.short_url|urlencode }}%20{{ blog_post.title|urlencode }}">{% trans "Share on Twitter" %}</a>
-<a class="btn btn-sm share-facebook" target="_blank" href="http://facebook.com/sharer.php?u={{ request.build_absolute_uri }}&amp;t={{ blog_post.title|urlencode }}">{% trans "Share on Facebook" %}</a>
+<ul class="social" role="navigation">
+<li><a target="_blank" href="http://facebook.com/sharer.php?u={{ request.build_absolute_uri }}&amp;t={{ blog_post.title|urlencode }}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
+<li><a target="_blank" href="http://twitter.com/home?status={{ blog_post.short_url|urlencode }}%20{{ blog_post.title|urlencode }}"><h4 class="social-icon icon-twitter">Twitter</h4></a></li>
+
+</ul>
 {% endblock %}
 
 {% block blog_post_previous_next %}
