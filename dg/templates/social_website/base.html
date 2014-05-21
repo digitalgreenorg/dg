@@ -129,7 +129,6 @@
                 <!-- End .global-nav -->
             </div>
         </div>
-        <div class="header-margin"></div>
 
         <section class="about-bg about-bg-white">
             <div class="wrapper">
@@ -147,19 +146,19 @@
                     </div>
                     {% endif %} {% endnevercache %}
 
-                    <h1 class="hdg-a hdg-source-lt layout-vr-md">{% block title %}{% endblock %}</h1>
-
-                    <ul class="results-info h-list h-list-sm js-filter-breadcrumbs">
+                    <!-- <ul class="results-info h-list h-list-sm js-filter-breadcrumbs">
                         {% spaceless %} {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %} {% endspaceless %}
-                    </ul>
+                    </ul> -->
                     <div class="clearfix">
-                        <div class="grid-col grid-size3of4">{% block main %}{% endblock %}
+                        <div class="grid-col grid-size3of4">
+                        <h1 class="hdg-a hdg-source-lt layout-vr-md">{% block title %}{% endblock %}</h1>
+                        {% block main %}{% endblock %}
                         </div>
     
                         <div class="grid-col grid-size1of4">
                             {% nevercache %} {% include "includes/user_panel.html" %} {% endnevercache %}
-                            <div class="panel panel-default">
-                                <div class="panel-body">{% block right_panel %} {% ifinstalled mezzanine.twitter %} {% include  "twitter/tweets.html" %} {% endifinstalled %} {% endblock %}
+                            <div>
+                                <div>{% block right_panel %} {% ifinstalled mezzanine.twitter %} {% include  "twitter/tweets.html" %} {% endifinstalled %} {% endblock %}
                                 </div>
                             </div>
                         </div>
