@@ -32,7 +32,7 @@ def partnersetter(request):
         
 def districtsetter(request):
     selectedpartner = request.GET.get('partner', None)
-    districts = District.objects.filter(state_id=10000000000006, partner_id=selectedpartner).values('district_name')
+    districts = District.objects.filter(state_id=5, partner_id=selectedpartner).values('district_name')
     return HttpResponse(json.dumps(list(districts)), mimetype="application/json")
 
 def deosetter(request):

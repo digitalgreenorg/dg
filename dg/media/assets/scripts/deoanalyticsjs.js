@@ -47,8 +47,8 @@
  	    var partner_name = text.innerText.trim();
  	    var partner_id;
  	    
- 	    if (partner_name == "ASA") {partner_id = 10000000000008;}
- 	    else if (partner_name == "BRLPS") {partner_id = 10000000000013;}
+ 	    if (partner_name == "ASA") {partner_id = 6;}
+ 	    else if (partner_name == "BRLPS") {partner_id = 11;}
     	$("div#partnername").html(partner_name); 
     	document.getElementById('districtlist').classList.remove('nodisplay');
     	document.getElementById('districtlist').classList.add('blockdisplay');
