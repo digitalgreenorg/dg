@@ -6,20 +6,20 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 
-from dashboard.models import Screening
-from dashboard.models import Partners
-from dashboard.models import District
-from dashboard.models import ServerLog
-from dashboard.models import CocoUser
-from dashboard.models import PersonAdoptPractice
-from dashboard.models import Person
+from activities.models import Screening
+from programs.models import Partner
+from geographies.models import District
+from coco.models import ServerLog
+from coco.models import CocoUser
+from activities.models import PersonAdoptPractice
+from people.models import Person
 
 def index(request):
     template = loader.get_template('deoanalytics/index.html')
     return HttpResponse()
 
 def mainpage(request):
-    thepartners = Partners.objects.filter(partner_name__in=('ASA','BRLPS'))  
+    thepartners = Partner.objects.filter(partner_name__in=('ASA','BRLPS'))  
     context = {
         'thepartner': thepartners,
     }    
@@ -27,7 +27,7 @@ def mainpage(request):
 
 def partnersetter(request):
     '''ASA partner_id = 10000000000008, BRLPS partner_id = 10000000000013'''
-    partners = Partners.objects.filter(partner_name__in=('ASA','BRLPS')).values('partner_name')
+    partners = Partner.objects.filter(partner_name__in=('ASA','BRLPS')).values('partner_name')
     return HttpResponse(json.dumps(list(partners)), mimetype="application/json")
         
 def districtsetter(request):
