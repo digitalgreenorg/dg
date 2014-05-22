@@ -18,6 +18,7 @@ require.config({
         'tabletools': 'libs/tabletools_media/js/TableTools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
         'configs': '../../../configs',
+        'select2': 'libs/select2/select2.min'
     },
 
     //specifying dependencies of non-amd libraries
@@ -69,8 +70,9 @@ require.config({
         'time_picker': {
             deps: ["jquery"]
         },
-
-
+        'select2': {
+            deps: ["jquery"]
+        }
     }
 });
 

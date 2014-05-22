@@ -17,6 +17,7 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
+    <LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/select2/select2.css">
     
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
@@ -497,7 +498,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>Assigned Villages</b></label>
             <div class="col-sm-4">
-                <select id = "id_ass_villages" name="assigned_villages" class = "form-control chzn-select" multiple>
+                <select id = "id_ass_villages" name="assigned_villages" class = "select2 form-control" multiple>
                 
                 </select>
             </div>
@@ -505,7 +506,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>District</b></label>
             <div class="col-sm-4">
-                <select id = "id_district" name="district" class = "form-control">
+                <select id = "id_district" name="district" class = "select2 form-control">
                
                 </select>
             </div>
@@ -938,7 +939,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>Village</b></label>
             <div class="col-sm-4">
-                <select id = "id_village" name="village" class="chzn-select form-control">
+                <select id = "id_village" name="village" class="select2 form-control">
                     <option value='' selected='selected'>---------</option> 
                     
                 </select>
