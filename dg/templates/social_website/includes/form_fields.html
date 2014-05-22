@@ -8,20 +8,9 @@
 {% for field in form_for_fields %}
 {% if field.is_hidden %}
 {{ field }}
-{% else %}
-<div class="form-group input_{{ field.id_for_label }} {{ field.field.type }}
-    {% if field.errors %} has-error{% endif %}">
-    {% if field.label %}<label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>{% endif %}
-    {{ field }}
-    {% if field.errors %}
-    <p class="help-block">
-        {% for e in field.errors %}
-        {% if not forloop.first %} / {% endif %}{{ e }}
-        {% endfor %}
-    </p>
-    {% elif field.help_text %}
-    <p class="help-block">{{ field.help_text }}</p>
-    {% endif %}
-</div>
 {% endif %}
 {% endfor %}
+
+<input id="id_name" maxlength="50" name="name" type="hidden" value="{% if request.user.first_name %}{{request.user.first_name}} {{request.user.last_name}}{% else %} {{request.user.username}} {% endif %}">
+<input id="id_email" name="email" type="hidden" value="{% if request.user.email %}{{request.user.email}}{% else %} default@dg.com {% endif %}">
+<input id="id_honeypot" name="honeypot" type="hidden">
