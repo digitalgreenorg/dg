@@ -10,26 +10,42 @@
     <link rel="stylesheet"  href="/media/coco/app/styles/css/faq.css">
     <meta name="robots" content="NONE,NOARCHIVE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
+    <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3 well affix no-print" id="sidepanel">
-            <div id="coco_faq">
-                <a href="/coco/v2" id="heading">COCO </a><small style="color:grey;">FAQ page</small>
+    <div class="row">
+        <nav class="no-print col-sm-3 navbar navbar-default" role="navigation">
+            <div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-for-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <div id="coco_faq">
+                        <a href="/coco/" id="heading">COCO</a><small style="color:grey;">  FAQ page</small>
+                    </div>
+                </a>
             </div>
-            <ul class="nav nav-list">
-                <li><a href="#setup">COCO Setup</a></li>
-                <li><a href="#syncing">Syncing</a></li>
-                <li><a href="#database">Database</a></li>
-                <li><a href="#modes">Offline and Online Modes</a></li>
-                <li><a href="#login">Login</a></li>
-                <li><a href="#data">Data Entry, Listing and Modification</a></li>
-                <li><a href="#troubleshoot">Troubleshooting</a></li>
-            </ul>
-        </div>
-        <div class="span9" style="float:right; margin-top:2%;">
+            <div class="collapse navbar-collapse" id="nav-for-toggle">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#setup">COCO Setup</a></li>
+                    <li><a href="#syncing">Syncing</a></li>
+                    <li><a href="#database">Database</a></li>
+                    <li><a href="#modes">Offline and Online Modes</a></li>
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#data">Data Entry, Listing and Modification</a></li>
+                    <li><a href="#troubleshoot">Troubleshooting</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="col-sm-9 flt-rt">
             <a name="setup"></a><h3 class="topic">COCO Setup</h3>
             <ul class="faq-wrap">
                 <li><b><a name="browsers"></a>Which browsers support COCO V2?</b></li>

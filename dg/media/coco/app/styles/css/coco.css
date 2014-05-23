@@ -62,6 +62,10 @@
     float:left;
 }
 
+.flt-rt {
+    float: right;
+}
+
 #coco_sync {
 	margin: 0 0 0 15%;
 }

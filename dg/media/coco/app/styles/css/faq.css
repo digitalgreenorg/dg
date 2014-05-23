@@ -3,12 +3,6 @@
 	margin-left: 10%;
 }
 
-#sidepanel{
-	width:18%;
-	margin-left:5%;
-	margin-top:2%;
-}
-
 #coco_faq{
 	margin-bottom:10%;
 	margin-top:10%;
@@ -37,5 +31,16 @@ ul{
     .no-print, .no-print *
     {
         display: none !important;
+    }
+}
+
+@media(max-width:768px) {
+    #heading {
+        font-size: 26px;
+    }
+    
+    #coco_faq {
+        margin-bottom: 1%;
+        margin-top : 1%;
     }
 }
