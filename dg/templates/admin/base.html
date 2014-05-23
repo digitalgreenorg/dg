@@ -51,7 +51,6 @@
     <ul class="messagelist">{% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}</ul>
     {% endif %}
 
-    {% block before_content %}{% endblock %}
 
     <!-- CONTENT -->
     <div id="content" class="{% block coltype %}colM{% endblock %}">
