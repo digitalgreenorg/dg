@@ -88,6 +88,13 @@
     clear: both;
 }
 
+#thegrid {
+	width:100%;
+	background: #e1ded9;
+	padding-bottom:20px;
+	padding-left:10px;
+}
+
 .gridleft
 {
 	width: 25%;
@@ -101,6 +108,13 @@
 	width: 75%;
 	display: inline-block;
 	float: left;	
+}
+
+#chartcontainer {
+	float: left; 
+	margin: 10px; 
+	padding: 10px; 
+	height: 400px;
 }
 
 #databox
@@ -215,6 +229,23 @@
 
 .deonotselected {
 	background-color: #ffffff;
+}
+
+.layoutclass {
+	background:white; 
+	padding-top:50px;
+}
+
+.yscroll {
+	overflow-y:scroll;
+}
+
+.listpadding {
+	padding:0 10px;
+}
+
+#maindiv {
+	margin-top:100px;
 }
 
 

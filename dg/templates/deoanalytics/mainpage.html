@@ -4,7 +4,7 @@
  
  	<div class="inner-wrapper">
  	
- 	   <div class="featured layout-vr-xlg" style="background:white; padding-top:50px;">
+ 	   <div class="featured layout-vr-xlg layoutclass">
  	   
  	   		<div class="my-select js-custom-select leftrelative">
 
@@ -12,12 +12,11 @@
                     <div class="my-icon"></div>
                     <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
 	                             
-                    <ul id="partnerlist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    <ul id="partnerlist" class="options js-options nodisplay yscroll">
                     
                     </ul>                  
                 </div>
             </div>
-
 
  	   		<div class="my-select js-custom-select leftrelative">
 
@@ -25,20 +24,19 @@
                     <div class="my-icon"></div>
                     <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
 	                             
-                    <ul id="districtlist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    <ul id="districtlist" class="options js-options nodisplay yscroll">
                     
                     </ul>                  
                 </div>
             </div>
             
-
  	   		<div class="my-select js-custom-select leftrelative">
 
                 <div class="my-select-container">
                     <div class="my-icon"></div>
                     <div id="deoname" class="selected-item-label js-selected-item-label" onclick="deosetter();">Choose DEOs</div>
 	                             
-                    <ul id="deolist" class="options js-options nodisplay" style='overflow-y:scroll;'>
+                    <ul id="deolist" class="options js-options nodisplay yscroll">
                     
                     </ul>                  
                 </div>
@@ -48,19 +46,19 @@
 	      <a id="gobutton" class="btn" onclick="goclicked()">GO</a>
         </div>  
         
-        <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright" style="padding:0 10px;">
+        <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright listpadding">
            <li><a href="#" class="js-most-filter active" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
            <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
 		</ul>
          
-		<div style="margin-top:100px">
+		<div id="maindiv">
 		
-		    <ul id="deobox" class="filterOptions hdg-upper copy clearfix js-most-filters hidden" style="padding:0 10px;">
+		    <ul id="deobox" class="filterOptions hdg-upper copy clearfix js-most-filters hidden listpadding">
 		        
 		    </ul>
 	         			
-	        <div id="thegrid" class="grid hidden" style="width:100%;background: #e1ded9; padding-bottom:20px; padding-left:10px;">
+	        <div id="thegrid" class="grid hidden">
 				
 				<div class="gridleft">
 				
@@ -85,7 +83,7 @@
 	       				</div>
    					</div>
    					
-					<div id="chartcontainer" style="float: left; margin: 10px; padding: 10px; height: 400px;"></div>
+					<div id="chartcontainer"></div>
 				</div>	         	
 	        </div>
 		</div>

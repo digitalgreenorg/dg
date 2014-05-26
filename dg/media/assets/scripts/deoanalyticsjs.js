@@ -1,13 +1,13 @@
 // JavaScript Document
  
- 	var selecteddeoname;
+var selecteddeoname;
  
-    var pflag = 0;
-    var diflag = 0;
-    var deflag = 0;
-    var chosendeos = [];
+var pflag = 0;
+var diflag = 0;
+var deflag = 0;
+var chosendeos = [];
     
-    function partnersetter()
+function partnersetter()
     {  	
     	if (pflag == 0)
     	{
@@ -41,7 +41,7 @@
         });
     }
 
-    function setpartnerlistdiv(text)
+function setpartnerlistdiv(text)
     {    	
     	//ASA partner_id = 10000000000008, BRLPS partner_id = 10000000000013
  	    var partner_name = text.innerText.trim();
@@ -56,7 +56,7 @@
     	districtfilter(partner_id);
     }
 
-    function districtsetter()
+function districtsetter()
     {
     	if (diflag == 0)
     	{
@@ -72,7 +72,7 @@
     	}     	
     }
     
-    function districtfilter(partner_id)
+function districtfilter(partner_id)
     {           
        $.ajax(
        {
@@ -100,7 +100,7 @@
       });
     }
     
-    function setdistrictlistdiv(text, partner_id)
+function setdistrictlistdiv(text, partner_id)
     {	
     	chosendeos = [];    	
  	    var district_name = text.innerText.trim();
@@ -111,7 +111,7 @@
     	deflag = 1;    	
     }    
 
-    function deofilter(district_name, partner_id)
+function deofilter(district_name, partner_id)
     {       
        $.ajax(
        {
@@ -139,7 +139,7 @@
        });
     }
     
-    function makedeochecked(itemid, deo_name)
+function makedeochecked(itemid, deo_name)
     {
     	if ($('#' + itemid).hasClass("deonotselected"))
     		{
@@ -158,7 +158,7 @@
     		}
     }
     
-    function deosetter()
+function deosetter()
     {
     	if (deflag == 0)
     	{
@@ -174,13 +174,13 @@
     	}     	
     }
     
-   function onbodyload()
+function onbodyload()
    {
 	  var today = new Date();
 	  setdate(0, today);
    }
 
-   function settheday()
+function settheday()
    {
 	   var userdate = document.getElementById('dateshow').innerHTML;
 	   var first = userdate.split(" ");
@@ -209,7 +209,7 @@
 	   analyzedeo();
    }
    
-	function settheweek()
+function settheweek()
  	{
  	   var userdate = document.getElementById('dateshow').innerHTML;
 	   var first = userdate.split(" ");
@@ -230,7 +230,7 @@
 	   analyzedeo();
  	}
 	
-	function setthemonth()
+function setthemonth()
 	{
 	   var userdate = document.getElementById('dateshow').innerHTML;
 	   var first = userdate.split(" ");
@@ -250,7 +250,7 @@
 	   analyzedeo();
 	}
 	
-	function getfirstdateofselectedmonth(cn)
+function getfirstdateofselectedmonth(cn)
 	{
 	   var data = document.getElementById('dateshow').innerHTML;
 	   var usermonth = data.split(" ");
@@ -265,7 +265,7 @@
 	   return d;
 	}
 	
-	function getlastdateofselectedmonth()
+function getlastdateofselectedmonth()
 	{
 		var d = getfirstdateofselectedmonth(1);
 		
@@ -277,7 +277,8 @@
 		return ld;
 		
 	}
-	function setmonthfromdate(d)
+
+function setmonthfromdate(d)
 	{
 		var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 		var mon = month[d.getMonth()];
@@ -288,7 +289,7 @@
 		$("div#dateshow").html(d);
 	}
 	
- 	function setdate(counter, d)
+function setdate(counter, d)
  	{
  	   if (counter == -1)  {d.setDate(d.getDate() - 1);}
  	   else if (counter == 1)  {d.setDate(d.getDate() + 1);}
@@ -309,7 +310,7 @@
 	   $("div#dateshow").html(d);
  	}
  
- 	function getdateonscreen(cn)
+function getdateonscreen(cn)
  	{
  	   var userdate = document.getElementById('dateshow').innerHTML; 
 	   datesplitted = userdate.split(" ");
@@ -345,8 +346,7 @@
 	   return dateformatted;
  	}
  	
-	
- 	function setweekfromsingledate(d)
+function setweekfromsingledate(d)
  	{
  	  var day = d.getDay();
 
@@ -364,7 +364,7 @@
 	  setweekfromtwodates(0, startweek, endweek)
  	}
 
- 	function setweekfromtwodates(counter, startweek, endweek)
+function setweekfromtwodates(counter, startweek, endweek)
  	{
  		
   	  if (counter == -1)  {startweek.setDate(startweek.getDate() - 7); endweek.setDate(endweek.getDate() - 7);}
@@ -382,7 +382,7 @@
 	  $("div#dateshow").html(d);	
  	}
  	
- 	function getdateonscreenforweek(cn, rdate)
+function getdateonscreenforweek(cn, rdate)
  	{
 	   date = rdate.split(" ");
 	   
@@ -403,7 +403,7 @@
 	   return dateformatted;
  	}
  	
- 	function getmonthnofromname(mon)
+function getmonthnofromname(mon)
  	{
  	   if (mon == "Jan") {mm = 0;}
 	   else if (mon == "Feb") {mm = 1;}
@@ -421,7 +421,7 @@
 	   return mm;
  	}
  	
-   function movenext()
+function movenext()
    {
 
 	   if ($("#daily").hasClass("active") == true)
@@ -447,7 +447,7 @@
 	   analyzedeo();
    }
 
-   function moveprev()
+function moveprev()
    {
 	   if ($("#daily").hasClass("active") == true)
 	   {
@@ -472,7 +472,7 @@
 	   analyzedeo();
    }
  
-   function goclicked()
+function goclicked()
    {	   
 	   document.getElementById('deolist').classList.add('nodisplay');      
        document.getElementById("thegrid").classList.remove('hidden');
@@ -494,7 +494,7 @@
        analyzedeo();
    }
 
-   function makedeoactive(deoname_element, total, val)
+function makedeoactive(deoname_element, total, val)
    {
 	   deoname = deoname_element.innerText.trim();
 	   	
@@ -513,7 +513,7 @@
        }
    }
    
-   function analyzedeo()
+function analyzedeo()
    {	     
    	var mode;
    	var s_list = [];
@@ -675,7 +675,7 @@
             });
    }
    
-   function makechart(datelist,s_list,a_list)
+function makechart(datelist,s_list,a_list)
    {
     	var chart1 = new Highcharts.Chart({	    	
         chart: {
@@ -705,11 +705,10 @@
         	   name: 'Adoptions',
         	   data: a_list
            }]
-    	});	   
-	  
+    	});	  
    }
    
-   function makeactive(num)
+function makeactive(num)
    {
 	   if (num==1)
 	   {
