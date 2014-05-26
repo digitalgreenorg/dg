@@ -165,6 +165,7 @@ TESTING = True
 ADMIN_MENU_COLLAPSED = False
 COMMENTS_USE_RATINGS = False
 COMMENTS_ACCOUNT_REQUIRED  = True
+RICHTEXT_FILTER_LEVEL = 2
 #ADMIN_REMOVAL = []
 #following line makes sessionid cookie accessible to in-browser javascript
 SESSION_COOKIE_HTTPONLY = False
