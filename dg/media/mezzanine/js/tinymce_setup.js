@@ -29,7 +29,7 @@ jQuery(function($) {
             language: "en",
             dialog_type: "window",
             editor_deselector : "mceNoEditor",
-            skin: "thebigreason",
+            skin: "default",
 
             // general settings
             width: '800px',
@@ -55,15 +55,15 @@ jQuery(function($) {
             theme_advanced_toolbar_align: "left",
             theme_advanced_statusbar_location: "",
             theme_advanced_buttons1: "bold,italic,|,link,unlink,|,image,|,media,charmap,|,code,|,table,|,bullist,numlist,blockquote,|,undo,redo,|,formatselect,|,search,replace,|,fullscreen,",
-            theme_advanced_buttons2: "",
+            theme_advanced_buttons2: "styleselect",
             theme_advanced_buttons3: "",
             theme_advanced_path: false,
             theme_advanced_blockformats: "p,h1,h2,h3,h4,pre",
-            theme_advanced_styles: "[all] clearfix=clearfix;[p] small=small;[img] Image left-aligned=img_left;[img] Image left-aligned (nospace)=img_left_nospacetop;[img] Image right-aligned=img_right;[img] Image right-aligned (nospace)=img_right_nospacetop;[img] Image Block=img_block;[img] Image Block (nospace)=img_block_nospacetop;[div] column span-2=column span-2;[div] column span-4=column span-4;[div] column span-8=column span-8",
+            theme_advanced_styles: "Heading 1=hdg-a layout-vr-sm; Heading 2=hdg-b layout-vr-sm; Heading 3=hdg-c layout-vr-sm; Heading 4=hdg-e layout-vr-sm; [all] clearfix=clearfix;[p] small=small;[img] Image left-aligned=img_left;[img] Image left-aligned (nospace)=img_left_nospacetop;[img] Image right-aligned=img_right;[img] Image right-aligned (nospace)=img_right_nospacetop;[img] Image Block=img_block;[img] Image Block (nospace)=img_block_nospacetop;[div] column span-2=column span-2;[div] column span-4=column span-4;[div] column span-8=column span-8;Bullet=bullet-list",
             theme_advanced_resizing : true,
             theme_advanced_resize_horizontal : false,
             theme_advanced_resizing_use_cookie : true,
-            theme_advanced_styles: "Image left-aligned=img_left;Image left-aligned (nospace)=img_left_nospacetop;Image right-aligned=img_right;Image right-aligned (nospace)=img_right_nospacetop;Image Block=img_block",
+//            theme_advanced_styles: "Image left-aligned=img_left;Image left-aligned (nospace)=img_left_nospacetop;Image right-aligned=img_right;Image right-aligned (nospace)=img_right_nospacetop;Image Block=img_block",
             advlink_styles: "intern=internal;extern=external",
 
             // plugins
