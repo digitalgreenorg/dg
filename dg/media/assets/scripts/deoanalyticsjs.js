@@ -203,7 +203,7 @@ function settheday()
 	   }
 	   analyzedeo();
    }
-   
+  
 function settheweek()
  	{
  	   var userdate = document.getElementById('dateshow').innerHTML;
@@ -661,8 +661,10 @@ function analyzedeo()
             	   lin1 = "No. of screenings entered: " + sumscreenings;
             	   lin2 = "No. of adoptions entered : " + sumadoptions;
             	   lin3 = "No. of persons entered   : " + data.persons;
-            	   lin4 = "Average Screening Lag    : " + data.slag + " days";
-            	   lin5 = "Average Adoption Lag     : " + data.alag + " days";
+            	   if (data.slag == "NA")	{lin4 = "Average Screening Lag    : " + data.slag;}
+            	   else	{lin4 = "Average Screening Lag    : " + data.slag + " days";}
+            	   if (data.alag == "NA")	{lin5 = "Average Adoption Lag     : " + data.alag;}
+            	   else	{lin5 = "Average Adoption Lag     : " + data.alag + " days";}
             	   
              	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
@@ -700,6 +702,41 @@ function makechart(datelist,s_list,a_list)
                    width: 1,
                    color: '#808080'
                }]
+           },
+           
+           plotOptions: {
+               series: {
+                   cursor: 'pointer',
+                   point: {
+                       events: {
+                           click: function() {
+                        	   //dateformatted = new Date (yyyy, mm, dd);
+                        	   
+                        	   var userdate = document.getElementById('dateshow').innerHTML;
+                    		   var dates = userdate.split("-");
+                    		   var date1 = dates[0].split(" ");
+                    		   var yyyy = date1[2];
+
+                        	   curdate = this.category;
+                        	   console.log(curdate);
+                        	   var dd = curdate.split(' ')[0];
+                        	   var mon = curdate.split(' ')[1];
+                        	   var mm = getmonthnofromname(mon);
+                        	   
+                        	   if(dd<10) {dd='0'+dd}
+                        	   if(mm<10) {mm='0'+mm}
+                        	   
+                        	   var dateformatted = new Date (yyyy, mm, dd);
+                        	   
+                        	   console.log(dateformatted);
+                        	   
+                        	   makeactive(1);
+                        	   setdate(0, dateformatted);
+                        	   analyzedeo();
+                           }
+                       }
+                   }
+               }
            },
            series: [{
                name: 'Screenings',
