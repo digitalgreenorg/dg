@@ -25,7 +25,7 @@ function partnersetter()
         $.ajax(
         {
          type:'GET',
-         url: window.location.origin + "/deo/api/getpartner",
+         url: window.location.origin + "/analytics/cocouser/api/getpartner",
         
          success: function(data){
              var listitems = '';
@@ -76,7 +76,7 @@ function districtfilter(partner_id)
         data:{ 
         'partner': partner_id,
         },
-        url: window.location.origin + "/deo/api/getdistrict",
+        url: window.location.origin + "/analytics/cocouser/api/getdistrict",
         
         success: function(data){
 
@@ -114,7 +114,7 @@ function deofilter(district_name, partner_id)
           'partner': partner_id,
           'district': district_name,
           },
-          url: window.location.origin + "/deo/api/getdeo",
+          url: window.location.origin + "/analytics/cocouser/api/getdeo",
           
           success: function(data){
 
@@ -588,7 +588,7 @@ function analyzedeo()
                'edate': end_date,
                'mode': mode,
                },
-               url:window.location.origin + "/deo/api/getthedeo",
+               url:window.location.origin + "/analytics/cocouser/api/getthedeo",
                
                success: function(data){
 

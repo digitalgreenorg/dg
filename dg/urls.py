@@ -68,7 +68,7 @@ urlpatterns = patterns('',
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
     
-    (r'^deo/',include('deoanalytics.urls')),
+    (r'^analytics/cocouser/',include('deoanalytics.urls')),
 )
 
 # Static files serving locally
