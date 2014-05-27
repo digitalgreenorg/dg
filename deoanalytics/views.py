@@ -1,52 +1,32 @@
-# Create your views here.
-
 import json, datetime
 
 from django.http import HttpResponse
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
 
-from activities.models import Screening
-from programs.models import Partner
-from geographies.models import District
-from coco.models import ServerLog
+from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
-from activities.models import PersonAdoptPractice
 from people.models import Person
-
-def index(request):
-    template = loader.get_template('deoanalytics/index.html')
-    return HttpResponse()
-
-def mainpage(request):
-    thepartners = Partner.objects.filter(partner_name__in=('ASA','BRLPS'))  
-    context = {
-        'thepartner': thepartners,
-    }    
-    return render_to_response('deoanalytics/mainpage.html' , context, context_instance = RequestContext(request))
+from programs.models import Partner
 
 def partnersetter(request):
-    '''ASA partner_id = 10000000000008, BRLPS partner_id = 10000000000013'''
-    partners = Partner.objects.filter(partner_name__in=('ASA','BRLPS')).values('partner_name')
+    partners = Partner.objects.values('partner_name','id')
     return HttpResponse(json.dumps(list(partners)), mimetype="application/json")
         
 def districtsetter(request):
     selectedpartner = request.GET.get('partner', None)
-    districts = District.objects.filter(state_id=5, partner_id=selectedpartner).values('district_name')
+    districts = Person.objects.select_related().filter(partner_id=selectedpartner).values_list('village__block__district__district_name', flat=True).distinct()
     return HttpResponse(json.dumps(list(districts)), mimetype="application/json")
 
 def deosetter(request):
     selectedpartner = request.GET.get('partner', None)
     selecteddistrict = request.GET.get('district', None)
     
-    deos_working_for_Bihar_partners = ServerLog.objects.filter(partner=selectedpartner).values_list('user__username', flat=True).distinct()
+    deos = CocoUser.objects.filter(partner_id=selectedpartner)
     deos_working_in_selected_district = []
-    for deo in deos_working_for_Bihar_partners:
-        if deo != None:
-            deodetails = CocoUser.objects.get(user__username=deo)
-            dist = deodetails.villages.values_list('block__district__district_name', flat=True).distinct()
-            if str(dist[0].encode('utf-8')) == selecteddistrict:
-                deos_working_in_selected_district.append(deo)
+    for deo in deos:
+        if deo:
+            dist = deo.villages.filter(block__district__district_name=selecteddistrict)
+            if len(dist) > 0:
+                deos_working_in_selected_district.append(deo.user.username)
     resp = [dict(deo_name=deo) for deo in deos_working_in_selected_district]
     return HttpResponse(json.dumps(list(resp)), mimetype="application/json")
 
@@ -68,7 +48,8 @@ def deodatasetter(request):
     '''screeningtelecast = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('date', flat=True)
     listofscreeningtelecastdates = []
     for tscreening in screeningtelecast:
-        listofscreeningtelecastdates.append(str(tscreening.date()))    
+        ndate = datetime.datetime.strptime(tscreening, "%Y-%m-%d")
+        listofscreeningtelecastdates.append(ndate)    
     print listofscreeningtelecastdates;'''
 
     adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)

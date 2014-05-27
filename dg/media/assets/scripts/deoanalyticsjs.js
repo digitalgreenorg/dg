@@ -31,7 +31,7 @@ function partnersetter()
              var listitems = '';
              for (var j = 0; j < data.length; j++) 
              {                         
-               listitems += '<li class=' + '"item"' + 'id="' + data[j].partner_name+  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
+               listitems += '<li class=' + '"item"' + 'id="' + data[j].id+  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
              }
              $("ul#partnerlist").html(listitems);
          },
@@ -42,13 +42,9 @@ function partnersetter()
     }
 
 function setpartnerlistdiv(text)
-    {    	
-    	//ASA partner_id = 10000000000008, BRLPS partner_id = 10000000000013
+    {   
+ 	    var partner_id = text.id;
  	    var partner_name = text.innerText.trim();
- 	    var partner_id;
- 	    
- 	    if (partner_name == "ASA") {partner_id = 6;}
- 	    else if (partner_name == "BRLPS") {partner_id = 11;}
     	$("div#partnername").html(partner_name); 
     	document.getElementById('districtlist').classList.remove('nodisplay');
     	document.getElementById('districtlist').classList.add('blockdisplay');
@@ -88,10 +84,8 @@ function districtfilter(partner_id)
             for (var i = 0; i < data.length; i++) 
             {
            	 
-              listitems += '<li class=' + '"item"' + 'id="' + data[i].district_name+  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i].district_name + '</li>';
-              //options += '<option value="' + data[i].district_name+  '">' + data[i].district_name + '</option>';
+              listitems += '<li class=' + '"item"' + 'id="' + data[i]+  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i] + '</li>';
             }
-            //$("select#districtlist").html(options);
             $("ul#districtlist").html(listitems);
         },
         error: function(data){
