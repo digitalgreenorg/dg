@@ -172,6 +172,7 @@ function onbodyload()
    {
 	  var today = new Date();
 	  setdate(0, today);
+	  setweekfromsingledate(new Date());
    }
 
 function settheday()
