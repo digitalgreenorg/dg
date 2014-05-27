@@ -119,12 +119,12 @@
 
 #databox
 {
-	width:80%;
+	width:85%;
 }
 
 #photobox
 {
-	margin-left:38px;
+	margin-left:45px;
 }
 
 .fontforbox {
@@ -248,4 +248,10 @@
 	margin-top:100px;
 }
 
+.listheight {
+	max-height:125px;
+}
 
+.h-overflow {
+	overflow:hidden;
+}

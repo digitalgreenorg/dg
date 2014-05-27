@@ -31,7 +31,7 @@ function partnersetter()
              var listitems = '';
              for (var j = 0; j < data.length; j++) 
              {                         
-               listitems += '<li class=' + '"item"' + 'id="' + data[j].id+  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
+               listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[j].id+  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
              }
              $("ul#partnerlist").html(listitems);
          },
@@ -84,7 +84,7 @@ function districtfilter(partner_id)
             for (var i = 0; i < data.length; i++) 
             {
            	 
-              listitems += '<li class=' + '"item"' + 'id="' + data[i]+  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i] + '</li>';
+              listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[i]+  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i] + '</li>';
             }
             $("ul#districtlist").html(listitems);
         },
@@ -121,7 +121,7 @@ function deofilter(district_name, partner_id)
               var listitems = '';
               for (var i = 0; i < data.length; i++) 
               {
-             	 listitems += '<li id="' + i + data[i].deo_name + '"class=' + '"item deonotselected"' + 'onclick="' 
+             	 listitems += '<li id="' + i + data[i].deo_name + '"class=' + '"item h-overflow deonotselected"' + 'onclick="' 
              	 + "makedeochecked('" + i + data[i].deo_name + "','" + data[i].deo_name + "')" + '">' + 
              	 '<input id ="' + data[i].deo_name + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
               }
@@ -475,13 +475,15 @@ function goclicked()
        var list = '';
        for (var j = 0; j < chosendeos.length; j++) 
        {
-           htmlline = '<li><a id=' + j + ' '+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' + 'analyzedeo(); makedeoactive(this'+ ',' + chosendeos.length + ',' + j + ');">' + '<span><span class="' + 'icon"' + '></span>' + chosendeos[j]+ '</span></a></li>';
+           htmlline = '<li><a id="' + 'deo' + j + '"'+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' 
+           + 'analyzedeo(); makedeoactive(this'+ ',' + chosendeos.length + ',' + j + ');">' 
+           + '<span><span class="' + 'icon"' + '></span>' + chosendeos[j]+ '</span></a></li>';
        	   list += htmlline;
        }
        $("ul#deobox").html(list);
-       document.getElementById(0).classList.add('active');
+       document.getElementById("deo0").classList.add('active');
        
-       deoname = document.getElementById(0).innerText.trim();
+       deoname = document.getElementById("deo0").innerText.trim();
       
        selecteddeoname = deoname;
               
@@ -498,11 +500,11 @@ function makedeoactive(deoname_element, total, val)
        {	  
     	   if (j == val)
     	   {
-    		   document.getElementById(j).classList.add('active');   		   
+    		   document.getElementById("deo"+j).classList.add('active');   		   
     	   }
     	   else
     	  {
-    		   document.getElementById(j).classList.remove('active');    		   
+    		   document.getElementById("deo"+j).classList.remove('active');    		   
     	  }   
        }
    }
@@ -658,9 +660,15 @@ function analyzedeo()
             	   lin1 = "No. of screenings entered: " + sumscreenings;
             	   lin2 = "No. of adoptions entered : " + sumadoptions;
             	   lin3 = "No. of persons entered   : " + data.persons;
-            	   $("p#screenings").html(lin1);
+            	   lin4 = "Average Screening Lag    : " + data.slag + " days";
+            	   lin5 = "Average Adoption Lag     : " + data.alag + " days";
+            	   
+             	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
             	   $("p#persons").html(lin3);
+            	   $("p#s-lag").html(lin4);
+            	   $("p#a-lag").html(lin5);
+            	   
             	   makechart(datelist,s_list,a_list);
                },
                error: function(data){

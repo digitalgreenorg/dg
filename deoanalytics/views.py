@@ -35,33 +35,64 @@ def deodatasetter(request):
     sdate = request.GET.get ('sdate',None)
     edate = request.GET.get ('edate',None)
     
+    slag = "-"
+    alag = "-"
+    
     start_date = datetime.datetime.strptime(sdate, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(edate, "%Y-%m-%d")
         
-    screenings = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)
-    listofscreeningdates = []
-    for screening in screenings:
-        listofscreeningdates.append(str(screening.date()))
-        
-    s_dict = dict((i,listofscreeningdates.count(i)) for i in listofscreeningdates)
+    Screening_objects = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date])
+    screenings_entrydate = Screening_objects.values_list('time_created', flat=True)
+    list_of_screening_entrydates = []
+    for screening in screenings_entrydate:
+        list_of_screening_entrydates.append(str(screening.date()))
+               
+    s_dict = dict((i,list_of_screening_entrydates.count(i)) for i in list_of_screening_entrydates)
     
-    '''screeningtelecast = Screening.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('date', flat=True)
-    listofscreeningtelecastdates = []
-    for tscreening in screeningtelecast:
-        ndate = datetime.datetime.strptime(tscreening, "%Y-%m-%d")
-        listofscreeningtelecastdates.append(ndate)    
-    print listofscreeningtelecastdates;'''
-
-    adoptions = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).values_list('time_created', flat=True)
-    listofadoptiondates = []
-    for adoption in adoptions:
-        listofadoptiondates.append(str(adoption.date()))
+    s_laglist = []
+    
+    if len(list_of_screening_entrydates)> 0:
         
-    a_dict = dict((i,listofadoptiondates.count(i)) for i in listofadoptiondates)
-    persons = Person.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()
+        for screening in Screening_objects:
+            s_lag = screening.time_created.date() - screening.date
+            s_laglist.append(s_lag.days)
+        
+        print s_laglist 
+        
+        s_avglag= sum(s_laglist) / float(len(s_laglist))
+        
+        slag = int(s_avglag)
+        print slag
+    
+    Adoption_objects = PersonAdoptPractice.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date])
+    adoptions_entrydate = Adoption_objects.values_list('time_created', flat=True)
+    list_of_adoption_entrydates = []
+    for adoption in adoptions_entrydate:
+        list_of_adoption_entrydates.append(str(adoption.date()))
+        
+    a_dict = dict((i,list_of_adoption_entrydates.count(i)) for i in list_of_adoption_entrydates)
+       
+    a_laglist = []
+    
+    if len(list_of_adoption_entrydates)> 0:        
+        
+        for adoption in Adoption_objects:
+            a_lag = adoption.time_created.date() - adoption.date_of_adoption
+            a_laglist.append(a_lag.days)
+        
+        print a_laglist 
+    
+        a_avglag= sum(a_laglist) / float(len(a_laglist))
+    
+        alag = int(a_avglag)       
+        print alag
+   
+    persons = Person.objects.filter(user_created__username=selecteddeo, time_created__range=[start_date, end_date]).count()  
     
     return HttpResponse(json.dumps({
         "screenings":s_dict,
         "adoptions": a_dict,
-        "persons": persons}),
+        "persons": persons,
+        "slag": slag,
+        "alag": alag}),
     content_type="application/json")
