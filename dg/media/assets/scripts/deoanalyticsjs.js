@@ -121,9 +121,9 @@ function deofilter(district_name, partner_id)
               var listitems = '';
               for (var i = 0; i < data.length; i++) 
               {
-             	 listitems += '<li id="' + i + data[i].deo_name + '"class=' + '"item h-overflow deonotselected"' + 'onclick="' 
-             	 + "makedeochecked('" + i + data[i].deo_name + "','" + data[i].deo_name + "')" + '">' + 
-             	 '<input id ="' + data[i].deo_name + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
+             	 listitems += '<li id="' + i + data[i].deo_id + '"class=' + '"item h-overflow deonotselected hdg-trunc"' + 'onclick="' 
+             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
+             	 '<input id ="' + data[i].deo_id + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
               }
               $("ul#deolist").html(listitems);
           },
@@ -146,7 +146,7 @@ function makedeochecked(itemid, deo_name)
     		{
     			$('#' + itemid).removeClass("deoselected");
     			$('#' + itemid).addClass("deonotselected");
-    			$('#' + deo_name).prop('checked', false);
+    			$('#' + itemid).prop('checked', false);
     			var index = chosendeos.indexOf(deo_name);
 	 	    	chosendeos.splice(index,1);
     		}
