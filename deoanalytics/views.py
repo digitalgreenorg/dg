@@ -26,8 +26,8 @@ def deosetter(request):
         if deo:
             dist = deo.villages.filter(block__district__district_name=selecteddistrict)
             if len(dist) > 0:
-                deos_working_in_selected_district.append(deo.user.username)
-    resp = [dict(deo_name=deo) for deo in deos_working_in_selected_district]
+                deos_working_in_selected_district.append(deo)
+    resp = [dict(deo_name=deo.user.username, deo_id=deo.user.id) for deo in deos_working_in_selected_district]
     return HttpResponse(json.dumps(list(resp)), mimetype="application/json")
 
 def deodatasetter(request):
