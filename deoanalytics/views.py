@@ -8,7 +8,7 @@ from people.models import Person
 from programs.models import Partner
 
 def partnersetter(request):
-    partners = Partner.objects.values('partner_name','id')
+    partners = Partner.objects.values('partner_name','id').order_by('partner_name')
     return HttpResponse(json.dumps(list(partners)), mimetype="application/json")
         
 def districtsetter(request):
