@@ -139,7 +139,7 @@ function makedeochecked(itemid, deo_name)
     		{
     			$('#' + itemid).removeClass("deonotselected");
     			$('#' + itemid).addClass("deoselected");
-    			$('#' + deo_name).prop('checked', true);
+    			$('#' + itemid).prop('checked', true);
     			chosendeos.push(deo_name);	
     		}
     	else if ($('#' + itemid).hasClass("deoselected"))
@@ -477,7 +477,7 @@ function goclicked()
        for (var j = 0; j < chosendeos.length; j++) 
        {
            htmlline = '<li><a id="' + 'deo' + j + '"'+ 'href="' + '#"' + 'class=' + '"js-most-filter"' + 'onclick="' 
-           + 'analyzedeo(); makedeoactive(this'+ ',' + chosendeos.length + ',' + j + ');">' 
+           + 'makedeoactive(this'+ ',' + chosendeos.length + ',' + j + ');">' 
            + '<span><span class="' + 'icon"' + '></span>' + chosendeos[j]+ '</span></a></li>';
        	   list += htmlline;
        }
@@ -508,6 +508,7 @@ function makedeoactive(deoname_element, total, val)
     		   document.getElementById("deo"+j).classList.remove('active');    		   
     	  }   
        }
+       analyzedeo()
    }
    
 function analyzedeo()
