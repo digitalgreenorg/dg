@@ -42,19 +42,19 @@
 </div>
 </script>
 <script type="text/template" id="error_notifcation_template" >
-    <div class="alert alert-error">
+    <div class="alert alert-danger fade in">
       <a class="close" data-dismiss="alert">×</a>
       <strong>Error! </strong><%= msg%>
     </div>
 </script>
 <script type="text/template" id="success_notifcation_template" >
-    <div class="alert alert-success">
+    <div class="alert alert-success fade in">
       <a class="close" data-dismiss="alert">×</a>
       <strong>Success! </strong><%= msg%>
     </div>
 </script>
 <script type="text/template" id="info_notifcation_template" >
-    <div class="alert alert-info">
+    <div class="alert alert-info fade in">
       <a class="close" data-dismiss="alert">×</a>
       <strong>Info! </strong><%= msg%>
     </div>
@@ -214,7 +214,7 @@
 
                         </ul>
                     </div>
-                    <div id="coco_nav_add" class="flt-lt collapse navbar-collapse pdg-0 flt-rt mrg-top-nav-30">
+                    <div id="coco_nav_add" class="flt-lt collapse navbar-collapse pdg-0 mrg-top-nav-30 flt-rt-nav">
                         <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked" title= "Click to add data">
 
                         </ul>
@@ -388,7 +388,7 @@
     <div id="legend">
     	<legend class=""><%= page_header %></legend>
     </div>
-	<div >
+	<div class="table-responsive">
        <table id= "list_table" class="table table-striped display">
            <thead>
                <%= table_header%>

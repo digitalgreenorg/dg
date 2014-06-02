@@ -420,9 +420,9 @@ define([
         
         // initiate the dropdown and date, time widgets
         initiate_form_widgets: function() {
-            $(".chzn-select").chosen({
+            /* $(".chzn-select").chosen({
                 'search_contains': true
-            });
+            }); */
             
             $(".select2").select2();
 

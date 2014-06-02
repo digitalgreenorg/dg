@@ -26,7 +26,7 @@ define(['jquery', 'backbone', ], function($) {
                 template = this.error_notif_template({
                     msg: message
                 });
-                alert_class = ".alert-error";
+                alert_class = ".alert-danger";
                 timeout = 20000;
             }
             
