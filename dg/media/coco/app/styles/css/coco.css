@@ -23,6 +23,7 @@
     display: inline;
     width: 35px;
     margin-top: -8px;
+    cursor: pointer;
 }
 
 /* ----------- Margins and Paddings-------- */
@@ -237,6 +238,7 @@ h1 small{
 
 .user-dropdown {
     position: absolute;
+    display: none;
     right: 0;
     top: 32px;
     background-color: white;
@@ -263,7 +265,7 @@ h1 small{
 
 .user-dropdown-option {
     text-align: right;
-    padding: 15px 20px !important;
+    padding: 15px 25px !important;
     border-top: 1px solid #dbdad5;
     font-size: 12px;
     list-style-type: none;

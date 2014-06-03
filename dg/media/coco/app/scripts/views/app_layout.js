@@ -13,6 +13,10 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             var dashboard_view = new DashboardView();
             this.setView("#side_panel", dashboard_view);
             dashboard_view.render();
+            
+            $( ".img-user" ).click(function() {
+                $( ".user-dropdown" ).toggle();
+            });
         },
 
         //content panel will be filled with a subview by one of the following functions based on the current url
