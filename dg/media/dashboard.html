@@ -220,11 +220,6 @@
                         </ul>
                     </div>
                 </nav>
-                <div id="coco_userinfo">
-                    <%if(typeof(username)!=undefined){%>
-                    Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
-                    <%}%>
-                </div>
             </div>
 </script>
 
@@ -236,8 +231,10 @@
             <div class="user-dropdown-div">
                 <div class="user-dropdown js-user-dropdown">
                     <ul class="pdg-0">
-                        <li class="user-dropdown-option">Name</li>
-                        <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign Out</a></li>
+                        <%if(typeof(username)!=undefined){%>
+                            <li class="user-dropdown-option">Hi <%=username%>!</li>
+                            <li class="user-dropdown-option"><a id="logout" style="cursor:pointer">Log out</a></li>
+                        <%}%>
                     </ul>
                 </div>
             </div>

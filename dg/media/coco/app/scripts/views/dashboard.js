@@ -7,8 +7,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         template: "#dashboard",
         events: {
             "click #sync": "sync",
-            "click #inc_download": "inc_download",
-            "click #logout": "logout"
+            "click #inc_download": "inc_download"
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -317,16 +316,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         // check internet connection
         is_internet_connected: function() {
             return navigator.onLine;
-        },
-        
-        // logout and navigate to login url
-        logout: function() {
-            Auth.logout()
-                .always(function() {
-                window.Router.navigate('login', {
-                    trigger: true
-                });
-            });
         }
     });
 

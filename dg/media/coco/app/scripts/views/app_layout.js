@@ -1,12 +1,29 @@
 //The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
-define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView) {
+define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
 
     var AppLayout = Backbone.Layout.extend({
         template: "#page_layout",
+        events: {
+            "click #logout": "logout"
+        },
+        
         initialize: function() {
             console.log("initilizing app layout");
+            _(this)
+                .bindAll('render');
+            User.on('change', this.render);
         },
-
+        
+        serialize: function() {
+            // send username to the template 
+            var username = User.get("username");
+            console.log(User);
+            return {
+                username: username
+            }
+                
+        },
+        
         //when layout is rendered, create and put the dashboard view in the side panel - constant across all routes
         afterRender: function() {
             console.log("app layout rendered");
@@ -44,8 +61,17 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             });
             this.setView("#content", formcontroller_view);
             formcontroller_view.render(); //bcoz Its afterRender assumes its elements are in DOM
+        },
+        
+        // logout and navigate to login url
+        logout: function() {
+            Auth.logout()
+                .always(function() {
+                window.Router.navigate('login', {
+                    trigger: true
+                });
+            });
         }
-
     });
     return new AppLayout;
 });
