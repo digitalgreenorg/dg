@@ -91,7 +91,12 @@
 							<td class="column1"><label id="widthlabel" for="width">{#advimage_dlg.dimensions}</label></td>
 							<td class="nowrap">
 								<span style="display:none" id="width_voiceLabel">{#advimage_dlg.width}</span>
-								<input name="width" type="text" id="width" value="" size="5" maxlength="5" class="size" onchange="ImageDialog.changeHeight();" aria-labelledby="width_voiceLabel" /> x 
+								<!-- <input name="width" type="text" id="width" value="" size="5" maxlength="5" class="size" onchange="ImageDialog.changeHeight();" aria-labelledby="width_voiceLabel" /> x  -->
+								<select id="width" name="width" onchange="ImageDialog.changeHeight();"> 
+                                    <option value="700">Large</option> 
+                                    <option value="350">Small</option>
+                                    <option value="175">Thumbnail</option>
+                                </select>
 								<span style="display:none" id="height_voiceLabel">{#advimage_dlg.height}</span>
 								<input name="height" type="text" id="height" value="" size="5" maxlength="5" class="size" onchange="ImageDialog.changeWidth();" aria-labelledby="height_voiceLabel" /> px
 							</td>
