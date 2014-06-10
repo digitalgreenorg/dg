@@ -247,7 +247,7 @@
 							<td id='partnerbodytd2' class='custompartnerbodytd'> 
 								<div id='partnername' class='partnerdiv'>{{partner.PARTNER_NAME}}</div> 
 								<div class='partnercheckbox'> 
-									<input type="checkbox" name="partners" value="{{partner.id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
+									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
 								</div> 
 							</td>														
 						</tr>

@@ -182,11 +182,11 @@ def get_partner_list(geog,id, partners):
         part_list = run_query(sql)
         if(not partners or len(part_list) == 1):
             return part_list
-        filtered_partners = [x['id'] for x in part_list if str(x['id']) in partners]
+        filtered_partners = [x['partner_id'] for x in part_list if str(x['partner_id']) in partners]
         if not filtered_partners:
             return part_list
         for partner in part_list:
-            if partner['id'] not in filtered_partners:
+            if partner['partner_id'] not in filtered_partners:
                 partner['unmarked'] = 1
         return part_list
     else:
