@@ -78,7 +78,7 @@ def get_partners_sql(geog, id):
     sql_ds['join'].append(["programs_PARTNER P", "P.id = vcp.partner_id"])
     if (geog):
         sql_ds['where'].append("vcp.%s_id = %s" %(geog.lower(), str(id)))
-
+    sql_ds['order by'].append("P.PARTNER_NAME")
     return join_sql_ds(sql_ds);
 
 def child_geog_list(geog, id, from_date, to_date):
