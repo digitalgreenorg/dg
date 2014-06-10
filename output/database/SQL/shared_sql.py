@@ -69,18 +69,15 @@ def practice_options_sql(sec, subsec, top, subtop, sub):
         
 
 def get_partners_sql(geog, id):
-    if geog not in [None, "COUNTRY", "STATE"]:
+    if geog not in [None, "COUNTRY", "STATE", "DISTRICT", "BLOCK", "VILLAGE"]:
         return ''
 
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(["DISTINCT P.id", "P.PARTNER_NAME"])
-    sql_ds['from'].append("geographies_DISTRICT D")
-    sql_ds['join'].append(["programs_PARTNER P", "P.id = D.partner_id"])
-    if (geog=="STATE"):
-        sql_ds['where'].append("D.state_id = "+str(id))
-    elif(geog=="COUNTRY"):
-        sql_ds['join'].append(["geographies_STATE S", "S.id = D.state_id"])
-        sql_ds['where'].append("S.country_id = " + str(id))
+    sql_ds['select'].extend(["DISTINCT vcp.partner_id", "P.PARTNER_NAME"])
+    sql_ds['from'].append("village_precalculation_copy vcp")
+    sql_ds['join'].append(["programs_PARTNER P", "P.id = vcp.partner_id"])
+    if (geog):
+        sql_ds['where'].append("vcp.%s_id = %s" %(geog.lower(), str(id)))
 
     return join_sql_ds(sql_ds);
 
