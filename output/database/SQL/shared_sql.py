@@ -81,34 +81,19 @@ def get_partners_sql(geog, id):
 
     return join_sql_ds(sql_ds);
 
-def child_geog_list(geog, id, from_date, to_date, partners):
+def child_geog_list(geog, id, from_date, to_date):
     sql_ds = get_init_sql_ds()
     if(geog == None):
         sql_ds['select'].extend(['DISTINCT C.id', 'COUNTRY_NAME AS name'])
         sql_ds['from'].append("geographies_COUNTRY C")
-        if(partners):
-            sql_ds['join'].append(['geographies_STATE S', 'S.country_id = C.id'])
-            sql_ds['join'].append(['geographies_DISTRICT D', 'D.state_id = S.id'])
-            sql_ds['where'].append("D.partner_id in ("+','.join(partners)+")")
     elif(geog == "COUNTRY"):
         sql_ds['select'].extend(['DISTINCT S.id', 'STATE_NAME AS name'])
         sql_ds['from'].append("geographies_STATE S")
         sql_ds['where'].append("S.country_id = " + str(id))
-        if(partners):
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT D JOIN geographies_STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
-            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
-            if(filtered_partner_list):
-                sql_ds['join'].append(["geographies_DISTRICT D", "S.id = D.state_id"])
-                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == "STATE"):
         sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
         sql_ds['from'].append("geographies_DISTRICT D")
         sql_ds['where'].append("state_id = " + str(id))
-        if(partners):
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT WHERE state_id = "+str(id))
-            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
-            if(filtered_partner_list):
-                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == 'DISTRICT'):
         sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
         sql_ds['from'].append('geographies_BLOCK B')
