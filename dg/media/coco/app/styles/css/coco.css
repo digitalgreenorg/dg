@@ -52,6 +52,10 @@
     margin-left: auto !important;
 }
 
+.mrg-top-0 {
+    margin-top: 0;
+}
+
 /* ----------- Sidebar for Navigation -------*/
 
 .white-bgd {
@@ -68,7 +72,7 @@
 }
 
 #coco_sync {
-	margin: -1px 0 0 15%;
+	margin: -7px 0 0 15%;
 }
 
 /* ----------- Rest ------------*/
