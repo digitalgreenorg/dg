@@ -3,7 +3,7 @@ import dg.settings
 setup_environ(dg.settings)
 
 from activities.models import PersonAdoptPractice, Screening
-from dashboard.models import PersonAdoptPractice as Old_Adoption, Screening as Old_Screening
+from dashboard.models import PersonAdoptPractice as OldAdoption, Screening as OldScreening
 
 
 for adoption in PersonAdoptPractice.objects.exclude(old_coco_id__isnull=True):
