@@ -4,6 +4,12 @@
     border-bottom: 4px solid #047d0a;
     padding-top : 1%;
 }
+.big-logo{
+
+}
+.small-logo{
+    display : none;
+}
 
 .align-center {
     text-align: center;
@@ -278,6 +284,14 @@ h1 small{
 /*----------- Media Queries -----------*/
 
 @media(max-width:767px){
+    .big-logo{
+        display: none;
+    }
+    .small-logo{
+        display: block;
+        height: 33px;
+        width: auto;
+    }
     .flt-rt-nav {
         float: right;
     }
@@ -297,7 +311,7 @@ h1 small{
         display: none;
     }
 
-    tr:nth-of-type(odd) { 
+    trn:th-of-type(odd) { 
         background: #eee; 
     }
     
