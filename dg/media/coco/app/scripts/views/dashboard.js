@@ -101,6 +101,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 .fail(function(model, error) {
                 that.db_not_downloaded();
             });
+            
+            $("#main-navbar").on('click',function(){
+                $(".collapse").collapse('hide');
+            });
         },
         
         //enable sync button, show online indicator
