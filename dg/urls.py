@@ -15,6 +15,7 @@ from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
 import website_archive_urls
+import deoanalytics.urls
 
 admin.login_template = 'social_website/login.html'
 admin.logout_template = 'social_website/home.html'
@@ -66,6 +67,8 @@ urlpatterns = patterns('',
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
+    
+    (r'^analytics/cocouser/',include('deoanalytics.urls')),
 )
 
 # Static files serving locally

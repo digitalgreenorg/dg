@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta property="og:image" content="http://www.digitalgreen.org/media/social_website/content/dg_transition.png"/>
+        <meta property="og:title" content="Digital Green"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="DigitalGreen"/>
+        <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
+        <meta property="fb:app_id" content="149405231925556" />
+        <!-- META DATA -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="MSSmartTagsPreventParsing" content="true" />
+        <meta http-equiv="imagetoolbar" content="no" />
+        
+        <!-- SEO -->
+        <title>Digital Green</title>
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+
+        <!-- ICONS -->
+        <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
+
+        <!-- STYLESHEETS -->
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/deoanalytics.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
+        <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
+		
+		<script type="text/javascript" src="{{STATIC_URL}}assets/scripts/jquery.min.js"></script>
+		<script src="http://code.highcharts.com/highcharts.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}assets/scripts/deoanalyticsjs.js"></script>
+  	
+    </head>
+    <!--
+        =======================
+        | Implementation Note |
+        =======================
+
+        The body needs to have this "data-controller" attribute 
+        on it to control which JS controller is loaded.
+
+        Current list includes:
+            Home
+            About
+            Collections
+            ViewCollections
+            Profile
+    -->
+    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
+    <body data-controller="{{header.jsController}}" data-user-id={{request.user.id}} onload="onbodyload()">
+        <!-- Begin Main Wrapper -->
+        <div class="wrapper-main wrapper">
+            <div class="header-fixed">
+                <div class="header-wrapper clearfix">
+                    <header class="global-nav">
+                        <a class="skip-to-content" href="#main">Skip to content</a>
+                        <div class="wrapper">
+                            <nav class="inner-nav" role="navigation">
+                                <ul class="nav">
+                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
+                                    <li class="logo"><a href="{% url 'home' %}">Green Digital</a></li>
+
+                                </ul>
+                            </nav> <!-- End .inner-nav -->
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>           
+            </div>
+            <div class="header-margin"></div>
