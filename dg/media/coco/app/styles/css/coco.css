@@ -311,7 +311,7 @@ h1 small{
         display: none;
     }
 
-    trnth-of-type(odd) { 
+    trn:th-of-type(odd) { 
         background: #eee; 
     }
     
