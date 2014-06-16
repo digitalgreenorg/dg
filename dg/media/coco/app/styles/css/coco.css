@@ -239,6 +239,12 @@ h1 small{
     color:red;
     width: 100%;
 }
+
+#incremental_download_back {
+    position:fixed;
+    bottom:0px;
+    z-index:10000;
+}
 /*---------------- User Dropdown --------------- */
 
 .user-dropdown-div {
