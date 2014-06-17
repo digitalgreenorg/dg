@@ -1,8 +1,8 @@
 /* ---------- header -----------*/
 
 .global-header {
-    border-bottom: 4px solid #047d0a;
-    padding-top : 1%;
+    border-bottom: 1px solid #999;
+    padding : 15px 0 10px 0;
 }
 .big-logo{
 
@@ -28,7 +28,7 @@
 .img-user {
     display: inline;
     width: 35px;
-    margin-top: -8px;
+    margin-top: -5px;
     cursor: pointer;
 }
 
@@ -256,7 +256,7 @@ h1 small{
     position: absolute;
     display: none;
     right: 0;
-    top: 32px;
+    top: 35px;
     background-color: white;
     z-index: 1000;
     border: 1px solid #dbdad5;
@@ -334,6 +334,10 @@ h1 small{
     
     #content{
         padding: 20px 10px;
+    }
+    
+    .global-header {
+        padding: 10px 0 5px 0;
     }
 
     .stack-table table, 
