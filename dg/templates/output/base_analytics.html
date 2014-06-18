@@ -43,7 +43,10 @@
 				
 			if($("input:checkbox:not(:checked)").length > 0) {
 				$("#partnerbodytable input:checked").each(function() {
-   					url.push("partners="+$(this).val())
+				    if($(this).val()!='-1')
+				    {
+				        url.push("partners="+$(this).val())
+				    }
 				});
 			}
 			
@@ -70,7 +73,21 @@
 			};
 			
 		}
-    		
+    	
+		//Select or Deselect all Partners
+		function select_deselect(e){
+		    if(e.checked) {
+		        $("#partnerbodytable input").each(function() {
+		            this.checked = true;
+                });
+		    }
+		    else{
+		        $("#partnerbodytable input").each(function() {
+                    this.checked = false;
+                });
+		    }
+		}
+
 		//Function to enable/disable and fill option in Selects for region select drop downs
     	function dochange(src, val) {
 			$.ajax({ type: "GET", 
@@ -242,6 +259,14 @@
 				<div id='arrowimg'>  </div>
 				<div id='partnerbody' class='custombody'>
 					<table id='partnerbodytable' class='custombodytable'>
+					   <tr>
+                            <td id='partnerbodytd2' class='custompartnerbodytd'> 
+                                <div id='selectalltag' class='partnerdiv'>Select All</div> 
+                                <div class='partnercheckbox'>
+                                    <input type="checkbox" id="selectall" value="-1" checked onclick="select_deselect(this)"/> 
+                                </div> 
+                            </td>                                                       
+                        </tr>
 					{% for partner in search_box_params.partners %}
 						<tr>
 							<td id='partnerbodytd2' class='custompartnerbodytd'> 
