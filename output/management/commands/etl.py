@@ -74,12 +74,12 @@ class AnalyticsSync():
             #person_meeting_attendance_myisam
             self.db_cursor.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
-                                        SELECT pma.id, pma.person_id, sc.id, GENDER, date, p.village_id, block_id,
+                                        SELECT pma.id, pma.person_id, sc.id, GENDER, date, sc.village_id, block_id,
                                         district_id, state_id, country_id, sc.partner_id
                                         FROM activities_personmeetingattendance pma 
                                         JOIN activities_screening sc on sc.id = pma.screening_id
                                         JOIN people_person p on p.id = pma.person_id
-                                        JOIN geographies_village v on v.id = p.village_id
+                                        JOIN geographies_village v on v.id = sc.village_id
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
