@@ -22,6 +22,24 @@ define([
     If server save succeeds, then we set the online_id in the offline model.
     */
 
+var counts_success = {
+    "person": 0,
+    "mediator":0,
+    "group" : 0,
+    "video" : 0,
+    "screening" : 0,
+    "adoption":0
+};
+var counts_failure = {
+    "person": 0,
+    "mediator":0,
+    "group" : 0,
+    "video" : 0,
+    "screening" : 0,
+    "adoption":0
+};
+var message_combined_success = "";
+var message_combined_failure = "";
 
     var FormControllerView = Backbone.Layout.extend({
 
@@ -57,6 +75,26 @@ define([
         // After Save is finished calls an after_form_save function
         on_save: function(e) {
             //event contains the form view object itself
+            // Set the count of successful and failed saves. These are later used to give notifications
+            counts_success = {
+                "person": 0,
+                "group" : 0,
+                "mediator":0,
+                "video" : 0,
+                "screening" : 0,
+                "adoption":0
+            };
+            counts_failure = {
+                "person": 0,
+                "group" : 0,
+                "mediator":0,
+                "video" : 0,
+                "screening" : 0,
+                "adoption":0
+            };
+            // Reset the notification messages because if the person is adding multiple persons, the message does not get duplicated
+            message_combined_failure=""
+            message_combined_success=""
             this.form = e.context; 
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-" + JSON.stringify(this.form.final_json));
             var that = this;
@@ -76,9 +114,19 @@ define([
                             // error while saving object
                             // show the error on the form right above the object
                             that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
+                            
                         });
                     // put dfd for this object-save in the save_complete_dfds list
+               
+                    save_object_dfd.done(function(){
+                        //When the saving is done, add the notification.
+                        notifs_view.add_alert({
+                        notif_type: "success",
+                        message: message_combined_success});
+
+                    });
                     save_complete_dfds.push(save_object_dfd);
+
                 });
             } 
             else 
@@ -107,16 +155,22 @@ define([
                                 .done(function(all_inlines) {
                                     console.log("ALL INLINES SAVED");
                                     inlines_dfd.resolve(all_inlines);
+                                    
                                 })
                                 .fail(function() {
                                     console.log("FAILED AT INLINES SAVE");
                                     show_inline_error();
                                     inlines_dfd.reject();
                                 });
+                    
+                
                     })
                     .fail(function(error) {
                         that.form.show_errors(error);
                     });
+                    
+                
+
                 save_complete_dfds.push(save_object_dfd);
             }
 
@@ -125,10 +179,23 @@ define([
                 .done(function() {
                     console.log("Everything saved");
                     that.after_form_save(that.form.entity_name);
+                    notifs_view.add_alert({
+                                        notif_type: "success",
+                                        message: message_combined_success});
+
                 })
                 .fail(function() {
                     if (that.form.bulk)
                         show_bulk_error();
+                    if (message_combined_success!="")
+                        notifs_view.add_alert({
+                            notif_type: "success",
+                            message: message_combined_success});
+
+                    notifs_view.add_alert({
+                        notif_type: "error",
+                        message: message_combined_failure
+                    });
                 });
 
             //shown if any inline could not be saved
@@ -298,19 +365,34 @@ define([
             };
 
             function show_suc_notif() {
-                notifs_view.add_alert({
-                    notif_type: "success",
-                    message: "Saved " + entity_name
-                });
+               
+               // function counts the successful operations and creates the notification message. Has to be done BEFORE the notification is added, hence here.
+                console.log(message_combined_success);
+                counts_success[entity_name] +=1;
+                message_combined_success="";
+                for (var title in counts_success)
+                {
+                    if (counts_success[title]>0)
+                        message_combined_success = message_combined_success + "<br>" + "Saved " + counts_success[title] + " " +title;
+
+                }
+                
             };
 
             function show_err_notif() {
-                notifs_view.add_alert({
-                    notif_type: "error",
-                    message: "Error saving " + entity_name
-                });
-            };
+            // function counts the errors and creates the notification message
+               counts_failure[entity_name] +=1;
+                message_combined_failure="";
+               for (var title in counts_failure)
+                {
+                    if (counts_failure[title]>0)
+                        message_combined_failure = message_combined_failure + "<br>" + "Error saving " + counts_failure[title] + " " +title;
 
+                }
+                
+            };
+            
+           
             return dfd.promise();
         },
 
