@@ -42,7 +42,7 @@
 			}
 				
 			if($("input:checkbox:not(:checked)").length > 0) {
-				$("input:checked").each(function() {
+				$("#partnerbodytable input:checked").each(function() {
    					url.push("partners="+$(this).val())
 				});
 			}
