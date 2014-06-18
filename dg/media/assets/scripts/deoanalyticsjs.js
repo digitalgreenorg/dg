@@ -122,7 +122,7 @@ function deofilter(district_name, partner_id)
               for (var i = 0; i < data.length; i++) 
               {
              	 listitems += '<li id="' + i + data[i].deo_id + '"class=' + '"item h-overflow deonotselected hdg-trunc"' + 'onclick="' 
-             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
+             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
              	 '<input id ="' + data[i].deo_id + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
               }
               $("ul#deolist").html(listitems);
@@ -133,20 +133,20 @@ function deofilter(district_name, partner_id)
        });
     }
     
-function makedeochecked(itemid, deo_name)
+function makedeochecked(itemid, deoid, deo_name)
     {
     	if ($('#' + itemid).hasClass("deonotselected"))
     		{
     			$('#' + itemid).removeClass("deonotselected");
     			$('#' + itemid).addClass("deoselected");
-    			$('#' + itemid).prop('checked', true);
+    			$('#' + deoid).prop('checked', true);
     			chosendeos.push(deo_name);	
     		}
     	else if ($('#' + itemid).hasClass("deoselected"))
     		{
     			$('#' + itemid).removeClass("deoselected");
     			$('#' + itemid).addClass("deonotselected");
-    			$('#' + itemid).prop('checked', false);
+    			$('#' + deoid).prop('checked', false);
     			var index = chosendeos.indexOf(deo_name);
 	 	    	chosendeos.splice(index,1);
     		}
