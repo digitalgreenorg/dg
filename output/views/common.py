@@ -10,6 +10,7 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, \
 from copy import deepcopy
 from activities.models import Screening
 from people.models import Person
+from programs.models import Partner
 from videos.models import Video
 import datetime
 import json
@@ -176,19 +177,22 @@ def get_geog_id(request):
 #Returns a dictionary of list of PARTNER_NAME, id
 #If partners were selected i.e. argument 'partners' is not empty,
 #  those that are not present are marked with 'unmarked = 1'
-def get_partner_list(geog,id, partners):
-    sql = shared_sql.get_partners_sql(geog,id)
+def get_partner_list(geog, id, partners):
+    sql = shared_sql.get_partners_sql(geog, id)
     if(sql):
         part_list = run_query(sql)
-        if(not partners or len(part_list) == 1):
-            return part_list
-        filtered_partners = [x['partner_id'] for x in part_list if str(x['partner_id']) in partners]
-        if not filtered_partners:
-            return part_list
-        for partner in part_list:
-            if partner['partner_id'] not in filtered_partners:
-                partner['unmarked'] = 1
-        return part_list
+        filtered_partners = [x['partner_id'] for x in part_list]
+        coco_partners = Partner.objects.values_list('id', 'partner_name').order_by('partner_name')
+        partner_list = []
+        for id, partner_name in coco_partners:
+            partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name}
+            if partners:
+                if str(id) not in partners:
+                    partner_dict['unmarked'] = 1
+            if id in filtered_partners:
+                partner_dict['highlight'] = 1
+            partner_list.append(partner_dict)
+        return partner_list
     else:
         return {}
 
