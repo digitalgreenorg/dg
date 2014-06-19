@@ -261,16 +261,16 @@
 					<table id='partnerbodytable' class='custombodytable'>
 					   <tr>
                             <td id='partnerbodytd2' class='custompartnerbodytd'> 
-                                <div id='selectalltag' class='partnerdiv'>Select All</div> 
+                                <div id='selectalltag' class='partnerdiv' style="font-style:italic;">Select All</div> 
                                 <div class='partnercheckbox'>
-                                    <input type="checkbox" id="selectall" value="-1" checked onclick="select_deselect(this)"/> 
+                                    <input type="checkbox" id="selectall" value="-1" {% if search_box_params.checked != 0 %} checked {% endif %}onclick="select_deselect(this)"/> 
                                 </div> 
                             </td>                                                       
                         </tr>
 					{% for partner in search_box_params.partners %}
 						<tr>
 							<td id='partnerbodytd2' class='custompartnerbodytd'> 
-								<div id='partnername' class='partnerdiv'>{{partner.PARTNER_NAME}}</div> 
+								<div id='partnername' class='partnerdiv' {% if partner.highlight == 1 %} style="font-weight:bold;" {% endif %}>{{partner.PARTNER_NAME}}</div> 
 								<div class='partnercheckbox'> 
 									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
 								</div> 
