@@ -88,6 +88,8 @@ def get_search_box(request):
     search_box_params['cur_geog'] = geog.lower() if geog != None else None
     search_box_params['cur_id'] = id
     search_box_params['base_url'] = request.path
+    if partner:
+        search_box_params['checked'] = 0
 
     return search_box_params
 
