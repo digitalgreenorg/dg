@@ -45,22 +45,19 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 });
         },
 
+
         modify_row_object: function (model_object){
             var row_elements_keys_array = this.entity_config.list_elements;
-//            console.log('dw',model_object);
             var row_value = [];
             for (var k=0; k<row_elements_keys_array.length; k++){
-//                console.log('array is',row_value);
                 if(row_elements_keys_array[k].subelement){
                 element_value_in_list_elements = row_elements_keys_array[k]['element'];
                 subelement_value_in_list_elements = row_elements_keys_array[k]['subelement'];
                     if (model_object[element_value_in_list_elements].length!=0){
                     }
-
                     var data_value = $.map(model_object[element_value_in_list_elements], function(val){
                          return val[subelement_value_in_list_elements];
                      }).join("; ");
-//                     console.log('x is', x);
                      row_value.push(data_value);
                 }
                 else{
@@ -78,38 +75,41 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                     }
                 }
             }
-            console.log('test', row_value);
+//            console.log('test', row_value);
+            row_value.push('<a href="#'+this.entity_config.entity_name+'/edit/'+ model_object[row_elements_keys_array[0]['element']]+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>');
             return row_value;
         },
 
-
-
         render_data: function (entity_collection) {
+
+// Method 1 for better performance as well as better readability after optimization
             var self = this;
             var start = new Date().getTime();
             console.log("in render_data...change in collection...rendering list view");
             var that = this;
             var array_table_values = []
             array_table_values = $.map(entity_collection.toJSON(), function(model){
-//                var row_valuepert = ;
-//                console.log('arr is ', row_valuepert)
-                return [self.modify_row_object(model)];
+                var output = [self.modify_row_object(model)];
+                return output;
             });
 
 
+// Method 2 for better performance after optimization
+//            var that = this;
+//            var array_table_values = $.map(entity_collection.toJSON(), function(model){
+//                return that.entity_config.object_to_array(model);
+//            });
 
-//            var arr=[];
-//            console.log('elem',c );
-//
-//
-//            var arr = [];
+
+// Method 3 for poor performance
+//            var array_table_values = [];
 //            entity_collection.each(function (model) {
 //                console.log('log item', model.toJSON());
 //                a = model.toJSON();
-//                arr.push(this.entity_config.object_to_array(a));
+//                array_table_values.push(this.entity_config.object_to_array(a));
 //            }, this);
 
- //           console.log('check2', arr);
+//           console.log('check2', array_table_values);
 
             this.$('#list_table')
                 .dataTable({
