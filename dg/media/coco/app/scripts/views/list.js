@@ -10,9 +10,6 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
         initialize: function (params) {
             this.entity_config = all_configs[params.entity_name];
             //TODO: if !entity_config, handle error etc
-            //get the template for a row of table
-            this.row_template = _.template($('#' + this.entity_config.list_table_row_template)
-                .html());
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
             this.render();
@@ -50,8 +47,11 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                     element = column_definition["element"].split(".").pop().replace("_", " ");
                     header = element[0].toUpperCase() + element.slice(1);
                 }
-                return {mDataProp: header};
+                return {sTitle: header};
             });
+            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+                header_row.push({sTitle: "Edit"});
+            }
             return header_row;
         },
         
