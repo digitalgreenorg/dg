@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <!-- manifest="/media/coco/coco-offline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
-<!--manifest="/media/coco/coco-offline.appcache"-->
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
@@ -17,7 +16,7 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -147,7 +146,7 @@
     </div>
 </script>
 <script type="text/template" id="dashboard_item_template">
-      <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
+        <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
 </script>
 <script  type="text/template" id="dashboard">
     <div id="coco_sidebar" class="coco_sidebar affix">
@@ -890,7 +889,7 @@
                                 <div class="control-group"> 
 					<label class="control-label"><b>Name</b></label>
                                 	<div class="controls">
-                                   	<input type="text" name="group_name" placeholder="Name">
+                                 	<input type="text" name="group_name" placeholder="Name">
                                  	</div>
                                  </div>
                                  <div class="control-group"> 
@@ -1066,15 +1065,15 @@
                             <div class="control-group">
                                 <label class="control-label"><b>Persons Shown</b></label>
                                 <div class="controls">
+                                    <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
                                     </div>
-                            </div>
+                                </div>
                                 <div class="control-group">
                                     <label class="control-label"><b>Actors</b></label>
                                     <div class="controls">
                                         <select class="input-medium" name="actors">
                                             <option value="" selected="selected">
                                                 ---------
-                                                <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
                                             </option>
                                             <option value="F">
                                                 Family
