@@ -91,7 +91,7 @@ def adoption_geog_pie_data(request):
 
 
     ado_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'adoption'))
-    geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
+    geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date),'id')
 
     return_val = []
     return_val.append(['name','value','url'])
