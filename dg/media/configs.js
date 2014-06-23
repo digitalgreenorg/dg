@@ -122,11 +122,6 @@ function() {
         'list_table_header_template': 'village_table_template', 
         'list_table_row_template': 'village_list_item_template',
         'rest_api_url': '/coco/api/v2/village/',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.village_name, obj.block_name, obj.start_date, obj.state_name,'<a href="#village/edit/"'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'element':'state_name'}],
         'entity_name': 'village',
         'dashboard_display': {
@@ -143,10 +138,6 @@ function() {
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.name,($.map(obj.assigned_villages, function(val){return val.village_name;})).sort().join("; "),'<a href="#mediator/edit/"'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
         'list_elements': [{'element':'id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}],
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
@@ -227,11 +218,6 @@ function() {
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.title, obj.village.village_name, obj.video_production_start_date, obj.video_production_end_date,'<a href="#video/edit/'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'title'},{'element':'village.village_name'},{'element':'video_production_start_date'},{'element':'video_production_end_date'}],
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
@@ -398,11 +384,6 @@ function() {
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
         'entity_name': 'group',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.group_name, obj.village.village_name,'<a href="#group/edit/'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'group_name'},{'element':'village.village_name'}],
         'inc_table_name': 'persongroup',
         'unique_together_fields': ['group_name', 'village.id'],
@@ -491,12 +472,6 @@ function() {
         'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
-
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.date, obj.animator.name, obj.village.village_name, ($.map(obj.farmer_groups_targeted, function(group){return group.group_name;})).sort().join("; "),($.map(obj.videoes_screened, function(val){return val.title;})).sort().join("; "),'<a href="#screening/edit/"'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'date'},{'element':'animator.name'},{'element':'village.village_name'},{'subelement':'group_name','element':'farmer_groups_targeted'},{'subelement':'title','element':'videoes_screened'}],
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
@@ -701,11 +676,6 @@ function() {
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.date_of_adoption, obj.person.person_name, obj.group.group_name, obj.village.village_name, obj.video.title,'<a href="#adoption/edit/"'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'date_of_adoption'},{'element':'person.person_name'},{'element':'group.group_name'},{'element':'village.village_name'},{'element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
@@ -832,11 +802,6 @@ function() {
         'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
-        'object_to_array': function(obj) {
-            temp = [obj.id, obj.person_name, obj.father_name, obj.village.village_name, obj.group.group_name,'<a href="#person/edit/'+ obj.id+'" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>']
-            return temp;
-        },
-
         'list_elements': [{'element':'id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
         'rest_api_url': '/coco/api/v2/person/',
         'entity_name': 'person',
