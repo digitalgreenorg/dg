@@ -44,7 +44,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 else if ('element' in column_definition) {
                     // Split column_definition to get the very last field.
                     // For instance, extract block_name from village.block.block_name
-                    element = column_definition["element"].split(".").pop().replace("_", " ");
+                    element = column_definition["element"].split(".").pop().replace(/_/g, " ");
                     header = element[0].toUpperCase() + element.slice(1);
                 }
                 return {sTitle: header};
