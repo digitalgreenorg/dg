@@ -424,7 +424,13 @@ define([
                 'search_contains': true
             }); */
             
-            $(".select2").select2();
+            try{
+                $(".select2").select2();
+               }
+            catch(err){
+                console.log(err);
+                $("select.select2").select2();
+            }
 
             var eDate = new Date();
             enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
