@@ -10,10 +10,6 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
         initialize: function (params) {
             this.entity_config = all_configs[params.entity_name];
             //TODO: if !entity_config, handle error etc
-            //TODO: instead of html of header, we can ask for coloumn headers as array
-            //get the template for table header
-            this.table_header = $('#' + this.entity_config.list_table_header_template)
-                .html();
             //get the template for a row of table
             this.row_template = _.template($('#' + this.entity_config.list_table_row_template)
                 .html());
@@ -26,7 +22,6 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
             //send these to the list page template
             return {
                 page_header: this.entity_config.page_header,
-                table_header: this.table_header
             };
         },
 
