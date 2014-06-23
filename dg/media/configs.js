@@ -466,7 +466,7 @@ function() {
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
-        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id','link'],
+        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;

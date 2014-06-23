@@ -95,7 +95,6 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
             // render data and call function get_row() to make array_table_values which is assigned to aaData later to
             // fill the table with the relevant values.
             var self = this;
-            var start = new Date().getTime();
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
@@ -125,10 +124,6 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
             $("#loaderimg")
                 .hide();
             $("#sort-helptext").show();
-            var end = new Date().getTime();
-            var time = end - start;
-            console.log('Execution time:', time);
-
         }
     });
     return ListView;
