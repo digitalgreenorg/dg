@@ -41,7 +41,25 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                     });
                 });
         },
-
+        
+        get_row_header: function () {
+            var list_elements = this.entity_config.list_elements;
+            var header_row = $.map(list_elements, function (column_definition) {
+                var header = "";
+                if ('header' in column_definition) {
+                    header = column_definition["header"];
+                }
+                else if ('element' in column_definition) {
+                    // Split column_definition to get the very last field.
+                    // For instance, extract block_name from village.block.block_name
+                    element = column_definition["element"].split(".").pop().replace("_", " ");
+                    header = element[0].toUpperCase() + element.slice(1);
+                }
+                return {mDataProp: header};
+            });
+            return header_row;
+        },
+        
         get_row: function (model_object) {
             var list_elements = this.entity_config.list_elements;
             var row = $.map(list_elements, function (column_definition) {
@@ -87,11 +105,12 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
             });
-
+            aoColumns = this.get_row_header();
             this.$('#list_table')
                 .dataTable({
                     "sDom": 'T<"clear">lfrtip',
                     "bDeferRender": true,
+                    "aoColumns": aoColumns,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
