@@ -119,8 +119,6 @@ function() {
 
     var village_configs = {
         'page_header': 'Village',
-        'list_table_header_template': 'village_table_template', 
-        'list_table_row_template': 'village_list_item_template',
         'rest_api_url': '/coco/api/v2/village/',
         'list_elements': [{'element':'id'},{'element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'element':'state_name'}],
         'entity_name': 'village',
@@ -133,8 +131,6 @@ function() {
 
     var mediator_configs = {
         'page_header': 'Mediator',
-        'list_table_header_template': 'mediator_table_template',
-        'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
@@ -213,8 +209,6 @@ function() {
 
     var video_configs = {
         'page_header': 'Video',
-        'list_table_header_template': 'video_table_template',
-        'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
@@ -378,8 +372,6 @@ function() {
 
     var group_configs = {
         'page_header': 'Group',
-        'list_table_header_template': 'group_table_template',
-        'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
@@ -468,8 +460,6 @@ function() {
 
     var screening_configs = {
         'page_header': 'Screening',
-        'list_table_header_template': 'screening_table_template',
-        'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
         'list_elements': [{'element':'id'},{'element':'date'},{'element':'animator.name'},{'element':'village.village_name'},{'subelement':'group_name','element':'farmer_groups_targeted'},{'subelement':'title','element':'videoes_screened'}],
@@ -669,8 +659,6 @@ function() {
 
     var adoption_configs = {
         'page_header': 'Adoption',
-        'list_table_header_template': 'adoption_table_template',
-        'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
@@ -798,8 +786,6 @@ function() {
 
     var person_configs = {
         'page_header': 'Person',
-        'list_table_header_template': 'person_table_template',
-        'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
         'list_elements': [{'element':'id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
