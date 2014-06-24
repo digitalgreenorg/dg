@@ -122,7 +122,7 @@ function deofilter(district_name, partner_id)
               for (var i = 0; i < data.length; i++) 
               {
              	 listitems += '<li id="' + i + data[i].deo_id + '"class=' + '"item h-overflow deonotselected hdg-trunc"' + 'onclick="' 
-             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
+             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
              	 '<input id ="' + data[i].deo_id + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
               }
               $("ul#deolist").html(listitems);
@@ -133,20 +133,20 @@ function deofilter(district_name, partner_id)
        });
     }
     
-function makedeochecked(itemid, deo_name)
+function makedeochecked(itemid, deoid, deo_name)
     {
     	if ($('#' + itemid).hasClass("deonotselected"))
     		{
     			$('#' + itemid).removeClass("deonotselected");
     			$('#' + itemid).addClass("deoselected");
-    			$('#' + itemid).prop('checked', true);
+    			$('#' + deoid).prop('checked', true);
     			chosendeos.push(deo_name);	
     		}
     	else if ($('#' + itemid).hasClass("deoselected"))
     		{
     			$('#' + itemid).removeClass("deoselected");
     			$('#' + itemid).addClass("deonotselected");
-    			$('#' + itemid).prop('checked', false);
+    			$('#' + deoid).prop('checked', false);
     			var index = chosendeos.indexOf(deo_name);
 	 	    	chosendeos.splice(index,1);
     		}
@@ -659,13 +659,13 @@ function analyzedeo()
 		 					} 		   					
             		   }
 					
-            	   lin1 = "No. of screenings entered: " + sumscreenings;
-            	   lin2 = "No. of adoptions entered : " + sumadoptions;
-            	   lin3 = "No. of persons entered   : " + data.persons;
-            	   if (data.slag == "NA")	{lin4 = "Average Screening Lag    : " + data.slag;}
-            	   else	{lin4 = "Average Screening Lag    : " + data.slag + " days";}
-            	   if (data.alag == "NA")	{lin5 = "Average Adoption Lag     : " + data.alag;}
-            	   else	{lin5 = "Average Adoption Lag     : " + data.alag + " days";}
+            	   lin1 = sumscreenings;
+            	   lin2 = sumadoptions;
+            	   lin3 = data.persons;
+            	   if (data.slag == "NA")	{lin4 = data.slag;}
+            	   else	{lin4 = data.slag + " days";}
+            	   if (data.alag == "NA")	{lin5 = data.alag;}
+            	   else	{lin5 = data.alag + " days";}
             	   
              	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
