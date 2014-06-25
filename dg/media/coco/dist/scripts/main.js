@@ -9127,7 +9127,11 @@ define('views/form_controller',[
             //since may already be on the add page, therefore have to call this explicitly
             window.Router.add(entity_name); 
         }
-   });
+
+
+
+
+    });
 
     // Our module now returns our view
     return FormControllerView;
@@ -9775,9 +9779,8 @@ require.config({
         'jquery_cookie': 'libs/jquery.cookie',
         'tabletools': 'libs/tabletools_media/js/TableTools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
-        'configs': '../../../configs'
+        'configs': '../../../configs',
     },
-
 
     //specifying dependencies of non-amd libraries
     shim: {
