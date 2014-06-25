@@ -44,7 +44,7 @@ function partnersetter()
 function setpartnerlistdiv(text)
     {   
  	    var partner_id = text.id;
- 	    var partner_name = text.innerText.trim();
+ 	    var partner_name = $(text).html();//text.innerText.trim();
     	$("div#partnername").html(partner_name); 
     	document.getElementById('districtlist').classList.remove('nodisplay');
     	document.getElementById('districtlist').classList.add('blockdisplay');
@@ -97,7 +97,7 @@ function districtfilter(partner_id)
 function setdistrictlistdiv(text, partner_id)
     {	
     	chosendeos = [];    	
- 	    var district_name = text.innerText.trim();
+ 	    var district_name = $(text).html();//text.innerText.trim();
     	$("div#districtname").html(district_name);   
     	deofilter(district_name, partner_id);
     	document.getElementById('deolist').classList.remove('nodisplay');
@@ -484,7 +484,7 @@ function goclicked()
        $("ul#deobox").html(list);
        document.getElementById("deo0").classList.add('active');
        
-       deoname = document.getElementById("deo0").innerText.trim();
+       deoname = $("#deo0").html();//document.getElementById("deo0").innerText.trim();
       
        selecteddeoname = deoname;
               
@@ -493,7 +493,7 @@ function goclicked()
 
 function makedeoactive(deoname_element, total, val)
    {
-	   deoname = deoname_element.innerText.trim();
+	   deoname = $(deoname_element).html();//deoname_element.innerText.trim();
 	   	
 	   selecteddeoname = deoname;
 	   
