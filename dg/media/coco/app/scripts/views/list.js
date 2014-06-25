@@ -71,7 +71,13 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                         var element_parts = element_definition.split(".");
                         var object = model_object;
                         for (var i = 0; i < element_parts.length; i++) {
-                            object = object[element_parts[i]];
+                            // To check if the entry is made online or offline. Display "Not uploaded in place of id in case of offline entry"
+                            if(element_parts.length == 1 && element_parts[i] == "id" && object.online_id == undefined){
+                                object = "Not Uploaded"
+                            }
+                            else{
+                                object = object[element_parts[i]];
+                            }
                         }
                         if (object != null) {
                             cell = object;
