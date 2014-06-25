@@ -59,7 +59,7 @@ jQuery(function($) {
             theme_advanced_buttons3: "",
             theme_advanced_path: false,
             theme_advanced_blockformats: "p,h1,h2,h3,h4,pre",
-            theme_advanced_styles: "Heading 1=hdg-a layout-vr-sm; Heading 2=hdg-b layout-vr-sm; Heading 3=hdg-c layout-vr-sm; Heading 4=hdg-e layout-vr-sm; [p] space=copy-para;[img] Right Margin=img;Bullet=bullet-list",
+            theme_advanced_styles: "Heading 1=hdg-a layout-vr-sm; Heading 2=hdg-b layout-vr-sm; Heading 3=hdg-c layout-vr-sm; Heading 4=hdg-e layout-vr-sm; [p] space=copy-para; [img] Right Margin=img; [img] Left Margin=grid-pad-lt-sm; Bullet=bullet-list",
             theme_advanced_resizing : true,
             theme_advanced_resize_horizontal : false,
             theme_advanced_resizing_use_cookie : true,
