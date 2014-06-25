@@ -708,7 +708,7 @@ function makechart(datelist,s_list,a_list)
                    color: '#808080'
                }]
            },
-           
+
            plotOptions: {
                series: {
                    cursor: 'pointer',
