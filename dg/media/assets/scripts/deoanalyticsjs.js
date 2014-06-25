@@ -44,7 +44,7 @@ function partnersetter()
 function setpartnerlistdiv(text)
     {   
  	    var partner_id = text.id;
- 	    var partner_name = text.innerText.trim();
+ 	    var partner_name = $(text).html();//text.innerText.trim();
     	$("div#partnername").html(partner_name); 
     	document.getElementById('districtlist').classList.remove('nodisplay');
     	document.getElementById('districtlist').classList.add('blockdisplay');
@@ -97,7 +97,7 @@ function districtfilter(partner_id)
 function setdistrictlistdiv(text, partner_id)
     {	
     	chosendeos = [];    	
- 	    var district_name = text.innerText.trim();
+ 	    var district_name = $(text).html();//text.innerText.trim();
     	$("div#districtname").html(district_name);   
     	deofilter(district_name, partner_id);
     	document.getElementById('deolist').classList.remove('nodisplay');
@@ -484,7 +484,7 @@ function goclicked()
        $("ul#deobox").html(list);
        document.getElementById("deo0").classList.add('active');
        
-       deoname = document.getElementById("deo0").innerText.trim();
+       deoname = $("#deo0").html();//document.getElementById("deo0").innerText.trim();
       
        selecteddeoname = deoname;
               
@@ -493,7 +493,7 @@ function goclicked()
 
 function makedeoactive(deoname_element, total, val)
    {
-	   deoname = deoname_element.innerText.trim();
+	   deoname = $(deoname_element).html();//deoname_element.innerText.trim();
 	   	
 	   selecteddeoname = deoname;
 	   
@@ -566,6 +566,10 @@ function analyzedeo()
    	}
    	else if ($("#monthly").hasClass("active") == true) 
    	{ 
+   		var userdate = document.getElementById('dateshow').innerHTML;
+   		var getmon = userdate.split(" ");
+   		var mon = getmon[0];
+   		
    		mode = 3;
    		start_date = getfirstdateofselectedmonth(2);
    		end_date = getlastdateofselectedmonth();
@@ -704,7 +708,7 @@ function makechart(datelist,s_list,a_list)
                    color: '#808080'
                }]
            },
-           
+
            plotOptions: {
                series: {
                    cursor: 'pointer',
@@ -712,28 +716,47 @@ function makechart(datelist,s_list,a_list)
                        events: {
                            click: function() {
                         	   //dateformatted = new Date (yyyy, mm, dd);
-                        	   
-                        	   var userdate = document.getElementById('dateshow').innerHTML;
-                    		   var dates = userdate.split("-");
-                    		   var date1 = dates[0].split(" ");
-                    		   var yyyy = date1[2];
+                        	   if ($("#weekly").hasClass("active") == true)
+                        		   {
+	                            	   var userdate = document.getElementById('dateshow').innerHTML;
+	                        		   var dates = userdate.split("-");
+	                        		   var date1 = dates[0].split(" ");
+	                        		   var yyyy = date1[2];
+	
+	                            	   curdate = this.category;
+	                            	   var dd = curdate.split(' ')[0];
+	                            	   var mon = curdate.split(' ')[1];
+	                            	   var mm = getmonthnofromname(mon);
+	                            	   
+	                            	   if(dd<10) {dd='0'+dd}
+	                            	   if(mm<10) {mm='0'+mm}
+	                            	   
+	                            	   var dateformatted = new Date (yyyy, mm, dd);
+	                            	   
+	                            	   makeactive(1);
+	                            	   setdate(0, dateformatted);
+	                            	   analyzedeo();                        		   
+                      		     }
+                        	   else if ($("#monthly").hasClass("active") == true)
+                        		 {
+                        	 	   var userdate = document.getElementById('dateshow').innerHTML;
+                        		   var splitteduserdate = userdate.split(" ");
+                        		   
+                        		   var mon = splitteduserdate[0];
+                        		   var yyyy = splitteduserdate[1];
+                        		   
+                        		   var mm = getmonthnofromname(mon);
+                            	   
+                            	   if(mm<10) {mm='0'+mm}                   		   
+                            	   var dd = this.category;
+                            	   if(dd<10) {dd='0'+dd}
 
-                        	   curdate = this.category;
-                        	   console.log(curdate);
-                        	   var dd = curdate.split(' ')[0];
-                        	   var mon = curdate.split(' ')[1];
-                        	   var mm = getmonthnofromname(mon);
-                        	   
-                        	   if(dd<10) {dd='0'+dd}
-                        	   if(mm<10) {mm='0'+mm}
-                        	   
-                        	   var dateformatted = new Date (yyyy, mm, dd);
-                        	   
-                        	   console.log(dateformatted);
-                        	   
-                        	   makeactive(1);
-                        	   setdate(0, dateformatted);
-                        	   analyzedeo();
+                            	   var dateformatted = new Date (yyyy, mm, dd);                     		   
+                            	                             	   
+                            	   makeactive(1);
+                            	   setdate(0, dateformatted);
+                            	   analyzedeo();    
+                        		 }
                            }
                        }
                    }
