@@ -484,7 +484,7 @@ function goclicked()
        $("ul#deobox").html(list);
        document.getElementById("deo0").classList.add('active');
        
-       deoname = $("#deo0").html();//document.getElementById("deo0").innerText.trim();
+       deoname = $("#deo0").text().toUpperCase();
       
        selecteddeoname = deoname;
               
@@ -493,8 +493,7 @@ function goclicked()
 
 function makedeoactive(deoname_element, total, val)
    {
-	   deoname = $(deoname_element).html();//deoname_element.innerText.trim();
-	   	
+	   deoname = $(deoname_element).text().toUpperCase();//deoname_element.innerText.trim();
 	   selecteddeoname = deoname;
 	   
        for (var j = 0; j < total; j++) 
