@@ -3,9 +3,18 @@
             <!-- The #player div is where the video player comes. -->
             <div id='player'></div>
             <div class="slide-img" >
-				<img src="https://s3.amazonaws.com/digitalgreenorg/{% if header.currentPage == 'About' %}about_carousel_img.jpg{% elif header.currentPage == 'Events' %}events_carousel_img.jpg{% else %}home_carousel_img.jpg{% endif%}" alt="">
+				{% if header.currentPage == 'Home' %}
+				    <video id="video-loop" autoplay="autoplay" loop poster="https://s3.amazonaws.com/digitalgreenorg/home_carousel_img.jpg">
+                        		<source src="{{STATIC_URL}}social_website/content/sugari.mp4" class="mp4">
+                        		<img src="https://s3.amazonaws.com/digitalgreenorg/home_carousel_img.jpg">
+                    		    </video>                    
+				{% else %}
+				    <img src="https://s3.amazonaws.com/digitalgreenorg/{% if header.currentPage == 'About' %}about_carousel_img.jpg{% elif header.currentPage == 'Events' %}events_carousel_img.jpg{% endif %}" alt="">
+				{% endif %}
+                
 				<div class="play-button" > 
 				</div>
+				
              </div>
 
 			<div id="main-carousel" class="main-carousel carousel-wrapper">

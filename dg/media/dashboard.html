@@ -347,9 +347,6 @@
     </div>
 	<div >
        <table id= "list_table" class="table table-striped display">
-           <thead>
-               <%= table_header%>
-           </thead>
        </table>
 	</div>
 	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
@@ -395,40 +392,7 @@
 
                                 <!--Core Framework templates end here -->    
 
-
-<!--///////////////////////////////////////////////////// MEDIATOR TEMPLATES START ///////////////////////////////////////////-->
-
-<script type="text/template" id="mediator_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Assigned Villages</th>
-       <th></th>
-	   </tr>
-</script>
-<script type="text/template" id="mediator_list_item_template">
-    <tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= name %></td>
-    <td> 
-		<% 
-			var villages=[];
-			$.each(assigned_villages, function(index,val) {
-				villages.push(val.village_name.trim());
-     		});
-			villages.sort();
-		%>
-	<%= villages %>
-	</td>
-    <td>
-	<a href="#mediator/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil" title="Edit entry"></i></a>
-	</td>
-    </tr>
-</script>
+<!--///////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES START ///////////////////////////////////////////-->
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset>
         <legend>Add Mediator</legend>
@@ -474,54 +438,9 @@
     </fieldset>
 </script>
 
-<!--/////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
+<!--/////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--///////////////////////////////////////////////// SCREENING TEMPLATES START //////////////////////////////////////////////-->
-<script type="text/template" id="screening_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Date</th>
-	   <th>Mediator</th>
-       <th>Village</th>
-	   <th>Groups Attended</th>
-       <th>Videos Screened</th>
-       <th></th>
-	   </tr>
-</script>
-<script type="text/template" id="screening_list_item_template">
-    <tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= date %></td>
-    <td> <%= animator.name %></td>
-    <td> <%= village.village_name %></td>
-	<td>
-	<% 
-		var groups="";
-		$.each(farmer_groups_targeted, function(index,val) {
-			groups = groups + val.group_name +"; ";
-     	});
-	%>
-	<%= groups %>
-	</td>    
-	<td> 
-	<% 
-		var videos="";
-		$.each(videoes_screened, function(index,val) {
-			videos = videos + val.title + "; ";
-     	});
-	%>
-	<%= videos %>
-	</td>
-    
-    <td>
-	<a href="#screening/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
-    </tr>
-</script>
+<!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="screening_add_edit_template">
             <fieldset>
                 <legend>Add Screening</legend>
@@ -684,39 +603,9 @@
         </td>
     </tr>
 </script>
+<!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
 
-<!--////////////////////////////////////////////////// SCREENING TEMPLATES END //////////////////////////////////////////////-->
-
-<!--///////////////////////////////////////////////// ADOPTION TEMPLATES START //////////////////////////////////////////////-->
-<script type="text/template" id="adoption_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Date</th>
-	   <th>Person</th>
-	   <th>Group</th>
-	   <th>Village</th>
-       <th>Video</th>
-       <th></th>
-	   
-	   </tr>
-</script>
-<script type="text/template" id="adoption_list_item_template">
-    <tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= date_of_adoption %></td>
-    <td> <%= person.person_name %></td>
-	<td> <%= group.group_name %></td>
-	<td> <%= village.village_name %></td>
-    <td> <%= video.title %></td>
-    <td>
-	<a href="#adoption/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-	</td>
-    </tr>
-</script>
+<!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="adoption_edit_template">
         <fieldset>
                 <legend>Edit Adoption</legend>
@@ -857,31 +746,9 @@
     </tr>
 </script>
 
-<!--////////////////////////////////////////////////// ADOPTION TEMPLATES END ///////////////////////////////////////////////-->
+<!--////////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--////////////////////////////////////////////////// GROUP TEMPLATES START //////////////////////////////////////////////-->
-<script type="text/template" id="group_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Village</th>
-       <th></th>
-	   </tr>
-</script>
-<script type="text/template" id="group_list_item_template">
-    <tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= group_name %></td>
-    <td> <%= village.village_name %></td>
-    <td>
-	<a href="#group/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-	</td>
-    </tr>
-</script>
+<!--////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="group_add_edit_template">
                             <fieldset>
                                 <legend>Add Group</legend>
@@ -934,37 +801,9 @@
 <tr> <th> Person Name</th><th> Father Name</th><th class = "notbold"> Age</th><th> Gender</th><th class="notbold"> Phone No</th></tr>
 </script>
 
-<!--//////////////////////////////////////////////////// GROUP TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
-
-
-<!--///////////////////////////////////////////////////// VIDEO TEMPLATES START //////////////////////////////////////////////-->
-<script type="text/template" id="video_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Title</th>
-	   <th>Village</th>
-	   <th>Start Date</th>
-	   <th>End Date</th>
-       <th></th>
-	   </tr>
-</script>
-<script type="text/template" id="video_list_item_template">
-    <tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= title %></td>
-	<td> <%= village.village_name %></td>
-    <td> <%= video_production_start_date %></td>
-    <td> <%= video_production_end_date %></td>
-    <td>
-	<a href="#video/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-	</td>
-    </tr>
-</script>
+<!--///////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="video_add_edit_template">
                             <fieldset>
                                 <legend>Add Video</legend>
@@ -1129,67 +968,9 @@
                         
 
 </script>
-<!--//////////////////////////////////////////////////// VIDEO TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--/////////////////////////////////////////////////// VILLAGE TEMPLATES START ////////////////////////////////////////////-->
-<script type="text/template" id="village_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Block Name</th>
-       <th>Start Date</th>
-       <th>State</th>
-       <th></th>
-	   </tr>
-</script>
-
-
-<script type="text/template" id="village_list_item_template">
-<tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= village_name %></td>
-    <td> <%= block_name %></td>
-    <td> <%= start_date %></td>
-    <td> <%= state_name %></td>
-    <td>
-        <a href="#village/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
-</tr>
-</script>
-<!--//////////////////////////////////////////////////// VILLAGE TEMPLATES END ///////////////////////////////////////////////-->
-
-<!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
-<script type="text/template" id="person_list_item_template">
-<tr>
-    <%if(typeof(online_id)!="undefined"){%>
-        <td><%= online_id %></td>
-    <%}else{%>    
-        <td>Not uploaded</td>
-    <%}%>        
-    <td><%= person_name %></td>
-    <td> <%= father_name %></td>
-    <td> <%= village.village_name %></td>
-    <td> <%= group.group_name %></td>
-    <td>
-	<a href="#person/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
-</tr>
-</script>
-
-<script type="text/template" id="person_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Father Name</th>
-       <th>Village</th>
-       <th>Group</th>
-       <th></th>
-	   </tr>
-</script>
+<!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
 
 <script type="text/template" id="person_add_edit_template">
         <fieldset>
@@ -1247,7 +1028,7 @@
             </div>
         </fieldset>
 </script>
-<!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
    
 </head>
 

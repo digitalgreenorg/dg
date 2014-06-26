@@ -15,6 +15,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from dg.settings import PERMISSION_DENIED_URL
 
@@ -32,6 +33,7 @@ def social_home(request):
     context= {
         'header': {
             'jsController':'Home',
+            'currentPage':'Home',
             'loggedIn':False
              },
         'language':language,
@@ -145,6 +147,7 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
             filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
     return filters
 
+@csrf_exempt
 def searchFilters(request):
     if request.method == 'GET':
         params = request.GET

@@ -13,9 +13,6 @@
 				{% if vid.adopters %}
 					<div class="question" style="margin-top:0px;">{{ vid.adopters }} adopters </div>
 				{% endif %}
-				{% if vid.viewers %}
-					<div class="question" style="margin-top:0px;">{{ vid.viewers }} viewers </div>
-				{% endif %}
 				</li>
 			{% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}						    
 				</div>							

@@ -138,7 +138,7 @@ def get_user_videos(user_id):
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
     videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
     ###Get videos screened to allow inter partner sharing of videos
-    videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
+    videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(videos_seen))
     
 def get_user_mediators(user_id):
@@ -369,7 +369,7 @@ class VideoResource(BaseResource):
         excludes = ['duration', 'picture_quality ', 'audio_quality', 'editing_quality', 'edit_start_date ', 'edit_start_date', 
                     'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
                     'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
-                    'last_modified', 'viewers','time_created', 'time_modified', 'duration' ]
+                    'last_modified', 'time_created', 'time_modified', 'duration' ]
     
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
