@@ -18,7 +18,9 @@ def save_screening_data(xml_tree):
     error_msg = ''
     xml_data = xml_tree.getElementsByTagName('data')
     for record in xml_data:
+        print 'in save screening_data'
         try:
+            print 'in try 1'
             screening_data = {}
             screening_data['date'] = record.getElementsByTagName('date')[0].firstChild.data
             screening_data['time'] = record.getElementsByTagName('time')[0].firstChild.data
@@ -32,17 +34,21 @@ def save_screening_data(xml_tree):
             screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
             pma_record = []
             for person in screening_data['attendance_record']:
+                print person
                 if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
                     pma = {}
                     pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
-                    pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
+                    if person.getElementsByTagName('interested')[0].firstChild:
+                        pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
+                    else:
+                        pma['interested'] = 0
+                    
                     if person.getElementsByTagName('question_asked')[0].firstChild:
                         pma['question'] = person.getElementsByTagName('question_asked')[0].firstChild.data
                     else:
                         pma['question'] = ""
                     pma_record.append(pma)
             error_msg = 'Successful'
-        
                 
     # time is returned as string, doing funky things to retrieve it in time format  
             temp_time = screening_data['time'].split('.')
@@ -53,6 +59,7 @@ def save_screening_data(xml_tree):
             screening_data['end_time'] = screening_data['end_time'].time() 
             # save screening record
             try:
+                print 'in try 2'
                 screening = Screening ( date = screening_data['date'],
                                         start_time = screening_data['start_time'],
                                         end_time = screening_data['end_time'],
@@ -81,17 +88,21 @@ def save_screening_data(xml_tree):
                     except ValidationError, e:
                         status['pma'] = error_list['PMA_SAVE_ERROR'] 
                         error_msg = unicode(e)
+                        print error_msg
                 else:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                    error_msg = 'Not valid' 
+                    error_msg = 'Not valid'
+                    print error_msg 
                         
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
-           
+                print error_msg
+       
         except Exception as ex:
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
             error_msg = unicode(ex)
+            print error_msg
             
     return status['screening'],error_msg
 
