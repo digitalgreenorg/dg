@@ -10,7 +10,7 @@ class CommCareProjectAdmin(admin.ModelAdmin):
 
 
 class CommCareUserAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['username', 'guid', 'project', 'is_user']
+    fieldsets = [(None,  {'fields': ['username', 'guid', 'project', 'is_user', 'coco_user']
                           }
                   )]
     list_display = ('username', 'project', 'guid', 'is_user')
