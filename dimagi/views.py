@@ -36,6 +36,9 @@ def save_submission(request):
 def save_in_db(submission):
     xml_string = submission.xml_data
     xml_parse = minidom.parseString(xml_string)
+    #Change these variables definitely..Testing the ping from commcare server
+    status = "none"
+    msg = "none"
     if xml_parse.getElementsByTagName('data'):
         data = xml_parse.getElementsByTagName('data')
         try:
