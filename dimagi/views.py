@@ -24,7 +24,8 @@ def save_submission(request):
         submission.save()
     except Exception as ex:
         error = ex
-        raise SubmissionNotSaved("submission not saved")
+        print error
+        raise SubmissionNotSaved("submission not saved"+ str(ex))
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
@@ -51,7 +52,8 @@ def save_in_db(submission):
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
         except Exception as ex:
             error = ex
-            raise SubmissionNotSaved("submission not saved")
+            print error
+            raise SubmissionNotSaved("submission not saved in db"+str(ex))
     elif devicereport:
         status = error_list['DEVICE_REPORT']
         msg = 'device_report'

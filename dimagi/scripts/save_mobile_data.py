@@ -11,12 +11,10 @@ def save_screening_data(xml_tree):
     status = {}
     error_msg = ''
     xml_data = xml_tree.getElementsByTagName('data')
-    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
     cocouser = commcare_user.coco_user
     for record in xml_data:
-        print 'in save screening_data'
         try:
-            print 'in try 1'
             screening_data = {}
             screening_data['date'] = record.getElementsByTagName('date')[0].firstChild.data
             screening_data['time'] = record.getElementsByTagName('time')[0].firstChild.data
@@ -30,7 +28,6 @@ def save_screening_data(xml_tree):
             screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
             pma_record = []
             for person in screening_data['attendance_record']:
-                print person
                 if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
                     pma = {}
                     pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
@@ -55,7 +52,6 @@ def save_screening_data(xml_tree):
             screening_data['end_time'] = screening_data['end_time'].time() 
             # save screening record
             try:
-                print 'in try 2'
                 screening = Screening ( date = screening_data['date'],
                                         start_time = screening_data['start_time'],
                                         end_time = screening_data['end_time'],
@@ -107,7 +103,7 @@ def save_screening_data(xml_tree):
 
 def save_adoption_data(xml_tree):
     xml_data=xml_tree.getElementsByTagName('data')
-    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
     cocouser = commcare_user.coco_user
     error_msg = ''
     for record in xml_data:
