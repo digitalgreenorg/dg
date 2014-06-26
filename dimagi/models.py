@@ -4,6 +4,7 @@ from django.db import models
 from poster.streaminghttp import register_openers
 from poster.encode import multipart_encode
 
+from coco.models import CocoUser
 from people.models import Person
 from geographies.models import Village
 
@@ -60,6 +61,7 @@ class CommCareProject(models.Model):
 class CommCareUser(models.Model):
     username = models.CharField(max_length=40)
     guid = models.CharField(max_length=100)
+    coco_user = models.ForeignKey(CocoUser)
     project = models.ForeignKey(CommCareProject)
     assigned_villages = models.ManyToManyField(Village, through='CommCareUserVillage')
     is_user = models.BooleanField(default=False)

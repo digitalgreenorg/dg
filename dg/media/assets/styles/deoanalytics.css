@@ -1,0 +1,238 @@
+.myicon {
+	width: 14px;
+	height: 11px;
+	top: 10px;
+	right: 10px;
+	background-position: -86px -567px;
+}
+.leftrelative {
+	position:relative; 
+	float:left;
+}
+
+.fleft {
+	float:left;
+}
+
+.fright {
+	float:right;
+}
+
+.boxdesign
+{
+	clear:both;
+	/*border: 1px solid #c2c1bc;
+	border-width: 3px;*/
+	float: left;
+	margin: 90px 10px;
+	padding: 10px;
+}
+
+.bigfontsize
+{
+	font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+	font-size: 20px;
+}
+
+#dateshow
+{
+	margin:10px;
+}
+
+.pnbtns
+{
+	width: 25px;
+}
+
+.hidden
+{
+	visibility: hidden;
+}
+
+.outer-center {
+    float: right;
+    right: 50%;
+    position: relative;
+    margin-top:10px;
+}
+.inner-center {
+    float: right;
+    right: -50%;
+    position: relative;
+}
+.clear {
+    clear: both;
+}
+
+#thegrid {
+	width:100%;
+	background: #e1ded9;
+	padding-bottom:20px;
+	padding-left:10px;
+}
+
+.gridleft
+{
+	width: 25%;
+	display: inline-block;
+	float: left;
+	margin-top:10px;
+}
+
+.gridright
+{
+	width: 75%;
+	display: inline-block;
+	float: left;	
+}
+
+#chartcontainer {
+	float: left; 
+	margin: 10px; 
+	padding: 10px; 
+	height: 400px;
+}
+
+#databox
+{
+	width:85%;
+}
+
+#photobox
+{
+	margin-left:45px;
+}
+
+.fontforbox {
+	font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+	font-size: 13px;
+}
+
+.makecursor {
+	cursor: pointer; cursor: hand;
+}
+
+.blockdisplay
+{
+	display:block;
+}
+
+
+
+/* my select */
+.my-select,
+.my-select .selected-item-label,
+.my-select .options .item {
+    width: 126px;
+    height: 20px;
+}
+
+.my-select {
+    margin-right: 42px;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+.my-select-container {
+    position: absolute;
+
+    text-align: left;
+    border: 1px solid #dbdad5;
+    background: #ffffff;
+
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    -moz-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 5px;
+}
+
+.my-select .selected-item-label,
+.my-select .options .item {
+    padding: 5px 20px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.my-select select {
+    display: none;
+}
+
+.my-select .selected-item-label {
+    color: #047d0a;
+    text-transform: uppercase;
+}
+
+/*.my-select .options {
+    display: none;
+}*/
+
+.my-select .options .item {
+    border-top: 1px solid #dbdad5;
+}
+
+.my-select .options .item:hover {
+    color: #047d0a;
+    background-color: #f3f9ed;
+}
+
+.my-select .options .item.selected {
+    font-weight: bold;
+}
+
+.nodisplay {
+	display:none;
+}
+
+.my-icon {
+    position: absolute;
+    background-image: url(../images/icon-sprite.png);
+    background-repeat: no-repeat;
+}
+
+.my-select .my-icon {
+    width: 14px;
+    height: 11px;
+    top: 10px;
+    right: 10px;
+    background-position: -86px -567px;
+}
+
+.deoselected {
+	background-color: #f3f9ed;
+}
+
+.deonotselected {
+	background-color: #ffffff;
+}
+
+.layoutclass {
+	background:white; 
+	padding-top:50px;
+}
+
+.yscroll {
+	overflow-y:scroll;
+}
+
+.listpadding {
+	padding:0 10px;
+}
+
+#maindiv {
+	margin-top:100px;
+}
+
+.listheight {
+	max-height:125px;
+}
+
+.h-overflow {
+	overflow:hidden;
+}
+
+#deolist {
+	z-index: 10;
+	position: relative;
+}

@@ -1,22 +1,18 @@
-import site, sys
-sys.path.append('/home/ubuntu/code/dg_test')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
-from xml.dom import minidom
+from datetime import datetime, timedelta
 import time
-from datetime import datetime,timedelta
-from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
-from dimagi.models import XMLSubmission
-from dimagi.models import error_list
+
 from django.core.exceptions import ValidationError
+
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from dimagi.models import CommCareUser, error_list
 
 
 def save_screening_data(xml_tree):
     status = {}
     error_msg = ''
     xml_data = xml_tree.getElementsByTagName('data')
+    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    cocouser = commcare_user.coco_user
     for record in xml_data:
         print 'in save screening_data'
         try:
@@ -65,7 +61,9 @@ def save_screening_data(xml_tree):
                                         end_time = screening_data['end_time'],
                                         location = 'Mobile',
                                         village_id = screening_data['selected_village'],
-                                        animator_id = screening_data['selected_mediator'] )
+                                        animator_id = screening_data['selected_mediator'],
+                                        partner = cocouser.partner,
+                                        user_created = cocouser.user )
               
                 if screening.full_clean() == None: # change to full_clean() 
                     screening.save()
@@ -109,18 +107,22 @@ def save_screening_data(xml_tree):
 
 def save_adoption_data(xml_tree):
     xml_data=xml_tree.getElementsByTagName('data')
+    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    cocouser = commcare_user.coco_user
     error_msg = ''
     for record in xml_data:
         try:
-            screening_data = {}
-            screening_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
-            screening_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
-            screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
+            adoption_data = {}
+            adoption_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
+            adoption_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
+            adoption_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
             
             try:
-                pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
-                                     date_of_adoption = screening_data['date'],
-                                     video_id = screening_data['selected_video'],
+                pap = PersonAdoptPractice(person_id = adoption_data['selected_person'],
+                                     date_of_adoption = adoption_data['date'],
+                                     video_id = adoption_data['selected_video'],
+                                     partner = cocouser.partner,
+                                     user_created = cocouser.user
                                      )
             
                 if pap.full_clean() == None:
@@ -136,18 +138,3 @@ def save_adoption_data(xml_tree):
             error_msg = unicode(ex)
 
     return status, error_msg
-
-
-
-if __name__ == "__main__":
-    xml_file = r'C:\Users\Yash\Desktop\trial.xml'
-    xml_parse = minidom.parse(xml_file)
-    data = xml_parse.getElementsByTagName('data')
-    if data[0].attributes["name"].value.lower() == 'screening' :
-        status,msg = save_screening_data(xml_parse)
-    elif data[0].attributes["name"].value.lower() == 'adoption' :
-        status,msg = save_adoption_data(xml_parse)
-    else :
-        status = -1
-    print status 
-    print msg
