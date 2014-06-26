@@ -127,18 +127,3 @@ def save_adoption_data(xml_tree):
             error_msg = unicode(ex)
 
     return status, error_msg
-
-
-
-if __name__ == "__main__":
-    xml_file = r'C:\Users\Yash\Desktop\trial.xml'
-    xml_parse = minidom.parse(xml_file)
-    data = xml_parse.getElementsByTagName('data')
-    if data[0].attributes["name"].value.lower() == 'screening' :
-        status,msg = save_screening_data(xml_parse)
-    elif data[0].attributes["name"].value.lower() == 'adoption' :
-        status,msg = save_adoption_data(xml_parse)
-    else :
-        status = -1
-    print status 
-    print msg
