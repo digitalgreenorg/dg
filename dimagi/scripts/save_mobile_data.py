@@ -1,16 +1,10 @@
-import site, sys
-sys.path.append('/home/ubuntu/code/dg_test')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
-from xml.dom import minidom
+from datetime import datetime, timedelta
 import time
-from datetime import datetime,timedelta
-from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
-from dimagi.models import XMLSubmission
-from dimagi.models import error_list
+
 from django.core.exceptions import ValidationError
+
+from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from dimagi.models import CommCareUser, error_list
 
 
 def save_screening_data(xml_tree):
