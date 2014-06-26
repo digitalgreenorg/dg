@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from dimagi.models import CommCareUser, error_list
+from dimagi.scripts.exception_email import sendmail
 
 
 def save_screening_data(xml_tree):
@@ -81,8 +82,8 @@ def save_screening_data(xml_tree):
                                 error_msg = 'Not valid' 
                     except ValidationError, e:
                         status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                        error_msg = unicode(e)
-                        print error_msg
+                        error = "Error in saving Pma " + str(e)
+                        sendmail("Exception in Mobile COCO", error)
                 else:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                     error_msg = 'Not valid'
@@ -90,13 +91,13 @@ def save_screening_data(xml_tree):
                         
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                error_msg = unicode(ex)
-                print error_msg
+                error = "Error in saving Screening " + str(ex)
+                sendmail("Exception in Mobile COCO", error)
        
         except Exception as ex:
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
-            error_msg = unicode(ex)
-            print error_msg
+            error = "Error in Reading Screening " + str(e)
+            sendmail("Exception in Mobile COCO", error)
             
     return status['screening'],error_msg
 
@@ -126,11 +127,13 @@ def save_adoption_data(xml_tree):
                     status = 1
                     error_msg = 'Successful'
             except ValidationError ,e:
-                status = error_list['ADOPTION_SAVE_ERROR'] 
-                error_msg = unicode(e)
+                status = error_list['ADOPTION_SAVE_ERROR']
+                error = "Error in saving Adoption " + str(e)
+                sendmail("Exception in Mobile COCO", error)
             
         except Exception as ex:
-            status = error_list['ADOPTION_READ_ERROR'] 
-            error_msg = unicode(ex)
+            status = error_list['ADOPTION_READ_ERROR']
+            error = "Error in reading Adoption " + str(e)
+            sendmail("Exception in Mobile COCO", error) 
 
     return status, error_msg

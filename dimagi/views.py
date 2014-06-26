@@ -6,6 +6,8 @@ from xml.dom import minidom
 
 from models import XMLSubmission
 from scripts import save_mobile_data
+from dimagi.scripts.exception_email import sendmail
+
 
 class SubmissionNotSaved(Exception):
     pass
@@ -14,18 +16,15 @@ class SubmissionNotSaved(Exception):
 @csrf_exempt
 def save_submission(request):
     submission = XMLSubmission()
-    print 'here 1'
     if not request.raw_post_data:
-        print 'in here'
         return HttpResponse(status=201)
     submission.xml_data = request.raw_post_data
     submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     try:
         submission.save()
     except Exception as ex:
-        error = ex
-        print error
-        raise SubmissionNotSaved("submission not saved"+ str(ex))
+        error = "Error in saving submission in save_submission function " + str(ex)
+        sendmail("Exception in Mobile COCO", error)
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
@@ -33,7 +32,8 @@ def save_submission(request):
     try:
         submission.save()
     except Exception as ex:
-        error = ex
+        error = "Error in saving submission in save_submission function " + str(ex)
+        sendmail("Exception in Mobile COCO", error)
     return HttpResponse(status=201)
 
 
@@ -51,10 +51,9 @@ def save_in_db(submission):
             elif data[0].attributes["name"].value.lower() == 'adoption' :
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
         except Exception as ex:
-            error = ex
-            print error
-            raise SubmissionNotSaved("submission not saved in db"+str(ex))
-    elif devicereport:
+            error = "Error in saving submission in save_in_db function " + str(ex)
+            sendmail("Exception in Mobile COCO", error)
+    elif xml_parse.getElementsByTagName('device_report'):
         status = error_list['DEVICE_REPORT']
         msg = 'device_report'
     else:
