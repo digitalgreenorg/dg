@@ -14,6 +14,8 @@ class SubmissionNotSaved(Exception):
 @csrf_exempt
 def save_submission(request):
     submission = XMLSubmission()
+    if not request.raw_post_data:
+        return HttpResponse(status=201)
     submission.xml_data = request.raw_post_data
     submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     try:
