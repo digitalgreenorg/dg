@@ -19,7 +19,7 @@ def save_submission(request):
     try:
         submission.save()
     except Exception as ex:
-        raise SubmissionNotSaved(ex)
+        error = ex
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
