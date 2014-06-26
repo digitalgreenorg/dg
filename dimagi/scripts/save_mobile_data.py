@@ -11,6 +11,8 @@ def save_screening_data(xml_tree):
     status = {}
     error_msg = ''
     xml_data = xml_tree.getElementsByTagName('data')
+    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    cocouser = commcare_user.coco_user
     for record in xml_data:
         try:
             screening_data = {}
@@ -52,7 +54,9 @@ def save_screening_data(xml_tree):
                                         end_time = screening_data['end_time'],
                                         location = 'Mobile',
                                         village_id = screening_data['selected_village'],
-                                        animator_id = screening_data['selected_mediator'] )
+                                        animator_id = screening_data['selected_mediator'],
+                                        partner = cocouser.partner,
+                                        user_created = cocouser.user )
               
                 if screening.full_clean() == None: # change to full_clean() 
                     screening.save()
