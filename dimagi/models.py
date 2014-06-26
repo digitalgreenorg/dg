@@ -18,7 +18,7 @@ error_list = dict({'UNIDENTIFIED_FORM'     : -1,
 
 class XMLSubmission(models.Model):
     submission_time = models.DateTimeField(editable=False)
-    modification_time = models.DateTimeField()
+    modification_time = models.DateTimeField(auto_now_add=True)
     xml_data = models.TextField()
     error_code = models.IntegerField(null=True)
     error_message = models.TextField(null=True)
