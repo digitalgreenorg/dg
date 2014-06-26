@@ -7,12 +7,19 @@ from xml.dom import minidom
 from models import XMLSubmission
 from scripts import save_mobile_data
 
+class SubmissionNotSaved(Exception):
+    pass
+
+
 @csrf_exempt
 def save_submission(request):
     submission = XMLSubmission()
     submission.xml_data = request.raw_post_data
     submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    submission.save()
+    try:
+        submission.save()
+    except Exception as ex:
+        raise SubmissionNotSaved(ex)
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
