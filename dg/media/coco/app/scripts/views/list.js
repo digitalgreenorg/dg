@@ -91,7 +91,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 return cell;
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
-                row.push('<a href="#' + this.entity_config.entity_name + '/edit/' + model_object['id'] + '" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>');
+                row.push('<a href="#' + this.entity_config.entity_name + '/edit/' + model_object['id'] + '" class="edit" title="Edit this entry"><i class="glyphicon glyphicon-pencil"></i></a>');
 
             }
             return row;
