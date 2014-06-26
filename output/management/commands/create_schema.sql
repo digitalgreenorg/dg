@@ -1,17 +1,18 @@
 -- Normalized version of digitalgreen.SCREENING
 DROP TABLE IF EXISTS `screening_myisam`;
 CREATE TABLE `screening_myisam` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `screening_id` bigint(20) unsigned NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `screening_id` int unsigned NOT NULL,
   `date` date NOT NULL,
-  `video_id` bigint(20) unsigned DEFAULT NULL,
-  `practice_id` bigint(20) unsigned DEFAULT NULL,
-  `group_id` bigint(20) unsigned DEFAULT NULL,
-  `village_id` bigint(20) unsigned DEFAULT NULL,
-  `block_id` bigint(20) unsigned DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `state_id` bigint(20) unsigned DEFAULT NULL,
-  `country_id` bigint(20) unsigned DEFAULT NULL,
+  `video_id` int unsigned DEFAULT NULL,
+  `practice_id` int unsigned DEFAULT NULL,
+  `group_id` int unsigned DEFAULT NULL,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 CREATE INDEX screening_myisam_screening_id ON screening_myisam(screening_id);
@@ -28,21 +29,22 @@ CREATE INDEX screening_myisam_country_id ON screening_myisam(country_id, date);
 -- Normalized version of digitalgreen.VIDEO
 DROP TABLE IF EXISTS `video_myisam`;
 CREATE TABLE `video_myisam` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `video_id` bigint(20) unsigned NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `video_id` int unsigned NOT NULL,
   `video_production_end_date` date NOT NULL,
   `prod_duration` int(5) DEFAULT NULL,
-  `practice_id` bigint(20) unsigned DEFAULT NULL,
+  `practice_id` int unsigned DEFAULT NULL,
   `video_type` int(11) NOT NULL,
-  `language_id` bigint(20) unsigned DEFAULT NULL,
-  `actor_id` bigint(20) unsigned DEFAULT NULL,
+  `language_id` int unsigned DEFAULT NULL,
+  `actor_id` int unsigned DEFAULT NULL,
   `gender` varchar(1) NOT NULL,
   `actor_type` varchar(1) NOT NULL,
-  `village_id` bigint(20) unsigned DEFAULT NULL,
-  `block_id` bigint(20) unsigned DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `state_id` bigint(20) unsigned DEFAULT NULL,
-  `country_id` bigint(20) unsigned DEFAULT NULL,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 CREATE INDEX video_myisam_video_id ON video_myisam(video_id);
@@ -59,17 +61,18 @@ CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_productio
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
 DROP TABLE IF EXISTS `person_meeting_attendance_myisam`;
 CREATE TABLE `person_meeting_attendance_myisam` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `pma_id` bigint(20) unsigned NOT NULL,
-  `person_id` bigint(20) unsigned DEFAULT NULL,
-  `screening_id` bigint(20) unsigned DEFAULT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `pma_id` int unsigned NOT NULL,
+  `person_id` int unsigned DEFAULT NULL,
+  `screening_id` int unsigned DEFAULT NULL,
   `gender` varchar(1) NOT NULL,
   `date` date NOT NULL,
-  `village_id` bigint(20) unsigned DEFAULT NULL,
-  `block_id` bigint(20) unsigned DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `state_id` bigint(20) unsigned DEFAULT NULL,
-  `country_id` bigint(20) unsigned DEFAULT NULL,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
@@ -86,16 +89,17 @@ CREATE INDEX person_meeting_attendance_myisam_country_id ON person_meeting_atten
 DROP TABLE IF EXISTS `person_adopt_practice_myisam`;
 CREATE TABLE `person_adopt_practice_myisam` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `adoption_id` bigint(20) unsigned NOT NULL,
-  `person_id` bigint(20) unsigned DEFAULT NULL,
-  `video_id` bigint(20) unsigned DEFAULT NULL,
+  `adoption_id` int unsigned NOT NULL,
+  `person_id` int unsigned DEFAULT NULL,
+  `video_id` int unsigned DEFAULT NULL,
   `gender` varchar(1) NOT NULL,
   `date_of_adoption` date NOT NULL,
-  `village_id` bigint(20) unsigned DEFAULT NULL,
-  `block_id` bigint(20) unsigned DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `state_id` bigint(20) unsigned DEFAULT NULL,
-  `country_id` bigint(20) unsigned DEFAULT NULL,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
@@ -131,13 +135,14 @@ CREATE TABLE `village_precalculation_copy` (
   `total_active_attendees` int(10) unsigned NOT NULL DEFAULT '0',
   `total_adoption_by_active` int(10) unsigned NOT NULL DEFAULT '0',
   `total_video_seen_by_active` int(10) unsigned NOT NULL DEFAULT '0',
-  `village_id` bigint(20) unsigned DEFAULT NULL,
-  `block_id` bigint(20) unsigned DEFAULT NULL,
-  `district_id` bigint(20) unsigned DEFAULT NULL,
-  `state_id` bigint(20) unsigned DEFAULT NULL,
-  `country_id` bigint(20) unsigned DEFAULT NULL,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `village_precalculation_village_id_2919c23_uniq` (`village_id`,`date`),
+  UNIQUE KEY `village_precalculation_village_id_2919c23_uniq` (`village_id`,`date`,`partner_id`),
   KEY `village_precalculation_1290e829` (`village_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 

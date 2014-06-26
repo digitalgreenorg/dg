@@ -119,9 +119,8 @@ function() {
 
     var village_configs = {
         'page_header': 'Village',
-        'list_table_header_template': 'village_table_template', 
-        'list_table_row_template': 'village_list_item_template',
         'rest_api_url': '/coco/api/v2/village/',
+        'list_elements': [{'element':'id'},{'element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'element':'state_name'}],
         'entity_name': 'village',
         'dashboard_display': {
             listing: true,
@@ -132,11 +131,10 @@ function() {
 
     var mediator_configs = {
         'page_header': 'Mediator',
-        'list_table_header_template': 'mediator_table_template',
-        'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
+        'list_elements': [{'element':'id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}],
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
@@ -211,11 +209,10 @@ function() {
 
     var video_configs = {
         'page_header': 'Video',
-        'list_table_header_template': 'video_table_template',
-        'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
+        'list_elements': [{'element':'id'},{'element':'title'},{'element':'village.village_name'},{'element':'video_production_start_date'},{'element':'video_production_end_date'}],
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
@@ -375,12 +372,11 @@ function() {
 
     var group_configs = {
         'page_header': 'Group',
-        'list_table_header_template': 'group_table_template',
-        'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
         'entity_name': 'group',
+        'list_elements': [{'element':'id'},{'element':'group_name'},{'element':'village.village_name'}],
         'inc_table_name': 'persongroup',
         'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
@@ -464,10 +460,9 @@ function() {
 
     var screening_configs = {
         'page_header': 'Screening',
-        'list_table_header_template': 'screening_table_template',
-        'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
+        'list_elements': [{'element':'id'},{'element':'date'},{'element':'animator.name'},{'element':'village.village_name'},{'subelement':'group_name','element':'farmer_groups_targeted'},{'subelement':'title','element':'videoes_screened'}],
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
@@ -664,13 +659,12 @@ function() {
 
     var adoption_configs = {
         'page_header': 'Adoption',
-        'list_table_header_template': 'adoption_table_template',
-        'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
+        'list_elements': [{'element':'id'},{'element':'date_of_adoption'},{'element':'person.person_name'},{'element':'group.group_name'},{'element':'village.village_name'},{'element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
@@ -792,10 +786,9 @@ function() {
 
     var person_configs = {
         'page_header': 'Person',
-        'list_table_header_template': 'person_table_template',
-        'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
+        'list_elements': [{'element':'id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
         'rest_api_url': '/coco/api/v2/person/',
         'entity_name': 'person',
         'foreign_entities': {

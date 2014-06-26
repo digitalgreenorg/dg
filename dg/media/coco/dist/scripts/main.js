@@ -8573,109 +8573,138 @@ break;case "mouseover":this.domElement&&this.cssEffects&&this.recoverActive&&thi
 define("zeroclipboard", function(){});
 
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone','tabletools', 'zeroclipboard'], function($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'tabletools', 'zeroclipboard'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+
 
     var ListView = Backbone.Layout.extend({
 
         template: "#list_view_template",
 
         //params passed contains the name of the entity whose listing is to be shown
-        initialize: function(params) {
+        initialize: function (params) {
             this.entity_config = all_configs[params.entity_name];
             //TODO: if !entity_config, handle error etc
-            //TODO: instead of html of header, we can ask for coloumn headers as array
-            //get the template for table header
-            this.table_header = $('#' + this.entity_config.list_table_header_template)
-                .html();
-            //get the template for a row of table    
-            this.row_template = _.template($('#' + this.entity_config.list_table_row_template)
-                .html());
             //now context of all fuctions in this view would always be the view object
-            _.bindAll(this); 
+            _.bindAll(this);
             this.render();
         },
 
-        serialize: function() {
+        serialize: function () {
             //send these to the list page template
             return {
                 page_header: this.entity_config.page_header,
-                table_header: this.table_header
             };
         },
 
-        afterRender: function() {
+        afterRender: function () {
             //Fetch entity's full data from offline DB and call render_data when fetched
             Offline.fetch_collection(this.entity_config.entity_name)
                 .done(this.render_data)
-                .fail(function() {
-                notifs_view.add_alert({
-                    notif_type: "error",
-                    message: "Error reading data for listing."
+                .fail(function () {
+                    notifs_view.add_alert({
+                        notif_type: "error",
+                        message: "Error reading data for listing."
+                    });
                 });
+        },
+        
+        get_row_header: function () {
+            var list_elements = this.entity_config.list_elements;
+            var header_row = $.map(list_elements, function (column_definition) {
+                var header = "";
+                if ('header' in column_definition) {
+                    header = column_definition["header"];
+                }
+                else if ('element' in column_definition) {
+                    // Split column_definition to get the very last field.
+                    // For instance, extract block_name from village.block.block_name
+                    element = column_definition["element"].split(".").pop().replace(/_/g, " ");
+                    header = element[0].toUpperCase() + element.slice(1);
+                }
+                return {sTitle: header};
             });
+            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+                header_row.push({sTitle: "Edit"});
+            }
+            return header_row;
+        },
+        
+        get_row: function (model_object) {
+            var list_elements = this.entity_config.list_elements;
+            var row = $.map(list_elements, function (column_definition) {
+                var cell = '';
+                if ('element' in column_definition) {
+                    if ('subelement' in column_definition) {
+                        var subelement_definition = column_definition['subelement'];
+                        cell = $.map(model_object[column_definition['element']],function (val) {
+                            return val[subelement_definition];
+                        }).join("; ");
+                    }
+                    else {
+                        var element_definition = column_definition['element'];
+                        var element_parts = element_definition.split(".");
+                        var object = model_object;
+                        for (var i = 0; i < element_parts.length; i++) {
+                            // To check if the entry is made online or offline. Display "Not uploaded in place of id in case of offline entry"
+                            if(element_parts.length == 1 && element_parts[i] == "id" && object.online_id == undefined){
+                                object = "Not Uploaded"
+                            }
+                            else{
+                                object = object[element_parts[i]];
+                            }
+                        }
+                        if (object != null) {
+                            cell = object;
+                        }
+                    }
+                }
+                else {
+                    // Developer needs to be told that 'element' is compulsory.
+                    alert('Error: Add element in list_elements parameter in configs.js');
+                }
+                return cell;
+            });
+            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+                row.push('<a href="#' + this.entity_config.entity_name + '/edit/' + model_object['id'] + '" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>');
+
+            }
+            return row;
         },
 
-        
-        render_data: function(entity_collection) {
+        render_data: function (entity_collection) {
+            // render data and call function get_row() to make array_table_values which is assigned to aaData later to
+            // fill the table with the relevant values.
+            var self = this;
             console.log("in render_data...change in collection...rendering list view");
-            //create table body in memory
-            tbody = $('<tbody>');
-            tbody.html('');
-            //iterate over the collection, fill row template with each object and append the row to table
-            entity_collection.each(function(model) {
-                tbody.append(this.row_template(model.toJSON()));
-            }, this);
-            //put table body in DOM
-            this.$('#list_table')
-                .append(tbody);
-            //initialize datatable lib on the table    
+            var array_table_values = $.map(entity_collection.toJSON(), function (model) {
+                return [self.get_row(model)];
+            });
+            aoColumns = this.get_row_header();
             this.$('#list_table')
                 .dataTable({
-            		"sDom": 'T<"clear">lfrtip',
-            		"oTableTools": {
-            				"sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
-            				"aButtons": [
-            				             	{
-											    "sExtends":    "copy",
-											    "sButtonText": "Copy to Clipboard"
-            				             	},
-            				                {
-            				                    "sExtends":    "xls",
-            				                    "sButtonText": "Download in Excel"
-            				                }
-            				            ]
-            				
-            			}
-            	});
+                    "sDom": 'T<"clear">lfrtip',
+                    "bDeferRender": true,
+                    "aoColumns": aoColumns,
+                    "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
+                    "oTableTools": {
+                        "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+                        "aButtons": [
+                            {
+                                "sExtends": "copy",
+                                "sButtonText": "Copy to Clipboard"
+                            },
+                            {
+                                "sExtends": "xls",
+                                "sButtonText": "Download in Excel"
+                            }
+                        ]
+
+                    }
+                });
             $("#loaderimg")
                 .hide();
-			$("#sort-helptext").show();
-
-            //alternate 1 - using raw string to build table rows
-            //     $tbody = this.$("tbody");
-            //     $tbody.html('');
-            //     var all_items= '';
-            //     this.collection.each(function(model) {
-            //         all_items+=(this.row_template(model.toJSON()));
-            //     }, this);
-            //     // console.log(all_items);
-            //     $tbody.html(all_items);
-            ////////////
-
-            //alternate 2 - using a separate view for each row
-            //     this.collection.each(function(model) {
-            //         tbody.append(new ListItemView({
-            //             model: model,
-            //             entity_config: this.entity_config,
-            //             appRouter: this.appRouter
-            //             
-            //         })
-            //             .render()
-            //             .el);
-            //     }, this);
-            ////////////
-        },
-
+            $("#sort-helptext").show();
+        }
     });
     return ListView;
 });
@@ -9748,7 +9777,7 @@ require.config({
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
-        'tabletools': 'libs/tabletools_media/js/Tabletools',
+        'tabletools': 'libs/tabletools_media/js/TableTools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
         'configs': '../../../configs',
     },
