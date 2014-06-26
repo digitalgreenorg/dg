@@ -96,18 +96,22 @@ def save_screening_data(xml_tree):
 
 def save_adoption_data(xml_tree):
     xml_data=xml_tree.getElementsByTagName('data')
+    commcare_user = CommCareUser.objects.get(guid = str(xml_data.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
+    cocouser = commcare_user.coco_user
     error_msg = ''
     for record in xml_data:
         try:
-            screening_data = {}
-            screening_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
-            screening_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
-            screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
+            adoption_data = {}
+            adoption_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
+            adoption_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
+            adoption_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
             
             try:
-                pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
-                                     date_of_adoption = screening_data['date'],
-                                     video_id = screening_data['selected_video'],
+                pap = PersonAdoptPractice(person_id = adoption_data['selected_person'],
+                                     date_of_adoption = adoption_data['date'],
+                                     video_id = adoption_data['selected_video'],
+                                     partner = cocouser.partner,
+                                     user_created = cocouser.user
                                      )
             
                 if pap.full_clean() == None:
