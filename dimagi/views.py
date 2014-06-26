@@ -64,29 +64,34 @@ def update_submission(obj):
     else:
         data = minidom.parseString(obj.xml_data)
         if data.getElementsByTagName('data'):
-            type = data.getElementsByTagName('data')[0].attributes['name'].value
-            if type.lower() == 'screening form' or type.lower() == 'screening':
-                type= "Screening"
-            elif type.lower() == 'adoption form' or type.lower() == 'adoption':
-                type= "Adoption"
-            
-            obj.type = type
-            
-            version = data.getElementsByTagName('n1:appVersion')[0].childNodes[0].nodeValue
-            version = int(version.split('App #')[1].split(' b')[0])
-            obj.app_version = version
-            
-            obj.username = str(data.getElementsByTagName('n0:username')[0].childNodes[0].nodeValue)
-            
-            start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
-            start_date = str(start[0])
-            start_time = str(start[1].split('.')[0])
-            obj.start_time = start_date+" "+start_time
-            
-            end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
-            end_date = str(end[0])
-            end_time = str(end[1].split('.')[0])
-            obj.end_time = end_date+" "+end_time
+            try:
+                type = data.getElementsByTagName('data')[0].attributes['name'].value
+                if type.lower() == 'screening form' or type.lower() == 'screening':
+                    type= "Screening"
+                elif type.lower() == 'adoption form' or type.lower() == 'adoption':
+                    type= "Adoption"
+                
+                obj.type = type
+                
+                version = data.getElementsByTagName('n1:appVersion')[0].childNodes[0].nodeValue
+                version = int(version.split('App #')[1].split(' b')[0])
+                obj.app_version = version
+                
+                obj.username = str(data.getElementsByTagName('n0:username')[0].childNodes[0].nodeValue)
+                
+                start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
+                start_date = str(start[0])
+                start_time = str(start[1].split('.')[0])
+                obj.start_time = start_date+" "+start_time
+                
+                end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
+                end_date = str(end[0])
+                end_time = str(end[1].split('.')[0])
+                obj.end_time = end_date+" "+end_time
+            except Exception as ex:
+                error = ex
+                obj.type = "Error"
+                obj.app_version = 0
 
         elif data.getElementsByTagName('device_report'):
             obj.type = "Report"
