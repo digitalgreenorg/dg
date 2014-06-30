@@ -8,7 +8,9 @@ from coco.models import CocoUser
 from people.models import Person
 from geographies.models import Village
 
-error_list = dict({'UNIDENTIFIED_FORM'     : -1,
+error_list = dict({
+                   'SUCCESS'               : 0,
+                   'UNIDENTIFIED_FORM'     : -1,
                    'SCREENING_SAVE_ERROR'  : -2,
                    'SCREENING_READ_ERROR'  : -3,
                    'ADOPTION_SAVE_ERROR'   : -4,

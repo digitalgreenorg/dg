@@ -21,29 +21,19 @@ def save_submission(request):
         return HttpResponse(status=201)
     submission.xml_data = request.raw_post_data
     submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    try:
-        submission.save()
-    except Exception as ex:
-        error = "Error in saving submission in save_submission function " + str(ex)
-        sendmail("Exception in Mobile COCO Line 28", error)
+    submission.save()
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
     update_submission(submission)
-    try:
-        submission.save()
-    except Exception as ex:
-        error = "Error in saving submission in save_submission function " + str(ex)
-        sendmail("Exception in Mobile COCO Line 39", error)
+    submission.save()
     return HttpResponse(status=201)
-
 
 def save_in_db(submission):
     xml_string = submission.xml_data
     xml_parse = minidom.parseString(xml_string)
-    #Change these variables definitely..Testing the ping from commcare server
-    status = "none"
-    msg = "none"
+    status = error_list['SUCCESS']
+    msg = "No error."
     if xml_parse.getElementsByTagName('data'):
         data = xml_parse.getElementsByTagName('data')
         try:
@@ -53,13 +43,13 @@ def save_in_db(submission):
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
         except Exception as ex:
             error = "Error in saving submission in save_in_db function " + str(ex)
-            sendmail("Exception in Mobile COCO Line 59", error)
+            sendmail("Exception in Mobile COCO", error)
     elif xml_parse.getElementsByTagName('device_report'):
         status = error_list['DEVICE_REPORT']
         msg = 'device_report'
     else:
         status = error_list['UNIDENTIFIED_FORM']
-        msg = 'error in form'    
+        msg = 'Unidentified form. No data tag.'
     return status, msg
 
 
