@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:vellum="http://commcarehq.org/xforms/vellum">
 	<h:head>
 		<h:title>Screening Form</h:title>
 		<model>
@@ -12,6 +12,7 @@
 					<selected_video />
 					<additional_selected_video />
 					<listofvideos />
+					<listoftopvideos />
 					<selected_mediator />
 					<attendee_ids />
 					<number_of_attendees_display />
@@ -34,17 +35,19 @@
 			<instance id="video" src="jr://fixture/item-list:video"></instance>
 			<instance id="unique_video" src="jr://fixture/item-list:unique_video"></instance>
 			<instance id="casedb" src="jr://instance/casedb"></instance>
-			<bind nodeset="/data/date" type="xsd:date" required="true()" />
+			<bind nodeset="/data/date" type="xsd:date" constraint=". &lt;= today()" jr:constraintMsg="jr:itext('date-constraintMsg')" required="true()" />
 			<bind nodeset="/data/time" type="xsd:time" required="true()" />
 			<bind nodeset="/data/selected_village" required="true()" />
 			<bind nodeset="/data/selected_group" required="true()" />
 			<bind nodeset="/data/selected_video" required="true()" />
-			<bind nodeset="/data/additional_selected_video" relevant="/data/selected_video = 0" required="true()"/>
-			<bind nodeset="/data/listofvideos" calculate="if(/data/selected_video = 0, join(' ', instance('unique_video')/unique_video_list/unique_video[id != 0]/id), join(' ', instance('video')/video_list/video[date(low) &lt;=/data/date and date(high) &gt;=/data/date]/id))" />
+			<bind nodeset="/data/additional_selected_video" relevant="/data/selected_video = 0" required="true()" />
+			<bind nodeset="/data/listofvideos" calculate="join(' ', instance('unique_video')/unique_video_list/unique_video[id != 0]/id)" />
+			<bind nodeset="/data/listoftopvideos" calculate="join(' ', instance('video')/video_list/video[date(low) &lt;=/data/date and date(high) &gt;=/data/date]/id)" />
 			<bind nodeset="/data/selected_mediator" required="true()" />
 			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('casedb')/casedb/case[selected(/data/selected_group,group_id)]/id))" />
 			<bind nodeset="/data/number_of_attendees_display" />
 			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])))" />
+			<bind nodeset="/data/form_done" />
 			<bind nodeset="/data/attendance_record" />
 			<bind nodeset="/data/attendance_record/index" type="xsd:string" calculate="position(..)" />
 			<bind nodeset="/data/attendance_record/attendee_name_display" />
@@ -57,6 +60,9 @@
 				<translation lang="en">
 					<text id="date-label">
 						<value>Date</value>
+					</text>
+					<text id="date-constraintMsg">
+						<value>>Future date not allowed.</value>
 					</text>
 					<text id="time-label">
 						<value>Time</value>
@@ -77,7 +83,7 @@
 						<value>Attendance Record</value>
 					</text>
 					<text id="attended-label">
-						<value><output ref="/data/attendance_record/attendee_name"/></value>
+						<value><output ref="/data/attendance_record/attendee_name"></output></value>
 					</text>
 					<text id="attended_yes-label">
 						<value>Yes</value>
@@ -105,6 +111,9 @@
 					<text id="date-label">
 						<value>తేది</value>
 					</text>
+					<text id="date-constraintMsg">
+						<value>ఫ్యూచర్ తేదీ అనుమతించబడవు</value>
+					</text>
 					<text id="time-label">
 						<value>సమయం</value>
 					</text>
@@ -119,12 +128,12 @@
 					</text>
 					<text id="selected_video-label">
 						<value>చిత్రం పేరు</value>
-					</text>					
+					</text>
 					<text id="attendance_record-label">
 						<value>హాజారు నమోదు</value>
-					</text>					
+					</text>
 					<text id="attended-label">
-						<value><output ref="/data/attendance_record/attendee_name"/></value>
+						<value><output ref="/data/attendance_record/attendee_name"></output></value>
 					</text>
 					<text id="attended_yes-label">
 						<value>వచ్చారు</value>
@@ -181,7 +190,7 @@
 		</select>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')" />
-			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listoftopvideos,id) ]">
 				<label ref="name"></label>
 				<value ref="id"></value>
 			</itemset>

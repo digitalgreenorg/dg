@@ -39,7 +39,7 @@
 						<value>Date</value>
 					</text>
 					<text id="selected_date-constraintMsg">
-						<value>Future Date not Allowed</value>
+						<value>Future date not allowed.</value>
 					</text>
 					<text id="selected_village-label">
 						<value>Village</value>
