@@ -48,18 +48,16 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
     PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
     CommCareCase = get_model('dimagi','CommCareCase')
-
     for i, case in enumerate(case_new_list):
         person = case['person']
-        owner_id = case['user'].id
-        project_id = commcare_project.id
+        owner_id = case['user'].guid
         case_id = uuid.uuid4()
         #Creating/populating CommCareCase table in DB
         try:
             commcarecase = CommCareCase(is_open = True,
                                     person_id = person.id,
-                                    project_id = project_id,
-                                    user_id = owner_id,
+                                    project = commcare_project,
+                                    user = case['user'],
                                     guid = case_id
                                     )
             if commcarecase.full_clean() == None:

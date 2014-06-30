@@ -25,9 +25,10 @@ class Command(BaseCommand):
                 commcare_project = CommCareProject.objects.get(name=commcare_project_name)
             except CommCareProject.DoesNotExist:
                 raise CommandError('CommCare Project "%s" not yet entered in the Database.' % commcare_project_name)
-            case_new_list = case_update_list = []
+            case_new_list = []
+            case_update_list = []
             for user in CommCareUser.objects.filter(project=commcare_project):
-                for village in user.assigned_villages:
+                for village in user.assigned_villages.all():
                     for person in Person.objects.filter(village=village):
                         try:
                             case = CommCareCase.objects.get(person=person, user=user, project=commcare_project, is_open=True)
