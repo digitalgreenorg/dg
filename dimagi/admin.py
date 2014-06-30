@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 class CommCareProjectAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['name']
                           }
