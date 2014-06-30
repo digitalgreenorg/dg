@@ -311,9 +311,8 @@ def create_fixture(users, project_name, want_seasonal_behavior):
         for id in video_list:
             video_schedule_list.append(id)
         video_schedule_list_of_dict = []
-        ##Get videos screened in Chittor for this project
-        video_list_screened_in_villages = Screening.objects.filter(village__block__district__id = 47).values_list('videoes_screened', flat=True)
-        video_list_screened_in_villages = set(video_list_screened_in_villages)
+        ##Get videos screened in Chittoor for this project
+        video_list_screened_in_villages = Screening.objects.filter(village__block__district__id = 47).values_list('videoes_screened', flat=True).distinct()
         for id in video_list_screened_in_villages[:10]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
             video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01', 
