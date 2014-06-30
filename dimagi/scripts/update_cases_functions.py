@@ -1,59 +1,59 @@
 import uuid
 import codecs
 from django.db.models import get_model
-from write_xml_content import write_close_person_content, write_closing_meta, write_opening_meta, write_person_content 
-   
-def close_case(persons, filename):
-    file = codecs.open(filename, "w",'utf-8')
-    write_opening_meta(file, len(persons))
-    i = 0
-    CommCareCase = get_model('dimagi', 'CommCareCase')
-    for person in persons:
-        case_id = CommCareCase.objects.get(person=person).guid
-        owner_id = CommCareCase.objects.get(person=person).user.guid
-        write_close_person_content(file, i, case_id, owner_id)
-        i+= 1
-    write_closing_meta(file, owner_id, i)
-    file.close()                
+from django.core.exceptions import ValidationError
+from write_xml_content import write_close_person_content, write_closing_meta, write_opening_meta, write_person_content, write_person_update_content 
 
-def update_case(persons, filename): #this will just update cases that are already on our and commcare database  
+
+def close_case(cases, filename):
     file = codecs.open(filename, "w",'utf-8')
-    write_opening_meta(file, len(persons))
+    write_opening_meta(file, len(cases))
+
+    i = 0
+    for i, case in enumerate(cases):
+        case_id = case.guid
+        owner_id = case.user.guid
+        write_close_person_content(file, i, case_id, owner_id)
+
+    write_closing_meta(file, owner_id, i + 1)
+    file.close()
+
+
+def update_case(cases, filename):
+    file = codecs.open(filename, "w",'utf-8')
+    write_opening_meta(file, len(cases))
     PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
-    i = 0
-    CommCareCase = get_model('dimagi', 'CommCareCase')
     Person = get_model('people','Person')
-    for person in persons:
-        case_id = CommCareCase.objects.get(person=person).guid
-        owner_id = CommCareCase.objects.get(person=person).user.guid
-        person = Person.objects.get(id = person)
-        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
-        videos_seen = ''
-        for vid in vids:
-            videos_seen = videos_seen + unicode(vid) + ' '
+    for i, case in enumerate(cases):
+        case_id = case.guid
+        owner_id = case.user.guid
+        person = Person.objects.get(id=case.person_id)
+        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True)
+        videos_seen = " ".join([unicode(v) for v in vids])
+
         # Getting list of videos adopted
-        adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
-        videos_adopted = ''
-        for vid in adopts:
-            videos_adopted = videos_adopted + unicode(vid) + ' '
+        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True)
+        videos_adopted = " ".join([unicode(a) for a in adopts])
+
         # Write xml for a particular person
-        write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
-        i+= 1
-    write_closing_meta(file, owner_id, i)    
-    file.close()                
+        write_person_update_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
+    write_closing_meta(file, owner_id, i + 1)
+    file.close()
+
 
 def write_new_case(persons, filename): #this creates new cases both in our and commcare database
     file = codecs.open(filename, "w",'utf-8')
     write_opening_meta(file, len(persons))
+    Person = get_model('people', 'Person')
     PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
     CommCareUserVillage=get_model('dimagi','CommCareUserVillage')
     CommCareUser = get_model('dimagi','CommCareUser')
     CommCareCase = get_model('dimagi','CommCareCase')
-    i = 0
-    for person in persons:
-        person = Person.objects.get(id = person_id) 
+
+    for i, person_id in enumerate(persons):
+        person = Person.objects.get(id=person_id) 
         owner_id = CommCareUserVillage.objects.get(village=person.village_id).user.id
         project_id = CommCareUser.objects.get(id=owner_id).project_id
         case_id = uuid.uuid4()
@@ -69,20 +69,16 @@ def write_new_case(persons, filename): #this creates new cases both in our and c
                 commcarecase.save()
         except ValidationError ,e:
             pass #what should be here????
-        
-        vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
-        videos_seen = ''
-        for vid in vids:
-            videos_seen = videos_seen + unicode(vid) + ' '
+
+        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat=True)
+        videos_seen = " ".join([unicode(v) for v in vids])
+
         # Getting list of videos adopted
-        adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
-        videos_adopted = ''
-        for vid in adopts:
-            videos_adopted = videos_adopted + unicode(vid) + ' '
-        # Write xml for a particular person        
-        
+        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True)
+        videos_adopted = " ".join([unicode(a) for a in adopts])
+
+        # Write xml for a particular person
         write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
-        i+= 1
-    write_closing_meta(file, owner_id, i)    
+
+    write_closing_meta(file, owner_id, i + 1)
     file.close()
-    
