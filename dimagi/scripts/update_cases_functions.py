@@ -60,7 +60,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
         #Creating/populating CommCareCase table in DB
         try:
             commcarecase = CommCareCase(is_open = True,
-                                    person_id = person.id,
+                                    person = person,
                                     project = commcare_project,
                                     user = case['user'],
                                     guid = case_id
@@ -77,7 +77,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
         # Getting list of videos adopted
         adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True)
         videos_adopted = " ".join([unicode(a) for a in adopts])
-
+        print 'videos_adopted '+str(videos_adopted)
         # Write xml for a particular person
         write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
 
