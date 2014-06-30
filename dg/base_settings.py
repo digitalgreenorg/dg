@@ -61,6 +61,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'dg.urls'
+ALLOWED_HOSTS = ['sandbox.digitalgreen.org']
 
 # Google ID is required for fetching the user profile image
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id'), ('picture', 'picture') ]
@@ -110,6 +111,7 @@ INSTALLED_APPS = (
     #'video_practice_map',
     #'path',
     'fbconnect',
+    'dimagi',
     'tastypie',
     'coco',
     'social_website',

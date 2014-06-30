@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:vellum="http://commcarehq.org/xforms/vellum">
+	<h:head>
+		<h:title>Adoption Form</h:title>
+		<model>
+			<instance>
+				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/58d4e7979e6c8b8b2bddce6845b02fd51d89acc8" uiVersion="1" version="1" name="Adoption Form">
+					<selected_date />
+					<selected_village />
+					<selected_group />
+					<selected_mediator />
+					<selected_person />
+					<selected_video />
+					<listofvideos />
+					<form_done />
+					<no_videos_seen_form_done />
+					<no_persons_in_group_form_done />
+				</data>
+			</instance>
+			<instance id="village" src="jr://fixture/item-list:village"></instance>
+			<instance id="group" src="jr://fixture/item-list:group"></instance>
+			<instance id="mediator" src="jr://fixture/item-list:mediator"></instance>
+			<instance id="video" src="jr://fixture/item-list:video"></instance>
+			<instance id="unique_video" src="jr://fixture/item-list:unique_video"></instance>
+			<instance id="casedb" src="jr://instance/casedb"></instance>
+			<bind nodeset="/data/selected_date" type="xsd:date" constraint=". &lt;= today()" jr:constraintMsg="jr:itext('selected_date-constraintMsg')" required="true()" />
+			<bind nodeset="/data/selected_village" required="true()" />
+			<bind nodeset="/data/selected_group" required="true()" />
+			<bind nodeset="/data/selected_mediator" required="true()" />
+			<bind nodeset="/data/selected_person" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
+			<bind nodeset="/data/selected_video" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
+			<bind nodeset="/data/listofvideos" calculate="if(/data/selected_person = '','', instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen)" />
+			<bind nodeset="/data/form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
+			<bind nodeset="/data/no_videos_seen_form_done" relevant="instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen = '' and int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
+			<bind nodeset="/data/no_persons_in_group_form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) &lt;= 0" />
+			<itext>
+				<translation lang="en">
+					<text id="date-label">
+						<value>Date</value>
+					</text>
+					<text id="selected_date-constraintMsg">
+						<value>Future date not allowed.</value>
+					</text>
+					<text id="selected_village-label">
+						<value>Village</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>Mediator</value>
+					</text>
+					<text id="selected_group-label">
+						<value>Group</value>
+					</text>
+					<text id="selected_person-label">
+						<value>Person</value>
+					</text>
+					<text id="no_videos_seen_form_done-label">
+						<value>No videos found. Go back and select another person.</value>
+					</text>
+					<text id="selected_video-label">
+						<value>Video</value>
+					</text>
+					<text id="form_done-label">
+						<value>Your form has been completed. Press Done to continue</value>
+					</text>
+					<text id="no_persons_in_group_form_done-label">
+						<value>No persons in this group. And your form has been completed</value>
+					</text>
+				</translation>
+				<translation lang="tel" default="">
+					<text id="date-label">
+						<value>తేది</value>
+					</text>
+					<text id="selected_date-constraintMsg">
+						<value>ఫ్యూచర్ తేదీ అనుమతించబడవు</value>
+					</text>
+					<text id="selected_village-label">
+						<value>గ్రామము</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>కార్యకర్త</value>
+					</text>
+					<text id="selected_group-label">
+						<value>గ్రూప్ పేరు</value>
+					</text>
+					<text id="selected_person-label">
+						<value>రైతు</value>
+					</text>
+					<text id="no_videos_seen_form_done-label">
+						<value>ఇ వ్యక్తి ఒకా వీడియో కుడా చూడాలీధు. ప్రెస్ డన్</value>
+					</text>
+					<text id="selected_video-label">
+						<value>చిత్రం పేరు</value>
+					</text>
+					<text id="form_done-label">
+						<value>మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
+					</text>
+					<text id="no_persons_in_group_form_done-label">
+						<value>ఇ గ్రూప్ లో ఎవరు లేరు.  ప్రెస్ డన్</value>
+					</text>
+				</translation>
+			</itext>
+		</model>
+	</h:head>
+	<h:body>
+		<input ref="/data/selected_date">
+			<label ref="jr:itext('date-label')" />
+		</input>
+		<select1 ref="/data/selected_village">
+			<label ref="jr:itext('selected_village-label')" />
+			<itemset nodeset="instance('village')/village_list/village">
+				<label ref="name"></label>
+				<value ref="id"></value>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_mediator">
+			<label ref="jr:itext('selected_mediator-label')" />
+			<itemset nodeset="instance('mediator')/mediator_list/mediator[village_id=/data/selected_village]">
+				<label ref="name"></label>
+				<value ref="id"></value>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_group">
+			<label ref="jr:itext('selected_group-label')" />
+			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
+				<label ref="name"></label>
+				<value ref="id"></value>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_person">
+			<label ref="jr:itext('selected_person-label')" />
+			<itemset nodeset=" instance('casedb')/casedb/case[group_id=/data/selected_group] ">
+				<label ref="case_name"></label>
+				<value ref="id"></value>
+			</itemset>
+		</select1>
+		<trigger ref="/data/no_videos_seen_form_done">
+			<label ref="jr:itext('no_videos_seen_form_done-label')" />
+		</trigger>
+		<select1 ref="/data/selected_video" relevant="int(count(/data/listofvideos)!=0)">
+			<label ref="jr:itext('selected_video-label')" />
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
+				<label ref="name"></label>
+				<value ref="id"></value>
+			</itemset>
+		</select1>
+		<trigger ref="/data/form_done" relevant="int(count(/data/selected_video) !=0)">
+			<label ref="jr:itext('form_done-label')" />
+		</trigger>
+<!--		<trigger ref="/data/no_persons_in_group_form_done">
+			<label ref="jr:itext('no_persons_in_group_form_done-label')" />
+		</trigger>
+-->
+	</h:body>
+</h:html>
