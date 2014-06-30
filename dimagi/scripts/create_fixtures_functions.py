@@ -261,13 +261,16 @@ def create_fixture(users, project_name, want_seasonal_behavior):
     data = []    
     for user in users:
         dict = {}
-        dict['username'] = user.username
-        dict['user_id'] = user.guid 
         villages = CommCareUserVillage.objects.filter(user = user.id)
-        dict['villages']=[]
-        for vil in villages:
-            dict['villages'].append(vil.village.id)
-        data.append(dict)
+        if villages:
+            dict['villages']=[]
+            for vil in villages:
+                dict['villages'].append(vil.village.id)
+            dict['username'] = user.username
+            dict['user_id'] = user.guid
+            data.append(dict)
+        else:
+            print 'No villages assigned to %s'% user.username
         
     cluster_village_dict = []
     mediator_dict = []
