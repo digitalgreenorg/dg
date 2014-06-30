@@ -18,7 +18,11 @@ def write_person_content(file, i, case_id, owner_id, person, videos_seen, videos
     file.write('</n'+unicode(i)+':create>\n')
     file.write('<n'+unicode(i)+':update>\n')
     file.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')
-    file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
+    if person.group:
+        file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
+    else:
+        file.write('<n'+unicode(i)+':group_id>None</n'+unicode(i)+':group_id>\n')
+    
     file.write('<n'+unicode(i)+':videos_seen>' + videos_seen + '</n'+unicode(i)+':videos_seen>\n')
     file.write('<n'+unicode(i)+':videos_adopted>' + videos_adopted + '</n'+unicode(i)+':videos_adopted>\n')
     file.write('</n'+unicode(i)+':update>\n')
@@ -49,7 +53,10 @@ def write_person_update_content(file, i, case_id, owner_id, person, videos_seen,
     file.write('<n'+unicode(i)+':update>\n')
     file.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '</n'+unicode(i)+':case_name>\n')
     file.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')
-    file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
+    if person.group:
+        file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
+    else:
+        file.write('<n'+unicode(i)+':group_id>None</n'+unicode(i)+':group_id>\n')
     file.write('<n'+unicode(i)+':videos_seen>' + videos_seen + '</n'+unicode(i)+':videos_seen>\n')
     file.write('<n'+unicode(i)+':videos_adopted>' + videos_adopted + '</n'+unicode(i)+':videos_adopted>\n')
     file.write('</n'+unicode(i)+':update>\n')

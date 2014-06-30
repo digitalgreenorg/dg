@@ -28,8 +28,10 @@ def update_case(cases, filename):
     for i, case in enumerate(cases):
         case_id = case.guid
         owner_id = case.user.guid
+
         person = Person.objects.get(id=case.person_id)
         vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True).distinct()
+
         videos_seen = " ".join([unicode(v) for v in vids])
 
         # Getting list of videos adopted
@@ -50,12 +52,13 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
     CommCareCase = get_model('dimagi','CommCareCase')
     for i, case in enumerate(case_new_list):
         person = case['person']
+        print 'creating new cases for '+person.person_name+', '+str(person.id)
         owner_id = case['user'].guid
         case_id = uuid.uuid4()
         #Creating/populating CommCareCase table in DB
         try:
             commcarecase = CommCareCase(is_open = True,
-                                    person_id = person.id,
+                                    person = person,
                                     project = commcare_project,
                                     user = case['user'],
                                     guid = case_id
@@ -63,6 +66,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
             if commcarecase.full_clean() == None:
                 commcarecase.save()
         except ValidationError ,e:
+            print 'in write new case'+str(e)
             pass #what should be here????
 
         vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat=True).distinct()
@@ -71,7 +75,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
         # Getting list of videos adopted
         adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True).distinct()
         videos_adopted = " ".join([unicode(a) for a in adopts])
-
+        print 'videos_adopted '+str(videos_adopted)
         # Write xml for a particular person
         write_person_content(file, i, case_id, owner_id, person, videos_seen, videos_adopted)
 
