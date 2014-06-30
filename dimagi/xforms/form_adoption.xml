@@ -54,7 +54,7 @@
 						<value>Person</value>
 					</text>
 					<text id="no_videos_seen_form_done-label">
-						<value>No Videos seen by this person. And your form has been completed</value>
+						<value>No videos found. Go back and select another person.</value>
 					</text>
 					<text id="selected_video-label">
 						<value>Video</value>
@@ -136,18 +136,19 @@
 		<trigger ref="/data/no_videos_seen_form_done">
 			<label ref="jr:itext('no_videos_seen_form_done-label')" />
 		</trigger>
-		<select1 ref="/data/selected_video">
+		<select1 ref="/data/selected_video" relevant="int(count(/data/listofvideos)!=0)">
 			<label ref="jr:itext('selected_video-label')" />
 			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
 				<label ref="name"></label>
 				<value ref="id"></value>
 			</itemset>
 		</select1>
-		<trigger ref="/data/form_done">
+		<trigger ref="/data/form_done" relevant="int(count(/data/selected_video) !=0)">
 			<label ref="jr:itext('form_done-label')" />
 		</trigger>
-		<trigger ref="/data/no_persons_in_group_form_done">
+<!--		<trigger ref="/data/no_persons_in_group_form_done">
 			<label ref="jr:itext('no_persons_in_group_form_done-label')" />
 		</trigger>
+-->
 	</h:body>
 </h:html>
