@@ -4,7 +4,6 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-
 	<TITLE>Dashboard</TITLE>
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
@@ -524,7 +523,7 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                Interested?
+                                <input type="checkbox" id="select_all_interested" name="select_all_interested" onClick="select_unselect_all(this)">Interested?
                             </th>
                         </tr>
                     </thead>
@@ -533,6 +532,16 @@
                 </table>
             </fieldset>
 </script>
+
+<script language="JavaScript">
+function select_unselect_all(source) {
+  checkboxes = document.getElementsByName('interested');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
 
 <script type="text/template" id="person_pma_template">
     <tr id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
@@ -592,6 +601,7 @@
         <td>
             <div class="control-group">
                 <div class="controls">
+
                     <%if(typeof(interested)!="undefined"&&interested){%>
                         <input type="checkbox" name="interested" checked>
                     <%} else{%>

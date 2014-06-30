@@ -212,7 +212,7 @@ function() {
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
-        'list_elements': [{'element':'id'},{'element':'title'},{'element':'village.village_name'},{'element':'video_production_start_date'},{'element':'video_production_end_date'}],
+        'list_elements': [{'element':'id'},{'header':'Title of the Video','element':'title'},{'element':'village.village_name'},{'header':'Start date','element':'video_production_start_date'},{'header':'End date','element':'video_production_end_date'}],
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
@@ -462,7 +462,7 @@ function() {
         'page_header': 'Screening',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
-        'list_elements': [{'element':'id'},{'element':'date'},{'element':'animator.name'},{'element':'village.village_name'},{'subelement':'group_name','element':'farmer_groups_targeted'},{'subelement':'title','element':'videoes_screened'}],
+        'list_elements': [{'element':'id'},{'header':'Screening Date','element':'date'},{'header':'Mediator Name','element':'animator.name'},{'element':'village.village_name'},{'subelement':'group_name','element':'farmer_groups_targeted'},{'subelement':'title','element':'videoes_screened'}],
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
@@ -664,7 +664,7 @@ function() {
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'list_elements': [{'element':'id'},{'element':'date_of_adoption'},{'element':'person.person_name'},{'element':'group.group_name'},{'element':'village.village_name'},{'element':'video.title'}],
+        'list_elements': [{'element':'id'},{'header':'Adoption Date','element':'date_of_adoption'},{'element':'person.person_name'},{'element':'group.group_name'},{'element':'village.village_name'},{'header':'Title of Video Adopted', 'element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
@@ -708,14 +708,12 @@ function() {
                     float_person: {
                         'placeholder': 'id_person',
                         'name_field': 'person_name',
+                        'name_field_extra_info':'group',
+                        'name_field_detail':'group_name',
                         'dependency': [{
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }],
-                        'filter': {
-                            attr: 'group',
-                            value: null
-                        }
                     },
                     farmers_attendance: {
                         dependency: [{
