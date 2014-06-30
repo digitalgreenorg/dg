@@ -141,6 +141,7 @@ def write_group_info(cluster_dict, workbook):
             for group in village_persongroup_info:         
                 group_id = group[0]
                 vill_id = group[2]
+                print 'in write group info '+ str(vill_id)
                 sheet.write(row, 0, str(group_id))
                 sheet.write(row, 1, group[1])
                 sheet.write(row, 2, str(vill_id))
@@ -195,6 +196,7 @@ def write_mediator_info(mediator_dict, workbook):
     for mediator in mediator_dict:
         mediator_id = mediator['mediator']
         vill_id = mediator['village']
+        print 'in write mediator info '+vill_id
         user_name = mediator['cluster']
         mediator_name = mediator['mediator_name']
         if(mediator):
