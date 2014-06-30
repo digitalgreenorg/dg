@@ -147,10 +147,13 @@ def write_group_info(cluster_dict, workbook):
                 sheet.write(row, 3, cluster['cluster'])
                 row += 1
             if Person.objects.filter(village = vill, group = None).count() > 0:
-                sheet.write(row, 0, str(vill_id))
-                sheet.write(row, 1, 'Without Group')
-                sheet.write(row, 2, str(vill_id))
-                row += 1
+                try:
+                    sheet.write(row, 0, str(vill))
+                    sheet.write(row, 1, 'Without Group')
+                    sheet.write(row, 2, str(vill))
+                    row += 1
+                except Exception as e:
+                    print str(e)
             
     return sheet
 
@@ -261,13 +264,16 @@ def create_fixture(users, project_name, want_seasonal_behavior):
     data = []    
     for user in users:
         dict = {}
-        dict['username'] = user.username
-        dict['user_id'] = user.guid 
         villages = CommCareUserVillage.objects.filter(user = user.id)
-        dict['villages']=[]
-        for vil in villages:
-            dict['villages'].append(vil.village.id)
-        data.append(dict)
+        if villages:
+            dict['villages']=[]
+            for vil in villages:
+                dict['villages'].append(vil.village.id)
+            dict['username'] = user.username
+            dict['user_id'] = user.guid
+            data.append(dict)
+        else:
+            print 'No villages assigned to %s'% user.username
         
     cluster_village_dict = []
     mediator_dict = []
@@ -304,8 +310,10 @@ def create_fixture(users, project_name, want_seasonal_behavior):
         video_schedule_list = []
         for id in video_list:
             video_schedule_list.append(id)
-        video_schedule_list_of_dict = [] 
-        for id in video_schedule_list[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
+        video_schedule_list_of_dict = []
+        ##Get videos screened in Chittor for this project
+        video_list_screened_in_villages = Screening.objects.filter(village__block__district__id = 47).values_list('videoes_screened', flat=True) 
+        for id in video_list_screened_in_villages[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
             video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01', 
                                         'high_val': '2020-01-01' })
