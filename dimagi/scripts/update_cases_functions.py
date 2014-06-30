@@ -29,11 +29,11 @@ def update_case(cases, filename):
         case_id = case.guid
         owner_id = case.user.guid
         person = Person.objects.get(id=case.person_id)
-        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True)
+        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True).distinct()
         videos_seen = " ".join([unicode(v) for v in vids])
 
         # Getting list of videos adopted
-        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True)
+        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True).distinct()
         videos_adopted = " ".join([unicode(a) for a in adopts])
 
         # Write xml for a particular person
@@ -65,11 +65,11 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
         except ValidationError ,e:
             pass #what should be here????
 
-        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat=True)
+        vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat=True).distinct()
         videos_seen = " ".join([unicode(v) for v in vids])
 
         # Getting list of videos adopted
-        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True)
+        adopts = PersonAdoptPractice.objects.filter(person=person).values_list('video', flat = True).distinct()
         videos_adopted = " ".join([unicode(a) for a in adopts])
 
         # Write xml for a particular person
