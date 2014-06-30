@@ -138,24 +138,20 @@ def write_group_info(cluster_dict, workbook):
     for cluster in cluster_dict:
         for vill in cluster['villages']:
             village_persongroup_info = PersonGroup.objects.filter(village = vill).values_list('id','group_name','village')
-            print village_persongroup_info, vill
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:         
                 group_id = group[0]
-                print 'in write group info '+ str(group[0])
                 vill_id = group[2]
-                print 'in write group info '+ str(vill_id)
                 sheet.write(row, 0, str(group_id))
                 sheet.write(row, 1, group[1])
                 sheet.write(row, 2, str(vill_id))
                 sheet.write(row, 3, cluster['cluster'])
                 row += 1
-            
             if Person.objects.filter(village = vill, group = None).count() > 0:
                 try:
-                    sheet.write(row, 0, str(vill_id))
+                    sheet.write(row, 0, str(vill))
                     sheet.write(row, 1, 'Without Group')
-                    sheet.write(row, 2, str(vill_id))
+                    sheet.write(row, 2, str(vill))
                     row += 1
                 except Exception as e:
                     print str(e)
