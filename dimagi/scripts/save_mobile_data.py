@@ -65,9 +65,13 @@ def save_screening_data(xml_tree):
                 if screening.full_clean() == None: # change to full_clean() 
                     screening.save()
                     status['screening'] = 1
-                    screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                    screening.videoes_screened = [screening_data['selected_video']]
-                    screening.save()
+                    try:
+                        screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
+                        screening.videoes_screened = screening_data['selected_video'].split(" ")
+                        screening.save()
+                    except Exception as e:
+                        error = "Error in saving groups and videos" + str(e)
+                        sendmail("Exception in Mobile COCO line 74", error)
                     status['pma'] = 1
                     try :
                         for person in pma_record:
@@ -82,22 +86,21 @@ def save_screening_data(xml_tree):
                                 error_msg = 'Not valid' 
                     except ValidationError, e:
                         status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                        error = "Error in saving Pma " + str(e)
+                        error = "Error in saving Pma line 85" + str(e)
                         sendmail("Exception in Mobile COCO", error)
                 else:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                     error_msg = 'Not valid'
-                    print error_msg 
                         
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error = "Error in saving Screening " + str(ex)
-                sendmail("Exception in Mobile COCO", error)
+                sendmail("Exception in Mobile COCO Screenig save error line 97", error)
        
         except Exception as ex:
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
             error = "Error in Reading Screening " + str(e)
-            sendmail("Exception in Mobile COCO", error)
+            sendmail("Exception in Mobile COCO screening read error line 103", error)
             
     return status['screening'],error_msg
 
@@ -129,11 +132,11 @@ def save_adoption_data(xml_tree):
             except ValidationError ,e:
                 status = error_list['ADOPTION_SAVE_ERROR']
                 error = "Error in saving Adoption " + str(e)
-                sendmail("Exception in Mobile COCO", error)
+                sendmail("Exception in Mobile COCO adoption save line 136", error)
             
         except Exception as ex:
             status = error_list['ADOPTION_READ_ERROR']
             error = "Error in reading Adoption " + str(e)
-            sendmail("Exception in Mobile COCO", error) 
+            sendmail("Exception in Mobile COCO adoption read line 142", error) 
 
     return status, error_msg

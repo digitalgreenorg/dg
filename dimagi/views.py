@@ -16,6 +16,7 @@ class SubmissionNotSaved(Exception):
 @csrf_exempt
 def save_submission(request):
     submission = XMLSubmission()
+    ##For a test ping from Dimagi
     if not request.raw_post_data:
         return HttpResponse(status=201)
     submission.xml_data = request.raw_post_data
@@ -24,7 +25,7 @@ def save_submission(request):
         submission.save()
     except Exception as ex:
         error = "Error in saving submission in save_submission function " + str(ex)
-        sendmail("Exception in Mobile COCO", error)
+        sendmail("Exception in Mobile COCO Line 28", error)
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
@@ -33,7 +34,7 @@ def save_submission(request):
         submission.save()
     except Exception as ex:
         error = "Error in saving submission in save_submission function " + str(ex)
-        sendmail("Exception in Mobile COCO", error)
+        sendmail("Exception in Mobile COCO Line 39", error)
     return HttpResponse(status=201)
 
 
@@ -52,7 +53,7 @@ def save_in_db(submission):
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
         except Exception as ex:
             error = "Error in saving submission in save_in_db function " + str(ex)
-            sendmail("Exception in Mobile COCO", error)
+            sendmail("Exception in Mobile COCO Line 59", error)
     elif xml_parse.getElementsByTagName('device_report'):
         status = error_list['DEVICE_REPORT']
         msg = 'device_report'
