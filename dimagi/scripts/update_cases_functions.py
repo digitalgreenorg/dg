@@ -50,8 +50,8 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
     CommCareCase = get_model('dimagi','CommCareCase')
 
     for i, case in enumerate(case_new_list):
-        person = case.person
-        owner_id = case.user.id
+        person = case['person']
+        owner_id = case['user'].id
         project_id = commcare_project.id
         case_id = uuid.uuid4()
         #Creating/populating CommCareCase table in DB
