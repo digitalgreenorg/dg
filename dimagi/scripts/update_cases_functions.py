@@ -29,6 +29,7 @@ def update_case(cases, filename):
         case_id = case.guid
         owner_id = case.user.guid
         person = Person.objects.get(id=case.person_id)
+        print 'updating cases for '+person.person_name+', '+str(person.id)
         vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True)
         videos_seen = " ".join([unicode(v) for v in vids])
 
@@ -50,6 +51,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
     CommCareCase = get_model('dimagi','CommCareCase')
     for i, case in enumerate(case_new_list):
         person = case['person']
+        print 'creating new cases for '+person.person_name+', '+str(person.id)
         owner_id = case['user'].guid
         case_id = uuid.uuid4()
         #Creating/populating CommCareCase table in DB

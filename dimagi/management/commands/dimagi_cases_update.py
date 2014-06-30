@@ -28,6 +28,7 @@ class Command(BaseCommand):
             case_new_list = []
             case_update_list = []
             for user in CommCareUser.objects.filter(project=commcare_project):
+                print user
                 for village in user.assigned_villages.all():
                     for person in Person.objects.filter(village=village):
                         try:
@@ -46,6 +47,7 @@ class Command(BaseCommand):
 
             if len(case_new_list):
                 # Write XML for Creating Cases into file
+                print 'creating new cases'
                 filename_newcases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_newcase.xml" % (commcare_project_name))
                 write_new_cases(case_new_list, filename_newcases, commcare_project)
 
