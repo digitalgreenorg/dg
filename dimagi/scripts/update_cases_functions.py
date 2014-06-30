@@ -28,8 +28,11 @@ def update_case(cases, filename):
     for i, case in enumerate(cases):
         case_id = case.guid
         owner_id = case.user.guid
-        person = Person.objects.get(id=case.person_id)
-        print 'updating cases for '+person.person_name+', '+str(person.id)
+        try:
+            person = Person.objects.get(id=case.person_id)
+        except Exception as e:
+            print 'person does not exist '+person
+        print 'updating cases for '+person.person_name
         vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat = True)
         videos_seen = " ".join([unicode(v) for v in vids])
 
@@ -65,6 +68,7 @@ def write_new_cases(case_new_list, filename, commcare_project): #this creates ne
             if commcarecase.full_clean() == None:
                 commcarecase.save()
         except ValidationError ,e:
+            print 'in write new case'+str(e)
             pass #what should be here????
 
         vids = PersonMeetingAttendance.objects.filter(person=person).values_list('screening__videoes_screened', flat=True)

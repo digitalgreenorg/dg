@@ -76,6 +76,7 @@ class Command(BaseCommand):
             #===================================================================
 
             if len(case_update_list):
+                print 'in update cases'
                 filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_updatecase.xml" % (commcare_project_name))
                 update_case(case_update_list, filename_updatecases)
                 try:
