@@ -42,25 +42,22 @@ def update_case(cases, filename):
     file.close()
 
 
-def write_new_case(persons, filename): #this creates new cases both in our and commcare database
+def write_new_cases(case_new_list, filename, commcare_project): #this creates new cases both in our and commcare database
     file = codecs.open(filename, "w",'utf-8')
-    write_opening_meta(file, len(persons))
-    Person = get_model('people', 'Person')
+    write_opening_meta(file, len(case_new_list))
     PersonMeetingAttendance = get_model('activities','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('activities','PersonAdoptPractice')
-    CommCareUserVillage=get_model('dimagi','CommCareUserVillage')
-    CommCareUser = get_model('dimagi','CommCareUser')
     CommCareCase = get_model('dimagi','CommCareCase')
 
-    for i, person_id in enumerate(persons):
-        person = Person.objects.get(id=person_id) 
-        owner_id = CommCareUserVillage.objects.get(village=person.village_id).user.id
-        project_id = CommCareUser.objects.get(id=owner_id).project_id
+    for i, case in enumerate(case_new_list):
+        person = case.person
+        owner_id = case.user.id
+        project_id = commcare_project.id
         case_id = uuid.uuid4()
         #Creating/populating CommCareCase table in DB
         try:
             commcarecase = CommCareCase(is_open = True,
-                                    person_id = person_id,
+                                    person_id = person.id,
                                     project_id = project_id,
                                     user_id = owner_id,
                                     guid = case_id
