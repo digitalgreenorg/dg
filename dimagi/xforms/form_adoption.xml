@@ -11,9 +11,10 @@
 					<selected_mediator />
 					<selected_person />
 					<selected_video />
-					<listofvideos />
+					<list_of_videos />
+                    <count_of_videos />
 					<form_done />
-					<no_videos_seen_form_done />
+					<videos_seen_none />
 					<no_persons_in_group_form_done />
 				</data>
 			</instance>
@@ -29,9 +30,10 @@
 			<bind nodeset="/data/selected_mediator" required="true()" />
 			<bind nodeset="/data/selected_person" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
 			<bind nodeset="/data/selected_video" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
-			<bind nodeset="/data/listofvideos" calculate="if(/data/selected_person = '','', instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen)" />
+			<bind nodeset="/data/list_of_videos" calculate="if(/data/selected_person = '','', instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen)" />
+            <bind nodeset="/data/count_of_videos" calculate="int(count(/data/list_of_videos)" />
 			<bind nodeset="/data/form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
-			<bind nodeset="/data/no_videos_seen_form_done" relevant="instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen = '' and int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
+			<bind nodeset="/data/videos_seen_none" relevant="instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen = '' and int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
 			<bind nodeset="/data/no_persons_in_group_form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) &lt;= 0" />
 			<itext>
 				<translation lang="en">
@@ -53,7 +55,7 @@
 					<text id="selected_person-label">
 						<value>Person</value>
 					</text>
-					<text id="no_videos_seen_form_done-label">
+					<text id="videos_seen_none-label">
 						<value>No videos found. Go back and select another person.</value>
 					</text>
 					<text id="selected_video-label">
@@ -85,7 +87,7 @@
 					<text id="selected_person-label">
 						<value>రైతు</value>
 					</text>
-					<text id="no_videos_seen_form_done-label">
+					<text id="videos_seen_none-label">
 						<value>ఇ వ్యక్తి ఒకా వీడియో కుడా చూడాలీధు. ప్రెస్ డన్</value>
 					</text>
 					<text id="selected_video-label">
@@ -133,22 +135,18 @@
 				<value ref="id"></value>
 			</itemset>
 		</select1>
-		<trigger ref="/data/no_videos_seen_form_done">
-			<label ref="jr:itext('no_videos_seen_form_done-label')" />
+		<trigger ref="/data/videos_seen_none">
+			<label ref="jr:itext('videos_seen_none-label')" />
 		</trigger>
-		<select1 ref="/data/selected_video" relevant="int(count(/data/listofvideos)!=0)">
+		<select1 ref="/data/selected_video" relevant="/data/count_of_videos != 0)">
 			<label ref="jr:itext('selected_video-label')" />
-			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/list_of_videos,id) ]">
 				<label ref="name"></label>
 				<value ref="id"></value>
 			</itemset>
 		</select1>
-		<trigger ref="/data/form_done" relevant="int(count(/data/selected_video) !=0)">
+		<trigger ref="/data/form_done" relevant="/data/count_of_videos != 0)">
 			<label ref="jr:itext('form_done-label')" />
 		</trigger>
-<!--		<trigger ref="/data/no_persons_in_group_form_done">
-			<label ref="jr:itext('no_persons_in_group_form_done-label')" />
-		</trigger>
--->
 	</h:body>
 </h:html>
