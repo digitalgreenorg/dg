@@ -140,6 +140,7 @@ def write_group_info(cluster_dict, workbook):
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:         
                 group_id = group[0]
+                print 'in write group info '+ str(group[0])
                 vill_id = group[2]
                 print 'in write group info '+ str(vill_id)
                 sheet.write(row, 0, str(group_id))
@@ -312,7 +313,7 @@ def create_fixture(users, project_name, want_seasonal_behavior):
         video_schedule_list_of_dict = []
         ##Get videos screened in Chittor for this project
         video_list_screened_in_villages = Screening.objects.filter(village__block__district__id = 47).values_list('videoes_screened', flat=True) 
-        for id in video_list_screened_in_villages[:10]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
+        for id in video_list_screened_in_villages[:5]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
             video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01', 
                                         'high_val': '2020-01-01' })
