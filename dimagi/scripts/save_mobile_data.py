@@ -23,9 +23,8 @@ def save_screening_data(xml_tree):
             screening_data['selected_group'] = record.getElementsByTagName('selected_group')[0].firstChild.data
             screening_data['selected_mediator'] = record.getElementsByTagName('selected_mediator')[0].firstChild.data
             screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
-            if  screening_data['selected_video'] == 0 :
+            if  screening_data['selected_video'] == '0' :
                 screening_data['selected_video'] = record.getElementsByTagName('additional_selected_video')[0].firstChild.data
-                 
             screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
             pma_record = []
             for person in screening_data['attendance_record']:
