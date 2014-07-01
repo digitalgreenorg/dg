@@ -1,5 +1,9 @@
 from django.contrib import admin
 
+class XMLSubmissionAdmin(admin.ModelAdmin):
+    list_display = ('username', 'error_code', 'error_message', 'submission_time', 'xml_data')
+    search_fields = ['username', 'xml_data', 'error_code', 'error_message']
+
 class CommCareProjectAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['name']
                           }
