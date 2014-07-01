@@ -39,7 +39,7 @@ def save_in_db(submission):
         try:
             if data[0].attributes["name"].value.lower() == 'screening form' :
                 status, msg = save_mobile_data.save_screening_data(xml_parse)
-            elif data[0].attributes["name"].value.lower() == 'adoption' :
+            elif data[0].attributes["name"].value.lower() == 'adoption form' :
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
         except Exception as ex:
             error = "Error in saving submission in save_in_db function " + str(ex)
