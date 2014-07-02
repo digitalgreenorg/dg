@@ -523,7 +523,7 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                <input type="checkbox" id="select_all_interested" name="select_all_interested" onClick="select_unselect_all(this)">Interested?
+                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onClick="select_unselect_all(this)">
                             </th>
                         </tr>
                     </thead>
@@ -534,14 +534,10 @@
 </script>
 
 <script language="JavaScript">
-function select_unselect_all(source) {
-  checkboxes = document.getElementsByName('interested');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    checkboxes[i].checked = source.checked;
-  }
+select_unselect_all = function (select_all) {
+    $(select_all).closest("table").find('input[type="checkbox"]').not(me).prop('checked', select_all.checked);
 }
 </script>
-
 
 <script type="text/template" id="person_pma_template">
     <tr id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>

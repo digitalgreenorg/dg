@@ -588,6 +588,7 @@ define([
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
+                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
                     });
                     if (this.num_sources[element] <= 0)
@@ -612,25 +613,25 @@ define([
                         id: "",
                         name: "------------"
                     }));
-                $.each(model_array, function(index, f_model) {
+                $.each(model_array, function (index, f_model) {
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    if(f_json[f_entity_desc.name_field_extra_info]){
-                        var group_info = ""
-                        if(f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null){
-                           group_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                    if (f_json[f_entity_desc.name_field_extra_info]) {
+                        var extra_info = "";
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
+                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (group_info != ""? ' (' + group_info + ')':"")
-                    }));
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                        }));
                     }
-                    else{
-                    $f_el.append(that.options_inner_template({
-                        id: parseInt(f_json["id"]),
-                        name: f_json[f_entity_desc.name_field]
-                    }));
+                    else {
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field]
+                        }));
                     }
                 });
                 $f_el.prop("disabled", false);
