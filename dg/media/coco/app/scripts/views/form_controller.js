@@ -86,7 +86,6 @@ var message_combined_failure = "";
                             // error while saving object
                             // show the error on the form right above the object
                             that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
-                            
                         });
                     // put dfd for this object-save in the save_complete_dfds list
                
@@ -95,10 +94,8 @@ var message_combined_failure = "";
                         notifs_view.add_alert({
                         notif_type: "success",
                         message: message_combined_success});
-
                     });
                     save_complete_dfds.push(save_object_dfd);
-
                 });
             } 
             else 
@@ -134,15 +131,10 @@ var message_combined_failure = "";
                                     show_inline_error();
                                     inlines_dfd.reject();
                                 });
-                    
-                
                     })
                     .fail(function(error) {
                         that.form.show_errors(error);
                     });
-                    
-                
-
                 save_complete_dfds.push(save_object_dfd);
             }
 
@@ -154,7 +146,6 @@ var message_combined_failure = "";
                     notifs_view.add_alert({
                                         notif_type: "success",
                                         message: message_combined_success});
-
                 })
                 .fail(function() {
                     if (that.form.bulk)
@@ -352,9 +343,7 @@ var message_combined_failure = "";
                 {
                     if (counts_success[title]>0)
                         message_combined_success = message_combined_success + "<br>" + "Saved " + counts_success[title] + " " +title;
-
-                }
-                
+                }       
             };
 
             function show_err_notif() {
@@ -365,18 +354,14 @@ var message_combined_failure = "";
                 else{
                     counts_failure[entity_name] = 1;
                 }
-
                 message_combined_failure="";
-               for (var title in counts_failure)
+                for (var title in counts_failure)
                 {
                     if (counts_failure[title]>0)
                         message_combined_failure = message_combined_failure + "<br>" + "Error saving " + counts_failure[title] + " " +title;
 
                 }
-                
             };
-            
-           
             return dfd.promise();
         },
 

@@ -281,9 +281,9 @@ h1 small{
 
 /*----------- Media Queries -----------*/
 
-@media(min-width:767px)
-{
-    #notifications{
+@media(min-width:767px){
+    
+    #notifications {
         width: 400px;
         max-height: auto;
         position:fixed;
@@ -294,16 +294,18 @@ h1 small{
 }
 
 @media(max-width:767px){
-    #notifications{
+    
+    #notifications {
         font-size: 12px;
         position: fixed;
         top:50px;
     }
-    .big-logo{
+    
+    .big-logo {
         display: none;
     }
     
-    .small-logo{
+    .small-logo {
         display: block;
         height: 33px;
         width: auto;
