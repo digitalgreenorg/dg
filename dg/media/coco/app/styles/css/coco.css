@@ -153,17 +153,11 @@
 	display:none;
 }
 
-#notifications{
-	width: 400px;
-	position:fixed;
-	right: 10px;
-	font-size:12px;
-    top: 50px;
-}
+
 
 #loaderimg{
 	left: 50%;
-	top: 55%;
+	top: 50%;
 	position: fixed;
 }
 
@@ -239,12 +233,6 @@ h1 small{
     color:red;
     width: 100%;
 }
-
-#incremental_download_back {
-    position:fixed;
-    bottom:0px;
-    z-index:10000;
-}
 /*---------------- User Dropdown --------------- */
 
 .user-dropdown-div {
@@ -289,11 +277,30 @@ h1 small{
 
 /*----------- Media Queries -----------*/
 
+
+
+
+@media(min-width:767px)
+{
+  #notifications{
+    width: 400px;
+    max-height: auto;
+    position:fixed;
+    right: 10px;
+    font-size:12px;
+    top: 50px;
+ }  
+}
 @media(max-width:767px){
+    #notifications{
+        font-size: 12px;
+        position: fixed;
+        top:50px;
+    }
+
     .big-logo{
         display: none;
     }
-    
     .small-logo{
         display: block;
         height: 33px;
@@ -309,17 +316,8 @@ h1 small{
     
     .mrg-top-nav-50 {
         margin-top: 0px;
-    }    
-    
-    .DTTT_container {
-        display: none;
     }
-    
-    #list_table_length, #list_table_filter {
-        float: none;
-        width: 50%;
-        margin: 0 auto;
-    }
+     
 }
 
 @media(max-width:992px){

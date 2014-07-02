@@ -116,8 +116,8 @@
 </script>
 <script type="text/template" id="incremental_download_background_template">
 <div class="row">
-    <div id="incremental_download_back" class="col-xs-5 col-sm-3 col-md-2">
-      <p>Downloading...</p>
+    <div id="incremental_download_back" style="position:fixed;bottom:0px;z-index:10000" class="span2">
+    Downloading...
       <div>
         <div class="progress progress-info progress-striped">
           <div class="progress-bar" id = "inc_pbar" style="width: 0%"></div>
@@ -193,7 +193,7 @@
                 by clicking on the sync button
                 </p> -->
 
-                <nav class="navbar navbar-default coco_main_nav white-bgd mrg-top-nav-50" role="navigation" id="main-navbar">
+                <nav class="navbar navbar-default coco_main_nav white-bgd mrg-top-nav-50" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".coco_main_nav .navbar-collapse">
                             <span class="sr-only">Toggle navigation</span>
@@ -220,9 +220,6 @@
                         </ul>
                     </div>
                 </nav>
-                <p id="helptext">
-                    Please download the database by clicking on the sync button
-                </p>
             </div>
 </script>
 
@@ -230,7 +227,7 @@
     <div class="row global-header">
         <div class="col-xs-4"><img src="/media/coco/app/images/logo.png" class="img-responsive mrg-lt-5 big-logo"><img src="/media/coco/app/images/dg4.png" class="img-responsive small-logo"></div>
         <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
-        <div class="col-xs-4 align-right"><a href="{% url 'faq' %}"> Help </a><img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5"></div>
+        <div class="col-xs-4 align-right"><a href="{% url 'faq' %}"> FAQ </a><img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5"></div>
             <div class="user-dropdown-div">
                 <div class="user-dropdown js-user-dropdown">
                     <ul class="pdg-0">
@@ -698,7 +695,7 @@
                     <select name="group" id="id_group" multiple="multiple" class="select2 form-control"></select>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-control-group">
                 <label class="control-label col-sm-2 notbold">Person</label>
                 <div class="col-sm-4">
                     <select name="float_person" id="id_person" multiple="multiple" class="select2 form-control"></select>
@@ -1079,11 +1076,13 @@
 <body>
 	
      {% csrf_token %}
-    <div id = "notifications">
-        
-    </div>
+    
     <div id="app" class='container-fluid'>
 
+    </div>
+    <div class="row">
+    <div id = "notifications" class="col-xs-11">
+    </div>    
     </div>
 
 	
