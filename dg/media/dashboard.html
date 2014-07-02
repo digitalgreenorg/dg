@@ -535,7 +535,7 @@
 
 <script language="JavaScript">
 select_unselect_all = function (select_all) {
-    $(select_all).closest("table").find('input[type="checkbox"]').not(me).prop('checked', select_all.checked);
+    $(select_all).closest("table").find('input[type="checkbox"]').not(select_all).prop('checked', select_all.checked);
 }
 </script>
 
