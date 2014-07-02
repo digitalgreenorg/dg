@@ -59,31 +59,40 @@
 		    </ul>
 	         			
 	        <div id="thegrid" class="grid hidden">
-				
-				<div class="gridleft">
-				
-					<div id="photobox" class="boxdesign">
-						<img class="fleft" src="{{STATIC_URL}}assets/images/face.png">				
-					</div>		
-							    
-				    <div id="databox" class="boxdesign">		         	
-			         	<p class="fontforbox" id="screenings"></p>
-			         	<p class="fontforbox" id="adoptions"></p>
-			         	<p class="fontforbox" id="persons"></p>
-			         	<p class="fontforbox" id="s-lag"></p>
-			         	<p class="fontforbox" id="a-lag"></p>			         	
-			        </div>
-				</div>
-				
-				<div class="gridright">	
-					        	    
-				   	<div class="outer-center">
-	       				<div class="inner-center fontforbox">   				
+	        
+	        		<div class="outer-center">
+	       				<div class="inner-center hdg-e">   				
 				         	<img class="fleft makecursor" src="{{STATIC_URL}}assets/images/carousel-arrow-lt.png" onclick="moveprev()">
 				         		<div class="fleft" id="dateshow"></div>
 				         	<img class="fleft makecursor" src="{{STATIC_URL}}assets/images/carousel-arrow-rt.png" onclick="movenext()">  						               				
 	       				</div>
    					</div>
+				
+				<div class="gridleft">
+				
+					<!-- <div id="photobox" class="boxdesign">
+						<img class="fleft" src="{{STATIC_URL}}assets/images/face.png">				
+					</div> -->		
+							    
+				    <div id="databox" class="boxdesign">		         	
+			         	<p class="hdg-f hdg-black">No. of screenings</p>
+			         	<p class="bigfontsize" id="screenings"></p>
+			         	<br>
+			         	<p class="hdg-f hdg-black">No. of adoptions</p>
+			         	<p class="bigfontsize" id="adoptions"></p>
+			         	<br>
+			         	<p class="hdg-f hdg-black">No. of persons</p>
+			         	<p class="bigfontsize" id="persons"></p>
+			         	<br>
+			         	<p class="hdg-f hdg-black">Average screening lag</p>
+			         	<p class="bigfontsize" id="s-lag"></p>
+			         	<br>
+			         	<p class="hdg-f hdg-black">Average adoption lag</p>
+			         	<p class="bigfontsize" id="a-lag"></p>			         	
+			        </div>
+				</div>
+				
+				<div class="gridright">	
    					
 					<div id="chartcontainer"></div>
 				</div>	         	

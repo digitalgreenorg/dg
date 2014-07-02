@@ -43,6 +43,9 @@ def video_collection_activity(sender, **kwargs):
 def update_stats(sender, **kwargs):
     from migration_functions import populate_collection_stats, populate_partner_stats
     instance = kwargs["instance"]
-    collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
-    populate_collection_stats(collection)
-    populate_partner_stats(collection.partner)
+    try:
+        collection = get_model('social_website', 'Collection').objects.get(uid=instance.collection_id)
+        populate_collection_stats(collection)
+        populate_partner_stats(collection.partner)
+    except get_model('social_website', 'Collection').DoesNotExist :
+        pass #Collection is deleted no need to update the stats
