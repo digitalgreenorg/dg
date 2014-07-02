@@ -22,22 +22,7 @@ define([
     If server save succeeds, then we set the online_id in the offline model.
     */
 
-var counts_success = {
-    "person": 0,
-    "mediator":0,
-    "group" : 0,
-    "video" : 0,
-    "screening" : 0,
-    "adoption":0
-};
-var counts_failure = {
-    "person": 0,
-    "mediator":0,
-    "group" : 0,
-    "video" : 0,
-    "screening" : 0,
-    "adoption":0
-};
+
 var message_combined_success = "";
 var message_combined_failure = "";
 
@@ -76,22 +61,9 @@ var message_combined_failure = "";
         on_save: function(e) {
             //event contains the form view object itself
             // Set the count of successful and failed saves. These are later used to give notifications
-            counts_success = {
-                "person": 0,
-                "group" : 0,
-                "mediator":0,
-                "video" : 0,
-                "screening" : 0,
-                "adoption":0
-            };
-            counts_failure = {
-                "person": 0,
-                "group" : 0,
-                "mediator":0,
-                "video" : 0,
-                "screening" : 0,
-                "adoption":0
-            };
+            counts_success = new Object();
+            counts_failure = new Object();
+            
             // Reset the notification messages because if the person is adding multiple persons, the message does not get duplicated
             message_combined_failure=""
             message_combined_success=""
@@ -368,7 +340,13 @@ var message_combined_failure = "";
                
                // function counts the successful operations and creates the notification message. Has to be done BEFORE the notification is added, hence here.
                 console.log(message_combined_success);
-                counts_success[entity_name] +=1;
+                if (counts_success.hasOwnProperty(entity_name)){
+                    counts_success[entity_name] += 1;
+                }
+                else
+                {
+                    counts_success[entity_name] = 1;
+                }
                 message_combined_success="";
                 for (var title in counts_success)
                 {
@@ -381,7 +359,13 @@ var message_combined_failure = "";
 
             function show_err_notif() {
             // function counts the errors and creates the notification message
-               counts_failure[entity_name] +=1;
+               if (counts_failure.hasOwnProperty(entity_name)){
+                    counts_failure[entity_name] += 1;
+                }
+                else{
+                    counts_failure[entity_name] = 1;
+                }
+
                 message_combined_failure="";
                for (var title in counts_failure)
                 {
