@@ -341,7 +341,7 @@ var message_combined_failure = "";
                // function counts the successful operations and creates the notification message. Has to be done BEFORE the notification is added, hence here.
                 console.log(message_combined_success);
                 if (counts_success.hasOwnProperty(entity_name)){
-                    counts_success[entity_name] += 1;
+                    counts_success[entity_name] +=1;
                 }
                 else
                 {
@@ -360,7 +360,7 @@ var message_combined_failure = "";
             function show_err_notif() {
             // function counts the errors and creates the notification message
                if (counts_failure.hasOwnProperty(entity_name)){
-                    counts_failure[entity_name] += 1;
+                    counts_failure[entity_name] +=1;
                 }
                 else{
                     counts_failure[entity_name] = 1;
