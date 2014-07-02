@@ -3,7 +3,9 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 import coco.urls
+import dimagi.urls
 import feeds.urls
+
 import social_website.api_urls
 import social_website.urls
 
@@ -17,7 +19,9 @@ from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
+from mcoco_admin import mcoco_admin
 import website_archive_urls
+import deoanalytics.urls
 
 coco_admin.index_template = 'social_website/index.html'
 coco_admin.login_template = 'social_website/login.html'
@@ -43,7 +47,9 @@ urlpatterns = patterns('',
     (r'^admin/', include(coco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
     (r'^adminblog/', include(admin.site.urls)),
+    (r'^mcocoadmin/', include(mcoco_admin.urls)),
     (r'^coco/', include(coco.urls)),
+    (r'^dimagi/', include(dimagi.urls)),
     (r'^path/', include('path.urls')),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
@@ -72,6 +78,7 @@ urlpatterns = patterns('',
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r"^", include("mezzanine.urls")),
+    (r'^analytics/cocouser/',include('deoanalytics.urls')),
 )
 
 # Static files serving locally

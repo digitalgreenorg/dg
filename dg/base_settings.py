@@ -94,7 +94,8 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
     os.path.join(PROJECT_PATH, 'media/coco/app'),
-	os.path.join(PROJECT_PATH, 'media/'),
+    os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
+    os.path.join(PROJECT_PATH, 'media/'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -136,6 +137,7 @@ INSTALLED_APPS = (
     #'video_practice_map',
     #'path',
     'fbconnect',
+    'dimagi',
     'tastypie',
     'coco',
     'social_website',
@@ -143,6 +145,7 @@ INSTALLED_APPS = (
     'communications',
     'human_resources',
     'feeds',
+    'deoanalytics',
     'mezzanine.boot',
     'mezzanine.conf',
     'mezzanine.core',

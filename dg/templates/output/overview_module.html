@@ -158,6 +158,7 @@
 				 		</thead>
 				 		<tbody>
 				 			{% for item in table_data %}
+				 			{% if item.tot_per != 0 or item.tot_vil != 0 or item.tot_pro != 0 or item.tot_scr != 0 or item.tot_ado != 0 or item.tot_pra != 0 %}
 				 			<tr>
 								<td class='table2statdesc2'>
 									{% ifnotequal item.geog "NULL" %}
@@ -200,7 +201,8 @@
 								<td class='table2statdesc2'>
 									{{ item.tot_pra }}
 								</td>
-						 	</tr>				 					 	
+						 	</tr>
+						 	{% endif %}
 				 			{% endfor %}
 				 		</tbody>		 							
 					</table>

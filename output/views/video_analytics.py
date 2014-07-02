@@ -91,7 +91,7 @@ def video_geog_pie_data(request):
 
 
     vid_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'production'))
-    geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
+    geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date),'id')
 
     return_val = []
     return_val.append(["title","val",'url'])

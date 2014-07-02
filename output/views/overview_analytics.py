@@ -31,7 +31,7 @@ def overview_module(request):
     tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
 
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
-    table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date, partners=partners))
+    table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date))
     for i in table_data:
         if i['id'] in vid_prod:
             i['tot_pro'] = vid_prod[i['id']][0]
