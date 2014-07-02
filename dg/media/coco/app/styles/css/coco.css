@@ -32,6 +32,10 @@
     cursor: pointer;
 }
 
+#dropdown-help {
+    display: none;
+}
+
 /* ----------- Margins and Paddings-------- */
 
 .mrg-lt-5 {
@@ -121,17 +125,11 @@
     padding-top: 20px;
 }
 
-#online{
+.connection-indicator{
 	width: 10px;
-	margin-left: 15px;
 	position: relative;
-	display: none;
-}
-
-#offline{
-	width: 10px;
-	margin-left: 15px;
-	position:relative;
+    right: 15px;
+    top: 10px;
 	display: none;
 }
 
@@ -175,12 +173,6 @@
 	font-size: 12px;
 	cursor: pointer;
 	margin-top:10px;
-}
-
-#faq{
-	clear: both;
-	padding-top: 40px;
-	font-size: 11px;
 }
 
 div.dataTables_length label {
@@ -313,6 +305,14 @@ h1 small{
     
     .DTTT_container {
         display: none;
+    }
+    
+    #help {
+        display: none;
+    }
+    
+    #dropdown-help {
+        display: block;
     }
     
     #list_table_length, #list_table_filter {
