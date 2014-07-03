@@ -201,7 +201,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline help-color"
+            errorClass: "help-inline red-color"
 
         }
 
@@ -345,7 +345,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline help-color"
+            errorClass: "help-inline red-color"
 
         }
     };
@@ -452,7 +452,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline help-color",
+            errorClass: "help-inline red-color",
         }
 
 
@@ -653,7 +653,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline help-color"
+            errorClass: "help-inline red-color"
         }
     };
 
@@ -683,7 +683,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-block help-color",
+            errorClass: "help-block red-color",
             display: "block"
         },
         add: {
@@ -886,7 +886,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline help-color"
+            errorClass: "help-inline red-color"
         }
 
     };
