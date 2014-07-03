@@ -143,9 +143,12 @@ var message_combined_failure = "";
                 .done(function() {
                     console.log("Everything saved");
                     that.after_form_save(that.form.entity_name);
-                    notifs_view.add_alert({
-                                        notif_type: "success",
-                                        message: message_combined_success});
+                    if (message_combined_success!="")
+                    {
+                        notifs_view.add_alert({
+                            notif_type: "success",
+                            message: message_combined_success});
+                    }
                 })
                 .fail(function() {
                     if (that.form.bulk)

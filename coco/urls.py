@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     (r'^logout/', logout),
     (r'^debug/', debug),
     (r'^$', coco_v2),
-    url(r'^v2/faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
+    url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
 )
