@@ -16,8 +16,7 @@ define([
     'indexeddb-backbone',
     'chosen',
     'date_picker',
-    'time_picker',
-    'select2',
+    'time_picker'
 ], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
 
 
@@ -420,17 +419,11 @@ define([
         
         // initiate the dropdown and date, time widgets
         initiate_form_widgets: function() {
-            /* $(".chzn-select").chosen({
-                'search_contains': true
-            }); */
+            $(".chosen-select").chosen({
+                'search_contains': true,
+                'width': '100%'
+            });
             
-            try{
-                $(".select2").select2();
-               }
-            catch(err){
-                console.log(err);
-                $("select.select2").select2();
-            }
 
             var eDate = new Date();
             enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
@@ -631,12 +624,12 @@ define([
                     }));
                 });
                 $f_el.prop("disabled", false);
-                $f_el.trigger("liszt:updated");
+                $f_el.trigger("chosen:updated");
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
                     this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("liszt:updated");
+                    this.$('form [name=' + element + ']').trigger("chosen:updated");
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }

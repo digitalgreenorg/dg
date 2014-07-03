@@ -31,9 +31,16 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             this.setView("#side_panel", dashboard_view);
             dashboard_view.render();
             
-            $( ".img-user" ).click(function() {
+            $( ".img-user" ).click(function(event) {
+                event.stopPropagation();
                 $( ".user-dropdown" ).toggle();
             });
+            
+            /*Hide dropdown if clicked anywhere outside the dropdown*/
+            $( "html" ).click(function() {
+                $( ".user-dropdown" ).hide();
+            });
+            
         },
 
         //content panel will be filled with a subview by one of the following functions based on the current url

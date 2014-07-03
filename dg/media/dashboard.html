@@ -12,12 +12,12 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
 	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
-	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen/chosen.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
+	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen-select/chosen.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
+	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/chosen-magic.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
-    <LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/select2/select2.css">
     
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
@@ -471,7 +471,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>Assigned Villages</b></label>
             <div class="col-sm-4">
-                <select id = "id_ass_villages" name="assigned_villages" class = "select2 form-control" multiple>
+                <select id = "id_ass_villages" name="assigned_villages" class = "chosen-select form-control" multiple>
                 
                 </select>
             </div>
@@ -479,7 +479,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>District</b></label>
             <div class="col-sm-4">
-                <select id = "id_district" name="district" class = "select2 form-control">
+                <select id = "id_district" name="district" class = "chosen-select form-control">
                
                 </select>
             </div>
@@ -523,7 +523,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Village</label>
                 	<div class="col-sm-4"> 
-                        <select name="village" id="id_village" class="select2 form-control" placeholder="Enter animator to enable">
+                        <select name="village" id="id_village" class="chosen-select form-control" placeholder="Enter animator to enable">
                         <option value='' selected='selected'>---------</option> 
                         </select>
                 	</div>
@@ -531,7 +531,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Mediator</label>
                  	<div class="col-sm-4"> 
-                        <select name="animator" id="id_animator" class="select2 form-control">
+                        <select name="animator" id="id_animator" class="chosen-select form-control">
                             <option value='' selected='selected'>---------</option> 
                         </select > 
                	    </div>
@@ -539,20 +539,20 @@
                 <div class="form-group"> 
                     <label class="control-label col-sm-2">Videos Screened</label>
                 	<div class="col-sm-4"> 
-                	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="select2 form-control">
+                	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
                         </select> 
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2">Groups Attended</label>
                     <div class="col-sm-4">
-                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="select2 form-control"></select> 
+                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chosen-select form-control"></select> 
                     </div>
                 </div>
                 <div class="form-group">
                 	<label class="control-label col-sm-2 notbold">Person</label>
                 	<div class="col-sm-4">
-                        <select id="id_person" name = "person" class="select2 form-control" multiple="multiple"></select>
+                        <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
                     </div>
                 </div>
                     <br>
@@ -619,7 +619,7 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <select  name="expressed_adoption_video" class="select2 pma_select form-control">
+                    <select  name="expressed_adoption_video" class="chosen-select pma_select form-control">
                         <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
@@ -665,7 +665,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Person</label>
                 	<div class="col-sm-4"> 
-                        <select name="person" id="id_person" class="select2 form-control">
+                        <select name="person" id="id_person" class="chosen-select form-control">
                         <option value="">---------- </option>
                         </select>
                     </div>
@@ -673,7 +673,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Video</label>
                     <div class="col-sm-4">
-                        <select name="video" id="id_video" class="select2 form-control"></select>
+                        <select name="video" id="id_video" class="chosen-select form-control"></select>
                     </div>
                 </div>
                 <div class="form-group"> 
@@ -692,7 +692,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Village</label>
                 <div class="col-sm-4"> 
-                <select name="village" id="id_village" class="select2 form-control">
+                <select name="village" id="id_village" class="chosen-select form-control">
                 <option value="">---------- </option>
                 </select>
                 </div>
@@ -700,13 +700,13 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Groups Attended</label>
                 <div class="col-sm-4">
-                    <select name="group" id="id_group" multiple="multiple" class="select2 form-control"></select>
+                    <select name="group" id="id_group" multiple="multiple" class="chosen-select form-control"></select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2 notbold">Person</label>
                 <div class="col-sm-4">
-                    <select name="float_person" id="id_person" multiple="multiple" class="select2 form-control"></select>
+                    <select name="float_person" id="id_person" multiple="multiple" class="chosen-select form-control"></select>
                 </div>
             </div>
                 <br>
@@ -774,7 +774,7 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <select id = "video<%=index%>" name="video<%=index%>" class="select2 form-control" required>
+                    <select id = "video<%=index%>" name="video<%=index%>" class="chosen-select form-control" required>
                         <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
@@ -814,7 +814,7 @@
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b>Village</b></label>
             <div class="col-sm-4">
-                <select id = "id_village" name="village" class="select2 form-control">
+                <select id = "id_village" name="village" class="chosen-select form-control">
                     <option value='' selected='selected'>---------</option> 
                     
                 </select>
@@ -909,7 +909,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Language</label>
                 <div class="col-sm-4">
-                    <select id = "id_language" name="language" class="select2 form-control">
+                    <select id = "id_language" name="language" class="chosen-select form-control">
                         <option selected="selected" value="">
                             Language
                         </option>
@@ -925,7 +925,7 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Village</label>
                 <div class="col-sm-4">
-                    <select id = "id_village" name="village" class="select2 form-control">
+                    <select id = "id_village" name="village" class="chosen-select form-control">
                         <option value="">---------- </option>
                     </select>
                 </div>
@@ -933,7 +933,7 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Facilitator</label>
                 <div class="col-sm-4">
-                    <select id = "id_facilitator" name="facilitator" class="select2 form-control">
+                    <select id = "id_facilitator" name="facilitator" class="chosen-select form-control">
                         <option selected="selected" value="">
                             ---------
                         </option>
@@ -943,7 +943,7 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Camera Operator</label>
                 <div class="col-sm-4">
-                    <select id = "id_cameraoperator" name="cameraoperator" class="select2 form-control">
+                    <select id = "id_cameraoperator" name="cameraoperator" class="chosen-select form-control">
                         <option selected="selected" value="">
                             ---------
                         </option>                    
@@ -953,7 +953,7 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2"><b>Persons Shown</b></label>
                 <div class="col-sm-4">
-                    <select size="20" class="select2 form-control" id = "id_farmers_shown" name="farmers_shown" multiple>
+                    <select size="20" class="chosen-select form-control" id = "id_farmers_shown" name="farmers_shown" multiple>
                     </select>
                 </div>
             </div>
@@ -1040,7 +1040,7 @@
             <div class="form-group"> 
                 <label class="control-label col-sm-2">Village</label>
                 <div class="col-sm-4"> 
-                    <select id = "id_village" name="village" class="select2 form-control">
+                    <select id = "id_village" name="village" class="chosen-select form-control">
                         
                     </select>
                 </div>
@@ -1070,7 +1070,7 @@
 			<div class="form-group"> 
                 <label class="control-label col-sm-2 notbold">Group</label> 
                 <div class="col-sm-4">
-                    <select id = "id_group" name="group" class="select2 form-control">
+                    <select id = "id_group" name="group" class="chosen-select form-control">
                     
                     </select>
                 </div>
