@@ -15,10 +15,54 @@
     <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <script type="text/javascript">
+        $(function() {
+            var $sidebar   = $("#sidebar"), 
+                $window    = $(window),
+                offset     = $sidebar.offset(),
+                topPadding = 15;
+                console.log("place 1");
+            $window.resize(function(){
+                if ($window.width() <= 767){
+                    $sidebar.stop().animate({
+                            marginTop: 0
+                        });
+                }
+                else
+                {
+                    console.log("place 3");
+                    if ($window.scrollTop() > offset.top) {
+                        $sidebar.stop().animate({
+                            marginTop: $window.scrollTop() - offset.top + topPadding
+                        });
+                    } 
+                }   
+            });
+
+            $window.scroll(function() {
+                if ($window.width() > 767)
+                {
+                    if ($window.scrollTop() > offset.top) {
+                        $sidebar.stop().animate({
+                            marginTop: $window.scrollTop() - offset.top + topPadding
+                        });
+                    } else {
+                        $sidebar.stop().animate({
+                            marginTop: 0
+                        });
+                    }
+                }
+                else{
+                    console.log("place 4");
+                $sidebar.css("marginTop",0);
+                }
+            });       
+        });
+    </script>
 
 <div class="container-fluid">
     <div class="row">
-        <nav class="no-print col-sm-3 navbar navbar-default" role="navigation">
+        <nav class="no-print col-sm-3 navbar navbar-default" role="navigation" id = "sidebar">
             <div>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-for-toggle">
                     <span class="sr-only">Toggle navigation</span>
