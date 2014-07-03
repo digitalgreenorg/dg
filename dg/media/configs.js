@@ -201,7 +201,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline help-color"
 
         }
 
@@ -345,7 +345,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline help-color"
 
         }
     };
@@ -452,7 +452,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline",
+            errorClass: "help-inline help-color",
         }
 
 
@@ -653,7 +653,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline help-color"
         }
     };
 
@@ -683,7 +683,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-block",
+            errorClass: "help-block help-color",
             display: "block"
         },
         add: {
@@ -886,7 +886,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline help-color"
         }
 
     };
