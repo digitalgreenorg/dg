@@ -155,14 +155,6 @@
 	display:none;
 }
 
-#notifications{
-	width: 400px;
-	position:fixed;
-	right: 10px;
-	font-size:12px;
-    top: 50px;
-}
-
 #loaderimg{
 	left: 50%;
 	top: 55%;
@@ -285,12 +277,31 @@ h1 small{
 
 /*----------- Media Queries -----------*/
 
+@media(min-width:767px){
+    
+    #notifications {
+        width: 400px;
+        max-height: auto;
+        position:fixed;
+        right: 10px;
+        font-size:12px;
+        top: 50px;
+    }  
+}
+
 @media(max-width:767px){
-    .big-logo{
+    
+    #notifications {
+        font-size: 12px;
+        position: fixed;
+        top:50px;
+    }
+    
+    .big-logo {
         display: none;
     }
     
-    .small-logo{
+    .small-logo {
         display: block;
         height: 33px;
         width: auto;
