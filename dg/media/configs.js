@@ -460,7 +460,6 @@ function() {
             errorPlacement: function(label, element) {
                 element.parent().append(label);
             }
-
         }
 
 
@@ -665,7 +664,6 @@ function() {
             errorPlacement: function(label, element) {
                 element.parent().append(label);
             }
-
         }
     };
 
@@ -905,7 +903,6 @@ function() {
             errorPlacement: function(label, element) {
                 element.parent().append(label);
             }
-
         }
 
     };
