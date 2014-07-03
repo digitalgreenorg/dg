@@ -107,6 +107,10 @@
 	display:none;
 }
 
+.red-color{
+    color: red
+}
+
 .dis-block {
     display: block;
 }
