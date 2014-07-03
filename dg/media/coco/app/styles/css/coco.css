@@ -132,7 +132,7 @@
 .connection-indicator{
 	width: 10px;
 	position: relative;
-    right: 15px;
+    right: 35px;
     top: 10px;
 	display: none;
 }
@@ -251,7 +251,7 @@ h1 small{
 .user-dropdown {
     position: absolute;
     display: none;
-    right: 0;
+    right: 13px;
     top: 35px;
     background-color: white;
     z-index: 1000;
