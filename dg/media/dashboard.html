@@ -193,28 +193,27 @@
                 </p> -->
 
                 <nav class="navbar coco_main_nav" role="navigation" id="main-navbar" >
-                    <div class="row navbar-header">
-                        <button type="button" class="navbar-right navbar-toggle" style="border:1px solid black" data-toggle="collapse" data-target=".coco_main_nav .navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">
-                            <div id="coco_sync" class="">
-                                <button type="button" class="btn btn-default" id= "sync">Sync
-                                    <span class="badge" id="upload_num"><%=upload_entries%></span>
-                                </button>
-                            </div>
-                        </a>
+                    <div class="row">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-right navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <button type="button" class="coco_sync btn btn-default" id="sync">
+                                Sync
+                                <span class="badge" id="upload_num"><%=upload_entries%></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="row">
-                        <div id="coco_nav" class="col-lg-2 col-md-2 col-sm-3 col-xs-10 navbar-collapse">
+                        <div id="coco_nav" class="col-lg-1 col-md-2 col-sm-3 col-xs-10 navbar-collapse collapse">
                             <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
 
                             </ul>
                         </div>
-                        <div id="coco_nav_add" class="col-lg-1 col-md-1 col-sm-1 col-xs-2 navbar-collapse navbar-right">
+                        <div id="coco_nav_add" class="col-lg-1 col-md-1 col-sm-1 col-xs-2 navbar-collapse navbar-right collapse">
                             <ul id = "dashboard_items_add" class="nav nav-pills nav-stacked " title= "Click to add data">
 
                             </ul>
@@ -250,8 +249,8 @@
     </div>
 
     <div class="row">
-        <div id="side_panel" class="side_panel navbar-static-top col-lg-3 col-md-3 col-sm-4"></div>
-        <div id="content" class="col-lg-9 col-md-9 col-sm-8"></div>
+        <div id="side_panel" class="side_panel navbar-static-top col-lg-2 col-md-3 col-sm-4"></div>
+        <div id="content" class="col-lg-10 col-md-9 col-sm-8"></div>
     </div>
 </script>
 
@@ -1089,7 +1088,7 @@
     <div id="app" class='container-fluid'>
 
     </div>
-    <div id = "notifications" class = "col-xs-11">
+    <div id = "notifications" class = "col-xs-10 col-xs-push-1">
         
     </div>
 	
