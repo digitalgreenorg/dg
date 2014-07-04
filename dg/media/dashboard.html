@@ -15,7 +15,7 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -23,7 +23,14 @@
 	    },
 	  });
 	</script>	
-	
+
+    <script language="JavaScript">
+    select_unselect_all = function (select_all) {
+        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
+        $(select_all).closest("table").find("td:nth-child("+index+") input:checkbox").prop("checked",select_all.checked);
+    }
+    </script>
+
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -523,7 +530,7 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onClick="select_unselect_all(this)">
+                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
                             </th>
                         </tr>
                     </thead>
@@ -531,12 +538,6 @@
                     </tbody>
                 </table>
             </fieldset>
-</script>
-
-<script language="JavaScript">
-select_unselect_all = function (select_all) {
-    $(select_all).closest("table").find('input[type="checkbox"]').not(select_all).prop('checked', select_all.checked);
-}
 </script>
 
 <script type="text/template" id="person_pma_template">
