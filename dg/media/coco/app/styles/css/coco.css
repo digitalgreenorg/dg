@@ -284,6 +284,13 @@ h1 small{
 
 /*----------- Media Queries -----------*/
 
+@media(max-width:481px) {
+    
+    #list_table_filter{
+        margin-right: 5% !important;
+    }
+}
+
 @media(min-width:767px){
     
     #notifications {
