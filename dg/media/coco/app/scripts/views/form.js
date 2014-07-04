@@ -596,7 +596,6 @@ define([
                 } else {
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
-
                         t_json["index"] = index;
                         $f_el.append(expanded_template(t_json));
                     });
