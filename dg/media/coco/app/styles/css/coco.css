@@ -85,10 +85,12 @@
     -moz-border-radius: 2px;
     border-radius: 2px;
     cursor: pointer;
+    border-width: 0 0 1px;
 }
 
 .coco_sync {
     margin-top: 8px;
+    margin-left: 8px;
     margin-bottom: 8px;
 }
 
@@ -406,7 +408,6 @@ h1 small{
 
 .user-dropdown-div {
     position: relative;
-    z-index: 1001;
     right: 0;
 }
 
@@ -448,7 +449,6 @@ h1 small{
 
 #notifications {
     position: absolute;
-    z-index: 1000;
 }
 
 /*----------- Media Queries -----------*/
@@ -463,12 +463,21 @@ h1 small{
 @media(min-width:767px){
     
     #notifications {
-        width: 400px;
         max-height: auto;
         right: 10px;
         font-size:12px;
         top: 50px;
-    }   
+    } 
+    .side_panel{
+        border-radius: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .coco_sync{
+        margin-left: 50px;
+    }
+
+
 }
 
 @media(max-width:767px){
@@ -476,6 +485,10 @@ h1 small{
     #notifications {
         font-size: 12px;
         top:50px;
+    }
+    .coco_main_nav {
+    margin-top: 0px; 
+    margin-bottom: 0px;
     }
     
     .big-logo {
