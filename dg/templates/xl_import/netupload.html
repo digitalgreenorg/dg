@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head>
+	<title>Xl_Import</title>
+	<style type="text/css">
+    h1.detail { color:black;font-weight:bold;font-size:40 }
+    span.name { color:green;font-weight:bold;font-size:40 }
+   
+    </style></head>
+    	
+	<body>
+	    <header>
+	    <h1 class="detail"> <center> digital<span class="name">GREEN </center> </span></h1>
+	    <hr><br><br><br><br><br>
+		</header>
+	
+
+		<!-- Upload form. Note enctype attribute! -->
+	<div id="myDiv">
+	<center><form action="/xl_import/" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<p>{{ form.non_field_errors }}</p> 
+			<p>{{   form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+			<p>
+				{{ form.docfile.errors }}
+				{{ form.docfile }}
+			</p>
+			<p><input type="submit" value="Upload" onclick= /></p>
+		</form></center>
+	</div>
+	</div>
+
+	</body>
+
+</html> 
