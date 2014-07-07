@@ -114,6 +114,152 @@
 
 /* ----------- Rest ------------*/
 
+@font-face{
+    font-family: 'Source Sans Pro';
+    src: url('/media/assets/fonts/sourcesanspro-regular-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.svg#source_sans_problack') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'source_sans_problack';
+    src: url('/media/assets/fonts/sourcesanspro-black-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-black-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-black-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-black-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-black-webfont.svg#source_sans_problack') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_problack_italic';
+    src: url('/media/assets/fonts/sourcesanspro-blackitalic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-blackitalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-blackitalic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-blackitalic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-blackitalic-webfont.svg#source_sans_problack_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_probold';
+    src: url('/media/assets/fonts/sourcesanspro-bold-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-bold-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-bold-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-bold-webfont.svg#source_sans_probold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_probold_italic';
+    src: url('/media/assets/fonts/sourcesanspro-bolditalic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-bolditalic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-bolditalic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-bolditalic-webfont.svg#source_sans_probold_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'source_sans_proextralight';
+    src: url('/media/assets/fonts/sourcesanspro-extralight-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-extralight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-extralight-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-extralight-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-extralight-webfont.svg#source_sans_proextralight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_proXLtIt';
+    src: url('/media/assets/fonts/sourcesanspro-extralightitalic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-extralightitalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-extralightitalic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-extralightitalic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-extralightitalic-webfont.svg#source_sans_proXLtIt') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_proitalic';
+    src: url('/media/assets/fonts/sourcesanspro-italic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-italic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-italic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-italic-webfont.svg#source_sans_proitalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_prolight';
+    src: url('/media/assets/fonts/sourcesanspro-light-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-light-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-light-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-light-webfont.svg#source_sans_prolight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_prolight_italic';
+    src: url('/media/assets/fonts/sourcesanspro-lightitalic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-lightitalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-lightitalic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-lightitalic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-lightitalic-webfont.svg#source_sans_prolight_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_proregular';
+    src: url('/media/assets/fonts/sourcesanspro-regular-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-regular-webfont.svg#source_sans_proregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_prosemibold';
+    src: url('/media/assets/fonts/sourcesanspro-semibold-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-semibold-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-semibold-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-semibold-webfont.svg#source_sans_prosemibold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'source_sans_proSBdIt';
+    src: url('/media/assets/fonts/sourcesanspro-semibolditalic-webfont.eot');
+    src: url('/media/assets/fonts/sourcesanspro-semibolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/media/assets/fonts/sourcesanspro-semibolditalic-webfont.woff') format('woff'),
+         url('/media/assets/fonts/sourcesanspro-semibolditalic-webfont.ttf') format('truetype'),
+         url('/media/assets/fonts/sourcesanspro-semibolditalic-webfont.svg#source_sans_proSBdIt') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+}
 .pointer-hand {
     cursor: pointer
 }
