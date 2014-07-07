@@ -406,6 +406,7 @@ h1 small{
 
 .user-dropdown-div {
     position: relative;
+    z-index: 1001;
     right: 0;
 }
 
