@@ -102,8 +102,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 that.db_not_downloaded();
             });
             
+            // $("#main-navbar").on('click',function(){
+            //     $(".collapse").collapse('hide');
+            // });
             $("#main-navbar").on('click',function(){
-                $(".collapse").collapse('hide');
+                    if($(window).width()<768)
+                        $(".collapse").collapse('hide');
             });
         },
         
