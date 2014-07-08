@@ -344,8 +344,6 @@
 
 div.dataTables_length label {
     width: 460px;
-    float: left;
-    text-align: left;
 }
  
 div.dataTables_length select {
@@ -353,7 +351,6 @@ div.dataTables_length select {
 }
  
 div.dataTables_filter label {
-    float: right;
     width: 460px;
 }
  
@@ -524,9 +521,14 @@ h1 small{
         display: block;
     }
     
-    #list_table_length, #list_table_filter {
+    #list_table_length{
         float: none;
-        width: 50%;
+        width: 70%;
+        margin: 0 auto;
+    }
+    #list_table_filter {
+        float: none;
+        width: 100%;
         margin: 0 auto;
     }
 }
