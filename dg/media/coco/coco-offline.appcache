@@ -54,7 +54,6 @@ CACHE:
 /media/assets/fonts/sourcesanspro-semibold-webfont.woff
 /media/assets/fonts/sourcesanspro-semibolditalic-webfont.woff
 
-
 NETWORK:
 /api/v2/
 *
