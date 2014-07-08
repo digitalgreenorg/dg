@@ -32,6 +32,7 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             dashboard_view.render();
             
             $( ".img-user" ).click(function(event) {
+                // stop the event to up the hierarchy, div -> div-> container -> html. stops the event here. Because the next event should not be called
                 event.stopPropagation();
                 $( ".user-dropdown" ).toggle();
             });

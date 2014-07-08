@@ -16,7 +16,9 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/chosen-magic.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
+
     
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
@@ -207,6 +209,9 @@
                             </button>
                         </div>
                     </div>
+                    <p id="helptext">
+                    Please download the database by clicking on the sync button
+                    </p>
                     <div class="row">
                         <div id="coco_nav" class="col-lg-1 col-md-2 col-sm-3 col-xs-10 navbar-collapse collapse">
                             <ul id = "dashboard_items" class="nav nav-pills nav-stacked" title= "Click to view, search or edit data">
@@ -220,9 +225,6 @@
                         </div>
                     </div>
                 </nav>
-                <p id="helptext">
-                    Please download the database by clicking on the sync button
-                </p>
             </div>
 </script>
 
@@ -249,7 +251,7 @@
     </div>
 
     <div class="row">
-        <div id="side_panel" class="side_panel navbar-static-top col-lg-2 col-md-3 col-sm-4"></div>
+        <div id="side_panel" class="side_panel col-lg-2 col-md-3 col-sm-4"></div>
         <div id="content" class="col-lg-10 col-md-9 col-sm-8"></div>
     </div>
 </script>
@@ -257,7 +259,7 @@
 <script type="text/template" id="status">
     <div id="modal"></div>
 	<div class="page-header mrg-top-0">
-	    <h1 style = "color:#0088cc;"> Welcome to COCO!
+	    <h1 style = "color:#047d0a;"> Welcome to COCO!
             <br>
                 <small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small>
             </br>
@@ -593,7 +595,7 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
+                    <i id="Delete" class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow');"></i>
                 </div>
             </div>
         </td>
@@ -1088,7 +1090,7 @@
     <div id="app" class='container-fluid'>
 
     </div>
-    <div id = "notifications" class = "col-xs-10 col-xs-push-1">
+    <div id = "notifications" class = "col-xs-10 col-xs-push-1 col-sm-3 col-sm-push-8">
         
     </div>
 	
