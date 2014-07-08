@@ -595,7 +595,9 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <i id="Delete" class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow');"></i>
+                    <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
+                        $('tr[index = <%=index%>]').remove();
+                    });"></i>
                 </div>
             </div>
         </td>
