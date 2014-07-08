@@ -752,7 +752,9 @@
     <td>
     <div class="form-group">
         <div class="controls">
-            <i class="glyphicon glyphicon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
+            <i class="glyphicon glyphicon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
+                        $('tr[index = <%=index%>]').remove();
+                    });"></i>
         </div>
     </div>
     </td>
