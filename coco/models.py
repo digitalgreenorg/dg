@@ -34,3 +34,6 @@ class CocoUser(CocoModel):
 
     def get_villages(self):
         return self.villages.all()
+    
+    def __unicode__(self):
+        return  u'%s' % (self.user.username)
