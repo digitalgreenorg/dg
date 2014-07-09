@@ -615,7 +615,7 @@ define([
                         id: "",
                         name: "------------"
                     }));
-                $.each(model_array, function(index, f_model) {
+                $.each(model_array, function (index, f_model) {
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
@@ -625,10 +625,10 @@ define([
                             extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
                         }
                         $f_el.append(that.options_inner_template({
-                                id: parseInt(f_json["id"]),
-                                name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
-                            }));
-                        }
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                        }));
+                    }
                     else {
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),

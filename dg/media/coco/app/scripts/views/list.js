@@ -111,6 +111,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                     "sDom": 'T<"clear">lfrtip',
                     "bDeferRender": true,
                     "aoColumns": aoColumns,
+                    "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "bAutoWidth":false,
                     "oTableTools": {

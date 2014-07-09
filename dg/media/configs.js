@@ -624,6 +624,7 @@ function() {
                 animator: "required",
                 village: "required",
                 videoes_screened: "required",
+                farmer_groups_targeted: "required"
 
             },
             messages: {
@@ -643,6 +644,7 @@ function() {
 				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
+				farmer_groups_targeted: "Groups attended is required"
 			},
 
             highlight: function(element, errorClass, validClass) {

@@ -5026,7 +5026,7 @@ define('views/form',[
                 //create entity_map, dependency map, foreign_elements_rendered, for each foreign element
                 for (var element in this.foreign_entities[f_entity]) {
                     //created mapping of element - entity
-                    this.element_entity_map[element] = f_entity; 
+                    this.element_entity_map[element] = f_entity;
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
@@ -5477,7 +5477,7 @@ define('views/form',[
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
                 //LIMIT: there can be only one expanded foreign element!
-                this.expanded = element; 
+                this.expanded = element;
 
                 //Its edit case and edit model is not yet rendered - so render it
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
@@ -5518,14 +5518,26 @@ define('views/form',[
                         id: "",
                         name: "------------"
                     }));
-                $.each(model_array, function(index, f_model) {
+                $.each(model_array, function (index, f_model) {
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(that.options_inner_template({
-                        id: parseInt(f_json["id"]),
-                        name: f_json[f_entity_desc.name_field]
-                    }));
+                    if (f_json[f_entity_desc.name_field_extra_info]) {
+                        var extra_info = "";
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
+                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        }
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                        }));
+                    }
+                    else {
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field]
+                        }));
+                    }
                 });
                 $f_el.prop("disabled", false);
                 $f_el.trigger("chosen:updated");
@@ -11100,6 +11112,7 @@ define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_co
                     "sDom": 'T<"clear">lfrtip',
                     "bDeferRender": true,
                     "aoColumns": aoColumns,
+                    "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
@@ -11214,13 +11227,6 @@ var message_combined_failure = "";
                             that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
                         });
                     // put dfd for this object-save in the save_complete_dfds list
-               
-                    save_object_dfd.done(function(){
-                        //When the saving is done, add the notification.
-                        notifs_view.add_alert({
-                        notif_type: "success",
-                        message: message_combined_success});
-                    });
                     save_complete_dfds.push(save_object_dfd);
                 });
             } 
@@ -11758,18 +11764,7 @@ define('views/login',[
           console.log("Initializing login view");
           _(this).bindAll('render');
           var that = this;
-          // fetch the user from offline db,if one exists, to show it in the form
-          User.fetch({
-              success: function(model){
-                  console.log("USERMODEL : successfully fetched");
-                  that.render();
-              },
-              error: function(){
-                  console.log("USERMODEL :  fetch failed") 
-                  that.render();           
-              }
-          });
-          
+          that.render();
       },
       
       serialize: function(){
@@ -11785,11 +11780,25 @@ define('views/login',[
       afterRender: function(){
           console.log("rendered login view");
           //render the modal
-          this.$('#login_modal').modal({
-              keyboard: false,
-              backdrop: "static",
+          User.fetch({
+              success: function(model){
+                  console.log("USERMODEL : successfully fetched");
+                  if (!model.attributes.loggedin){
+                      this.$('#login_modal').modal({
+                          keyboard: false,
+                          backdrop: "static",
+                      });
+                  }
+                  
+              },
+              error: function(){
+                  console.log("USERMODEL :  fetch failed") 
+                  this.$('#login_modal').modal({
+                      keyboard: false,
+                      backdrop: "static",
+                  });           
+              }
           });
-          this.$('#login_modal').modal('show');
       },
       
       //fetches u,p from dom  and asks auth module to login
