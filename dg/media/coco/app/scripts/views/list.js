@@ -112,6 +112,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                     "bDeferRender": true,
                     "aoColumns": aoColumns,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
+                    "bAutoWidth":false,
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [
