@@ -88,13 +88,6 @@ var message_combined_failure = "";
                             that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
                         });
                     // put dfd for this object-save in the save_complete_dfds list
-               
-                    save_object_dfd.done(function(){
-                        //When the saving is done, add the notification.
-                        notifs_view.add_alert({
-                        notif_type: "success",
-                        message: message_combined_success});
-                    });
                     save_complete_dfds.push(save_object_dfd);
                 });
             } 
