@@ -1,17 +1,11 @@
 //The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
-define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
+define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
 
     var AppLayout = Backbone.Layout.extend({
         template: "#page_layout",
-        events: {
-            "click #logout": "logout"
-        },
         
         initialize: function() {
-            console.log("initilizing app layout");
-            _(this)
-                .bindAll('render');
-            User.on('change', this.render);
+            console.log("initializing app layout");
         },
         
         serialize: function() {
@@ -30,17 +24,9 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             var dashboard_view = new DashboardView();
             this.setView("#side_panel", dashboard_view);
             dashboard_view.render();
-            
-            $( ".img-user" ).click(function(event) {
-                // stop the event to up the hierarchy, div -> div-> container -> html. stops the event here. Because the next event should not be called
-                event.stopPropagation();
-                $( ".user-dropdown" ).toggle();
-            });
-            
-            /*Hide dropdown if clicked anywhere outside the dropdown*/
-            $( "html" ).click(function() {
-                $( ".user-dropdown" ).hide();
-            });
+            var header_view = new HeaderView();
+            this.setView("#header", header_view);
+            header_view.render();
             
         },
 
@@ -69,16 +55,6 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
             });
             this.setView("#content", formcontroller_view);
             formcontroller_view.render(); //bcoz Its afterRender assumes its elements are in DOM
-        },
-        
-        // logout and navigate to login url
-        logout: function() {
-            Auth.logout()
-                .always(function() {
-                window.Router.navigate('login', {
-                    trigger: true
-                });
-            });
         }
     });
     return new AppLayout;
