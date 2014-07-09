@@ -122,7 +122,7 @@ define([
                 //create entity_map, dependency map, foreign_elements_rendered, for each foreign element
                 for (var element in this.foreign_entities[f_entity]) {
                     //created mapping of element - entity
-                    this.element_entity_map[element] = f_entity; 
+                    this.element_entity_map[element] = f_entity;
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
@@ -573,7 +573,7 @@ define([
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
                 //LIMIT: there can be only one expanded foreign element!
-                this.expanded = element; 
+                this.expanded = element;
 
                 //Its edit case and edit model is not yet rendered - so render it
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
@@ -614,14 +614,26 @@ define([
                         id: "",
                         name: "------------"
                     }));
-                $.each(model_array, function(index, f_model) {
+                $.each(model_array, function (index, f_model) {
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(that.options_inner_template({
-                        id: parseInt(f_json["id"]),
-                        name: f_json[f_entity_desc.name_field]
-                    }));
+                    if (f_json[f_entity_desc.name_field_extra_info]) {
+                        var extra_info = "";
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
+                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        }
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                        }));
+                    }
+                    else {
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field]
+                        }));
+                    }
                 });
                 $f_el.prop("disabled", false);
                 $f_el.trigger("chosen:updated");

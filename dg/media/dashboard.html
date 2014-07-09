@@ -2,7 +2,6 @@
 <!-- manifest="/media/coco/coco-offline.appcache" -->
 <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache">
 <head>
-	
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,9 +26,14 @@
 	        "configs": "/media/configs"
 	    },
 	  });
-	</script>
-	<meta name="robots" content="NONE,NOARCHIVE">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</script>	
+
+    <script language="JavaScript">
+	    select_unselect_all = function (select_all) {
+	        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
+	        $(select_all).closest("table").find("td:nth-child("+index+") input:checkbox").prop("checked",select_all.checked);
+	    }
+    </script>
 
                                         <!--Core Framework templates end here -->
     <!--Page layout, full download, incremental download, background inc download, upload, notifications, status, dashboard,    form page, list page, login, select-options template, -->            
@@ -580,7 +584,7 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                Interested?
+                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
                             </th>
                         </tr>
                     </thead>
