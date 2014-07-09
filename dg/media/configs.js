@@ -680,6 +680,30 @@ function() {
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
+			rules: {
+                person: {
+                    required: true,
+                    
+                },
+                video: {
+                    required: true,                    
+                },                
+                date_of_adoption: {
+                    required: true,
+					validateDate: true
+                }
+            },
+            messages: {
+				person: {
+					required: "person is required"
+				},
+				video: {
+					required: "video is required"
+				},
+				date_of_adoption: {
+					required: "Date of Adoption is required"
+				}
+			},
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
