@@ -1,11 +1,15 @@
 #heading{
 	font-size: 32px;
-	margin-left: 10%;
+}
+.faq-navbar{
+padding-left: 0px;
+padding-right: 0px;
 }
 
 #coco_faq{
 	margin-bottom:10%;
 	margin-top:10%;
+    text-align: center;
 }
 
 .affix{
@@ -16,10 +20,18 @@
 	width: 85%;
 	word-wrap: normal;
 }
+.coco-brand{
+    margin-top:0px;
+    margin-bottom:0px;
+    text-align: center;
+}
 
 .topic{
-	color:#0088cc;
+	color:#047d0a;
 	margin-left:2.4%;
+}
+#sidebar{
+    background-color: #f3f2eb;
 }
 
 ul{
@@ -42,5 +54,6 @@ ul{
     #coco_faq {
         margin-bottom: 1%;
         margin-top : 1%;
+        text-align: left;
     }
 }
