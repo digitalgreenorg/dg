@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         var app_router = new AppRouter();
         //set it on global object to make it easily accessible
         window.Router = app_router;
-        //begin monitoring hashchange events
+        //begin monitoring hash change events
         Backbone.history.start();
     };
 
@@ -110,7 +110,7 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             console.log("Authenticating before routing");
             Auth.check_login()
                 .fail(function(err) {
-                console.log("UnAuthenticated");
+                console.log("Unauthenticated");
                 dfd.reject();
                 //navigate to login url if user is not logged in
                 window.Router.navigate("login", {
