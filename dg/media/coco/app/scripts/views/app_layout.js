@@ -21,13 +21,12 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
         //when layout is rendered, create and put the dashboard view in the side panel - constant across all routes
         afterRender: function() {
             console.log("app layout rendered");
-            var dashboard_view = new DashboardView();
-            this.setView("#side_panel", dashboard_view);
-            dashboard_view.render();
             var header_view = new HeaderView();
             this.setView("#header", header_view);
             header_view.render();
-            
+            var dashboard_view = new DashboardView();
+            this.setView("#side_panel", dashboard_view);
+            dashboard_view.render();
         },
 
         //content panel will be filled with a subview by one of the following functions based on the current url

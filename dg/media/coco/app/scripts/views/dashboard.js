@@ -79,17 +79,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 });
             });
             
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("offline", this.user_offline);
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("online", this.user_online);
-
-            //set the online-offline indicator
-            if (User.isOnline()) {
-                this.user_online();
-            } else {
-                this.user_offline();
-            }
             var that = this;
             
             //disable all links of db not yet downloaded
@@ -110,26 +99,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
         },
         
-        //enable sync button, show online indicator
-        user_online: function() {
-            $('#sync')
-                .removeAttr("disabled");
-            $('#offline')
-                .hide();
-            $('#online')
-                .show();
-        },
-
-        //disable sync button, show offline indicator
-        user_offline: function() {
-            $('#sync')
-                .attr('disabled', true);
-            $('#online')
-                .hide();
-            $('#offline')
-                .show();
-        },
-
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
