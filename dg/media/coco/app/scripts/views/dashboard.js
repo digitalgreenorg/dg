@@ -20,7 +20,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             _(this)
                 .bindAll('render');
             //re-render the view when User model changes - to keep username updated    
-            User.on('change', this.render);
             this.upload_entries = upload_collection.length;
         },
 

@@ -3205,7 +3205,7 @@ define('auth_offline_backend',[
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
-              save_login_state_in_offline(User.get("username"), User.get("password"), false)
+              save_login_state(User.get("username"), User.get("password"), false)
                   .done(function(){
                       dfd.resolve();
                   })
@@ -3217,7 +3217,7 @@ define('auth_offline_backend',[
                return dfd.reject();
           }
       });      
-      return dfd;
+      return dfd.promise();
   }
   
   // if u, p matches that in user table, sets login state = true 
@@ -3227,7 +3227,7 @@ define('auth_offline_backend',[
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state_in_offline(username, password, true)
+                  save_login_state(username, password, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -3241,33 +3241,21 @@ define('auth_offline_backend',[
               }
           },
           error: function(){
-               return dfd.reject("No user found");
+              // No user has been found in the database. This is probably a new login, and database is yet to be created.
+               save_login_state(username, password, true)
+               .done(function (){
+                   return dfd.resolve("New user registered in offline database.");
+               })
+               .fail(function (error){
+                   return dfd.reject(error);
+               });
           }
       });
       return dfd.promise();
   }
   
-  // register a new user - store its info in User table
-  var register = function(username, password){
-      var dfd = new $.Deferred();
-      User.save({
-          key: "user_info",
-          username: username,
-          password: password,
-          loggedin: true
-      },{
-          success: function(){
-              dfd.resolve();
-          },
-          error: function(){
-              dfd.reject();
-          }
-      });
-      return dfd;
-  }
-  
   //saves in offline that this username, password is logged in/out
-  var save_login_state_in_offline = function(username, password, loggedin){
+  var save_login_state = function(username, password, loggedin){
       var dfd = new $.Deferred();
       User.save({'username':username, 'password':password, 'loggedin':loggedin},{
           success: function(){
@@ -3296,20 +3284,13 @@ define('auth_offline_backend',[
                return dfd.reject("User couldn't be fetched from offline db (Offline Backend)");
           }
       });
-      return dfd;
-  }
-  
-  // check whether user is logged in or not without gettinf fresh state of User table
-  var check_login_approx = function(){
-      return User.get("loggedin");
+      return dfd.promise();
   }
 
   return {
     login: login,
     logout: logout,
-    register: register,
-    check_login: check_login,
-    check_login_approx: check_login_approx
+    check_login: check_login
   };
 });
 
@@ -5057,16 +5038,16 @@ define('views/form',[
         params = {
             serialiaze:{
                 //name of first button, not shown if ==""
-                button1: "...",     
-                //name of sec button, not shown if =="" 
-                button2: "..."      
+                button1: "...",
+                //name of sec button, not shown if ==""
+                button2: "..."
             },
             //name of entity to be added/edited
-            entity_name:,           
+            entity_name:,
             //id of model if edit case
-            model_id:,              
+            model_id:,
             //json of model to be shown in edit form - used when json!= json(model_id)
-            model_json:,            
+            model_json:,
         }
         */
         initialize: function(params) {
@@ -5097,7 +5078,7 @@ define('views/form',[
             //fetch all foreign collections and render them when all are fetched
             this.fetch_and_render_foreign_entities();
 
-            //if edit case - fill form with the model    
+            //if edit case - fill form with the model
             if (this.edit_case)
                 this.render_edit_model();
 
@@ -5207,7 +5188,7 @@ define('views/form',[
                         console.log("ERROR: EDIT: Inline collection could not be fetched!");
                     });
             }
-            //not showing the inlines in case of edit_case_json            
+            //not showing the inlines in case of edit_case_json
         },
 
         // fills the inline objects in their templates and puts them into form
@@ -5243,7 +5224,7 @@ define('views/form',[
                 // switch validation on/off based on whether the inline is empty or not
                 tr.on('change', this.switch_validation_for_inlines);
             }
-            
+
             // get last index of already existing inlines
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
@@ -5257,7 +5238,7 @@ define('views/form',[
         // to prevent validation of empty inline rows
         switch_validation_for_inlines: function(ev) {
             //get the changed row
-            var elem = ev.delegateTarget; 
+            var elem = ev.delegateTarget;
             var empty = true;
             $(elem).find(':input').each(function() {
                 if ($(this).val())
@@ -5275,8 +5256,8 @@ define('views/form',[
                 });
             }
         },
-        
-        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json  
+
+        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json
         fill_form_elements: function(container, o_json) {
             container.attr("model_id", o_json.id);
             container.find(':input').each(function() {
@@ -5299,7 +5280,7 @@ define('views/form',[
             return container;
         },
 
-        // start listening to in-form events 
+        // start listening to in-form events
         start_change_events: function() {
             for (element in this.source_dependents_map) {
                 console.log("creating changeevent for - " + element);
@@ -5307,7 +5288,7 @@ define('views/form',[
                 this.$('[name=' + element + ']').change(this.render_dep_for_elements);
             }
         },
-        
+
         // initiate the jquery validation plugin on the form
         initiate_form_field_validation: function() {
             var that = this;
@@ -5317,17 +5298,18 @@ define('views/form',[
                     that.save();
                 }
             });
+            console.log()
             this.$('form')
                 .validate(validate_obj);
         },
-        
+
         // initiate the dropdown and date, time widgets
         initiate_form_widgets: function() {
             $(".chosen-select").chosen({
                 'search_contains': true,
                 'width': '100%'
             });
-            
+
 
             var eDate = new Date();
             enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
@@ -5374,14 +5356,14 @@ define('views/form',[
             }, this);
         },
 
-        // Fully Reset the dependent foreign element by looking at all its sources.  
+        // Fully Reset the dependent foreign element by looking at all its sources.
         filter_dep_for_element: function(element) {
             //get dependent element's entity's collection - to be filtered
             var dep_collection = this.get_collection_of_element(element);
             // get all sources of this element - to filter by
-            var all_sources = this.get_sources_of_element(element); 
+            var all_sources = this.get_sources_of_element(element);
             //model array to be finally inserted into dom
-            var final_models = []; 
+            var final_models = [];
             var that = this;
 
             if (!dep_collection.length)
@@ -5445,7 +5427,7 @@ define('views/form',[
             });
             return final_models;
         },
-        
+
         // filter an array of modal based on a filter defined in configs
         filter_model_array: function(model_array, filter) {
             var filter_attr = filter.attr;
@@ -5459,7 +5441,7 @@ define('views/form',[
             });
             return filtered;
         },
-        
+
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
@@ -5467,7 +5449,7 @@ define('views/form',[
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
 
-            //if any defined, filter the model array before putting into dom 
+            //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
 
@@ -5551,8 +5533,8 @@ define('views/form',[
                 }
             }
         },
-        
-        // normalises the json before putting into form 
+
+        // normalises the json before putting into form
         normalize_json: function(d_json) {
             console.log("FORM: Before Normalised json = " + JSON.stringify(d_json));
             var f_entities = this.foreign_entities;
@@ -5574,14 +5556,14 @@ define('views/form',[
             console.log("FORM: Normalised json = " + JSON.stringify(d_json));
             return d_json;
         },
-        
+
         // Using Backbone.Syphon library to put normalised json into form
         fill_form: function() {
             console.log("FORM: filling form with the model - " + JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
         },
 
-        // used to disable the save button while save is in progress 
+        // used to disable the save button while save is in progress
         set_submit_button_state: function(state) {
             if (state == "disabled")
                 this.$(".action_button").attr("disabled", true);
@@ -5592,7 +5574,7 @@ define('views/form',[
         //err format - {"mediator": {"__all__": ["Animator with this Name, Gender and Partner already exists."]}}
         // {"form_name": {"element name": [list of errors]}}
         show_errors: function(errors, disable_submit) {
-            // used to clear form errors 
+            // used to clear form errors
             if (errors == null) {
                 $('.form_error').remove();
                 $('.error').removeClass("error");
@@ -5619,11 +5601,11 @@ define('views/form',[
                             parent_el.addClass("error"); //highlight
                         } else {
                             var error_el = parent_el.find('[name=' + error_el_name + ']');
-                            error_el.after(error_ul); //insert error message
                             error_el
                                 .parent('div')
                                 .parent('div')
                                 .addClass("error"); //highlight
+                            error_el.parent().append(error_ul); // insert error message after the element
                         }
                     });
                 }, this);
@@ -5634,7 +5616,7 @@ define('views/form',[
             }
 
         },
-        
+
         // TODO: the following 3 methods can be combined into single generic one
         // fetch inline from the form as a list of objects
         parse_inlines: function(raw_json) {
@@ -5682,7 +5664,7 @@ define('views/form',[
 
 
         },
-        
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
@@ -5701,7 +5683,7 @@ define('views/form',[
                 $(inl).find(':input').each(function(){
                     if(!$(this).attr('name'))
                         return;
-                    inline_attrs.push($(this).attr("name"));    
+                    inline_attrs.push($(this).attr("name"));
                     var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
     				switch(this.type) {
     					case 'password':
@@ -5723,7 +5705,7 @@ define('views/form',[
             $.each(inline_attrs, function(index, attr) {
                 delete raw_json[attr];
             });
-            // console.log(inline_attrs);    
+            // console.log(inline_attrs);
         },
 
         // fetch bulks from the form as a list of objects
@@ -5801,7 +5783,7 @@ define('views/form',[
                     else if(typeof(obj[member])=="string"){
                         obj[member] = obj[member].trim();
                     }
-                }    
+                }
             }
             console.log("FORM: After cleaning json - " + JSON.stringify(form_json))
 
@@ -5814,7 +5796,7 @@ define('views/form',[
                 }, this);
             }, this);
         },
-        
+
         //initialize the Denormalize module to denormalize the form's objects
         denormalize_json: function(json) {
             var dfds = [];
@@ -5858,18 +5840,18 @@ define('views/form',[
             this.show_errors(null);
             //set state to loading
             this.set_submit_button_state('loading');
-            //get a json object out of the form 
+            //get a json object out of the form
             this.final_json = this.serialize_form();
-            //clean json to be able to send to server    
+            //clean json to be able to send to server
             this.clean_json(this.final_json);
-            //denormalise the foreign elements in json 
+            //denormalise the foreign elements in json
             var that = this;
             this.denormalize_json(this.final_json)
                 .done(function() {
-                    //preserve the background fields - not entered through form:            
+                    //preserve the background fields - not entered through form:
                     if (that.edit_case)
                         that.final_json = that.extend_edit_json(that.final_json);
-                    /*form rendered, form filled by user, save clicked, savable json prepared, 
+                    /*form rendered, form filled by user, save clicked, savable json prepared,
                     this module's work is done for now, sending event*/
                     var ev_data = {
                         context: that,
@@ -7219,7 +7201,7 @@ define('auth',[
         var dfd = new $.Deferred()
         console.log("checking login");
         if (check_online_login()) {
-            check_offline_login()
+            OfflineAuthBackend.check_login()
                 .done(function() {
                     dfd.resolve();
                 })
@@ -7239,32 +7221,14 @@ define('auth',[
             return true;
         return false;
     }
-
-    //is exactly same as the offline backend uses. (Since offline backend auth is custom written by us)
-    var check_offline_login = function() {
-        var dfd = new $.Deferred();
-        // check login state stored in offline db
-        User.fetch({
-            success: function() {
-                if (User.get("loggedin"))
-                    return dfd.resolve();
-                else
-                    return dfd.reject("User is currently logged out. (Offline Backend)");
-            },
-            error: function() {
-                return dfd.reject("User couldn't be fetched from offline db");
-            }
-        });
-        return dfd;
-    }
-
+    
     // logs out of the offline backend, if internet accessible- logs out of the server backend
     var logout = function() {
         var dfd = new $.Deferred();
         var that = this;
         online_logout()
             .always(function() {
-                offline_logout()
+                OfflineAuthBackend.logout()
                     .always(function() {
                         dfd.resolve();
                     })
@@ -7290,20 +7254,7 @@ define('auth',[
 
         return dfd.promise();
     }
-
-    // contact OfflineAuthBackend to log out of the offline backend 
-    var offline_logout = function() {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.logout()
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function() {
-                dfd.reject();
-            });
-        return dfd;
-    }
-
+    
     // logs-in to the offline backend, if internet accessible - logs-in to the server backend
     var login = function(username, password) {
         var dfd = new $.Deferred();
@@ -7317,54 +7268,40 @@ define('auth',[
                     dfd.reject(error);
                 })
                 .done(function() {
-                    // try offline backend login
-                    offline_login(username, password)
-                        .fail(function(error) {
-                            console.log("Offline login failed - " + error);
-                            // If no user exists(new machine - first time login) the user is registered in the offline backend
-                            if (error == "No user found") {
-                                offline_register(username, password)
-                                    .fail(function(error) {
-                                        console.log("Offline register failed - " + error);
-                                        dfd.reject(error);
-                                    })
-                                    .done(function() {
-                                        console.log("Registered in Offline backend");
-                                        console.log("Login Successfull");
-                                        dfd.resolve();
-                                    });
-                            } else
-                                dfd.reject(error);
-                        })
+                    // online login successful, try offline backend login
+                    OfflineAuthBackend.login(username, password)
                         .done(function() {
-                            // login successfull
-                            console.log("Login Successfull");
-                            // run any onLogin logic defined by user
-                            if (all_configs.misc.onLogin)
-                                all_configs.misc.onLogin(Offline, this);
+                            // login successful
+                            console.log("Login Successful");
+                            post_login_success();
                             dfd.resolve();
+                        })
+                        .fail(function (error){
+                            console.log("Offline login failed - " + error);
+                            dfd.reject(error);
                         });
                 });
         } else {
-            // internet nt accessible - only try loggin into offline backend
-            offline_login(username, password)
-                .fail(function(error) {
-                    console.log("Offline login failed - " + error);
-                    // no db exists - can't register user till server authenticates
-                    if (error == "No user found")
-                        dfd.reject("You need to be online till database has been downloaded.");
-                    else
-                        dfd.reject(error);
-                })
+            // internet not accessible - only try logging into offline backend
+            OfflineAuthBackend.login(username, password)
                 .done(function() {
-                    console.log("Login Successfull");
-                    // run any onLogin logic defined by user
-                    if (all_configs.misc.onLogin)
-                        all_configs.misc.onLogin(Offline, this);
+                    console.log("Login Successful");
+                    post_login_success();
                     dfd.resolve();
+                })
+                .fail(function (error) {
+                    console.log("Offline login failed - " + error);
+                    dfd.reject(error);
                 });
         }
         return dfd;
+    }
+    
+    // run any onLogin logic defined by user
+    var post_login_success = function (){
+        if (all_configs.misc.onLogin)
+            all_configs.misc.onLogin(Offline, this);
+            return;
     }
 
     // resolves if server returns 1 or internet is not connected otherwise rejects
@@ -7389,33 +7326,6 @@ define('auth',[
         return dfd.promise();
     }
     
-
-    //contact OfflineAuthBackend to authenticate a user against offline backend  
-    var offline_login = function(username, password) {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.login(username, password)
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function(error) {
-                dfd.reject(error);
-            });
-        return dfd.promise();
-    }
-
-    // contact OfflineAuthBackend to register a new user in offline backend
-    var offline_register = function(username, password) {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.register(username, password)
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function(error) {
-                dfd.reject(error);
-            });
-        return dfd.promise();
-    }
-
     return {
         check_login: check_login,
         logout: logout,
@@ -7504,7 +7414,7 @@ define('views/full_download',[
             //intialize UI objects
             this.$('#full_download_modal').modal({
                 keyboard: false,
-                backdrop: true,
+                backdrop: "static",
             });
             this.$('#full_download_modal').modal('show');
             
@@ -8023,7 +7933,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             _(this)
                 .bindAll('render');
             //re-render the view when User model changes - to keep username updated    
-            User.on('change', this.render);
             this.upload_entries = upload_collection.length;
         },
 
@@ -8333,6 +8242,59 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
 
     // Our module now returns our view
     return DashboardView;
+});
+
+//This view the page header containt the branding, and the user profile - along with the username and logout action.
+define('views/app_header',['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth'],
+
+function(jquery, pass, configs, layoutmanager, User, Auth) {
+
+    var HeaderView = Backbone.Layout.extend({
+        template: "#page_header",
+        events: {
+            "click #logout": "logout"
+        },
+        
+        initialize: function() {
+            _(this)
+                .bindAll('render');
+            // Re-render the view when User model changes - to keep username updated    
+            User.on('change', this.render);
+        },
+
+        serialize: function() {
+            // Send username 
+            var username = User.get("username");
+            return {
+                username: username,
+            }
+        },
+
+        afterRender: function() { 
+            console.log("rendering page_header");
+            $( ".img-user" ).click(function(event) {
+                // Stops the event from traveling up the hierarchy div-> container-> html.
+                event.stopPropagation();
+                $( ".user-dropdown" ).toggle();
+            });
+            
+            // Hide dropdown if clicked anywhere outside the dropdown.
+            $( "html" ).click(function() {
+                $( ".user-dropdown" ).hide();
+            });
+        },
+        // logout and navigate to login url
+        logout: function() {
+            Auth.logout()
+                .always(function() {
+                window.location.href = window.location.origin + window.location.pathname;
+            });
+        }
+    });
+
+
+    // Our module now returns our view
+    return HeaderView;
 });
 
 /*
@@ -11114,6 +11076,7 @@ define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_co
                     "aoColumns": aoColumns,
                     "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
+                    "bAutoWidth":false,
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [
@@ -11850,19 +11813,13 @@ define('views/login',[
   return LoginView;
 });
 //The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
-define('views/app_layout',['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
+define('views/app_layout',['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
 
     var AppLayout = Backbone.Layout.extend({
         template: "#page_layout",
-        events: {
-            "click #logout": "logout"
-        },
         
         initialize: function() {
-            console.log("initilizing app layout");
-            _(this)
-                .bindAll('render');
-            User.on('change', this.render);
+            console.log("initializing app layout");
         },
         
         serialize: function() {
@@ -11881,17 +11838,9 @@ define('views/app_layout',['views/dashboard', 'views/list', 'views/form_controll
             var dashboard_view = new DashboardView();
             this.setView("#side_panel", dashboard_view);
             dashboard_view.render();
-            
-            $( ".img-user" ).click(function(event) {
-                // stop the event to up the hierarchy, div -> div-> container -> html. stops the event here. Because the next event should not be called
-                event.stopPropagation();
-                $( ".user-dropdown" ).toggle();
-            });
-            
-            /*Hide dropdown if clicked anywhere outside the dropdown*/
-            $( "html" ).click(function() {
-                $( ".user-dropdown" ).hide();
-            });
+            var header_view = new HeaderView();
+            this.setView("#header", header_view);
+            header_view.render();
             
         },
 
@@ -11920,16 +11869,6 @@ define('views/app_layout',['views/dashboard', 'views/list', 'views/form_controll
             });
             this.setView("#content", formcontroller_view);
             formcontroller_view.render(); //bcoz Its afterRender assumes its elements are in DOM
-        },
-        
-        // logout and navigate to login url
-        logout: function() {
-            Auth.logout()
-                .always(function() {
-                window.Router.navigate('login', {
-                    trigger: true
-                });
-            });
         }
     });
     return new AppLayout;
@@ -11944,7 +11883,7 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
         var app_router = new AppRouter();
         //set it on global object to make it easily accessible
         window.Router = app_router;
-        //begin monitoring hashchange events
+        //begin monitoring hash change events
         Backbone.history.start();
     };
 
@@ -12047,7 +11986,7 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
             console.log("Authenticating before routing");
             Auth.check_login()
                 .fail(function(err) {
-                console.log("UnAuthenticated");
+                console.log("Unauthenticated");
                 dfd.reject();
                 //navigate to login url if user is not logged in
                 window.Router.navigate("login", {

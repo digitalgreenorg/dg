@@ -10,7 +10,7 @@ define([
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
-              save_login_state_in_offline(User.get("username"), User.get("password"), false)
+              save_login_state(User.get("username"), User.get("password"), false)
                   .done(function(){
                       dfd.resolve();
                   })
@@ -22,7 +22,7 @@ define([
                return dfd.reject();
           }
       });      
-      return dfd;
+      return dfd.promise();
   }
   
   // if u, p matches that in user table, sets login state = true 
@@ -32,7 +32,7 @@ define([
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state_in_offline(username, password, true)
+                  save_login_state(username, password, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -46,33 +46,21 @@ define([
               }
           },
           error: function(){
-               return dfd.reject("No user found");
+              // No user has been found in the database. This is probably a new login, and database is yet to be created.
+               save_login_state(username, password, true)
+               .done(function (){
+                   return dfd.resolve("New user registered in offline database.");
+               })
+               .fail(function (error){
+                   return dfd.reject(error);
+               });
           }
       });
       return dfd.promise();
   }
   
-  // register a new user - store its info in User table
-  var register = function(username, password){
-      var dfd = new $.Deferred();
-      User.save({
-          key: "user_info",
-          username: username,
-          password: password,
-          loggedin: true
-      },{
-          success: function(){
-              dfd.resolve();
-          },
-          error: function(){
-              dfd.reject();
-          }
-      });
-      return dfd;
-  }
-  
   //saves in offline that this username, password is logged in/out
-  var save_login_state_in_offline = function(username, password, loggedin){
+  var save_login_state = function(username, password, loggedin){
       var dfd = new $.Deferred();
       User.save({'username':username, 'password':password, 'loggedin':loggedin},{
           success: function(){
@@ -101,19 +89,12 @@ define([
                return dfd.reject("User couldn't be fetched from offline db (Offline Backend)");
           }
       });
-      return dfd;
-  }
-  
-  // check whether user is logged in or not without gettinf fresh state of User table
-  var check_login_approx = function(){
-      return User.get("loggedin");
+      return dfd.promise();
   }
 
   return {
     login: login,
     logout: logout,
-    register: register,
-    check_login: check_login,
-    check_login_approx: check_login_approx
+    check_login: check_login
   };
 });

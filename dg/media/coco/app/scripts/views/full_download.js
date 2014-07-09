@@ -79,7 +79,7 @@ define([
             //intialize UI objects
             this.$('#full_download_modal').modal({
                 keyboard: false,
-                backdrop: true,
+                backdrop: "static",
             });
             this.$('#full_download_modal').modal('show');
             
