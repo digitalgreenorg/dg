@@ -36,7 +36,40 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             $( "html" ).click(function() {
                 $( ".user-dropdown" ).hide();
             });
+            
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("offline", this.user_offline);
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("online", this.user_online);
+
+            //set the online-offline indicator
+            if (User.isOnline()) {
+                this.user_online();
+            } else {
+                this.user_offline();
+            }
         },
+        
+        //enable sync button, show online indicator
+        user_online: function() {
+            $('#sync')
+                .removeAttr("disabled");
+            $('#offline')
+                .hide();
+            $('#online')
+                .show();
+        },
+
+        //disable sync button, show offline indicator
+        user_offline: function() {
+            $('#sync')
+                .attr('disabled', true);
+            $('#online')
+                .hide();
+            $('#offline')
+                .show();
+        },
+        
         // logout and navigate to login url
         logout: function() {
             Auth.logout()

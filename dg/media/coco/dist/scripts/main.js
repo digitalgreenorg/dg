@@ -7992,17 +7992,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 });
             });
             
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("offline", this.user_offline);
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("online", this.user_online);
-
-            //set the online-offline indicator
-            if (User.isOnline()) {
-                this.user_online();
-            } else {
-                this.user_offline();
-            }
             var that = this;
             
             //disable all links of db not yet downloaded
@@ -8023,26 +8012,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
         },
         
-        //enable sync button, show online indicator
-        user_online: function() {
-            $('#sync')
-                .removeAttr("disabled");
-            $('#offline')
-                .hide();
-            $('#online')
-                .show();
-        },
-
-        //disable sync button, show offline indicator
-        user_offline: function() {
-            $('#sync')
-                .attr('disabled', true);
-            $('#online')
-                .hide();
-            $('#offline')
-                .show();
-        },
-
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
@@ -8282,7 +8251,40 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             $( "html" ).click(function() {
                 $( ".user-dropdown" ).hide();
             });
+            
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("offline", this.user_offline);
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("online", this.user_online);
+
+            //set the online-offline indicator
+            if (User.isOnline()) {
+                this.user_online();
+            } else {
+                this.user_offline();
+            }
         },
+        
+        //enable sync button, show online indicator
+        user_online: function() {
+            $('#sync')
+                .removeAttr("disabled");
+            $('#offline')
+                .hide();
+            $('#online')
+                .show();
+        },
+
+        //disable sync button, show offline indicator
+        user_offline: function() {
+            $('#sync')
+                .attr('disabled', true);
+            $('#online')
+                .hide();
+            $('#offline')
+                .show();
+        },
+        
         // logout and navigate to login url
         logout: function() {
             Auth.logout()
@@ -11835,13 +11837,12 @@ define('views/app_layout',['views/dashboard', 'views/app_header', 'views/list', 
         //when layout is rendered, create and put the dashboard view in the side panel - constant across all routes
         afterRender: function() {
             console.log("app layout rendered");
-            var dashboard_view = new DashboardView();
-            this.setView("#side_panel", dashboard_view);
-            dashboard_view.render();
             var header_view = new HeaderView();
             this.setView("#header", header_view);
             header_view.render();
-            
+            var dashboard_view = new DashboardView();
+            this.setView("#side_panel", dashboard_view);
+            dashboard_view.render();
         },
 
         //content panel will be filled with a subview by one of the following functions based on the current url
