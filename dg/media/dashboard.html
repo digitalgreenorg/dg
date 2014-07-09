@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
-<!-- manifest="/media/coco/coco-offline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache">
+<!-- manifest="/media/coco/coco-offline.appcache" manifest="/media/coco/coco-offline.appcache"-->
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache" >
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -26,13 +26,13 @@
 	        "configs": "/media/configs"
 	    },
 	  });
-	</script>	
+	</script>
 
     <script language="JavaScript">
-	    select_unselect_all = function (select_all) {
-	        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
-	        $(select_all).closest("table").find("td:nth-child("+index+") input:checkbox").prop("checked",select_all.checked);
-	    }
+    select_unselect_all = function (select_all) {
+        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
+        $(select_all).closest("table").find("td:nth-child("+index+") input:checkbox").prop("checked",select_all.checked);
+    }
     </script>
 
                                         <!--Core Framework templates end here -->
@@ -588,7 +588,8 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
+                                <input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
+                                Interested?
                             </th>
                         </tr>
                     </thead>
