@@ -20,18 +20,7 @@ define([
           console.log("Initializing login view");
           _(this).bindAll('render');
           var that = this;
-          // fetch the user from offline db,if one exists, to show it in the form
-          User.fetch({
-              success: function(model){
-                  console.log("USERMODEL : successfully fetched");
-                  that.render();
-              },
-              error: function(){
-                  console.log("USERMODEL :  fetch failed") 
-                  that.render();           
-              }
-          });
-          
+          that.render();
       },
       
       serialize: function(){
@@ -47,11 +36,25 @@ define([
       afterRender: function(){
           console.log("rendered login view");
           //render the modal
-          this.$('#login_modal').modal({
-              keyboard: false,
-              backdrop: "static",
+          User.fetch({
+              success: function(model){
+                  console.log("USERMODEL : successfully fetched");
+                  if (!model.attributes.loggedin){
+                      this.$('#login_modal').modal({
+                          keyboard: false,
+                          backdrop: "static",
+                      });
+                  }
+                  
+              },
+              error: function(){
+                  console.log("USERMODEL :  fetch failed") 
+                  this.$('#login_modal').modal({
+                      keyboard: false,
+                      backdrop: "static",
+                  });           
+              }
           });
-          this.$('#login_modal').modal('show');
       },
       
       //fetches u,p from dom  and asks auth module to login
