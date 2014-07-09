@@ -4,7 +4,6 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-
 	<TITLE>Dashboard</TITLE>
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css">
@@ -24,7 +23,14 @@
 	    },
 	  });
 	</script>	
-	
+
+    <script language="JavaScript">
+    select_unselect_all = function (select_all) {
+        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
+        $(select_all).closest("table").find("td:nth-child("+index+") input:checkbox").prop("checked",select_all.checked);
+    }
+    </script>
+
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -524,7 +530,7 @@
                                 Question Asked
                             </th>
                             <th class="notbold">
-                                Interested?
+                                Interested?<input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
                             </th>
                         </tr>
                     </thead>
