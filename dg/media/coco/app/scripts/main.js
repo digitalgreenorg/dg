@@ -11,13 +11,13 @@ require.config({
         'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
         'syphon': 'libs/backbone.syphon',
         'bootstrapjs': 'libs/bootstrap/js/bootstrap.min',
-        'chosen': 'libs/chosen/chosen.jquery.min',
+        'chosen': 'libs/chosen-select/chosen.jquery.min',
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
         'tabletools': 'libs/tabletools_media/js/TableTools',
         'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
-        'configs': '../../../configs',
+        'configs': '../../../configs'
     },
 
     //specifying dependencies of non-amd libraries
@@ -68,9 +68,7 @@ require.config({
         },
         'time_picker': {
             deps: ["jquery"]
-        },
-
-
+        }
     }
 });
 

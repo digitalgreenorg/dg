@@ -201,8 +201,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
-
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
     };
@@ -345,8 +347,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
-
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
     };
 
@@ -452,7 +456,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline",
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
 
@@ -617,6 +624,7 @@ function() {
                 animator: "required",
                 village: "required",
                 videoes_screened: "required",
+                farmer_groups_targeted: "required"
 
             },
             messages: {
@@ -636,6 +644,7 @@ function() {
 				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
+				farmer_groups_targeted: "Groups attended is required"
 			},
 
             highlight: function(element, errorClass, validClass) {
@@ -653,7 +662,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
     };
 
@@ -668,6 +680,30 @@ function() {
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
+			rules: {
+                person: {
+                    required: true,
+                    
+                },
+                video: {
+                    required: true,                    
+                },                
+                date_of_adoption: {
+                    required: true,
+					validateDate: true
+                }
+            },
+            messages: {
+				person: {
+					required: "person is required"
+				},
+				video: {
+					required: "video is required"
+				},
+				date_of_adoption: {
+					required: "Date of Adoption is required"
+				}
+			},
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -683,7 +719,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-block",
+            errorClass: "help-block red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            },
             display: "block"
         },
         add: {
@@ -884,7 +923,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
     };

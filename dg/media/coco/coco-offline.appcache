@@ -1,8 +1,7 @@
 CACHE MANIFEST
-# 2014-04-14 v2.0.52
+# 2014-07-09 v2.1.5
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
-/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css
 /media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css
 /media/coco/app/scripts/libs/tabletools_media/css/TableTools.css
 /media/coco/app/scripts/libs/bootstrap/img/glyphicons-halflings.png 
@@ -10,7 +9,9 @@ CACHE:
 /media/coco/app/styles/css/coco.css
 /media/coco/app/styles/css/datepicker.css
 /media/coco/app/styles/css/bootstrap-timepicker.css
-/media/coco/app/scripts/libs/chosen/chosen.css
+/media/coco/app/scripts/libs/chosen-select/chosen.css
+/media/coco/app/styles/css/chosen-magic.css
+/media/coco/app/styles/css/tabletools_custom.css
 
 /media/configs.js
 /media/coco/dist/scripts/main.js
@@ -30,16 +31,31 @@ CACHE:
 /media/coco/app/scripts/libs/datatablejs_media/images/sort_desc.png
 /media/coco/app/scripts/libs/datatablejs_media/images/Sorting%20icons.psd
 /media/coco/app/images/loading_text.gif
-/media/coco/app/scripts/libs/chosen/chosen-sprite.png 
+/media/coco/app/scripts/libs/chosen-select/chosen-sprite.png
+/media/coco/app/styles/css/chosen-sprite.png 
 /media/coco/app/images/offline.png
 /media/coco/app/images/online.png
 /media/coco/app/images/add.png
 /media/coco/app/images/table.png
 /media/coco/app/images/sync.png
 /media/coco/app/images/feedback.png
- 
+
 /media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf
- 
+
+/media/assets/fonts/sourcesanspro-light-webfont.woff
+/media/assets/fonts/sourcesanspro-lightitalic-webfont.woff
+/media/assets/fonts/sourcesanspro-bold-webfont.woff
+/media/assets/fonts/sourcesanspro-bolditalic-webfont.woff
+/media/assets/fonts/sourcesanspro-black-webfont.woff
+/media/assets/fonts/sourcesanspro-blackitalic-webfont.woff
+/media/assets/fonts/sourcesanspro-blackitalic-webfont.woff
+/media/assets/fonts/sourcesanspro-regular-webfont.woff
+/media/assets/fonts/sourcesanspro-italic-webfont.woff
+/media/assets/fonts/sourcesanspro-extralight-webfont.woff
+/media/assets/fonts/sourcesanspro-extralightitalic-webfont.woff
+/media/assets/fonts/sourcesanspro-semibold-webfont.woff
+/media/assets/fonts/sourcesanspro-semibolditalic-webfont.woff
+
 NETWORK:
 /api/v2/
 *
