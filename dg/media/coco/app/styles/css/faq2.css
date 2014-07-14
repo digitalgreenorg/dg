@@ -1,0 +1,27 @@
+body {
+	position: relative;
+}
+#sidebar.affix {
+    position: relative;
+
+}
+.faq-navbar{
+float: left;
+}
+
+@media (min-width: 769px) {
+  #sidebar.affix-top {
+    position: static;
+  	margin-top: 80px;
+
+  }
+  .faq-navbar{
+float: none;
+}
+  
+  #sidebar.affix {
+    position: fixed;
+    top:80px;
+
+  }
+}
