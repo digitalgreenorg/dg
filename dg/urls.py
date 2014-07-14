@@ -8,7 +8,7 @@ import feeds.urls
 
 import social_website.api_urls
 import social_website.urls
-
+import xl_import.urls
 from admin import admin
 from coco.data_log import send_updated_log
 from dashboard.views import feed_animators, get_person, redirect_url, search
@@ -41,8 +41,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
+
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
     
+
+    (r'^xl_import/', include(xl_import.urls)),
+
     (r'^coco/', include(coco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^path/', include('path.urls')),

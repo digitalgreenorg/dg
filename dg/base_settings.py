@@ -77,6 +77,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/social_website'),
     os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
 	os.path.join(PROJECT_PATH, 'media/'),
+    os.path.join(PROJECT_PATH,  'templates/xl_import')
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -119,6 +120,7 @@ INSTALLED_APPS = (
     'human_resources',
     'feeds',
     'deoanalytics',
+    'xl_import'
 )
 
 #following line makes sessionid cookie accessible to in-browser javascript
