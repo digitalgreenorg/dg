@@ -262,6 +262,9 @@
 }
 
 }
+.hide-media{
+}
+
 .pointer-hand {
     cursor: pointer
 }
@@ -464,7 +467,8 @@ h1 small{
         right: 10px;
         font-size:12px;
         top: 50px;
-    } 
+    }
+
     .side_panel{
         border-radius: 0;
         padding-left: 0;
@@ -492,6 +496,10 @@ h1 small{
         display: none;
     }
     
+    .hide-media{
+        display: none;
+    }
+
     .small-logo {
         display: block;
         height: 33px;
