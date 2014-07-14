@@ -44,7 +44,7 @@ function partnersetter()
 function setpartnerlistdiv(text)
     {   
  	    var partner_id = text.id;
- 	    var partner_name = text.innerText.trim();
+ 	    var partner_name = $(text).html();//text.innerText.trim();
     	$("div#partnername").html(partner_name); 
     	document.getElementById('districtlist').classList.remove('nodisplay');
     	document.getElementById('districtlist').classList.add('blockdisplay');
@@ -97,7 +97,7 @@ function districtfilter(partner_id)
 function setdistrictlistdiv(text, partner_id)
     {	
     	chosendeos = [];    	
- 	    var district_name = text.innerText.trim();
+ 	    var district_name = $(text).html();//text.innerText.trim();
     	$("div#districtname").html(district_name);   
     	deofilter(district_name, partner_id);
     	document.getElementById('deolist').classList.remove('nodisplay');
@@ -122,7 +122,7 @@ function deofilter(district_name, partner_id)
               for (var i = 0; i < data.length; i++) 
               {
              	 listitems += '<li id="' + i + data[i].deo_id + '"class=' + '"item h-overflow deonotselected hdg-trunc"' + 'onclick="' 
-             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
+             	 + "makedeochecked('" + i + data[i].deo_id + "','" + data[i].deo_id + "','" + data[i].deo_name + "')" + '">' + 
              	 '<input id ="' + data[i].deo_id + '"type=' + '"checkbox"' + '/>' + data[i].deo_name + '</li>';
               }
               $("ul#deolist").html(listitems);
@@ -133,20 +133,20 @@ function deofilter(district_name, partner_id)
        });
     }
     
-function makedeochecked(itemid, deo_name)
+function makedeochecked(itemid, deoid, deo_name)
     {
     	if ($('#' + itemid).hasClass("deonotselected"))
     		{
     			$('#' + itemid).removeClass("deonotselected");
     			$('#' + itemid).addClass("deoselected");
-    			$('#' + itemid).prop('checked', true);
+    			$('#' + deoid).prop('checked', true);
     			chosendeos.push(deo_name);	
     		}
     	else if ($('#' + itemid).hasClass("deoselected"))
     		{
     			$('#' + itemid).removeClass("deoselected");
     			$('#' + itemid).addClass("deonotselected");
-    			$('#' + itemid).prop('checked', false);
+    			$('#' + deoid).prop('checked', false);
     			var index = chosendeos.indexOf(deo_name);
 	 	    	chosendeos.splice(index,1);
     		}
@@ -484,7 +484,7 @@ function goclicked()
        $("ul#deobox").html(list);
        document.getElementById("deo0").classList.add('active');
        
-       deoname = document.getElementById("deo0").innerText.trim();
+       deoname = $("#deo0").text().toUpperCase();
       
        selecteddeoname = deoname;
               
@@ -493,8 +493,7 @@ function goclicked()
 
 function makedeoactive(deoname_element, total, val)
    {
-	   deoname = deoname_element.innerText.trim();
-	   	
+	   deoname = $(deoname_element).text().toUpperCase();//deoname_element.innerText.trim();
 	   selecteddeoname = deoname;
 	   
        for (var j = 0; j < total; j++) 
@@ -566,6 +565,10 @@ function analyzedeo()
    	}
    	else if ($("#monthly").hasClass("active") == true) 
    	{ 
+   		var userdate = document.getElementById('dateshow').innerHTML;
+   		var getmon = userdate.split(" ");
+   		var mon = getmon[0];
+   		
    		mode = 3;
    		start_date = getfirstdateofselectedmonth(2);
    		end_date = getlastdateofselectedmonth();
@@ -659,13 +662,13 @@ function analyzedeo()
 		 					} 		   					
             		   }
 					
-            	   lin1 = "No. of screenings entered: " + sumscreenings;
-            	   lin2 = "No. of adoptions entered : " + sumadoptions;
-            	   lin3 = "No. of persons entered   : " + data.persons;
-            	   if (data.slag == "NA")	{lin4 = "Average Screening Lag    : " + data.slag;}
-            	   else	{lin4 = "Average Screening Lag    : " + data.slag + " days";}
-            	   if (data.alag == "NA")	{lin5 = "Average Adoption Lag     : " + data.alag;}
-            	   else	{lin5 = "Average Adoption Lag     : " + data.alag + " days";}
+            	   lin1 = sumscreenings;
+            	   lin2 = sumadoptions;
+            	   lin3 = data.persons;
+            	   if (data.slag == "NA")	{lin4 = data.slag;}
+            	   else	{lin4 = data.slag + " days";}
+            	   if (data.alag == "NA")	{lin5 = data.alag;}
+            	   else	{lin5 = data.alag + " days";}
             	   
              	   $("p#screenings").html(lin1);
             	   $("p#adoptions").html(lin2);
@@ -704,7 +707,7 @@ function makechart(datelist,s_list,a_list)
                    color: '#808080'
                }]
            },
-           
+
            plotOptions: {
                series: {
                    cursor: 'pointer',
@@ -712,28 +715,47 @@ function makechart(datelist,s_list,a_list)
                        events: {
                            click: function() {
                         	   //dateformatted = new Date (yyyy, mm, dd);
-                        	   
-                        	   var userdate = document.getElementById('dateshow').innerHTML;
-                    		   var dates = userdate.split("-");
-                    		   var date1 = dates[0].split(" ");
-                    		   var yyyy = date1[2];
+                        	   if ($("#weekly").hasClass("active") == true)
+                        		   {
+	                            	   var userdate = document.getElementById('dateshow').innerHTML;
+	                        		   var dates = userdate.split("-");
+	                        		   var date1 = dates[0].split(" ");
+	                        		   var yyyy = date1[2];
+	
+	                            	   curdate = this.category;
+	                            	   var dd = curdate.split(' ')[0];
+	                            	   var mon = curdate.split(' ')[1];
+	                            	   var mm = getmonthnofromname(mon);
+	                            	   
+	                            	   if(dd<10) {dd='0'+dd}
+	                            	   if(mm<10) {mm='0'+mm}
+	                            	   
+	                            	   var dateformatted = new Date (yyyy, mm, dd);
+	                            	   
+	                            	   makeactive(1);
+	                            	   setdate(0, dateformatted);
+	                            	   analyzedeo();                        		   
+                      		     }
+                        	   else if ($("#monthly").hasClass("active") == true)
+                        		 {
+                        	 	   var userdate = document.getElementById('dateshow').innerHTML;
+                        		   var splitteduserdate = userdate.split(" ");
+                        		   
+                        		   var mon = splitteduserdate[0];
+                        		   var yyyy = splitteduserdate[1];
+                        		   
+                        		   var mm = getmonthnofromname(mon);
+                            	   
+                            	   if(mm<10) {mm='0'+mm}                   		   
+                            	   var dd = this.category;
+                            	   if(dd<10) {dd='0'+dd}
 
-                        	   curdate = this.category;
-                        	   console.log(curdate);
-                        	   var dd = curdate.split(' ')[0];
-                        	   var mon = curdate.split(' ')[1];
-                        	   var mm = getmonthnofromname(mon);
-                        	   
-                        	   if(dd<10) {dd='0'+dd}
-                        	   if(mm<10) {mm='0'+mm}
-                        	   
-                        	   var dateformatted = new Date (yyyy, mm, dd);
-                        	   
-                        	   console.log(dateformatted);
-                        	   
-                        	   makeactive(1);
-                        	   setdate(0, dateformatted);
-                        	   analyzedeo();
+                            	   var dateformatted = new Date (yyyy, mm, dd);                     		   
+                            	                             	   
+                            	   makeactive(1);
+                            	   setdate(0, dateformatted);
+                            	   analyzedeo();    
+                        		 }
                            }
                        }
                    }

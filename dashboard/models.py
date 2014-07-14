@@ -1,3 +1,6 @@
+import datetime
+import sys
+import traceback
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -14,6 +17,7 @@ from libs.geocoder import Geocoder
 
 import logging
 import sys, traceback, datetime
+
 
 # Variables
 GENDER_CHOICES = (
@@ -110,9 +114,6 @@ EQUIPMENT_PURPOSE = (
                      (7,'Individual'),
 )
 
-
-
-    
 class ServerLog(models.Model):
     id = BigAutoField(primary_key=True)
     timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
@@ -925,6 +926,12 @@ class PersonMeetingAttendance(CocoModel):
     interested = models.BooleanField(db_column="INTERESTED", db_index=True)
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
+    
+    def get_village(self):
+        return self.person.village.id
+    def get_partner(self):
+        return self.person.village.block.district.partner.id
+    
     class Meta:
         db_table = u'person_meeting_attendance'
     
@@ -934,6 +941,8 @@ post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttend
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
+post_save.connect(save_log, sender = PersonMeetingAttendance)
+pre_delete.connect(delete_log, sender = PersonMeetingAttendance)
 
 class Equipment(CocoModel):
     id = BigAutoField(primary_key = True)

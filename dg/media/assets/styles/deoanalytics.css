@@ -21,11 +21,17 @@
 .boxdesign
 {
 	clear:both;
-	border: 1px solid #c2c1bc;
-	border-width: 3px;
+	/*border: 1px solid #c2c1bc;
+	border-width: 3px;*/
 	float: left;
-	margin: 10px;
+	margin: 90px 10px;
 	padding: 10px;
+}
+
+.bigfontsize
+{
+	font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
+	font-size: 20px;
 }
 
 #dateshow
@@ -224,4 +230,9 @@
 
 .h-overflow {
 	overflow:hidden;
+}
+
+#deolist {
+	z-index: 10;
+	position: relative;
 }

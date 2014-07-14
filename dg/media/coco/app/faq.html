@@ -10,33 +10,96 @@
     <link rel="stylesheet"  href="/media/coco/app/styles/css/faq.css">
     <meta name="robots" content="NONE,NOARCHIVE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
+    <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <script type="text/javascript">
+        $(function() {
+            var $sidebar   = $("#sidebar"), 
+                $window    = $(window),
+                offset     = $sidebar.offset(),
+                topPadding = 15;
+                console.log("place 1");
+            $window.resize(function(){
+                if ($window.width() <= 767){
+                    $sidebar.stop().animate({
+                            marginTop: 0
+                        });
+                }
+                else
+                {
+                    console.log("place 3");
+                    if ($window.scrollTop() > offset.top) {
+                        $sidebar.stop().animate({
+                            marginTop: $window.scrollTop() - offset.top + topPadding
+                        });
+                    } 
+                }   
+            });
+
+            $window.scroll(function() {
+                if ($window.width() > 767)
+                {
+                    if ($window.scrollTop() > offset.top) {
+                        $sidebar.stop().animate({
+                            marginTop: $window.scrollTop() - offset.top + topPadding
+                        });
+                    } else {
+                        $sidebar.stop().animate({
+                            marginTop: 0
+                        });
+                    }
+                }
+                else{
+                    console.log("place 4");
+                $sidebar.css("marginTop",0);
+                }
+            });       
+        });
+    </script>
 
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3 well affix no-print" id="sidepanel">
-            <div id="coco_faq">
-                <a href="/coco/v2" id="heading">COCO </a><small style="color:grey;">FAQ page</small>
+    <div class="row global-header">
+        <h1 class="coco-brand" ><a href="/coco">COCO</a></h1>
+    </div>
+    <div class="row">
+        <nav class="no-print col-sm-3 navbar navbar-default" role="navigation" id = "sidebar">
+            <div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-for-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand  faq-navbar" href="#">
+                    <div id="coco_faq">
+                        <a href="/coco/" id="heading">COCO</a><small style="color:grey;">  FAQ page</small>
+                    </div>
+                </a>
             </div>
-            <ul class="nav nav-list">
-                <li><a href="#setup">COCO Setup</a></li>
-                <li><a href="#syncing">Syncing</a></li>
-                <li><a href="#database">Database</a></li>
-                <li><a href="#modes">Offline and Online Modes</a></li>
-                <li><a href="#login">Login</a></li>
-                <li><a href="#data">Data Entry, Listing and Modification</a></li>
-                <li><a href="#troubleshoot">Troubleshooting</a></li>
-            </ul>
-        </div>
-        <div class="span9" style="float:right; margin-top:2%;">
+            <div class="collapse navbar-collapse" id="nav-for-toggle">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#setup">COCO Setup</a></li>
+                    <li><a href="#syncing">Syncing</a></li>
+                    <li><a href="#database">Database</a></li>
+                    <li><a href="#modes">Offline and Online Modes</a></li>
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#data">Data Entry, Listing and Modification</a></li>
+                    <li><a href="#troubleshoot">Troubleshooting</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="col-sm-9 flt-rt">
             <a name="setup"></a><h3 class="topic">COCO Setup</h3>
             <ul class="faq-wrap">
-                <li><b><a name="browsers"></a>Which browsers support COCO V2?</b></li>
+                <li><b><a name="browsers"></a>Which browsers support COCO?</b></li>
                 <li>Mozilla Firefox version 10 onwards &#40get from <a href="http://www.mozilla.org/en-US/firefox/new/" target="_blank">here</a>&#41
                 and Google Chrome version 23 onwards &#40get from <a href="https://www.google.com/intl/en/chrome/browser/" target="_blank">here</a>&#41 support COCO version 2.</li><hr>
-                <li><b>What is needed for setting up COCO V2?</b></li>
-                <li>Please do the following before setting up COCO V2
+                <li><b>What is needed for setting up COCO?</b></li>
+                <li>Please do the following before setting up COCO
                     <ol><li> Make sure you have consistent internet connection.</li>
                         <li>Make sure your computer's time is correct. It can be seen at the bottom right of your screen.
                             If it isn't correct, get help from <a href="https://kb.wisc.edu/helpdesk/page.php?id=12540" target="_blank">here</a></li>
@@ -75,11 +138,11 @@
             <a name="modes"></a><h3 class="topic">Offline and Online Modes</h3>
             <ul class="faq-wrap">
                 <li><b>How do I switch modes?</b></li>
-                <li>There is no need to switch modes in COCO version 2.
-                    COCO V2 works seamlessly, automatically keeping track of internet connectivity.</li><hr>
+                <li>There is no need to switch modes in COCO.
+                    COCO works seamlessly, automatically keeping track of internet connectivity.</li><hr>
                 <li><b>How do I access COCO in offline mode?</b></li>
-                <li>In your browser, type this URL - www.digitalgreen.org/coco/v2/. Please note that the last slash '/' is essential 
-                and you will not be able to access COCO offline if you just type www.digitalgreen.org/coco/v2
+                <li>In your browser, type this URL - www.digitalgreen.org/coco/. Please note that the last slash '/' is essential.
+                and you will not be able to access COCO offline if you just type www.digitalgreen.org/coco/
                 </li><hr>    
             </ul>
             <a name="login"></a><h3 class="topic">Login</h3>
@@ -115,7 +178,7 @@
                 <li><b>How do I clear the application cache?</b></li>
                 <li>To clear the appcache in Google Chrome, in your browser type chrome://appcache-internals/ and remove the appcache of the relevant application.
                     In this case it will be http://www.digitalgreen.org/media/coco/coco-offline.appcache .</li>
-                <li>To clear the appcache in Mozilla Firefox, Click on Options in the menu bar, select digitalgreen.org/coco/v2 and then click on Remove.</li><hr>
+                <li>To clear the appcache in Mozilla Firefox, Click on Options in the menu bar, select digitalgreen.org/coco/ and then click on Remove.</li><hr>
                 <li><b>How do I delete indexed database in chrome?</b></li>
                 <li>To delete the indexed database follow these steps:
                     <ol><li>Click on <img src="/media/coco/app/images/chrome-options.png"> icon on the top right of chrome.</li>

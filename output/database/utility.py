@@ -105,23 +105,10 @@ def get_dates_partners(request):
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
 
-def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partner_id):
-    if(partner_id):
-        if(geog == None):
-            partner_sql = ["SELECT id FROM geographies_district WHERE partner_id in ("+','.join(partner_id)+")"]
-            attach_geog_date(sql_ds,par_table_id,date_filter_field,'DISTRICT',partner_sql,from_date,to_date)
-            return
-        elif(geog=="STATE"  or geog=="COUNTRY"):
-            dist_part = []
-            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
-            if geog=="COUNTRY":
-                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_DISTRICT D JOIN geographies_STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
-            else:
-                dist_part = run_query_raw("SELECT DISTINCT partner_id FROM geographies_district WHERE state_id = "+str(id))
-            dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
-            if(dist_part_list):
-                partner_sql = ["SELECT id FROM geographies_district WHERE partner_id in ("+','.join(dist_part_list)+")"]
-                sql_ds['where'].append("district_id in ("+partner_sql[0]+")")
+def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partners):
+    if(partners):
+        # filtering on partners
+        sql_ds['where'].append("%s.partner_id in (%s)" %(par_table_id, ','.join(partners)))
 
     attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
 

@@ -18,7 +18,7 @@ define([
         var dfd = new $.Deferred()
         console.log("checking login");
         if (check_online_login()) {
-            check_offline_login()
+            OfflineAuthBackend.check_login()
                 .done(function() {
                     dfd.resolve();
                 })
@@ -38,32 +38,14 @@ define([
             return true;
         return false;
     }
-
-    //is exactly same as the offline backend uses. (Since offline backend auth is custom written by us)
-    var check_offline_login = function() {
-        var dfd = new $.Deferred();
-        // check login state stored in offline db
-        User.fetch({
-            success: function() {
-                if (User.get("loggedin"))
-                    return dfd.resolve();
-                else
-                    return dfd.reject("User is currently logged out. (Offline Backend)");
-            },
-            error: function() {
-                return dfd.reject("User couldn't be fetched from offline db");
-            }
-        });
-        return dfd;
-    }
-
+    
     // logs out of the offline backend, if internet accessible- logs out of the server backend
     var logout = function() {
         var dfd = new $.Deferred();
         var that = this;
         online_logout()
             .always(function() {
-                offline_logout()
+                OfflineAuthBackend.logout()
                     .always(function() {
                         dfd.resolve();
                     })
@@ -89,20 +71,7 @@ define([
 
         return dfd.promise();
     }
-
-    // contact OfflineAuthBackend to log out of the offline backend 
-    var offline_logout = function() {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.logout()
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function() {
-                dfd.reject();
-            });
-        return dfd;
-    }
-
+    
     // logs-in to the offline backend, if internet accessible - logs-in to the server backend
     var login = function(username, password) {
         var dfd = new $.Deferred();
@@ -116,54 +85,40 @@ define([
                     dfd.reject(error);
                 })
                 .done(function() {
-                    // try offline backend login
-                    offline_login(username, password)
-                        .fail(function(error) {
-                            console.log("Offline login failed - " + error);
-                            // If no user exists(new machine - first time login) the user is registered in the offline backend
-                            if (error == "No user found") {
-                                offline_register(username, password)
-                                    .fail(function(error) {
-                                        console.log("Offline register failed - " + error);
-                                        dfd.reject(error);
-                                    })
-                                    .done(function() {
-                                        console.log("Registered in Offline backend");
-                                        console.log("Login Successfull");
-                                        dfd.resolve();
-                                    });
-                            } else
-                                dfd.reject(error);
-                        })
+                    // online login successful, try offline backend login
+                    OfflineAuthBackend.login(username, password)
                         .done(function() {
-                            // login successfull
-                            console.log("Login Successfull");
-                            // run any onLogin logic defined by user
-                            if (all_configs.misc.onLogin)
-                                all_configs.misc.onLogin(Offline, this);
+                            // login successful
+                            console.log("Login Successful");
+                            post_login_success();
                             dfd.resolve();
+                        })
+                        .fail(function (error){
+                            console.log("Offline login failed - " + error);
+                            dfd.reject(error);
                         });
                 });
         } else {
-            // internet nt accessible - only try loggin into offline backend
-            offline_login(username, password)
-                .fail(function(error) {
-                    console.log("Offline login failed - " + error);
-                    // no db exists - can't register user till server authenticates
-                    if (error == "No user found")
-                        dfd.reject("You need to be online till database has been downloaded.");
-                    else
-                        dfd.reject(error);
-                })
+            // internet not accessible - only try logging into offline backend
+            OfflineAuthBackend.login(username, password)
                 .done(function() {
-                    console.log("Login Successfull");
-                    // run any onLogin logic defined by user
-                    if (all_configs.misc.onLogin)
-                        all_configs.misc.onLogin(Offline, this);
+                    console.log("Login Successful");
+                    post_login_success();
                     dfd.resolve();
+                })
+                .fail(function (error) {
+                    console.log("Offline login failed - " + error);
+                    dfd.reject(error);
                 });
         }
         return dfd;
+    }
+    
+    // run any onLogin logic defined by user
+    var post_login_success = function (){
+        if (all_configs.misc.onLogin)
+            all_configs.misc.onLogin(Offline, this);
+            return;
     }
 
     // resolves if server returns 1 or internet is not connected otherwise rejects
@@ -188,33 +143,6 @@ define([
         return dfd.promise();
     }
     
-
-    //contact OfflineAuthBackend to authenticate a user against offline backend  
-    var offline_login = function(username, password) {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.login(username, password)
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function(error) {
-                dfd.reject(error);
-            });
-        return dfd.promise();
-    }
-
-    // contact OfflineAuthBackend to register a new user in offline backend
-    var offline_register = function(username, password) {
-        var dfd = new $.Deferred();
-        OfflineAuthBackend.register(username, password)
-            .done(function() {
-                dfd.resolve();
-            })
-            .fail(function(error) {
-                dfd.reject(error);
-            });
-        return dfd.promise();
-    }
-
     return {
         check_login: check_login,
         logout: logout,

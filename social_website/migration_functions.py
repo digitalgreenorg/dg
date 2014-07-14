@@ -11,7 +11,7 @@ from social_website.models import Collection, Comment, Partner, Person, PersonVi
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
-S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
+S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg-farmerbook/2/"
 
 def initial_personvideorecord():
     from activities.models import PersonAdoptPractice, PersonMeetingAttendance

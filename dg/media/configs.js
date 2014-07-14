@@ -119,9 +119,8 @@ function() {
 
     var village_configs = {
         'page_header': 'Village',
-        'list_table_header_template': 'village_table_template', 
-        'list_table_row_template': 'village_list_item_template',
         'rest_api_url': '/coco/api/v2/village/',
+        'list_elements': [{'element':'id'},{'header':'Name','element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'header':'State','element':'state_name'}],
         'entity_name': 'village',
         'dashboard_display': {
             listing: true,
@@ -132,11 +131,10 @@ function() {
 
     var mediator_configs = {
         'page_header': 'Mediator',
-        'list_table_header_template': 'mediator_table_template',
-        'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
+        'list_elements': [{'element':'id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}],
         'entity_name': 'mediator',
         'unique_together_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
@@ -203,19 +201,20 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
-
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
     };
 
     var video_configs = {
         'page_header': 'Video',
-        'list_table_header_template': 'video_table_template',
-        'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
+        'list_elements': [{'element':'id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Start Date','element':'video_production_start_date'},{'header':'End Date','element':'video_production_end_date'}],
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
@@ -348,8 +347,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
-
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
     };
 
@@ -375,12 +376,11 @@ function() {
 
     var group_configs = {
         'page_header': 'Group',
-        'list_table_header_template': 'group_table_template',
-        'list_table_row_template': 'group_list_item_template',
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
         'entity_name': 'group',
+        'list_elements': [{'element':'id'},{'header':'Name','element':'group_name'},{'header':'Village','element':'village.village_name'}],
         'inc_table_name': 'persongroup',
         'unique_together_fields': ['group_name', 'village.id'],
         'sort_field': 'group_name',
@@ -456,7 +456,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline",
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
 
@@ -464,10 +467,9 @@ function() {
 
     var screening_configs = {
         'page_header': 'Screening',
-        'list_table_header_template': 'screening_table_template',
-        'list_table_row_template': 'screening_list_item_template',
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
+        'list_elements': [{'element':'id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
@@ -622,6 +624,7 @@ function() {
                 animator: "required",
                 village: "required",
                 videoes_screened: "required",
+                farmer_groups_targeted: "required"
 
             },
             messages: {
@@ -641,6 +644,7 @@ function() {
 				animator: "Mediator is required",
 				village:"Village is required",
 				videoes_screened:"Videos screened is required",
+				farmer_groups_targeted: "Groups attended is required"
 			},
 
             highlight: function(element, errorClass, validClass) {
@@ -658,22 +662,48 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
     };
 
     var adoption_configs = {
         'page_header': 'Adoption',
-        'list_table_header_template': 'adoption_table_template',
-        'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
+        'list_elements': [{'element':'id'},{'header':'Date','element':'date_of_adoption'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
+			rules: {
+                person: {
+                    required: true,
+                    
+                },
+                video: {
+                    required: true,                    
+                },                
+                date_of_adoption: {
+                    required: true,
+					validateDate: true
+                }
+            },
+            messages: {
+				person: {
+					required: "person is required"
+				},
+				video: {
+					required: "video is required"
+				},
+				date_of_adoption: {
+					required: "Date of Adoption is required"
+				}
+			},
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -689,7 +719,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-block",
+            errorClass: "help-block red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            },
             display: "block"
         },
         add: {
@@ -714,14 +747,12 @@ function() {
                     float_person: {
                         'placeholder': 'id_person',
                         'name_field': 'person_name',
+                        'name_field_extra_info':'group',
+                        'name_field_detail':'group_name',
                         'dependency': [{
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }],
-                        'filter': {
-                            attr: 'group',
-                            value: null
-                        }
                     },
                     farmers_attendance: {
                         dependency: [{
@@ -792,10 +823,9 @@ function() {
 
     var person_configs = {
         'page_header': 'Person',
-        'list_table_header_template': 'person_table_template',
-        'list_table_row_template': 'person_list_item_template',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
+        'list_elements': [{'element':'id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
         'rest_api_url': '/coco/api/v2/person/',
         'entity_name': 'person',
         'foreign_entities': {
@@ -893,7 +923,10 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline red-color",
+            errorPlacement: function(label, element) {
+                element.parent().append(label);
+            }
         }
 
     };

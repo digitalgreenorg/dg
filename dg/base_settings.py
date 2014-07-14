@@ -110,6 +110,7 @@ INSTALLED_APPS = (
     #'video_practice_map',
     #'path',
     'fbconnect',
+    'dimagi',
     'tastypie',
     'coco',
     'social_website',
