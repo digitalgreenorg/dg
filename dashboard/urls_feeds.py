@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from views import feed_person_html_on_person_group, feed_person_html_on_person_group_modified, \
 feed_person_prac_pg_anim, feeds_persons_village, test, test_gwt
 

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from views import get_key_for_user, set_key_for_user, login_view, save_country_online, \
 get_countries_online, save_country_offline, save_region_online, get_regions_online, \
 save_region_offline, save_state_online, get_states_online, save_state_offline, \
