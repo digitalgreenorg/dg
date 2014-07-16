@@ -14,7 +14,7 @@ class FBUser(models.Model):
 
 class FBFollowers(models.Model):
     fbuser = models.CharField(max_length=64, null=True)
-    person = PositiveBigIntegerField(null=True)
-    
+    person = models.CharField(max_length=15, null=True)
+
     class Meta:
         db_table = 'fb_followers'
