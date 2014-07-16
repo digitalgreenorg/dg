@@ -1,33 +1,29 @@
 {% include "includes/header.html" %}
     {% include "includes/partials/mainCarousel.html" %}
-    {% include "includes/partials/search.html" %}
 	{% load app_tags %}
     <section id="main" role="main" class="wrapper">
-        <div class="inner-wrapper">
+        <div class="inner-wrapper layout-vr-xlg">
             <header class="grid">
-                <div class="grid-col">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-sm">Featured Collection</h2>
+                <div class="grid-col grid-size1of3">
+                    <div class="">
+                        <h2 class="hdg-c hdg-source-lt layout-vr-sm">Who we are</h2>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+                    </div>
                 </div>
-                <div class="grid-rt">
-                    <div class="language-select custom-select js-custom-select">
-                        <select >
-                            <!-- TODO: populate this dynamically -->
-                            <option value='All Language'>All Languages</option>
-                            {% for item in language %}
-                             	<option>{{item}}</option>
-                         	{% endfor %}
-                        </select>
-                        <div class="custom-select-container">
-                            <div class="icon"></div>
-                            <div class="selected-item-label js-selected-item-label"></div>
-                            <ul class="options js-options" style='overflow-y:scroll;height:218px;'>
-                                <!-- Dynamic content filled by select box -->
-                            </ul>
-                        </div>
+                <div class="grid-col grid-size1of3">
+                    <div class="borderLt">
+                        <h2 class="hdg-c hdg-source-lt layout-vr-sm">What we do</h2>
+                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
+                    </div>
+                </div>
+                <div class="grid-col grid-size1of3">
+                    <div class="borderLt">
+                        <h2 class="hdg-c hdg-source-lt layout-vr-sm">Who we work with</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id quam at dui venenatis consequat eu tincidunt neque. Maecenas convallis, tortor at dapibus ultrices, nisl erat vulputate purus, at dictum purus lacus nec nulla. </p>
                     </div>
                 </div>
             </header>
-            <div class="featured layout-vr-xlg">
+            <!--div class="featured layout-vr-xlg">
                 <div class="grid js-featured-collection-wrapper">
                 </div>
             </div> <!-- End .featured -->
@@ -50,12 +46,9 @@
                         <!-- Dynamic Collections Content Here -->
 
                 </ul>
-                <div class="gradientBg-ft">
-                    <div class="pagination-wrapper js-pagination">
-
-                            <!-- Dynamic Pagination Here -->
-
-                    </div>
+                <div class="gradientBg-ft ">
+                    <!--div class="pagination-wrapper js-pagination">
+                    </div-->
                     <div class="gradientBg-ft-btn">
                         <a href="{% url 'discover' %}" class="btn">See All Collections</a>
                     </div>
@@ -65,13 +58,40 @@
     </section>
     
     <section class="wrapper layout-vr-xlg">
-        <div class="inner-wrapper js-news-feed-wrapper">
-            <h2 class="hdg-a hdg-source-lt layout-vr-md">News Feed</h2>
-            <ul class="v-list-lg v-list-divided v-list-divided-dk js-news-feed-container">
-                <!-- Dynamic News Feed Content Here -->
-            </ul>
-            <div class="news-ft">
-                <a href="#" class="btn js-news-feed-show-more-btn">Show More</a>
+        <div class="grid inner-wrapper js-news-feed-wrapper">
+            <div class="grid-col grid-size2of4">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">News</h2>
+                <ul class="v-list-md js-news-feed-container">
+                    <!-- Dynamic News Feed Content Here -->
+                </ul>
+            </div>
+            <div class="grid-col grid-size2of4">
+                <div class="borderLt">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
+                    <ul class="v-list-md">
+    <li class="js-news-feed-item">
+                            <article class="media">
+                                <div class="bd">
+                                    <div class="bd-text layout-vr-sm">
+                                        <div class="copy copy-lt layout-vr-sm">May 05, 2014</div>
+                                        <a href="https://www.facebook.com/digitalgreenorg/posts/10152334409865219"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">Digital Green</h3></a>
+                                        <p class="copy">
+                                            More innovations from VARRAT, our partner in the Indian state of Odisha! A low cost tracking tripod dolly kit which helps capture smooth tracking shots and Chinese LED lanterns used as low cost alternative for lighting during video shoots.
+                                        </p>
+                                    </div>
+                                    <div class="grid js-assets-container">
+                                        <ul class="h-list layout-vr-md">
+                                            <li>
+                                                <a href="https://www.facebook.com/digitalgreenorg/photos/pcb.10152334409865219/10152334408630219/?type=1&amp;relevant_count=3"><img src="/media/social_website/uploads/facebook/10152334409865219.jpg" target="_blank" height="112px" width="170px" alt="Image from Facebook"></a>
+                                            </li>
+                                        </ul>
+
+                                    </div> <!-- End .grid -->
+                                </div> <!-- End .bd -->
+                            </article>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div> <!-- End .inner-wrapper -->
     </section>

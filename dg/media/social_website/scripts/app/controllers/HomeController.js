@@ -33,7 +33,7 @@ define(function(require) {
             var references = this._references;
 
             references.collectionViewController
-                .setCollectionsPerPage(12)
+                .setCollectionsPerPage(4)
                 .setCollectionsPerRow(4)
                 .setVideosPerDrawer(5);
 
