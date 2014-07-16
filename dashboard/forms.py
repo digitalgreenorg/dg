@@ -35,7 +35,7 @@ class CocoModelForm(ModelForm):
         
     class Meta:
         model = CocoModel
-        exclude = ('user_modified')
+        exclude = ('user_modified',)
 
 class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
@@ -121,7 +121,7 @@ class VideoForm(CocoModelForm):
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance')   
+        exclude = ('farmers_attendance',)   
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
