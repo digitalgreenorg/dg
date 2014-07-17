@@ -57,7 +57,7 @@ class ScreeningAdmin(admin.ModelAdmin):
     fields = ('date','start_time','end_time','location','partner','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions',)
     inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
-    list_display = ('date', 'village', 'location')
+    list_display = ('date', 'location')
     search_fields = ['village__village_name']
     #form = ScreeningForm
     related_search_fields = {
