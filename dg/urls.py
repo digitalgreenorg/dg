@@ -45,10 +45,9 @@ urlpatterns = patterns('',
     
     (r'^coco/', include(coco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
-    (r'^path/', include('path.urls')),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
-    (r'^videotask/', include('video_practice_map.urls')),
+    #(r'^videotask/', include('video_practice_map.urls')),
     # Imports from dashboard
     (r'^feeds/', include('dashboard.urls_feeds')),
     (r'^animators-by-village-id/(\d+)/$', feed_animators),
