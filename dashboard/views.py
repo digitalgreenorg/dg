@@ -1,9 +1,9 @@
-import cjson
+import json
 import datetime
 import operator
 import re
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.contrib import auth
 from django.core import serializers
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
@@ -175,7 +175,7 @@ def get_person(request):
         blocks = blocks | Block.objects.filter(id = village.block.id)
     p = Person.objects.all().filter(village__block__in = blocks).order_by('person_name')
     per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}}{% if p.father_name %} ({{p.father_name}}){% endif %} ({{p.village}})</option>{% endfor %}""")
-    return HttpResponse(cjson.encode(dict(per_list=per_list.render(Context(dict(per=p))))))
+    return HttpResponse(json.dumps(dict(per_list=per_list.render(Context(dict(per=p))))))
 
 
 # Takes 'mode' argument
@@ -184,7 +184,7 @@ def get_person(request):
 def feed_person_prac_pg_anim(request):
     mode = int(request.GET.get('mode'))
     if(mode!=1): prac = get_prac()
-    if(mode==0): return HttpResponse(cjson.encode(dict(prac_list=prac)))
+    if(mode==0): return HttpResponse(json.dumps(dict(prac_list=prac)))
     if 'vil_id' in request.GET:
         vil_id=int(request.GET.get('vil_id'))
         village = Village.objects.select_related().get(id=int(vil_id))
@@ -193,9 +193,9 @@ def feed_person_prac_pg_anim(request):
         p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
         per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}} ({{p.village}})</option>{% endfor %}""")
         if(mode==1):
-            return HttpResponse(cjson.encode(dict(per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+            return HttpResponse(json.dumps(dict(per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
         elif(mode==2):
-            return HttpResponse(cjson.encode(dict(prac_list=prac,per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+            return HttpResponse(json.dumps(dict(prac_list=prac,per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
 
     return HttpResponse('')
 
