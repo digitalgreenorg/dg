@@ -10,7 +10,6 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 
-from ajax_filtered_fields.forms import AjaxForeignKeyField, FilteredSelect
 
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
@@ -108,7 +107,7 @@ class ScreeningAdmin(admin.ModelAdmin):
                     smart_str(field_name)): smart_str(bit)})
                         for field_name in search_fields.split(',')]
                 other_qs = QuerySet(model)
-                other_qs.dup_select_related(qs)
+                other_qs.query.select_related = qs.query.select_related
                 other_qs = other_qs.filter(reduce(operator.or_, or_queries))
                 qs = qs & other_qs
             data = ''.join([u'%s|%s\n' % (f.__unicode__(), f.pk) for f in qs])

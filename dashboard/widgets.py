@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
-from django.utils.text import truncate_words
+from django.utils.text import Truncator
 from django.conf import settings
 
 import datetime
@@ -30,7 +30,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
         obj = self.rel.to._default_manager.get(**{key: value})
-        return truncate_words(obj, 14)
+        return Truncator(obj).words(14)
 
     def __init__(self, rel, search_fields, attrs=None):
         self.rel = rel
