@@ -15,7 +15,6 @@ from ajax_filtered_fields.forms import AjaxForeignKeyField, FilteredSelect
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-from dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
 
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
