@@ -74,6 +74,9 @@ urlpatterns = patterns('',
     (r'^fbconnect/', include('fbconnect.urls')),
     
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
+
+    (r'^cocodoc/', TemplateView.as_view(template_name='cocodoc.html')),
+
 )
 
 # Static files serving locally
