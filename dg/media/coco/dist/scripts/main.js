@@ -12295,7 +12295,22 @@ require.config({
 
 require(['app'], function(app) {
     //load and initialize app module
-    app.initialize();
+    
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+
+    if (msie > 0) {
+        alert("Currently COCO is not supported on IE Browser, Please use Chrome or Firefox");
+        window.location = "/coco/faq/#setup";
+    }
+    else if (trident > 0) {
+        alert("Currently COCO is not supported on IE Browser, Please use Chrome or Firefox");
+        window.location = "/coco/faq/#setup";
+    }
+    else{
+        app.initialize();
+    }
 });
 
 define("main", function(){});
