@@ -73,6 +73,24 @@ require.config({
 });
 
 require(['app'], function(app) {
-    //load and initialize app module
-    app.initialize();
+    // Show alert if COCO is opened in Internet Explorer and redirect to FAQ page to install Chrome or Firefox 
+    
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+
+    // Check for IE Version <= 10
+    if (msie > 0) {
+        alert("Currently COCO is not supported on IE Browser. Please use Chrome or Firefox.");
+        window.location = "/coco/faq/#setup";
+    }
+    // Check for IE Version >= 11
+    else if (trident > 0) {
+        alert("Currently COCO is not supported on IE Browser. Please use Chrome or Firefox.");
+        window.location = "/coco/faq/#setup";
+    }
+    else{
+        //load and initialize app module
+        app.initialize();
+    }
 });
