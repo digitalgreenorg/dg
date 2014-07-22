@@ -46,7 +46,6 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
-    (r'^videotask/', include('video_practice_map.urls')),
 
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard

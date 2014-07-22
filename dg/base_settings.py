@@ -107,7 +107,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'south',
     'farmerbook',
-    #'video_practice_map',
     'fbconnect',
     'dimagi',
     'tastypie',
