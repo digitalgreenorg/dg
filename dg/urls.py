@@ -11,7 +11,6 @@ import social_website.urls
 
 from admin import admin
 from coco.data_log import send_updated_log
-from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
@@ -47,13 +46,8 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
-    #(r'^videotask/', include('video_practice_map.urls')),
-    # Imports from dashboard
-    (r'^feeds/', include('dashboard.urls_feeds')),
-    (r'^animators-by-village-id/(\d+)/$', feed_animators),
-    (r'/search/', search),
-    (r'^dashboard/', include('dashboard.urls')),
-    (r'^get/person/$', get_person),
+    (r'^videotask/', include('video_practice_map.urls')),
+
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
     ##Special page.needs to be deleted

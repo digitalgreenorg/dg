@@ -59,4 +59,4 @@ class CocoModel(models.Model):
     def get_village(self):
         return self.village.id
     def get_partner(self):
-        return self.village.block.district.partner.id
+        return self.partner.id
