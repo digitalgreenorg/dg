@@ -96,7 +96,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #'django.contrib.sites',
     'django.contrib.admindocs',
-    'dashboard',
     'programs',
     'geographies',
     'people',
