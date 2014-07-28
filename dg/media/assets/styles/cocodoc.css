@@ -1,0 +1,42 @@
+.type{
+	padding-bottom: 20px;
+}
+.classification{
+	padding-left: 10px;
+}
+.entity{
+padding-bottom: 10px;
+}
+.static_nav{
+    margin-left: 20px;
+    width:20%;
+    height: auto;
+    border-right:1px solid #f4f4f4;
+}
+.entity_type{
+	font-style: italic;
+}
+.static-content{
+	margin-left: 20px;
+}
+.code-block{
+	background-color: #f4f4f4;
+}
+
+body{
+	position: relative;
+	font-family: "Source Sans Pro";
+	font-weight: regular;
+}
+.heading-entity
+{
+	display: inline-block;
+	font-size: 16px;
+	margin-right: 20px;
+}
+#sidebar li{
+	padding-left: 10px;
+	font-size: 90%;
+	border-left: 1px solid #f4f4f4;
+	color: #f4f4f4;
+}

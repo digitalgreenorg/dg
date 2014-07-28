@@ -1,93 +1,261 @@
 {% include "includes/header.html" %}
-
-			<div class="grid layout-vr-lg">
+			<LINK REL="stylesheet"  HREF="/media/assets/styles/cocodoc.css">
+			<div id = "container" class="grid layout-vr-lg" onscroll = "sc()">
 				<h1 class="hdg-a hdg-source-lt layout-vr-md" style="text-align:center;">COCO FAQ
-				<hr></h1>
-				<div class="grid-col grid-size1of4">
+				</h1>
+				<div id="sidebar"  class="grid-col static_nav nav">
 					<ul>
-						<li> DASHBOARD</li>
+						<li><a> Configs.js</a></li>
 						<ul>
-							<li style="padding-left:10px"> templates </li>
+							<li><a>BASIC CONFIGS</a>
+							<ul>
+								<li><a href="#entity_name"> entity_name</a></li>
+								<li><a href="#rest_api_url"> rest_api_url</a></li>
+								<li><a href="#dashboard_display"> dashboard_display</a></li>
+								<li><a href="#page_header"> page_header</a></li>
+								<li><a href="#list_elements"> list_elements</a></li>
+								<li><a href="#sort_field"> sort_field</a></li>
+								<li><a href="#add_template_name"> add_template_name</a></li>
+								<li><a href="#edit_template_name"> edit_template_name</a></li>
+								<li><a href="#form_field_validation"> form_field_validation</a></li>
+								<li><a href="#unique_together_fields"> unique_together_fields</a></li>
+							</ul>
+							</li>
 						</ul>
-						<li> CONFIGS</li>
 						<ul>
-							<li style="padding-left:10px"><a href="#c1"> configs docs</a></li>
+							<li><a>Foreign Entities' Configs</a>
+							<ul>
+								<li><a href="#placeholder">placeholder</a></li>
+								<li><a href="#name_field"> name_field</a></li>
+								<li><a href="#dependency"> dependency</a></li>
+								<li><a href="#filter"> filter</a></li>
+								<li><a href="#id_field"> id_field</a></li>
+								<ul>
+									<li><a>Dependency Configs</a>
+										<ul>
+											<li><a href="#source_from_element">source_from_element</a></li>
+											<li><a href="#dep_attr"> dep_attr</a></li>
+											<li><a href="#src_attr"> src_attr</a></li>
+										</ul>
+									</li>
+									<li><a>Filter Configs</a>
+										<ul>
+											<li><a href="#attr">attr</a></li>
+											<li><a href="#value"> value</a></li>
+										</ul>
+									</li>
+								</ul>
+							</ul>
+							</li>
+						</ul>
+						<ul>
+							<li><a>Inline Forms</a>
+							<ul>
+								<li><a href="#inline_entity">placeholder</a></li>
+								<li><a href="#default_num_rows"> name_field</a></li>
+								<li><a href="#template"> dependency</a></li>
+								<li><a href="#joining_attribute"> filter</a></li>
+							</ul>
+							</li>
 						</ul>
 					</ul>
 				</div>
-				<div class="grid-col grid-size3of4">
-					<div id="configs">
-						<div id = "entitiy_name">
-							<h2> entity_name </h2>
-							<div> TYPE : String</div> 
-							<div> Description : Name of the object in indexed DB. It is used for accessing this object.</div>
-							<div> Example: </div>
-							<hr>
+
+				<div id="content" class="grid-col grid-size3of4">
+					<div id="configs" class="type">
+						<div id="basic_configs" class="classification">
+							<div id="basic_configs_ex" >
+
+							</div>
+							<div id = "entitiy_name" class="entity">
+								<div><div class="heading-entity"> entity_name </div> 
+								 TYPE : String</div> 
+								<div> Description : Name of the object in indexed DB. It is used for accessing this object.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "rest_api_url" class="entity">
+								<div class="heading-entity"> rest_api_url </div>
+								<div> TYPE : Sting </div> 
+								<div> Description : The REST url for this entity</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "dashboard_display" class="entity">
+								<div class="heading-entity"> dashboard_display </div>
+								<div> TYPE : Dictionary </div> 
+								<div> Description : Determine if list view and add view of this entity is required or not. By default everything in dictionary is true.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "page_header" class="entity">
+								<div class="heading-entity"> page_header </div>
+								<div> TYPE : String </div> 
+								<div> Description : The name that needs to shown in headers (on dashboard as well as list view)</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "list_elements" class="entity">
+								<div class="heading-entity"> list_elements </div>
+								<div> TYPE : List </div> 
+								<div> Description : The name and values that needs to shown in list views.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "sort_field" class="entity">
+								<div class="heading-entity"> sort_field </div>
+								<div> TYPE : String </div> 
+								<div> Description : The default field for sorting data when this entity is used as a foreign key in some other entity's form</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "add_template_name" class="entity">
+								<div class="heading-entity"> add_template_name </div>
+								<div> TYPE : HTML Template </div> 
+								<div> Description : The id of template in dashboard.html used to add data.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "edit_template_name" class="entity">
+								<div class="heading-entity"> edit_template_name </div>
+								<div> TYPE : HTML Template </div> 
+								<div> Description : The id of template in dashboard.html used to edit data.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "form_field_validation" class="entity">
+								<div class="heading-entity"> form_field_validation </div>
+								<div> TYPE : dictionary </div> 
+								<div> Description : Validation check on form</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "unique_together_fields" class="entity">
+								<div class="heading-entity"> unique_together_fields </div>
+								<div> TYPE : List of Strings </div> 
+								<div> Description : The name of the attributes whose combination should be unique. This thing is checked when user clicks on submit in a form.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "unique_together_fields2" class="entity">
+								<div class="heading-entity"> unique_together_fields </div>
+								<div> TYPE : List of Strings </div> 
+								<div> Description : The name of the attributes whose combination should be unique. This thing is checked when user clicks on submit in a form.</div>
+								<div> Example: </div>
+								
+							</div>
 						</div>
-						<div id = "rest_api_url">
-							<h2> rest_api_url </h2>
-							<div> TYPE : Sting </div> 
-							<div> Description : The REST url for this entity</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "dashboard_display">
-							<h2> dashboard_display </h2>
-							<div> TYPE : Dictionary </div> 
-							<div> Description : Determine if list view and add view of this entity is required or not. By default everything in dictionary is true.</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "page_header">
-							<h2> page_header </h2>
-							<div> TYPE : String </div> 
-							<div> Description : The name that needs to shown in headers (on dashboard as well as list view)</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "list_elements">
-							<h2> list_elements </h2>
-							<div> TYPE : List </div> 
-							<div> Description : The name and values that needs to shown in list views.</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "sort_field">
-							<h2> sort_field </h2>
-							<div> TYPE : String </div> 
-							<div> Description : The default field for sorting data when this entity is used as a foreign key in some other entity's form</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "add_template_name">
-							<h2> add_template_name </h2>
-							<div> TYPE : HTML Template </div> 
-							<div> Description : The id of template in dashboard.html used to add data.</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "edit_template_name">
-							<h2> edit_template_name </h2>
-							<div> TYPE : HTML Template </div> 
-							<div> Description : The id of template in dashboard.html used to edit data.</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "form_field_validation">
-							<h2> form_field_validation </h2>
-							<div> TYPE : dictionary </div> 
-							<div> Description : Validation check on form</div>
-							<div> Example: </div>
-							<hr>
-						</div>
-						<div id = "unique_together_fields">
-							<h2> unique_together_fields </h2>
-							<div> TYPE : List of Strings </div> 
-							<div> Description : The name of the attributes whose combination should be unique. This thing is checked when user clicks on submit in a form.</div>
-							<div> Example: </div>
-							<hr>
+						<div>
 						</div>
 
+						<div id="foreign_configs" class="classification">
+							<div id = "placeholder" class="entity">
+								<div class="heading-entity"> placeholder </div>
+								<div> TYPE : String </div> 
+								<div> Description : The id of the element in form's html (in dashboard.html) where the dropdown of this foreign entity is inserted.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "name_field" class="entity">
+								<div class="heading-entity"> name_field </div>
+								<div> TYPE : String </div> 
+								<div> the attribute name in f_entity's json which needs to be shown in its dropdown.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "dependency" class="entity">
+								<div class="heading-entity"> dependency</div>
+								<div> TYPE : List </div> 
+								<div> The choices available in this foreign key are included if the value of an attribute is the same as the value selected earlier in the form.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "filter" class="entity">
+								<div class="heading-entity"> filter</div>
+								<div> TYPE : Dictionary </div> 
+								<div> Whether to filter the objects of foreign entity before rendering into dropdown.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "id_field" class="entity">
+								<div class="heading-entity"> id_field</div>
+								<div> TYPE : String </div> 
+								<div> The name of id field for this foreign entity in denormalised json.</div>
+								<div> Example: </div>
+								
+							</div>				
+						</div>
+						<div id="dependency_configs" class="classification">
+							<div id = "source_from_element" class="entity">
+								<div class="heading-entity"> source_from_element</div>
+								<div> TYPE : String </div> 
+								<div> The name of id field for this foreign entity in denormalised json.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "dep_attr" class="entity">
+								<div class="heading-entity"> dep_attr</div>
+								<div> TYPE : String </div> 
+								<div> The attribute name in json of dependent foreign entity which refers to source foreign entity.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "src_attr" class="entity">
+								<div class="heading-entity"> src_attr</div>
+								<div> TYPE : String </div> 
+								<div> To compare dep_attr of dependent element with a particular attribute in source foreign entity</div>
+								<div> Example: </div>
+								
+							</div>
+						</div>
+						<div id="filter_configs" class="classification">
+							<div id = "attr" class="entity">
+								<div class="heading-entity"> attr</div>
+								<div> TYPE : String </div> 
+								<div> the attribute name in f_entity's json to filter on.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "value" class="entity">
+								<div class="heading-entity"> value</div>
+								<div> TYPE : String </div> 
+								<div> The desired value of the attr</div>
+								<div> Example: </div>
+								
+							</div>
+						</div>
+						<div id="inline_forms" class="classification">
+							<div id = "inline_entity" class="entity">
+								<div class="heading-entity"> entity</div>
+								<div> TYPE : String </div> 
+								<div> The name of the entity which needs to be inserted into current entity.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "default_num_rows" class="entity">
+								<div class="heading-entity"> default_num_rows</div>
+								<div> TYPE : Number </div> 
+								<div> Number of rows to be shown by default to the user.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "template" class="entity">
+								<div class="heading-entity"> template</div>
+								<div> TYPE : HTML </div> 
+								<div> The id of the template used inside template dashboard.html for this form.</div>
+								<div> Example: </div>
+								
+							</div>
+							<div id = "joining_attribute" class="entity">
+								<div class="heading-entity"> joining_attribute</div>
+								<div> TYPE : Dictionary </div> 
+								<div> It denotes the attribute that joins the inline entity with the main entity.</div>
+								<div> Example: </div>	
+							</div>
+						</div>
+						<div id="bulk_forms" class="classification">
+
+						</div>
 					</div>
 				</div>
 			</div>
