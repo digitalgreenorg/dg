@@ -443,6 +443,161 @@ All the fields which are required inside the bulk form are added inside the brac
                         </ol><h2>
 
                     </ul>
+
+ <ul class="faq-wrap">
+<h2>Create a Server API using Django</h2>
+
+<ol class="task-list">
+<li>Create a Django project. Configure the database details in settings.py </li>
+<li>Copy the following files into project/project_name/media folder
+
+<ol class="task-list">
+<li>dashboard.html</li>
+<li>config.js</li>
+<li>coco-offline.appcache</li>
+<li>main.js</li>
+</ol>
+</li>
+<li>In settings.py, make the following changes: 
+
+<ol class="task-list">
+<li>Set STATIC_URL = '/media/' </li>
+<li>Set STATICFILES_DIRS = ( os.path.join(PROJECT_PATH, 'media'), ) </li>
+<li>Set TEMPLATE_DIRS = ( os.path.join(PROJECT_PATH, 'media/coco/app') ) </li>
+</ol>
+</li>
+<li>Create a new app and register the app in settings.py </li>
+<li>
+<p>Create models in that app as per the requirement in models.py </p>
+
+<ol class="task-list">
+<li>
+<p>Create a Usermodel class which will be used for storing the user identity if there are multiple users. Later inherit this Usermodel class in all other model classes. Class Usermodel can be created as below: </p>
+
+<pre><code>  class UserModel(models.Model):
+      user_created = models.ForeignKey(User, related_name ="%(class)s_created", editable = False, null=True, blank=True)
+      time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+      user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified",editable = False, null=True, blank=True)
+      time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+  class Meta:
+      abstract = True
+</code></pre>
+
+<p>The above class saves the timestamp for when the user was created and when its details were modified. In Tastypie it is not possible to determine both username and whether created or modified at the same place. Therefore, user_created and user_modified will be saved as null.</p>
+</li>
+<li>
+<p>If you need to assign some particular village/state/area to some user then create a class CocoUser which will store this mapping:</p>
+
+<pre><code>  class CocoUser(UserModel):
+      user = models.OneToOneField(User)
+      states = models.ManyToManyField(State)
+</code></pre>
+
+<p>All models which are to be selectively downloaded (example user specific) must contain the assigned field (state in above case). Create this class if there are multiple users of coco and each enters data according to different state/department etc.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>After creating models, we need to create RestAPIs for performing operations on our database. For this, create a file api.py in django app and do the following: </p>
+
+<ol class="task-list">
+<li>
+<p>Create a class called baseresource which will be inherited by the resource classes which is to be shown to users i.e. the tables that could be modified by the user. We are creating this class called base resource so that we may store the id the user entering the data. The base resource class needs to have a full_hydrate function which will be used for denormalizing the JSON file that is sent to server. </p>
+
+<pre><code>  class BaseResource(ModelResource):
+
+      def full_hydrate(self, bundle):
+          bundle = super(BaseResource, self).full_hydrate(bundle)
+          bundle.obj.user_modified_id = bundle.request.user.id return bundle
+
+      def obj _create(self, bundle, **kwargs):
+          """
+          A ORM-specific implementation of ``obj_create``.
+          """
+          bundle.obj = self._meta.object_class()
+
+          for key, value in kwargs.items():
+              setattr(bundle.obj, key, value)
+
+          self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
+          bundle = self.full_hydrate(bundle)
+          bundle.obj.user_created_id = bundle.request.user.id return self.save(bundle)
+</code></pre>
+</li>
+<li>
+<p>Add a function dict_to_foreign_uri which generate a foreign uri for a given field in a dictionary. </p>
+
+<pre><code>  def dict_to_foreign_uri(bundle, field_name, resource_name=None):
+      field_dict = bundle.data.get(field_name)
+      if field_dict:
+          bundle.data[field_name] = "/api/v1/%s/%s/"%(resource_name if resource_ name else field_name, str(field_dict))
+      else:
+          bundle.data[field_name] = None return bundle
+</code></pre>
+</li>
+<li>
+<p>Add a class for Authorization. The authorization can be given to a user based on some specific fields like in the following example code, we give authorization to the user based on the state assigned to him. </p>
+
+<pre><code>  class StateLevelAuthorization(Authorization):
+      def __init__(self, field):
+          self.state_field = field
+
+      def read_list(self, object_list, bundle):
+          states = CocoUser.objects.get(user_id= bundle.request.user.id).get_state()
+          kwargs = {} kwargs[self.state_field] = states
+          return object_list.filter(**kwargs).distinct()
+
+      def read_detail(self, object_list, bundle):
+          # Is the requested object owned by the user?
+          kwargs = {}
+          kwargs[self.state_field] = CocoUser.objects.get(user_id= bundle.request.user.id).get_state()
+          obj = object_list.filter(**kwargs).distinct()
+          if obj:
+              return True
+          else:
+              raise NotFound( "Not allowed to download" )
+</code></pre>
+</li>
+<li><p>The authorization class created above should be used in Meta class's authorization field. </p></li>
+</ol>
+</li>
+<li><p>Copy the media folder which contains the coco code into project/project_name folder. We now need to code two files, configs.js and dashboard.html file. </p></li>
+<li>Configs.js file is used for configuring the forms. Each variable defined in this file either represents a server side model or a form. The dummy_config variable in the file represents a dummy configuration and describe the use of each of the options. </li>
+<li>Dashboard.html have a list view as well as the add/edit view. The templates for these views need to be defines. The ids of these views needs to be same as that defined in configs.js. </li>
+<li>Compile the js files using grunt. Go inside coco folder and type this command: "grunt roptimize" into the command line. This action will result into generation of main.js inside /media/coco/dist/scripts folder. If there are other js libraries which needs to be included in main.js files then do the require changes in /media/coco/app/scripts/main.js as well as /media/coco/gruntfile.js </li>
+<li>
+<p>Incremental download feature checks the server every 5 mins if there are updates on server which are not present on the client. These updates might have been made by some other user who is assigned same state/village/department etc. Whenever a user enters a data, server stores the timestamp of the entry along with the user as well as state/village/Department in the table serverlog. Following is the serverlog code to be written in models.py: </p>
+
+<pre><code>class ServerLog(models.Model):
+    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
+    user = models.ForeignKey(User, null = True)
+    state = models.IntegerField(null = True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null = True)
+</code></pre>
+</li>
+<li>
+<p>For maintaining the logs related to when an entry was saved/deleted or if there are any updated logs, create a file data_log.py in the app. This file handles the request related to incremental download, add/delete logs. Now we need to trigger signals whenever a save/delete event occurs. For this, write these two lines after every class which saves the data that is entered by the user:</p>
+
+<pre><code>post_save.connect(save_log, sender = Progress)
+pre_delete.connect(delete_log, sender = Progress)
+</code></pre>
+
+<p>The sender's value here should be equal to name of the class. save_log and delete_log can be imported from django.db.models.signals</p>
+</li>
+<li>
+<p>For storing the info regarding the database downloads made by the user, write the following code in models.py</p>
+
+<pre><code>class FullDownloadStats(models.Model):
+    user = models.ForeignKey(User)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+</code></pre>
+</li>
+</ol>
+</ul>
                 </div> 
             </div>   
         </div>
