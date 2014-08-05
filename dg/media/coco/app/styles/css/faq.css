@@ -48,7 +48,7 @@ tr:nth-child(even) {background: #f8f8f8}
   
   .faq-sidebar.affix {
     position: fixed;
-    top:80px;
+    top:58px;
 
   }
   #coco_faq{
