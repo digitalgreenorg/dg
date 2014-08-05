@@ -61,20 +61,20 @@
                 <div class="row">
                     <div class"collapse navbar-collapse" id="nav-for-toggle">
                         <ul class="nav nav-stacked">
-                            <li><a href="#entity_name"> 3 Steps to coco.js</a></li>
-                            <li><a href="#rest_api_url"> Designning Forms</a></li>
-                            <li><a href="#rest_api_url"> Basic configs</a></li>
-                            <li><a href="#dashboard_display"> Foreign Entities</a></li>
-                            <li><a href="#page_header"> Special Forms : Inline</a></li>
-                            <li><a href="#list_elements"> Special Forms : Bulk</a></li>
-                            <li><a href="#sort_field"> COCO server Setup </a></li>
-                            <li><a href="#add_template_name"> Django Server Setup Example</a></li>
+                            <li><a href="#welcome"> 3 Steps to coco.js</a></li>
+                            <li><a href="#dashboard"> Designning Forms</a></li>
+                            <li><a href="#configs"> Basic configs</a></li>
+                            <li><a href="#"> Foreign Entities</a></li>
+                            <li><a href="#"> Special Forms : Inline</a></li>
+                            <li><a href="#"> Special Forms : Bulk</a></li>
+                            <li><a href="#server"> COCO server Setup </a></li>
+                            <li><a href="#django-server"> Django Server Setup Example</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
             <div class="col-sm-8 col-sm-push-4">
-                <div id="setup"></div><h2 class="topic">WELCOME TO COCO.js</h2>
+                <h2 id="welcome" class="topic">WELCOME TO COCO.js</h2>
 
                     <ul class="faq-wrap">
                         <li><h3><a name="browsers"></a>3 steps to COCO.js</h3></li>
@@ -86,8 +86,8 @@
                             </ol><h2>
 
                     </ul>
-                    <h2>Designing forms in dashboard.html</h2>
-<ul>
+                    <h2 id="dashboard">Designing forms in dashboard.html</h2>
+<ul class="faq-wrap">
 <ol>
 <li>In dashboard.html, there is some code written, you have to append your form templates at the end of this file.</li>
 <li>
@@ -123,7 +123,7 @@
         &lt;/fieldset&gt;
 &lt;/script&gt;
 </code></pre>
-<ol class="task-list">
+<ol>
 <li>COCO uses underscore templating language, hence the first script tag is compulsory. The 'id' is used in the configs file to reference this form template</li>
 <li>Inside the fieldset tag, you can structure your fonts the way you like</li>
 <li>In the Input tags, name field is used to refer in the configs file.</li>
@@ -132,8 +132,8 @@
 </ol>
 
 </ul>
-<h3><a name="browsers"></a> Write Your Configs.js file</h3>
-                    <ul class="faq-wrap">
+<h2 id="configs"> Write Your Configs.js file</h2>
+<ul class="faq-wrap">
 <ol>
 
 <p>We configure an entity through configs.js for forms that need to be populated through COCO. To configure an entity:</p>
@@ -456,11 +456,10 @@ All the fields which are required inside the bulk form are added inside the brac
 <p>Validations can be done inside each entity using same syntax as that of jquery validation.</p>
  </ol><h2>
 </ul>
+<h2 id="server">How to setup COCO with a server:</h2>
 
- <ul class="faq-wrap">
-    
-<h2>How to setup COCO with a server:</h2>
-<ol>
+<ul>
+<ol class="faq-wrap">
 <li>Design your database models</li>
 <li>Setup a REST api</li>
 <li>Write the views required by COCO on the server-side.</li>
@@ -475,13 +474,12 @@ All the fields which are required inside the bulk form are added inside the brac
 <li> <strong>/coco/reset_database_check/ :</strong> This URL can be changed in configs file. COCO sends a get request to this url with a parameter 'lastdownloadtimestamp'. The server sends "1" as a response if it wants the client to download the database again. </li>
 <li> <strong>/coco/record_full_download_time/ :</strong> The URL can be changed in configs file. COCO sends a post request to this URL with start_time and end_time as the parameters. These parameters are useful for recording total database download time. </li>
 <li> <strong>/get_log/ :</strong> User can change this URL in configs.misc.inc_download_url. COCO sends a get request to this URL along with last_download_timestamp as a parameter. The server should send the data having timestamp later than the timestamp received from the client. </li>
-</ol><h2>
-                        </ol><h2>
+</ol>
+</ul>
 
-                    </ul>
-
+<h2 id="django-server">Create a Server API using Django</h2>
  <ul class="faq-wrap">
-<h2>Create a Server API using Django</h2>
+
 
 <ol>
 <li>Create a Django project. Configure the database details in settings.py </li>
