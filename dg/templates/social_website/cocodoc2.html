@@ -62,6 +62,7 @@
                     <div class"collapse navbar-collapse" id="nav-for-toggle">
                         <ul class="nav nav-stacked">
                             <li><a href="#entity_name"> 3 Steps to coco.js</a></li>
+                            <li><a href="#rest_api_url"> Designning Forms</a></li>
                             <li><a href="#rest_api_url"> Basic configs</a></li>
                             <li><a href="#dashboard_display"> Foreign Entities</a></li>
                             <li><a href="#page_header"> Special Forms : Inline</a></li>
@@ -85,10 +86,55 @@
                             </ol><h2>
 
                     </ul>
+                    <h2>Designing forms in dashboard.html</h2>
+<ul>
+<ol>
+<li>In dashboard.html, there is some code written, you have to append your form templates at the end of this file.</li>
+<li>
+<p>Start by writing a simple form to add person data</p>
 
+<pre><code>&lt;script type="text/template" id="example_village_add_edit_template"&gt;
+        &lt;fieldset class="form-horizontal"&gt;
+
+            &lt;legend&gt;Add Village&lt;/legend&gt;
+
+            &lt;p class="bold-helptext"&gt; All fields in bold are required&lt;/p&gt;
+
+            &lt;div class="form-group"&gt; 
+                &lt;label class="control-label col-sm-2"&gt;Name&lt;/label&gt;
+                &lt;div class="col-sm-4"&gt;
+                    &lt;input type="text" name="name" class="form-control"&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class="form-group"&gt; 
+                &lt;label class="control-label col-sm-2"&gt;District Name&lt;/label&gt;
+                &lt;div class="col-sm-4"&gt; 
+                    &lt;input type="text" name="district_name" class="form-control"&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class="form-group"&gt; 
+                &lt;label class="control-label col-sm-2"&gt;State Name&lt;/label&gt;
+                &lt;div class="col-sm-4"&gt; 
+                    &lt;input type="text" name="state_name" class="form-control"&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;    
+        &lt;/fieldset&gt;
+&lt;/script&gt;
+</code></pre>
+<ol class="task-list">
+<li>COCO uses underscore templating language, hence the first script tag is compulsory. The 'id' is used in the configs file to reference this form template</li>
+<li>Inside the fieldset tag, you can structure your fonts the way you like</li>
+<li>In the Input tags, name field is used to refer in the configs file.</li>
+</ol>
+</li>
+</ol>
+
+</ul>
+<h3><a name="browsers"></a> Write Your Configs.js file</h3>
                     <ul class="faq-wrap">
-                        <li><h3><a name="browsers"></a> Write Your Configs.js file</h3></li>
-                        <ol>
+<ol>
 
 <p>We configure an entity through configs.js for forms that need to be populated through COCO. To configure an entity:</p>
 
@@ -422,7 +468,7 @@ All the fields which are required inside the bulk form are added inside the brac
 <li>Ensure that the path of main.js file (in coco/dist directory) and path of configs.js are specified correctly in dashboard.html file. </li>
 </ol><p>COCO communicates with the server using the following urls:</p>
 
-<ol class="task-list">
+<ol>
 <li> <strong>/coco/login/ :</strong> COCO sends 'username' and 'password' parameters using POST to the URL /coco/login/ and it expects "1" as a response in case the authentication is successful otherwise it expects "0". </li>
 <li> <strong>/coco/logout/ :</strong> COCO sends a POST request to the URL /coco/logout/ and on success, it logs out the user. </li>
 <li> <strong>/api/api_name/ :</strong> In order to communicate with the database using RESTful service, the url for the REST API needs to be specified in the configs.js file in the parameter 'rest_api_url'. Its not compulsory to use /api/ URL, but it is recommended. </li>
@@ -437,11 +483,11 @@ All the fields which are required inside the bulk form are added inside the brac
  <ul class="faq-wrap">
 <h2>Create a Server API using Django</h2>
 
-<ol class="task-list">
+<ol>
 <li>Create a Django project. Configure the database details in settings.py </li>
 <li>Copy the following files into project/project_name/media folder
 
-<ol class="task-list">
+<ol>
 <li>dashboard.html</li>
 <li>config.js</li>
 <li>coco-offline.appcache</li>
@@ -450,7 +496,7 @@ All the fields which are required inside the bulk form are added inside the brac
 </li>
 <li>In settings.py, make the following changes: 
 
-<ol class="task-list">
+<ol>
 <li>Set STATIC_URL = '/media/' </li>
 <li>Set STATICFILES_DIRS = ( os.path.join(PROJECT_PATH, 'media'), ) </li>
 <li>Set TEMPLATE_DIRS = ( os.path.join(PROJECT_PATH, 'media/coco/app') ) </li>
@@ -460,7 +506,7 @@ All the fields which are required inside the bulk form are added inside the brac
 <li>
 <p>Create models in that app as per the requirement in models.py </p>
 
-<ol class="task-list">
+<ol>
 <li>
 <p>Create a Usermodel class which will be used for storing the user identity if there are multiple users. Later inherit this Usermodel class in all other model classes. Class Usermodel can be created as below: </p>
 
@@ -491,7 +537,7 @@ All the fields which are required inside the bulk form are added inside the brac
 <li>
 <p>After creating models, we need to create RestAPIs for performing operations on our database. For this, create a file api.py in django app and do the following: </p>
 
-<ol class="task-list">
+<ol>
 <li>
 <p>Create a class called baseresource which will be inherited by the resource classes which is to be shown to users i.e. the tables that could be modified by the user. We are creating this class called base resource so that we may store the id the user entering the data. The base resource class needs to have a full_hydrate function which will be used for denormalizing the JSON file that is sent to server. </p>
 
@@ -588,6 +634,7 @@ pre_delete.connect(delete_log, sender = Progress)
 </li>
 </ol>
 </ul>
+
                 </div> 
             </div>   
         </div>
