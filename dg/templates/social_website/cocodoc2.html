@@ -4,12 +4,13 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-    <title>COCO FAQ</title>
+    <title>COCO.js Documentation</title>
+    <meta name="description" content="COCO.js is a JavaScript Framework for making Data collection systems with offline/online functoinality">
+    <meta name="keywords" content="Framework,JavaScript,Offline,Online,Data Collection,library,Front end">
     <link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
     <link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
-    
     <link rel="stylesheet"  href="/media/coco/app/styles/css/faq.css">
-    <meta name="robots" content="NONE,NOARCHIVE">
+    <meta name="robots" content="INDEX,NOARCHIVE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
@@ -18,7 +19,7 @@
 <body  data-spy="scroll" data-target=".faq-sidebar">
     <div class="container">
         <div class="row global-header">
-            <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
+            <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO.js</a></h1>
         </div>
         <div class="row">
             <!-- <nav class="navbar navbar-default col-sm-3 faq-sidebar" role="navigation" data-spy="affix" data-offset-top="57">
@@ -59,14 +60,14 @@
                     </div>      
                 </div>
                 <div class="row">
-                    <div class"collapse navbar-collapse" id="nav-for-toggle">
+                    <div class="collapse navbar-collapse" id="nav-for-toggle">
                         <ul class="nav nav-stacked">
                             <li><a href="#welcome"> 3 Steps to coco.js</a></li>
                             <li><a href="#dashboard"> Designning Forms</a></li>
                             <li><a href="#configs"> Basic configs</a></li>
-                            <li><a href="#"> Foreign Entities</a></li>
-                            <li><a href="#"> Special Forms : Inline</a></li>
-                            <li><a href="#"> Special Forms : Bulk</a></li>
+                            <li><a href="#foreign-entities"> Foreign Entities</a></li>
+                            <li><a href="#inline"> Special Forms : Inline</a></li>
+                            <li><a href="#bulk"> Special Forms : Bulk</a></li>
                             <li><a href="#server"> COCO server Setup </a></li>
                             <li><a href="#django-server"> Django Server Setup Example</a></li>
                         </ul>
@@ -78,15 +79,17 @@
 
                     <ul class="faq-wrap">
                         <li><h3><a name="browsers"></a>3 steps to COCO.js</h3></li>
+                        <li>
                         <ol start="0">
                             <li>Copy main.js, config.js and dashboard.html from the COCO repository into your code.</li>
                             <li>Design your forms and put them in dashboard.html. Freely use Bootstrap, mustache/handlebars, chosen, underscore and your own JavaScript to include complex functionality.</li>
                             <li>Configure your application in configs.js using this documentation.</li>
                             <li>Create a REST API, and some COCO specific APIs over your database on your server.</li>
-                            </ol><h2>
+                        </ol>
+                        </li>
 
                     </ul>
-                    <h2 id="dashboard">Designing forms in dashboard.html</h2>
+                    <div id="dashboard"><h2>Designing forms in dashboard.html</h2></div>
 <ul class="faq-wrap">
 <ol>
 <li>In dashboard.html, there is some code written, you have to append your form templates at the end of this file.</li>
@@ -239,7 +242,7 @@
 }
 </code></pre>
 
-<p>Here foreign_entity_name is the entity_name of the foreign element and attribute_name_in_json is the attribute name of this foreign element in json. The attribut_name_in_json has the following attributes:</p>
+<p id = "foreign-entities">Here foreign_entity_name is the entity_name of the foreign element and attribute_name_in_json is the attribute name of this foreign element in json. The attribut_name_in_json has the following attributes:</p>
 
 <table>
 <thead><tr>
@@ -338,7 +341,7 @@
 
 <p>There can be cases where we need an inline form or a bulk form.</p>
 
-<h3>
+<h3 id="inline">
 Special forms: Inline forms</h3>
 
 <p>If we want to include some other entity's form inline inside our current entity's form, then we use inline attribute of the entity.</p>
@@ -413,7 +416,7 @@ Special forms: Inline forms</h3>
 </table><p>The borrow_attributes and joining_attribute has two attributes:<br>
 1. host_attribute - The list of single attribute from the host entity. <br>
 2. inline_attribute - The attribute corresponding to host_attribute for inline entity. </p>
-<h3>Special forms - bulk forms</h3>
+<h3 id="bulk">Special forms - bulk forms</h3>
 
 <p>Bulk forms are used when multiple objects of the entity can be saved through its add form. Bulk form is usually written inside add: {}
 All the fields which are required inside the bulk form are added inside the braces of 'bulk':{}</p>

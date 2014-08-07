@@ -9,14 +9,17 @@ body {
 .affix-top{
   position: relative;
 }
-
+.active a{
+  background-color: #047d0a;
+  color: #ffffff;
+  border-radius: 4px;
+}
 #coco_faq{
   text-align: left;
   padding-top: 10px;
   font-size: 18px;
 }
 ul li{
-  padding-left: 10px;
   list-style: none;
 }
 ol li{
