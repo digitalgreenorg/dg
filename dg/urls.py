@@ -77,7 +77,7 @@ urlpatterns = patterns('',
     
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
 
-    (r'^cocodoc/', TemplateView.as_view(template_name='cocodoc2.html')),
+    (r'^cocodoc/', TemplateView.as_view(template_name='cocodoc.html')),
 
 )
 
