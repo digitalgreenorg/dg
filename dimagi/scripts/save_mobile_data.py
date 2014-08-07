@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
 import time
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
+from people.models import PersonGroup
 from dimagi.models import CommCareUser, error_list
 from dimagi.scripts.exception_email import sendmail
 
@@ -31,6 +32,7 @@ def save_screening_data(xml_tree):
                 if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
                     pma = {}
                     pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
+                    #print "Person Entered : "+str(pma['person_id'])
                     if person.getElementsByTagName('interested')[0].firstChild:
                         pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
                     else:
@@ -60,45 +62,110 @@ def save_screening_data(xml_tree):
                                         animator_id = screening_data['selected_mediator'],
                                         partner = cocouser.partner,
                                         user_created = cocouser.user )
-              
-                if screening.full_clean() == None: # change to full_clean() 
-                    screening.save()
+                
+                #print str(screening_data['selected_mediator']) + str(screening_data['date']) + str(screening_data['start_time']) + str(screening_data['end_time']) + str(screening_data['selected_village'])
+                
+                ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
+
+                if ScreeningObject:
+                    #Append group and save PMA
                     status['screening'] = 1
-                    try:
-                        screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
-                        screening.videoes_screened = screening_data['selected_video'].split(" ")
-                        screening.save()
-                    except Exception as e:
-                        error = "Error in saving groups and videos" + str(e)
-                        sendmail("Exception in Mobile COCO line 74", error)
-                    status['pma'] = 1
-                    try :
-                        for person in pma_record:
-                            pma = PersonMeetingAttendance ( screening_id = screening.id, 
-                                                            person_id = person['person_id'],
-                                                            interested = person['interested'],
-                                                            expressed_question = person['question'] )
-                            if pma.full_clean() == None:
-                                pma.save()
-                            else:
-                                status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                                error_msg = 'Not valid' 
-                    except ValidationError, e:
-                        status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                        error = "Error in saving Pma line 85" + str(e)
-                        sendmail("Exception in Mobile COCO", error)
-                else:
-                    status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                    error_msg = 'Not valid'
+                    flag=0
+                    # add only if group doesn't exist
+                    for group in screening_data['selected_group'].split(" "):
+                        try:
+                            GroupExisting = Screening.objects.get(farmer_groups_targeted=group, id=ScreeningObject.id)
+                            print "Duplicate Entry!"
+                            #print GroupExisting
+                        except ObjectDoesNotExist as e:
+                            #print e
+                            GroupObject = PersonGroup.objects.get(id=group)                     
+                            ScreeningObject.farmer_groups_targeted.add(GroupObject)
+                            ScreeningObject.save()
+                            status['pma'] = 1
+                            flag=1
+                        except MultipleObjectsReturned as ex:
+                            print ex   
+                    
+                    if flag==1:
+                        try :
+                            for person in pma_record:
+                                #check if person in PMA already for that screening
+                                try:
+                                    PersonExisting = PersonMeetingAttendance.objects.get(screening_id=ScreeningObject.id, person_id=person['person_id'])
+                                    print "Attendance Marked"
+                                except ObjectDoesNotExist as ex:
+                                    #print ex                                
+                               
+                                    pma = PersonMeetingAttendance ( screening_id = ScreeningObject.id, 
+                                                                    person_id = person['person_id'],
+                                                                    interested = person['interested'],
+                                                                    expressed_question = person['question'] )
+                                    
+                                    if pma.full_clean() == None:
+                                            pma.save()
+                                            #print "PMA Record Saved"
+                                    else:
+                                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                                            error_msg = 'Not valid' 
+                                            
+                                except MultipleObjectsReturned as e:
+                                    print e
+                                            
+                        except ValidationError, e:
+                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                            error = "Error in saving Pma line 85" + str(e)
+                            sendmail("Exception in Mobile COCO", error)
                         
+                else:
+                    print "Save Screening"
+                    if screening.full_clean() == None: # change to full_clean()
+                        screening.save()
+                        print "Screening Saved :O"
+                        
+                        status['screening'] = 1
+                        try:
+                            screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
+                            screening.videoes_screened = screening_data['selected_video'].split(" ")
+                            screening.save()
+
+                        except Exception as e:
+                            error = "Error in saving groups and videos" + str(e)
+                            sendmail("Exception in Mobile COCO line 74", error)
+                        status['pma'] = 1
+                        
+                        try :
+                            for person in pma_record:
+                                pma = PersonMeetingAttendance ( screening_id = screening.id, 
+                                                                person_id = person['person_id'],
+                                                                interested = person['interested'],
+                                                                expressed_question = person['question'] )
+                                
+                                if pma.full_clean() == None:
+                                    pma.save()
+                                    #print "PMA Record Saved"
+                                else:
+                                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                                    error_msg = 'Not valid' 
+                        except ValidationError, e:
+                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                            error = "Error in saving Pma line 85" + str(e)
+                            sendmail("Exception in Mobile COCO", error)
+                            
+                    else:
+                        status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                        error_msg = 'Not valid'
+                    
             except Exception as ex:
+                #print str(ex)
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error = "Error in saving Screening " + str(ex)
-                sendmail("Exception in Mobile COCO Screenig save error line 97", error)
+                sendmail("Exception in Mobile COCO Screening save error line 97", error)
        
         except Exception as ex:
+            #print str(ex)
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
-            error = "Error in Reading Screening " + str(e)
+            error = "Error in Reading Screening " + str(ex)
             sendmail("Exception in Mobile COCO screening read error line 103", error)
             
     return status['screening'],error_msg
@@ -135,7 +202,7 @@ def save_adoption_data(xml_tree):
             
         except Exception as ex:
             status = error_list['ADOPTION_READ_ERROR']
-            error = "Error in reading Adoption " + str(e)
+            error = "Error in reading Adoption " + str(ex)
             sendmail("Exception in Mobile COCO adoption read line 142", error) 
 
     return status, error_msg
