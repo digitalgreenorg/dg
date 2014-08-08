@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import time
 
-from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ValidationError
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from people.models import PersonGroup
@@ -32,7 +32,6 @@ def save_screening_data(xml_tree):
                 if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
                     pma = {}
                     pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
-                    #print "Person Entered : "+str(pma['person_id'])
                     if person.getElementsByTagName('interested')[0].firstChild:
                         pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
                     else:
@@ -118,8 +117,6 @@ def save_pma(pma_record, Sid, status, error_msg):
             error = "Error in saving Pma line 85" + str(e)
             sendmail("Exception in Mobile COCO", error)
     return error_msg
-
-
 
 def save_adoption_data(xml_tree):
     xml_data=xml_tree.getElementsByTagName('data')
