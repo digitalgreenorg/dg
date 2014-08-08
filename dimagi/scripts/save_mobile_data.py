@@ -62,11 +62,8 @@ def save_screening_data(xml_tree):
                                         animator_id = screening_data['selected_mediator'],
                                         partner = cocouser.partner,
                                         user_created = cocouser.user )
-                
                 #print str(screening_data['selected_mediator']) + str(screening_data['date']) + str(screening_data['start_time']) + str(screening_data['end_time']) + str(screening_data['selected_village'])
-                
                 ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
-
                 if ScreeningObject:
                     #Append group and save PMA
                     status['screening'] = 1
@@ -86,37 +83,8 @@ def save_screening_data(xml_tree):
                             flag=1
                         except MultipleObjectsReturned as ex:
                             print ex   
-                    
                     if flag==1:
-                        try :
-                            for person in pma_record:
-                                #check if person in PMA already for that screening
-                                try:
-                                    PersonExisting = PersonMeetingAttendance.objects.get(screening_id=ScreeningObject.id, person_id=person['person_id'])
-                                    print "Attendance Marked"
-                                except ObjectDoesNotExist as ex:
-                                    #print ex                                
-                               
-                                    pma = PersonMeetingAttendance ( screening_id = ScreeningObject.id, 
-                                                                    person_id = person['person_id'],
-                                                                    interested = person['interested'],
-                                                                    expressed_question = person['question'] )
-                                    
-                                    if pma.full_clean() == None:
-                                            pma.save()
-                                            #print "PMA Record Saved"
-                                    else:
-                                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                                            error_msg = 'Not valid' 
-                                            
-                                except MultipleObjectsReturned as e:
-                                    print e
-                                            
-                        except ValidationError, e:
-                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                            error = "Error in saving Pma line 85" + str(e)
-                            sendmail("Exception in Mobile COCO", error)
-                        
+                        save_pma(pma_record, ScreeningObject.id, status, error_msg)
                 else:
                     print "Save Screening"
                     if screening.full_clean() == None: # change to full_clean()
@@ -134,23 +102,7 @@ def save_screening_data(xml_tree):
                             sendmail("Exception in Mobile COCO line 74", error)
                         status['pma'] = 1
                         
-                        try :
-                            for person in pma_record:
-                                pma = PersonMeetingAttendance ( screening_id = screening.id, 
-                                                                person_id = person['person_id'],
-                                                                interested = person['interested'],
-                                                                expressed_question = person['question'] )
-                                
-                                if pma.full_clean() == None:
-                                    pma.save()
-                                    #print "PMA Record Saved"
-                                else:
-                                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                                    error_msg = 'Not valid' 
-                        except ValidationError, e:
-                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                            error = "Error in saving Pma line 85" + str(e)
-                            sendmail("Exception in Mobile COCO", error)
+                        save_pma(pma_record, screening.id, status, error_msg)
                             
                     else:
                         status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
@@ -169,6 +121,27 @@ def save_screening_data(xml_tree):
             sendmail("Exception in Mobile COCO screening read error line 103", error)
             
     return status['screening'],error_msg
+
+def save_pma(pma_record, Sid, status, error_msg):
+    for person in pma_record:
+        try:
+            PersonExisting = PersonMeetingAttendance.objects.filter(screening_id=Sid, person_id=person['person_id'])
+            if not(len(PersonExisting)):              
+                pma = PersonMeetingAttendance ( screening_id = Sid, 
+                                                person_id = person['person_id'],
+                                                interested = person['interested'],
+                                                expressed_question = person['question'] )
+                if pma.full_clean() == None:
+                    pma.save()
+                else:
+                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                    error_msg = 'Not valid'
+        except ValidationError, e:
+            status['pma'] = error_list['PMA_SAVE_ERROR'] 
+            error = "Error in saving Pma line 85" + str(e)
+            sendmail("Exception in Mobile COCO", error)
+    return error_msg
+
 
 
 def save_adoption_data(xml_tree):
