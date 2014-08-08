@@ -52,8 +52,21 @@ def save_screening_data(xml_tree):
             screening_data['start_time'] = temp_time.time()
             screening_data['end_time'] = temp_time + timedelta(minutes = 45)
             screening_data['end_time'] = screening_data['end_time'].time() 
-            # save screening record
+
             try:
+                ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
+                status['screening'] = 1
+                # add only if group doesn't exist
+                for group in screening_data['selected_group'].split(" "):
+                    GroupExisting = Screening.objects.filter(farmer_groups_targeted=group, id=ScreeningObject.id)
+                    if not(len(GroupExisting)):                                
+                        GroupObject = PersonGroup.objects.get(id=group)                     
+                        ScreeningObject.farmer_groups_targeted.add(GroupObject)
+                        ScreeningObject.save()
+                error_msg = save_pma(pma_record, ScreeningObject.id, status, error_msg)
+                status['pma'] = 1
+            
+            except Screening.DoesNotExist as e:            
                 screening = Screening ( date = screening_data['date'],
                                         start_time = screening_data['start_time'],
                                         end_time = screening_data['end_time'],
@@ -61,61 +74,25 @@ def save_screening_data(xml_tree):
                                         village_id = screening_data['selected_village'],
                                         animator_id = screening_data['selected_mediator'],
                                         partner = cocouser.partner,
-                                        user_created = cocouser.user )
-                #print str(screening_data['selected_mediator']) + str(screening_data['date']) + str(screening_data['start_time']) + str(screening_data['end_time']) + str(screening_data['selected_village'])
-                ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
-                if ScreeningObject:
-                    #Append group and save PMA
+                                        user_created = cocouser.user )                    
+                if screening.full_clean() == None: # change to full_clean()
+                    screening.save()
                     status['screening'] = 1
-                    flag=0
-                    # add only if group doesn't exist
-                    for group in screening_data['selected_group'].split(" "):
-                        try:
-                            GroupExisting = Screening.objects.get(farmer_groups_targeted=group, id=ScreeningObject.id)
-                            print "Duplicate Entry!"
-                            #print GroupExisting
-                        except ObjectDoesNotExist as e:
-                            #print e
-                            GroupObject = PersonGroup.objects.get(id=group)                     
-                            ScreeningObject.farmer_groups_targeted.add(GroupObject)
-                            ScreeningObject.save()
-                            status['pma'] = 1
-                            flag=1
-                        except MultipleObjectsReturned as ex:
-                            print ex   
-                    if flag==1:
-                        save_pma(pma_record, ScreeningObject.id, status, error_msg)
-                else:
-                    print "Save Screening"
-                    if screening.full_clean() == None: # change to full_clean()
+                    try:
+                        screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
+                        screening.videoes_screened = screening_data['selected_video'].split(" ")
                         screening.save()
-                        print "Screening Saved :O"
+                    except Exception as e:
+                        error = "Error in saving groups and videos" + str(e)
+                        sendmail("Exception in Mobile COCO line 74", error)
+                    status['pma'] = 1
+                    error_msg = save_pma(pma_record, screening.id, status, error_msg)
                         
-                        status['screening'] = 1
-                        try:
-                            screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
-                            screening.videoes_screened = screening_data['selected_video'].split(" ")
-                            screening.save()
+                else:
+                    status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                    error_msg = 'Not valid'
 
-                        except Exception as e:
-                            error = "Error in saving groups and videos" + str(e)
-                            sendmail("Exception in Mobile COCO line 74", error)
-                        status['pma'] = 1
-                        
-                        save_pma(pma_record, screening.id, status, error_msg)
-                            
-                    else:
-                        status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                        error_msg = 'Not valid'
-                    
-            except Exception as ex:
-                #print str(ex)
-                status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                error = "Error in saving Screening " + str(ex)
-                sendmail("Exception in Mobile COCO Screening save error line 97", error)
-       
         except Exception as ex:
-            #print str(ex)
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
             error = "Error in Reading Screening " + str(ex)
             sendmail("Exception in Mobile COCO screening read error line 103", error)
