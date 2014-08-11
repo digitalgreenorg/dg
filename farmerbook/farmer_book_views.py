@@ -193,7 +193,7 @@ def get_village_page(request):
     left_panel_stats['num_of_groups'] = PersonGroup.objects.filter(village__id = village_id).count()
     #group_id_list = get_id_with_images.get_group_list()
     left_panel_stats['vil_groups'] = PersonGroup.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
-    left_panel_stats['partner'] = Partner.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
+    left_panel_stats['partner'] = Partner.objects.filter(person__village__block__district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
     startdate = Person.objects.filter(village__id = village_id).annotate(sd = Min('date_of_joining')).values_list('sd', flat=True)
@@ -421,8 +421,8 @@ def get_group_page(request):
                                                                                               'village__village_name',
                                                                                               'village__block__district__district_name',
                                                                                               'village__block__district__state__state_name',
-                                                                                              'village__block__district__partner__id',
-                                                                                              'village__block__district__partner__partner_name',
+                                                                                              'partner__id',
+                                                                                              'partner__partner_name',
                                                                                               'village__animatorassignedvillage__animator__id',
                                                                                               'village__animatorassignedvillage__animator__name',
                                                                                               'id')
@@ -607,17 +607,15 @@ def get_csp_page(request):
                                     'farmers_attended': vids_stats_dict[obj[0]][3],
                                     'screenings':vids_stats_dict[obj[0]][4],
                                     'fulltext': stat_text})
-      
+
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
-    
+
     id_list = get_id_with_images.get_csp_list()
     # Related CSP's
     views_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0, 0, 0])
-    csp_district= Animator.objects.filter(id = csp_id).values_list('village__block__district__id', flat = True)
-    related_info = Animator.objects.filter( id__in = id_list).exclude(id = csp_id).values('id').annotate(num_screening = Count('screening')).values_list('id',
-                                                                                                                                                                                                     'name',
-                                                                                                                                                                                                     'num_screening',
-                                                                                                                                                                                                     'total_adoptions')
+    csp_district = Animator.objects.filter(id = csp_id).values_list('district_id', flat=True)
+    related_info = Animator.objects.filter(id__in = id_list).exclude(id = csp_id).values('id').annotate(num_screening = Count('screening')).values_list('id', 'name', 'num_screening', 'total_adoptions')
+
     for related_id in related_info:
         views_dict[related_id[0]][0] = related_id[1]
         views_dict[related_id[0]][1] = related_id[2]
@@ -638,17 +636,8 @@ def get_csp_page(request):
     # Sorting and limiting to 10 related CSP's
     sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[3],k), reverse=True)
     top_related_list = sorted_list_stats[:10] 
-    
-    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name')
-     
-    # For those in list(image of csp exists), give s3 link , otherwise sample image   
-#    id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
-#               10000000000406, 10000000000450, 10000000019320, 10000000019321, 10000000019348, 10000000019419, 
-#               10000000019420, 10000000019422, 10000000019426, 10000000019428, 10000000019430, 10000000019431, 
-#               10000000019435, 10000000019453, 10000000019495, 10000000019502, 10000000019505, 10000000019506, 
-#               10000000019507, 10000000019508, 10000000019515, 10000000019541, 10000000019554, 10000000019696, 
-#               10000000019793, 10000000019808, 10000000019823, 10000000019826, 10000000019831, 10000000019844, 
-#               10000000019895, 10000000019979, 10000000020020]        
+
+    left_panel_stats['partner_details'] = Partner.objects.filter(animator__id=csp_id).values_list('id', 'partner_name')
     top_related_stats = []
     for obj in top_related_list:
         if(obj[0] in id_list):
@@ -699,19 +688,19 @@ def get_partner_page(request):
     left_panel_stats['site_link'] = site_link[Partner.objects.get(id = partner_id).old_coco_id][0]
     left_panel_stats['partner_details'] = Partner.objects.filter(id= partner_id).values_list('id',
                                                                                               'partner_name',
-                                                                                              'district__state__state_name',
-                                                                                              'district__id',
+                                                                                              'person__village__block__district__state__state_name',
+                                                                                              'person__village__block__district__id',
                                                                                               'date_of_association',
-                                                                                              'district__district_name')
-    
+                                                                                              'person__village__block__district__district_name')
+
     partner_district = set(i[3] for i in left_panel_stats['partner_details'])
     left_panel_stats['assigned_states'] = set(i[2] for i in left_panel_stats['partner_details'])
-    left_panel_stats['assigned_districts'] = set(i[5] for i in left_panel_stats['partner_details'])                                                                                                
-    left_panel_stats['total_adoptions'] = Animator.objects.filter(partner = partner_id).values('partner').annotate(tot = Sum('total_adoptions')).values_list('tot')[0][0]
-    left_panel_stats['farmers'] = Person.objects.filter(village__block__district__partner__id = partner_id).count()
-    left_panel_stats['number_villages'] = Village.objects.filter(block__district__partner__id = partner_id).count()
-    
-    left_panel_stats['Screenings'] = Screening.objects.filter(village__block__district__partner__id = partner_id).count()
+    left_panel_stats['assigned_districts'] = set(i[5] for i in left_panel_stats['partner_details'])
+    left_panel_stats['total_adoptions'] = PersonAdoptPractice.objects.filter(partner_id=partner_id).count()
+    left_panel_stats['farmers'] = Person.objects.filter(partner_id=partner_id).count()
+    left_panel_stats['number_villages'] = len(Village.objects.filter(person__partner_id=partner_id).distinct())
+
+    left_panel_stats['Screenings'] = Screening.objects.filter(partner_id=partner_id).count()
     if(left_panel_stats['Screenings']):
         months = ((datetime.date.today() - left_panel_stats['partner_details'][0][4]).days)/30.0
         left_panel_stats['rate'] =  left_panel_stats['Screenings'] / months
@@ -720,10 +709,10 @@ def get_partner_page(request):
         left_panel_stats['rate'] = 0
         left_panel_stats['pbar_width'] = 0
     left_panel_stats['photo_link'] = "http://s3.amazonaws.com/dg-farmerbook/partner/" + str(partner_id) + ".jpg"
-    
+
     vill_id_list = get_id_with_images.get_village_list()
-    top_vill = Village.objects.filter(id__in = vill_id_list,
-                                       block__district__partner = partner_id).values('id').annotate(num_screenings = Count('screening')).order_by('-num_screenings')[:10].values_list('id',
+    top_vill = Village.objects.filter(id__in=vill_id_list,
+                                      person__partner_id=partner_id).values('id').annotate(num_screenings = Count('screening')).order_by('-num_screenings')[:10].values_list('id',
                                                                                                                                                                           'village_name',
                                                                                                                                                                           'num_screenings')
 
@@ -734,7 +723,7 @@ def get_partner_page(request):
     for partner_id,partner_name,startdate in other_partner_info:
         partner_stats_dict[partner_id][0] = partner_id
         partner_stats_dict[partner_id][1] = partner_name
-        partner_stats_dict[partner_id][2] = Screening.objects.filter(village__block__district__partner__id = partner_id).count()
+        partner_stats_dict[partner_id][2] = Screening.objects.filter(partner_id=partner_id).count()
         if(startdate):
             partner_stats_dict[partner_id][3] = startdate
             months = ((datetime.date.today() - partner_stats_dict[partner_id][3]).days)/30.0
