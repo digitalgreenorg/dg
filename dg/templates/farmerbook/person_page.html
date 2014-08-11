@@ -8,7 +8,7 @@
 <div class='left_panel' style="height:540px;">
 	<div class="left_panel_top" >
 		<div id="district_label" >{{ left_panel_stats.farmer_details.0.5 }} | {{ left_panel_stats.farmer_details.0.6 }}</div>
-			<center><img id="img_container" src='https://s3.amazonaws.com/dg_farmerbook/2/{{ left_panel_stats.farmer_details.0.0 }}.jpg'></center>
+			<center><img id="img_container" src='https://s3.amazonaws.com/dg-farmerbook/2/{{ left_panel_stats.farmer_details.0.0 }}.jpg'></center>
 		<div id="name_label" > {{ left_panel_stats.farmer_details.0.1 }}</div>
 		<div class="group_label" > <a href="javascript:void(0)" onclick="groupClick({{ left_panel_stats.farmer_details.0.9 }})">
 			{{ left_panel_stats.farmer_details.0.3 }} </a> </div>
@@ -61,7 +61,7 @@
 			<div style='width:100px;float:left;'>
 				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
 					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
-					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg-farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
 				</div>
 				<div style="width:100px; overflow:hidden;">
 					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})"><center>{{ left_panel_stats.service_provider.0.1 }}</center></a>
@@ -70,7 +70,7 @@
 			<div style='width:100px;float:right;'>
 				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
 					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})">
-					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.partner.0.0}}.jpg"></a>
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg-farmerbook/partner/{{left_panel_stats.partner.0.0}}.jpg"></a>
 				</div>
 				<div style="width:100px; overflow:hidden; margin-left:-30px;">
 					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})"><center>{{ left_panel_stats.partner.0.1 }}</center></a>
@@ -167,7 +167,7 @@
 						<li style="margin-left:2px;margin-top:-9px;">
 							<div  class= 'farmer_details_container'>
 							<center><a href="javascript:void(0);" onclick="personClick({{ person.id }})">
-								<img  src="https://s3.amazonaws.com/dg_farmerbook/2/{{ person.old_coco_id }}.jpg"></center>	</a>					
+								<img  src="https://s3.amazonaws.com/dg-farmerbook/2/{{ person.id }}.jpg"></center>	</a>					
 							<div class='farmer_name'> 
 								<a href="javascript:void(0);" onclick="personClick({{ person.id }})">
 									<center>{{ person.name }}</center></a> 
