@@ -69,11 +69,9 @@ def get_home_page(request, type=None, id=None):
                                          'photo_link': photo_link,
                                          'adoptions': obj[1][3]})
     top_partner_stats = defaultdict(lambda:[0, 0, 0, 0])     
-    partner_info = Partner.objects.all().annotate(num_vill = Count('district__block__village', distinct = True),
-                                                   num_farmers = Count('district__block__village__person')).values_list('id',
-                                                                                                             'partner_name',
-                                                                                                             'num_vill',
-                                                                                                             'num_farmers')
+    partner_info = Partner.objects.all().annotate(num_vill = Count('person__village', distinct = True),
+                                                  num_farmers = Count('person')).values_list('id', 'partner_name',
+                                                                                             'num_vill','num_farmers')
     for partner in partner_info:
         top_partner_stats [partner[0]][0] = partner[0]
         top_partner_stats [partner[0]][1] = partner[1]
