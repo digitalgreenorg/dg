@@ -33,7 +33,7 @@
 	       <tr>
 	           <td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>
 	               <div id='searchresultdivrighttddiv1'>
-	                   <a href='../video/?id={{vid.id}}'>{% if vid.youtubeid %}<img src='http://img.youtube.com/vi/{{vid.youtubeid}}/default.jpg' class="videothumbnail">{%else%}<img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'>{%endif%}</a>
+	                   <a href='../video/?id={{vid.id}}'>{% if vid.youtubeid %}<img src='http://img.youtube.com/vi/{{vid.youtubeid}}/default.jpg' class="videothumbnail">{%else%}<img src='/media/Output/Images/videothumbnail2.png' alt='' class="videothumbnail">{%endif%}</a>
 	               </div>
 	               <div id='searchresultdivrighttddiv2'>
 	                   <div class='searchresultdivrighttddiv21'>
@@ -43,20 +43,17 @@
 	                       {{vid.related_practice.practice_name|default:' '}}
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
-                           {{vid.partner.partner_name}}
-                        </div>
-	                    <div class='searchresultdivrighttddiv22'>
-	                       {{vid.duration|time:"H:i:s"|default:"Duration:NA"}}
-                           &nbsp;&nbsp;       
-                           Produced On: {{ vid.video_production_end_date|date:"d M Y" }}
+	                       Produced by {{vid.partner.partner_name}}
 	                    </div>
+	                    <div class='searchresultdivrighttddiv22'>
+                           Produced on {{ vid.video_production_end_date|date:"d M Y" }}
+                        </div>
 	                    <div class='searchresultdivrighttddiv22'>
 	                        {% if vid.viewers %}
 	                        {{vid.viewers}} viewer{{vid.viewers|pluralize}}
-	                        &nbsp; |  
+	                        &nbsp; |  &nbsp;
 	                        {% endif %}
                             {% if vid.adoptions %}
-                            &nbsp;
                             {{vid.adoptions}} Adoption{{vid.adoptions|pluralize}}
                             {% endif %}
 	                    </div>
