@@ -43,6 +43,9 @@
 	                       {{vid.related_practice.practice_name|default:' '}}
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
+                           {{vid.partner.partner_name}}
+                        </div>
+	                    <div class='searchresultdivrighttddiv22'>
 	                       {{vid.duration|time:"H:i:s"|default:"Duration:NA"}}
                            &nbsp;&nbsp;       
                            Produced On: {{ vid.video_production_end_date|date:"d M Y" }}
