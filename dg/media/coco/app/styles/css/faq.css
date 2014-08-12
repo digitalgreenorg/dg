@@ -9,6 +9,33 @@ body {
 .affix-top{
   position: relative;
 }
+.active a{
+  background-color: #047d0a;
+  color: #ffffff;
+  border-radius: 4px;
+}
+#coco_faq{
+  text-align: left;
+  padding-top: 10px;
+  font-size: 18px;
+}
+ul li{
+  list-style: none;
+}
+ol li{
+  list-style: decimal;
+}
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid gray;
+}
+td, th{
+  padding: 5px;
+}
+tr:nth-child(even) {background: #f8f8f8}
+
 
 
 @media (min-width: 769px) {
@@ -24,7 +51,11 @@ body {
   
   .faq-sidebar.affix {
     position: fixed;
-    top:80px;
+    top:58px;
 
+  }
+  #coco_faq{
+    text-align: center;
+    padding-top: 0px;
   }
 }

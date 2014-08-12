@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic import TemplateView
 
 import coco.urls
 import dimagi.urls
@@ -18,6 +19,7 @@ from website_admin import website_admin
 from mcoco_admin import mcoco_admin
 import website_archive_urls
 import deoanalytics.urls
+
 
 admin.login_template = 'social_website/login.html'
 admin.logout_template = 'social_website/home.html'
@@ -66,6 +68,9 @@ urlpatterns = patterns('',
     (r'^fbconnect/', include('fbconnect.urls')),
     
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
+
+    (r'^cocodoc/', TemplateView.as_view(template_name='cocodoc.html')),
+
 )
 
 # Static files serving locally
