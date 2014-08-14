@@ -17,6 +17,7 @@ error_list = dict({
                    'ADOPTION_READ_ERROR'   : -5,
                    'PMA_SAVE_ERROR'        : -6,
                    'DEVICE_REPORT'         : -7,
+                   'USER_NOT_FOUND'        : -8,
                    })
 
 class XMLSubmission(models.Model):
