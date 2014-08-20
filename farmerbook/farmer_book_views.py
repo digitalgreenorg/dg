@@ -193,7 +193,7 @@ def get_village_page(request):
     left_panel_stats['num_of_groups'] = PersonGroup.objects.filter(village__id = village_id).count()
     #group_id_list = get_id_with_images.get_group_list()
     left_panel_stats['vil_groups'] = PersonGroup.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
-    left_panel_stats['partner'] = Partner.objects.filter(person__village__block__district__block__village__id = village_id).values_list('id', 'partner_name')
+    left_panel_stats['partner'] = Partner.objects.filter(person__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
     startdate = Person.objects.filter(village__id = village_id).annotate(sd = Min('date_of_joining')).values_list('sd', flat=True)

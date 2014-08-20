@@ -1,4 +1,3 @@
-from django.core.management import setup_environ
 from django.db.models import Sum
 
 from social_website.migration_functions import get_online_stats, populate_collection_stats, populate_partner_stats
