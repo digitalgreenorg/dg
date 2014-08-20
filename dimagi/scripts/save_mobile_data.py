@@ -63,6 +63,8 @@ def save_screening_data(xml_tree):
                             GroupObject = PersonGroup.objects.get(id=group)                     
                             ScreeningObject.farmer_groups_targeted.add(GroupObject)
                             ScreeningObject.save()
+                            status['screening'] = error_list['DUPLICATE_SCREENING']
+                            error_msg = 'Duplicate'
                     error_msg = save_pma(pma_record, ScreeningObject.id, status, error_msg)
                     status['pma'] = 1
                 
@@ -91,7 +93,7 @@ def save_screening_data(xml_tree):
                             
                     except ValidationError as err:
                         status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                        error_msg = "Not valid" + str(err)
+                        error = "Not valid" + str(err)
                         sendmail("Exception in Mobile COCO screening save error line 79", error)
     
             except Exception as ex:
@@ -101,7 +103,7 @@ def save_screening_data(xml_tree):
                 
     except Exception as e:
         status['screening'] = error_list['USER_NOT_FOUND']
-        error = "Error in Reading Username" + str(e)
+        error = "Error in Reading Username" + str(e) + " GUID of user: " + str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue)
         sendmail("Exception in Mobile COCO username not found error line 17", error)
             
     return status['screening'],error_msg
@@ -140,31 +142,35 @@ def save_adoption_data(xml_tree):
                 adoption_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
                 
                 try:
-                    pap = PersonAdoptPractice(person_id = adoption_data['selected_person'],
-                                         date_of_adoption = adoption_data['date'],
-                                         video_id = adoption_data['selected_video'],
-                                         partner = cocouser.partner,
-                                         user_created = cocouser.user
-                                         )
-                
-                    pap.full_clean()
-                    pap.save()
-                    status = 1
-                    error_msg = 'Successful'
-                        
+                    AdoptionExisting = PersonAdoptPractice.objects.filter(person_id = adoption_data['selected_person'], video_id = adoption_data['selected_video'], date_of_adoption =  adoption_data['date'])
+                    status = error_list['DUPLICATE_ADOPTION']
+                    error_msg = 'Duplicate'
+                    if not(len(AdoptionExisting)):
+                        pap = PersonAdoptPractice(person_id = adoption_data['selected_person'],
+                                                  date_of_adoption = adoption_data['date'],
+                                                  video_id = adoption_data['selected_video'],
+                                                  partner = cocouser.partner,
+                                                  user_created = cocouser.user
+                                                  )
+            
+                        pap.full_clean()
+                        pap.save()
+                        status = 1
+                        error_msg = 'Successful'
+                                                
                 except ValidationError ,e:
                     status = error_list['ADOPTION_SAVE_ERROR']
                     error = "Error in saving Adoption " + str(e)
-                    sendmail("Exception in Mobile COCO adoption save line 143", error)
+                    sendmail("Exception in Mobile COCO adoption save line 144", error)
                 
             except Exception as ex:
                 status = error_list['ADOPTION_READ_ERROR']
-                error = "Error in reading Adoption " + str(ex)
+                error = "Error in reading Adoption " + str(ex) 
                 sendmail("Exception in Mobile COCO adoption read line 138", error) 
 
     except Exception as e:
         status = error_list['USER_NOT_FOUND']
-        error = "Error in reading Username " + str(ex)
+        error = "Error in reading Username " + str(e) + " GUID: " + str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue)
         sendmail("Exception in Mobile COCO adoption read line 132", error)
          
     return status, error_msg

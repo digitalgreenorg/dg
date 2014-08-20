@@ -18,6 +18,8 @@ error_list = dict({
                    'PMA_SAVE_ERROR'        : -6,
                    'DEVICE_REPORT'         : -7,
                    'USER_NOT_FOUND'        : -8,
+                   'DUPLICATE_SCREENING'   : -9,
+                   'DUPLICATE_ADOPTION'    : -10,
                    })
 
 class XMLSubmission(models.Model):
