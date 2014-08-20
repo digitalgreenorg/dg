@@ -14,6 +14,7 @@ def save_screening_data(xml_tree):
     error_msg = ''
     try:
         xml_data = xml_tree.getElementsByTagName('data')
+        error_msg = 'Username not found'
         commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
         for record in xml_data:
@@ -63,8 +64,11 @@ def save_screening_data(xml_tree):
                             GroupObject = PersonGroup.objects.get(id=group)                     
                             ScreeningObject.farmer_groups_targeted.add(GroupObject)
                             ScreeningObject.save()
+                            status['screening'] = 1
+                            error_msg = 'Successful'
+                        else:
                             status['screening'] = error_list['DUPLICATE_SCREENING']
-                            error_msg = 'Duplicate'
+                            error_msg = 'Duplicate Screening'
                     error_msg = save_pma(pma_record, ScreeningObject.id, status, error_msg)
                     status['pma'] = 1
                 
@@ -117,11 +121,9 @@ def save_pma(pma_record, Sid, status, error_msg):
                                                 person_id = person['person_id'],
                                                 interested = person['interested'],
                                                 expressed_question = person['question'] )
-                if pma.full_clean() == None:
-                    pma.save()
-                else:
-                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                    error_msg = 'Not valid'
+                pma.full_clean()
+                pma.save()
+                error_msg = 'Successful'
         except ValidationError, e:
             status['pma'] = error_list['PMA_SAVE_ERROR'] 
             error = "Error in saving Pma line 85" + str(e)
@@ -129,11 +131,12 @@ def save_pma(pma_record, Sid, status, error_msg):
     return error_msg
 
 def save_adoption_data(xml_tree):
+    error_msg = ''
     try:
+        error_msg = 'Username Not Found'
         xml_data=xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
-        error_msg = ''
         for record in xml_data:
             try:
                 adoption_data = {}
@@ -144,7 +147,7 @@ def save_adoption_data(xml_tree):
                 try:
                     AdoptionExisting = PersonAdoptPractice.objects.filter(person_id = adoption_data['selected_person'], video_id = adoption_data['selected_video'], date_of_adoption =  adoption_data['date'])
                     status = error_list['DUPLICATE_ADOPTION']
-                    error_msg = 'Duplicate'
+                    error_msg = 'Duplicate Adoption'
                     if not(len(AdoptionExisting)):
                         pap = PersonAdoptPractice(person_id = adoption_data['selected_person'],
                                                   date_of_adoption = adoption_data['date'],
