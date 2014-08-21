@@ -5,7 +5,7 @@ from django.forms.extras.widgets import *
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
-from geographies.models import Village, Block, Region, District, State, Country
+from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
 from videos.models import Language, Practice, Video
@@ -35,7 +35,7 @@ class CocoModelForm(ModelForm):
         
     class Meta:
         model = CocoModel
-        exclude = ('user_modified')
+        exclude = ('user_modified',)
 
 class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
@@ -60,10 +60,6 @@ class CountryForm(CocoModelForm):
     class Meta:
         model = Country
         
-class RegionForm(CocoModelForm):
-    class Meta:
-        model = Region
-
 class StateForm(CocoModelForm):
     class Meta:
         model = State
@@ -121,7 +117,7 @@ class VideoForm(CocoModelForm):
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance')   
+        exclude = ('farmers_attendance',)   
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:

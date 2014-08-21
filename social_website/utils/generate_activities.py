@@ -1,11 +1,10 @@
 from datetime import datetime
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
+
 import logging
 import pickle
 from django.db.models import get_model, Max
 
+import dg.settings
 import activities.models
 import geographies.models
 import programs.models

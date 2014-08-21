@@ -11,15 +11,9 @@ class Animator(CocoModel):
     id = models.AutoField(primary_key = True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     name = models.CharField(max_length=100)
-    age = models.IntegerField(max_length=3, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    csp_flag = models.NullBooleanField(null=True, blank=True)
-    camera_operator_flag = models.NullBooleanField(null=True, blank=True)
-    facilitator_flag = models.NullBooleanField(null=True, blank=True)
     phone_no = models.CharField(max_length=100, blank=True)
-    address = models.CharField(max_length=500, blank=True)
     partner = models.ForeignKey(Partner)
-    village = models.ForeignKey(Village, null=True, blank=True)
     district = models.ForeignKey(District, null=True, blank=True)
     assigned_villages = models.ManyToManyField(Village, related_name='assigned_villages', through='AnimatorAssignedVillage', null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
@@ -34,7 +28,7 @@ class Animator(CocoModel):
         return self.partner.id
 
     def __unicode__(self):
-        return  u'%s (%s)' % (self.name, self.village)
+        return  u'%s (%s)' % (self.name, self.district)
 
 post_save.connect(save_log, sender=Animator)
 pre_delete.connect(delete_log, sender=Animator)
@@ -50,9 +44,6 @@ class PersonGroup(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     group_name = models.CharField(max_length=100)
-    days = models.CharField(max_length=9, choices=DAY_CHOICES, blank=True)
-    timings = models.TimeField(null=True, blank=True)
-    time_updated = models.DateTimeField(auto_now=True)
     village = models.ForeignKey(Village)
     partner = models.ForeignKey(Partner)
 
@@ -73,8 +64,6 @@ class Person(CocoModel):
     age = models.IntegerField(max_length=3, null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone_no = models.CharField(max_length=100, blank=True)
-    address = models.CharField(max_length=500, blank=True)
-    land_holdings = models.FloatField(null=True, blank=True)
     village = models.ForeignKey(Village)
     group = models.ForeignKey(PersonGroup, null=True, blank=True)
     date_of_joining = models.DateField(null=True, blank=True)

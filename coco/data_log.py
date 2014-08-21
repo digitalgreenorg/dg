@@ -24,14 +24,14 @@ def save_log(sender, **kwargs ):
     except Exception, ex:
         user = None
     try:
-        instance.get_village()
+        instance.village.id
     except Exception as e:
         print type(e), e
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     ServerLog = get_model('coco', 'ServerLog')
-    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
-                    model_id = model_id, partner = instance.get_partner())
+    log = ServerLog(village = instance.village.id, user = user, action = action, entry_table = sender, 
+                    model_id = model_id, partner = instance.partner.id)
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
     if previous_time_stamp:        
@@ -51,7 +51,7 @@ def delete_log(sender, **kwargs ):
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     ServerLog = get_model('coco', 'ServerLog')
     try:
-        log = ServerLog(village = instance.get_village(), user = user, action = -1, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
+        log = ServerLog(village = instance.village.id, user = user, action = -1, entry_table = sender, model_id = instance.id, partner = instance.partner.id)
         log.save()
     except Exception as ex:
         pass
