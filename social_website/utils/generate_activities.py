@@ -84,7 +84,7 @@ def add_village(village, partner):
     file = "".join([dg.settings.MEDIA_ROOT, "village_partner_list.p"])
     village_partner_list = pickle.load(open(file, "rb"))
     Activity = get_model('social_website', 'Activity')
-    screenings = activities.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, user_created__cocouser__partner_id=partner.coco_id).order_by('date')
+    screenings = activities.models.Screening.objects.exclude(videoes_screened__isnull = True).filter(village=village.id, partner_id=partner.coco_id).order_by('date')
     if (len(screenings) > 0):
         title = partner.name
         date = screenings[0].date
