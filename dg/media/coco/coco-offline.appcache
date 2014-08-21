@@ -1,10 +1,14 @@
 CACHE MANIFEST
-# 2014-07-10 v3.0.3
+# 2014-07-10 v3.0.4
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
 /media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css
 /media/coco/app/scripts/libs/tabletools_media/css/TableTools.css
 /media/coco/app/scripts/libs/bootstrap/img/glyphicons-halflings.png 
+/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.woff 
+/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.ttf
+/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.svg
+/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.eot
 /media/img/admin/nav-bg.gif  
 /media/coco/app/styles/css/coco.css
 /media/coco/app/styles/css/datepicker.css
@@ -39,6 +43,9 @@ CACHE:
 /media/coco/app/images/table.png
 /media/coco/app/images/sync.png
 /media/coco/app/images/feedback.png
+/media/coco/app/images/default.png
+/media/coco/app/images/dg4.png
+/media/coco/app/images/logo.png
 
 /media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf
 
