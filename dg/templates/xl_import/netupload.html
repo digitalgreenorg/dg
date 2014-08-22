@@ -1,62 +1,64 @@
-<!DOCTYPE html>
-<html><head>
-	<title>Xl_Import</title>
-	<style type="text/css">
-    h1.detail { color:black;font-weight:bold;font-size:40 }
-    span.name { color:green;font-weight:bold;font-size:40 }
-    
-    </style></head>
-    	
-	<body>
-	    <header>
-	    <h1 class="detail"> <center> digital<span class="name">GREEN </center> </span></h1><hr>
-	    </header>
-		<h3>File should be in following format:</h3>
-		<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.Should be in .csv/.xls/.xlsx form </h4>
-		<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.Should have the following fields </h4>
+{% include "includes/header.html" %}
+	<script  src="/media/xl_import/file_upload.js"></script>
 	
-	<style type="text/css">
-		table.tableizer-table {
-		border: 2px solid Black; font-family: Arial, Helvetica, sans-serif
-		font-size: 12px;
-		} 
-	.tableizer-table td {
-		padding: 4px;
-		margin: 3px;
-		border: 2px solid Black;
-		}
-	.tableizer-table th {
-		padding: 8px;
-		background-color:White; 
-		color: Black;
-		font-weight: bold;
-		border: 2px solid Black;
-		}
 		
-	</style>
-	<table class="tableizer-table">
-	<tr class="tableizer-firstrow"><th>village_name</th><th>shg_name</th><th>Member_Name</th><th>Member_Surname</th><th>Husband_Father_Name</th><th>Husband_Father_Surname</th></tr>
-	<tr class="tableizer-firstrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-	<tr class="tableizer-firstrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-	<tr class="tableizer-firstrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-	</table>
-	
-
-		<!-- Upload form. Note enctype attribute! -->
-	<div id="myDiv">
-	<center><form action="/xl_import/" method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		<p>{{ form.non_field_errors }}</p> 
-			<p>{{   form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-			<p>
-				{{ form.docfile.errors }}
-				{{ form.docfile }}
-			</p>
-			<p><input type="submit" value="Upload" onclick= /></p>
-		</form></center>
-	</div>
-	</div>
-
-	</body>
-
-</html> 
+		<section id="Static Data Upload" class="about-bg">
+		        	<div class="wrapper">
+		        		<div class="inner-wrapper">
+		        			<h2 class="hdg-a hdg-source-lt layout-vr-md">Static Data Upload</h2>
+		        			<div class="media layout-vr-xlg">
+						
+		        				<div class="bd">
+		        					
+		        					<p class="copy copy-margin"> Static Data Uplaod lets you upload excel or csv sheets containing data collected from the field. This tool saves those datas directly into database and those enteries having errors are notified to uploader 
+		        												 and  with a privilege of downloading them as csv sheets which will be send to them as email. 	
+		        					</p>				 
+									<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">File should be in following format:</h3>
+		        					<ul class="copy bullet-list "> <!-- created css class for bullet points. Named as bullet-list-->
+							
+		        						<li>Should be in .csv/.xls/.xlsx form</li><br>                               
+		        						<li>Should have the following fields
+											<table class="tableizer-table">
+												<tr class="tableizer-firstrow"><th>Village_Name</th><th>Shg_Name</th><th>Member_Name</th><th>Member_Surname</th><th>Husband_Father_Name</th><th>Husband_Father_Surname</th></tr>
+												<tr class="tableizer-secondrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+												<tr class="tableizer-thirdrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+												<tr class="tableizer-fourthrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+											</table>
+										</li>
+									</ul><br>
+		        					<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
+										<a href="http://127.0.0.1:8000/media/xl_import/Sample_Person_Add.csv">download sample excel sheet </a>
+									</div>
+		        					<br><br><br>
+		        					<div id="read file" class="copy copy-margin">
+										<center>
+											<form action="/xl_import/status/" method="POST" enctype="multipart/form-data" >
+												{% csrf_token %}
+												<input id="email_box" type="checkbox"  value="" onclick="showHide();">Know the status of updated file through email!<br>
+												<div id="get_email"  style="visibility:hidden;">
+                                      				Enter your email id: <input id="email_id" name="email_id" type="text">
+                       							</div><br><br>
+													
+												<p>{{form.non_field_errors}}</p> 
+												<p>{{form.docfile.label_tag}}</p>
+												<p> &nbsp;&nbsp;&nbsp;&nbsp;
+													{{ form.docfile }}
+													<input type="submit" value="Upload" onclick= 'check_extension(form.docfile,email_id);'>
+												</p>
+						
+											</form>
+									
+										</center>
+								
+									</div>
+		   
+		        				</div>
+		   
+		        			</div>
+		   
+		        		</div> <!-- End .inner-wrapper -->
+		   
+		        	</div> <!-- End .wrapper -->
+		  </section>
+        
+ {% include "includes/footer.html" %}

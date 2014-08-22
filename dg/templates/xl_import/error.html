@@ -1,0 +1,47 @@
+{% include "includes/header.html" %}
+
+	
+	<section id="Static Data Upload" class="about-bg">
+		        	<div class="wrapper">
+		        		<div class="inner-wrapper">
+		        			<h2 class="hdg-a hdg-source-lt layout-vr-md">Static Data Upload - Status</h2>
+		        			
+		        			<div class="media layout-vr-xlg">
+								<div class="bd">
+									<h3 class="hdg-c hdg-source-semibold hdg-black layout-vr-sm">Entries shown below have been successfully added</h3><br>
+									<div style="clear:both; display:inline;">
+										<h3 class="hdg-e hdg-source-semibold hdg-black layout-vr-sm" style="width:200; " ><p>Villages Added<span style="padding-left:4.75em;">
+										Shg Added</span><span style="padding-left:6.75em;">Persons Added</span></p></h3>
+									</div>
+									<div id="csvcontents">
+										{% if csv_data %}
+											{% for csv_data_file in csv_data %}
+												<div id="errors" style="height:300px; width:200px; overflow-y:auto; float:left; display:block;">
+													<table style="float:left;">
+														{% for data in csv_data_file %}
+															<tr><td>{{ data }}</td></tr> 
+														{% endfor %}
+													</table>
+												</div>
+											{% endfor %}
+										{% endif %}
+										<br clear="all" />
+									</div><br><br>
+									
+									<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
+										<a href="/xl_import/zip/">Download all error excel sheets as a zip file</a>
+									</div>
+									<center>
+										<form action="/xl_import/" method="POST">
+											{% csrf_token %}
+											<input type="submit" value="Go Back" >
+										</form>
+									</center>
+	
+								</div>
+							</div>
+						</div>
+					</div>
+	</section>
+
+{% include "includes/footer.html" %}
