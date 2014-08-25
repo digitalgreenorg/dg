@@ -31,6 +31,8 @@ def save_log(sender, **kwargs ):
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     if sender=="Village" :
         village_id = instance.id
+    elif sender=="Animator":
+        village_id = None
     elif sender=="PersonAdoptPractice":
         village_id = instance.person.village.id
     else:
