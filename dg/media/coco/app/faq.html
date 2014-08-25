@@ -7,116 +7,157 @@
     <title>COCO FAQ</title>
     <link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
     <link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
+    
     <link rel="stylesheet"  href="/media/coco/app/styles/css/faq.css">
     <meta name="robots" content="NONE,NOARCHIVE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
+    <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
 </head>
-<body>
-
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3 well affix no-print" id="sidepanel">
-            <div id="coco_faq">
-                <a href="/coco/v2" id="heading">COCO </a><small style="color:grey;">FAQ page</small>
-            </div>
-            <ul class="nav nav-list">
-                <li><a href="#setup">COCO Setup</a></li>
-                <li><a href="#syncing">Syncing</a></li>
-                <li><a href="#database">Database</a></li>
-                <li><a href="#modes">Offline and Online Modes</a></li>
-                <li><a href="#login">Login</a></li>
-                <li><a href="#data">Data Entry, Listing and Modification</a></li>
-                <li><a href="#troubleshoot">Troubleshooting</a></li>
-            </ul>
+<body  data-spy="scroll" data-target=".faq-sidebar">
+    <div class="container">
+        <div class="row global-header">
+            <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
         </div>
-        <div class="span9" style="float:right; margin-top:2%;">
-            <a name="setup"></a><h3 class="topic">COCO Setup</h3>
+        <div class="row">
+
+            <nav class="navbar navbar-default faq-sidebar col-sm-3" data-spy="affix">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-12" >
+                        <div class="navbar-header faq-navbar">
+                            <div id="coco_faq">
+                                <a href="/coco" id="heading">COCO FAQ </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-for-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>      
+                </div>
+                <div class="row">
+                    <div class="collapse navbar-collapse" id="nav-for-toggle">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="#setup">COCO Setup</a></li>
+                            <li><a href="#syncing">Syncing</a></li>
+                            <li><a href="#database">Database</a></li>
+                            <li><a href="#modes">Offline and Online Modes</a></li>
+                            <li><a href="#login">Login</a></li>
+                            <li><a href="#data">Data Entry, Listing and Modification</a></li>
+                            <li><a href="#troubleshoot">Troubleshooting</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="col-sm-8 col-sm-push-4">
+                 <div id="setup"></div><h3 class="topic">COCO Setup</h3>
             <ul class="faq-wrap">
-                <li><b><a name="browsers"></a>Which browsers support COCO V2?</b></li>
-                <li>Mozilla Firefox version 10 onwards &#40get from <a href="http://www.mozilla.org/en-US/firefox/new/" target="_blank">here</a>&#41
-                and Google Chrome version 23 onwards &#40get from <a href="https://www.google.com/intl/en/chrome/browser/" target="_blank">here</a>&#41 support COCO version 2.</li><hr>
-                <li><b>What is needed for setting up COCO V2?</b></li>
-                <li>Please do the following before setting up COCO V2
-                    <ol><li> Make sure you have consistent internet connection.</li>
+                <li><h4><a name="browsers"></a>Which browsers support COCO?</h4></li>
+                <li>We recommend using google <a href="https://www.google.com/intl/en_in/chrome/browser/">Chrome version 23 or later</a> but it also works in <a href="https://www.mozilla.org/en-US/firefox/new/">mozilla firefox 10 or later</a>.</li><hr>
+                <li><h4>What is needed for setting up COCO?</h4></li>
+                <li>Please do the following before setting up COCO
+                    <ol><li> Make sure you have consistent internet connection. You only need it for the first time. One the setup is done, coco works seamlessly even in intermittent connectivity situations.</li>
                         <li>Make sure your computer's time is correct. It can be seen at the bottom right of your screen.
                             If it isn't correct, get help from <a href="https://kb.wisc.edu/helpdesk/page.php?id=12540" target="_blank">here</a></li>
                         <li>Make sure you have a suitable browser as listed <a href="#browsers">here</a>.</li>
                     </ol></li><hr>
             </ul>
-            <a name="syncing"></a><h3 class="topic">Syncing</h3>
+            <div id="syncing"></div><h3 class="topic">Syncing</h3>
             <ul class="faq-wrap">
-                <li><b>What is syncing?</b></li>
+                <li><h4>What is syncing?</h4></li>
                 <li>Syncing in this context means uploading data from your computer to the server and downloading data from the server 
                     to your 
                     computer so that both the server and your computer have the latest copy of the data.</li><hr>
-                <li><b>When should I sync?</b></li>
+                <li><h4>When should I sync?</h4></li>
                 <li>You should sync whenever you want to upload locally stored entries to the server. Please try to sync as and when you can.</li><hr>
-                <li><b>What does the number in the sync button mean?</b></li>
+                <li><h4>What does the number in the sync button mean?</h4></li>
                 <li>The number in the sync button is the number of entries which are stored on your computer but not yet on the server.
                 Click on sync to upload them.</li><hr>
-                <li><b>The sync button is disabled, I'm not able to click on it, what's wrong?</b></li>
+                <li><h4>The sync button is disabled, I'm not able to click on it, what's wrong?</h4></li>
                 <li>The sync button gets disabled when there is no internet connection. It will automatically get enabled when you are online.</li><hr>
             </ul>
-            <a name="database"></a><h3 class="topic">Database</h3>
+            <div id="database"></div><h3 class="topic">Database</h3>
             <ul class="faq-wrap">
-                <li><b>How do I download a fresh database?</b></li>
+                <li><h4>How do I download a fresh database?</h4></li>
                 <li>Click on the 'Delete and Download Database' button located at the bottom of the home page to download a fresh database.</li><hr>
-                <li><b>I paused database during download, how do I resume it?</b></li>
+                <li><h4>I paused database during download, how do I resume it?</h4></li>
                 <li>To resume paused download, click on the 'Sync' button, or simply refresh the page.</li><hr>
-                <li><b>I need to use a different user's database, how do I do that?</b></li>
+                <li><h4>I need to use a different user's database, how do I do that?</h4></li>
                 <li>To use a different user's database, first logout, then click on 'Sign in as a different user' and provide the credentials.
                     This will replace your current database with the new user's database.</li><hr>
-                <li><b>Why are all the links in the side panel disabled?</b></li>
+                <li><h4>Why are all the links in the side panel disabled?</h4></li>
                 <li>All the links in the side panel are disabled when the database has not been completely downloaded.
                     To enable the links, click on the 'Sync' button and download the database.</li><hr>
-                <li><b>How can I get access to other geographies' data?</b></li>
+                <li><h4>How can I get access to other geographies' data?</h4></li>
                 <li>Each username can access data of a particular geographical region only. To access other geographies' data you need to <a href="#change_user">sign in as a different user</a> who has access to data from that location.</li><hr>
             </ul>
-            <a name="modes"></a><h3 class="topic">Offline and Online Modes</h3>
+            <div id="modes"></div><h3 class="topic">Offline and Online Modes</h3>
             <ul class="faq-wrap">
-                <li><b>How do I switch modes?</b></li>
-                <li>There is no need to switch modes in COCO version 2.
-                    COCO V2 works seamlessly, automatically keeping track of internet connectivity.</li><hr>
-                <li><b>How do I access COCO in offline mode?</b></li>
-                <li>In your browser, type this URL - www.digitalgreen.org/coco/v2/. Please note that the last slash '/' is essential 
-                and you will not be able to access COCO offline if you just type www.digitalgreen.org/coco/v2
+                <li><h4>How do I switch modes?</h4></li>
+                <li>There is no need to switch modes in COCO.
+                    COCO works seamlessly, automatically keeping track of internet connectivity.</li><hr>
+                <li><h4>How do I access COCO in offline mode?</h4></li>
+                <li>In your browser, type this URL - www.digitalgreen.org/coco/. Please note that the last slash '/' is essential.
+                and you will not be able to access COCO offline if you just type www.digitalgreen.org/coco/
                 </li><hr>    
             </ul>
-            <a name="login"></a><h3 class="topic">Login</h3>
+            <div id="login"></div><h3 class="topic">Login</h3>
             <ul class="faq-wrap">
-                <li><b>How do I get my username and password?</b></li>
+                <li><h4>How do I get my username and password?</h4></li>
                 <li>To get your username and password, contact your regional office.</li><hr>
-                <li><b><a name="change_user"></a>How can I sign in as a different user?</b></li>
+                <li><h4><a name="change_user"></a>How can I sign in as a different user?</h4></li>
                 <li>To sign in as a different user, first log out, then click on 'Sign in as a different user'.
                     Remember this will delete your current database and download a new one.</li><hr>
+                <li><h4>I logged in to coco but the download gets stuck. what should i do?</h4></li>
+                <li>Make sure your username is assigned to villages. Contact the regional office and ensure that the villages are assigned.</li><hr>
             </ul>
-            <a name="data"></a><h3 class="topic">Data Entry, Listing and Modification</h3>
+            <div id="data"></div><h3 class="topic">Data Entry, Listing and Modification</h3>
             <ul class="faq-wrap">
-                <li><b>How do I edit an entry?</b></li>
+                <li><h4>How do I edit an entry?</h4></li>
                 <li>To edit an entry go to that entry's table and click on the 'pen' icon in front of that entry in the table.</li><hr>
-                <li><b><a name="sort"></a>How can I sort a table?</b></li>
+                <li><h4><a name="sort"></a>How can I sort a table?</h4></li>
                 <li>To sort a table by a column, click on either of the upsided or downsided pointer in front of the column name.
                     The upsided pointer will be highlighted when data is sorted in increasing order and the downsided pointer will be highlighted
                     when it is sorted in decreasing order. To sort tables on multiple columns, press and hold the shift key while sorting by each column.</li><hr>
-                <li><b><a name="search"></a>How can I search for an entry in a table?</b></li>
+                <li><h4><a name="search"></a>How can I search for an entry in a table?</h4></li>
                 <li>To search, type your query in the search box on top-right of the table.</li><hr>
-                <li><b>How can I copy data into Excel?</b></li>
-                <li>To copy data into Excel follow these steps:
-                <ol><li> Highlight the data in the table and copy it.</li>
-                    <li>Go to Excel and click on 'Paste Special'.</li>
-                    <li>Select 'Text' in the 'As' box and click on OK.</li></li>
-                </ol>   
+                <li><h4>How can I download data into Excel?</h4></li>
+                <li>To download data in , click in the ‘download in excel’ button. This downloads a .csv file, which can be opened using excel.
+                </li>  
                 <hr>
-                <li><b>How can I check if an entry has been added to the database?</b></li>
+                <li><h4>How can I check if an entry has been added to the database?</h4></li>
                 <li>Go to that entry's table and <a href="#sort">sort</a> by decreasing order of ID. You can alternatively <a href="#search">search</a> for that entry in the table</li><hr>
+
+                <li><h4>How can i check how many entries i have made?</h4></li>
+                <li>Go to <a href="/analytics/cocouser/">digitalgreen.org/analytics/cocouser/ </a>select your partner, district and your username in DEO select field. Click on Go. It should display a graph showing your entries.</li>
+
             </ul>
-            <a name="troubleshoot"></a><h3 class="topic">Troubleshooting</h3>
+            <div id="troubleshoot"></div><h3 class="topic">Troubleshooting</h3>
             <ul class="faq-wrap">
-                <li><b>How do I clear the application cache?</b></li>
+                <li><h4>Coco is not opening, what should i do?</h4></li>
+                <li>Follow the steps below :
+                    <ol>
+                        <li>Go to digitalgreen.org/coco and login to coco framework.</li>
+                        <li> Notice the advertisements being displayed on the website.</li>
+                        <li> There is a name of the tool/company on the corner of the ad which is responsible for those ads.</li>
+                        <li> Go to Control Panel of your system and uninstall all the plugins and tools from that company. </li>
+                        <li> Go to Extensions in Chrome Settings and disable the plugin/extension which support ads from any advertiser.</li>
+                        <li> Go to Extensions in Chrome settings and Install AdBlock Plus from adblockplus.org as publisher.</li>
+                        <li>For firefox - Go to extensions in firefox settings, search ad block plus in the search box and install the “ad block plus” from adblockplus.org as publisher.</li>
+                        <li> Close google Chrome.</li>
+                        <li> Start Chrome and try using the COCO and digitalgreen.org. There shouldn’t be any problem now. If problem persists contact digital green support center</li>
+                    </ol>
+                </li><hr>
+                <li><h4>How do I clear the application cache?</h4></li>
                 <li>To clear the appcache in Google Chrome, in your browser type chrome://appcache-internals/ and remove the appcache of the relevant application.
                     In this case it will be http://www.digitalgreen.org/media/coco/coco-offline.appcache .</li>
-                <li>To clear the appcache in Mozilla Firefox, Click on Options in the menu bar, select digitalgreen.org/coco/v2 and then click on Remove.</li><hr>
-                <li><b>How do I delete indexed database in chrome?</b></li>
+                <li>To clear the appcache in Mozilla Firefox, Click on Options in the menu bar, select digitalgreen.org/coco/ and then click on Remove.</li><hr>
+                <li><h4>How do I delete indexed database in chrome?</h4></li>
                 <li>To delete the indexed database follow these steps:
                     <ol><li>Click on <img src="/media/coco/app/images/chrome-options.png"> icon on the top right of chrome.</li>
                         <li>Click on 'Settings'</li>
@@ -124,9 +165,57 @@
                         <li>Click on the 'Content Settings' button and then 'All cookies and site data'</li>
                         <li>In the search box, search for www.digitalgreen.org. Click on 'Indexed Database' and then 'remove'</li>
                     </ol></li><hr>
+
+                    <li><h4>I cannot log into COCO. What should i do? (Making COCO Users)</h4></li>
+                    <ol>
+                        <li>If you do not have admin account, please contact the DG Regional Office. They will assign villages to your user.</li>
+                        <li> If you have admin rights, follow the procedure -
+                            <ol>
+                                <li> Log into digitalgreen.org/coco</li>
+                                <li> Click on User and Click on Add User button.</li>
+                                <li> Once you have added user, you need to create a COCO user and Assign this user id to it. To do so, click on cocouser and add new cocouser. Fill in the user id of the user you created above.</li>
+                                <li> Now you can assign villages to this COCO user. Please read the question below to know more.</li>
+                            </ol>
+                        </li>
+                    </ol>
+                    <hr>
+                    <li><h4>I can log into COCO but the download gets stuck. What should I do?</h4></li>
+                    <ol>
+                        First of all please make sure that you have an Internet connection.<br>
+                        If yes, check if you have logged into the admin site.
+                        <li> Goto digitalgreen.org/admin.</li>
+                        <li> Check if you are logged in.</li>
+                        <li> If you are logged in, Click on logout. This can be found in the top right corner of the page. </li>
+                        If you are not logged in admin, and still the download gets stuck, check that you have assigned villages to the cocouser. To do this refer to the question below.
+                    </ol>
+                    <hr>
+                    <li><h4>I can log into COCO but I cannot see the village data. What should I do?</h4></li>
+                    <ol>
+                        First make sure that you have created a COCO user. You can do that by checking the COCO user table and searching for the desired COCO user.<br>
+                        If you have not created a COCO user, please refer to the question above.<br>
+                        To assign villages to the user follow these steps - 
+                        <li> If a Click on villages in the admin page. Click on add new village and fill out the details.</li>
+                        <li> If the village is already created, you simply need to assign this village to the coco user.</li>
+                        <li> Go to Admin, Click on COCO User, Search for the COCO user you want to assign the village and click on it.</li>
+                        <li> Now you will see 2 boxes, which say Available villages and Assigned villages. Select the village in the available village box, and click on the (>) button. Now click on Save.</li>
+                        You have assigned the village to the COCO user. Now just click on Delete and Download Database to get the data of these villages.
+                    </ol>
+                    <hr>
+                    <li><h4>How to get a video of a different partner/state?</h4></li>
+                    <ol>
+                        By default, only those videos get downloaded which - 
+                        <li> Have been produced by that Partner in that State.</li>
+                        <li> or have been screened in one of the villages assigned to the coco user by that partner</li>
+                        If you still want to download some video, go to the admin site and add a dummy screening. If you dont have an admin account, please contact DG Regional Staff.
+                    </ol>
+                    <hr>
+
             </ul>
+            </div>
+            
         </div>
+
     </div>
-</div>
+
 </body>
 </html>

@@ -57,7 +57,8 @@ define([
         remove_ui: function() {
             // calling remove without hiding modal causes modal's backdrop to remain
             this.$('#full_download_modal').modal('hide');
-            this.remove();
+            $('.modal-backdrop').remove();
+            
         },
 
         // Checks internet connectivity

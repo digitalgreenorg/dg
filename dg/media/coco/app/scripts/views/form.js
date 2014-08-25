@@ -122,7 +122,7 @@ define([
                 //create entity_map, dependency map, foreign_elements_rendered, for each foreign element
                 for (var element in this.foreign_entities[f_entity]) {
                     //created mapping of element - entity
-                    this.element_entity_map[element] = f_entity; 
+                    this.element_entity_map[element] = f_entity;
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
@@ -153,16 +153,16 @@ define([
         params = {
             serialiaze:{
                 //name of first button, not shown if ==""
-                button1: "...",     
-                //name of sec button, not shown if =="" 
-                button2: "..."      
+                button1: "...",
+                //name of sec button, not shown if ==""
+                button2: "..."
             },
             //name of entity to be added/edited
-            entity_name:,           
+            entity_name:,
             //id of model if edit case
-            model_id:,              
+            model_id:,
             //json of model to be shown in edit form - used when json!= json(model_id)
-            model_json:,            
+            model_json:,
         }
         */
         initialize: function(params) {
@@ -193,7 +193,7 @@ define([
             //fetch all foreign collections and render them when all are fetched
             this.fetch_and_render_foreign_entities();
 
-            //if edit case - fill form with the model    
+            //if edit case - fill form with the model
             if (this.edit_case)
                 this.render_edit_model();
 
@@ -303,7 +303,7 @@ define([
                         console.log("ERROR: EDIT: Inline collection could not be fetched!");
                     });
             }
-            //not showing the inlines in case of edit_case_json            
+            //not showing the inlines in case of edit_case_json
         },
 
         // fills the inline objects in their templates and puts them into form
@@ -339,7 +339,7 @@ define([
                 // switch validation on/off based on whether the inline is empty or not
                 tr.on('change', this.switch_validation_for_inlines);
             }
-            
+
             // get last index of already existing inlines
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
@@ -353,7 +353,7 @@ define([
         // to prevent validation of empty inline rows
         switch_validation_for_inlines: function(ev) {
             //get the changed row
-            var elem = ev.delegateTarget; 
+            var elem = ev.delegateTarget;
             var empty = true;
             $(elem).find(':input').each(function() {
                 if ($(this).val())
@@ -371,8 +371,8 @@ define([
                 });
             }
         },
-        
-        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json  
+
+        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json
         fill_form_elements: function(container, o_json) {
             container.attr("model_id", o_json.id);
             container.find(':input').each(function() {
@@ -395,7 +395,7 @@ define([
             return container;
         },
 
-        // start listening to in-form events 
+        // start listening to in-form events
         start_change_events: function() {
             for (element in this.source_dependents_map) {
                 console.log("creating changeevent for - " + element);
@@ -403,7 +403,7 @@ define([
                 this.$('[name=' + element + ']').change(this.render_dep_for_elements);
             }
         },
-        
+
         // initiate the jquery validation plugin on the form
         initiate_form_field_validation: function() {
             var that = this;
@@ -413,15 +413,18 @@ define([
                     that.save();
                 }
             });
+            console.log()
             this.$('form')
                 .validate(validate_obj);
         },
-        
+
         // initiate the dropdown and date, time widgets
         initiate_form_widgets: function() {
-            $(".chzn-select").chosen({
-                'search_contains': true
+            $(".chosen-select").chosen({
+                'search_contains': true,
+                'width': '100%'
             });
+
 
             var eDate = new Date();
             enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
@@ -468,14 +471,14 @@ define([
             }, this);
         },
 
-        // Fully Reset the dependent foreign element by looking at all its sources.  
+        // Fully Reset the dependent foreign element by looking at all its sources.
         filter_dep_for_element: function(element) {
             //get dependent element's entity's collection - to be filtered
             var dep_collection = this.get_collection_of_element(element);
             // get all sources of this element - to filter by
-            var all_sources = this.get_sources_of_element(element); 
+            var all_sources = this.get_sources_of_element(element);
             //model array to be finally inserted into dom
-            var final_models = []; 
+            var final_models = [];
             var that = this;
 
             if (!dep_collection.length)
@@ -539,7 +542,7 @@ define([
             });
             return final_models;
         },
-        
+
         // filter an array of modal based on a filter defined in configs
         filter_model_array: function(model_array, filter) {
             var filter_attr = filter.attr;
@@ -553,7 +556,7 @@ define([
             });
             return filtered;
         },
-        
+
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
@@ -561,7 +564,7 @@ define([
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
 
-            //if any defined, filter the model array before putting into dom 
+            //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
 
@@ -571,7 +574,7 @@ define([
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
                 //LIMIT: there can be only one expanded foreign element!
-                this.expanded = element; 
+                this.expanded = element;
 
                 //Its edit case and edit model is not yet rendered - so render it
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
@@ -612,29 +615,41 @@ define([
                         id: "",
                         name: "------------"
                     }));
-                $.each(model_array, function(index, f_model) {
+                $.each(model_array, function (index, f_model) {
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(that.options_inner_template({
-                        id: parseInt(f_json["id"]),
-                        name: f_json[f_entity_desc.name_field]
-                    }));
+                    if (f_json[f_entity_desc.name_field_extra_info]) {
+                        var extra_info = "";
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
+                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        }
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                        }));
+                    }
+                    else {
+                        $f_el.append(that.options_inner_template({
+                            id: parseInt(f_json["id"]),
+                            name: f_json[f_entity_desc.name_field]
+                        }));
+                    }
                 });
                 $f_el.prop("disabled", false);
-                $f_el.trigger("liszt:updated");
+                $f_el.trigger("chosen:updated");
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
                     this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("liszt:updated");
+                    this.$('form [name=' + element + ']').trigger("chosen:updated");
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }
             }
         },
-        
-        // normalises the json before putting into form 
+
+        // normalises the json before putting into form
         normalize_json: function(d_json) {
             console.log("FORM: Before Normalised json = " + JSON.stringify(d_json));
             var f_entities = this.foreign_entities;
@@ -656,14 +671,14 @@ define([
             console.log("FORM: Normalised json = " + JSON.stringify(d_json));
             return d_json;
         },
-        
+
         // Using Backbone.Syphon library to put normalised json into form
         fill_form: function() {
             console.log("FORM: filling form with the model - " + JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
         },
 
-        // used to disable the save button while save is in progress 
+        // used to disable the save button while save is in progress
         set_submit_button_state: function(state) {
             if (state == "disabled")
                 this.$(".action_button").attr("disabled", true);
@@ -674,7 +689,7 @@ define([
         //err format - {"mediator": {"__all__": ["Animator with this Name, Gender and Partner already exists."]}}
         // {"form_name": {"element name": [list of errors]}}
         show_errors: function(errors, disable_submit) {
-            // used to clear form errors 
+            // used to clear form errors
             if (errors == null) {
                 $('.form_error').remove();
                 $('.error').removeClass("error");
@@ -701,11 +716,11 @@ define([
                             parent_el.addClass("error"); //highlight
                         } else {
                             var error_el = parent_el.find('[name=' + error_el_name + ']');
-                            error_el.after(error_ul); //insert error message
                             error_el
                                 .parent('div')
                                 .parent('div')
                                 .addClass("error"); //highlight
+                            error_el.parent().append(error_ul); // insert error message after the element
                         }
                     });
                 }, this);
@@ -716,7 +731,7 @@ define([
             }
 
         },
-        
+
         // TODO: the following 3 methods can be combined into single generic one
         // fetch inline from the form as a list of objects
         parse_inlines: function(raw_json) {
@@ -764,7 +779,7 @@ define([
 
 
         },
-        
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
@@ -783,7 +798,7 @@ define([
                 $(inl).find(':input').each(function(){
                     if(!$(this).attr('name'))
                         return;
-                    inline_attrs.push($(this).attr("name"));    
+                    inline_attrs.push($(this).attr("name"));
                     var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
     				switch(this.type) {
     					case 'password':
@@ -805,7 +820,7 @@ define([
             $.each(inline_attrs, function(index, attr) {
                 delete raw_json[attr];
             });
-            // console.log(inline_attrs);    
+            // console.log(inline_attrs);
         },
 
         // fetch bulks from the form as a list of objects
@@ -883,7 +898,7 @@ define([
                     else if(typeof(obj[member])=="string"){
                         obj[member] = obj[member].trim();
                     }
-                }    
+                }
             }
             console.log("FORM: After cleaning json - " + JSON.stringify(form_json))
 
@@ -896,7 +911,7 @@ define([
                 }, this);
             }, this);
         },
-        
+
         //initialize the Denormalize module to denormalize the form's objects
         denormalize_json: function(json) {
             var dfds = [];
@@ -940,18 +955,18 @@ define([
             this.show_errors(null);
             //set state to loading
             this.set_submit_button_state('loading');
-            //get a json object out of the form 
+            //get a json object out of the form
             this.final_json = this.serialize_form();
-            //clean json to be able to send to server    
+            //clean json to be able to send to server
             this.clean_json(this.final_json);
-            //denormalise the foreign elements in json 
+            //denormalise the foreign elements in json
             var that = this;
             this.denormalize_json(this.final_json)
                 .done(function() {
-                    //preserve the background fields - not entered through form:            
+                    //preserve the background fields - not entered through form:
                     if (that.edit_case)
                         that.final_json = that.extend_edit_json(that.final_json);
-                    /*form rendered, form filled by user, save clicked, savable json prepared, 
+                    /*form rendered, form filled by user, save clicked, savable json prepared,
                     this module's work is done for now, sending event*/
                     var ev_data = {
                         context: that,

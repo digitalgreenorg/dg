@@ -25,7 +25,7 @@ define([
         events: {
             "click #stop_inc_download": "stop_inc_download"
         },
-
+        /* The incremental download modal code in HTML is commented for now, so is this one.
         //increment the progress bar
         increment_pb: function() {
             //get the current width of progress bar
@@ -33,7 +33,7 @@ define([
             //increment the width with the step
             document.getElementById('inc_pbar').style.width = (w + this.progress_bar_step) + '%';
         },
-
+        */
         //update the status on the view - # of downloaded/# of total objects
         update_status: function(status) {
             console.log(status);
@@ -255,7 +255,7 @@ define([
                     .always(function() {
                         // continue processing the objects even if this object failed
                         //  increment progress bar
-                        that.increment_pb();
+                        //that.increment_pb();
                         // increment download status
                         that.download_status["downloaded"]++;
                         //recursively process the rest of the objects

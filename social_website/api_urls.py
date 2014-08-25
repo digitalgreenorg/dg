@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import include, patterns, url
+from django.conf.urls import include, patterns, url
 from elastic_search import get_collections_from_elasticsearch, searchCompletions
 from social_website.api import VideoLikeResource, UserResource, VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
 from views import searchFilters, featuredCollection, mapping

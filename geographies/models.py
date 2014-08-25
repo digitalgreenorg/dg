@@ -23,21 +23,10 @@ class Country(CocoModel):
         return self.country_name
 
 
-class Region(CocoModel):
-    id = models.AutoField(primary_key=True)
-    old_coco_id = models.BigIntegerField(editable=False, null=True)
-    region_name = models.CharField(max_length=100, unique='True')
-    start_date = models.DateField(null=True, blank=True)
-
-    def __unicode__(self):
-        return self.region_name
-
-
 class State(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     state_name = models.CharField(max_length=100, unique='True')
-    region = models.ForeignKey(Region)
     country = models.ForeignKey(Country)
     start_date = models.DateField(null=True, blank=True)
 
@@ -51,7 +40,6 @@ class District(CocoModel):
     district_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
     state = models.ForeignKey(State)
-    partner = models.ForeignKey(Partner)
     latitude = models.DecimalField(max_digits=31, decimal_places=28, null=True, blank=True,
                                    validators=[MaxValueValidator(90), MinValueValidator(-90)])
     longitude = models.DecimalField(max_digits=32, decimal_places=28, null=True, blank=True,
@@ -88,10 +76,6 @@ class Village(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     village_name = models.CharField(max_length=100)
     block = models.ForeignKey(Block)
-    no_of_households = models.IntegerField(null=True, blank=True)
-    population = models.IntegerField(null=True, blank=True)
-    road_connectivity = models.CharField(max_length=100, blank=True)
-    control = models.NullBooleanField(null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     latitude = models.CharField(max_length=25, null=True, blank=True)
     longitude = models.CharField(max_length=25, null=True, blank=True)

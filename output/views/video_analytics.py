@@ -279,7 +279,7 @@ def video_search(request):
         search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
     
     if(partners):
-        vids = vids.filter(village__block__district__partner__id__in = map(int,partners))
+        vids = vids.filter(partner__id__in=map(int,partners))
         search_box_params['sel_partners'] = partners
     search_box_params['all_partners'] = Partner.objects.all().values('id','partner_name')
     
