@@ -123,7 +123,7 @@ def save_pma(pma_record, Sid, status, error_msg):
                                                 expressed_question = person['question'] )
                 pma.full_clean()
                 pma.save()
-                error_msg = 'Successful'
+                error_msg = 'PMA Successful'
         except ValidationError, e:
             status['pma'] = error_list['PMA_SAVE_ERROR'] 
             error = "Error in saving Pma line 85" + str(e)
@@ -134,7 +134,7 @@ def save_adoption_data(xml_tree):
     error_msg = ''
     try:
         error_msg = 'Username Not Found'
-        xml_data=xml_tree.getElementsByTagName('data')
+        xml_data = xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
         for record in xml_data:
