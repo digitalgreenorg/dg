@@ -14,7 +14,6 @@ def save_screening_data(xml_tree):
     error_msg = ''
     try:
         xml_data = xml_tree.getElementsByTagName('data')
-        error_msg = 'Username not found'
         commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
         for record in xml_data:
@@ -69,8 +68,11 @@ def save_screening_data(xml_tree):
                         else:
                             status['screening'] = error_list['DUPLICATE_SCREENING']
                             error_msg = 'Duplicate Screening'
-                    error_msg = save_pma(pma_record, ScreeningObject.id, status, error_msg)
-                    status['pma'] = 1
+                    
+                    status['pma'] = save_pma(pma_record, ScreeningObject.id, status['screening'])
+                    if status['pma'] == -6:
+                        status['screening'] = error_list['PMA_SAVE_ERROR']
+                        error_msg = 'pma_save_error'
                 
                 except Screening.DoesNotExist as e:            
                     screening = Screening ( date = screening_data['date'],
@@ -90,29 +92,37 @@ def save_screening_data(xml_tree):
                             screening.videoes_screened = screening_data['selected_video'].split(" ")
                             screening.save()
                         except Exception as e:
-                            error = "Error in saving groups and videos" + str(e)
-                            sendmail("Exception in Mobile COCO save groups and videos line 83", error)
-                        status['pma'] = 1
-                        error_msg = save_pma(pma_record, screening.id, status, error_msg)
-                            
+                            error = "Error in Saving Groups and Videos : " + str(e)
+                            status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                            error_msg = 'screening_save_error'
+                            sendmail("Exception in Mobile COCO. Error in saving groups and videos (Line 91)", error)
+    
+                        status['pma'] = save_pma(pma_record, screening.id, status['screening'])
+                        if status['pma'] == -6:
+                            status['screening'] = error_list['PMA_SAVE_ERROR']
+                            error_msg = 'pma_save_error'
+                                                    
                     except ValidationError as err:
                         status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                        error = "Not valid" + str(err)
-                        sendmail("Exception in Mobile COCO screening save error line 79", error)
+                        error_msg = 'screening_save_error'
+                        error = "Error in Saving Screening : " + str(err)
+                        sendmail("Exception in Mobile COCO. Screening save error (Line 87)", error)
     
             except Exception as ex:
-                status['screening'] = error_list['SCREENING_READ_ERROR'] 
-                error = "Error in Reading Screening " + str(ex)
-                sendmail("Exception in Mobile COCO screening read error line 22", error)
+                status['screening'] = error_list['SCREENING_READ_ERROR']
+                error_msg = 'screening_read_error'
+                error = "Error in Reading Screening : " + str(ex)
+                sendmail("Exception in Mobile COCO. Screening read error (Line 22)", error)
                 
     except Exception as e:
         status['screening'] = error_list['USER_NOT_FOUND']
-        error = "Error in Reading Username" + str(e) + " GUID of user: " + str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue)
-        sendmail("Exception in Mobile COCO username not found error line 17", error)
+        error_msg = 'user_read_error'
+        error = "Error in Reading User : " + str(e)
+        sendmail("Exception in Mobile COCO. User not found (Line 17)", error)
             
     return status['screening'],error_msg
 
-def save_pma(pma_record, Sid, status, error_msg):
+def save_pma(pma_record, Sid, status):
     for person in pma_record:
         try:
             PersonExisting = PersonMeetingAttendance.objects.filter(screening_id=Sid, person_id=person['person_id'])
@@ -123,17 +133,16 @@ def save_pma(pma_record, Sid, status, error_msg):
                                                 expressed_question = person['question'] )
                 pma.full_clean()
                 pma.save()
-                error_msg = 'PMA Successful'
+                status = 1
         except ValidationError, e:
-            status['pma'] = error_list['PMA_SAVE_ERROR'] 
-            error = "Error in saving Pma line 85" + str(e)
-            sendmail("Exception in Mobile COCO", error)
-    return error_msg
+            status = error_list['PMA_SAVE_ERROR'] 
+            error = "Error in Saving PMA : " + str(e)
+            sendmail("Exception in Mobile COCO. Error in Saving PMA {Line 134)", error)
+    return status
 
 def save_adoption_data(xml_tree):
     error_msg = ''
     try:
-        error_msg = 'Username Not Found'
         xml_data = xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid = str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
@@ -163,17 +172,20 @@ def save_adoption_data(xml_tree):
                                                 
                 except ValidationError ,e:
                     status = error_list['ADOPTION_SAVE_ERROR']
-                    error = "Error in saving Adoption " + str(e)
-                    sendmail("Exception in Mobile COCO adoption save line 144", error)
+                    error_msg = 'adoption_save_error'
+                    error = "Error in Saving Adoption : " + str(e)
+                    sendmail("Exception in Mobile COCO. Adoption save error (Line 168)", error)
                 
             except Exception as ex:
                 status = error_list['ADOPTION_READ_ERROR']
-                error = "Error in reading Adoption " + str(ex) 
-                sendmail("Exception in Mobile COCO adoption read line 138", error) 
+                error_msg = 'adoption_read_error'
+                error = "Error in Reading Adoption : " + str(ex) 
+                sendmail("Exception in Mobile COCO. Adoption read error (Line 152)", error) 
 
     except Exception as e:
         status = error_list['USER_NOT_FOUND']
-        error = "Error in reading Username " + str(e) + " GUID: " + str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue)
-        sendmail("Exception in Mobile COCO adoption read line 132", error)
+        error_msg = 'user_read_error'
+        error = "Error in Reading User : " + str(e)
+        sendmail("Exception in Mobile COCO. User read error (Line 147)", error)
          
     return status, error_msg

@@ -8,7 +8,7 @@ from dimagi.scripts.exception_email import sendmail
 class Command(BaseCommand):
     
     def handle(self, *args, **options):
-        xml_data = XMLSubmission.objects.filter(error_code=-5)
+        xml_data = XMLSubmission.objects.filter(error_code=-2)
         
         for obj in xml_data:
             xml_string = obj.xml_data
