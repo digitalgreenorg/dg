@@ -5,11 +5,12 @@ from dimagi.models import error_list, XMLSubmission
 from dimagi.scripts import save_mobile_data
 from dimagi.scripts.exception_email import sendmail
 
+
 class Command(BaseCommand):
-    
+
     def handle(self, *args, **options):
-        xml_data = XMLSubmission.objects.filter(error_code=-2)
-        
+        xml_data = XMLSubmission.objects.exclude(error_code__in=[-7, -1, 1]).exclude(error_code__isnull=True)
+
         for obj in xml_data:
             xml_string = obj.xml_data
             xml_parse = minidom.parseString(xml_string)
