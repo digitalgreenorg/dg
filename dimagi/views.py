@@ -17,9 +17,9 @@ class SubmissionNotSaved(Exception):
 def save_submission(request):
     submission = XMLSubmission()
     ##For a test ping from Dimagi
-    if not request.raw_post_data:
+    if not request.body:
         return HttpResponse(status=201)
-    submission.xml_data = request.raw_post_data
+    submission.xml_data = request.body
     submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     submission.save()
     status, msg = save_in_db(submission)
