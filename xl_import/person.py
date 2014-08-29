@@ -5,7 +5,7 @@ setup_environ(dg.settings)
 from geographies.models import Village, Block
 from people.models import PersonGroup, Person
 from coco.models import CocoUser
-
+from django.http import HttpResponseRedirect, HttpResponse
 
 error=0 #variable to identify if any error occurs in uploaded file
 error_filenames = [] #contains the files to be zipped for download
@@ -16,7 +16,6 @@ def add_person(file, user_id, block_id):
     
     file = os.path.join(dg.settings.MEDIA_ROOT, file)
     
-    #block= Block.objects.values_list('block_name').get(id=block_id)
     user_id = CocoUser.objects.get(user__id=user_id)
     block_id = Block.objects.get(id=block_id)
     
@@ -127,3 +126,4 @@ def add_person(file, user_id, block_id):
     person_success_file.close()
     error_filenames.append(str(os.path.splitext(file)[0].split('/')[-1]+'_person_errors.csv'))
     success_filenames.append(str(os.path.splitext(file)[0].split('/')[-1]+'_person_success.csv'))
+    

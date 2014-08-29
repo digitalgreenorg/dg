@@ -1,67 +1,81 @@
-import xlrd, csv, os.path, dg.settings, StringIO, zipfile, person1
+import xlrd, csv, os.path, dg.settings, StringIO, zipfile, person
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.core.mail import EmailMultiAlternatives
 from django.template import RequestContext
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
+from django.http import  HttpResponse
 from django.core.management import setup_environ
 setup_environ(dg.settings)
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from dg.settings import PERMISSION_DENIED_URL
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 from xl_import.models import Document
 from xl_import.forms import DocumentForm
-from geographies.models import Village, Block
+from geographies.models import  Block
 from coco.models import CocoUser
+
 @login_required()
 @user_passes_test(lambda u: u.groups.filter(name='CoCo User').count() > 0, login_url=PERMISSION_DENIED_URL)
 @csrf_protect
-def file_upload(request):
+
+def home(request):# home page 
+    form = DocumentForm(request.POST, request.FILES)
+    user_id= User.objects.get(username=request.user.username).id
+    blocks = CocoUser.objects.filter(user__id=user_id).values_list('villages__block__block_name').distinct() 
+    block_names=[]
+    for block in blocks:
+        block_names.append(str(block[0]))
+    return render_to_response(
+        'xl_import/netupload.html',
+       {'form': form, 'blocks':block_names},
+        context_instance=RequestContext(request)
+        )
+   
+def file_upload(request):# Handle file upload
     
     ext_allwd = ['.xls', '.xlsx']
-
-    #initiated user and block id which should be retrieved from login and upload form respectively
-    user_id = 35
-    #block_id = 485
     
-    block_id = CocoUser.objects.filter(user__id=user_id).values(villages__block__id)   
-    # Handle file upload
+    user_id= User.objects.get(username=request.user.username).id
+    block_id = Block.objects.get(block_name=request.POST.get("get_block")).id
+    
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
        
         if form.is_valid():
             
             document = Document(docfile=request.FILES['docfile'])
-           
+            
             if (os.path.splitext(document.docfile.name)[1] in ext_allwd):
                 document.save()
-                
                 converted_document = file_converter(document)
-                
-                print type(converted_document)
-                person1.add_person(converted_document.name,user_id,block_id)
-                           
+               # messages.add_message(request, messages.INFO, '')                        
+                person.add_person(converted_document.name,user_id,block_id)
+                         
             elif (os.path.splitext(document.docfile.name)[1] == '.csv'):
                 document.save()
-                
-                person1.add_person(document.docfile.name,user_id,block_id)
-                    
-        return HttpResponseRedirect(reverse('xl_import.views.file_upload'))
+                #messages.add_message(request, messages.INFO, 'File is being uploaded, this may take few minutes. Please do not refresh or send another upload request. you will be automatically redirected to another page')
+                person.add_person(document.docfile.name,user_id,block_id)
+                     
     else:
         form = DocumentForm()  # A empty, unbound form
 
-   
+    if (person.error > 0):
+            csv_data = csv_to_html()
+            send_mail(request)
+            return render_to_response("xl_import/error.html", {'csv_data' : csv_data},
+                                  context_instance=RequestContext(request)
+                                  )
+    else :
+            send_mail(request)
+            return render_to_response(
+                                      'xl_import/success.html',
+       
+                                      context_instance=RequestContext(request)
+                                      )
     
     
-    return render_to_response(
-        'xl_import/netupload.html',
-       {'form': form},
-        context_instance=RequestContext(request)
-    )
-
-
 def file_converter(document): #converts .xls and .xlsx files to .csv
     try:
         
@@ -85,30 +99,7 @@ def file_converter(document): #converts .xls and .xlsx files to .csv
         print err
         
         
-#displays the status of the uploaded files
-def status(request):
-    file_upload(request)
-   
-    if request.method == 'POST':
-        
-        if (person1.error > 0):
-            csv_data = csv_to_html()
-            #send_mail(request)
-            return render_to_response("xl_import/error.html", {'csv_data' : csv_data},
-                                  context_instance=RequestContext(request)
-                                  )
-        else :
-            #send_mail(request)
-            return render_to_response(
-                                      'xl_import/success.html',
-       
-                                      context_instance=RequestContext(request)
-                                      )
-        
-        return HttpResponseRedirect(reverse('xl_import.views.status'))
-        
-   
-def handle_zip_download(request, download):
+def handle_zip_download(request):
     
     buffer= StringIO.StringIO()
     zip_subdir = "error_files"
@@ -116,14 +107,14 @@ def handle_zip_download(request, download):
     
     zip_file= zipfile.ZipFile( buffer, "w" )
     
-    for f in person1.error_filenames:
+    for f in person.error_filenames:
         file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', f)
         zip_path = os.path.join(str(zip_subdir), str(file)).split('/')[-1]
         zip_file.write(file, zip_path) #Add files to zip
         
     zip_file.close() 
        
-    del person1.error_filenames[:] #empty the list of files 
+    del person.error_filenames[:] #empty the list of files 
     resp = HttpResponse(buffer.getvalue(), mimetype = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
     return resp
@@ -133,7 +124,7 @@ def csv_to_html():
     csv_data = [[] for i in range(3)]
     
     i = 0
-    for file in person1.success_filenames:
+    for file in person.success_filenames:
         if i < 3:
             file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)
             
@@ -146,13 +137,13 @@ def csv_to_html():
                        
             row_num += 1
             i +=1 
-    del person1.success_filenames[:]   
+    del person.success_filenames[:]   
     return csv_data
 
 def send_mail(request):
     document = Document(docfile=request.FILES['docfile'])
     subject = 'Status of uploaded file: '+document.docfile.name
-    if person1.error < 1:
+    if person.error < 1:
         body = 'All the data in uploaded file has been successfully entered'
     else:
         body = 'Some of the data in uploaded file could not be entered. Please find the attachment containing the error files '
@@ -160,10 +151,11 @@ def send_mail(request):
     from_email = dg.settings.EMAIL_HOST_USER
     to_email = [request.POST.get("email_id")]
     msg = EmailMultiAlternatives(subject, body, from_email, to_email)
-    for file in person1.error_filenames:
+    for file in person.error_filenames:
         file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)
         msg.attach_file(file, 'text/csv' )
     msg.send()
-    messages.info(request, 'Email has been sent to given email addresss')
     
+    
+
  
