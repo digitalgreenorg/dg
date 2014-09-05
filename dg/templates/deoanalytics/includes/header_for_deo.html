@@ -26,11 +26,26 @@
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/deoanalytics.css" />
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
         <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
-		
+
+	    <LINK REL="stylesheet"  HREF="{{STATIC_URL}}coco/app/styles/css/datepicker.css">
+        <LINK REL="stylesheet"  HREF="{{STATIC_URL}}coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
+    	<link rel="stylesheet"  href="{{STATIC_URL}}coco/app/scripts/libs/tabletools_media/css/TableTools.css">
+
+        <!-- SCRIPTS -->
 		<script type="text/javascript" src="{{STATIC_URL}}assets/scripts/jquery.min.js"></script>
 		<script src="http://code.highcharts.com/highcharts.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}assets/scripts/deoanalyticsjs.js"></script>
-  	
+        <script type="text/javascript" src="'{{STATIC_URL}}coco/app/scripts/libs/bootstrap/js/bootstrap-datepicker.js"></script>
+        <script data-main="{{STATIC_URL}}coco/app/scripts/main" src="{{STATIC_URL}}coco/app/scripts/libs/require.js"></script>
+
+        <script type="text/javascript">
+	    require.config({
+	        paths: {
+	            "configs": "{{STATIC_URL}}configs"
+	        },
+	    });
+	    </script>
+
     </head>
     <!--
         =======================

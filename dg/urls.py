@@ -67,7 +67,7 @@ urlpatterns = patterns('',
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
     
-    (r'^analytics/cocouser/',include('deoanalytics.urls')),
+    (r'^analytics/coco/',include('deoanalytics.urls')),
 
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
 
