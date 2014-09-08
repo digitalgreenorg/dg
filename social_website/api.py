@@ -6,7 +6,7 @@ from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
 
 from tastypie import fields
-from tastypie.authorization import Authorization
+from tastypie.authorization import Authorization, DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
@@ -200,7 +200,7 @@ class CollectionResource(BaseCorsResource):
         resource_name = 'collections'
         ordering = {'likes', 'views', 'adoptions'}
         authentication = WebsiteSessionAuthentication()
-        authorization = Authorization()
+        authorization = DjangoAuthorization()
         validation = ModelFormValidation(form_class=CollectionForm)
 
     def obj_create(self, bundle, **kwargs):

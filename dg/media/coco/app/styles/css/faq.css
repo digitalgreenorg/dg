@@ -1,59 +1,61 @@
-#heading{
-	font-size: 32px;
-}
-.faq-navbar{
-padding-left: 0px;
-padding-right: 0px;
-}
-
-#coco_faq{
-	margin-bottom:10%;
-	margin-top:10%;
-    text-align: center;
+body {
+  position: relative;
 }
 
 .affix{
-	position:fixed;
-}
+  position: relative;
 
-.faq-wrap{
-	width: 85%;
-	word-wrap: normal;
 }
-.coco-brand{
-    margin-top:0px;
-    margin-bottom:0px;
+.affix-top{
+  position: relative;
+}
+.active a{
+  background-color: #047d0a;
+  color: #ffffff;
+  border-radius: 4px;
+}
+#coco_faq{
+  text-align: left;
+  padding-top: 10px;
+  font-size: 18px;
+}
+ul li{
+  list-style: none;
+}
+ol li{
+  list-style: decimal;
+}
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid gray;
+}
+td, th{
+  padding: 5px;
+}
+tr:nth-child(even) {background: #f8f8f8}
+
+
+
+@media (min-width: 769px) {
+ .faq-sidebar.affix-top {
+    position: static;
+    margin-top: 80px;
+
+  }
+
+  .nav-collapse, .nav-collapse.collapse {
+    overflow: visible;
+} 
+  
+  .faq-sidebar.affix {
+    position: fixed;
+    top:58px;
+
+  }
+  #coco_faq{
     text-align: center;
-}
-
-.topic{
-	color:#047d0a;
-	margin-left:2.4%;
-}
-#sidebar{
-    background-color: #f3f2eb;
-}
-
-ul{
-    list-style-type: none;
-}
-
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
-}
-
-@media(max-width:768px) {
-    #heading {
-        font-size: 26px;
-    }
-    
-    #coco_faq {
-        margin-bottom: 1%;
-        margin-top : 1%;
-        text-align: left;
-    }
+    padding-top: 0px;
+  }
 }

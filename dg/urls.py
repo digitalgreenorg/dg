@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic import TemplateView
 
 import coco.urls
 import dimagi.urls
@@ -11,7 +12,6 @@ import social_website.urls
 
 from admin import admin
 from coco.data_log import send_updated_log
-from dashboard.views import feed_animators, get_person, redirect_url, search
 from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
@@ -19,6 +19,7 @@ from website_admin import website_admin
 from mcoco_admin import mcoco_admin
 import website_archive_urls
 import deoanalytics.urls
+
 
 admin.login_template = 'social_website/login.html'
 admin.logout_template = 'social_website/home.html'
@@ -45,16 +46,9 @@ urlpatterns = patterns('',
     
     (r'^coco/', include(coco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
-    (r'^path/', include('path.urls')),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
-    (r'^videotask/', include('video_practice_map.urls')),
-    # Imports from dashboard
-    (r'^feeds/', include('dashboard.urls_feeds')),
-    (r'^animators-by-village-id/(\d+)/$', feed_animators),
-    (r'/search/', search),
-    (r'^dashboard/', include('dashboard.urls')),
-    (r'^get/person/$', get_person),
+
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
     ##Special page.needs to be deleted
@@ -74,6 +68,9 @@ urlpatterns = patterns('',
     (r'^fbconnect/', include('fbconnect.urls')),
     
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
+
+    (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
+
 )
 
 # Static files serving locally

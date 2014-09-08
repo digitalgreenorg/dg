@@ -8,7 +8,6 @@ from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
 
-
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -16,9 +15,6 @@ class Screening(CocoModel):
     start_time = models.TimeField()
     end_time = models.TimeField()
     location = models.CharField(max_length=200, blank=True)
-    target_person_attendance = models.IntegerField(null=True, blank=True)
-    target_audience_interest = models.IntegerField(null=True, blank=True)
-    target_adoptions = models.IntegerField(null=True, blank=True)
     village = models.ForeignKey(Village)
     animator = models.ForeignKey(Animator)
     farmer_groups_targeted = models.ManyToManyField(PersonGroup)
@@ -32,8 +28,6 @@ class Screening(CocoModel):
     def __unicode__(self):
         return u'%s %s' % (self.date, self.village)
 
-#pre_save.connect(Person.date_of_joining_handler, sender=Screening)
-#m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)
 
@@ -49,23 +43,13 @@ class PersonMeetingAttendance(CocoModel):
 
     def __unicode__(self):
         return  u'%s' % (self.id)
-#post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
-#pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
-#pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
-#pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
-
 
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person)
     video = models.ForeignKey(Video)
-    prior_adoption_flag = models.NullBooleanField(null=True, blank=True)
     date_of_adoption = models.DateField()
-    quality = models.CharField(max_length=200, blank=True)
-    quantity = models.IntegerField(null=True, blank=True)
-    quantity_unit = models.CharField(max_length=150, blank=True)
-    time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     partner = models.ForeignKey(Partner)
 
     def __unicode__(self):
