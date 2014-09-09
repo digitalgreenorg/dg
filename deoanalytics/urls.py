@@ -5,5 +5,5 @@ from deoanalytics import views
 
 urlpatterns = patterns('',
     url(r'^$', views.home, name='mainpage'),
-    url(r'^api/getthedeo/$', views.deodatasetter, name='deodatasetter')
+    
 )

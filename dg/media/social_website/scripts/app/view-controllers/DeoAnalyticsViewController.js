@@ -17,6 +17,7 @@ define(function(require) {
     
     var DistrictDataFeed = require('app/libs/DistrictDataFeed');
     var DeoDataFeed = require('app/libs/DeoDataFeed');
+    var AnalyticsDataFeed = require('app/libs/DeoAnalyticsDataFeed');
     
     var districtTemplate = require('text!app/views/district.html');
     var deoTemplate = require('text!app/views/deo.html');
@@ -39,6 +40,7 @@ define(function(require) {
             var references = this._references;
             references.districtdataFeed = new DistrictDataFeed();
             references.deodataFeed = new DeoDataFeed();
+            references.analyticsdataFeed = new AnalyticsDataFeed();
             references.$analyticsWrapper = $referenceBase;
             references.$districtContainer = $referenceBase.find('.js-district-container');
             references.$deoContainer = $referenceBase.find('.js-deo-container');
@@ -62,6 +64,9 @@ define(function(require) {
             
             boundFunctions.onDeoDataProcessed = this._onDeoDataProcessed.bind(this);
             references.deodataFeed.on('dataProcessed', boundFunctions.onDeoDataProcessed);
+            
+            boundFunctions.onAnalyticsDataProcessed = this._onAnalyticsDataProcessed.bind(this);
+            references.analyticsdataFeed.on('dataProcessed', boundFunctions.onAnalyticsDataProcessed);
             
             boundFunctions.onGoBtnClick = this._onGoBtnClick.bind(this);
             references.$goButton.on("click", boundFunctions.onGoBtnClick);
@@ -275,7 +280,6 @@ define(function(require) {
                 d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
                 $("div#dateshow").html(d);          
             }
-            //analyzedeo();
         },
         
         setWeek: function()
@@ -294,7 +298,6 @@ define(function(require) {
                var d = this.getMonthFirstDate(1);     
                this.setWeekSingleDate(d);
             }
-            //analyzedeo();
         },
         
         setMonth: function()
@@ -314,7 +317,6 @@ define(function(require) {
                 var date2 = this.getScreenWeekDate(1, dates[1]);        
                 this.setMonthDate(date2);
             }
-            //analyzedeo();
         },
         
         getDistrict: function() {
@@ -333,6 +335,99 @@ define(function(require) {
             }
             this._renderDeo(deoData);
             this.initSelect2();
+        },
+        
+        getAnalytics: function() {
+            var analyticsData = this._references.analyticsdataFeed.getAnalytics();
+            if (analyticsData == false) {
+                return false;
+            }
+            
+            var datelist = this._references.datelist;
+            var s_list = this._references.s_list;
+            var a_list = this._references.a_list;
+            var sumscreenings = 0;
+            var sumadoptions = 0;
+            
+            if (analyticsData.mode == 1)
+            {
+                 for (var key1 in analyticsData.screenings)
+                 {
+                    s_list[0] = analyticsData.screenings[key1];
+                    sumscreenings += analyticsData.screenings[key1];
+                 }
+                 for (var key2 in analyticsData.adoptions)
+                 {
+                    a_list[0] = analyticsData.adoptions[key2];
+                    sumadoptions += analyticsData.adoptions[key2];
+                 }                       
+            }
+            if (analyticsData.mode == 2)
+            {
+                 for (var key1 in analyticsData.screenings)
+                 {
+                     var keydate = key1.split("-")[2];
+                     keydate = keydate.replace(/^0+/, '');
+                     
+                     for (var i = 0; i <= 6; i++)
+                     {
+                         if (datelist[i].split(" ")[0] == keydate)
+                         {
+                             s_list[i] = analyticsData.screenings[key1];
+                         }
+                     }                               
+                     sumscreenings += analyticsData.screenings[key1];                             
+                 }
+                 
+                 for (var key2 in analyticsData.adoptions)
+                 {
+                     var keydate = key2.split("-")[2];
+                     keydate = keydate.replace(/^0+/, '');
+                     
+                     for (var i = 0; i <= 6; i++)
+                     {
+                         if (datelist[i].split(" ")[0] == keydate)
+                         {
+                             a_list[i] = analyticsData.adoptions[key2];
+                         }
+                     }                               
+                     sumadoptions += analyticsData.adoptions[key2];                               
+                 }                           
+            }                   
+            if (analyticsData.mode == 3)
+                {
+                     for (var key1 in analyticsData.screenings) 
+                     {
+                        var keydate = key1.split("-")[2];
+                        keydate = keydate.replace(/^0+/, '');
+                        s_list[keydate-1] = analyticsData.screenings[key1];
+                        sumscreenings += analyticsData.screenings[key1];
+                     }
+                     
+                     for (var key2 in analyticsData.adoptions) 
+                     {
+                        var keydate = key2.split("-")[2];
+                        keydate = keydate.replace(/^0+/, '');
+                        a_list[keydate-1] = analyticsData.adoptions[key2];
+                        sumadoptions += analyticsData.adoptions[key2];
+                     }                           
+                }
+             
+            var lin1 = sumscreenings;
+            var lin2 = sumadoptions;
+            var lin3 = analyticsData.persons;
+            if (analyticsData.slag == "NA")   {var lin4 = analyticsData.slag;}
+            else {var lin4 = analyticsData.slag + " days";}
+            if (analyticsData.alag == "NA")   {var lin5 = analyticsData.alag;}
+            else {var lin5 = analyticsData.alag + " days";}
+            
+            $("p#screenings").html(lin1);
+            $("p#adoptions").html(lin2);
+            $("p#persons").html(lin3);
+            $("p#s-lag").html(lin4);
+            $("p#a-lag").html(lin5);
+            
+            this.makeChart(datelist,s_list,a_list);
         },
         
         analyzeDeo: function(){
@@ -406,106 +501,20 @@ define(function(require) {
                     s_list.push(0);
                 }
             }
-            var that = this
-            $.ajax(
-                 {
-                    type:'GET',
-                    data:{ 
-                    'deo': references.$selectedDeo,
-                    'sdate': start_date,
-                    'edate': end_date,
-                    'mode': mode,
-                    },
-                    url:window.location.origin + "/analytics/cocouser/api/getthedeo",
-                    
-                    success: function(data){
-
-                        var sumscreenings = 0;
-                        var sumadoptions = 0;
-                        if (mode == 1)
-                        {
-                             for (var key1 in data.screenings)
-                             {
-                                s_list[0] = data.screenings[key1];
-                                sumscreenings += data.screenings[key1];
-                             }
-                             for (var key2 in data.adoptions)
-                             {
-                                a_list[0] = data.adoptions[key2];
-                                sumadoptions += data.adoptions[key2];
-                             }                       
-                        }
-                        if (mode == 2)
-                        {
-                             for (var key1 in data.screenings)
-                             {
-                                 var keydate = key1.split("-")[2];
-                                 keydate = keydate.replace(/^0+/, '');
-                                 
-                                 for (var i = 0; i <= 6; i++)
-                                 {
-                                     if (datelist[i].split(" ")[0] == keydate)
-                                     {
-                                         s_list[i] = data.screenings[key1];
-                                     }
-                                 }                               
-                                 sumscreenings += data.screenings[key1];                             
-                             }
-                             
-                             for (var key2 in data.adoptions)
-                             {
-                                 var keydate = key2.split("-")[2];
-                                 keydate = keydate.replace(/^0+/, '');
-                                 
-                                 for (var i = 0; i <= 6; i++)
-                                 {
-                                     if (datelist[i].split(" ")[0] == keydate)
-                                     {
-                                         a_list[i] = data.adoptions[key2];
-                                     }
-                                 }                               
-                                 sumadoptions += data.adoptions[key2];                               
-                             }                           
-                        }                   
-                        if (mode == 3)
-                            {
-                                 for (var key1 in data.screenings) 
-                                 {
-                                    var keydate = key1.split("-")[2];
-                                    keydate = keydate.replace(/^0+/, '');
-                                    s_list[keydate-1] = data.screenings[key1];
-                                    sumscreenings += data.screenings[key1];
-                                 }
-                                 
-                                 for (var key2 in data.adoptions) 
-                                 {
-                                    var keydate = key2.split("-")[2];
-                                    keydate = keydate.replace(/^0+/, '');
-                                    a_list[keydate-1] = data.adoptions[key2];
-                                    sumadoptions += data.adoptions[key2];
-                                 }                           
-                            }
-                         
-                        var lin1 = sumscreenings;
-                        var lin2 = sumadoptions;
-                        var lin3 = data.persons;
-                        if (data.slag == "NA")   {var lin4 = data.slag;}
-                        else {var lin4 = data.slag + " days";}
-                        if (data.alag == "NA")   {var lin5 = data.alag;}
-                        else {var lin5 = data.alag + " days";}
-                        
-                        $("p#screenings").html(lin1);
-                        $("p#adoptions").html(lin2);
-                        $("p#persons").html(lin3);
-                        $("p#s-lag").html(lin4);
-                        $("p#a-lag").html(lin5);
-                        
-                        that.makeChart(datelist,s_list,a_list);
-                    },
-                    error: function(data){
-                           alert("Sorry! There was an error!");
-                   }
-                 });
+            references.analyticsdataFeed.addInputParam('limit', false, 0);
+            references.analyticsdataFeed.setInputParam('limit', 0, false);
+            references.analyticsdataFeed.addInputParam('deo', false, references.$selectedDeo);
+            references.analyticsdataFeed.setInputParam('deo', references.$selectedDeo, false);
+            references.analyticsdataFeed.addInputParam('sdate', false, start_date);
+            references.analyticsdataFeed.setInputParam('sdate', start_date, false);
+            references.analyticsdataFeed.addInputParam('edate', false, end_date);
+            references.analyticsdataFeed.setInputParam('edate', end_date, false);
+            references.analyticsdataFeed.addInputParam('mode', false, mode);
+            references.analyticsdataFeed.setInputParam('mode', mode, false);
+            references.datelist = datelist;
+            references.a_list = a_list;
+            references.s_list = s_list;
+            this.getAnalytics();
         },
         
         makeChart: function(datelist,s_list,a_list)
@@ -603,8 +612,8 @@ define(function(require) {
             this.getDeo();
         },
         
-        _onVideoDataProcessed: function() {
-            this.getCollectionVideoDropDown();
+        _onAnalyticsDataProcessed: function() {
+            this.getAnalytics();
         },
         
         _onGoBtnClick: function(e) {
@@ -624,7 +633,10 @@ define(function(require) {
                });
             console.log(selectedDeos);
             this._renderDeoTab(selectedDeos);
+            references.$deoList.val([]);
+            this.initSelect2();
             this.analyzeDeo();
+            
         },
         
         _onDayTabClick: function(e) {

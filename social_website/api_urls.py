@@ -2,7 +2,7 @@ from django.conf.urls import include, patterns, url
 from elastic_search import get_collections_from_elasticsearch, searchCompletions
 from social_website.api import VideoLikeResource, UserResource, VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
 from views import searchFilters, featuredCollection, mapping
-from deoanalytics.views import deosetter, districtsetter
+from deoanalytics.views import deodatasetter, deosetter, districtsetter
 
 video_resource = VideoResource()
 farmer_resource = PersonResource()
@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     (r'^api/mapping/$', mapping),
     (r'^api/getdistrict/$', districtsetter),
     (r'^api/getdeo/$', deosetter),
+    (r'^api/getthedeo/$', deodatasetter),
 
 #    (r'', include(signin_resource.urls)),
 #    (r'', include(usercollectionhistory_resource.urls)),

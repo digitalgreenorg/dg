@@ -49,7 +49,7 @@ def deodatasetter(request):
     selecteddeo = request.GET.get('deo', None)
     sdate = request.GET.get('sdate', None)
     edate = request.GET.get('edate', None)
-
+    mode = request.GET.get('mode', None)
     slag = "NA"
     alag = "NA"
 
@@ -84,10 +84,10 @@ def deodatasetter(request):
         a_avglag = sum(a_laglist) / float(len(a_laglist))
         alag = int(a_avglag)
     persons = Person.objects.filter(user_created_id=selecteddeo, time_created__range=[start_date, end_date]).count()  
-    return HttpResponse(json.dumps({
+    return HttpResponse(json.dumps({"analytics":{
         "screenings":s_dict,
         "adoptions": a_dict,
         "persons": persons,
         "slag": slag,
-        "alag": alag}),
-    content_type="application/json")
+        "alag": alag,
+        "mode": int(mode)}}))
