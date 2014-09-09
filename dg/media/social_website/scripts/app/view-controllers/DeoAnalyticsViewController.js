@@ -166,26 +166,26 @@ define(function(require) {
         {
             var references = this._references;
             var userdate = jQuery('#dateshow').html();; 
-           var datesplitted = userdate.split(" ");
+            var datesplitted = userdate.split(" ");
 
-           var dd = datesplitted[1];
+            var dd = datesplitted[1];
            
-           var yyyy = datesplitted[3];
-           var mm = references.months.indexOf(datesplitted[2]);
+            var yyyy = datesplitted[3];
+            var mm = references.months.indexOf(datesplitted[2]);
        
-           if (cn == 2) {mm = mm+1}
-           if(mm<10) {mm='0'+mm}
+            if (cn == 2) {mm = mm+1}
+            if(mm<10) {mm='0'+mm}
        
-           var dateformatted;
-           if (cn==1)
+            var dateformatted;
+            if (cn==1)
              {
                dateformatted = new Date (yyyy, mm, dd);        
              }
-           else if (cn == 2)
+            else if (cn == 2)
              {
                dateformatted = yyyy+'-'+mm+'-'+dd;
              }
-           else if (cn == 3)
+            else if (cn == 3)
              {
                dateformatted = new Date (yyyy, mm, dd);
                dateformatted.setDate(dateformatted.getDate() + 1);
@@ -197,7 +197,7 @@ define(function(require) {
                
                dateformatted = yyyy+'-'+mm+'-'+dd;
              }
-           return dateformatted;
+            return dateformatted;
         },
         
         getScreenWeekDate: function(cn, rdate)
@@ -264,9 +264,7 @@ define(function(require) {
                 var date1 = this.getScreenWeekDate(1, dates[0]);        
                 this.setDate(0, date1);
             }
-            else if (first[0] == "Jan" || first[0] == "Feb" || first[0] == "Mar" || first[0] == "Apr" || first[0] == "May" || 
-                    first[0] == "Jun" || first[0] == "Jul" || first[0] == "Aug" || first[0] == "Sep" || first[0] == "Oct" || 
-                    first[0] == "Nov" || first[0] == "Dec") 
+            else if (jQuery.inArray(first[0], references.months) >= 0) 
                 //coming to DAILY from MONTHLY              
             {
                 var d = this.getMonthFirstDate(1);
@@ -286,15 +284,12 @@ define(function(require) {
             var userdate = jQuery('#dateshow').html();
             var first = userdate.split(" ");
            
-            if (first[0] == "Sun" || first[0] == "Mon" || first[0] == "Tue" || first[0] == "Wed" || first[0] == "Thu"
-                || first[0] == "Fri" || first[0] == "Sat") //coming to WEEKLY view from DAILY view      
+            if (jQuery.inArray(first[0], references.days) >= 0) //coming to WEEKLY view from DAILY view      
             {
                 var mydate = this.getScreenDate(1);    
                 this.setWeekSingleDate(mydate);
             }
-            else if (first[0] == "Jan" || first[0] == "Feb" || first[0] == "Mar" || first[0] == "Apr" || first[0] == "May" || 
-                   first[0] == "Jun" || first[0] == "Jul" || first[0] == "Aug" || first[0] == "Sep" || first[0] == "Oct" || 
-                   first[0] == "Nov" || first[0] == "Dec") //coming to WEEKLY from MONTHLY view
+            else if ((jQuery.inArray(first[0], references.months) >= 0)) //coming to WEEKLY from MONTHLY view
             {
                var d = this.getMonthFirstDate(1);     
                this.setWeekSingleDate(d);
@@ -308,8 +303,7 @@ define(function(require) {
             var userdate = jQuery('#dateshow').html();
             var first = userdate.split(" ");
 
-            if (first[0] == "Sun" || first[0] == "Mon" || first[0] == "Tue" || first[0] == "Wed" || first[0] == "Thu"
-               || first[0] == "Fri" || first[0] == "Sat") //coming to MONTHLY view from DAILY view
+            if ((jQuery.inArray(first[0], references.days) >= 0)) //coming to MONTHLY view from DAILY view
             {
                 var mydate = this.getScreenDate(1);
                 this.setMonthDate(mydate);
@@ -761,7 +755,6 @@ define(function(require) {
                        {
                            jQuery(this).find("a").removeClass('active');
                        });
-               //alert($(this).find("a").attr("id"));
                jQuery(this).find("a").addClass('active');
                references.$selectedDeo = jQuery(this).find("a").attr("id");
                that.analyzeDeo();
@@ -773,10 +766,10 @@ define(function(require) {
         initSelect2: function(){
             var references = this._references;
             try{
-                $(".chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose a Partner", allowClear: true});
+                $(".chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose Username"});
                }
             catch(err){
-                $("select.chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose a Partner", allowClear: true});
+                $("select.chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose Username"});
             }
             
         },
