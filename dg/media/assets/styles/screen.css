@@ -629,6 +629,9 @@ a {
 .grid-pad-rt-tiny{
 	padding-right: 7px;
 }
+.grid-pad-rt-md{
+padding-right: 20px;
+}
 
 .grid-margin-rt-md {
     margin-right: 25px;
