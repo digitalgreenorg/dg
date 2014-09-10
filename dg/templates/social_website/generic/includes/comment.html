@@ -1,0 +1,134 @@
+{% load i18n mezzanine_tags comment_tags rating_tags %}
+
+<div class="commentBox">
+    <div class="commentBox-form">
+        <div class="media commentLeft-border">
+                                    <div class="img">
+                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                             <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                             <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
+                                        {% else %}
+                                             <img src="{% gravatar_url comment.email %}">
+                                        {% endif %}
+                                                
+                                    </div>
+                                    <div class="bd">
+                                        <form method="post" id="comment" action="{{ comment_url }}#comment">
+                                            {% fields_for posted_comment_form %}
+                                            <label for="comment" class="text-hide">Comment</label>
+                                            <textarea class="comment-text" id="id_comment" name="comment"></textarea>
+                                            {% if not request.user.is_authenticated %}
+                                                <div class="layout-vr-md"></div>
+                                                <div class="centered layout-vr-md">
+                                                    <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
+                                                </div>
+                                            {% else %}
+                                                <div class="grid layout-vr-md">
+                                                    <!--   <div class="grid-col">
+                                                        <input type="checkbox" id="facebook" />
+                                                        <label class="copy" for="facebook">Post to Facebook</label>
+                                                    </div> -->
+                                                    <div class="grid-rt">
+                                                        {% if request.user.first_name %}
+                                                        <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
+                                                        {% else %}
+                                                        <p class="copy">Posting as {{request.user.username}}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="centered">
+                                                    <input type="submit" value="Add a Comment" class="comment-btn" />
+                                                </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+        {% if no_comments %}
+            <p class="copy">{% trans "There are currently no comments" %}</p>
+        {% endif %}
+        <ol class="comment-list">
+            {% for comment in comments_for_thread %}
+            <li>
+                <div id="comment-{{ comment.id }}" class="media">
+
+                {% editable comment.is_public comment.is_removed %}
+                {% if not comment.is_removed and comment.is_public or request.user.is_staff %}
+                    <div class="img comment-left-img">
+                        <img class="comment-avatar-thumbnail"
+                            {% if "facebook" == comment.user.social_auth.all.0.provider %}
+                                src="https://graph.facebook.com/{{comment.user.social_auth.all.0.uid}}/picture?type=large">
+                            {% elif "google-oauth2" == comment.user.social_auth.all.0.provider %}
+                                src=" {{comment.user.social_auth.all.0.extra_data.picture}}?sz=75">
+                            {% else %}
+                                src="{% gravatar_url comment.email %}">
+                            {% endif %}
+                    </div>
+                    <div class="clearfix comment-left">
+                        <div class="comment-left-carat">
+                            <div class="comment-hd">
+                                <h3 class="copy">
+                                    <span class="hdg-bold">
+                                        {{ comment.user_name }}
+                                    </span>
+                                </h3>
+                            </div>
+                            <div class="comment-bd">
+                                <p class="copy layout-vr-sm">
+                                    {{ comment.comment|comment_filter }}
+                                </p>
+                                <p class="copy copy-lt">
+                                    {% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endeditable %}
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+    
+    <!-- {% if not comment.is_removed and comment.is_public %}
+    <a href="{{ request.path }}#comment-{{ comment.id }}">
+        <span class="glyphicon glyphicon-link"></span> {% trans "Link" %}
+    </a> |
+    <a href="#reply-{{ comment.id }}" class="reply">
+        <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %}
+    </a>
+    {% if settings.COMMENTS_USE_RATINGS %}
+    <div class="rating">
+    {% rating_for comment %}
+    </div>
+    {% endif %}
+    <form class="comment-reply-form" method="post" id="reply-{{ comment.id }}"
+        action="{{ comment_url }}#reply-{{ comment.id }}"
+        {% if replied_to != comment.id %}style="display:none;"{% endif %}>
+        {% if replied_to == comment.id %}
+        {% fields_for posted_comment_form %}
+        {% else %}
+        {% fields_for unposted_comment_form %}
+        {% endif %}
+        <input type="hidden" name="replied_to" value="{{ comment.id }}">
+        <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Reply" %}">
+    </form>
+
+    {% else %}
+    <p>
+        {% if comment.is_removed %}
+        <span class="glyphicon glyphicon-remove-circle"></span> {% trans "Comment deleted" %}
+        {% else %}
+        <span class="glyphicon glyphicon-warning-sign"></span> {% trans "Comment awaiting approval" %}
+        {% endif %}
+        <small class="timespan">{% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</small>
+    </p>
+    {% endif %}
+
+    
+    {% if not comment.is_removed and comment.is_public or request.user.is_staff %}</div>{% endif %} -->
+    
+
