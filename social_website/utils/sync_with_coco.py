@@ -1,9 +1,6 @@
-from django.core.management import setup_environ
-import dg.settings
-setup_environ(dg.settings)
-
 import datetime
 import logging
+
 from activities.models import Screening
 from coco.models import ServerLog
 from people.models import Person

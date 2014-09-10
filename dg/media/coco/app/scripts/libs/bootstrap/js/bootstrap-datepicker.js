@@ -52,11 +52,12 @@
 		} else {
 			this.picker.addClass('datepicker-dropdown dropdown-menu');
 		}
-
+		// Classes have been changed below FROM -->> "icon-arrow-left"     TO -->> "glyphicon-arrow-left"  (same with right arrow)
+		// This was done because we have upgraded to BootStrap 3 while the library used BootStrap 2 classes and it wasn't under development
 		if (this.o.rtl){
 			this.picker.addClass('datepicker-rtl');
 			this.picker.find('.prev i, .next i')
-						.toggleClass('icon-arrow-left icon-arrow-right');
+						.toggleClass('glyphicon glyphicon-arrow-left glyphicon glyphicon-arrow-right');
 		}
 
 
@@ -1184,12 +1185,14 @@
 				date.push(val[format.parts[i]]);
 			}
 			return date.join('');
-		},
+		}, 
+		// Classes have been changed below FROM -->> "icon-arrow-left"    TO -->> "glyphicon-arrow-left"  (same with right arrow)
+		// This was done because we have upgraded to BootStrap 3 while the library used BootStrap 2 classes and it wasn't under development
 		headTemplate: '<thead>'+
 							'<tr>'+
-								'<th class="prev"><i class="icon-arrow-left"/></th>'+
+								'<th class="prev"><i class="glyphicon glyphicon-arrow-left"/></th>'+
 								'<th colspan="5" class="datepicker-switch"></th>'+
-								'<th class="next"><i class="icon-arrow-right"/></th>'+
+								'<th class="next"><i class="glyphicon glyphicon-arrow-right"/></th>'+
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
