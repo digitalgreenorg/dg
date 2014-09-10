@@ -24,7 +24,7 @@ class PersonMeetingAttendanceForm(forms.ModelForm):
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
     raw_id_fields = ("person",)
-    extra = 0
+    extra = 20
 
 
 class ScreeningForm(forms.ModelForm):
