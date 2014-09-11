@@ -1,64 +1,58 @@
-{% load admin_static %}<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
 <title>{% block title %}{% endblock %}</title>
-<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
-{% block extrastyle %}{% endblock %}
-<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
-{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
-<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
-{% block extrahead %}{% endblock %}
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+<!-- LOADING -->
+{% load staticfiles i18n %}
+
+<!-- STYLESHEETS / EXTRASTYLE -->
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static "grappelli/css/base.css" %}" />
+{% endblock %}
+
+{% block extrastyle %}{% endblock %}
+
+<!-- JAVASCRIPTS / EXTRAHEAD -->
+{% block javascripts %}
+<script type="text/javascript" src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+<script type="text/javascript">
+    // Ensures jQuery does not pollute the global namespace
+    $.noConflict();
+    {% url "admin:index" as admin_index_url %}
+    var ADMIN_URL = "{{ admin_index_url }}";
+</script>
+{% endblock %}
+
+{% block extrahead %}{% endblock %}
+
+{% if LANGUAGE_BIDI %}
+{% block rtl_styles %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "grappelli/css/rtl.css" %}{% endblock %}" />{% endblock %}
+{% endif %}
+
 </head>
-{% load i18n %}
 
 <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
 
-<!-- Container -->
+<!-- CONTAINER -->
 <div id="container">
 
+    <!-- HEADER -->
     {% if not is_popup %}
-    <!-- Header -->
-    <div id="header">
-        <div id="branding">
-        {% block branding %}{% endblock %}
-        </div>
-        {% if user.is_active %}
-        <div id="user-tools">
-            {% trans 'Welcome,' %}
-            <strong>{% filter force_escape %}{% firstof user.get_short_name user.get_username %}{% endfilter %}</strong>.
-            {% block userlinks %}
-                {% url 'django-admindocs-docroot' as docsroot %}
-                {% if docsroot %}
-                    <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
-                {% endif %}
-                {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
-                {% endif %}
-                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
-            {% endblock %}
-        </div>
-        {% endif %}
-        {% block nav-global %}{% endblock %}
-    </div>
-    <!-- END Header -->
-    {% block breadcrumbs %}
-    <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    {% if title %} &rsaquo; {{ title }}{% endif %}
-    </div>
-    {% endblock %}
+    {% include "admin/includes_grappelli/header.html" %}
     {% endif %}
 
-    {% block messages %}
-        {% if messages %}
-        <ul class="messagelist">{% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}</ul>
-        {% endif %}
-    {% endblock messages %}
+    <!-- BREADCRUMBS -->
+    {% block breadcrumbs %}<div class="breadcrumbs"><a href="/">{% trans 'Home' %}</a>{% if title %} &rsaquo; {{ title }}{% endif %}</div>{% endblock %}
 
-    <!-- Content -->
+    <!-- MESSAGES -->
+    {% if messages %}
+    <ul class="messagelist">{% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}</ul>
+    {% endif %}
+
+
+    <!-- CONTENT -->
     <div id="content" class="{% block coltype %}colM{% endblock %}">
         {% block pretitle %}{% endblock %}
         {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
@@ -69,11 +63,22 @@
         {% block sidebar %}{% endblock %}
         <br class="clear" />
     </div>
-    <!-- END Content -->
 
+    <!-- FOOTER -->
     {% block footer %}<div id="footer"></div>{% endblock %}
-</div>
-<!-- END Container -->
 
+</div>
+    
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+            try {
+                var pageTracker = _gat._getTracker("UA-16211208-1");
+                pageTracker._trackPageview();
+                } 
+        catch(err) {}
+        </script>
 </body>
 </html>
