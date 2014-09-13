@@ -76,7 +76,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/social_website'),
     os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
 	os.path.join(PROJECT_PATH, 'media/'),
-    os.path.join(PROJECT_PATH, 'templates/xl_import')
+    os.path.join(PROJECT_PATH, 'templates/data_upload')
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -121,7 +121,7 @@ INSTALLED_APPS = (
     'human_resources',
     'feeds',
     'deoanalytics',
-    'xl_import',
+    'data_upload',
     'progressbarupload',
 )
 #File upload handlers

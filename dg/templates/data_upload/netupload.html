@@ -1,0 +1,77 @@
+{% include "includes/header.html" %}
+	<script  src="/media/data_upload/file_upload.js"></script>
+	
+		
+		<section id="Static Data Upload" class="about-bg">
+		        	<div class="wrapper">
+		        		<div class="inner-wrapper">
+		        			<h2 class="hdg-a hdg-source-lt layout-vr-md">Static Data Upload</h2>
+		        			<div class="media layout-vr-xlg">
+						
+		        				<div class="bd">
+		        					
+		        					<p class="copy copy-margin"> Static Data Uplaod lets you upload excel or csv sheets containing data collected from the field. This tool saves those datas directly into database and those enteries having errors are notified to uploader 
+		        												 and  with a privilege of downloading them as csv sheets which will be send to them as email. 	
+		        					</p>				 
+									<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Instructions for uploading the file:</h3>
+		        					<ul class="copy bullet-list "> <!-- created css class for bullet points. Named as bullet-list-->
+										<li>Data to be uploaded from the file should be from a single block</li><br>
+		        						<li>File should be in .csv/.xls/.xlsx form</li><br>  
+		        						<li>Each excel file should contain only a single sheet of data</li><br>                             
+		        						<li>File should have the following fields
+											<table class="tableizer-table">
+												<tr class="tableizer-firstrow"><th>Village_Name</th><th>Shg_Name</th><th>Member_Name</th><th>Member_Surname</th><th>Husband_Father_Name</th><th>Husband_Father_Surname</th></tr>
+												<tr class="tableizer-secondrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+												<tr class="tableizer-thirdrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+												<tr class="tableizer-fourthrow"><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+											</table>
+										</li>
+									</ul>
+		        					<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
+										<a href="http://127.0.0.1:8000/media/data_upload/Sample_Person_Add.csv">download sample excel sheet </a>
+									</div>
+		        					<br><br><br>
+		        					
+										<center class="copy">
+											<form action="/data_upload/upload/" method="POST" enctype="multipart/form-data" >
+												{% csrf_token %}
+												<div name="blocks">
+													Block :
+													<select name="get_block">
+														<option disabled selected> -- select an option -- </option>
+														{% if blocks %}
+															{% for block in blocks %}
+																<option >{{ block }}</option>
+															{% endfor %}
+														{% endif %}
+													</select>
+												</div> <br>
+												<div id="get_email" >
+                                      				<p> Email id : <input id="email_id" name="email_id" type="text"> </p>
+                       								(Enter your email id to receive status of uploaded file via email) 
+                       							</div><br><br>
+												
+												<p>{{form.non_field_errors}}</p> 
+												<p>{{form.docfile.label_tag}}</p>
+												<p> &nbsp;&nbsp;&nbsp;&nbsp;
+													{{ form.docfile }}
+													<input type="submit" value="Upload" onclick="check_validation(form.docfile,email_id,get_block);">
+												
+												</p>
+						
+											</form>
+									
+										</center>
+								
+									
+		   
+		        				</div>
+		   
+		        			</div>
+		   
+		        		</div> <!-- End .inner-wrapper -->
+		   
+		        	</div> <!-- End .wrapper -->
+		  </section>
+        
+ {% include "includes/footer.html" %}
