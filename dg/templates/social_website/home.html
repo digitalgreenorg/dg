@@ -6,24 +6,27 @@
             <header class="grid">
                 <div class="grid-col grid-size1of3">
                     <div class="grid-pad-rt-md">
-                        <h2 class="hdg-b hdg-source-reg layout-vr-sm">Who we are</h2>
+                        <h2 class="hdg-b hdg-source-lt layout-vr-sm">Who we are</h2>
                         <p class="copy">We are an international not-for-profit organization, using an innovative digital platform for community engagement to improve livelihoods of rural communities across South Asia and Sub-Saharan Africa.
 						</p>
-						<a  href="{% url 'about' %}" class="hdg-green copy hdg-bold">Know more about us</a>
-                    </div>
+                       
+                        <a  href="{% url 'about' %}" class="btn">About us</a>
+                        
+                        
+					</div>
                 </div>
                 <div class="grid-col grid-size1of3">
                     <div class="borderLt grid-pad-rt-md">
-                        <h2 class="hdg-b hdg-source-reg layout-vr-sm">What we do</h2>
+                        <h2 class="hdg-b hdg-source-lt layout-vr-sm">What we do</h2>
                         <p class="copy">We engage with and empower rural communities to produce participatory videos on improved livelihood, health, and nutrition practices and disseminate these videos through human mediation.</p>
-						<a  href="{% url 'ourwork' %}" class="hdg-green copy hdg-bold">Know more about our work</a>
+						<a  href="{% url 'ourwork' %}" class="btn">Our Work</a>
                     </div>
                 </div>
                 <div class="grid-col grid-size1of3">
                     <div class="borderLt  grid-pad-rt-tiny">
-                        <h2 class="hdg-b hdg-source-reg layout-vr-sm">Who we work with</h2>
+                        <h2 class="hdg-b hdg-source-lt layout-vr-sm">Who we work with</h2>
                         <p class="copy">Our partners include prominent public, private and civil society organizations in the fields of rural health and development, research and technology.</p>
-						<a href="{% url 'connect' %}" class="hdg-green copy hdg-bold">Know more about our partners and investors</a>
+						<a href="{% url 'connect' %}" class="btn" style="margin-top:19px;">Our Partners</a>
                     </div>
                 </div>
             </header>
@@ -39,7 +42,7 @@
             <div class="inner-wrapper js-collections-wrapper">
                 <header class="clearfix layout-vr-lg">
                     <div class="grid-col">
-                        <h1 class="hdg-a hdg-source-lt">Collections</h1>
+                        <h1 class="hdg-a hdg-source-lt">Videos</h1> <p class="hdg-source-lt"> for the people, by the people</p>
                     </div>
                     <div class="grid-rt">
                         {% include "includes/partials/mostFilters.html"%}
@@ -54,7 +57,7 @@
                     <!--div class="pagination-wrapper js-pagination">
                     </div-->
                     <div class="gradientBg-ft-btn">
-                        <a href="{% url 'discover' %}" class="btn">See All Collections</a>
+                        <a href="{% url 'discover' %}" class="btn">See All Videos</a>
                     </div>
                 </div>
             </div> <!-- End .inner-wrapper -->
