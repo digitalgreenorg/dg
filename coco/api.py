@@ -135,11 +135,12 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
+    user_videos = coco_user.get_videos().values_list('id', flat = True)
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
     videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
     ###Get videos screened to allow inter partner sharing of videos
     videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
-    return set(list(videos) + list(videos_seen))
+    return set(list(videos) + list(videos_seen) + list(user_videos))
     
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)

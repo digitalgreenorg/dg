@@ -52,6 +52,7 @@ def write_person_update_content(file, i, case_id, owner_id, person, videos_seen,
     file.write('<n'+unicode(i)+':case case_id="' + unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="' + owner_id + '" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
     file.write('<n'+unicode(i)+':update>\n')
     file.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '</n'+unicode(i)+':case_name>\n')
+    file.write('<n'+unicode(i)+':owner_id>' + unicode(owner_id) + '</n'+unicode(i)+':owner_id>\n')
     file.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')
     if person.group:
         file.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
