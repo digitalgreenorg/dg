@@ -14,14 +14,14 @@ success_filenames = []
 def add_person(file, user_id, block_id):
     global error
     file = os.path.join(dg.settings.MEDIA_ROOT, file)
-    print file
+    
     user_id = CocoUser.objects.get(user__id=user_id)
     block_id = Block.objects.get(id=block_id)
-    
-    village_errors_file = open(os.path.splitext(file)[0]+'_village_errors.csv', 'wb')
+    print 'errors_village_'+os.path.splitext(file)[0].split('/')[-1]+'.csv'
+    village_errors_file =open(os.path.splitext(file)[0]+'_village_errors.csv', 'wb')
     wrtr = csv.writer(village_errors_file, delimiter=',', quotechar='"')
     
-    village_success_file = open(os.path.splitext(file)[0]+'_village_success.csv', 'wb')
+    village_success_file =open(os.path.splitext(file)[0]+'_village_success.csv', 'wb')
     wrtr_success = csv.writer(village_success_file, delimiter=',', quotechar='"')
     
     csvfile = open(file, 'rb')
@@ -44,6 +44,7 @@ def add_person(file, user_id, block_id):
                 village.save()
                 village_map[row['Village_Name']] = village.id
                 wrtr_success.writerow([row['Village_Name']])
+                village_success_file.flush()
                 print 'pushing', row['Village_Name']
             
             except Exception as e:
@@ -80,6 +81,7 @@ def add_person(file, user_id, block_id):
                 group.save()
                 group_map[row['Shg_Name'] + row['Village_Name']] = group.id
                 wrtr_success.writerow([row['Shg_Name']])
+                group_success_file.flush()
                 print 'pushing', row['Shg_Name']
             
             except Exception as e:
@@ -114,6 +116,7 @@ def add_person(file, user_id, block_id):
                              gender = 'F')
             person.save()
             wrtr_success.writerow([''.join([str(row['Member_Name ']),str(row['Member_Surname'])])])
+            person_success_file.flush()
             print 'pushing', row['Member_Name']
         
         except Exception as e:

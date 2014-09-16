@@ -129,7 +129,7 @@ def csv_to_html():
     for file in person.success_filenames:
         if i < 3:
             file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)
-            
+            print file
             csv_reader = csv.reader(open(file))
             row_num = 0
             for x in csv_data:
