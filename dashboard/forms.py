@@ -61,7 +61,8 @@ class CocoUserForm(forms.ModelForm):
                                       verbose_name='videos',
                                       is_stacked=False
                                      ),
-        queryset=Video.objects.all().prefetch_related('language', 'village__block__district')
+        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
+        required=False
         )
 
 
