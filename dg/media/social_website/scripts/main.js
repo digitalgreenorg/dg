@@ -1,7 +1,7 @@
 'use strict';
 
 requirejs.config({
-    baseUrl: '/media/social_website/build/',
+    baseUrl: '/media/social_website/scripts/',
 
     paths: {
         framework: 'libs/framework',
@@ -9,7 +9,8 @@ requirejs.config({
         jquery: 'libs/external/jquery-1.8.3.min',
         appConfig: 'appConfig',
         appcommon: 'appcommon',
-        bootstrap_modal: 'libs/external/bootstrap-modal'
+        bootstrap_modal: 'libs/external/bootstrap-modal',
+        datatables: 'libs/external/jquery.dataTables'
     },
     shim: {
         'bootstrap_modal': {

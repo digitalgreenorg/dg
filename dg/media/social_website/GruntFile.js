@@ -70,6 +70,10 @@ module.exports = function( grunt ) {
 	    		          {
                               name: 'controllers/DeoAnalyticsController',
                               exclude: ["main"]
+                          },
+                          {
+                              name: 'controllers/VrpPaymentController',
+                              exclude: ["main"]
                           }
 	    		         ]
         	}
