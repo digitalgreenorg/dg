@@ -81,7 +81,6 @@
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url 'connect' %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url 'tools' %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
                                     
-                                    <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a href="{% url 'career' %}?header=true">Careers</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
