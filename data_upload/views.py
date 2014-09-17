@@ -22,7 +22,8 @@ from geographies.models import  Block
 from coco.models import CocoUser
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0, login_url=PERMISSION_DENIED_URL)
+@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0, 
+                  login_url=PERMISSION_DENIED_URL)
 @csrf_protect
 
 # home page
@@ -34,17 +35,19 @@ def home(request):
     block_names = [str(b) for b in zip(*blocks)[0]]
     
     return render_to_response(
-        'data_upload/netupload.html',
-        {'form':form, 'blocks':block_names},
-        context_instance=RequestContext(request)
-        )
+           'data_upload/netupload.html',
+           {'form' : form, 'blocks' : block_names},
+            context_instance=RequestContext(request)
+           )
 
 # Handle file upload   
 def file_upload(request): 
     ext_allwd = ['.xls', '.xlsx']
+    
     del person.ERROR_FILENAMES[:] #empty the list of files
     del person.SUCCESS_FILENAMES[:]
-    user_id= User.objects.get(username=request.user.username).id
+    
+    user_id = User.objects.get(username=request.user.username).id
     block_id = Block.objects.get(block_name=request.POST.get("get_block")).id
     
     if request.method == 'POST':
@@ -57,15 +60,17 @@ def file_upload(request):
             if (os.path.splitext(document.docfile.name)[1] in ext_allwd):
                 document.save()
                 converted_document = file_converter(document)
-                status = person.add_person(converted_document,user_id,block_id)
+                status = person.add_person(converted_document, user_id,block_id)
                 if status == 1:
-                    raise forms.ValidationError("Some field missing or mismatch. Please read instructions or download sample file")
+                    raise forms.ValidationError("Some field missing or mismatch." \
+                                                "Please read instructions or download sample file")
             
             elif (os.path.splitext(document.docfile.name)[1] == '.csv'):
                 document.save()
-                status=person.add_person(document.docfile.name,user_id,block_id)
+                status=person.add_person(document.docfile.name, user_id, block_id)
                 if status == 1:
-                    raise forms.ValidationError("Some field missing or mismatch. Please read instructions or download sample file")
+                    raise forms.ValidationError("Some field missing or mismatch." \
+                                                "Please read instructions or download sample file")
     else:
         form = DocumentForm()  # A empty, unbound form
 
@@ -94,8 +99,8 @@ def file_converter(document):
         worksheets = wb.sheet_names()
         sh = wb.sheet_by_name(worksheets[0])
         
-        converted_csv_file = open(os.path.splitext(document_docfile_name)[0] +'.csv', 'wb') #saves .csv file with uploaded file name
-        wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)# write into .csv file row wise
+        converted_csv_file = open(os.path.splitext(document_docfile_name)[0] +'.csv', 'wb')
+        wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)
         
         for rownum in xrange(sh.nrows):
             wr.writerow(sh.row_values(rownum))
@@ -158,15 +163,16 @@ def csv_to_html():
 
 def send_mail(request):
     document = Document(docfile=request.FILES['docfile'])
-    subject = 'Status of uploaded file: '+document.docfile.name
+    subject = "Status of uploaded file: "+document.docfile.name
     from_email = dg.settings.EMAIL_HOST_USER
     to_email = [request.POST.get("email_id")]
     if person.ERROR < 1:
-        body = 'All the data in uploaded file has been successfully entered'
+        body = "All the data in uploaded file has been successfully entered"
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
     else:
-        body = 'Some of the data in uploaded file could not be entered. Please find the attachment containing the error files '
+        body = "Some of the data in uploaded file could not be entered." \
+               "Please find the attachment containing the error files "
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         for file in person.ERROR_FILENAMES:
             file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)

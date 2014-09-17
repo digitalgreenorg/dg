@@ -2,9 +2,11 @@ import os.path, dg.settings
 
 from django.core.management import setup_environ
 setup_environ(dg.settings)
+
 from geographies.models import Village, Block
 from people.models import PersonGroup, Person
 from coco.models import CocoUser
+
 import csv
 
 ERROR=0 #variable to identify if any error occurs in uploaded file
@@ -19,7 +21,7 @@ def add_person(file, user_id, block_id):
     rows = csv.DictReader(csvfile)    
     req_field = ['Village_Name','Shg_Name','Member_Name','Member_Surname','Husband_Father_Name','Husband_Father_Surname']
     for row in rows:
-        if set(req_field)==set(row.keys()) and len(req_field)==len(row.keys()):
+        if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
             execute_upoad(file, user_id, block_id)
             break
         else:
@@ -36,7 +38,7 @@ def execute_upoad(file, user_id, block_id):
     village_errors_file = open(os.path.splitext(file)[0]+'_village_errors.csv', 'wb')
     wrtr = csv.writer(village_errors_file, delimiter=',', quotechar='"')
     
-    village_success_file =open(os.path.splitext(file)[0]+'_village_success.csv', 'wb')
+    village_success_file = open(os.path.splitext(file)[0]+'_village_success.csv', 'wb')
     wrtr_success = csv.writer(village_success_file, delimiter=',', quotechar='"')
     
     csvfile = open(file, 'rb')
@@ -140,10 +142,13 @@ def execute_upoad(file, user_id, block_id):
         try:
             i = i + 1
             print i
-            person = Person(user_created_id = user_id.id, partner_id = user_id.partner.id, person_name = ' '.join([row['Member_Name'], row['Member_Surname']]), 
-                             father_name = ' '.join([row['Husband_Father_Name'], row['Husband_Father_Surname']]), 
-                             village_id = village_map[row['Village_Name']], group_id = group_map[row['Shg_Name']+ row['Village_Name']],
-                             gender = 'F')
+            person = Person(user_created_id = user_id.id,
+                            partner_id = user_id.partner.id, 
+                            person_name = ' '.join([row['Member_Name'], row['Member_Surname']]), 
+                            father_name = ' '.join([row['Husband_Father_Name'], row['Husband_Father_Surname']]), 
+                            village_id = village_map[row['Village_Name']], 
+                            group_id = group_map[row['Shg_Name']+ row['Village_Name']],
+                            gender = 'F')
             person.save()
             wrtr_success.writerow([''.join([str(row['Member_Name ']),str(row['Member_Surname'])])])
             person_success_file.flush()
@@ -151,7 +156,6 @@ def execute_upoad(file, user_id, block_id):
         
         except Exception as e:
             ERROR += 1
-            
             wrtr.writerow([' '.join([str(row['Member_Name']),str(row['Member_Surname'])]), e])
             person_errors_file.flush()
 
