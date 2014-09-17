@@ -19,7 +19,7 @@
 {% if page %}
 {% editable page.title %}{{ page.title }}{% endeditable %}
 {% else %}
-{% trans "Blog" %}
+{% trans "Our Blog" %}
 {% endif %}
 {% endblock %}
 
@@ -77,7 +77,7 @@
         <div class="layout-vr-lg">
 {% block blog_post_list_post_title %}
 {% editable blog_post.title %}
-<h2 class="hdg-a hdg-source-lt layout-vr-sm">
+<h2 class="hdg-c hdg-source-lt layout-vr-sm">
     <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
 </h2>
 {% endeditable %}
