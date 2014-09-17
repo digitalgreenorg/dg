@@ -2,7 +2,7 @@
     {% include "includes/partials/mainCarousel.html" %}
 	{% load app_tags %}
     <section id="main" role="main" class="wrapper">
-        <div class="inner-wrapper layout-vr-xlg">
+        <div class="inner-wrapper">
             <header class="grid">
                 <div class="grid-col grid-size1of3">
                     <div class="grid-pad-rt-md">
@@ -34,14 +34,14 @@
         </div> <!-- End .inner-wrapper -->
     </section> <!-- End .wrapper -->
     
-    <section class="gradientBg">
+    <section class="mainBg-gradient">
         <div class="wrapper">
             <div class="inner-wrapper js-collections-wrapper">
                 <header class="clearfix layout-vr-lg">
                     <div class="grid-col">
-                        <h1 class="hdg-a hdg-source-lt">Videos <h3 class="hdg-f hdg-source-reg"> Produced by our network of partners and rural communities</h3></h1> 
+                        <h1 class="hdg-a hdg-source-lt">Videos <h3 class="hdg-e hdg-source-lt"> Produced by our network of partners and rural communities</h3></h1> 
                     </div>
-                    <div class="grid-rt" style="margin-top:40px;">
+                    <div class="grid-rt">
                         {% include "includes/partials/mostFilters.html"%}
                     </div>
                 </header> <!-- End .clearfix -->
@@ -61,7 +61,7 @@
         </div> <!-- End .wrapper -->
     </section>
     
-    <section class="wrapper layout-vr-xlg">
+    <section class="wrapper mainBg-white">
         <div class="grid inner-wrapper js-news-feed-wrapper">
             <div class="grid-col grid-size2of4">
                 <h2 class="hdg-a hdg-source-lt layout-vr-md">News</h2>
@@ -135,8 +135,42 @@
             </div>
         </div> <!-- End .inner-wrapper -->
     </section>
-    <section class="wrapper layout-vr-xlg">>
-        <!-- Quotes from known people-->
+    <section class="mainBg-gradient">
+        <div class="wrapper layout-vr-xlg">
+
+            <!-- Quotes from known people-->
+            <div class="inner-wrapper grid">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Media Mentions</h2>
+                <div class="grid-col grid-size3of5">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3">
+                            <img src="/media/social_website/content/homepage/melindagates.png" height="120px"></img>
+                            <p class="hdg-e grid-pad-lt-tiny">Melinda Gates</p>
+                        </div>
+                        <div class="grid-col grid-size2of3">
+                            <p class="hdg-f copy-italic">"There's a technology called Digital Green in India that started on a very small scale, and it's now spreading very broadly in a number of communities," Gates says. "It allows you to go into a local community with a tiny little projector — basically the size of a recording device these days — set it up, and let the farmers record themselves about the new agricultural [best practices] they've learned."</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-col grid-size1of5">
+                    <article class="media">
+                        <div class="bd">
+                            <img src="/media/social_website/content/homepage/nyt.png" height="100px" class="grid-rt grid-pad-rt-tiny"></img>
+                            <img src="/media/social_website/content/homepage/wb.png" height="100px" class="grid-rt grid-pad-rt-tiny"></img>
+                        </div>
+                    </article>
+                </div>
+                <div class="grid-col grid-size1of5">
+                    <article class="media">
+                        <div class="bd">
+                            <img src="/media/social_website/content/homepage/ys.png" height="100px"></img>
+                            <img src="/media/social_website/content/homepage/bbctech.jpeg" height="100px"></img>
+                        </div>
+                    </article>
+                </div>
+
+            </div>
+        </div>
     </section>
 
 {% include "includes/footer.html"%}
