@@ -1,33 +1,36 @@
-import os.path, dg.settings
+import os.path
+import dg.settings
+import csv
 
 from django.core.management import setup_environ
-setup_environ(dg.settings)
 
 from geographies.models import Village, Block
 from people.models import PersonGroup, Person
 from coco.models import CocoUser
 
-import csv
+setup_environ(dg.settings)
 
-ERROR=0 #variable to identify if any error occurs in uploaded file
-ERROR_FILENAMES = [] #contains the files to be zipped for download
-SUCCESS_FILENAMES = []
+ERROR = 0 #variable to identify if any error occurs in uploaded file
+ERROR_FILENAMES = [] #error files to be zipped for download
+SUCCESS_FILENAMES = [] #success files to be zipped for download
 
-def add_person(file, user_id, block_id):
+def upload_data(file, user_id, block_id):
     
     file = os.path.join(dg.settings.MEDIA_ROOT, file)
     
     csvfile = open(file, 'rb')
     rows = csv.DictReader(csvfile)    
-    req_field = ['Village_Name','Shg_Name','Member_Name','Member_Surname','Husband_Father_Name','Husband_Father_Surname']
+    
+    req_field = ['Village_Name','Shg_Name','Member_Name','Member_Surname',
+                 'Husband_Father_Name','Husband_Father_Surname']
+    
     for row in rows:
         if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
             execute_upoad(file, user_id, block_id)
             break
         else:
-            prevent_execution = 1
-            return prevent_execution
-            
+            return False
+    return True            
   
 def execute_upoad(file, user_id, block_id):
     global ERROR
@@ -35,29 +38,26 @@ def execute_upoad(file, user_id, block_id):
     user_id = CocoUser.objects.get(user__id=user_id)
     block_id = Block.objects.get(id=block_id)
         
-    village_errors_file = open(os.path.splitext(file)[0]+'_village_errors.csv', 'wb')
+    file_name = str(os.path.splitext(file)[0])
+    file_name_list = str(os.path.splitext(file)[0].split('/')[-1])
+    
+    village_errors_file = open(file_name + '_errors_village.csv', 'wb')
     wrtr = csv.writer(village_errors_file, delimiter=',', quotechar='"')
     
-    village_success_file = open(os.path.splitext(file)[0]+'_village_success.csv', 'wb')
-    wrtr_success = csv.writer(village_success_file, delimiter=',', quotechar='"')
+    village_success_file = open(file_name + '_success_village.csv', 'wb')
+    wrtr_success = csv.writer(village_success_file, delimiter=',',quotechar='"')
     
     csvfile = open(file, 'rb')
-    rows = csv.DictReader(csvfile)
+    rows_villages = csv.DictReader(csvfile)
         
     village_querry_set = Village.objects.values('village_name','id')
     village_map = dict(village_querry_set)
     
-    i = 0
-    error_villages = []
-    
-    for row in rows:
+    i = 0 
+    for row in rows_villages:
         if str(row['Village_Name']) not in village_map:
-            print "village"
-            village_name = str(row['Village_Name'])
-            
+            i = i + 1                   
             try:
-                i = i + 1
-                print i
                 village = Village(user_created_id = user_id.id, 
                                   village_name = row['Village_Name'], 
                                   block_id = block_id.id)
@@ -70,40 +70,32 @@ def execute_upoad(file, user_id, block_id):
             
             except Exception as e:
                 ERROR += 1
-                if village_name not in error_villages:
-                    wrtr.writerow([row['Village_Name'], e])
-                    error_villages.append(village_name)
+                wrtr.writerow([i, row['Village_Name'], e])
                 village_errors_file.flush()
     
     village_success_file.close()
-    village_errors_file.close()
+    village_errors_file.close()   
     
-    ERROR_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_village_errors.csv'))
-    SUCCESS_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_village_success.csv'))
+    ERROR_FILENAMES.append(file_name_list + '_errors_village.csv')
+    SUCCESS_FILENAMES.append(file_name_list + '_success_village.csv')
     
-    group_errors_file = open(os.path.splitext(file)[0]+'_group_errors.csv', 'wb')
+    group_errors_file = open(file_name + '_errors_group.csv', 'wb')
     wrtr = csv.writer(group_errors_file, delimiter=',', quotechar='"')
     
-    group_success_file = open(os.path.splitext(file)[0]+'_group_success.csv', 'wb')
+    group_success_file = open(file_name + '_success_group.csv', 'wb')
     wrtr_success = csv.writer(group_success_file, delimiter=',', quotechar='"')
 
     csvfile = open(file, 'rb')
-    rows2 = csv.DictReader(csvfile)
+    rows_groups = csv.DictReader(csvfile)
 
     group_querry_set = PersonGroup.objects.values('group_name','id')
     group_map = dict(group_querry_set)
     
     i = 0
-    error_group = []
-    for row in rows2:
+    for row in rows_groups:
         if str(row['Shg_Name']) + str(row['Village_Name']) not in group_map:
-            print "group"
-            try:
-                i = i + 1
-                print i
-                group_name = str(row['Shg_Name'])
-               
-
+            i = i + 1
+            try:                         
                 group = PersonGroup(user_created_id = user_id.id,
                                     partner_id = user_id.partner.id,
                                     group_name = row['Shg_Name'], 
@@ -116,51 +108,52 @@ def execute_upoad(file, user_id, block_id):
             
             except Exception as e:
                 ERROR += 1
-                if group_name not in error_group:
-                    wrtr.writerow([row['Shg_Name'], e] )
-                    error_group.append(group_name)
-                group_errors_file.flush()
+                wrtr.writerow([i, row['Shg_Name'], e] )
+            group_errors_file.flush()
 
     group_errors_file.close()
     group_success_file.close()
     
-    ERROR_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_group_errors.csv'))      
-    SUCCESS_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_group_success.csv'))
+    ERROR_FILENAMES.append(file_name_list + '_errors_group.csv')
+    SUCCESS_FILENAMES.append(file_name_list + '_success_group.csv')
         
-    person_errors_file = open(os.path.splitext(file)[0]+'_person_errors.csv', 'wb')
+    person_errors_file = open(file_name + '_errors_person.csv', 'wb')
     wrtr = csv.writer(person_errors_file, delimiter=',', quotechar='"')
     
-    person_success_file = open(os.path.splitext(file)[0]+'_person_success.csv', 'wb')
+    person_success_file = open(file_name + '_success_person.csv', 'wb')
     wrtr_success = csv.writer(person_success_file, delimiter=',', quotechar='"')
 
     csvfile = open(file, 'rb')
-    rows2 = csv.DictReader(csvfile)
-
+    rows_persons = csv.DictReader(csvfile)
+    
     i = 0
-    for row in rows2:
-        print "person"
+    for row in rows_persons:
+        i = i + 1
         try:
-            i = i + 1
-            print i
+            person_name = ' '.join([str(row['Member_Name']), str(row['Member_Surname'])]) 
+            father_name = ' '.join([str(row['Husband_Father_Name']), 
+                                    str(row['Husband_Father_Surname'])]) 
+                                               
             person = Person(user_created_id = user_id.id,
-                            partner_id = user_id.partner.id, 
-                            person_name = ' '.join([row['Member_Name'], row['Member_Surname']]), 
-                            father_name = ' '.join([row['Husband_Father_Name'], row['Husband_Father_Surname']]), 
+                            partner_id = user_id.partner.id,
+                            person_name = person_name,
+                            father_name = father_name, 
                             village_id = village_map[row['Village_Name']], 
-                            group_id = group_map[row['Shg_Name']+ row['Village_Name']],
+                            group_id = group_map[row['Shg_Name']+row['Village_Name']],
                             gender = 'F')
+            
             person.save()
-            wrtr_success.writerow([''.join([str(row['Member_Name ']),str(row['Member_Surname'])])])
+            wrtr_success.writerow([person_name])
             person_success_file.flush()
             print 'pushing', row['Member_Name']
         
         except Exception as e:
             ERROR += 1
-            wrtr.writerow([' '.join([str(row['Member_Name']),str(row['Member_Surname'])]), e])
-            person_errors_file.flush()
+            wrtr.writerow([person_name, e])
+        person_errors_file.flush()
 
     person_errors_file.close()
     person_success_file.close()
-    ERROR_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_person_errors.csv'))
-    SUCCESS_FILENAMES.append(str(os.path.splitext(file)[0].split('/')[-1]+'_person_success.csv'))
+    ERROR_FILENAMES.append(file_name_list+'_errors_person.csv')
+    SUCCESS_FILENAMES.append(file_name_list + '_success_person.csv')
     
