@@ -3026,6 +3026,18 @@ body {
 .hide {
     display: none;
 }
+
+/********************************/
+/* For Blog Caption */
+.blog-caption {
+     overflow:hidden;
+     word-wrap: break-word;
+     text-align:center;
+     font-style: italic;
+     margin-bottom: 10px;
+     margin-top: 5px;
+}
+
 /********************************/
 /* Copied from bootstrap modals */
 .hide-text {
