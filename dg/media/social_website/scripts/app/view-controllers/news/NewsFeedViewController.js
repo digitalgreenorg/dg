@@ -54,7 +54,7 @@ define(function(require) {
 
             var state = this._state;
             state.currentPageNumber = 0;
-            state.newsItemsPerPage = 2;
+            state.newsItemsPerPage = 3;
             state.currentCount = 0;
         },
 
