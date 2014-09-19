@@ -31,6 +31,7 @@ def upload_data(file, user_id, block_id):
         else:
             return False
     return True            
+
   
 def execute_upoad(file, user_id, block_id):
     global ERROR
@@ -43,9 +44,11 @@ def execute_upoad(file, user_id, block_id):
     
     village_errors_file = open(file_name + '_errors_village.csv', 'wb')
     wrtr = csv.writer(village_errors_file, delimiter=',', quotechar='"')
+    wrtr.writerow(["Entry No.", "Village Name", "Error"])
     
     village_success_file = open(file_name + '_success_village.csv', 'wb')
     wrtr_success = csv.writer(village_success_file, delimiter=',',quotechar='"')
+    wrtr_success.writerow(["Entry No.", "Village Name"])
     
     csvfile = open(file, 'rb')
     rows_villages = csv.DictReader(csvfile)
@@ -64,7 +67,7 @@ def execute_upoad(file, user_id, block_id):
                 
                 village.save()
                 village_map[row['Village_Name']] = village.id
-                wrtr_success.writerow([row['Village_Name']])
+                wrtr_success.writerow([i, row['Village_Name']])
                 village_success_file.flush()
                 print 'pushing', row['Village_Name']
             
@@ -81,9 +84,11 @@ def execute_upoad(file, user_id, block_id):
     
     group_errors_file = open(file_name + '_errors_group.csv', 'wb')
     wrtr = csv.writer(group_errors_file, delimiter=',', quotechar='"')
+    wrtr.writerow(["Entry No.", "Shg Name", "Error"])
     
     group_success_file = open(file_name + '_success_group.csv', 'wb')
     wrtr_success = csv.writer(group_success_file, delimiter=',', quotechar='"')
+    wrtr_success.writerow(["Entry No.", "Shg Name"])
 
     csvfile = open(file, 'rb')
     rows_groups = csv.DictReader(csvfile)
@@ -100,9 +105,10 @@ def execute_upoad(file, user_id, block_id):
                                     partner_id = user_id.partner.id,
                                     group_name = row['Shg_Name'], 
                                     village_id = village_map[row['Village_Name']])
+                
                 group.save()
                 group_map[row['Shg_Name'] + row['Village_Name']] = group.id
-                wrtr_success.writerow([row['Shg_Name']])
+                wrtr_success.writerow([i,row['Shg_Name']])
                 group_success_file.flush()
                 print 'pushing', row['Shg_Name']
             
@@ -119,9 +125,11 @@ def execute_upoad(file, user_id, block_id):
         
     person_errors_file = open(file_name + '_errors_person.csv', 'wb')
     wrtr = csv.writer(person_errors_file, delimiter=',', quotechar='"')
+    wrtr.writerow(["Entry No.", "Person Name", "Error"])
     
     person_success_file = open(file_name + '_success_person.csv', 'wb')
     wrtr_success = csv.writer(person_success_file, delimiter=',', quotechar='"')
+    wrtr_success.writerow(["Entry No.", "Person Name"])
 
     csvfile = open(file, 'rb')
     rows_persons = csv.DictReader(csvfile)
@@ -143,13 +151,13 @@ def execute_upoad(file, user_id, block_id):
                             gender = 'F')
             
             person.save()
-            wrtr_success.writerow([person_name])
+            wrtr_success.writerow([i, person_name])
             person_success_file.flush()
             print 'pushing', row['Member_Name']
         
         except Exception as e:
             ERROR += 1
-            wrtr.writerow([person_name, e])
+            wrtr.writerow([i,person_name, e])
         person_errors_file.flush()
 
     person_errors_file.close()

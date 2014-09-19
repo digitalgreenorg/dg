@@ -85,7 +85,7 @@ def file_upload(request):
         raise forms.ValidationError("Some field missing or mismatch. Please " + \
                                     "read instructions or download sample file")
    
-    send_mail(request)
+    #send_mail(request)
     
     if(person.ERROR > 0):
         csv_data = csv_read()
@@ -148,10 +148,13 @@ def csv_read():
     csv_data = []
     for file in person.SUCCESS_FILENAMES:
         file_data = []
+        
         file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)        
+        
         csv_reader = csv.reader(open(file))
+        csv_reader.next()
         for row in csv_reader:
-            for column in row:
+            for column in row[1::2]:
                 file_data.append(column)
         
         csv_data.append(file_data)
