@@ -385,8 +385,8 @@ a {
     display: block;
     background: url(../images/logo.png) no-repeat 0 0;
     margin-top: 14px;
-    height: 25px;
-    width: 148px;
+    height: 30px;
+    width: 178px;
     margin-right: 14px;
 }
 
@@ -768,8 +768,9 @@ padding-right: 20px;
 ------------------------------------------------------------------------ */
 
 .copy {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
+    font-family: helvetica, source_sans_proregular, arial, sans-serif;
 }
 .copy-sm {
     font-size: 12px;
@@ -1088,14 +1089,14 @@ padding-right: 20px;
 	width: 16px;
 }
 /* Modifications for News on home page */
-.bd-text {
+/*.bd-text {
     width: 70%;
 }
 
 .bd-text-event {
     width: 80%
 }
-
+*/
 /* About page img border and box shadow */
 
 .img-effects img {
@@ -1974,12 +1975,16 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
  Home Page
 ------------------------------------------------------------------------ */
 
-.mainBg-white{
-    padding-top: 50px;
-    background: #ffffff;
+.mainBg-grey {
+    background-color: #f3f2eb;
+    border-bottom: 1px solid #dad9d3;
+    border-top: 1px solid #dad9d3;
+}
+
+.mainBg{
+    padding-top: 35px;
 }
 .mainBg-gradient{
-    padding-top: 50px;
     border-bottom: 1px solid #c1d0b3;
     background: #ffffff; /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -1989,7 +1994,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background: -webkit-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* Chrome10+,Safari5.1+ */
     background: -o-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%,#dcedcc 100%); /* W3C */
+    background: linear-gradient(to bottom, #ffffff 0%,#e0ffd6 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dcedcc',GradientType=0 ); /* IE6-8 */
 }
 
@@ -2000,7 +2005,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .gradientBg-ft-btn {
     position: absolute;
-    left: 772px;
+    right: 0px;
     top: -10px;
     cursor: pointer;
 }

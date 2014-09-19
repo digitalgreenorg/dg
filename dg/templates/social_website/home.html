@@ -2,31 +2,29 @@
     {% include "includes/partials/mainCarousel.html" %}
 	{% load app_tags %}
     <section id="main" role="main" class="wrapper">
-        <div class="inner-wrapper">
-            <header class="grid">
+        <div class="inner-wrapper grid layout-vr-md">
                 <div class="grid-col grid-size1of3">
-                    <div class="grid-pad-rt-md">
-                        <h2 class="hdg-b hdg-source-lt centered layout-vr-sm">Who we are</h2>
-                        <p class="copy centered layout-vr-sm">A not-for-profit organization, using an innovative digital platform to improve agriculture, livelihoods and health
+                    <div class="grid-pad-rt-md centered">
+                        <h2 class="hdg-b hdg-source-lt  layout-vr-tiny">Who we are</h2>
+                        <p class="hdg-f centered hdg-source-reg layout-vr-sm ">An international not-for-profit which combines social and technical innovation to improve agriculture, health and livelihoods
 						</p>
-                        <a  href="{% url 'about' %}" class="btn" style="margin-left:85px;">About us</a>   
+                        <a  href="{% url 'about' %}" class="btn">Read our story</a>   
 					</div>
                 </div>
                 <div class="grid-col grid-size1of3">
-                    <div class="borderLt grid-pad-rt-md">
-                        <h2 class="hdg-b hdg-source-lt centered layout-vr-sm">What we do</h2>
-                        <p class="copy centered layout-vr-sm">Engaging with rural communities to produce localized videos disseminated through human mediation</p>
-						<a  href="{% url 'ourwork' %}" class="btn" style="margin-left:90px;">Our Work</a>
+                    <div class="borderLt grid-pad-rt-md centered">
+                        <h2 class="hdg-b hdg-source-lt layout-vr-tiny">What we do</h2>
+                        <p class="hdg-f hdg-source-reg layout-vr-sm">Enable rural communities to create and disseminate localized videos through a knowledge exchange platform</p>
+						<a  href="{% url 'ourwork' %}" class="btn">Know our work</a>
                     </div>
                 </div>
                 <div class="grid-col grid-size1of3">
-                    <div class="borderLt">
-                        <h2 class="hdg-b hdg-source-lt centered layout-vr-sm">Who we work with</h2>
-                        <p class="copy centered layout-vr-sm">Prominent public, private and civil society organizations in the rural health and development space</p>
-						<a href="{% url 'connect' %}" class="btn" style="margin-left:90px;">Our Partners</a>
+                    <div class="borderLt centered">
+                        <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we work with</h2>
+                        <p class="hdg-f hdg-source-reg layout-vr-sm">Prominent public, private and civil society organizations in the rural health and development space</p>
+						<a href="{% url 'connect' %}" class="btn">Meet our Partners</a>
                     </div>
                 </div>
-            </header>
             <!--div class="featured layout-vr-xlg">
                 <div class="grid js-featured-collection-wrapper">
                 </div>
@@ -34,12 +32,13 @@
         </div> <!-- End .inner-wrapper -->
     </section> <!-- End .wrapper -->
     
-    <section class="mainBg-gradient">
+    <section class="mainBg mainBg-grey">
         <div class="wrapper">
             <div class="inner-wrapper js-collections-wrapper">
-                <header class="clearfix layout-vr-lg">
+                <header class="clearfix layout-vr-md">
                     <div class="grid-col">
-                        <h1 class="hdg-a hdg-source-lt">Videos <h3 class="hdg-e hdg-source-lt"> Produced by our network of partners and rural communities</h3></h1> 
+                        <h1 class="hdg-a hdg-source-lt">Videos of best practices</h1-->
+                        <!--h3 class="hdg-e hdg-source-lt">Videos produced by our network of partners and rural communities</h3-->
                     </div>
                     <div class="grid-rt">
                         {% include "includes/partials/mostFilters.html"%}
@@ -54,17 +53,17 @@
                     <!--div class="pagination-wrapper js-pagination">
                     </div-->
                     <div class="gradientBg-ft-btn">
-                        <a href="{% url 'discover' %}" class="btn">See All Videos</a>
+                        <a href="{% url 'discover' %}" class="btn">Explore video library</a>
                     </div>
                 </div>
             </div> <!-- End .inner-wrapper -->
         </div> <!-- End .wrapper -->
     </section>
     
-    <section class="wrapper mainBg-white">
+    <section class="wrapper mainBg mainBg-gradient">
         <div class="grid inner-wrapper js-news-feed-wrapper">
             <div class="grid-col grid-size2of4">
-                <h2 class="hdg-a hdg-source-lt layout-vr-md">News</h2>
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Latest updates</h2>
                 <ul class="v-list-md js-news-feed-container">
                     <!-- Dynamic News Feed Content Here -->
                 </ul>
@@ -134,42 +133,88 @@
                 </div>
             </div>
         </div> <!-- End .inner-wrapper -->
-    </section>
-    <section class="mainBg-gradient">
-        <div class="wrapper layout-vr-xlg">
+
+        <div class="wrapper layout-vr-md">
 
             <!-- Quotes from known people-->
             <div class="inner-wrapper grid">
-                <h2 class="hdg-a hdg-source-lt layout-vr-md">What they are saying</h2>
-                <div class="grid-col grid-size3of5">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">In the News</h2>
+                <div class="grid-col grid-size1of3 layout-vr-sm">
                     <div class="grid">
                         <div class="grid-col grid-size1of3 img-effects">
-                            <a href="http://www.fastcoexist.com/1681756/the-4-ideas-that-melinda-gates-thinks-are-changing-the-world" target="_blank"><img src="/media/social_website/content/homepage/melindagates.png" height="120px"></img></a>
-                            <p class="hdg-e grid-pad-lt-tiny">Melinda Gates</p>
+                        <img src="/media/social_website/content/homepage/fc.png" width="90px"></img>
                         </div>
-                        <div class="grid-col grid-size2of3">
-                            <p class="hdg-f copy-italic">"There's a technology called Digital Green in India that started on a very small scale, and it's now spreading very broadly in a number of communities," Gates says. "It allows you to go into a local community with a tiny little projector — basically the size of a recording device these days — set it up, and let the farmers record themselves about the new agricultural [best practices] they've learned."</p>
+                        <div class=" grid-col grid-size2of3">
+                            <p class="copy grid-pad-rt-md">
+                                Melinda Gates' four ideas that are changing the world
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="grid-col grid-size1of5">
-                    <article class="media">
-                        <div class="bd img-size-sq grid-pad-rt-tiny img-effects">
-                            <a href="http://opinionator.blogs.nytimes.com/2013/04/03/where-youtube-meets-the-farm/?_php=true&_type=blogs&_r=0" target="_blank"><img src="/media/social_website/content/homepage/nyt.png" class="grid-rt"></img></a>
-                            <a href="https://blogs.worldbank.org/endpovertyinsouthasia/digital-libraries-poor" target="_blank"><img src="/media/social_website/content/homepage/wb.png" class="grid-rt" style="margin-top:4px;"></img></a>
+                <div class="grid-col grid-size1of3 layout-vr-sm">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-effects">
+                        <img src="/media/social_website/content/homepage/ndtv.png" width="90px"></img>
                         </div>
-                    </article>
-                </div>
-                <div class="grid-col grid-size1of5">
-                    <article class="media">
-                        <div class="bd img-size-sq img-effects">
-                            <a href="http://yourstory.com/2014/03/vodafone-yourstory-agriculture-meetup-digital-green/" target="_blank"><img src="/media/social_website/content/homepage/ys.png"></img></a>
-                            <a href="http://www.bbc.com/news/technology-23867132" target="_blank"><img src="/media/social_website/content/homepage/bbctech.jpeg"></img></a>
+                        <div class=" grid-col grid-size2of3">
+                            <p class="copy grid-pad-rt-md">
+                                Digital Green catalyses a quiet revolution in India
+                            </p>
                         </div>
-                    </article>
+                    </div>
                 </div>
-
+                <div class="grid-col grid-size1of3 layout-vr-sm">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-effects">
+                        <img src="/media/social_website/content/homepage/nyt.png" width="90px"></img>
+                        </div>
+                        <div class=" grid-col grid-size2of3">
+                            <p class="copy grid-pad-rt-md">
+                                Where YouTube meets the farm
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="inner-wrapper grid">
+                <div class="grid-col grid-size1of3">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-effects">
+                        <img src="/media/social_website/content/homepage/bbctech.jpeg" width="90px"></img>
+                        </div>
+                        <div class=" grid-col grid-size2of3">
+                            <p class="copy grid-pad-rt-md">
+                                Digital Indians: Rikin Gandhi helps farmers with video
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-col grid-size1of3 layout-vr-sm">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-effects">
+                        <img src="/media/social_website/content/homepage/wb.png" width="90px"></img>
+                        </div>
+                        <div class=" grid-col grid-size2of3 img-effects">
+                            <p class="copy grid-pad-rt-md">
+                                Digital libraries for the poor - facilitating bottom-up Innovation through a video-based learning platform
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-col grid-size1of3 layout-vr-sm">
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-effects">
+                        <img src="/media/social_website/content/homepage/mit.png" width="90px"></img>
+                        </div>
+                        <div class=" grid-col grid-size2of3">
+                            <p class="copy grid-pad-rt-md">
+                                Innovators under 35 - Educating farmers through locally produced video
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
