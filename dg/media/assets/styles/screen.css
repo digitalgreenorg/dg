@@ -772,6 +772,9 @@ padding-right: 20px;
     line-height: 1.4;
     font-family: helvetica, source_sans_proregular, arial, sans-serif;
 }
+.copy-sourcesans{
+    font-family: source_sans_proregular,helvetica,arial,sans-serif;
+}
 .copy-sm {
     font-size: 12px;
     line-height: 1.4;
