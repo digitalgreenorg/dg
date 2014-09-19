@@ -35,6 +35,25 @@
 
  {% compress js %}
 <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+<script type="text/javascript">
+        function codeAddress() {
+            $("img").each(function(){
+                if($(this).attr('title')) {
+                    $(this).wrap( "<div></div>" );
+                    if ($(this).css('float') == 'right'){
+                        $(this).after( "<p class='copy-sm blog-caption js-img-caption' style='float:right; width:" + $(this).width()+ "px'>" + $(this).attr('title') + "</p>" );
+                    }
+                    else{
+                        $(this).after( "<p class='copy-sm blog-caption js-img-caption img' style='width:" + $(this).width()+ "px'>" + $(this).attr('title') + "</p>" );
+                    }
+                    //$('.js-img-caption').width($(this).width());
+                    
+                    
+                  }
+            });
+        }
+        window.onload = codeAddress;
+</script>
 <!-- <script src="{% static "js/bootstrap.js" %}"></script>
 <script src="{% static "js/bootstrap-extras.js" %}"></script> -->
 {% block extra_js %}{% endblock %} {% include "includes/footer_scripts.html" %} {% endcompress %}
@@ -167,5 +186,7 @@
                 </div>
             </div>
         </section>
+        
+        
 
 {% include "includes/footer.html" %}
