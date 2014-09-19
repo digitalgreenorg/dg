@@ -186,7 +186,7 @@ def populate_partner_stats(partner):
     partner.save()
         
 def populate_farmers(person):
-    partner = Partner.objects.get(coco_id = str(person.village.block.district.partner.id))
+    partner = Partner.objects.get(coco_id = str(person.partner.id))
     try:
         website_farmer = Person.objects.get(coco_id = str(person.id))
         # There is just one result for a filter, but we want to use update here.
