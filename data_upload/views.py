@@ -85,7 +85,7 @@ def file_upload(request):
         raise forms.ValidationError("Some field missing or mismatch. Please " + \
                                     "read instructions or download sample file")
    
-    #send_mail(request)
+    send_mail(request)
     
     if(person.ERROR > 0):
         csv_data = csv_read()
