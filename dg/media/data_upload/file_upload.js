@@ -39,7 +39,7 @@ function check_validation(file,email_id,block)
 								}	
 								else
 								{
-									alert("File is being uploaded, it will take FEW MINITUES. Please don't refresh or click on upload button. You will be directly redirected to another page.");
+									alert("File is being uploaded, it will take FEW MINUTES. Please don't refresh or click on upload button. You will be directly redirected to another page.");
 						    	}
 							}
 						}
