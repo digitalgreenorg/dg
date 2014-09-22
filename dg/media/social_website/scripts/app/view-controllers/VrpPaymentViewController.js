@@ -13,7 +13,6 @@ define(function(require) {
     var tableTools = require('TableTools');
     var districtTemplate = require('text!app/views/district.html');
     var blockTemplate = require('text!app/views/block.html');
-    var reportTemplate = require('text!app/views/report.html');
 
     var VrpPaymentViewController = Controller.extend({
 
