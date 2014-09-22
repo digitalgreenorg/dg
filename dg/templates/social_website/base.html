@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+{% load pages_tags mezzanine_tags i18n future staticfiles %}
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+<meta name="description"
+    content="{% block meta_description %}{% endblock %}">
+<title>Digital Green</title>
+<link rel="shortcut icon" type="image/ico"
+    href="{{STATIC_URL}}assets/images/favicon.ico" />
+
+{% ifinstalled mezzanine.blog %}
+<link rel="alternate" type="application/rss+xml" title="RSS"
+    href="{% url "blog_post_feed" "rss" %}">
+<link rel="alternate" type="application/atom+xml" title="Atom"
+    href="{% url "blog_post_feed" "atom" %}">
+{% endifinstalled %} 
+{% compress css %}
+<!-- <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+<link rel="stylesheet" href="{% static "css/mezzanine.css" %}"> 
+<link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}"> -->
+<link rel="stylesheet" media="screen, projection"
+    href="{{STATIC_URL}}assets/styles/screen.css" />
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/rtl.css" %}">
+{% endif %} {% ifinstalled cartridge.shop %}
+<link rel="stylesheet" href="{% static "css/cartridge.css" %}">
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
+{% endif %} {% endifinstalled %} {% block extra_css %}{% endblock %} 
+{% endcompress %}
+
+ {% compress js %}
+<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+<script type="text/javascript">
+        function codeAddress() {
+            $("img").each(function(){
+                if($(this).attr('title')) {
+                    $(this).wrap( "<div></div>" );
+                    if ($(this).css('float') == 'right'){
+                        $(this).after( "<p class='copy-sm blog-caption js-img-caption' style='float:right; width:" + $(this).width()+ "px'>" + $(this).attr('title') + "</p>" );
+                    }
+                    else{
+                        $(this).after( "<p class='copy-sm blog-caption js-img-caption img' style='width:" + $(this).width()+ "px'>" + $(this).attr('title') + "</p>" );
+                    }
+                    //$('.js-img-caption').width($(this).width());
+                    
+                    
+                  }
+            });
+        }
+        window.onload = codeAddress;
+</script>
+<!-- <script src="{% static "js/bootstrap.js" %}"></script>
+<script src="{% static "js/bootstrap-extras.js" %}"></script> -->
+{% block extra_js %}{% endblock %} {% include "includes/footer_scripts.html" %} {% endcompress %}
+
+<!--[if lt IE 9]>
+<script src="{% static "js/html5shiv.js" %}"></script>
+<script src="{% static "js/respond.min.js" %}"></script>
+<![endif]-->
+
+{% block extra_head %}{% endblock %}
+</head>
+
+<body id="{% block body_id %}body{% endblock %}"
+    data-controller="DigitalGreenPage">
+    <!-- Begin Main Wrapper -->
+    <div class="wrapper-main wrapper">
+        <div class="user-dropdown-div">
+            <div class="user-dropdown js-user-dropdown">
+                <ul>
+                    <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
+                    {% if not request.user.social_auth.all.0 %}
+                    <li class="user-dropdown-option"><a
+                        href="{% url 'change_password' %}">Change Password</a></li> {% endif %}
+                    <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign
+                            Out</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="header-fixed">
+            <div class="header-wrapper clearfix">
+                <header class="global-nav">
+                    <a class="skip-to-content" href="#main">Skip to content</a>
+                    <div class="wrapper">
+                        <nav class="inner-nav" role="navigation">
+                            <ul class="nav">
+                                <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
+                                <li class="logo"><a href="{% url 'home' %}">Green
+                                        Digital</a></li>
+                                <li
+                                    class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a
+                                    href="{% url 'discover' %}">Discover <span
+                                        class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
+                                <li
+                                    class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}"><a
+                                    href="{% url 'connect' %}">Connect <span
+                                        class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
+                                <li
+                                    class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a
+                                    href="{% url 'tools' %}">Tools <span
+                                        class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
+                                <li
+                                    class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a
+                                    href="{% url 'about' %}">About Us <span
+                                        class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
+                                <li class="nav-pipe copy copy-dk hdg-upper nav-small"><a
+                                    href="{% url 'career' %}?header=true">Careers</a></li> 
+                                    {% if not request.user.is_authenticated %}
+                                <li><a class="btn-sign-in"
+                                    href="/login/?next={{request.path}}">Sign in</a></li> {% else %}
+                                <li class="grid-rt" style="float: right;">
+                                    <div class="media grid-rt">
+                                        <div class="img">
+                                            {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                            <div class="img-effects">
+                                                <img
+                                                    src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture"
+                                                    class="user-image js-user-image">
+                                            </div>
+                                            {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                            <div class="img-effects">
+                                                <img
+                                                    src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=40"
+                                                    class="user-image js-user-image">
+                                            </div>
+                                            {% else %}
+                                            <div class="img-effects">
+                                                <img src="{{STATIC_URL}}social_website/content/default.png"
+                                                    class="user-image js-user-image">
+                                            </div>
+                                            {% endif %} <img
+                                                src="{{STATIC_URL}}social_website/content/dropdown.png"
+                                                class="user-dropdown-arrow js-user-dropdown-arrow">
+                                        </div>
+                                    </div>
+                                </li> {% endif %}
+                            </ul>
+                        </nav>
+                        <!-- End .inner-nav -->
+                    </div>
+                    <!-- End .wrapper -->
+                </header>
+                <!-- End .global-nav -->
+            </div>
+        </div>
+        <div class="header-margin"></div>
+
+        <section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    {% nevercache %} {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="alert alert-dismissable alert-{{ message.tags }}"
+                            data-alert="alert">
+                            <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">&times;</button>
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %} {% endnevercache %}
+
+                    <!-- <ul class="results-info h-list h-list-sm js-filter-breadcrumbs">
+                        {% spaceless %} {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %} {% endspaceless %}
+                    </ul> -->
+                    <div class="clearfix layout-vr-md">
+                        <div class="grid-col grid-size3of4">
+                        <h1 class="hdg-a hdg-source-lt layout-vr-md">{% block title %}{% endblock %}</h1>
+                        {% block main %}{% endblock %}
+                        </div>
+    
+                        <div class="grid-col grid-size1of4">
+                            {% nevercache %} {% include "includes/user_panel.html" %} {% endnevercache %}
+                            <div>
+                                <div>{% block right_panel %} {% ifinstalled mezzanine.twitter %} {% include  "twitter/tweets.html" %} {% endifinstalled %} {% endblock %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+
+{% include "includes/footer.html" %}

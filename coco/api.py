@@ -135,11 +135,12 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
+    user_videos = coco_user.get_videos().values_list('id', flat = True)
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
     videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
     ###Get videos screened to allow inter partner sharing of videos
     videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
-    return set(list(videos) + list(videos_seen))
+    return set(list(videos) + list(videos_seen) + list(user_videos))
     
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
@@ -265,7 +266,7 @@ class MediatorResource(BaseResource):
         authorization = MediatorAuthorization()
         validation = ModelFormValidation(form_class=AnimatorForm)
         always_return_data = True
-        excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
+        excludes = ['time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
@@ -366,10 +367,7 @@ class VideoResource(BaseResource):
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
-        excludes = ['duration', 'picture_quality ', 'audio_quality', 'editing_quality', 'edit_start_date ', 'edit_start_date', 
-                    'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
-                    'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
-                    'last_modified', 'time_created', 'time_modified', 'duration' ]
+        excludes = ['duration', 'related_practice', 'time_created', 'time_modified',]
     
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
@@ -385,7 +383,7 @@ class PersonGroupResource(BaseResource):
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupForm)
-        excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
+        excludes = ['time_created', 'time_modified']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
@@ -432,7 +430,7 @@ class ScreeningResource(BaseResource):
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
-        excludes = ['location', 'target_person_attendance', 'target_audience_interest', 'target_adoptions', 'time_created', 'time_modified']
+        excludes = ['location', 'time_created', 'time_modified']
     
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
@@ -503,7 +501,7 @@ class PersonResource(BaseResource):
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
-        excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
+        excludes = ['date_of_joining', 'image_exists', 'time_created', 'time_modified']
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
@@ -536,7 +534,7 @@ class PersonAdoptVideoResource(BaseResource):
         authorization = VillagePartnerAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
-        excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_updated', 'time_modified']
+        excludes = ['time_created', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')

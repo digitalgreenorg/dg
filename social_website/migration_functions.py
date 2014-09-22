@@ -169,11 +169,12 @@ def create_collections():
             website_collection.videos.add(video)
         
 def populate_collection_stats(collection):
-    stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
-    collection.likes = stats['offlineLikes__sum'] + stats['onlineLikes__sum']
-    collection.views = stats['offlineViews__sum'] + stats['onlineViews__sum']
-    collection.adoptions = stats['adoptions__sum']
-    collection.save()    
+    if collection.videos.all().count() != 0:
+        stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
+        collection.likes = stats['offlineLikes__sum'] + stats['onlineLikes__sum']
+        collection.views = stats['offlineViews__sum'] + stats['onlineViews__sum']
+        collection.adoptions = stats['adoptions__sum']
+        collection.save()    
     
 def populate_partner_stats(partner):
     stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('offlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
@@ -186,7 +187,7 @@ def populate_partner_stats(partner):
     partner.save()
         
 def populate_farmers(person):
-    partner = Partner.objects.get(coco_id = str(person.village.block.district.partner.id))
+    partner = Partner.objects.get(coco_id = str(person.partner.id))
     try:
         website_farmer = Person.objects.get(coco_id = str(person.id))
         # There is just one result for a filter, but we want to use update here.

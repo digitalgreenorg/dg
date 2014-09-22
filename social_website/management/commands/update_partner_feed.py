@@ -37,7 +37,7 @@ class Command(BaseCommand):
         villages = Village.objects.all()
         initial_rows = len(Activity.objects.filter(type=ActivityType.new_village))
         for village in villages:
-            partners = list(set(Screening.objects.filter(village=village).values_list('user_created__cocouser__partner', flat=True)))
+            partners = list(set(Screening.objects.filter(village=village).values_list('partner', flat=True)))
             for partner_id in partners:
                 try:
                     partner = Partner.objects.get(coco_id=partner_id)

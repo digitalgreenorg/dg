@@ -119,3 +119,16 @@ text!app/views/collection-add-video-carousel.html
 app/view-controllers/CollectionAddViewController.js
 libs/external/jquery-ui.js
 app/controllers/CollectionAddController.js
+
+app/controllers/DeoAnalyticsController.js
+----------------
+libs/external/select2.js
+libs/external/highcharts.js
+app/libs/DistrictDataFeed.js
+app/libs/DeoDataFeed.js
+app/libs/DeoAnalyticsDataFeed.js
+text!app/views/district.html
+text!app/views/deo.html
+text!app/views/deo_name_tab.html
+app/view-controllers/DeoAnalyticsViewController.js
+app/controllers/DeoAnalyticsController.js

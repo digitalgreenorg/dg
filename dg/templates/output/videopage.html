@@ -19,7 +19,7 @@
 				{{vid.title}}
 			</div>
 			<div id='partnertitle'>
-				{{vid.village.block.district.partner.partner_name}}
+				{{vid.partner.partner_name}}
 			</div>
 			<div id='contentdivleft'>
 			    {% if vid.youtubeid %}
@@ -46,7 +46,7 @@
 				</div>				
 				{% endif %}
 				<div id='videodatadiv0'>
-					<span class='smallfont'>{{vid.village.block.district.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_end_date|date:"d M Y" }} </span>
+					<span class='smallfont'>{{vid.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_end_date|date:"d M Y" }} </span>
 				</div>
 				
 				<table id='videodatadiv1' cellspacing='0px' cellpadding='0'>

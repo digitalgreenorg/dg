@@ -5,7 +5,7 @@ from django.forms.extras.widgets import *
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
-from geographies.models import Village, Block, Region, District, State, Country
+from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
 from videos.models import Language, Practice, Video
@@ -35,20 +35,34 @@ class CocoModelForm(ModelForm):
         
     class Meta:
         model = CocoModel
-        exclude = ('user_modified')
+        exclude = ('user_modified',)
 
-class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+
+class UserModelVillageMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "%s (%s) (%s)" % (obj.village_name, obj.block.block_name, obj.block.district.district_name)
 
 
+class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s (%s) (%s)" % (obj.title, obj.village.block.district.district_name, obj.language.language_name)
+
+
 class CocoUserForm(forms.ModelForm):
-    villages = UserModelMultipleChoiceField(
+    villages = UserModelVillageMultipleChoiceField(
         widget=FilteredSelectMultiple(
                                       verbose_name='villages',
                                       is_stacked=False
                                      ),
-        queryset=Village.objects.all()
+        queryset=Village.objects.all().prefetch_related('block', 'block__district')
+        )
+    videos = UserModelVideoMultipleChoiceField(
+        widget=FilteredSelectMultiple(
+                                      verbose_name='videos',
+                                      is_stacked=False
+                                     ),
+        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
+        required=False
         )
 
 
@@ -60,10 +74,6 @@ class CountryForm(CocoModelForm):
     class Meta:
         model = Country
         
-class RegionForm(CocoModelForm):
-    class Meta:
-        model = Region
-
 class StateForm(CocoModelForm):
     class Meta:
         model = State
@@ -121,7 +131,7 @@ class VideoForm(CocoModelForm):
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance')   
+        exclude = ('farmers_attendance',)   
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:

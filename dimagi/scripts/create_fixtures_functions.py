@@ -303,7 +303,7 @@ def create_fixture(users, project_name, want_seasonal_behavior):
     group_sheet = write_group_info(cluster_village_dict, workbook)
     village_sheet = write_village_info(cluster_village_dict, workbook)
     mediator_sheet = write_mediator_info(mediator_dict, workbook)
-    video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
+    video_list = Screening.objects.filter(village__block__district__state__state_name__in=['Andhra Pradesh', 'Telangana']).values_list('videoes_screened', flat=True)
     video_list = set(video_list)
     video_distinct_sheet = write_distinct(video_list,workbook)
     if want_seasonal_behavior.lower() =="yes":
@@ -312,7 +312,7 @@ def create_fixture(users, project_name, want_seasonal_behavior):
             video_schedule_list.append(id)
         video_schedule_list_of_dict = []
         ##Get videos screened in Chittoor for this project
-        video_list_screened_in_villages = Screening.objects.filter(village__block__district__id = 47).values_list('videoes_screened', flat=True).distinct()
+        video_list_screened_in_villages = Screening.objects.filter(village__block__district__id__in=[47, 70, 35]).values_list('videoes_screened', flat=True).distinct()
         for id in video_list_screened_in_villages[:10]: #when we create a project, we should atleast see some data. That can serve as example. And seasonal data must be added and deleted as and when they needed.
             video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01', 

@@ -16,4 +16,5 @@ pytz==2013b
 pyes==0.20.0
 python-social-auth==0.1.17
 BeautifulSoup==3.2.1
+Mezzanine==3.1.4
 poster==0.8.1

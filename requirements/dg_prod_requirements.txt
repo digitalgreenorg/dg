@@ -1,15 +1,11 @@
-Django==1.5.5
+Django==1.6.5
 MySQL-python==1.2.3
-PIL==1.1.7
 XlsxWriter==0.5.1
 South==0.7.6
 boto==2.8.0
-django-ajax-filtered-fields==0.5
 django-debug-toolbar==0.8.5
 django-tastypie==0.10.0
 gdata==2.0.15
-python-cjson==1.0.5
-wadofstuff-django-serializers==1.1.0
 yolk==0.4.1
 oauth2==1.5.211
 twython==3.0.0
@@ -17,9 +13,11 @@ pytz==2013b
 pyes==0.20.0
 python-social-auth==0.1.17
 BeautifulSoup==3.2.1
+Mezzanine==3.1.4
 poster==0.8.1
 xlrd==0.9.2
 xlwt==0.7.5
+Pillow==2.5.1
 
 wsgiref==0.1.2
 newrelic==1.12.0.56
