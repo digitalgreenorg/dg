@@ -22,14 +22,14 @@ class VRPpayment(models.Manager):
         self.end_dd = 01
         self.partner_id = partner_id
         self.block_id = block_id
-        self.Screening_all_object = Screening.objects.filter(village__block__id = self.block_id, partner__id=self.partner_id, date__gte=datetime.date(int(self.start_yyyy), int(self.start_mm), self.start_dd), date__lte=datetime.date(int(self.end_yyyy), int(self.end_mm), self.end_dd))
+        self.Screening_all_object = Screening.objects.filter(village__block_id = self.block_id, partner_id=self.partner_id, date__gte=datetime.date(int(self.start_yyyy), int(self.start_mm), self.start_dd), date__lte=datetime.date(int(self.end_yyyy), int(self.end_mm), self.end_dd)).prefetch_related('animator', 'village', 'farmer_groups_targeted', 'videoes_screened', 'farmers_attendance', 'partner')
 
     def get_req_id_vrp(self):
         list_of_vrps_in_block2 = self.Screening_all_object.values_list('animator__name','animator__id').distinct()
         return list_of_vrps_in_block2
 
     def each_vrp_diss_list(self, vrp_id):
-        vrp_wise_diss_list = self.Screening_all_object.filter(animator_id = vrp_id).values_list('id', 'date','village__village_name')
+        vrp_wise_diss_list = self.Screening_all_object.filter(animator_id = vrp_id)
         return vrp_wise_diss_list
 
     def get_grp_ids(self,diss_id):
@@ -41,21 +41,21 @@ class VRPpayment(models.Manager):
         video_shown_list = self.Screening_all_object.filter(id=diss_id).values_list('videoes_screened__id',flat=True)
         return video_shown_list
 
-    def get_adoption_data(self,vid_id, attendees):
-        self.adoption_list = PersonAdoptPractice.objects.filter(video__id=vid_id, person__id__in=attendees)
+    def get_adoption_data(self, vid_id, attendees):
+        self.adoption_list = PersonAdoptPractice.objects.filter(video_id=vid_id, person_id__in=attendees).prefetch_related('video', 'person', 'partner')
 
     def get_new_adoption_list(self, diss_date):
         self.d_date_yyyy = diss_date.year
         self.d_date_mm = diss_date.month
         self.d_date_dd = diss_date.day
-        new_adoption_list = self.adoption_list.filter(date_of_adoption__gt=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd),date_of_adoption__lte=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd)+datetime.timedelta(weeks=6)).values_list('id',flat=True)
+        new_adoption_list = self.adoption_list.filter(date_of_adoption__gt=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd),date_of_adoption__lte=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd)+datetime.timedelta(weeks=6))
         return new_adoption_list
 
     def get_old_adoption_list(self, diss_date):
         self.d_date_yyyy = diss_date.year
         self.d_date_mm = diss_date.month
         self.d_date_dd = diss_date.day
-        old_adoption_list = self.adoption_list.filter( date_of_adoption__gt=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd)-datetime.timedelta(weeks=8), date_of_adoption__lt=datetime.date(self.d_date_yyyy, self.d_date_mm,self.d_date_dd)).values_list('id',flat=True)
+        old_adoption_list = self.adoption_list.filter( date_of_adoption__gt=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd)-datetime.timedelta(weeks=8), date_of_adoption__lt=datetime.date(self.d_date_yyyy, self.d_date_mm,self.d_date_dd))
         return old_adoption_list
 
     def get_diss_attendees(self,diss_id):
@@ -63,7 +63,7 @@ class VRPpayment(models.Manager):
         return self.attendees_list
 
     def get_expected_attendance(self,dissemination_grp_id):
-        return Person.objects.filter(group__in=dissemination_grp_id)
+        return Person.objects.filter(group_id__in=dissemination_grp_id)
 
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)

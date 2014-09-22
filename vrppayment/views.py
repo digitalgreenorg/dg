@@ -35,6 +35,7 @@ def blocksetter(request):
     return HttpResponse(resp)
 
 def make_vrp_detail_list(custom_object, list_of_vrps):
+    print list_of_vrps
     animators_disseminations_payments = []
     for var in list_of_vrps:
         count = 0
@@ -58,27 +59,32 @@ def make_vrp_detail_list(custom_object, list_of_vrps):
 
 
 def make_dissemination_list(custom_object, vrp_id):
-    dissemination_id = custom_object.each_vrp_diss_list(vrp_id)
+    disseminations = custom_object.each_vrp_diss_list(vrp_id)
     dissemination_details = []
-    for diss_id in dissemination_id:
+    for dissemination in disseminations:
+        print "in disseminations"
         each_diss_det_dict = {}
-        dissemination_grp_id = custom_object.get_grp_ids(diss_id[0])
-        ppl_attending = custom_object.get_diss_attendees(diss_id[0])
-        diss_attendance = len(ppl_attending)
-        total_person_expected = len(custom_object.get_expected_attendance(dissemination_grp_id))
-        diss_video_details = make_videos_shown_list(custom_object, diss_id[0], diss_id[1])
-        each_diss_det_dict['d_id'] = diss_id[0]
-        each_diss_det_dict['d_date'] = diss_id[1]
-        each_diss_det_dict['d_attendance'] = diss_attendance
-        each_diss_det_dict['d_village'] = diss_id[2]
+        dissemination_grps = dissemination.farmer_groups_targeted.all()
+        farmer_attendance = dissemination.farmers_attendance.all()
+        farmer_attendance_count = farmer_attendance.count()
+        print "howdi"
+        print dissemination_grps.values_list('id', flat=True)
+        #print custom_object.get_expected_attendance(dissemination_grps.values_list('id', flat=True))
+        total_person_expected = 0
+        for grp in dissemination_grps:
+            total_person_expected += len(Person.objects.filter(group_id=grp.id))
+        print "vowdi"
+        print dissemination
+        diss_video_details = make_videos_shown_list(custom_object, dissemination, farmer_attendance.values_list('id', flat=True), farmer_attendance_count)
+        each_diss_det_dict['d_id'] = dissemination.id
+        each_diss_det_dict['d_date'] = dissemination.date
+        each_diss_det_dict['d_attendance'] = farmer_attendance_count
+        each_diss_det_dict['d_village'] = dissemination.village.village_name
         each_diss_det_dict['d_expected_attendance'] = total_person_expected
         each_diss_det_dict['videos_shown_detail'] = diss_video_details
         if total_person_expected > 0:
-            attendance_perc = diss_attendance * 100 / total_person_expected
-            if (attendance_perc > 60):
-                each_diss_det_dict['result_success'] = True
-            else:
-                each_diss_det_dict['result_success'] = False
+            attendance_perc = farmer_attendance_count * 100 / total_person_expected
+            each_diss_det_dict['result_success'] = True if attendance_perc > 60 else False
         else:
             each_diss_det_dict['result_success'] = False
         dissemination_details.append(each_diss_det_dict)
@@ -86,21 +92,27 @@ def make_dissemination_list(custom_object, vrp_id):
     return dissemination_details
 
 
-def make_videos_shown_list(custom_object, diss_id, diss_date):
-    dissemination_video_shown_id = custom_object.get_video_shown_list(diss_id)
+def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_attending_count):
+    
+    #dissemination_video_shown_id = custom_object.get_video_shown_list(diss_id)
     each_diss_vid_arr_detail = []
-    ppl_attending = custom_object.get_diss_attendees(diss_id)
-    for vid_id in dissemination_video_shown_id:
-        custom_object.get_adoption_data(vid_id, ppl_attending)
+    #ppl_attending = custom_object.get_diss_attendees(diss_id)
+    print dissemination.videoes_screened.all()
+    for video in dissemination.videoes_screened.all():
+        print "JHAKAS 1"
+        custom_object.get_adoption_data(video.id, ppl_attending)
         each_video_adopt_dict = {}
-        video_adopted_ppl = custom_object.get_new_adoption_list(diss_date)
-        video_already_adopted_ppl = custom_object.get_old_adoption_list(diss_date)
-        each_video_adopt_dict['v_id'] = vid_id
-        each_video_adopt_dict['v_n_adoptions'] = len(video_adopted_ppl)
-        each_video_adopt_dict['v_n_expected_adoptions'] = len(ppl_attending)
-        denominator = len(ppl_attending) - len(video_already_adopted_ppl)
+        print "JHAKAS 2"
+        video_adopted_ppl = custom_object.get_new_adoption_list(dissemination.date)
+        print "JHAKAS 3"
+        video_already_adopted_ppl = custom_object.get_old_adoption_list(dissemination.date)
+        print "JHAKAS 4"
+        each_video_adopt_dict['v_id'] = video.id
+        each_video_adopt_dict['v_n_adoptions'] = video_adopted_ppl.count()
+        each_video_adopt_dict['v_n_expected_adoptions'] = ppl_attending_count
+        denominator = ppl_attending_count - video_already_adopted_ppl.count()
         if (denominator > 0):
-            if (((len(video_adopted_ppl) * 100) / denominator) > 30):
+            if (((video_adopted_ppl.count() * 100) / denominator) > 30):
                 each_video_adopt_dict['v_adoption_success_result'] = True
             else:
                 each_video_adopt_dict['v_adoption_success_result'] = False
