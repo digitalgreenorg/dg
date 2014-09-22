@@ -30,7 +30,7 @@ def districtsetter(request):
 
 def blocksetter(request):
     selecteddistrict = request.GET.get('district', None)
-    blocks = Block.objects.filter(district__id=selecteddistrict).values('block_name', 'id')
+    blocks = Block.objects.filter(district_id=selecteddistrict).values('block_name', 'id')
     resp = json.dumps({"block":list(blocks)})
     return HttpResponse(resp)
 
