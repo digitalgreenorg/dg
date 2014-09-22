@@ -53,6 +53,7 @@ def make_vrp_detail_list(custom_object, list_of_vrps):
                 village_work_list = element['d_village'] + "; " + village_work_list
         each_vrp_dict['village'] = village_work_list
         animators_disseminations_payments.append(each_vrp_dict)
+    print animators_disseminations_payments
     return animators_disseminations_payments
 
 
@@ -81,6 +82,7 @@ def make_dissemination_list(custom_object, vrp_id):
         else:
             each_diss_det_dict['result_success'] = False
         dissemination_details.append(each_diss_det_dict)
+    print dissemination_details
     return dissemination_details
 
 
@@ -105,6 +107,7 @@ def make_videos_shown_list(custom_object, diss_id, diss_date):
         else:
             each_video_adopt_dict['v_adoption_success_result'] = False
         each_diss_vid_arr_detail.append(each_video_adopt_dict)
+    print each_diss_vid_arr_detail
     return each_diss_vid_arr_detail
 
 
@@ -113,14 +116,18 @@ def makereport(request):
     end_date = request.GET.get('endperiod', None)
     selectedpartner = request.GET.get('partner', None)
     selectedblock = request.GET.get('block', None)
-
+    print "hello1"
     custom_object = VRPpayment(selectedpartner, selectedblock, start_date, end_date)
+    print "hello2"
     list_of_vrps = custom_object.get_req_id_vrp()
+    print "hello3"
     complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
+    print "hello4"
     output_array = []
     i = 0
     for each_vrp in complete_data:
         i += 1
+        print "hello5"
         diss_count = 0
         adoption_count = 0
         for each_diss in each_vrp['dissem_detail']:
@@ -132,6 +139,7 @@ def makereport(request):
         final_amount = diss_count * 28 + adoption_count * 12
         temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, adoption_count, final_amount]
         output_array.append(temp_arr)
+    print "hello6"
     if not output_array:
         report_data = [[0,'NaN', 'No Data Available', '', '', '', '']]
         resp = json.dumps({"vrppayment":report_data})
