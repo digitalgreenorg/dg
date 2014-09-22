@@ -11,7 +11,7 @@ requirejs.config({
         appcommon: 'appcommon',
         bootstrap_modal: 'libs/external/bootstrap-modal',
         datatables: 'libs/external/jquery.dataTables',
-
+        TableTools: 'libs/external/dataTables.tableTools'
     },
     shim: {
         'bootstrap_modal': {
