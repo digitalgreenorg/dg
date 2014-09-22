@@ -38,7 +38,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-FILE_UPLOAD_PERMISSIONS = 0o644
+FILE_UPLOAD_PERMISSIONS = 0644
 
 STATIC_URL = '/media/'
 STATICFILES_DIRS = (

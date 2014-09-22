@@ -29,6 +29,9 @@ coco_admin.logout_template = 'social_website/home.html'
 website_admin.index_template = 'social_website/index.html'
 website_admin.login_template = 'social_website/login.html'
 website_admin.logout_template = 'social_website/home.html'
+mcoco_admin.index_template = 'social_website/index.html'
+mcoco_admin.login_template = 'social_website/login.html'
+mcoco_admin.logout_template = 'social_website/home.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),

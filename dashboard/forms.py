@@ -37,18 +37,32 @@ class CocoModelForm(ModelForm):
         model = CocoModel
         exclude = ('user_modified',)
 
-class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+
+class UserModelVillageMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "%s (%s) (%s)" % (obj.village_name, obj.block.block_name, obj.block.district.district_name)
 
 
+class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s (%s) (%s)" % (obj.title, obj.village.block.district.district_name, obj.language.language_name)
+
+
 class CocoUserForm(forms.ModelForm):
-    villages = UserModelMultipleChoiceField(
+    villages = UserModelVillageMultipleChoiceField(
         widget=FilteredSelectMultiple(
                                       verbose_name='villages',
                                       is_stacked=False
                                      ),
-        queryset=Village.objects.all()
+        queryset=Village.objects.all().prefetch_related('block', 'block__district')
+        )
+    videos = UserModelVideoMultipleChoiceField(
+        widget=FilteredSelectMultiple(
+                                      verbose_name='videos',
+                                      is_stacked=False
+                                     ),
+        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
+        required=False
         )
 
 

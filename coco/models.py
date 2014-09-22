@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from base_models import CocoModel
 from geographies.models import Village
 from programs.models import Partner
+from videos.models import Video
 
 
 class FullDownloadStats(models.Model):
@@ -31,9 +32,13 @@ class CocoUser(CocoModel):
     user = models.OneToOneField(User, related_name="coco_user")
     partner = models.ForeignKey(Partner)
     villages = models.ManyToManyField(Village)
+    videos = models.ManyToManyField(Video)
 
     def get_villages(self):
         return self.villages.all()
-    
+
+    def get_videos(self):
+        return self.videos.all()
+
     def __unicode__(self):
         return  u'%s' % (self.user.username)
