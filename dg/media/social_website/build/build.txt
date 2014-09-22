@@ -145,6 +145,5 @@ app/libs/VrpPaymentDataFeed.js
 libs/external/dataTables.tableTools.js
 text!app/views/district.html
 text!app/views/block.html
-text!app/views/report.html
 app/view-controllers/VrpPaymentViewController.js
 app/controllers/VrpPaymentController.js
