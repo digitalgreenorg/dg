@@ -35,7 +35,6 @@ def blocksetter(request):
     return HttpResponse(resp)
 
 def make_vrp_detail_list(custom_object, list_of_vrps):
-    print list_of_vrps
     animators_disseminations_payments = []
     for var in list_of_vrps:
         count = 0
@@ -54,7 +53,6 @@ def make_vrp_detail_list(custom_object, list_of_vrps):
                 village_work_list = element['d_village'] + "; " + village_work_list
         each_vrp_dict['village'] = village_work_list
         animators_disseminations_payments.append(each_vrp_dict)
-    print animators_disseminations_payments
     return animators_disseminations_payments
 
 
@@ -62,19 +60,14 @@ def make_dissemination_list(custom_object, vrp_id):
     disseminations = custom_object.each_vrp_diss_list(vrp_id)
     dissemination_details = []
     for dissemination in disseminations:
-        print "in disseminations"
         each_diss_det_dict = {}
         dissemination_grps = dissemination.farmer_groups_targeted.all()
         farmer_attendance = dissemination.farmers_attendance.all()
         farmer_attendance_count = farmer_attendance.count()
-        print "howdi"
-        print dissemination_grps.values_list('id', flat=True)
         #print custom_object.get_expected_attendance(dissemination_grps.values_list('id', flat=True))
         total_person_expected = 0
         for grp in dissemination_grps:
             total_person_expected += len(Person.objects.filter(group_id=grp.id))
-        print "vowdi"
-        print dissemination
         diss_video_details = make_videos_shown_list(custom_object, dissemination, farmer_attendance.values_list('id', flat=True), farmer_attendance_count)
         each_diss_det_dict['d_id'] = dissemination.id
         each_diss_det_dict['d_date'] = dissemination.date
@@ -88,7 +81,6 @@ def make_dissemination_list(custom_object, vrp_id):
         else:
             each_diss_det_dict['result_success'] = False
         dissemination_details.append(each_diss_det_dict)
-    print dissemination_details
     return dissemination_details
 
 
@@ -97,16 +89,11 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
     #dissemination_video_shown_id = custom_object.get_video_shown_list(diss_id)
     each_diss_vid_arr_detail = []
     #ppl_attending = custom_object.get_diss_attendees(diss_id)
-    print dissemination.videoes_screened.all()
     for video in dissemination.videoes_screened.all():
-        print "JHAKAS 1"
         custom_object.get_adoption_data(video.id, ppl_attending)
         each_video_adopt_dict = {}
-        print "JHAKAS 2"
         video_adopted_ppl = custom_object.get_new_adoption_list(dissemination.date)
-        print "JHAKAS 3"
         video_already_adopted_ppl = custom_object.get_old_adoption_list(dissemination.date)
-        print "JHAKAS 4"
         each_video_adopt_dict['v_id'] = video.id
         each_video_adopt_dict['v_n_adoptions'] = video_adopted_ppl.count()
         each_video_adopt_dict['v_n_expected_adoptions'] = ppl_attending_count
@@ -119,7 +106,6 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
         else:
             each_video_adopt_dict['v_adoption_success_result'] = False
         each_diss_vid_arr_detail.append(each_video_adopt_dict)
-    print each_diss_vid_arr_detail
     return each_diss_vid_arr_detail
 
 
@@ -128,18 +114,13 @@ def makereport(request):
     end_date = request.GET.get('endperiod', None)
     selectedpartner = request.GET.get('partner', None)
     selectedblock = request.GET.get('block', None)
-    print "hello1"
     custom_object = VRPpayment(selectedpartner, selectedblock, start_date, end_date)
-    print "hello2"
     list_of_vrps = custom_object.get_req_id_vrp()
-    print "hello3"
     complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
-    print "hello4"
     output_array = []
     i = 0
     for each_vrp in complete_data:
         i += 1
-        print "hello5"
         diss_count = 0
         adoption_count = 0
         for each_diss in each_vrp['dissem_detail']:
@@ -151,7 +132,6 @@ def makereport(request):
         final_amount = diss_count * 28 + adoption_count * 12
         temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, adoption_count, final_amount]
         output_array.append(temp_arr)
-    print "hello6"
     if not output_array:
         report_data = [[0,'NaN', 'No Data Available', '', '', '', '']]
         resp = json.dumps({"vrppayment":report_data})
