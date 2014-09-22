@@ -24,7 +24,9 @@ module.exports = function( grunt ) {
 	                controllers: 'app/controllers',
 	                jquery: 'libs/external/jquery-1.8.3.min',
 	                appConfig: 'appConfig',
-	                bootstrap_modal: 'libs/external/bootstrap-modal'
+	                bootstrap_modal: 'libs/external/bootstrap-modal',
+	                datatables: 'libs/external/jquery.dataTables',
+	                TableTools: 'libs/external/dataTables.tableTools'
 	            },
 	            dir: "./build/",
 	            optimize: "uglify",
