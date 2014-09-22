@@ -9,7 +9,6 @@ from django import forms
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.core.mail import EmailMultiAlternatives
-from django.core.management import setup_environ
 
 from django.template import RequestContext
 from django.http import  HttpResponse
@@ -25,8 +24,6 @@ from data_upload.models import Document
 from data_upload.forms import DocumentForm
 from geographies.models import  Block
 from coco.models import CocoUser
-
-setup_environ(dg.settings)
 
 @login_required()
 @user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0, 
@@ -70,7 +67,7 @@ def file_upload(request):
     if not form.is_valid():
         raise forms.ValidationError("Invalid form")        
 
-    document_raw = Document(docfile=request.FILES['docfile'])
+    document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)
      
     file_ext = os.path.splitext(document_raw.docfile.name)[-1]  
     if (file_ext in ext_allwd):
@@ -131,7 +128,7 @@ def handle_zip_download(request):
     zip_file= zipfile.ZipFile(buffer, "w")
     
     for f in (person.SUCCESS_FILENAMES + person.ERROR_FILENAMES):
-        file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', f)
+        file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', f)
         zip_path = os.path.join(str(zip_subdir), str(file)).split('/')[-1]
         zip_file.write(file, zip_path) #Add files to zip        
         
@@ -149,7 +146,7 @@ def csv_read():
     for file in person.SUCCESS_FILENAMES:
         file_data = []
         
-        file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)        
+        file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', file)        
         
         csv_reader = csv.reader(open(file))
         csv_reader.next()
@@ -177,6 +174,6 @@ def send_mail(request):
 
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)        
         for file in (person.ERROR_FILENAMES + person.SUCCESS_FILENAMES):
-            file = os.path.join(dg.settings.MEDIA_ROOT+r'documents/', file)
+            file = os.path.join(dg.settings.MEDIA_ROOT+r'/documents/', file)
             msg.attach_file(file, 'text/csv' )            
     msg.send()

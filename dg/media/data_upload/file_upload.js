@@ -1,9 +1,9 @@
         		
-// function to check extension of uploading file
+//function to check extension of uploading file
 function check_validation(file,email_id,block)
 			{
 				email_confirm = "Send an email with error files to " +email_id.value+ " ?"; 
-				var ext = [ "xls", "xlsx", "csv"]
+				var ext = [ "xls", "xlsx", "csv"];
 				var file_part = file.value.split('.');
 				var extension = file_part[1];
 				var flag=0;

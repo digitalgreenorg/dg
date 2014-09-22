@@ -2,13 +2,9 @@ import os.path
 import dg.settings
 import csv
 
-from django.core.management import setup_environ
-
 from geographies.models import Village, Block
 from people.models import PersonGroup, Person
 from coco.models import CocoUser
-
-setup_environ(dg.settings)
 
 ERROR = 0 #variable to identify if any error occurs in uploaded file
 ERROR_FILENAMES = [] #error files to be zipped for download
