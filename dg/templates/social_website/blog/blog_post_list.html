@@ -122,14 +122,14 @@
 <div class="blog-list-detail">
     {% keywords_for blog_post as tags %}
     {% if tags %}
-    <ul class="list-inline tags">
-    {% trans "Tags" %}:
     {% spaceless %}
+    <ul class="h-list tags copy">
+    <li>{% trans "Tags" %}:</li>
     {% for tag in tags %}
-    <li><a href="{% url "blog_post_list_tag" tag.slug %}" class="tag">{{ tag }}</a></li>
+    <li><a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a></li>
     {% endfor %}
-    {% endspaceless %}
     </ul>
+    {% endspaceless %}
     {% endif %}
     <p>
     <a href="{{ blog_post.get_absolute_url }}">{% trans "read more" %}</a>
