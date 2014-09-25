@@ -63,10 +63,10 @@ define(function(require) {
             references.FeaturedCollectionViewController = new FeaturedCollectionViewController($featuredCollectionContainer, $languageCookie);
 
             // dom elements
-            references.$mainCarouselWrapper = jQuery('#main-carousel');
+            references.$imageCarouselWrapper = jQuery('.js-imageCarousel');
 
-            references.mainCarousel = new NCarousel(references.$mainCarouselWrapper, {
-                transition: 'slide',
+            references.imageCarousel = new NCarousel(references.$imageCarouselWrapper, {
+                transition: 'fade',
                 autoPlay: true,
                 autoPlayDelay: 8000
             });
