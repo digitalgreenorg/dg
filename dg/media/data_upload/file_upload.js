@@ -7,10 +7,11 @@ function check_validation(file,email_id,block)
 				var file_part = file.value.split('.');
 				var extension = file_part[1];
 				var flag=0;
-				
+				 
+				valid_email = validateEmail(email_id.value)  
 				if(block.value!="-- select an option --")
 				{
-					if(email_id.value.length > 1)
+					if(valid_email == true)
 					{
 						var confirm = window.confirm(email_confirm);
 						
@@ -50,7 +51,7 @@ function check_validation(file,email_id,block)
 					}
 					else
 					{
-						alert("Enter email id");
+						alert("Enter valid email id");
 						event.preventDefault();	
 					}
 				}	
@@ -60,6 +61,10 @@ function check_validation(file,email_id,block)
 					}
 	}
 
-	
+// function to validate email
+function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}	
 
 		

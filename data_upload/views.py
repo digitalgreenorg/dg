@@ -70,18 +70,39 @@ def file_upload(request):
     document_raw = Document(docfile = request.FILES['docfile'], user_id = request.user)
      
     file_ext = os.path.splitext(document_raw.docfile.name)[-1]  
+    
+    error_list = []
+    
     if (file_ext in ext_allwd):
-        document_raw.save()
-        document = file_converter(document_raw)            
+        try:
+            document_raw.save()
+            document = file_converter(document_raw)
+        except Exception, err:
+            error_list.append(err)
+    
     elif (file_ext == '.csv'):
-        document_raw.save()
-        document = document_raw
-                                
-    success = person.upload_data(document, user_id, block_id)
-    if not success:
-        raise forms.ValidationError("Some field missing or mismatch. Please " + \
-                                    "read instructions or download sample file")
+        try:
+            document_raw.save()
+            document = document_raw.docfile.name
+        except Exception, err:
+            error_list.append(err)
+    else:
+        error_list.append('Invalid file format!!')    
+    
+    if len(error_list) > 0:
+        return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                  {'valid_errors': error_list },
+                                  context_instance=RequestContext(request))
    
+    upload_success = person.upload_data(document, user_id, block_id)
+    
+    if not upload_success:
+        valid_errors = ["Some field missing or mismatch. Please " + \
+              "read instructions or download sample file"]
+        return render_to_response("data_upload/ValidationErrorDisplay.html",
+                                  {'valid_errors' : valid_errors },
+                                  context_instance=RequestContext(request))
+    
     send_mail(request)
     
     if(person.ERROR > 0):
@@ -96,28 +117,26 @@ def file_upload(request):
   
 def file_converter(document):
 # converts file in .xls/.xlsx to .csv
-    try:
-        document_docfile_name = os.path.join(dg.settings.MEDIA_ROOT,
-                                             document.docfile.name)
-        
-        wb = xlrd.open_workbook(document_docfile_name)
-        worksheets = wb.sheet_names()
-        # first sheet only
-        sh = wb.sheet_by_name(worksheets[0])
-        
-        converted_csv_file = open(os.path.splitext(document_docfile_name)[0]+ \
-                                 '.csv', 'wb')
-        wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)
-        
-        for rownum in xrange(sh.nrows):
-            wr.writerow(sh.row_values(rownum))
-        converted_csv_file.close()
-        os.remove(document_docfile_name) #delete the old document
-        return os.path.splitext(document_docfile_name)[0] +'.csv'
 
-    except Exception, err:
-        raise forms.ValidationError(err) 
-        
+    document_docfile_name = os.path.join(dg.settings.MEDIA_ROOT,
+                                         document.docfile.name)
+    wb = xlrd.open_workbook(document_docfile_name)
+    worksheets = wb.sheet_names()
+    
+    # first sheet only
+    sh = wb.sheet_by_name(worksheets[0])
+    
+    converted_csv_file = open(os.path.splitext(document_docfile_name)[0]+ \
+                             '.csv', 'wb')
+    wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)
+    
+    for rownum in xrange(sh.nrows):
+        wr.writerow(sh.row_values(rownum))
+    
+    converted_csv_file.close()
+    os.remove(document_docfile_name) #delete the old document
+    
+    return os.path.splitext(document_docfile_name)[0] +'.csv'
         
 def handle_zip_download(request):
     
