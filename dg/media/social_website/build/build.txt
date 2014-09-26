@@ -143,6 +143,7 @@ app/libs/DistrictDataFeed.js
 app/libs/BlockDataFeed.js
 app/libs/VrpPaymentDataFeed.js
 libs/external/dataTables.tableTools.js
+libs/external/jquery.mtz.monthpicker.js
 text!app/views/district.html
 text!app/views/block.html
 app/view-controllers/VrpPaymentViewController.js
