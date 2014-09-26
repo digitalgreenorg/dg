@@ -11,6 +11,7 @@ define(function (require) {
     var BlockDataFeed = require('app/libs/BlockDataFeed');
     var VrpPaymentDataFeed = require('app/libs/VrpPaymentDataFeed');
     var tableTools = require('TableTools');
+    var monthpicker = require('libs/external/jquery.mtz.monthpicker');
     var districtTemplate = require('text!app/views/district.html');
     var blockTemplate = require('text!app/views/block.html');
 
@@ -64,6 +65,11 @@ define(function (require) {
             boundFunctions.onPartnerChosen = this._onPartnerChosen.bind(this);
             references.$partnerList.on('change', this._boundFunctions.onPartnerChosen);
 
+            boundFunctions.onFromInputClick = this._onFromInputClick.bind(this);
+            references.$startPeriod.on('mouseover', boundFunctions.onFromInputClick);
+
+            boundFunctions.onToInputClick = this._onToInputClick.bind(this);
+            references.$endPeriod.on('mouseover', boundFunctions.onToInputClick);
         },
 
         getDistrict: function () {
@@ -84,6 +90,13 @@ define(function (require) {
             this.initSelect2();
         },
 
+        _onFromInputClick: function () {
+            this._renderFromInput();
+        },
+
+        _onToInputClick: function () {
+            this._renderToInput();
+        },
         _onDistrictDataProcessed: function () {
             this.getDistrict();
         },
@@ -96,6 +109,15 @@ define(function (require) {
             this.makeReport();
         },
 
+        _renderFromInput: function(){
+            var references = this._references;
+            references.$startPeriod.monthpicker();
+        },
+
+        _renderToInput: function(){
+            var references = this._references;
+            references.$endPeriod.monthpicker();
+        },
 
         _renderDistrict: function (districtData) {
             var references = this._references;
@@ -224,7 +246,6 @@ define(function (require) {
             var renderData = {
                 report: reportData
             };
-            console.log("data is: ", renderData);
 
             jQuery(references.$starExplanation).removeClass('hidden');
             references.$reportTable.DataTable({
@@ -242,7 +263,7 @@ define(function (require) {
                 ],
                 "aaData": renderData['report'],   //aaData takes array_table_values and push data in the table.
                 "oTableTools": {
-                    "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf"
+                    "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf"
                 }
             });
         },
