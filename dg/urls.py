@@ -74,6 +74,7 @@ urlpatterns = patterns('',
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
+    (r'^analytics/vrptool/',include('vrppayment.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     (r"^", include("mezzanine.urls")),
 
@@ -82,4 +83,3 @@ urlpatterns = patterns('',
 # Static files serving locally
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
-    
