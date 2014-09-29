@@ -253,13 +253,13 @@ define(function (require) {
                 destroy: true,
                 "bAutoWidth": false,
                 "aoColumns": [
-                    {sTitle: "S.No"},
+                    {sTitle: "S.No", sClass: "a-center"},
                     {sTitle: "Name"},
                     {sTitle: "Village"},
-                    {sTitle: "Total Screenings"},
-                    {sTitle: "Successful Screening *"},
-                    {sTitle: "Successful Video Adoptions **"},
-                    {sTitle: "Amount"}
+                    {sTitle: "Total Screenings", sClass: "a-center"},
+                    {sTitle: "Successful Screenings *", sClass: "a-center"},
+                    {sTitle: "Successful Video Adoptions **", sClass: "a-center"},
+                    {sTitle: "Amount (Rs)", sClass: "a-center"}
                 ],
                 "aaData": renderData['report'],   //aaData takes array_table_values and push data in the table.
                 "oTableTools": {
