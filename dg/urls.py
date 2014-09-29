@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 import coco.urls
+import data_upload.urls
 import dimagi.urls
 import feeds.urls
 
@@ -49,8 +50,9 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(coco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
-    (r'^adminblog/', include(admin.site.urls)),
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
+    (r'^adminblog/', include(admin.site.urls)),
+    (r'^data_upload/', include(data_upload.urls)),
     (r'^coco/', include(coco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^analytics/', include('output.urls')),
