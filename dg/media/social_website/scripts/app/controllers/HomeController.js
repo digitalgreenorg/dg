@@ -68,7 +68,7 @@ define(function(require) {
             references.imageCarousel = new NCarousel(references.$imageCarouselWrapper, {
                 transition: 'fade',
                 autoPlay: true,
-                autoPlayDelay: 8000
+                autoPlayDelay: 2000
             });
             
             // play button 
