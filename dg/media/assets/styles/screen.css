@@ -350,7 +350,7 @@ a {
 .nav li a {
     color: #047d0a;
     font-family: source_sans_probold, arial, helvetica, sans-serif;
-    padding-left: 18px;
+    padding-left: 10px;
     display: block;
     padding-top: 6px;
     text-transform: uppercase;
@@ -373,7 +373,7 @@ a {
 }
 
 .nav-size {
-    width: 155px;
+    width: 140px;
 }
 
 .nav > li.logo {
@@ -387,7 +387,7 @@ a {
     margin-top: 14px;
     height: 30px;
     width: 178px;
-    margin-right: 2px;
+    margin-right: 5px;
 }
 
 .nav .nav-small a {
