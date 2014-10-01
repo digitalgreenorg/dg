@@ -1989,6 +1989,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0,1) 90%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dcedcc',GradientType=0 ); /* IE6-8 */
 }
+.image-carousel-caption{
+    position:absolute;
+    bottom:0; 
+    width:100%;
+}
 .js-imageCarousel{
     position: relative;
 }
