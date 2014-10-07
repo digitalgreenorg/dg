@@ -1992,17 +1992,17 @@ ul.carousel-list li{
     bottom:0; 
     width:100%;
 }
-.js-imageCarousel{
+.imageCarousel{
     position: relative;
 }
-.js-imageCarousel .carousel-nav {
+.imageCarousel .carousel-nav {
     /*text-align: center;*/
     position: absolute;
     right: 250px;
     bottom: 10px;
 }
 
-.js-imageCarousel .carousel-nav .carousel-nav-item {
+.imageCarousel .carousel-nav .carousel-nav-item {
     /*display: inline-block;*/
     float: left;
     width: 11px;
@@ -2012,10 +2012,10 @@ ul.carousel-list li{
     cursor: pointer;
 }
 
-.js-imageCarousel .carousel-nav .carousel-nav-item:hover {
+.imageCarousel .carousel-nav .carousel-nav-item:hover {
 }
 
-.js-imageCarousel .carousel-nav .carousel-nav-item-active {
+.imageCarousel .carousel-nav .carousel-nav-item-active {
     background-position: 0 -11px;
     cursor: default;
 }
