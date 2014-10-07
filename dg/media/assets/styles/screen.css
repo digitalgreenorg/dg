@@ -1986,8 +1986,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background: -webkit-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* Chrome10+,Safari5.1+ */
     background: -o-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top, #ffffff 0%,#dcedcc 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0,1) 90%); /* W3C */
+    background: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0,1) 70%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dcedcc',GradientType=0 ); /* IE6-8 */
+}
+ul.carousel-list li{
+    position: relative;
 }
 .image-carousel-caption{
     position:absolute;
