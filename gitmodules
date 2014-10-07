@@ -1,0 +1,3 @@
+[submodule "media/coco/bootstrap"]
+	path = media/coco/bootstrap
+	url = https://github.com/twitter/bootstrap.git
