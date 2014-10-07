@@ -33,7 +33,7 @@ define(function(require) {
             var references = this._references;
 
             references.collectionViewController
-                .setCollectionsPerPage(4)
+                .setCollectionsPerPage(12)
                 .setCollectionsPerRow(4)
                 .setVideosPerDrawer(5);
 
@@ -63,12 +63,12 @@ define(function(require) {
             references.FeaturedCollectionViewController = new FeaturedCollectionViewController($featuredCollectionContainer, $languageCookie);
 
             // dom elements
-            references.$imageCarouselWrapper = jQuery('.js-imageCarousel');
+            references.$mainCarouselWrapper = jQuery('#main-carousel');
 
-            references.imageCarousel = new NCarousel(references.$imageCarouselWrapper, {
-                transition: 'fade',
+            references.mainCarousel = new NCarousel(references.$mainCarouselWrapper, {
+                transition: 'slide',
                 autoPlay: true,
-                autoPlayDelay: 2000
+                autoPlayDelay: 8000
             });
             
             // play button 
