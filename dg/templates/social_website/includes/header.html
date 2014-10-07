@@ -83,12 +83,12 @@
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url 'discover' %}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url 'connect' %}">Connect <span class="nav-sub hdg-f menu-subitem">with our community</span></a></li>
                                     <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url 'tools' %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Careers' %} selected {% endif %}"><a href="{% url 'career' %}?header=true">Work<span class="nav-sub hdg-f menu-subitem">with us</span></a></li>
+                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Careers' %} selected {% endif %}"><a href="{% url 'career' %}">Work<span class="nav-sub hdg-f menu-subitem">with us</span></a></li>
                                     
                                     {% if not request.user.is_authenticated %}
-                                        <li><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
+                                        <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
-                                        <li class="grid-rt" style="float:right;">
+                                        <li class="grid-rt nav-pipe" style="padding-left:51px; padding-bottom:0px;">
                                             <div class="media grid-rt">
                                                 <div class="img">
                                                     {% if "facebook" == request.user.social_auth.all.0.provider %}
