@@ -1,7 +1,7 @@
 'use strict';
 
 requirejs.config({
-    baseUrl: '{{STATIC_URL}}social_website/build/',
+    baseUrl: '{{STATIC_URL}}social_website/scripts/',
 
     paths: {
         framework: 'libs/framework',
