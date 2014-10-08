@@ -9,7 +9,9 @@ requirejs.config({
         jquery: 'libs/external/jquery-1.8.3.min',
         appConfig: 'appConfig',
         appcommon: 'appcommon',
-        bootstrap_modal: 'libs/external/bootstrap-modal'
+        bootstrap_modal: 'libs/external/bootstrap-modal',
+        datatables: 'libs/external/jquery.dataTables',
+        TableTools: 'libs/external/dataTables.tableTools',
     },
     shim: {
         'bootstrap_modal': {

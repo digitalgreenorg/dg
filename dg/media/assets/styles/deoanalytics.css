@@ -117,7 +117,10 @@
 	display:block;
 }
 
-
+.a-center
+{
+    text-align: center;
+}
 
 /* my select */
 .my-select,
