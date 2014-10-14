@@ -39,7 +39,7 @@ def home(request):
     blocks = CocoUser.objects.filter(user__id=user_id). \
              values_list('villages__block__block_name').distinct() 
     
-    block_names = [str(b) for b in zip(*blocks)[0]]
+    block_names = [b for b in zip(*blocks)[0]]
     
     return render_to_response(
            'data_upload/netupload.html',
