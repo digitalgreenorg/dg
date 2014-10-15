@@ -41,6 +41,9 @@ def save_in_db(submission):
                 status, msg = save_mobile_data.save_screening_data(xml_parse)
             elif data[0].attributes["name"].value.lower() == 'adoption form' :
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
+            else:
+                status = error_list['UNIDENTIFIED_FORM']
+                msg = 'Unidentified form. Data Tag with some other form name.'
         except Exception as ex:
             error = "Error in saving submission in save_in_db function " + str(ex)
             sendmail("Exception in Mobile COCO", error)
@@ -65,22 +68,25 @@ def update_submission(obj):
                 type= "Screening"
             elif type.lower() == 'adoption form' or type.lower() == 'adoption':
                 type= "Adoption"
-            
+            else:
+                obj.type = "Other"
+                return
             obj.type = type
-            
+
             obj.username = str(data.getElementsByTagName('n0:username')[0].childNodes[0].nodeValue)
-            
+
             start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
             start_date = str(start[0])
             start_time = str(start[1].split('.')[0])
             obj.start_time = start_date+" "+start_time
-            
+
             end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
             end_date = str(end[0])
             end_time = str(end[1].split('.')[0])
             obj.end_time = end_date+" "+end_time
-           
 
         elif data.getElementsByTagName('device_report'):
             obj.type = "Report"
             obj.app_version = 0
+        else:
+            obj.type = "Other"
