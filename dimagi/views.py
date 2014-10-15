@@ -37,9 +37,9 @@ def save_in_db(submission):
     if xml_parse.getElementsByTagName('data'):
         data = xml_parse.getElementsByTagName('data')
         try:
-            if data[0].attributes["name"].value.lower() == 'screening form' :
+            if data[0].attributes["name"].value.lower() == 'screening form' or data[0].attributes["name"].value.lower() == 'screening form [en]':
                 status, msg = save_mobile_data.save_screening_data(xml_parse)
-            elif data[0].attributes["name"].value.lower() == 'adoption form' :
+            elif data[0].attributes["name"].value.lower() == 'adoption form' or data[0].attributes["name"].value.lower() == 'adoption form [en]':
                 status, msg = save_mobile_data.save_adoption_data(xml_parse)
             else:
                 status = error_list['UNIDENTIFIED_FORM']
@@ -64,10 +64,10 @@ def update_submission(obj):
         data = minidom.parseString(obj.xml_data)
         if data.getElementsByTagName('data'):
             type = data.getElementsByTagName('data')[0].attributes['name'].value
-            if type.lower() == 'screening form' or type.lower() == 'screening':
-                type= "Screening"
-            elif type.lower() == 'adoption form' or type.lower() == 'adoption':
-                type= "Adoption"
+            if type.lower() == 'screening form' or type.lower() == 'screening form [en]' or type.lower() == 'screening':
+                type = "Screening"
+            elif type.lower() == 'adoption form' or type.lower() == 'adoption form [en]' or type.lower() == 'adoption':
+                type = "Adoption"
             else:
                 obj.type = "Other"
                 return
