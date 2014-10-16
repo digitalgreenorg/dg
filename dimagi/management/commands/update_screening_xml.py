@@ -9,7 +9,7 @@ from dimagi.scripts.exception_email import sendmail
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        xml_data = XMLSubmission.objects.exclude(error_code__in=[-7, -1, 1]).exclude(error_code__isnull=True)
+        xml_data = XMLSubmission.objects.filter(error_code__isnull=True)
 
         for obj in xml_data:
             xml_string = obj.xml_data
@@ -19,10 +19,13 @@ class Command(BaseCommand):
             if xml_parse.getElementsByTagName('data'):
                 data = xml_parse.getElementsByTagName('data')
                 try:
-                    if data[0].attributes["name"].value.lower() == 'screening form' :
+                    if data[0].attributes["name"].value.lower() == 'screening form' or data[0].attributes["name"].value.lower() == 'screening form [en]':
                         status, msg = save_mobile_data.save_screening_data(xml_parse)
-                    elif data[0].attributes["name"].value.lower() == 'adoption form' :
+                    elif data[0].attributes["name"].value.lower() == 'adoption form' or data[0].attributes["name"].value.lower() == 'adoption form [en]':
                         status, msg = save_mobile_data.save_adoption_data(xml_parse)
+                    else:
+                        status = error_list['UNIDENTIFIED_FORM']
+                        msg = 'Unidentified form. Data Tag with some other form name.'
                 except Exception as ex:
                     error = "Error in update_screening_xml : " + str(ex)
                     sendmail("Exception in update_screening_xml", error)
