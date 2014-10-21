@@ -48,4 +48,4 @@ def blog_desc(string):
         print ''.join(list_str)
         return ''.join(list_str)
     else:
-        return str
+        return string
