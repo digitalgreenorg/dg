@@ -1,5 +1,5 @@
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'tabletools', 'zeroclipboard'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'TableTools', 'zeroclipboard'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
 
 
     var ListView = Backbone.Layout.extend({
@@ -107,7 +107,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
             });
             aoColumns = this.get_row_header();
             this.$('#list_table')
-                .dataTable({
+                .DataTable({
                     "sDom": 'T<"clear">lfrtip',
                     "bDeferRender": true,
                     "aoColumns": aoColumns,
