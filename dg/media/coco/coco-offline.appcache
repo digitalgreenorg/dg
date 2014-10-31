@@ -3,7 +3,7 @@ CACHE MANIFEST
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
 /media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css
-/media/coco/app/scripts/libs/tabletools_media/css/TableTools.css
+/media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css
 /media/coco/app/scripts/libs/bootstrap/img/glyphicons-halflings.png 
 /media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.woff 
 /media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.ttf
