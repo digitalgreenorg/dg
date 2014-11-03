@@ -1,12 +1,15 @@
 import datetime
 import urllib2
+
 from django.db import models
+from django.db.models.signals import pre_save
+
 from poster.streaminghttp import register_openers
 from poster.encode import multipart_encode
 
 from coco.models import CocoUser
 from people.models import Person
-from geographies.models import Village
+from dimagi.scripts.create_user import create_dimagi_user
 
 error_list = dict({
                    'SUCCESS'               : 0,
@@ -63,27 +66,19 @@ class CommCareProject(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class CommCareUser(models.Model):
     username = models.CharField(max_length=40)
     guid = models.CharField(max_length=100)
     coco_user = models.ForeignKey(CocoUser)
     project = models.ForeignKey(CommCareProject)
-    assigned_villages = models.ManyToManyField(Village, through='CommCareUserVillage')
-    is_user = models.BooleanField(default=False)
+
     class Meta:
-        unique_together = ("project","username")
+        unique_together = ("project", "username")
+
     def __unicode__(self):
         return self.username
-
-class CommCareUserVillage(models.Model):
-    '''
-    This model is used for assigning a user, villages.
-    While the ideal mway would have been to include a ManyToManyField in CommCareUser relating to Village,
-    this was not possible because Village.id is a BigAutoField and user.id is a AutoField.
-    This is a way to simulate ManyToBigManyField.
-    '''
-    village = models.ForeignKey(Village)
-    user = models.ForeignKey(CommCareUser)
+pre_save.connect(create_dimagi_user, sender=CommCareUser)
 
 class CommCareCase(models.Model):
     guid = models.CharField(max_length=100)
@@ -93,4 +88,4 @@ class CommCareCase(models.Model):
     user = models.ForeignKey(CommCareUser)
     class Meta:
        unique_together = ("is_open","person","project","user")
-       
+

@@ -13,19 +13,11 @@ class CommCareProjectAdmin(admin.ModelAdmin):
 
 
 class CommCareUserAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['username', 'guid', 'project', 'is_user', 'coco_user']
+    fieldsets = [(None,  {'fields': ['project', 'coco_user']
                           }
                   )]
-    list_display = ('username', 'project', 'guid', 'is_user')
+    list_display = ('username', 'project', 'guid')
     search_fields = ['username']
-
-
-class CommCareUserVillageAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['user', 'village']
-                          }
-                  )]
-    list_display = ('user', 'village')
-    search_fields = ['user']
 
 
 class CommCareCaseAdmin(admin.ModelAdmin):
