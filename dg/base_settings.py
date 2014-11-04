@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'feeds',
     'deoanalytics',
     'data_upload',
+    'raw_data_analytics',
     'mezzanine.boot',
     'mezzanine.conf',
     'mezzanine.core',
