@@ -773,7 +773,7 @@ a {
     line-height: 1.4;
 }
 
-.copy-italic {
+.copy-italic, em {
 	font-style: italic;
 }
 
@@ -807,7 +807,7 @@ a {
 	margin-bottom: 14px;
 }
 
-.copy-bold{
+.copy-bold, strong{
 	font-weight: bold;
 }
 

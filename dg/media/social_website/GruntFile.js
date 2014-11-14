@@ -66,6 +66,10 @@ module.exports = function( grunt ) {
 	    		          {
                               name: 'controllers/CollectionAddController',
                               exclude: ["main"]
+                          },
+	    		          {
+                              name: 'controllers/DeoAnalyticsController',
+                              exclude: ["main"]
                           }
 	    		         ]
         	}
