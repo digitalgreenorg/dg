@@ -159,6 +159,7 @@ INSTALLED_APPS = (
     'mezzanine.twitter',
     'filebrowser_safe',
     'grappelli_safe',
+    
 )
 
 # Store these package names here as they may change in the future since
