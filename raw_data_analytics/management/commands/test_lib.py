@@ -10,7 +10,6 @@ import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 
-
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
     make_option('-p', '--partner',
@@ -109,10 +108,18 @@ class Command(BaseCommand):
 
     def home(self, selectClause, whereClause, groupbyClause):
         mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
-        query = 'select'+ selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id where'+whereClause+groupbyClause+';'
-        df_mysql = psql.read_sql(query,con=mysql_cn)
+        Screeningquery = 'select'+ selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id where' + whereClause + groupbyClause + ';'
+
+        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id where' + whereClause + groupbyClause + ';'
+
+        df_mysql_screening = psql.read_sql(Screeningquery, con=mysql_cn)
+
+        df_mysql_adoption = psql.read_sql(Adoptionquery, con=mysql_cn)
+
+        df_mysql = pd.merge(df_mysql_screening,df_mysql_adoption, how='outer')
         print 'loaded dataframe from MySQL. records:', len(df_mysql)
-        print query
+        print Screeningquery
         print "################################"
+        print Adoptionquery
         print df_mysql
         mysql_cn.close()
