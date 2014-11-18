@@ -17,6 +17,7 @@ def upload_data(file, user_id, block_id):
     csvfile = open(file, 'rb')
     rows = csv.DictReader(csvfile)    
     
+    #check required fields
     req_field = ['Village_Name','Shg_Name','Member_Name','Member_Surname',
                  'Husband_Father_Name','Husband_Father_Surname']
     

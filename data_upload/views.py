@@ -77,7 +77,7 @@ def file_upload(request):
         try:
             document_raw.save()
             document = file_converter(document_raw)
-        except Exception, err:
+            except Exception, err:
             error_list.append(err)
     
     elif (file_ext == '.csv'):
@@ -131,8 +131,10 @@ def file_converter(document):
     wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)
     
     for rownum in xrange(sh.nrows):
-        wr.writerow(sh.row_values(rownum))
-    
+        temp_list = [unicode(x).replace(u'\xa0', u'') for x in sh.row_values(rownum)]
+        wr.writerow(temp_list)
+
+        
     converted_csv_file.close()
     os.remove(document_docfile_name) #delete the old document
     
