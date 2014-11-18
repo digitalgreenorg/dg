@@ -77,7 +77,7 @@ def file_upload(request):
         try:
             document_raw.save()
             document = file_converter(document_raw)
-            except Exception, err:
+        except Exception, err:
             error_list.append(err)
     
     elif (file_ext == '.csv'):
