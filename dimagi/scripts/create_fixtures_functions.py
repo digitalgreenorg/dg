@@ -58,7 +58,7 @@ def write_village_info(village_dict_list, workbook):
     row += 1
     for village_dict in village_dict_list:
         sheet.write(row, 0, str(village_dict['village_id']))
-        sheet.write(row, 1, str(village_dict['village_name']))
+        sheet.write(row, 1, unicode(village_dict['village_name']))
         sheet.write(row, 2, str(village_dict['username']))
         row += 1
 
@@ -75,9 +75,11 @@ def write_mediator_info(mediator_dict_list, workbook):
     row += 1
     for mediator_dict in mediator_dict_list:
         sheet.write(row, 0, str(mediator_dict['mediator_id']))
-        sheet.write(row, 1, mediator_dict['mediator_name'])
-        sheet.write(row, 2, mediator_dict['village_id'])
-        sheet.write(row, 3, mediator_dict['username'])
+        #print str(mediator_dict['mediator_id'])
+        #print mediator_dict['mediator_id']
+        sheet.write(row, 1, unicode(mediator_dict['mediator_name']))
+        sheet.write(row, 2, str(mediator_dict['village_id']))
+        sheet.write(row, 3, str(mediator_dict['username']))
         row += 1
 
 
@@ -95,7 +97,7 @@ def write_group_info(group_dict_list, workbook):
         sheet.write(row, 0, str(group_dict['group_id']))
         sheet.write(row, 1, unicode(group_dict['group_name']))
         sheet.write(row, 2, str(group_dict['village_id']))
-        sheet.write(row, 3, group_dict['username'])
+        sheet.write(row, 3, str(group_dict['username']))
         row += 1
 
 
@@ -137,7 +139,7 @@ def write_latest_video_info(vid_dict, workbook):
     return sheet
 
 
-def create_fixture(users, project_name, want_seasonal_behavior, list_group, list_village, list_mediator):
+def create_fixture(users, project_name, list_group, list_village, list_mediator):
     # getting user information in list of dictionaries; dictionary contains ursrname, uder_id and villages assigned
     data = []
     for user in users:
@@ -161,19 +163,19 @@ def create_fixture(users, project_name, want_seasonal_behavior, list_group, list
                     village_dict_list.append(village_dict)
 
                 for animator in Animator.objects.filter(assigned_villages=vil):
-                    if (str(animator.id), str(vil.id) not in list_mediator):
+                    if (str(animator.id), str(vil.id)) not in list_mediator:
                         mediator_dict = {}
-                        mediator_dict['mediator_id'] = animator.id,
-                        mediator_dict['mediator_name'] = animator.name,
-                        mediator_dict['village_id'] = vil.id,
+                        mediator_dict['mediator_id'] = animator.id
+                        mediator_dict['mediator_name'] = animator.name
+                        mediator_dict['village_id'] = vil.id
                         mediator_dict['username'] = username
                         mediator_dict_list.append(mediator_dict)
                 for group in PersonGroup.objects.filter(village=vil):
                     if (str(group.id) not in list_group):
                         group_dict = {}
-                        group_dict['group_id'] = group.id,
-                        group_dict['group_name'] = group.name,
-                        group_dict['village_id'] = vil.id,
+                        group_dict['group_id'] = group.id
+                        group_dict['group_name'] = group.group_name
+                        group_dict['village_id'] = vil.id
                         group_dict['username'] = username
                         group_dict_list.append(group_dict)
             write_village_info(village_dict_list, workbook)
