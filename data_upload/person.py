@@ -9,14 +9,15 @@ from coco.models import CocoUser
 ERROR = 0 #variable to identify if any error occurs in uploaded file
 ERROR_FILENAMES = [] #error files to be zipped for download
 SUCCESS_FILENAMES = [] #success files to be zipped for download
-print "1"
+
 def upload_data(file, user_id, block_id):
-    print "2"
+    
     file = os.path.join(dg.settings.MEDIA_ROOT, file)
     
     csvfile = open(file, 'rb')
     rows = csv.DictReader(csvfile)    
     
+    #check required fields
     req_field = ['Village_Name','Shg_Name','Member_Name','Member_Surname',
                  'Husband_Father_Name','Husband_Father_Surname']
     
@@ -31,7 +32,7 @@ def upload_data(file, user_id, block_id):
   
 def execute_upoad(file, user_id, block_id):
     global ERROR
-    print "3"
+    
     user_id = CocoUser.objects.get(user__id=user_id)
     block_id = Block.objects.get(id=block_id)
         
