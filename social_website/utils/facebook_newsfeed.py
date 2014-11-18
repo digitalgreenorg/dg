@@ -23,6 +23,9 @@ def read_data(entry):
     Returns True if the entry is already in the database, therefore the feed has been completely processed.
     Returns False otherwise
     '''
+    if entry['from']['name'] != "Digital Green":
+        return False
+
     has_image = False
     facebookID = entry['id'].split('_')[-1]
     image_url = ""

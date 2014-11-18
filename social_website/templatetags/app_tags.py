@@ -32,3 +32,20 @@ def html_placeholder(field, args=None):
     field.field.widget.attrs.update({"placeholder": args})
     field.field.widget.attrs.update({"class": 'auth'})
     return field
+
+@register.filter(name='blog_desc')
+def blog_desc(string):
+    if(string.find("iframe")>=0):
+        list_str = list(str(string))
+        x = string.find('width')
+        list_str[x+7] = '7'
+        list_str[x+8] = '0'
+        list_str[x+9] = '8'
+        y = string.find('height')
+        list_str[y+8] = '2'
+        list_str[y+9] = '4'
+        list_str[y+10] = '0'
+        print ''.join(list_str)
+        return ''.join(list_str)
+    else:
+        return string

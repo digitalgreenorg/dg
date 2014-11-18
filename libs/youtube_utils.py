@@ -76,7 +76,7 @@ def update_video_youtubeid_s3(vid):
     file_save_dir = os.path.join(MEDIA_ROOT, 'youtube')
 
     cleaned_id = cleanup_youtubeid(vid.youtubeid)
-    if cleaned_id == vid.youtubeid:
+    if cleaned_id != vid.youtubeid:
         vid.youtubeid = cleaned_id
         vid.save()
     #Fetch the video entry from Youtube

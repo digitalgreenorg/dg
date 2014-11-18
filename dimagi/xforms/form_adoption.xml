@@ -31,7 +31,7 @@
 			<bind nodeset="/data/selected_person" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
 			<bind nodeset="/data/selected_video" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" required="true()" />
 			<bind nodeset="/data/list_of_videos" calculate="if(/data/selected_person = '','', instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen)" />
-            <bind nodeset="/data/count_of_videos" calculate="int(count(/data/list_of_videos)" />
+            <bind nodeset="/data/count_of_videos" calculate="int(count(/data/list_of_videos))" />
 			<bind nodeset="/data/form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
 			<bind nodeset="/data/videos_seen_none" relevant="instance('casedb')/casedb/case[id =/data/selected_person]/videos_seen = '' and int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) != 0" />
 			<bind nodeset="/data/no_persons_in_group_form_done" relevant="int(count(instance('casedb')/casedb/case[selected(/data/selected_group,group_id)])) &lt;= 0" />
