@@ -52,7 +52,7 @@ def home(request):
 
     handle(partner_new, state_new, district_new, block_new)
     
-    return render_to_response('raw_data_analytics/netupload.html', context_instance=RequestContext(request))
+    return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
 
 def handle(partner, state, district, block):

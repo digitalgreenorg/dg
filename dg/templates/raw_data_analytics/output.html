@@ -1,0 +1,39 @@
+<HTML>
+	<center>
+		<head>
+			<h1>Raw Data Analytics</h1>
+		</head>
+		<body>
+			<form action="/raw_data_analytics/" method="POST" enctype="multipart/form-data" >
+				{% csrf_token %}
+				<div name="Partions">
+					<h3>Partions:</h3>
+					<p> Partner: <input id="partner" name="partner" type="text"> </p>
+					<p> Country: <input id="country" name="country" type="text"> </p>
+					<p> State: <input id="state" name="state" type="text"> </p>
+					<p> District: <input id="district" name="district" type="text"> </p>
+					<p> Block: <input id="block" name="block" type="text"> </p>
+					<p> Village: <input id="village" name="village" type="text"> </p>
+				</div>
+				<div name="Filters">
+					<h3>Filters:</h3>
+					<input type="checkbox" name="partner_chk" value"partner">Partner &nbsp;
+					<input type="checkbox" name="country_chk" value"country">Country &nbsp;
+					<input type="checkbox" name="state_chk" value"state">State &nbsp;
+					<input type="checkbox" name="district_chk" value"district">District &nbsp;
+					<input type="checkbox" name="block_chk" value"block">Block &nbsp;
+					<input type="checkbox" name="village_chk" value"village">Village &nbsp;
+				</div><br>
+				<div name="Values">
+					<h3> Statistics Required:</h3>
+					<input type="checkbox" name="screening_chk" value"screening">Number of Screenings &nbsp;
+					<input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions &nbsp;
+				</div><br><br>
+				<div name="Buttons">
+					<input type="submit" value="Submit">
+					<input type="reset" value="Reset">
+				</div>
+			</form>	
+		</body>
+	</center>
+</html>
