@@ -79,6 +79,10 @@ def execute(request):
 
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village}
     value = {'nScreening':screening, 'nAdoption':adoption}
+    print "in views-------------------"
+    print partition
+    print "----- inside the views----------------"
+    print value
     management.call_command('test_lib',partition=partition,value=value)
     
     print "bye"

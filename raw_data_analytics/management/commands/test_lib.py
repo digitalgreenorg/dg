@@ -61,26 +61,17 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        temp1 = options
-        temp2 = {}
         fields_dict = {}
-        temp2['nScreening'] = temp1['nScreening']
-        temp2['nAdoption'] = temp1['nAdoption']
+
+        fields_dict['partition'] = options['partition']
         print "%%%%%%%%%%%%%%%%%%%%%"
-        print temp2
-        del temp1['nScreening']
-        del temp1['nAdoption']
-        del temp1['settings']
-        del temp1['pythonpath']
-        del temp1['verbosity']
-        del temp1['traceback']
+        print fields_dict['partition']
+
+        fields_dict['value'] = options['value']
         print "###############"
-        print temp1
-        fields_dict['partition'] = temp1
-        fields_dict['value'] = temp2
+        print fields_dict['value']
 
-        self.handle_controller(fields_dict)
-
+        self.handle_controller(options)
 
     def handle_controller(self, options):
         print "args is -------"
@@ -163,7 +154,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['partner'][1] + '.partner_name'
 
-            if (options['partner']!='null'):
+            if (options['partner']!=True):
                 whereClause += "and " + self.tablesDictionary['partner'][1] + ".partner_name=\'"+options['partner']+"\'"
 
         # If section to check if user has selected country for partition field/filter field
@@ -179,7 +170,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['country'][1] + '.country_name'
 
-            if (options['country']!='null'):
+            if (options['country']!=True):
                 whereClause += "and " + self.tablesDictionary['country'][1] + ".country_name=\'"+options['country']+"\'"
 
         # If section to check if user has selected state for partition field/filter field
@@ -195,7 +186,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['state'][1] + '.state_name'
 
-            if (options['state']!='null'):
+            if (options['state']!=True):
                 whereClause += "and " + self.tablesDictionary['state'][1] + ".state_name=\'"+options['state']+"\'"
 
         # If section to check if user has selected district for partition field/filter field
@@ -211,7 +202,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['district'][1] + '.district_name'
 
-            if (options['district']!='null'):
+            if (options['district']!=True):
                 whereClause += "and " + self.tablesDictionary['district'][1] + ".district_name=\'"+options['district']+"\'"
 
         # If section to check if user has selected block for partition field/filter field
@@ -227,7 +218,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['block'][1] + '.block_name'
 
-            if (options['block']!='null'):
+            if (options['block']!=True):
                 whereClause += "and " + self.tablesDictionary['block'][1] + ".block_name=\'"+options['block']+"\'"
 
         # If section to check if user has selected village for partition field/filter field
@@ -243,7 +234,7 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['village'][1] + '.village_name'
 
-            if (options['village']!='null'):
+            if (options['village']!=True):
                 whereClause += "and " + self.tablesDictionary['village'][1] + ".village_name=\'"+options['village']+"\'"
 
         return [selectClause, whereClause, groupbyClause]
