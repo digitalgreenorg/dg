@@ -9,8 +9,7 @@ import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 from management.commands import test_lib
-
-
+from django.core import management
 
 def home(request):
     
@@ -73,8 +72,7 @@ def home(request):
 
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village}
     value = {'nScreening':screening, 'nAdoption':adoption}
-
-    test_lib.Command.handle(partition,value)
+    management.call_command('test_lib',partition=partition,value=value)
     
     return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
