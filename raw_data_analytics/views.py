@@ -13,10 +13,10 @@ import pandas.io.sql as psql
 
 def home(request):
 
-    partner_new = ''
+    '''partner_new = ''
     state_new = ''
     district_new = ''
-    block_new = ''
+    block_new = '''''
     
     partner = [request.POST.get("partner")]
     state = [request.POST.get("state")]
@@ -29,28 +29,27 @@ def home(request):
     block_chk = [request.POST.get("block_chk")]
     
     if(partner[0]=='' and partner_chk[0]!=None):
-        partner_new = "null"  
+        partner = "null"  
     elif (len(partner)>0 and partner_chk[0]==None) or (len(partner)>0 and partner_chk[0]!=None):
-        partner_new = partner[0]
+        partner = partner[0]
     
     if(state[0]=='' and state_chk[0]!=None):
-        state_new = "null"
+        state = "null"
     elif (len(state)>0 and state_chk[0]==None) or (len(state)>0 and state_chk[0]!=None):
-        state_new = state[0]
-        print state_new
-
+        state = state[0]
+        
     if(district[0]=='' and district_chk[0]!=None):
-        district_new = "null"
+        district = "null"
     elif (len(district)>0 and district_chk[0]==None) or (len(district)>0 and district_chk[0]!=None):
-        district_new = district[0]
+        district = district[0]
 
     if(block[0]=='' and block_chk[0]!=None):
-        block_new = "null"
+        block = "null"
     elif (len(block)>0 and block_chk[0]==None) or (len(block)>0 and block_chk[0]!=None):
-        block_new = block[0]
+        block = block[0]
 
 
-    handle(partner_new, state_new, district_new, block_new)
+    handle(partner=partner, state=state, district=district, block=block)
     
     return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
