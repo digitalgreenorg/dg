@@ -12,7 +12,13 @@ from management.commands import test_lib
 from django.core import management
 
 def home(request):
+    print "hi"
     
+    return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
+
+    
+def execute(request):
+
     partner = [request.POST.get("partner")]
     country = [request.POST.get("country")]
     state = [request.POST.get("state")]
@@ -29,7 +35,8 @@ def home(request):
 
     screening_chk = [request.POST.get("screening_chk")]
     adoption_chk = [request.POST.get("adoption_chk")]
-    
+
+
     if(partner[0]=='' and partner_chk[0]!=None):
         partner = True 
     elif (len(partner)>0 and partner_chk[0]==None) or (len(partner)>0 and partner_chk[0]!=None):
@@ -74,6 +81,7 @@ def home(request):
     value = {'nScreening':screening, 'nAdoption':adoption}
     management.call_command('test_lib',partition=partition,value=value)
     
+    print "bye"
     return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
 
