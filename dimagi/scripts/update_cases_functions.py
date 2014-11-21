@@ -6,6 +6,7 @@ import json
 import requests
 from requests.auth import HTTPDigestAuth
 
+from dg.settings import DIMAGI_USERNAME, DIMAGI_PASSWORD
 from write_xml_content import write_close_person_content, write_closing_meta, write_opening_meta, write_person_content, write_person_update_content 
 
 
@@ -46,7 +47,7 @@ def update_case(cases, filename, project_name):
 
         #check for changes in the cases in dimagi
 
-        r = requests.get(url, auth=HTTPDigestAuth('nandinibhardwaj@gmail.com','digitalgreen'))
+        r = requests.get(url, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
         data = json.loads(r.content)
         video_seen_in_case = sorted(data['properties']['videos_seen'].split())
         video_seen_in_db = sorted(videos_seen.split())

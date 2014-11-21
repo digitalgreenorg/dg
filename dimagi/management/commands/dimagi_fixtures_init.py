@@ -1,3 +1,4 @@
+from datetime import datetime
 from optparse import make_option
 import json
 import requests
@@ -5,6 +6,7 @@ from requests.auth import HTTPDigestAuth
 from django.core.management.base import BaseCommand, CommandError
 from dimagi.models import CommCareProject, CommCareUser
 from dimagi.scripts.create_fixtures_functions import create_fixture, create_fixture_video
+from dg.settings import DIMAGI_USERNAME, DIMAGI_PASSWORD
 
 
 class Command(BaseCommand):
@@ -45,7 +47,7 @@ class Command(BaseCommand):
 
             if Update:
                 while(True):
-                    r = requests.get(url_group, auth=HTTPDigestAuth('nandinibhardwaj@gmail.com', 'digitalgreen'))
+                    r = requests.get(url_group, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
                     group_data = json.loads(r.content)
                     for obj in group_data['objects']:
                         list_group.append(str(obj['fields']['id']))
@@ -55,7 +57,7 @@ class Command(BaseCommand):
                         break
                 print len(list_group)
                 while(True):
-                    r = requests.get(url_village, auth=HTTPDigestAuth('nandinibhardwaj@gmail.com', 'digitalgreen'))
+                    r = requests.get(url_village, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
                     village_data = json.loads(r.content)
                     for obj in village_data['objects']:
                         list_village.append(str(obj['fields']['id']))
@@ -65,7 +67,7 @@ class Command(BaseCommand):
                         break
                 print len(list_village)
                 while(True):
-                    r = requests.get(url_mediator, auth=HTTPDigestAuth('nandinibhardwaj@gmail.com', 'digitalgreen'))
+                    r = requests.get(url_mediator, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
                     mediator_data = json.loads(r.content)
                     for obj in mediator_data['objects']:
                         list_mediator.append((str(obj['fields']['id']), str(obj['fields']['village_id'])))
@@ -75,4 +77,6 @@ class Command(BaseCommand):
                         break
                 print len(list_mediator)
             create_fixture(commcare_users, commcare_project_name, list_group, list_village, list_mediator)
-            create_fixture_video(commcare_project_name)
+            # Run Video Fixtures on 5 Day of the Week
+            if (datetime.utcnow().weekday() % 5) == 0 or not Update:
+                create_fixture_video(commcare_project_name)

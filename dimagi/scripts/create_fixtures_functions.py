@@ -3,11 +3,14 @@ from datetime import datetime, timedelta
 import os
 import xlsxwriter
 
+import requests
+from requests.auth import HTTPDigestAuth
+
 from activities.models import PersonMeetingAttendance, Screening
 from geographies.models import Village
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
-from dg.settings import MEDIA_ROOT
+from dg.settings import MEDIA_ROOT, DIMAGI_USERNAME, DIMAGI_PASSWORD
 
 from dimagi.models import CommCareUser
 
@@ -182,6 +185,12 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
             write_mediator_info(mediator_dict_list, workbook)
             write_group_info(group_dict_list, workbook)
             workbook.close()
+            # Uploading Fixtures to Commcare
+            url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
+            payload = {'replace': 'false'}
+            files = {'file-to-upload': open(filename, 'rb')}
+            r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
+            r.content
         else:
             print 'No villages assigned to %s' % user.username
 
@@ -229,3 +238,11 @@ def create_fixture_video(project_name):
                                         'high_val': '2020-01-01'})
     write_latest_video_info(video_schedule_list_of_dict, workbook)
     workbook.close()
+
+    # Uploading Fixtures to Commcare
+    url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
+    payload = {'replace': 'True'}
+    files = {'file-to-upload': open(filename, 'rb')}
+
+    r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
+
