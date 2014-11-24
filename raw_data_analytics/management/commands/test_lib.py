@@ -10,130 +10,83 @@ import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 
+
 class Command(BaseCommand):
+    # Description for the tablesDictionary
+    # key - possible field names that can be included in the partition field.
+    # value - (table_name to be used, <symbol> to be used while making query for data extraction)
+    tablesDictionary = {'partner': ('programs_partner', 'P'), 'country': ('geographies_country', 'C'),
+                        'state': ('geographies_state', 'S'), 'district': ('geographies_district', 'D'),
+                        'block': ('geographies_block', 'B'), 'village': ('geographies_village', 'V')}
 
-    tablesDictionary = {'partner':('programs_partner','P'),'country':('geographies_country','C'),'state':('geographies_state','S'),'district':('geographies_district','D'),'block':('geographies_block','B'),'village':('geographies_village','V')}
+    # Description for generalPartitionList Dictionary ---
+    # key - column to be included as partition field in dataframe
+    # value - False - default value
+    generalPartitionList = {'partner': False, 'country': False, 'state': False, 'district': False, 'block': False,
+                            'village': False}
 
-    generalPartitionList = {'partner':False, 'country':False, 'state':False, 'district':False, 'block':False, 'village':False}
-    generalValueList = {'nScreening':False, 'nAdoption':False}
+    # Description for generalValueList Dictionary---
+    # key - Column to be included as Value field in dataframe
+    # value - function name which is being used to make query for the data extraction corresponding to the key
+    generalValueList = {'nScreening': 'nScreeningDF', 'nAdoption': 'nAdoptionDF'}
 
+    # --- defining options for the command line exceution of the library ---
     option_list = BaseCommand.option_list + (
-    make_option('-p', '--partner',
+        make_option('-p', '--partner',
                     action='store',
                     default=False,
                     dest='partner',
                     help='Takes partner name as input for filter'),
-    make_option('-c', '--country',
+        make_option('-c', '--country',
                     action='store',
                     default=False,
                     dest='country',
                     help='Takes country name as input for filter'),
-    make_option('-s', '--state',
+        make_option('-s', '--state',
                     action='store',
                     default=False,
                     dest='state',
                     help='Takes state name as input for filter'),
-    make_option('-d', '--district',
+        make_option('-d', '--district',
                     action='store',
                     default=False,
                     dest='district',
                     help='Takes district name as input for filter'),
-    make_option('-b', '--block',
+        make_option('-b', '--block',
                     action='store',
                     default=False,
                     dest='block',
                     help='Takes block name as input for filter'),
-    make_option('-g', '--village',
+        make_option('-g', '--village',
                     action='store',
                     default=False,
                     dest='village',
                     help='Takes village name as input for filter'),
-    make_option('-w', '--nScreening',
+        make_option('-w', '--nScreening',
                     action='store',
                     default=False,
                     dest='nScreening',
                     help='Takes nScreening as true or false to decide its inclusion in dataframe'),
-    make_option('-u', '--nAdoption',
+        make_option('-u', '--nAdoption',
                     action='store',
                     default=False,
                     dest='nAdoption',
                     help='Takes nAdoption as true or false to decide its inclusion in dataframe'),
     )
+    # --- options list for command line ends here ---
 
+    # Function accepts the inputs and pass it to handle_controller for further processing
     def handle(self, *args, **options):
         fields_dict = {}
-
         fields_dict['partition'] = options['partition']
         print "%%%%%%%%%%%%%%%%%%%%%"
         print fields_dict['partition']
-
         fields_dict['value'] = options['value']
         print "###############"
         print fields_dict['value']
-
         self.handle_controller(options)
 
-    def handle_controller(self, options):
-        print "args is -------"
-        print
-        print "options is ---------"
-        print options
-        print "$$$$$$$$$$$$$$$$$$$"
-
-        if self.check_partitionfield_validity(options['partition']):
-            queryComponents = self.make_query_components(options['partition'])
-            if self.check_valuefield_validity(options['value']):
-                self.home(queryComponents[0], queryComponents[1], queryComponents[2])
-            else:
-                print "Check the value field inputs again"
-        else:
-            print "Check the partition field inputs again"
-
-
-
-    def home(self, selectClause, whereClause, groupbyClause):
-
-        # Make query to extract data and create dataframe for further processing
-        Screeningquery = 'select'+ selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
-        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
-
-        df_mysql_screening = self.runQuery(Screeningquery)
-        df_mysql_adoption = self.runQuery(Adoptionquery)
-
-        df_mysql = pd.merge(df_mysql_screening,df_mysql_adoption, how='outer')
-        print 'loaded dataframe from MySQL. records:', len(df_mysql)
-        print Screeningquery
-        print "################################"
-        print Adoptionquery
-        print df_mysql
-
-    def runQuery(self, query):
-        # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
-        temp_df = psql.read_sql(query, con=mysql_cn)
-        mysql_cn.close()
-        return temp_df
-
-    def check_partitionfield_validity(self, partitionField):
-        print "hurrrr"
-        print partitionField
-        if set(partitionField.keys()).issubset(self.generalPartitionList.keys()):
-            print "Vella"
-            return True
-        else:
-            print "Delha"
-            return False
-
-    def check_valuefield_validity(self, valueField):
-        if set(valueField.keys()).issubset(self.generalValueList.keys()):
-            return True
-        else:
-            return False
-
     def make_query_components(self, options):
-        """ Add similar IF block for any new partition field and to add in groupbyClause, selectClause and whereClause """
-
-        print "hello ji"
         print options
         gflag = 0
         sflag = 0
@@ -141,8 +94,10 @@ class Command(BaseCommand):
         whereClause = " 1=1 "
         selectClause = ''
 
+        """ Add similar IF block for any new partition field and to add in groupbyClause, selectClause and whereClause """
+
         # If section to check if user has selected partner for partition field/filter field
-        if(options['partner']!=False):
+        if (options['partner'] != False):
             if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['partner'][1] + '.partner_name'
             else:
@@ -154,11 +109,12 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['partner'][1] + '.partner_name'
 
-            if (options['partner']!=True):
-                whereClause += "and " + self.tablesDictionary['partner'][1] + ".partner_name=\'"+options['partner']+"\'"
+            if (options['partner'] != True):
+                whereClause += "and " + self.tablesDictionary['partner'][1] + ".partner_name=\'" + options[
+                    'partner'] + "\'"
 
         # If section to check if user has selected country for partition field/filter field
-        if(options['country']!=False):
+        if (options['country'] != False):
             if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['country'][1] + '.country_name'
             else:
@@ -170,11 +126,12 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['country'][1] + '.country_name'
 
-            if (options['country']!=True):
-                whereClause += "and " + self.tablesDictionary['country'][1] + ".country_name=\'"+options['country']+"\'"
+            if (options['country'] != True):
+                whereClause += "and " + self.tablesDictionary['country'][1] + ".country_name=\'" + options[
+                    'country'] + "\'"
 
         # If section to check if user has selected state for partition field/filter field
-        if(options['state']!=False):
+        if (options['state'] != False):
             if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['state'][1] + '.state_name'
             else:
@@ -186,12 +143,12 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['state'][1] + '.state_name'
 
-            if (options['state']!=True):
-                whereClause += "and " + self.tablesDictionary['state'][1] + ".state_name=\'"+options['state']+"\'"
+            if (options['state'] != True):
+                whereClause += "and " + self.tablesDictionary['state'][1] + ".state_name=\'" + options['state'] + "\'"
 
         # If section to check if user has selected district for partition field/filter field
-        if(options['district']!=False):
-            if gflag==1:
+        if (options['district'] != False):
+            if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['district'][1] + '.district_name'
             else:
                 gflag = 1
@@ -202,11 +159,12 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['district'][1] + '.district_name'
 
-            if (options['district']!=True):
-                whereClause += "and " + self.tablesDictionary['district'][1] + ".district_name=\'"+options['district']+"\'"
+            if (options['district'] != True):
+                whereClause += "and " + self.tablesDictionary['district'][1] + ".district_name=\'" + options[
+                    'district'] + "\'"
 
         # If section to check if user has selected block for partition field/filter field
-        if(options['block']!=False):
+        if (options['block'] != False):
             if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['block'][1] + '.block_name'
             else:
@@ -218,11 +176,11 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['block'][1] + '.block_name'
 
-            if (options['block']!=True):
-                whereClause += "and " + self.tablesDictionary['block'][1] + ".block_name=\'"+options['block']+"\'"
+            if (options['block'] != True):
+                whereClause += "and " + self.tablesDictionary['block'][1] + ".block_name=\'" + options['block'] + "\'"
 
         # If section to check if user has selected village for partition field/filter field
-        if(options['village']!=False):
+        if (options['village'] != False):
             if gflag == 1:
                 groupbyClause += ',' + self.tablesDictionary['village'][1] + '.village_name'
             else:
@@ -234,7 +192,83 @@ class Command(BaseCommand):
                 sflag = 1
                 selectClause = ' ' + self.tablesDictionary['village'][1] + '.village_name'
 
-            if (options['village']!=True):
-                whereClause += "and " + self.tablesDictionary['village'][1] + ".village_name=\'"+options['village']+"\'"
+            if (options['village'] != True):
+                whereClause += "and " + self.tablesDictionary['village'][1] + ".village_name=\'" + options[
+                    'village'] + "\'"
 
         return [selectClause, whereClause, groupbyClause]
+
+    # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
+    def check_partitionfield_validity(self, partitionField):
+        print partitionField
+        if set(partitionField.keys()).issubset(self.generalPartitionList.keys()):
+            return True
+        else:
+            return False
+
+    # Function to check validity of the value field inputs by user by comparing with the generalValueList
+    def check_valuefield_validity(self, valueField):
+        if set(valueField.keys()).issubset(self.generalValueList.keys()):
+            return True
+        else:
+            return False
+
+    # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
+    def runQuery(self, query):
+        # Make connection with the database
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
+        # Making dataframe
+        temp_df = psql.read_sql(query, con=mysql_cn)
+        mysql_cn.close()
+        return temp_df
+
+    def nScreeningDF(self, selectClause, whereClause, groupbyClause):
+        Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
+        dfScreening = self.runQuery(Screeningquery)
+        return dfScreening
+
+    def nAdoptionDF(self, selectClause, whereClause, groupbyClause):
+        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
+        dfAdoption = self.runQuery(Adoptionquery)
+        return dfAdoption
+
+    def handle_controller(self, options):
+        # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
+        # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
+        print "options is ---------"
+        print options
+        print "$$$$$$$$$$$$$$$$$$$"
+        value_list_to_find = []
+
+        # --- checking validity of the partition fields and value fields entered by user ---
+        if self.check_partitionfield_validity(options['partition']):
+            queryComponents = self.make_query_components(options['partition'])
+            if self.check_valuefield_validity(options['value']):
+                for k, v in options['value'].items():
+                    if v:
+                        value_list_to_find.append(k)
+            else:
+                print "Check the value field inputs again"
+        else:
+            print "Check the partition field inputs again"
+        # --- checking of validity ends here ---
+
+        # --- creation of dataframe begins here ----
+        df = pd.DataFrame()
+        for element in value_list_to_find:
+            call_function = getattr(self, self.generalValueList[element])
+            if df.empty:
+                df = df.append(call_function(queryComponents[0], queryComponents[1], queryComponents[2]))
+            else:
+                df = pd.merge(df, call_function(queryComponents[0], queryComponents[1], queryComponents[2]),
+                              how='outer')
+        # --- creation of dataframe ends here ---
+        print df
+
+
+    # This function is not being used for now but not being removed for future reference. Will be erased in production mode
+    def home(self, selectClause, whereClause, groupbyClause):
+        # Make query to extract data and create dataframe for further processing
+        # print 'loaded dataframe from MySQL. records:', len(df_mysql)
+        print "################################"
+
