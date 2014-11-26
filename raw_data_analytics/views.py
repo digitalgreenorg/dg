@@ -10,6 +10,9 @@ import MySQLdb
 import pandas.io.sql as psql
 from management.commands import test_lib
 from django.core import management
+import datetime
+
+
 
 def home(request):
         
@@ -35,6 +38,8 @@ def execute(request):
     screening_chk = [request.POST.get("screening_chk")]
     adoption_chk = [request.POST.get("adoption_chk")]
 
+    from_date = [request.POST.get("from_date")]
+    to_date = [request.POST.get("to_date")]
 
     if(partner[0]=='' and partner_chk[0]!=None):
         partner = True 
@@ -88,13 +93,24 @@ def execute(request):
     else:
         adoption = False
 
+    if(from_date[0]!=''):
+        from_date = from_date[0]  
+    else:
+        from_date = '2004-01-01'
+        
+    if(to_date[0]!=''):
+        to_date = to_date[0]
+    else:
+        now = datetime.datetime.now()
+        to_date = '%s-%s-%s' %(now.year, now.month, now.day)
+       
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village}
     value = {'nScreening':screening, 'nAdoption':adoption}
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
     print value
-    management.call_command('test_lib',partition=partition,value=value)
+    management.call_command('test_lib',from_date, to_date, partition=partition,value=value)
     
     return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
