@@ -50,9 +50,11 @@ def execute_upoad(file, user_id, block_id):
     csvfile = open(file, 'rb')
     rows_villages = csv.DictReader(csvfile)
         
-    village_querry_set = Village.objects.values('village_name','id')
+    village_querry_set = Village.objects.values_list('village_name','id')
     village_map = dict(village_querry_set)
-    
+    print village_map
+    print village_querry_set
+
     i = 0 
     for row in rows_villages:
         if str(row['Village_Name']) not in village_map:
@@ -66,7 +68,7 @@ def execute_upoad(file, user_id, block_id):
                 village_map[row['Village_Name']] = village.id
                 wrtr_success.writerow([i, row['Village_Name']])
                 village_success_file.flush()
-                print 'pushing', row['Village_Name']
+                #print 'pushing', row['Village_Name']
             
             except Exception as e:
                 ERROR += 1
@@ -90,7 +92,7 @@ def execute_upoad(file, user_id, block_id):
     csvfile = open(file, 'rb')
     rows_groups = csv.DictReader(csvfile)
 
-    group_querry_set = PersonGroup.objects.values('group_name','id')
+    group_querry_set = PersonGroup.objects.values_list('group_name','id')
     group_map = dict(group_querry_set)
     
     i = 0
@@ -107,7 +109,7 @@ def execute_upoad(file, user_id, block_id):
                 group_map[row['Shg_Name'] + row['Village_Name']] = group.id
                 wrtr_success.writerow([i,row['Shg_Name']])
                 group_success_file.flush()
-                print 'pushing', row['Shg_Name']
+                #print 'pushing', row['Shg_Name']
             
             except Exception as e:
                 ERROR += 1
@@ -150,7 +152,7 @@ def execute_upoad(file, user_id, block_id):
             person.save()
             wrtr_success.writerow([i, person_name])
             person_success_file.flush()
-            print 'pushing', row['Member_Name']
+            #print 'pushing', row['Member_Name']
         
         except Exception as e:
             ERROR += 1
