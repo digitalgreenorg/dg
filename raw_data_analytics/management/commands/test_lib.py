@@ -10,7 +10,6 @@ import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 
-
 class Command(BaseCommand):
     # Description for the tablesDictionary
     # key - possible field names that can be included in the partition field.
@@ -84,7 +83,7 @@ class Command(BaseCommand):
         fields_dict['value'] = options['value']
         print "###############"
         print fields_dict['value']
-        self.handle_controller(options)
+        self.handle_controller(args, options)
 
     def make_query_components(self, options):
         print options
@@ -222,17 +221,17 @@ class Command(BaseCommand):
         mysql_cn.close()
         return temp_df
 
-    def nScreeningDF(self, selectClause, whereClause, groupbyClause):
-        Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
+    def nScreeningDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
+        Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and SC.date between' + sdate + 'and' + edate + groupbyClause + ';'
         dfScreening = self.runQuery(Screeningquery)
         return dfScreening
 
-    def nAdoptionDF(self, selectClause, whereClause, groupbyClause):
-        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + groupbyClause + ';'
+    def nAdoptionDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
+        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and ADP.date_of_adoption between' + sdate + 'and' + edate +  groupbyClause + ';'
         dfAdoption = self.runQuery(Adoptionquery)
         return dfAdoption
 
-    def handle_controller(self, options):
+    def handle_controller(self, args, options):
         # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
         # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
         print "options is ---------"
@@ -258,13 +257,16 @@ class Command(BaseCommand):
         for element in value_list_to_find:
             call_function = getattr(self, self.generalValueList[element])
             if df.empty:
-                df = df.append(call_function(queryComponents[0], queryComponents[1], queryComponents[2]))
+                df = df.append(call_function(queryComponents[0], queryComponents[1], queryComponents[2], args[0], args[1]))
             else:
-                df = pd.merge(df, call_function(queryComponents[0], queryComponents[1], queryComponents[2]),
+                df = pd.merge(df, call_function(queryComponents[0], queryComponents[1], queryComponents[2], args[0], args[1]),
                               how='outer')
         # --- creation of dataframe ends here ---
         print df
+        self.make_excel(df)
 
+    def make_excel(self,df):
+        df.to_excel('library_data.xlsx','Sheet1')
 
     # This function is not being used for now but not being removed for future reference. Will be erased in production mode
     def home(self, selectClause, whereClause, groupbyClause):
