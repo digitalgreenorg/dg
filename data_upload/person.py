@@ -52,8 +52,6 @@ def execute_upoad(file, user_id, block_id):
         
     village_querry_set = Village.objects.values_list('village_name','id')
     village_map = dict(village_querry_set)
-    print village_map
-    print village_querry_set
 
     i = 0 
     for row in rows_villages:
