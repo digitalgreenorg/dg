@@ -22,8 +22,10 @@ def upload_data(file, user_id, block_id):
                  'Husband_Father_Name','Husband_Father_Surname']
     
     for row in rows:
-        if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
+        if row.keys() <= req_field:
+        #if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
             execute_upoad(file, user_id, block_id)
+            print row.keys()
             break
         else:
             return False
