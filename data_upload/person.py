@@ -25,7 +25,6 @@ def upload_data(file, user_id, block_id):
         if row.keys() <= req_field:
         #if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
             execute_upoad(file, user_id, block_id)
-            print row.keys()
             break
         else:
             return False
