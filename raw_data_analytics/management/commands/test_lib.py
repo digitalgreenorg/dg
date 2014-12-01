@@ -9,6 +9,7 @@ from geographies.models import District, Block
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
+import xlsxwriter
 
 class Command(BaseCommand):
     # Description for the tablesDictionary
@@ -222,12 +223,12 @@ class Command(BaseCommand):
         return temp_df
 
     def nScreeningDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
-        Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and SC.date between' + sdate + 'and' + edate + groupbyClause + ';'
+        Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and SC.date between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
         dfScreening = self.runQuery(Screeningquery)
         return dfScreening
 
     def nAdoptionDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
-        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and ADP.date_of_adoption between' + sdate + 'and' + edate +  groupbyClause + ';'
+        Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and ADP.date_of_adoption between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
         dfAdoption = self.runQuery(Adoptionquery)
         return dfAdoption
 
@@ -267,6 +268,9 @@ class Command(BaseCommand):
 
     def make_excel(self,df):
         df.to_excel('library_data.xlsx','Sheet1')
+
+
+
 
     # This function is not being used for now but not being removed for future reference. Will be erased in production mode
     def home(self, selectClause, whereClause, groupbyClause):
