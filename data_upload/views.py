@@ -2,7 +2,7 @@ import os.path
 import StringIO
 import zipfile
 import xlrd
-import csv
+import unicodecsv as csv
 
 from django import forms
 
