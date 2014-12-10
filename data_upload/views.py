@@ -129,6 +129,7 @@ def file_converter(document):
     converted_csv_file = open(os.path.splitext(document_docfile_name)[0]+ \
                              '.csv', 'wb')
     wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_ALL)
+    #quote to none if char escape error pops up
     
     for rownum in xrange(sh.nrows):
         temp_list = [unicode(x).replace(u'\xa0', u'') for x in sh.row_values(rownum)]
