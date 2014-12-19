@@ -1,6 +1,6 @@
 import os.path
 import dg.settings
-import csv
+import unicodecsv as csv
 
 from geographies.models import Village, Block
 from people.models import PersonGroup, Person
