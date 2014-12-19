@@ -114,7 +114,7 @@ define(function(require) {
         
         _initVideoPlayer: function() {
 
-            var videoId = 'RjMTx1fzpMU';
+            var videoId = 'JYkaf4ucaSc';
 
             var params = { allowScriptAccess: "always" };
             var atts = { id: "player", 
