@@ -301,6 +301,24 @@ class Command(BaseCommand):
 
     def make_excel(self,df):
         df.to_excel('library_data.xlsx','Sheet1')
+        df.to_html('library_data.html')
+        header = '''<html>
+                    <head><center>
+                        <h2> Data Result </h2>
+                        <div name="download_excel">
+                            <a href="/raw_data_analytics/download">Download result as an excel file</a>
+                        </div></center>
+                    </head>
+                    <body>'''
+        footer = '''</body></html>'''
+
+        html_file = 'dg/templates/raw_data_analytics/library_data.html'
+
+        with open(html_file, 'w') as f:
+            f.write(header)
+            f.write(df.to_html())
+            f.write(footer)
+        f.close()
 
     # This function is not being used for now but not being removed for future reference. Will be erased in production mode
     def home(self, selectClause, whereClause, groupbyClause):

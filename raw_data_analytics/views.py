@@ -111,8 +111,31 @@ def execute(request):
     print "----- inside the views----------------"
     print value
     management.call_command('test_lib',from_date, to_date, partition=partition,value=value)
+
+
+#def df_html_download(request):
+    header = '''<html>
+                    <head>
+                        <h2> Data Result </h2>
+                        <div name="download_excel">
+                            <a href="/raw_data_analytics/download">Download result as an excel file</a>
+                        </div>
+                    </head>
+                    <body>'''
+    footer = '''</body></html>'''
+
+    html_file = 'dg/templates/raw_data_analytics/library_data.html'
+
+    with open(html_file, 'w') as f:
+        f.write(header)
+        #f.write(df.to_html(classes='df'))
+        f.write(footer)
+
+
+#    df.to_html('dg/templates/raw_data_analytics/library_data.html')
+
     
-    return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
+    return render_to_response('raw_data_analytics/library_data.html', context_instance=RequestContext(request))
 
 
 
