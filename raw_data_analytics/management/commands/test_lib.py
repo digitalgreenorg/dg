@@ -12,23 +12,29 @@ import pandas.io.sql as psql
 import xlsxwriter
 
 class Command(BaseCommand):
+
     # Description for the tablesDictionary
     # key - possible field names that can be included in the partition field.
     # value - (table_name to be used, <symbol> to be used while making query for data extraction)
     tablesDictionary = {'partner': ('programs_partner', 'P'), 'country': ('geographies_country', 'C'),
                         'state': ('geographies_state', 'S'), 'district': ('geographies_district', 'D'),
-                        'block': ('geographies_block', 'B'), 'village': ('geographies_village', 'V')}
+                        'block': ('geographies_block', 'B'), 'village': ('geographies_village', 'V'),
+                        'mediator': ('people_mediator','M'), 'adoption':('activities_personadoptpractice','PAP'),
+                        'person_attending': ('activities_personmeetingattendance','PMA'),'video':('videos_video','VV'),
+                        'screening': ('activites_screening','SC'),'people':('people_person','PP')}
 
     # Description for generalPartitionList Dictionary ---
     # key - column to be included as partition field in dataframe
     # value - False - default value
-    generalPartitionList = {'partner': False, 'country': False, 'state': False, 'district': False, 'block': False,
-                            'village': False}
+    partition_list_all = {'partner': False, 'country': False, 'state': False, 'district': False, 'block': False,
+                            'village': False,'mediator': False, 'video': False, 'practice': False, 'practiceSector': False}
 
     # Description for generalValueList Dictionary---
     # key - Column to be included as Value field in dataframe
     # value - function name which is being used to make query for the data extraction corresponding to the key
-    generalValueList = {'nScreening': 'nScreeningDF', 'nAdoption': 'nAdoptionDF'}
+    value_list_all = {'nScreening': 'nScreeningDF', 'nAdoption': 'nAdoptionDF'}
+
+    category_all = {'geographies':False, 'people':False, 'video':False, 'activities':False}
 
     # --- defining options for the command line exceution of the library ---
     option_list = BaseCommand.option_list + (
@@ -62,6 +68,16 @@ class Command(BaseCommand):
                     default=False,
                     dest='village',
                     help='Takes village name as input for filter'),
+        make_option('-m', '--mediator',
+                    action='store',
+                    default=False,
+                    dest='mediator',
+                    help='Takes mediator name as input for filter'),
+        make_option('-f', '--video',
+                    action='store',
+                    default=False,
+                    dest='video',
+                    help='Takes video name as input for filter'),
         make_option('-w', '--nScreening',
                     action='store',
                     default=False,
@@ -196,6 +212,23 @@ class Command(BaseCommand):
                 whereClause += "and " + self.tablesDictionary['village'][1] + ".village_name=\'" + options[
                     'village'] + "\'"
 
+        # If section to check if user has selected mediator for partition field/filter field
+        if (options['mediator'] != False):
+            if gflag == 1:
+                groupbyClause += ',' + self.tablesDictionary['mediator'][1] + '.name'
+            else:
+                gflag = 1
+                groupbyClause = ' group by ' + self.tablesDictionary['mediator'][1] + '.name'
+            if sflag == 1:
+                selectClause += ',' + self.tablesDictionary['mediator'][1] + '.name '
+            else:
+                sflag = 1
+                selectClause = ' ' + self.tablesDictionary['mediator'][1] + '.name'
+
+            if (options['mediator'] != True):
+                whereClause += "and " + self.tablesDictionary['mediator'][1] + ".name=\'" + options[
+                    'mediator'] + "\'"
+
         return [selectClause, whereClause, groupbyClause]
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
@@ -269,12 +302,12 @@ class Command(BaseCommand):
     def make_excel(self,df):
         df.to_excel('library_data.xlsx','Sheet1')
 
-
-
-
     # This function is not being used for now but not being removed for future reference. Will be erased in production mode
     def home(self, selectClause, whereClause, groupbyClause):
         # Make query to extract data and create dataframe for further processing
         # print 'loaded dataframe from MySQL. records:', len(df_mysql)
         print "################################"
 
+    def make_from_part(self, options):
+        if(options['partner']):
+            join_tables_list = [self.tablesDictionary['partner'][0]]
