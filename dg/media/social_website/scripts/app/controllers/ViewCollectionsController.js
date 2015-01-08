@@ -33,7 +33,7 @@ define(function(require) {
         constructor: function(bootstrapConfig, globalHelpers) {
             this.base(bootstrapConfig, globalHelpers);
 
-            this.onYouTubePlayerAPIReady();
+            this._initVideoPlayer();
             
             stLight.options({
             	publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", 
@@ -150,157 +150,65 @@ define(function(require) {
             }
         },
 
-        onYouTubePlayerAPIReady: function() {
+        _initVideoPlayer: function() {
             var videoId = this._references.$videoTarget.data('videoId');
             var that = this;
             if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
                 window.onYouTubeIframeAPIReady = function() {
-                    var player = new YT.Player('video-target', {
-                        height: '395',
-                        width: '703',
-                        videoId: videoId,
-                        events: {
-                          'onReady': that._onYouTubePlayerReady,
-                          'onStateChange': function(newState){
-                              switch (newState.data) {
-                                  // playback completed/stopped
-                                  case 0:
-                                      var now_playing_video = jQuery('.now-playing').closest('li');
-                                      var next_video = now_playing_video.next();
-                                      if (next_video.length == 0) {
-                                          /* End of current slide or this is the last video altogether */
-                                          var next_slide = now_playing_video.closest('ul').closest('li').next();
-                                          if (next_slide.length == 0) {
-                                              /* Last video - go back to the first video */
-                                              next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                                          }
-                                          next_video = next_slide.find('ul > li:first-child');
-                                      }
-                                      window.location.href = next_video.find('.vidDrawer-image a').attr('href');
-                                  // stop the interval and manually send an update
-                                  case 2:
-                                      that._stopUpdateInterval();
-                                      that._updateVideoWatchedTime();
-                                      break;
-                                  // playback started
-                                  case 1:
-                                      that._startUpdateInterval();
-                                      break;
-                              }
-                          }
-                        }
-                      });
+                    that.loadPlayer(videoId);
                 };
-
                 $.getScript('//www.youtube.com/iframe_api');
-              } else {
-                  var player = new YT.Player('video-target', {
-                      height: '395',
-                      width: '703',
-                      videoId: videoId,
-                      events: {
-                        'onReady': that._onYouTubePlayerReady,
-                        'onStateChange': function(newState){
-                            switch (newState.data) {
-                                // playback completed/stopped
-                                case 0:
-                                    var now_playing_video = jQuery('.now-playing').closest('li');
-                                    var next_video = now_playing_video.next();
-                                    if (next_video.length == 0) {
-                                        /* End of current slide or this is the last video altogether */
-                                        var next_slide = now_playing_video.closest('ul').closest('li').next();
-                                        if (next_slide.length == 0) {
-                                            /* Last video - go back to the first video */
-                                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                                        }
-                                        next_video = next_slide.find('ul > li:first-child');
-                                    }
-                                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
-                                // stop the interval and manually send an update
-                                case 2:
-                                    that._stopUpdateInterval();
-                                    that._updateVideoWatchedTime();
-                                    break;
-                                // playback started
-                                case 1:
-                                    that._startUpdateInterval();
-                                    break;
-                            }
-                        }
-                      }
-                    });
-              }
-            },
+            } 
+            else {
+                  that.loadPlayer(videoId);
+            }
+        },
         
-        /*_initVideoPlayer: function() {
-
-            var videoId = this._references.$videoTarget.data('videoId');
-
-            var params = { allowScriptAccess: "always" };
-            var atts = { id: "video-player" };
-            swfobject.embedSWF(
-                'http://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
-                'video-target',
-                '703',
-                '395',
-                '8',
-                null,
-                null,
-                params,
-                atts
-            );
-
-            window.onYouTubePlayerReady = this._onYouTubePlayerReady.bind(this);
-        },*/
+        loadPlayer: function(videoId){
+            var that = this;
+            var player = new YT.Player('video-target', {
+                height: '395',
+                width: '703',
+                videoId: videoId,
+                events: {
+                  'onReady': that._onYouTubePlayerReady,
+                  'onStateChange': function(newState){
+                      switch (newState.data) {
+                          // playback completed/stopped
+                          case 0:
+                              var now_playing_video = jQuery('.now-playing').closest('li');
+                              var next_video = now_playing_video.next();
+                              if (next_video.length == 0) {
+                                  /* End of current slide or this is the last video altogether */
+                                  var next_slide = now_playing_video.closest('ul').closest('li').next();
+                                  if (next_slide.length == 0) {
+                                      /* Last video - go back to the first video */
+                                      next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
+                                  }
+                                  next_video = next_slide.find('ul > li:first-child');
+                              }
+                              window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                          // stop the interval and manually send an update
+                          case 2:
+                              that._stopUpdateInterval();
+                              that._updateVideoWatchedTime();
+                              break;
+                          // playback started
+                          case 1:
+                              that._startUpdateInterval();
+                              break;
+                      }
+                  }
+                }
+              });
+        },
 
         _onYouTubePlayerReady: function(event) {
-            /*// clean up the window
-            window.onYouTubePlayerReady = undefined;
-
-            var videoPlayer = jQuery('#video-player').get(0);
-            this._references.videoPlayer = videoPlayer;
-
-            // youtube seems to force us to put functions in the window
-            // we'll do our best to handle that elegantly
-            window.onYouTubePlayerStateChange = this._onYouTubePlayerStateChange.bind(this);
-
-            videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
-            
-            // Below functionality will autoplay the youtube video on all video pages
-            videoPlayer.playVideo();*/
+            // Below functionality will autoplay the youtube video on all video pages for Non-Mobile Devices
             if (!navigator.userAgent.match(/Mobi/)) {
                 event.target.playVideo();
             }
             
-        },
-
-        _onYouTubePlayerStateChange: function(newState) {
-            var that = this;
-            switch (newState.data) {
-                // playback completed/stopped
-                case 0:
-                    var now_playing_video = jQuery('.now-playing').closest('li');
-                    var next_video = now_playing_video.next();
-                    if (next_video.length == 0) {
-                        /* End of current slide or this is the last video altogether */
-                        var next_slide = now_playing_video.closest('ul').closest('li').next();
-                        if (next_slide.length == 0) {
-                            /* Last video - go back to the first video */
-                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                        }
-                        next_video = next_slide.find('ul > li:first-child');
-                    }
-                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
-                // stop the interval and manually send an update
-                case 2:
-                    that._stopUpdateInterval();
-                    that._updateVideoWatchedTime();
-                    break;
-                // playback started
-                case 1:
-                    that._startUpdateInterval();
-                    break;
-            }
         },
 
         _startUpdateInterval: function() {
