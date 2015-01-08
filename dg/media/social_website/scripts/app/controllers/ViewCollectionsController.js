@@ -268,8 +268,10 @@ define(function(require) {
             
             // Below functionality will autoplay the youtube video on all video pages
             videoPlayer.playVideo();*/
+            if (!navigator.userAgent.match(/Mobi/)) {
+                event.target.playVideo();
+            }
             
-            event.target.playVideo();
         },
 
         _onYouTubePlayerStateChange: function(newState) {
