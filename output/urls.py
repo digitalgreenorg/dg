@@ -35,5 +35,4 @@ urlpatterns = patterns('',
     (r'^overview_line_graph/?$',overview_line_graph),
     (r'^practice_change/?$',practice_change),
     #Remove once Farmerbook video url's are fixed 
-    (r'^video/?$',video_analytics.video),
 )
