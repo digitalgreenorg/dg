@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from videokheti.models import ActionType, Crop, Method, TimeYear
+from videokheti.models import ActionType, Crop, Method, Video, TimeYear
 
 
 def home(request):
@@ -42,20 +42,38 @@ def level(request):
     if level == '2':
         crop_id = request.GET.get('crop', None)
         time_id = request.GET.get('time', None)
-        action_objects = ActionType.objects.filter(time_year_id=time_id)
-        list_dict = []
-        for obj in action_objects:
-            dic_obj = {'name': obj.name.replace('_', ' '),
-                       'image': obj.image_file,
-                       'audio': obj.sound_file,
-                       'id': obj.id,
-                       'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', str(obj.id), '&level=3'])
-                   }
-            list_dict.append(dic_obj)
-        context = {
-                  'crop': list_dict,
-                  }
-        return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+        if time_id == '2':
+            # Success stories
+            video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id)
+            list_dict = []
+            for obj in video_objects:
+                dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+                           'image': obj.image_file,
+                           'audio': obj.sound_file,
+                           'id': obj.id,
+                           'link': ''.join(['/discover/video/', obj.website_id])
+                       }
+                list_dict.append(dic_obj)
+            context = {
+                      'crop': list_dict,
+                      'video': 1,
+                      }
+            return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+        else:
+            action_objects = ActionType.objects.filter(time_year_id=time_id)
+            list_dict = []
+            for obj in action_objects:
+                dic_obj = {'name': obj.name.replace('_', ' '),
+                           'image': obj.image_file,
+                           'audio': obj.sound_file,
+                           'id': obj.id,
+                           'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', str(obj.id), '&level=3'])
+                       }
+                list_dict.append(dic_obj)
+            context = {
+                      'crop': list_dict,
+                      }
+            return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '3':
         crop_id = request.GET.get('crop', None)
         time_id = request.GET.get('time', None)
@@ -92,3 +110,39 @@ def level(request):
                         'crop': list_dict,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+        else:
+            video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id)
+            list_dict = []
+            for obj in video_objects:
+                dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+                           'image': obj.image_file,
+                           'audio': obj.sound_file,
+                           'id': obj.id,
+                           'link': ''.join(['/discover/video/', obj.website_id])
+                       }
+                list_dict.append(dic_obj)
+            context = {
+                      'crop': list_dict,
+                      'video': 1,
+                      }
+            return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+    if level == '4':
+        crop_id = request.GET.get('crop', None)
+        time_id = request.GET.get('time', None)
+        action_id = request.GET.get('action', None)
+        method_id = request.GET.get('method', None)
+        video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id, method_id=method_id)
+        list_dict = []
+        for obj in video_objects:
+            dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+                        'image': obj.image_file,
+                        'audio': obj.sound_file,
+                        'id': obj.id,
+                        'link': ''.join(['/discover/video/', obj.website_id])
+                       }
+            list_dict.append(dic_obj)
+        context = {
+                   'crop': list_dict,
+                    'video': 1,
+                  }
+        return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
