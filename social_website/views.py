@@ -1,6 +1,7 @@
 import ast
 import datetime
 import json
+import random
 import urllib2
 
 from django import forms
@@ -34,7 +35,8 @@ def social_home(request):
         'header': {
             'jsController':'Home',
             'currentPage':'Home',
-            'loggedIn':False
+            'loggedIn':False,
+            'random':random.randint(0, 1),
              },
         'language':language,
         }

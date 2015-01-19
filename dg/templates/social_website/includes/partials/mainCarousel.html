@@ -4,8 +4,8 @@
             <div id='player'></div>
             <div class="slide-img" >
 				{% if header.currentPage == 'Home' %}
-				    <video id="video-loop" autoplay="autoplay" loop poster="https://s3.amazonaws.com/digitalgreenorg/home_carousel_img.jpg">
-                        		<source src="{{STATIC_URL}}social_website/content/sugari.mp4" class="mp4">
+				    <video id="video-loop" autoplay="autoplay" loop poster="https://s3.amazonaws.com/digitalgreenorg/DG_Website_Loop.jpg">
+                        		<source src="{{STATIC_URL}}social_website/content/{% if header.random == 1 %}loop.mp4{% else %}sugari.mp4{% endif %}" class="mp4">
                         		<img src="https://s3.amazonaws.com/digitalgreenorg/home_carousel_img.jpg">
                     		    </video>                    
 				{% else %}

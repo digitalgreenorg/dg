@@ -2,7 +2,7 @@ import os.path
 import StringIO
 import zipfile
 import xlrd
-import csv
+import unicodecsv as csv
 
 from django import forms
 
@@ -25,30 +25,27 @@ from data_upload.forms import DocumentForm
 from geographies.models import  Block
 from coco.models import CocoUser
 
+
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0, 
+@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0,
                   login_url=PERMISSION_DENIED_URL)
 @csrf_protect
-
-
 def home(request):
     """Home Page of static data upload"""
-    
     form = DocumentForm(request.POST, request.FILES)
     user_id = User.objects.get(username=request.user.username).id
     blocks = CocoUser.objects.filter(user__id=user_id). \
-             values_list('villages__block__block_name').distinct() 
-    
+             values_list('villages__block__block_name').distinct()
     block_names = [b for b in zip(*blocks)[0]]
-    
     return render_to_response(
            'data_upload/netupload.html',
-           {'form' : form, 'blocks' : block_names},
+           {'form': form,
+            'blocks': block_names},
             context_instance=RequestContext(request)
            )
 
 
-# Handle file upload   
+# Handle file upload
 def file_upload(request):
     """
     Upload data in the file to database.
@@ -128,11 +125,14 @@ def file_converter(document):
     
     converted_csv_file = open(os.path.splitext(document_docfile_name)[0]+ \
                              '.csv', 'wb')
-    wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_NONE)
+    wr = csv.writer(converted_csv_file, quoting=csv.QUOTE_ALL)
+    #quote to none if char escape error pops up
     
     for rownum in xrange(sh.nrows):
-        wr.writerow(sh.row_values(rownum))
-    
+        temp_list = [unicode(x).replace(u'\xa0', u'') for x in sh.row_values(rownum)]
+        wr.writerow(temp_list)
+
+        
     converted_csv_file.close()
     os.remove(document_docfile_name) #delete the old document
     

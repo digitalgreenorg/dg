@@ -141,65 +141,68 @@ def video_monthwise_bar_data(request):
 ###########################
 
 def video(request):
-    id = int(request.GET['id'])
-    try:
-        vid = Video.objects.select_related().get(pk=id)
-    except Video.DoesNotExist:
-        vid = Video.objects.select_related().get(old_coco_id=id)
-        return HttpResponseRedirect("?id=" + str(vid.id))
-    vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
-    
-    tot_vid_scr = vid.screening_set.count()
-    tot_vid_adopt = vid.personadoptpractice_set.count()
-    
-    actors = vid.farmers_shown.values('person_name')
-    actor_data = dict(actors = actors, tot_actors = len(actors))
-    
-    #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
-    #in title and question
-    title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
-    #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
+    id = request.GET.get('id', None)
+    if id:
+        try:
+            vid = Video.objects.select_related().get(pk=id)
+        except Video.DoesNotExist:
+            vid = Video.objects.select_related().get(old_coco_id=id)
+            return HttpResponseRedirect("?id=" + str(vid.id))
+        vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
+        
+        tot_vid_scr = vid.screening_set.count()
+        tot_vid_adopt = vid.personadoptpractice_set.count()
+        
+        actors = vid.farmers_shown.values('person_name')
+        actor_data = dict(actors = actors, tot_actors = len(actors))
+        
+        #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
+        #in title and question
+        title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
+        #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
 
-    views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
-    tot_vid_views = views.count()
-    ques = views.exclude(expressed_question =  '')
-    ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
-                       'person__village__block__district__state__state_name','screening__date')
-    if(len(ques) > 0):
-        ques_arr = []
-        for x in ques:
-            ques_arr.append([x['expressed_question'].split(' '), x])
-            
-        scores = []
-        for ques in ques_arr:
-            count = 0
-            for tok in title_arr:
-                if tok in ques[0]:
-                    count = count + 1
-            scores.append([count, ques[1]])
-        scores.sort(key = (lambda x: x[0]), reverse = True)
-        ques = scores
-    #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
-    
-    
-    rel_vids_all = Video.objects.exclude(pk=vid.pk)
-    rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
-    if(rel_vids_prac.count()>= 9):
-        rel_vids = rel_vids_prac[:9]
+        views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
+        tot_vid_views = views.count()
+        ques = views.exclude(expressed_question =  '')
+        ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
+                           'person__village__block__district__state__state_name','screening__date')
+        if(len(ques) > 0):
+            ques_arr = []
+            for x in ques:
+                ques_arr.append([x['expressed_question'].split(' '), x])
+                
+            scores = []
+            for ques in ques_arr:
+                count = 0
+                for tok in title_arr:
+                    if tok in ques[0]:
+                        count = count + 1
+                scores.append([count, ques[1]])
+            scores.sort(key = (lambda x: x[0]), reverse = True)
+            ques = scores
+        #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
+        
+        
+        rel_vids_all = Video.objects.exclude(pk=vid.pk)
+        rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
+        if(rel_vids_prac.count()>= 9):
+            rel_vids = rel_vids_prac[:9]
+        else:
+            rel_vids = set(rel_vids_prac)
+            rel_vids_lang = rel_vids_all.exclude(pk__in=rel_vids_prac.values_list('pk',flat=True)).filter(language = vid.language)
+            rel_vids.update(list(rel_vids_lang[:9-len(rel_vids)]))
+            if(len(rel_vids)< 9):
+                rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
+
+        return render_to_response('videopage.html',dict(vid = vid, \
+                                                         tot_vid_scr = tot_vid_scr, \
+                                                         tot_vid_adopt = tot_vid_adopt, \
+                                                         tot_vid_views = tot_vid_views, \
+                                                         actors = actor_data, \
+                                                         ques = ques, \
+                                                         rel_vids = rel_vids))
     else:
-        rel_vids = set(rel_vids_prac)
-        rel_vids_lang = rel_vids_all.exclude(pk__in=rel_vids_prac.values_list('pk',flat=True)).filter(language = vid.language)
-        rel_vids.update(list(rel_vids_lang[:9-len(rel_vids)]))
-        if(len(rel_vids)< 9):
-            rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
-
-    return render_to_response('videopage.html',dict(vid = vid, \
-                                                     tot_vid_scr = tot_vid_scr, \
-                                                     tot_vid_adopt = tot_vid_adopt, \
-                                                     tot_vid_views = tot_vid_views, \
-                                                     actors = actor_data, \
-                                                     ques = ques, \
-                                                     rel_vids = rel_vids))
+        return video_search(request)
 
 
 def video_search(request):

@@ -23,27 +23,24 @@ def save_log(sender, **kwargs ):
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
     except Exception, ex:
         user = None
-    try:
-        instance.village.id
-    except Exception as e:
-        print type(e), e
+    
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
-    if sender=="Village" :
+    if sender == "Village":
         village_id = instance.id
-    elif sender=="Animator":
+    elif sender == "Animator" or sender == 'Language':
         village_id = None
-    elif sender=="PersonAdoptPractice":
+    elif sender == "PersonAdoptPractice":
         village_id = instance.person.village.id
     else:
         village_id = instance.village.id
-    partner_id = None if sender is "Village" else instance.partner.id
+    partner_id = None if sender is "Village" or 'Language' else instance.partner.id
     ServerLog = get_model('coco', 'ServerLog')
-    log = ServerLog(village = village_id, user = user, action = action, entry_table = sender, 
-                    model_id = model_id, partner = partner_id)
+    log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
+                    model_id=model_id, partner=partner_id)
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-    if previous_time_stamp:        
+    if previous_time_stamp:
         if previous_time_stamp.timestamp > log.timestamp:
             raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
 #    
