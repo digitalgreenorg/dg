@@ -12,11 +12,13 @@ def home(request):
                    'image': obj.image_file,
                    'audio': obj.sound_file,
                    'id': obj.id,
-                   'link': ''.join(['kheti/?crop=', str(obj.id), '&level=1'])
+                   'link': ''.join(['kheti/?crop=', str(obj.id), '&level=1']),
                    }
         list_dict.append(dic_obj)
         context = {
                   'crop': list_dict,
+                  'title': 'Choose the Crop',
+                  'title_audio': 'you-can-name-crop-prompt-graphics.wav'
                   }
     return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
 
@@ -37,6 +39,7 @@ def level(request):
             list_dict.append(dic_obj)
         context = {
                   'crop': list_dict,
+                  'title': 'Choose the Time of Year',
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '2':
@@ -57,6 +60,7 @@ def level(request):
             context = {
                       'crop': list_dict,
                       'video': 1,
+                      'title': 'Choose the Video',
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
@@ -72,6 +76,7 @@ def level(request):
                 list_dict.append(dic_obj)
             context = {
                       'crop': list_dict,
+                      'title': 'Choose the Action',
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '3':
@@ -93,6 +98,7 @@ def level(request):
                 list_dict.append(dic_obj)
             context = {
                         'crop': list_dict,
+                        'title': 'Choose the Method',
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         elif action_object.name == 'interculture':
@@ -124,6 +130,7 @@ def level(request):
             context = {
                       'crop': list_dict,
                       'video': 1,
+                      'title': 'Choose the Video',
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '4':
@@ -144,5 +151,6 @@ def level(request):
         context = {
                    'crop': list_dict,
                     'video': 1,
+                    'title': 'Choose the Video',
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))

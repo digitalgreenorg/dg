@@ -64,19 +64,21 @@
     <div class="container">
 
         <!-- Jumbotron Header -->
-        <header class="jumbotron hero-spacer">
-            <h1>A Warm Welcome!</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-            <p><a class="btn btn-primary btn-large">Call to action!</a>
-            </p>
-        </header>
-
-        <hr>
-
         <!-- Title -->
         <div class="row">
             <div class="col-lg-12">
-                <h3>Latest Features</h3>
+                <h3>
+                    {{title}} &nbsp
+                    {% if title_audio %}
+                    <a href="#" data-id="0" class="audio-click">
+                        <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
+                    </a>
+                    {% endif %}
+                </h3>
+                <audio preload="auto" id="0">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/wav">
+                            Your browser does not support the audio element.
+                </audio>
             </div>
         </div>
         <!-- /.row -->
@@ -96,10 +98,11 @@
                                 <img src="{% if video %}{{obj.image}}{% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="" style="width:253px; height:158px !important;"> </img>
                             </a>
                             <div class="caption">
-                            <h4>{{obj.name|upper}}</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                <a href="#" data-id="{{obj.id}}" class="audio-click"><span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span></a>
-                            </p>
+                            <h4>{{obj.name|upper}} &nbsp
+                                 <a href="#" data-id="{{obj.id}}" class="audio-click">
+                                    <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
+                                 </a>
+                            </h4>
                             </div>
                         </div>
                 
@@ -111,17 +114,6 @@
             {% endfor %}
         </div>
         <!-- /.row -->
-
-        <hr>
-
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
-                </div>
-            </div>
-        </footer>
 
     </div>
     <!-- /.container -->
