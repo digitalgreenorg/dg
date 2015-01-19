@@ -8,7 +8,7 @@ from geographies.models import District, Block
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
-from management.commands import test_lib
+from management.commands import partition_library
 from django.core import management
 import datetime
 
@@ -105,12 +105,12 @@ def execute(request):
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village}
-    value = {'nScreening':screening, 'nAdoption':adoption}
+    value = {'numScreening':screening, 'numAdoption':adoption}
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
     print value
-    management.call_command('test_lib',from_date, to_date, partition=partition,value=value)
+    management.call_command('partition_library',from_date, to_date, partition=partition,value=value)
 
 
 #def df_html_download(request):
