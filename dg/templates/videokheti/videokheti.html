@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Heroic Features - Start Bootstrap Template</title>
+    <title>Video Kheti</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="{{STATIC_URL}}videokheti/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +27,6 @@
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -59,22 +58,29 @@
         </div>
         <!-- /.container -->
     </nav>
-
+    
+    
     <!-- Page Content -->
     <div class="container">
-
-        <!-- Jumbotron Header -->
+        <nav>
+            <ul class="pager">
+                <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+                <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+        </nav>
         <!-- Title -->
-        <div class="row">
+        <div class="row" style="margin-bottom: 15px;">
             <div class="col-lg-12">
-                <h3>
-                    {{title}} &nbsp
+                <form class="form-inline">
+                    <label style="font-size: 20px">{{title}}</label>
                     {% if title_audio %}
                     <a href="#" data-id="0" class="audio-click">
-                        <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
-                    </a>
-                    {% endif %}
-                </h3>
+                        <button type="button" class="btn btn-primary btn-lg" style="margin-left: 10px; font-size: 25px; border-radius: 50%">
+                            <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
+                         </button>
+                     </a>
+                     {% endif %}
+                </form>
                 <audio preload="auto" id="0">
                             <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/wav">
                             Your browser does not support the audio element.
@@ -98,11 +104,14 @@
                                 <img src="{% if video %}{{obj.image}}{% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="" style="width:253px; height:158px !important;"> </img>
                             </a>
                             <div class="caption">
-                            <h4>{{obj.name|upper}} &nbsp
-                                 <a href="#" data-id="{{obj.id}}" class="audio-click">
-                                    <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
-                                 </a>
-                            </h4>
+                                <form class="form-inline">
+                                    <label style="font-size: 15px">{{obj.name|upper}}</label>
+                                    <a href="#" data-id="{{obj.id}}" class="audio-click">
+                                        <button type="button" class="btn btn-primary btn-lg" style="margin-left: 18px; font-size: 25px; border-radius: 50%">
+                                            <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
+                                        </button>
+                                    </a>
+                                </form>
                             </div>
                         </div>
                 
