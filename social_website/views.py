@@ -24,6 +24,8 @@ from elastic_search import get_related_collections, get_related_videos
 from social_website.models import  Collection, Partner, FeaturedCollection, Video
 from videos.models import Practice, Video as Dashboard_Video
 
+from mezzanine.blog.models import BlogPost
+
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
 
@@ -31,6 +33,7 @@ class CustomUserCreationForm(UserCreationForm):
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
     language = sorted(set(language))
+    blog = BlogPost.objects.all()[:3]
     context= {
         'header': {
             'jsController':'Home',
@@ -39,7 +42,8 @@ def social_home(request):
             'random':random.randint(0, 1),
              },
         'language':language,
-        }
+        'blog_posts':blog,
+                }
     return render_to_response('home.html', context, context_instance = RequestContext(request))
 
 def collection_view(request, partner, state, language, title, video=1):
