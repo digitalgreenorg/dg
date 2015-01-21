@@ -68,7 +68,7 @@
                 <li>
                     <a href="{{obj.link}}" style="background-color:black; border: 0px;">
                         <button type="button" class="btn btn-default btn-xs">
-                            <img class="media-object" src="{{STATIC_URL}}videokheti/content/images/{{obj.image}}" alt="..." style="width:50px; height:50px !important;">
+                            <img class="media-object" src="{{STATIC_URL}}videokheti/content/images/{{obj.image}}" alt="..." style="width:40px; height:40px !important;">
                         </button>
                     </a>
                 </li>
@@ -100,12 +100,12 @@
 
         
         <!-- Page Features -->
-        <div class="row text-center">
+        <div class="row">
             {% for obj in crop %}
                 {% cycle 1 0 0 0 as new_row silent %}
                     {% if forloop.counter > 4 and new_row %}
                         </div>
-                        <div class="row text-center">
+                        <div class="row">
                     {% endif %}
                     <div class="col-md-3 col-sm-6 hero-feature">
                         <div class="thumbnail">
@@ -113,14 +113,15 @@
                                 <img src="{% if video %}{{obj.image}}{% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="" style="width:253px; height:158px !important;"> </img>
                             </a>
                             <div class="caption">
-                                <form class="form-inline">
-                                    <label style="font-size: 15px; color: #ffffff;">{{obj.name|upper}}</label>
+                                <div class="form-inline">
                                     <a href="#" data-id="{{obj.id}}" class="audio-click">
-                                        <button type="button" class="btn btn-success btn-sm" style="margin-left: 18px; font-size: 25px; border-radius: 50%">
+                                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 25px; border-radius: 50%">
                                             <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
                                         </button>
                                     </a>
-                                </form>
+                                    
+                                    <label class="text-center"style="font-size: 15px; color: #ffffff;">{{obj.name|upper}}</label>
+                                </div>
                             </div>
                         </div>
                 
