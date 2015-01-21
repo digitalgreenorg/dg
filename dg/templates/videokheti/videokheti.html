@@ -100,12 +100,12 @@
 
         
         <!-- Page Features -->
-        <div class="row">
+        <div class="row text-center">
             {% for obj in crop %}
                 {% cycle 1 0 0 0 as new_row silent %}
                     {% if forloop.counter > 4 and new_row %}
                         </div>
-                        <div class="row">
+                        <div class="row text-center">
                     {% endif %}
                     <div class="col-md-3 col-sm-6 hero-feature">
                         <div class="thumbnail">
@@ -114,13 +114,14 @@
                             </a>
                             <div class="caption">
                                 <div class="form-inline">
+                                    <label class="text-center"style="font-size: 15px; color: #ffffff;">{{obj.name|upper}}</label>
                                     <a href="#" data-id="{{obj.id}}" class="audio-click">
-                                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 25px; border-radius: 50%">
+                                        <button type="button" class="btn btn-success btn-sm" style="margin-left: 18px; font-size: 25px; border-radius: 50%">
                                             <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true"></span>
                                         </button>
                                     </a>
                                     
-                                    <label class="text-center"style="font-size: 15px; color: #ffffff;">{{obj.name|upper}}</label>
+                                    
                                 </div>
                             </div>
                         </div>
