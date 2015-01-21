@@ -63,8 +63,7 @@
     <!-- Page Content -->
     <div class="container">
         {% if breadcrumb %}
-        <nav class="pull-left">
-        <ul class="pager">
+        <ul class="breadcrumb">
             {% for obj in breadcrumb %}
                 <li>
                     <a href="{{obj.link}}" style="background-color:black; border: 0px;">
@@ -75,7 +74,6 @@
                 </li>
             {% endfor%}
         </ul>
-        </nav>
         {% endif %}
         <!-- Title -->
         <div class="row" style="margin-bottom: 15px;">
