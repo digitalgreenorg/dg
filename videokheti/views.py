@@ -236,19 +236,19 @@ def play_video(request):
     if(time_id):
         time = TimeYear.objects.get(id=time_id)
         breadcrumb_obj = {'image': time.image_file,
-                           'link': ''.join(['?crop=', crop_id, '&level=1'])
+                           'link': ''.join(['/videokheti/kheti/?crop=', crop_id, '&level=1'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(action_id):
         action = ActionType.objects.get(id=action_id)
         breadcrumb_obj = {'image': action.image_file,
-                           'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&level=2'])
+                           'link': ''.join(['/videokheti/kheti/?crop=', crop_id, '&time=', str(time_id), '&level=2'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(method_id):
         method = Method.objects.get(id=method_id)
         breadcrumb_obj = {'image': method.image_file,
-                           'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', str(action_id), '&level=3'])
+                           'link': ''.join(['/videokheti/video/?crop=', crop_id, '&time=', str(time_id), '&action=', str(action_id), '&level=3'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     video = Video.objects.get(id=video_id)
