@@ -73,7 +73,7 @@ def level(request):
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
-                           'link': ''.join(['/discover/video/', obj.website_id])
+                           'link': ''.join(['/videokheti/video/?crop=', crop_id, '&time=', str(time_id), '&video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
             context = {
@@ -165,7 +165,7 @@ def level(request):
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
-                           'link': ''.join(['/discover/video/', obj.website_id])
+                           'link': ''.join(['/videokheti/video/?crop=', crop_id, '&time=', str(time_id), '&action=', action_id, '&video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
             context = {
@@ -208,7 +208,7 @@ def level(request):
                         'image': obj.image_file,
                         'audio': obj.sound_file,
                         'id': obj.id,
-                        'link': ''.join(['/discover/video/', obj.website_id])
+                        'link': ''.join(['/videokheti/video/?crop=', crop_id, '&time=', str(time_id), '&action=', action_id, '&method=', method_id, '&video=', str(obj.id)])
                        }
             list_dict.append(dic_obj)
         context = {
@@ -218,3 +218,43 @@ def level(request):
                     'breadcrumb': breadcrumb_list,
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+
+
+def play_video(request):
+    crop_id = request.GET.get('crop', None)
+    time_id = request.GET.get('time', None)
+    action_id = request.GET.get('action', None)
+    method_id = request.GET.get('method', None)
+    video_id = request.GET.get('video', None)
+    breadcrumb_list = []
+    if(crop_id):
+        crop = Crop.objects.get(id=crop_id)
+        breadcrumb_obj = {'image': crop.image_file,
+                           'link': '/videokheti'
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    if(time_id):
+        time = TimeYear.objects.get(id=time_id)
+        breadcrumb_obj = {'image': time.image_file,
+                           'link': ''.join(['?crop=', crop_id, '&level=1'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    if(action_id):
+        action = ActionType.objects.get(id=action_id)
+        breadcrumb_obj = {'image': action.image_file,
+                           'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&level=2'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    if(method_id):
+        method = Method.objects.get(id=method_id)
+        breadcrumb_obj = {'image': method.image_file,
+                           'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', str(action_id), '&level=3'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    video = Video.objects.get(id=video_id)
+    context = {
+                'title': video.coco_video.title,
+                'youtube': video.coco_video.youtubeid,
+                'breadcrumb': breadcrumb_list,
+              }
+    return render_to_response('video_play.html', context, context_instance=RequestContext(request))
