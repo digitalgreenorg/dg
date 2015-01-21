@@ -47,7 +47,6 @@
                 <ul class="blocks blocks-4-up clearfix js-collections-container">
 
                         <!-- Dynamic Collections Content Here -->
-
                 </ul>
                 <div class="gradientBg-ft ">
                     <!--div class="pagination-wrapper js-pagination">
@@ -63,10 +62,25 @@
     <section class="wrapper mainBg mainBg-gradient">
         <div class="grid inner-wrapper js-news-feed-wrapper">
             <div class="grid-col grid-size2of4">
-                <h2 class="hdg-a hdg-source-lt layout-vr-md">Latest updates</h2>
-                <ul class="v-list-md js-news-feed-container grid-margin-rt-md">
-                    <!-- Dynamic News Feed Content Here -->
-                </ul>
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
+                <ul class="v-list-sm">
+                    <li>               
+                        {% for blog_post in blog_posts %}
+
+                            <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
+                                <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+                            </h3>
+                            <div class="copy-italic">
+                                {{ blog_post.publish_date.date }}
+                            </div>
+                            <p class="copy">
+                                {{ blog_post.content|striptags|slice:":120"}}
+                                <a href="{{ blog_post.get_absolute_url }}">...read more</a>
+                            </p> 
+                            <div class="layout-vr-md"></div>
+                        {% endfor %}
+                    </li> 
+                </ul>             
             </div>
             <div class="grid-col grid-size2of4">
                 <div class="borderLt">
@@ -129,14 +143,32 @@
                                 </div> <!-- End .bd -->
                             </article>
                         </li>
-                        <div class="grid-rt">
-                        <a  href="{% url 'resources' %}" class="btn">View more Resources</a> 
-                    </div>
                     </ul>
                 </div>
             </div>
         </div> <!-- End .inner-wrapper -->
+        
+        <div class="wrapper">
+            <div class="inner-wrapper">
+                <div class="grid-col grid-size2of4">
+                    <div class="borderLt grid-pad-rt-md centered">
+                        <div class="grid-rt">
+                            <a  href="/blog" class="btn">VIEW MORE BLOGS</a> 
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-col grid-size2of4">
+                    <div class="borderLt grid-pad-rt-md centered">
+                        <div class="grid-rt">
+                            <a  href="{% url 'resources' %}" class="btn">VIEW MORE RESOURCES</a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+
+        
         <div class="wrapper layout-vr-md">
 
             <!-- NEWS SECTION-->
@@ -258,5 +290,4 @@
             </div>
         </div>
     </section>
-
 {% include "includes/footer.html"%}
