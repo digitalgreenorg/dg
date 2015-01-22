@@ -87,9 +87,50 @@
         
         <!-- Page Features -->
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-md-9">
                 <div class="embed-responsive embed-responsive-4by3">
                     <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{youtube}}?rel=0"></iframe>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img height='60px' width='60px' class="media-object" src="{{STATIC_URL}}social_website/uploads/{{partner_image}}" alt="...">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{partner}}</h4>
+                        <h6 class="media-heading">{{state}}</h6>
+                        <h6 class="media-heading">{{language}}</h6>
+                    </div>
+                </div>
+                
+                <div class="media">
+                    <h6>
+                        Produced on {{ date_pro|date:"D d M Y" }}
+                    </h6>
+                </div>
+                
+                <div class="media">
+                    <h6>
+                        By {{ facillitator }} and {{cameraoperator}}
+                    </h6>
+                </div>
+                
+                <div class="media">
+                    <h6>
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        &nbsp &nbsp {{views}} Views
+                    </h6>
+                </div>
+                
+                <div class="media">
+                    <h6>
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        &nbsp &nbsp {{adoptions}} Adoptions
+                    </h6>
+                </div>
+                
                 </div>
             </div>
         </div>
