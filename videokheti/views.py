@@ -48,6 +48,7 @@ def level(request):
         context = {
                   'crop': list_dict,
                   'title': 'Choose the Time of Year',
+                  'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                   'breadcrumb': breadcrumb_list,
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -81,6 +82,7 @@ def level(request):
                       'crop': list_dict,
                       'video': 1,
                       'title': 'Choose the Video',
+                      'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                       'breadcrumb': breadcrumb_list,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -98,6 +100,7 @@ def level(request):
             context = {
                       'crop': list_dict,
                       'title': 'Choose the Action',
+                      'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                       'breadcrumb': breadcrumb_list,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -138,6 +141,7 @@ def level(request):
             context = {
                         'crop': list_dict,
                         'title': 'Choose the Method',
+                        'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                         'breadcrumb': breadcrumb_list,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -155,6 +159,7 @@ def level(request):
             context = {
                         'crop': list_dict,
                         'title': 'Choose the Method',
+                        'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                         'breadcrumb': breadcrumb_list,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -173,6 +178,7 @@ def level(request):
                       'crop': list_dict,
                       'video': 1,
                       'title': 'Choose the Video',
+                      'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                       'breadcrumb': breadcrumb_list,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -216,6 +222,7 @@ def level(request):
                    'crop': list_dict,
                     'video': 1,
                     'title': 'Choose the Video',
+                    'title_audio': 'you-can-select-an-option-prompt-graphics.wav',
                     'breadcrumb': breadcrumb_list,
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
