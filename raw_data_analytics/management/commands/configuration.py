@@ -15,7 +15,7 @@ tableDictionary={
     'sector':'videos_practicesector',
     'practice':'videos_practice',
     'topic':'videos_practicetopic',
-    'numScreening':'activities_screening_wise_data',
+    'numScreening':'activities_screeningwisedata',
 #    'video_n_screening':{'table':'videos_video_wise_data','column':'nScreenings','function':'video_screening_func()'},
 #    'person_n_screening':{'table':'people_person_wise_data','column':'nScreenings','function':'person_screening_func()'},
     'numAdoption':'activities_personadoptpractice',
@@ -23,13 +23,13 @@ tableDictionary={
 #    'person_n_adoption':{'table':'people_person_wise_data','column':'nAdoptions','function':'person_adoption_func()'},
     'attendance':'activities_personmeetingattendance',
     'numPeople':'people_person',
-    'numAnimator':'people_animator_wise_data',
+    'numAnimator':'people_animatorwisedata',
     'listPeople':'people_person',
-    'listAnimator':'people_animator_wise_data',
-    'listVideoScreened':'videos_video_wise_data',
-    'numVideoScreened':'videos_video_wise_data',
-    'listVideoProduces':'Videos_video_wise_data',
-    'numVideoProduced':'videos_video_wise_data',
+    'listAnimator':'people_animatorwisedata',
+    'listVideoScreened':'videos_videowisedata',
+    'numVideoScreened':'videos_videowisedata',
+    'listVideoProduces':'Videos_videowisedata',
+    'numVideoProduced':'videos_videowisedata',
 }
 
 whereDictionary={
@@ -39,7 +39,7 @@ whereDictionary={
     'district':'id',
     'block':'id',
     'village':'id',
-    'animator':'id',
+    'animator':'animator_id',
     'person':'id',
     'persongroup':'id',
     'video':'id',
@@ -47,7 +47,7 @@ whereDictionary={
     'sector':'id',
     'practice':'id',
     'topic':'id',
-    'numScreening':'date',
+    'numScreening':'screening_date',
 #    'video_n_screening':{'table':'videos_video_wise_data','column':'nScreenings','function':'video_screening_func()'},
 #    'person_n_screening':{'table':'people_person_wise_data','column':'nScreenings','function':'person_screening_func()'},
     'numAdoption':'date_of_adoption',
@@ -64,6 +64,11 @@ whereDictionary={
     'numVideoProduced':'video_production_end_date',
 }
 
+
+categoryDictionary={
+    'geographies':['country','state','district','block','village']
+}
+
 groupbyDictionary={
     'partner':'id',
     'country':'id',
@@ -71,7 +76,7 @@ groupbyDictionary={
     'district':'id',
     'block':'id',
     'village':'id',
-    'animator':'id',
+    'animator':'animator_id',
     'person':'id',
     'persongroup':'id',
     'video':'id',
@@ -103,7 +108,7 @@ selectDictionary={
     'district':{'id':True,'district_name':True},
     'block':{'id':True,'block_name':True},
     'village':{'id':True,'village_name':True},
-    'animator':{'id':True,'name':True,'gender':True},
+    'animator':{'animator_id':True,'animator_name':True,'gender':True},
     'person':{'id':True,'person_name':True,'gender':True},
     'persongroup':{'id':True,'group_name':True},
     'video':{'id':True,'title':True},
@@ -111,7 +116,7 @@ selectDictionary={
     'sector':{'id':True,'name':True},
     'practice':{'id':True,'practice_name':True},
     'topic':{'id':True,'name':True},
-    'numScreening':{'count(id)':True,'count(distinct id)':True},
+    'numScreening':{'count(screening_id)':True,'count(distinct screening_id)':True},
 #    'video_n_screening':{'table':'videos_video_wise_data','column':'nScreenings','function':'video_screening_func()'},
 #    'person_n_screening':{'table':'people_person_wise_data','column':'nScreenings','function':'person_screening_func()'},
     'numAdoption':{'count(id)':True,'count(distinct id)':True},

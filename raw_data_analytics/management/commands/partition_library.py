@@ -6,14 +6,17 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from geographies.models import District, Block
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary
+from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 import xlsxwriter
+import csv
 
 class Command(BaseCommand):
 
+    Dict={}
+    lookup_matrix = {}
     # --- defining options for the command line exceution of the library ---
     option_list = BaseCommand.option_list + (
         make_option('-p', '--partner',
@@ -74,158 +77,44 @@ class Command(BaseCommand):
         fields_dict['value'] = options['value']
         print "###############"
         print fields_dict['value']
-        self.handle_controller(args, options)
 
-    # def make_query_components(self, options):
-    #     print options
-    #     gflag = 0
-    #     sflag = 0
-    #     groupbyClause = ''
-    #     whereClause = " 1=1 "
-    #     selectClause = ''
-    #
-    #     """ Add similar IF block for any new partition field and to add in groupbyClause, selectClause and whereClause """
-    #
-    #     # If section to check if user has selected partner for partition field/filter field
-    #     if (options['partner'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['partner'][1] + '.partner_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['partner'][1] + '.partner_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['partner'][1] + '.partner_name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['partner'][1] + '.partner_name'
-    #
-    #         if (options['partner'] != True):
-    #             whereClause += "and " + self.tablesDictionary['partner'][1] + ".partner_name=\'" + options[
-    #                 'partner'] + "\'"
-    #
-    #     # If section to check if user has selected country for partition field/filter field
-    #     if (options['country'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['country'][1] + '.country_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['country'][1] + '.country_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['country'][1] + '.country_name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['country'][1] + '.country_name'
-    #
-    #         if (options['country'] != True):
-    #             whereClause += "and " + self.tablesDictionary['country'][1] + ".country_name=\'" + options[
-    #                 'country'] + "\'"
-    #
-    #     # If section to check if user has selected state for partition field/filter field
-    #     if (options['state'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['state'][1] + '.state_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['state'][1] + '.state_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['state'][1] + '.state_name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['state'][1] + '.state_name'
-    #
-    #         if (options['state'] != True):
-    #             whereClause += "and " + self.tablesDictionary['state'][1] + ".state_name=\'" + options['state'] + "\'"
-    #
-    #     # If section to check if user has selected district for partition field/filter field
-    #     if (options['district'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['district'][1] + '.district_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['district'][1] + '.district_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['district'][1] + '.district_name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['district'][1] + '.district_name'
-    #
-    #         if (options['district'] != True):
-    #             whereClause += "and " + self.tablesDictionary['district'][1] + ".district_name=\'" + options[
-    #                 'district'] + "\'"
-    #
-    #     # If section to check if user has selected block for partition field/filter field
-    #     if (options['block'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['block'][1] + '.block_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['block'][1] + '.block_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['block'][1] + '.block_name '
-    #         else:
-    #              sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['block'][1] + '.block_name'
-    #
-    #         if (options['block'] != True):
-    #             whereClause += "and " + self.tablesDictionary['block'][1] + ".block_name=\'" + options['block'] + "\'"
-    #
-    #     # If section to check if user has selected village for partition field/filter field
-    #     if (options['village'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['village'][1] + '.village_name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['village'][1] + '.village_name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['village'][1] + '.village_name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['village'][1] + '.village_name'
-    #
-    #         if (options['village'] != True):
-    #             whereClause += "and " + self.tablesDictionary['village'][1] + ".village_name=\'" + options[
-    #                 'village'] + "\'"
-    #
-    #     # If section to check if user has selected mediator for partition field/filter field
-    #     if (options['mediator'] != False):
-    #         if gflag == 1:
-    #             groupbyClause += ',' + self.tablesDictionary['mediator'][1] + '.name'
-    #         else:
-    #             gflag = 1
-    #             groupbyClause = ' group by ' + self.tablesDictionary['mediator'][1] + '.name'
-    #         if sflag == 1:
-    #             selectClause += ',' + self.tablesDictionary['mediator'][1] + '.name '
-    #         else:
-    #             sflag = 1
-    #             selectClause = ' ' + self.tablesDictionary['mediator'][1] + '.name'
-    #
-    #         if (options['mediator'] != True):
-    #             whereClause += "and " + self.tablesDictionary['mediator'][1] + ".name=\'" + options[
-    #                 'mediator'] + "\'"
+        self.lookup_matrix = self.read_lookup_csv()
+        print self.lookup_matrix
 
-        # def country_sql()
-        #     select_fld = 'adoptions''
-        #     select_fld = 'a.adoptions/a.screenings'
-        #     return selectFlds, whereCLasue, GroupByClause
-        #
-        # ptn = 'country'
-        # clauses = ""
-        # for ptn in ptns:
-        #     clauses.append(partition_dict[ptn][2]
-        #
-        # select_query = 'SELECT' + AND '.clauses[0]
-        #
-        # grp_qry = ""
-        # if len(grp_flds) > 1
-        #     grp_qry = GROUP BY'' + ' AND '
-        # sql_query = """
-        # SELECT {select_qry}
-        # FROM
-        #   {join_qry}
-        # {where_qry}
-        # """
-        #
-        # return [selectClause, whereClause, groupbyClause]
+        self.handle_controller(args, options, self.lookup_matrix)
+
+    def handle_controller(self, args, options, lookup_matrix):
+        # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
+        # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
+        print "options is ---------"
+        print options
+        print "$$$$$$$$$$$$$$$$$$$"
+        value_list_to_find = []
+        relevantPartitionDictionary={}
+        relevantValueDictionary={}
+
+        # --- checking validity of the partition fields and value fields entered by user ---
+        if self.check_partitionfield_validity(options['partition']):
+            print "valid input for partition fields"
+            for item in options['partition']:
+                if options['partition'][item]!=False:
+                    relevantPartitionDictionary[item] = options['partition'][item]
+        else:
+            print "Warning - Invalid input for partition fields"
+
+
+        if self.check_valuefield_validity(options['value']):
+            print "valid input for value fields"
+            for item in options['value']:
+                if options['value'][item]!=False:
+                    relevantValueDictionary[item] = options['value'][item]
+        else:
+            print "Warning - Invalid input for Value fields"
+
+        for input in relevantValueDictionary:
+            queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, lookup_matrix)
+            print queryComponents
+        return 0
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
     def check_partitionfield_validity(self, partitionField):
@@ -242,31 +131,164 @@ class Command(BaseCommand):
         else:
             return False
 
+    def read_lookup_csv(self):
+        file_data = csv.reader(open('C:/Users/Lokesh/Documents/dg/dg/media/raw_data_analytics/data_analytics.csv'))
+        headers = next(file_data)
+        headers.remove('')
+        matrix = {}
+        for row in file_data:
+            sub_matrix = {}
+            for i in range(0,len(headers)):
+                sub_matrix[headers[i]]=[]
+                temp = row[i+1].split('$')
+                for t in temp:
+                    sub_matrix[headers[i]].append(tuple(t.split('#')))
+            matrix[row[0]] = sub_matrix
+
+        for e in matrix:
+            print '\n\n---'+str(e)+'::::'
+            print str(matrix[e])
+            print '\n\n'
+        return matrix
+
+    def getRequiredTables(self,partitionDict, valueDictElement, lookup_matrix):
+        selectResult = self.getSelectComponent(partitionDict, valueDictElement)
+        fromResult = self.getFromComponent(partitionDict,valueDictElement,lookup_matrix)
+        whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, lookup_matrix)
+        groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "----------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
+        print "----------------------------------Full SQL Query---------------------------"
+        query = self.makeSQLquery(selectResult,fromResult,whereResult,groupbyResult)
+        print query
+        print "-------------------------------Final Result--------------------------------"
+        df = self.runQuery(query)
+        print df
+        print "---------------------------------Game Over---------------------------------"
+        return '\n\nGetRequiredTables function got over where'
+
+
+    def makeSQLquery(self,select_msg, from_msg, where_msg, groupby_msg):
+        query = 'select '+str(select_msg)+' from '+str(from_msg)+' where '+str(where_msg)+' group by '+str(groupby_msg)
+        return query
+
+    def getSelectComponent(self,partitionElements,valueElement):
+        selectComponentList = []
+        for items in partitionElements:
+            for i in selectDictionary[items]:
+                if(selectDictionary[items][i]==True):
+                    selectComponentList.append(tableDictionary[items] + '.' + i)
+        print selectComponentList
+        for i in selectDictionary[valueElement]:
+            if(selectDictionary[valueElement][i]==True):
+                selectComponentList.append(tableDictionary[valueElement] + '.' + i)
+
+        print '??????????????????????\n????????????????????????????'
+        print selectComponentList
+        print '???????????????????????\n????????????????????????????'
+        return ','.join(selectComponentList)
+
+    def makeJoinTable(self,sourceTable,destinationTable,lookup_matrix,occuredTables,Dict):
+        if(sourceTable not in occuredTables):
+            for i in lookup_matrix[sourceTable][destinationTable]:
+                if(i[2]=='self'):
+                    print 'SELF'
+                    return
+                elif(i[2]=='direct'):
+                    print 'DIRECT'
+                    if(destinationTable not in occuredTables):
+                        occuredTables.append(destinationTable)
+                    if(destinationTable not in Dict[sourceTable]):
+                        Dict[sourceTable].append(destinationTable)
+                    occuredTables.append(sourceTable)
+                    return
+                else:
+                    print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                    print sourceTable
+                    print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+                    if(sourceTable in Dict.keys()):
+                        Dict[sourceTable].append(i[2])
+                    else:
+                        Dict[sourceTable]=[i[2]]
+                    occuredTables.append(sourceTable)
+                    self.makeJoinTable(i[2],destinationTable,lookup_matrix,occuredTables,Dict)
+        else:
+            return
+
+    def getFromComponent(self,partitionElements,valueElement,lookup_matrix):
+        partitionTables = []
+        for i in partitionElements:
+            if(i in categoryDictionary['geographies']):
+                partitionTables.insert(0,tableDictionary[i])
+            else:
+                partitionTables.append(tableDictionary[i])
+        print '##############################################'
+        print partitionTables
+        print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+        print tableDictionary[valueElement]
+        print '*****************************************'
+
+        majorTablesList = []
+        tablesOccuredList = []
+        for index, table in enumerate(partitionTables):
+            minorTablePath=[]
+            self.Dict[table]=[]
+            if(table not in majorTablesList):
+                minorTablePath.append(table)
+                self.makeJoinTable(table,tableDictionary[valueElement],lookup_matrix,tablesOccuredList,self.Dict)
+            print '()()()()()()()()()()()()()()()()()()()'
+            print minorTablePath
+            print 'Dict is -      - - - - ' + str(self.Dict)
+            print '()()()()()()()()()()()()()()()()()()()'
+        majorTablesList=tablesOccuredList
+        print '!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!'
+        print majorTablesList
+        print '!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!'
+        print 'testing From Component'
+        return ' , '.join(majorTablesList)
+
+    def getWhereComponent(self,partitionElements,valueElement, Dictionary, lookup_matrix):
+        whereString = '1=1'
+        whereComponentList = [whereString]
+        for items in partitionElements:
+            if partitionElements[items]!=True:
+                whereComponentList.append(tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
+        print '>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        print whereComponentList
+        print '>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        for i in Dictionary:
+            for j in Dictionary[i]:
+                whereComponentList.append(str(i)+'.'+str(lookup_matrix[i][j][0][0])+'='+str(j)+'.'+str(lookup_matrix[i][j][0][1]))
+        return ' and '.join(whereComponentList)
+
+    def getGroupByComponent(self,partitionElements,valueElement):
+        groupbyComponentList = []
+        for items in partitionElements:
+            if partitionElements[items]==True:
+                groupbyComponentList.append(tableDictionary[items]+'.'+groupbyDictionary[items])
+        print '<<<<<<<<<<<<<<<<<<<<<<<<\n<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        print 'testing GroupBy Component'
+        print '<<<<<<<<<<<<<<<<<<<<<<<\n<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        return ' , '.join(groupbyComponentList)
+
+
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
 
+    def runQuery(self, query):
+        # Make connection with the database
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
+        # Making dataframe
+        temp_df = psql.read_sql(query, con=mysql_cn)
+        mysql_cn.close()
+        return temp_df
 
-
-
-
-    # def runQuery(self, query):
-    #     # Make connection with the database
-    #     mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
-    #     # Making dataframe
-    #     temp_df = psql.read_sql(query, con=mysql_cn)
-    #     mysql_cn.close()
-    #     return temp_df
     #
-
-
-
-
-
-
-
-
-
-
-
     #
     # def nScreeningDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
     #     Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and SC.date between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
@@ -277,106 +299,3 @@ class Command(BaseCommand):
     #     Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and ADP.date_of_adoption between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
     #     dfAdoption = self.runQuery(Adoptionquery)
     #     return dfAdoption
-
-    def handle_controller(self, args, options):
-        # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
-        # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
-        print "options is ---------"
-        print options
-        print "$$$$$$$$$$$$$$$$$$$"
-        value_list_to_find = []
-        relevantPartitionDictionary={}
-        relevantValueDictionarys={}
-
-        # --- checking validity of the partition fields and value fields entered by user ---
-        if self.check_partitionfield_validity(options['partition']):
-            print "valid input for partition fields"
-            for item in options['partition']:
-                if options['partition'][item]!=False:
-                    relevantPartitionDictionary[item] = options['partition'][item]
-        else:
-            print "Warning - Invalid input for partition fields"
-
-
-        if self.check_valuefield_validity(options['value']):
-            print "valid input for value fields"
-            for item in options['value']:
-                if options['value'][item]!=False:
-                    relevantValueDictionarys[item] = options['value'][item]
-        else:
-            print "Warning - Invalid input for Value fields"
-
-        for input in relevantValueDictionarys:
-            queryComponents = self.getRequiredTables(relevantPartitionDictionary,input)
-            print queryComponents
-        return 0
-
-    def getRequiredTables(self,partitionDict, valueDictElement):
-        selectResult = self.getSelectComponent(partitionDict, valueDictElement)
-        fromResult = self.getFromComponent(partitionDict,valueDictElement)
-        whereResult = self.getWhereComponent(partitionDict, valueDictElement)
-        groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-        return 'GetRequiredTables function got over where'
-
-
-
-    def getSelectComponent(self,partitionElements,valueElement):
-        selectComponentList = []
-        for items in partitionElements:
-            selectComponentList.append(selectDictionary[items])
-        print selectComponentList
-        return ','.join(selectComponentList)
-
-
-    def getFromComponent(self,partitionElements,valueElement):
-        print 'testing From Component'
-
-    def getWhereComponent(self,partitionElements,valueElement):
-        whereString = '1=1'
-        whereComponentList = []
-        for items in partitionElements:
-            if partitionElements[items]!=True:
-                whereComponentList.append(whereDictionary[items] + '=' + partitionElements[items])
-        print whereComponentList
-        return ' and '.join(whereComponentList)
-
-    def getGroupByComponent(self,partitionElements,valueElement):
-        print 'testing GroupBy Component'
-
-    #         for element in options['partition'].key:
-    #             tablesList = tableDictionary[element]queryComponents = (options['partition'])
-    #         if self.check_valuefield_validity(options['value']):
-    #             for k, v in options['value'].items():
-    #                 if v:
-    #                     value_list_to_find.append(k)
-    #         else:
-    #             print "Check the value field inputs again"
-    #     else:
-    #         print "Check the partition field inputs again"
-    #     # --- checking of validity ends here ---
-    #
-    #     # --- creation of dataframe begins here ----
-    #     df = pd.DataFrame()
-    #     for element in value_list_to_find:
-    #         call_function = getattr(self, self.generalValueList[element])
-    #         if df.empty:
-    #             df = df.append(call_function(queryComponents[0], queryComponents[1], queryComponents[2], args[0], args[1]))
-    #         else:
-    #             df = pd.merge(df, call_function(queryComponents[0], queryComponents[1], queryComponents[2], args[0], args[1]),
-    #                           how='outer')
-    #     # --- creation of dataframe ends here ---
-    #     print df
-    #     self.make_excel(df)
-    #
-    # def make_excel(self,df):
-    #     df.to_excel('library_data.xlsx','Sheet1')
-    #
-    # # This function is not being used for now but not being removed for future reference. Will be erased in production mode
-    # def home(self, selectClause, whereClause, groupbyClause):
-    #     # Make query to extract data and create dataframe for further processing
-    #     # print 'loaded dataframe from MySQL. records:', len(df_mysql)
-    #     print "################################"
-    #
-    # def make_from_part(self, options):
-    #     if(options['partner']):
-    #         join_tables_list = [self.tablesDictionary['partner'][0]]
