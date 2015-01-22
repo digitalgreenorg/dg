@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from social_website.models import Partner, Video as social_video
+from social_website.models import Comment, Partner, Video as social_video
 from videokheti.models import ActionType, Crop, Method, Video, TimeYear
 
 
@@ -255,6 +255,7 @@ def play_video(request):
     video = Video.objects.get(id=video_id)
     partner = Partner.objects.get(coco_id=video.coco_video.partner_id)
     svideo = social_video.objects.get(uid=video.website_id)
+    comments = Comment.objects.filter(video_id=svideo.uid)
     context = {
                 'title': video.coco_video.title,
                 'partner': video.coco_video.partner.partner_name,
@@ -268,5 +269,6 @@ def play_video(request):
                 'date_pro': svideo.date,
                 'facillitator': video.coco_video.facilitator.name,
                 'cameraoperator': video.coco_video.cameraoperator.name,
+                'comments': comments
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
