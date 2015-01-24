@@ -148,7 +148,15 @@
                             <div class="form-group">
                                 <div class="col-md-2">
                                 <label for="exampleInputName2">
-                                    <img height='50px' width='50px' class="media-object" src="{{obj.person.thumbnailURL}}" alt="...">
+                                    {% if request.user.is_authenticated %}
+	                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+	                                        <img height='50px' width='50px' class="media-object" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" alt="...">
+	                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+	                                            <img height='50px' width='50px' class="media-object" src="{{request.user.social_auth.all.0.extra_data.picture}}?sz=50" alt="...">
+	                                    {% else %}
+	                                            <img height='50px' width='50px' class="media-object" src="{{STATIC_URL}}social_website/content/default.png" alt="...">
+	                                    {% endif %}
+	                                {% endif %}                
                                 </label>
                                 </div>
                                 <div class="col-md-8">
@@ -156,9 +164,9 @@
                                 </div>
                                 <div class="col-md-2">
                                 {% if not request.user.is_authenticated %}
-                                    <a href="/login/?next={{request.get_full_path|urlencode}}"><button type="button" class="btn btn-success">POST</button></a>
+                                    <a href="/login/?next={{request.get_full_path|urlencode}}"><button type="button" class="btn btn-success js-data"  data-id="{{id}}">POST</button></a>
                                 {% else %}
-                                    <button type="button" class="btn btn-success" id="post-click" data-id="{{id}}">POST</button>
+                                    <button type="button" class="btn btn-success js-data" id="post-click" data-id="{{id}}">POST</button>
                                 {% endif %}
                                 
                                 
@@ -210,7 +218,7 @@
     });
     
     $('#forum').on('show.bs.modal', function(){
-        var video = $("#post-click").data('id')
+        var video = $(".js-data").data('id')
         if ($('#forum li').length == 0){
 	        $.get( "/videokheti/get-comments/", { video: video })
 	        .done(function( data ) {
