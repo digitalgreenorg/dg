@@ -1,5 +1,8 @@
+import datetime
+
+from django.contrib.auth.models import User
 from django.db import models
-from videos.models import Video
+from videos.models import Video as coco_video
 
 
 class Crop(models.Model):
@@ -28,7 +31,7 @@ class Method(models.Model):
 
 
 class Video(models.Model):
-    coco_video = models.ForeignKey(Video)
+    coco_video = models.ForeignKey(coco_video)
     website_id = models.CharField(max_length=20)
     crop = models.ForeignKey(Crop)
     time_year = models.ForeignKey(TimeYear)
@@ -36,3 +39,12 @@ class Video(models.Model):
     method = models.ForeignKey(Method, blank=True, null=True)
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
+
+
+class VideoComment(models.Model):
+    date = models.DateField(default=lambda: datetime.datetime.utcnow().date())
+    text = models.TextField()
+    video = models.ForeignKey(Video)
+    user = models.ForeignKey(User, null=True, blank=True)
+    imageURL = models.URLField(max_length=400, null=True, blank=True)
+    personName = models.CharField(max_length=300, null=True, blank=True)

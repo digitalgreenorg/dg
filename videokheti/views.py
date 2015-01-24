@@ -1,8 +1,14 @@
+import json
+
+from django.contrib.auth.decorators import login_required
+import django.core.serializers
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 
 from social_website.models import Comment, Partner, Video as social_video
-from videokheti.models import ActionType, Crop, Method, Video, TimeYear
+from videokheti.models import ActionType, Crop, Method, Video, VideoComment, TimeYear
 
 
 def home(request):
@@ -276,6 +282,30 @@ def play_video(request):
                 'date_pro': svideo.date,
                 'facillitator': video.coco_video.facilitator.name,
                 'cameraoperator': video.coco_video.cameraoperator.name,
-                'comments': comments
+                'comments': comments,
+                'id': video_id,
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
+
+
+@login_required()
+@csrf_exempt
+def comment(request):
+    #resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    video_id = request.POST.get('video', None)
+    text = request.POST.get('comment', None)
+    try:
+        provider = request.user.social_auth.all()[0].provider
+        if provider == 'google-oauth2':
+            url = '%s?sz=75' % request.user.social_auth.all()[0].extra_data['picture']
+        elif provider == 'facebook':
+            url = 'https://graph.facebook.com/%s/picture?type=large' % request.user.social_auth.all()[0].uid
+    except Exception as e:
+        print e
+        url = "/media/social_website/content/default.png"
+
+    video = VideoComment(text=text, video_id=video_id, user=request.user, imageURL=url, personName=request.user.username)
+    video.save()
+    resp = django.core.serializers.serialize('json', [video])
+    resp = resp.strip("[]")
+    return HttpResponse(resp)
