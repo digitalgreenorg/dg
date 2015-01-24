@@ -240,7 +240,7 @@ def play_video(request):
     crop = video.crop if video.crop is not None else None
     time = video.time_year if video.time_year is not None else None
     action = video.action_type if video.action_type is not None else None
-    method = video.method_id if video.method_id is not None else None
+    method = video.method if video.method is not None else None
     breadcrumb_list = []
     if(crop):
         breadcrumb_obj = {'image': crop.image_file,
@@ -257,9 +257,27 @@ def play_video(request):
                            'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
+    else:
+        breadcrumb_obj = {'image': video.image_file,
+                          'video': 1,
+                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
     if(method):
         breadcrumb_obj = {'image': method.image_file,
-                           'link': ''.join(['/videokheti/video/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
+                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    elif(action):
+        breadcrumb_obj = {'image': video.image_file,
+                          'video': 1,
+                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
+                         }
+        breadcrumb_list.append(breadcrumb_obj)
+    if(crop and time and action and method):
+        breadcrumb_obj = {'image': video.image_file,
+                          'video': 1,
+                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&method=', str(method.id),'&level=4'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     partner = Partner.objects.get(coco_id=video.coco_video.partner_id)

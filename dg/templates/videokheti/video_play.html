@@ -68,7 +68,7 @@
                 <li>
                     <a href="{{obj.link}}" style="background-color:black; border: 0px;">
                         <button type="button" class="btn btn-default btn-xs">
-                            <img class="media-object" src="{{STATIC_URL}}videokheti/content/images/{{obj.image}}" alt="..." style="width:40px; height:40px !important;">
+                            <img class="media-object" src="{% if obj.video %} {{obj.image}} {% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="..." style="width:40px; height:40px !important;">
                         </button>
                     </a>
                 </li>
