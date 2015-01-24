@@ -135,39 +135,6 @@
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Questions Asked</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="panel panel-default">
-                            <ul class="list-group">
-                                {% for obj in comments%}
-                                    <li class="list-group-item">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <img height='30px' width='30px' class="media-object" src="{{obj.person.thumbnailURL}}" alt="...">
-                                            </div>
-                                            <div class="media-body">
-                                                <h4 class="media-heading">{{obj.person.name}}</h4>
-                                                <h6 class="media-heading">{{obj.text}}</h6>
-                                            </div>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <div class="modal fade" id="forum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -202,19 +169,6 @@
                         </div>
                         <div class="panel panel-default">
                             <ul class="list-group" id="commentlist">
-                                {% for obj in comments%}
-                                    <li class="list-group-item">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <img height='30px' width='30px' class="media-object" src="{{obj.person.thumbnailURL}}" alt="...">
-                                            </div>
-                                            <div class="media-body">
-                                                <h4 class="media-heading">{{obj.person.name}}</h4>
-                                                <h6 class="media-heading">{{obj.text}}</h6>
-                                            </div>
-                                        </div>
-                                    </li>
-                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -256,7 +210,18 @@
     });
     
     $('#forum').on('show.bs.modal', function(){
-        alert("jhakarshfdkcndcv");
+        var video = $("#post-click").data('id')
+        if ($('#forum li').length == 0){
+	        $.get( "/videokheti/get-comments/", { video: video })
+	        .done(function( data ) {
+	            data_json = JSON.parse(data);
+	            for (obj in data_json) {
+	                var output_array = ['<li class="list-group-item">', '<div class="media">', '<div class="media-left">', '<img height="30px" width="30px" class="media-object" src="', data_json[obj].imageURL, '" alt="...">', '</div>', '<div class="media-body">', '<h4 class="media-heading">', data_json[obj].personName, '</h4>', '<h6 class="media-heading">', data_json[obj].text, '</h6>', '</div></div></li>'];
+	                var html_string = output_array.join("");
+	                $("#commentlist").append(html_string);
+	            }
+	        });
+        }
     })
     </script>
 </body>

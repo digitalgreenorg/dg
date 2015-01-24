@@ -309,3 +309,26 @@ def comment(request):
     resp = django.core.serializers.serialize('json', [video])
     resp = resp.strip("[]")
     return HttpResponse(resp)
+
+
+def get_comments(request):
+    #resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    video_id = request.GET.get('video', None)
+    video = Video.objects.get(id=video_id)
+    comments_screenings = Comment.objects.filter(video_id=video.website_id, isOnline=False)
+    comments_online = VideoComment.objects.filter(video_id=video.id).order_by('-id')
+    list_comments = []
+    for obj in comments_online:
+        obj_dic = {'text': obj.text,
+                   'imageURL': obj.imageURL,
+                   'personName': obj.personName,
+                   }
+        list_comments.append(obj_dic)
+    for obj in comments_screenings:
+        obj_dic = {'text': obj.text,
+                   'imageURL': obj.person.thumbnailURL,
+                   'personName': obj.person.name,
+                   }
+        list_comments.append(obj_dic)
+    resp = json.dumps(list_comments)
+    return HttpResponse(resp)
