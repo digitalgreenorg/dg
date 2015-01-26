@@ -12,8 +12,8 @@ class Migration(DataMigration):
         # insert into crop
         list_names = ['soybean', 'onion', 'spinach', 'coriander', 'wheat', 'pea', 'gram', 'chilli', 'orange',
                       'maize', 'gooseberry', 'brinjal', 'sweet_potato', 'groundnut', 'tomato', 'black_gram',
-                      'lentil', 'fenugreek', 'red_gram', 'misc', 'green_manure_crop', 'mustard', 'sorghum',
-                      'garlic']
+                      'lentil', 'fenugreek', 'red_gram', 'green_manure_crop', 'mustard', 'sorghum',
+                      'garlic', 'misc']
 
         for i in list_names:
             crop_object = orm['videokheti.Crop'](name=i, image_file=i.replace('_', '-')+'.png',
