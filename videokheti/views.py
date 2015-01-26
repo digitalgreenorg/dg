@@ -12,22 +12,30 @@ from videokheti.models import ActionType, Crop, Method, Video, VideoComment, Tim
 
 
 def home(request):
-    crop_objects = Crop.objects.all()
-    list_dict = []
-    for obj in crop_objects:
-        dic_obj = {'name': obj.name.replace('_', ' '),
-                   'image': obj.image_file,
-                   'audio': obj.sound_file,
-                   'id': obj.id,
-                   'link': ''.join(['kheti/?crop=', str(obj.id), '&level=1']),
-                   }
-        list_dict.append(dic_obj)
+    if 'videokheti_cookie' in request.COOKIES:
+        crop_objects = Crop.objects.all()
+        list_dict = []
+        for obj in crop_objects:
+            dic_obj = {'name': obj.name.replace('_', ' '),
+                       'image': obj.image_file,
+                       'audio': obj.sound_file,
+                       'id': obj.id,
+                       'link': ''.join(['kheti/?crop=', str(obj.id), '&level=1']),
+                       }
+            list_dict.append(dic_obj)
         context = {
-                  'crop': list_dict,
-                  'title': 'Choose the Crop',
-                  'title_audio': 'you-can-name-crop-prompt-graphics.wav'
-                  }
-    return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+                    'crop': list_dict,
+                    'title': 'Choose the Crop',
+                    'title_audio': 'you-can-name-crop-prompt-graphics.wav'
+                   }
+        return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+    else:
+        context = {
+                    'cookies': 1,
+                   }
+        response = render_to_response('videokheti_home.html', context, context_instance=RequestContext(request))
+        response.set_cookie("videokheti_cookie", 1)
+        return response
 
 
 def level(request):
