@@ -126,6 +126,32 @@
 	                </div>
                 
                 </div>
+                
+                <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
+                <!-- Carousel indicators -->
+                    <ol class="carousel-indicators">
+                        {% for obj in video_carousel %}
+                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
+                        {% endfor %}
+                    </ol>   
+                    <!-- Carousel items -->
+                    <div class="carousel-inner">
+                        {% for obj in video_carousel %}
+                            <div class="item {% if forloop.counter == 1 %} active {% endif %}">
+                                <div class="thumbnail">
+                                    <img src="{{STATIC_URL}}videokheti/content/images/{{obj}}" alt="" style="width:253px; height:158px !important;"> </img>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Carousel nav -->
+                    <a class="carousel-control left" href="#videoCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="carousel-control right" href="#videoCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
             </div>
         </div>
         <!-- /.row -->
@@ -195,6 +221,19 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <!-- Enabling Google Analytics -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16211208-1");
+            pageTracker._trackPageview();
+            } 
+        catch(err) {}
+    </script>
     
     <script>
     $("#post-click").click(function(event) {

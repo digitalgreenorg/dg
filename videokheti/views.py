@@ -283,6 +283,7 @@ def play_video(request):
     partner = Partner.objects.get(coco_id=video.coco_video.partner_id)
     svideo = social_video.objects.get(uid=video.website_id)
     comments = Comment.objects.filter(video_id=svideo.uid)
+    video_carousel = ['brinjal.jpg', 'chilli.jpg', 'coriander.jpg', 'garlic.jpg']
     context = {
                 'title': video.coco_video.title,
                 'partner': video.coco_video.partner.partner_name,
@@ -298,6 +299,7 @@ def play_video(request):
                 'cameraoperator': video.coco_video.cameraoperator.name,
                 'comments': comments,
                 'id': video_id,
+                'video_carousel': video_carousel,
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
 
