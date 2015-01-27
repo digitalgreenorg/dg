@@ -188,7 +188,7 @@ class Command(BaseCommand):
         for i in selectDictionary[valueElement]:
             if(selectDictionary[valueElement][i]==True):
 
-                selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement]) + '.'))
+                selectComponentList.append(i.replace('count(','count(distinct '+str(tableDictionary[valueElement]) + '.'))
 
         print '??????????????????????\n????????????????????????????'
         print selectComponentList
@@ -240,7 +240,10 @@ class Command(BaseCommand):
         tablesOccuredList = []
         for index, table in enumerate(partitionTables):
             minorTablePath=[]
-            self.Dict[table]=[]
+            if table not in self.Dict.keys():
+                self.Dict[table]=[]
+            # else:
+            #     self.Dict=[]
             if(table not in majorTablesList):
                 minorTablePath.append(table)
                 self.makeJoinTable(table,tableDictionary[valueElement],lookup_matrix,tablesOccuredList,self.Dict)
