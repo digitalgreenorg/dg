@@ -145,10 +145,10 @@ class Command(BaseCommand):
                     sub_matrix[headers[i]].append(tuple(t.split('#')))
             matrix[row[0]] = sub_matrix
 
-        for e in matrix:
-            print '\n\n---'+str(e)+'::::'
-            print str(matrix[e])
-            print '\n\n'
+        # for e in matrix:
+        #     print '\n\n---'+str(e)+'::::'
+        #     print str(matrix[e])
+        #     print '\n\n'
         return matrix
 
     def getRequiredTables(self,partitionDict, valueDictElement, lookup_matrix):
@@ -187,11 +187,11 @@ class Command(BaseCommand):
         print selectComponentList
         for i in selectDictionary[valueElement]:
             if(selectDictionary[valueElement][i]==True):
-                selectComponentList.append(tableDictionary[valueElement] + '.' + i)
+
+                selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement]) + '.'))
 
         print '??????????????????????\n????????????????????????????'
         print selectComponentList
-        print '???????????????????????\n????????????????????????????'
         return ','.join(selectComponentList)
 
     def makeJoinTable(self,sourceTable,destinationTable,lookup_matrix,occuredTables,Dict):
@@ -204,14 +204,16 @@ class Command(BaseCommand):
                     print 'DIRECT'
                     if(destinationTable not in occuredTables):
                         occuredTables.append(destinationTable)
-                    if(destinationTable not in Dict[sourceTable]):
-                        Dict[sourceTable].append(destinationTable)
+                    if(sourceTable in Dict.keys()):
+                        if(destinationTable not in Dict[sourceTable]):
+                            Dict[sourceTable].append(destinationTable)
+                    else:
+                        Dict[sourceTable]=[destinationTable]
                     occuredTables.append(sourceTable)
                     return
                 else:
                     print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
                     print sourceTable
-                    print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
                     if(sourceTable in Dict.keys()):
                         Dict[sourceTable].append(i[2])
                     else:
@@ -232,7 +234,7 @@ class Command(BaseCommand):
         print partitionTables
         print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
         print tableDictionary[valueElement]
-        print '*****************************************'
+        print '##############################################'
 
         majorTablesList = []
         tablesOccuredList = []
@@ -245,11 +247,9 @@ class Command(BaseCommand):
             print '()()()()()()()()()()()()()()()()()()()'
             print minorTablePath
             print 'Dict is -      - - - - ' + str(self.Dict)
-            print '()()()()()()()()()()()()()()()()()()()'
         majorTablesList=tablesOccuredList
         print '!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!'
         print majorTablesList
-        print '!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!'
         print 'testing From Component'
         return ' , '.join(majorTablesList)
 
@@ -261,9 +261,14 @@ class Command(BaseCommand):
                 whereComponentList.append(tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
         print '>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         print whereComponentList
-        print '>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
         for i in Dictionary:
             for j in Dictionary[i]:
+                print "***"+str(j)
+                print "*****"+str(lookup_matrix[i][j])
+                print "********"+str(i)
+                print "***********"+str(lookup_matrix[i][j][0][0])
+                print "*************"+str(j)
+                print "*****************"+str(lookup_matrix[i][j][0][1])
                 whereComponentList.append(str(i)+'.'+str(lookup_matrix[i][j][0][0])+'='+str(j)+'.'+str(lookup_matrix[i][j][0][1]))
         return ' and '.join(whereComponentList)
 
@@ -273,8 +278,7 @@ class Command(BaseCommand):
             if partitionElements[items]==True:
                 groupbyComponentList.append(tableDictionary[items]+'.'+groupbyDictionary[items])
         print '<<<<<<<<<<<<<<<<<<<<<<<<\n<<<<<<<<<<<<<<<<<<<<<<<<<<'
-        print 'testing GroupBy Component'
-        print '<<<<<<<<<<<<<<<<<<<<<<<\n<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        print 'testing GroupBy Component\n'
         return ' , '.join(groupbyComponentList)
 
 
@@ -282,20 +286,8 @@ class Command(BaseCommand):
 
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen_jan15')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
         return temp_df
-
-    #
-    #
-    # def nScreeningDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
-    #     Screeningquery = 'select' + selectClause + ',count(SC.id) as nScreenings from activities_screening SC join programs_partner P on P.id=SC.partner_id join geographies_village V on SC.village_id=V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and SC.date between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
-    #     dfScreening = self.runQuery(Screeningquery)
-    #     return dfScreening
-    #
-    # def nAdoptionDF(self, selectClause, whereClause, groupbyClause, sdate, edate):
-    #     Adoptionquery = 'select' + selectClause + ',count(ADP.id) as nAdoptions from activities_personadoptpractice ADP join programs_partner P on P.id=ADP.partner_id join people_person PP on ADP.person_id=PP.id join geographies_village V on PP.village_id = V.id join geographies_block B on V.block_id=B.id join geographies_district D on B.district_id=D.id join geographies_state S on D.state_id=S.id join geographies_country C on S.country_id=C.id where' + whereClause + 'and ADP.date_of_adoption between \'' + sdate + '\' and \'' + edate + '\'' + groupbyClause + ';'
-    #     dfAdoption = self.runQuery(Adoptionquery)
-    #     return dfAdoption

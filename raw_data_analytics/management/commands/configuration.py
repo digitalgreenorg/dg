@@ -26,10 +26,10 @@ tableDictionary={
     'numAnimator':'people_animatorwisedata',
     'listPeople':'people_person',
     'listAnimator':'people_animatorwisedata',
-    'listVideoScreened':'videos_videowisedata',
-    'numVideoScreened':'videos_videowisedata',
-    'listVideoProduces':'Videos_videowisedata',
-    'numVideoProduced':'videos_videowisedata',
+    'listVideoScreened':'videos_video_wisedata',
+    'numVideoScreened':'videos_video_wisedata',
+    'listVideoProduces':'Videos_video_wisedata',
+    'numVideoProduced':'videos_video_wisedata',
 }
 
 whereDictionary={
@@ -116,7 +116,7 @@ selectDictionary={
     'sector':{'id':True,'name':True},
     'practice':{'id':True,'practice_name':True},
     'topic':{'id':True,'name':True},
-    'numScreening':{'count(screening_id)':True,'count(distinct screening_id)':True},
+    'numScreening':{'count(screening_id)':True,'count(distinct screening_id)':False},
 #    'video_n_screening':{'table':'videos_video_wise_data','column':'nScreenings','function':'video_screening_func()'},
 #    'person_n_screening':{'table':'people_person_wise_data','column':'nScreenings','function':'person_screening_func()'},
     'numAdoption':{'count(id)':True,'count(distinct id)':True},
