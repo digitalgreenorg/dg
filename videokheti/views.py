@@ -315,7 +315,7 @@ def play_video(request):
                 'cameraoperator': video.coco_video.cameraoperator.name,
                 'comments': comments,
                 'id': video_id,
-                'video_carousel': video_carousel,
+                'video_carousel': video_carousel.sort(),
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
 
