@@ -1,3 +1,5 @@
+from os import listdir
+
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 
+from dg.settings import MEDIA_ROOT
 from social_website.models import Comment, Partner, Video as social_video
 from videokheti.models import ActionType, Crop, Method, Video, VideoComment, TimeYear
 
@@ -291,9 +294,14 @@ def play_video(request):
     partner = Partner.objects.get(coco_id=video.coco_video.partner_id)
     svideo = social_video.objects.get(uid=video.website_id)
     comments = Comment.objects.filter(video_id=svideo.uid)
-    video_carousel = ['brinjal.jpg', 'chilli.jpg', 'coriander.jpg', 'garlic.jpg']
+    video_carousel = []
+    for f in listdir(''.join([MEDIA_ROOT, '/img/', str(video.coco_video.id), '/'])):
+        print f
+        if f.split('.')[-1] == 'jpg':
+            video_carousel.append(f)
     context = {
                 'title': video.coco_video.title,
+                'coco_id': video.coco_video.id,
                 'partner': video.coco_video.partner.partner_name,
                 'partner_image': partner.logoURL,
                 'youtube': video.coco_video.youtubeid,
