@@ -21,7 +21,7 @@ class Migration(DataMigration):
                                                 )
             crop_object.save()
         #insert into TimeYear
-        list_names = ['pre-sowing', 'success_story', 'sowing_and_crop_management', 'harvesting']
+        list_names = ['pre-sowing', 'sowing_and_crop_management', 'harvesting', 'success_story',]
 
         for i in list_names:
             timeyear_object = orm['videokheti.TimeYear'](name=i, image_file=i.replace('_', '-')+'.png',

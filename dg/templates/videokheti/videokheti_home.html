@@ -46,14 +46,23 @@
     </nav>
 
     <!-- Intro Header -->
-    <header class="intro">
+    <header class="intro" style="background-image: none !important;">
         <div class="intro-body">
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading">VIDEO KHETI</h1>
-                        <p class="intro-text">A free, responsive, one page Bootstrap theme.<br>Created by Start Bootstrap.</p>
+                        <h1 class="brand-heading">
+                        <a href="#" data-id="0" class="audio-click">
+                                        <button type="button" class="btn btn-success btn-lg" style="margin-left: 18px; font-size: 200px; border-radius: 50%; text-align: center;">
+                                            <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true" style="vertical-align: -30px; margin-left: 30px; margin-right: 30px"></span>
+                                        </button>
+                                    </a>
+                        </h1>
                         
+                        <audio preload="auto" id="0">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
+                            Your browser does not support the audio element.
+                        </audio>
                     </div>
                 </div>
             </div>
@@ -65,6 +74,21 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <script>
+    $(".audio-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var button = $(this).find('.btn');
+        button.removeClass('btn-success').addClass('btn-info');
+        var audio = $("#"+$(this).data('id'))[0];
+        audio.play();
+        audio.addEventListener('ended', function(){
+            button.removeClass('btn-info').addClass('btn-success');
+            window.location.reload(true);
+        });
+    });
+    </script>
 
 </body>
 
