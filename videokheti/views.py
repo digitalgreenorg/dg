@@ -299,6 +299,7 @@ def play_video(request):
         print f
         if f.split('.')[-1] == 'jpg':
             video_carousel.append(f)
+    video_carousel.sort()
     context = {
                 'title': video.coco_video.title,
                 'coco_id': video.coco_video.id,
@@ -315,7 +316,7 @@ def play_video(request):
                 'cameraoperator': video.coco_video.cameraoperator.name,
                 'comments': comments,
                 'id': video_id,
-                'video_carousel': video_carousel.sort(),
+                'video_carousel': video_carousel,
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
 
