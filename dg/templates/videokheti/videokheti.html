@@ -119,7 +119,7 @@
                             </div>
                         </div>
                 
-                        <audio id="{{obj.id}}">
+                        <audio preload="meta" id="{{obj.id}}">
                             <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/wav">
                             Your browser does not support the audio element.
                         </audio>
