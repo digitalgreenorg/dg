@@ -79,7 +79,7 @@ urlpatterns = patterns('',
     (r'^analytics/cocouser/',include('deoanalytics.urls')),
     (r'^analytics/vrptool/',include('vrppayment.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
-    (r'^videokheti/', include(videokheti.urls)),
+    (r'^agri/', include(videokheti.urls)),
     (r"^", include("mezzanine.urls")),
 
 )

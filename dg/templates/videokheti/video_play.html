@@ -38,7 +38,7 @@
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
                 </a>
-                <a class="navbar-brand" href="/videokheti">digitalGreen</a>
+                <a class="navbar-brand" href="/agri">digitalGreen</a>
                 <audio id="-1">
                     <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
                     Your browser does not support the audio element.
@@ -236,7 +236,7 @@
         var video = $(this).data('id')
         var comment = $('textarea#commentText').val().trim();
         if (comment.length > 0) {
-            $.post( "/videokheti/comment/", { video: video, comment: comment })
+            $.post( "/agri/comment/", { video: video, comment: comment })
             .done(function( data ) {
                 data_json = JSON.parse(data);
                 var output_array = ['<li class="list-group-item">', '<div class="media">', '<div class="media-left">', '<img height="30px" width="30px" class="media-object" src="', data_json.fields.imageURL, '" alt="...">', '</div>', '<div class="media-body">', '<h4 class="media-heading">', data_json.fields.personName, '</h4>', '<h6 class="media-heading">', data_json.fields.text, '</h6>', '</div></div></li>'];
@@ -253,7 +253,7 @@
     $('#forum').on('show.bs.modal', function(){
         var video = $(".js-data").data('id')
         if ($('#forum li').length == 0){
-	        $.get( "/videokheti/get-comments/", { video: video })
+	        $.get( "/agri/get-comments/", { video: video })
 	        .done(function( data ) {
 	            data_json = JSON.parse(data);
 	            for (obj in data_json) {

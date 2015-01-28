@@ -26,7 +26,7 @@
 
 </head>
 
-<body onload="loadAudio()">
+<body>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -39,8 +39,8 @@
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
                 </a>
-                <a class="navbar-brand" href="/videokheti">digitalGREEN</a>
-                <audio id="-1">
+                <a class="navbar-brand" href="/agri">digitalGREEN</a>
+                <audio preload="auto" id="-1">
                     <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
@@ -82,7 +82,7 @@
                     
                 </form>
                 {% if title_audio %}
-                <audio id="0">
+                <audio preload="auto" id="0">
                             <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/wav">
                             Your browser does not support the audio element.
                 </audio>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                 
-                        <audio id="{{obj.id}}">
+                        <audio preload="auto" id="{{obj.id}}">
                             <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/wav">
                             Your browser does not support the audio element.
                         </audio>
@@ -158,15 +158,6 @@
         catch(err) {}
     </script>
     
-    <script>
-    function loadAudio() {
-        //setTimeout($(this).pause.bind($(this)), 5)
-        $("audio").each(function() {
-            $(this)[0].play();
-            setTimeout($(this)[0].pause.bind($(this)[0]), 1);
-        });
-    }
-    </script>
     <script>
     $(".audio-click").click(function(event) {
         event.preventDefault();

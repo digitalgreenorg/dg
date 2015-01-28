@@ -24,7 +24,7 @@ def home(request):
                        'image': obj.image_file,
                        'audio': obj.sound_file,
                        'id': obj.id,
-                       'link': ''.join(['kheti/?crop=', str(obj.id), '&level=1']),
+                       'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
                        }
             list_dict.append(dic_obj)
         context = {
@@ -60,7 +60,7 @@ def level(request):
         breadcrumb_list = []
         crop = Crop.objects.get(id=crop_id)
         breadcrumb_obj = {'image': crop.image_file,
-                          'link': '/videokheti'
+                          'link': '/agri'
                           }
         breadcrumb_list.append(breadcrumb_obj)
 
@@ -78,7 +78,7 @@ def level(request):
         crop = Crop.objects.get(id=crop_id)
         time = TimeYear.objects.get(id=time_id)
         breadcrumb_obj = {'image': crop.image_file,
-                          'link': '/videokheti'
+                          'link': '/agri'
                           }
         breadcrumb_list.append(breadcrumb_obj)
         breadcrumb_obj = {'image': time.image_file,
@@ -95,7 +95,7 @@ def level(request):
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
-                           'link': ''.join(['/videokheti/video/?video=', str(obj.id)])
+                           'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
             context = {
@@ -135,7 +135,7 @@ def level(request):
         time = TimeYear.objects.get(id=time_id)
         action = ActionType.objects.get(id=action_id)
         breadcrumb_obj = {'image': crop.image_file,
-                          'link': '/videokheti'
+                          'link': '/agri'
                           }
         breadcrumb_list.append(breadcrumb_obj)
         breadcrumb_obj = {'image': time.image_file,
@@ -195,7 +195,7 @@ def level(request):
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
-                           'link': ''.join(['/videokheti/video/?video=', str(obj.id)])
+                           'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
             context = {
@@ -217,7 +217,7 @@ def level(request):
         action = ActionType.objects.get(id=action_id)
         method = Method.objects.get(id=method_id)
         breadcrumb_obj = {'image': crop.image_file,
-                          'link': '/videokheti'
+                          'link': '/agri'
                           }
         breadcrumb_list.append(breadcrumb_obj)
         breadcrumb_obj = {'image': time.image_file,
@@ -240,7 +240,7 @@ def level(request):
                         'image': obj.image_file,
                         'audio': obj.sound_file,
                         'id': obj.id,
-                        'link': ''.join(['/videokheti/video/?video=', str(obj.id)])
+                        'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
             list_dict.append(dic_obj)
         context = {
@@ -263,40 +263,40 @@ def play_video(request):
     breadcrumb_list = []
     if(crop):
         breadcrumb_obj = {'image': crop.image_file,
-                           'link': '/videokheti'
+                           'link': '/agri'
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(time):
         breadcrumb_obj = {'image': time.image_file,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&level=1'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&level=1'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(action):
         breadcrumb_obj = {'image': action.image_file,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     else:
         breadcrumb_obj = {'image': video.image_file,
                           'video': 1,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&time=', str(time.id), '&level=2'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(method):
         breadcrumb_obj = {'image': method.image_file,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     elif(action):
         breadcrumb_obj = {'image': video.image_file,
                           'video': 1,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&level=3'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     if(crop and time and action and method):
         breadcrumb_obj = {'image': video.image_file,
                           'video': 1,
-                           'link': ''.join(['/videokheti/kheti/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&method=', str(method.id),'&level=4'])
+                           'link': ''.join(['/agri/opt/?crop=', str(crop.id), '&time=', str(time.id), '&action=', str(action.id), '&method=', str(method.id),'&level=4'])
                          }
         breadcrumb_list.append(breadcrumb_obj)
     partner = Partner.objects.get(coco_id=video.coco_video.partner_id)
