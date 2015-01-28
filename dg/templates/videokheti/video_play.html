@@ -32,29 +32,19 @@
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+                <div class="form-inline">
                 <a class="navbar-brand" href="/videokheti">digitalGreen</a>
+                <a href="#" data-id="0" class="audio-click">
+                        <button type="button" class="btn btn-success btn-sm" style="margin-top: 2px; font-size: 22px; border-radius: 50%">
+                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
+                         </button>
+                         <audio preload="auto" id="0">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
+                            Your browser does not support the audio element.
+                        </audio>
+                </a>
+                </div>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
@@ -107,11 +97,11 @@
 	                    </div>
 	                </div>
                 
-	                <div>
+	                <!-- <div>
 	                    <h6>
 	                        Produced on {{ date_pro|date:"D d M Y" }}
 	                    </h6>
-	                </div>
+	                </div> -->
                 
                 <!-- <div class="media">
                     <h6>
@@ -153,7 +143,7 @@
                     </a>
                 </div>
                 
-                <div style="text-align:center;">
+                <div style="text-align:center; margin-bottom:20px;">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#forum">
                         COMMENTS
                     </button>
@@ -273,7 +263,19 @@
 	            }
 	        });
         }
-    })
+    });
+    
+    $(".audio-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var button = $(this).find('.btn');
+        button.removeClass('btn-success').addClass('btn-info');
+        var audio = $("#"+$(this).data('id'))[0];
+        audio.play();
+        audio.addEventListener('ended', function(){
+            button.removeClass('btn-info').addClass('btn-success');
+        });
+    });
     </script>
 </body>
 

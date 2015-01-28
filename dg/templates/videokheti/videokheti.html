@@ -34,11 +34,15 @@
             <div class="navbar-header">
                 <div class="form-inline">
                 <a class="navbar-brand" href="/videokheti">digitalGREEN</a>
-                <a href="#" data-id="0" class="audio-click">
+                <a href="#" data-id="-1" class="audio-click">
                         <button type="button" class="btn btn-success btn-sm" style="margin-top: 2px; font-size: 22px; border-radius: 50%">
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
                 </a>
+                <audio preload="auto" id="-1">
+                    <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
                 </div>
             </div>
             
@@ -66,14 +70,15 @@
         <div class="row" style="margin-bottom: 15px;">
             <div class="col-lg-12">
                 <form class="form-inline">
-                    <label style="font-size: 20px; color: #ffffff;">{{title}}</label>
                     {% if title_audio %}
                     <a href="#" data-id="0" class="audio-click">
-                        <button type="button" class="btn btn-success btn-sm" style="margin-left: 10px; font-size: 25px; border-radius: 50%">
+                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 10px; font-size: 25px; border-radius: 50%">
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
                      </a>
                      {% endif %}
+                    <label style="font-size: 20px; color: #ffffff;">{{title}}</label>
+                    
                 </form>
                 {% if title_audio %}
                 <audio preload="auto" id="0">
