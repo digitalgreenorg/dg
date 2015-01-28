@@ -33,16 +33,16 @@
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <div class="form-inline">
-                <a class="navbar-brand" href="/videokheti">digitalGreen</a>
-                <a href="#" data-id="0" class="audio-click">
-                        <button type="button" class="btn btn-success btn-sm" style="margin-top: 2px; font-size: 22px; border-radius: 50%">
+                <a class="navbar-brand audio-click" href="#" data-id="-1" style="padding-top: 2px;">
+                        <button type="button" class="btn btn-success btn-sm" style="font-size: 22px; border-radius: 50%">
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
-                         <audio preload="auto" id="0">
-                            <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
-                            Your browser does not support the audio element.
-                        </audio>
                 </a>
+                <a class="navbar-brand" href="/videokheti">digitalGreen</a>
+                <audio id="-1">
+                    <source src="{{STATIC_URL}}videokheti/content/audio/what-information-prompt.wav" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
                 </div>
             </div>
         </div>
@@ -270,10 +270,12 @@
         //alert($(this).data('id'));
         var button = $(this).find('.btn');
         button.removeClass('btn-success').addClass('btn-info');
+        button.attr('disabled','disabled');
         var audio = $("#"+$(this).data('id'))[0];
         audio.play();
         audio.addEventListener('ended', function(){
             button.removeClass('btn-info').addClass('btn-success');
+            button.removeAttr('disabled');
         });
     });
     </script>

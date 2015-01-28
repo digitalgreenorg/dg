@@ -81,6 +81,7 @@
         //alert($(this).data('id'));
         var button = $(this).find('.btn');
         button.removeClass('btn-success').addClass('btn-info');
+        button.attr('disabled','disabled');
         var audio = $("#"+$(this).data('id'))[0];
         audio.play();
         audio.addEventListener('ended', function(){
