@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dg.settings import MEDIA_ROOT
 from social_website.models import Comment, Partner, Video as social_video
-from videokheti.models import ActionType, Crop, Method, Video, VideoComment, TimeYear
+from videokheti.models import ActionType, Crop, Method, Video, VideoComment, TimeYear, Title
 
 
 def home(request):
@@ -27,9 +27,10 @@ def home(request):
                        'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
                        }
             list_dict.append(dic_obj)
+        title = Title.objects.get(table='Crop')
         context = {
                     'crop': list_dict,
-                    'title': 'Choose the Crop',
+                    'title': title.hindi_text,
                     'title_audio': 'you-can-name-crop-prompt-graphics.mp3'
                    }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
@@ -63,10 +64,10 @@ def level(request):
                           'link': '/agri'
                           }
         breadcrumb_list.append(breadcrumb_obj)
-
+        title = Title.objects.get(table='TimeYear')
         context = {
                   'crop': list_dict,
-                  'title': 'Choose the Time of Year',
+                  'title': title.hindi_text,
                   'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                   'breadcrumb': breadcrumb_list,
                   }
@@ -98,10 +99,11 @@ def level(request):
                            'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
+            title = Title.objects.get(table='Video')
             context = {
                       'crop': list_dict,
                       'video': 1,
-                      'title': 'Choose the Video',
+                      'title': title.hindi_text,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       }
@@ -118,9 +120,10 @@ def level(request):
                            'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', str(obj.id), '&level=3'])
                        }
                 list_dict.append(dic_obj)
+            title = Title.objects.get(table='Action')
             context = {
                       'crop': list_dict,
-                      'title': 'Choose the Action',
+                      'title': title.hindi_text,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       }
@@ -160,9 +163,10 @@ def level(request):
                            'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', action_id, '&method=', str(obj.id), '&level=4'])
                            }
                 list_dict.append(dic_obj)
+            title = Title.objects.get(table='Method')
             context = {
                         'crop': list_dict,
-                        'title': 'Choose the Method',
+                        'title': title.hindi_text,
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
                       }
@@ -179,9 +183,10 @@ def level(request):
                            'link': ''.join(['?crop=', crop_id, '&time=', str(time_id), '&action=', action_id, '&method=', str(obj.id), '&level=4'])
                            }
                 list_dict.append(dic_obj)
+            title = Title.objects.get(table='Method')
             context = {
                         'crop': list_dict,
-                        'title': 'Choose the Method',
+                        'title': title.hindi_text,
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
                       }
@@ -198,10 +203,11 @@ def level(request):
                            'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
                 list_dict.append(dic_obj)
+            title = Title.objects.get(table='Video')
             context = {
                       'crop': list_dict,
                       'video': 1,
-                      'title': 'Choose the Video',
+                      'title': title.hindi_text,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       }
@@ -243,10 +249,11 @@ def level(request):
                         'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
             list_dict.append(dic_obj)
+        title = Title.objects.get(table='Video')
         context = {
                    'crop': list_dict,
                     'video': 1,
-                    'title': 'Choose the Video',
+                    'title': title.hindi_text,
                     'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                     'breadcrumb': breadcrumb_list,
                   }

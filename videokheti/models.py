@@ -52,3 +52,9 @@ class VideoComment(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     imageURL = models.URLField(max_length=400, null=True, blank=True)
     personName = models.CharField(max_length=300, null=True, blank=True)
+
+
+class Title(models.Model):
+    table = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100)
+    hindi_text = models.CharField(max_length=1000)

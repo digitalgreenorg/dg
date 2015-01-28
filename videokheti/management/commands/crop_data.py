@@ -7,8 +7,7 @@ from django.core.management.base import BaseCommand
 from libs.s3_utils import add_to_s3
 from dg.settings import ACCESS_KEY, SECRET_KEY, MEDIA_ROOT, YOUTUBE_SIMPLE_ACCESS
 from videos.models import Video
-from social_website.models import Video as website_video
-from videokheti.models import ActionType, Crop, Method, TimeYear, Video as videokheti_video
+from videokheti.models import ActionType, Crop, Method, TimeYear, Video as videokheti_video, Title
 
 
 class Command(BaseCommand):
@@ -74,3 +73,19 @@ class Command(BaseCommand):
             except:
                 pass
  
+        workbook = xlrd.open_workbook(os.path.join(__location__, 'Titles_Hindi.xlsx'))
+        worksheet = workbook.sheet_by_name('Sheet1')
+        num_rows = worksheet.nrows - 1
+        curr_row = -1
+        while curr_row < num_rows:
+            curr_row += 1
+            row = worksheet.row(curr_row)
+            #a = Video.objects.get(coco_video_id=worksheet.cell_value(curr_row, 0))
+            try:
+                a = Title(table=worksheet.cell_value(curr_row, 2),
+                          title=worksheet.cell_value(curr_row, 0),
+                          hindi_text=worksheet.cell_value(curr_row, 1))
+                print row
+                a.save()
+            except:
+                pass
