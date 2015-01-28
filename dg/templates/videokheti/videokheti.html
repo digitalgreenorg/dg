@@ -92,6 +92,7 @@
 
         
         <!-- Page Features -->
+        {% if crop %}
         <div class="row">
             {% for obj in crop %}
                 {% cycle 1 0 0 0 as new_row silent %}
@@ -125,6 +126,13 @@
                     </div>
             {% endfor %}
         </div>
+        {% else %}
+            <div class="well text-center">
+                <h5> Sorry no videos found !!!</h5>
+                <h5> Please go back and choose something else </h5>
+            </div>
+        {% endif %}
+            
         <!-- /.row -->
 
     </div>
