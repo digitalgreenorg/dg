@@ -73,7 +73,7 @@
                 <form class="form-inline">
                     {% if title_audio %}
                     <a href="#" data-id="0" class="audio-click">
-                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 10px; font-size: 25px; border-radius: 50%">
+                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 10px; font-size: 22px; border-radius: 50%">
                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                          </button>
                      </a>
@@ -109,12 +109,12 @@
                             <div class="caption">
                                 <form class="form-inline">
                                     <a href="#" data-id="{{obj.id}}" class="audio-click">
-                                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 25px; border-radius: 50%; text-align: center;">
+                                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 22px; border-radius: 50%; text-align: center;">
                                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                                         </button>
                                     </a>
                                     <a href="{{obj.link}}">
-                                    <label style="font-size: 14px; color: #ffffff;">{{obj.name|upper}}</label>
+                                    <label style="font-size: 16px; color: #ffffff;">{{obj.name|upper}}</label>
                                     </a>
                                 </form>
                             </div>
@@ -163,7 +163,7 @@
         //setTimeout($(this).pause.bind($(this)), 5)
         $("audio").each(function() {
             $(this)[0].play();
-            setTimeout($(this)[0].pause.bind($(this)[0]), 10);
+            setTimeout($(this)[0].pause.bind($(this)[0]), 1);
         });
     }
     </script>
