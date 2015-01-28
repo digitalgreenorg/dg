@@ -84,7 +84,35 @@
                     </div>
                 </div>
             </div>
+            
+            
             <div class="col-md-3">
+                <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
+                <!-- Carousel indicators -->
+                    <ol class="carousel-indicators">
+                        {% for obj in video_carousel %}
+                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
+                        {% endfor %}
+                    </ol>   
+                    <!-- Carousel items -->
+                    <div class="carousel-inner">
+                        {% for obj in video_carousel %}
+                            <div class="item {% if forloop.counter == 1 %} active {% endif %}">
+                                <div class="thumbnail">
+                                    <img src="{{STATIC_URL}}social_website/uploads/img/{{coco_id}}/{{obj}}" alt="" style="width:253px; height:158px !important;"> </img>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Carousel nav -->
+                    <a class="carousel-control left" href="#videoCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="carousel-control right" href="#videoCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+                
                 <div class="well">
 	                <div class="media">
 	                    <div class="media-left">
@@ -117,31 +145,7 @@
                 
                 </div>
                 
-                <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
-                <!-- Carousel indicators -->
-                    <ol class="carousel-indicators">
-                        {% for obj in video_carousel %}
-                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
-                        {% endfor %}
-                    </ol>   
-                    <!-- Carousel items -->
-                    <div class="carousel-inner">
-                        {% for obj in video_carousel %}
-                            <div class="item {% if forloop.counter == 1 %} active {% endif %}">
-                                <div class="thumbnail">
-                                    <img src="{{STATIC_URL}}social_website/uploads/img/{{coco_id}}/{{obj}}" alt="" style="width:253px; height:158px !important;"> </img>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <!-- Carousel nav -->
-                    <a class="carousel-control left" href="#videoCarousel" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </a>
-                    <a class="carousel-control right" href="#videoCarousel" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </a>
-                </div>
+                
                 
                 <div style="text-align:center; margin-bottom:20px;">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#forum">

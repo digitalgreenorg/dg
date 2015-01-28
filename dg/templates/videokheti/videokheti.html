@@ -83,7 +83,7 @@
                 </form>
                 {% if title_audio %}
                 <audio preload="auto" id="0">
-                            <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/wav">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/mpeg">
                             Your browser does not support the audio element.
                 </audio>
                 {% endif %}
@@ -121,7 +121,7 @@
                         </div>
                 
                         <audio preload="auto" id="{{obj.id}}">
-                            <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/wav">
+                            <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                     </div>
