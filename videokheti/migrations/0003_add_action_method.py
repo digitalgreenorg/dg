@@ -16,7 +16,7 @@ class Migration(DataMigration):
 
         for i in list_tuple:
             actiontype_object = orm['videokheti.ActionType'](name=i[0], image_file=i[0].replace('_', '-')+'.png',
-                                                 sound_file=i[0].replace('_', '-')+'.wav',
+                                                 sound_file=i[0].replace('_', '-')+'.mp3',
                                                  time_year=orm['videokheti.TimeYear'].objects.get(name=i[1])
                                                 )
             actiontype_object.save()
@@ -27,7 +27,7 @@ class Migration(DataMigration):
 
         for i in list_names:
             method_object = orm['videokheti.Method'](name=i, image_file=i.replace('_', '-')+'.png',
-                                                 sound_file=i.replace('_', '-')+'.wav'
+                                                 sound_file=i.replace('_', '-')+'.mp3'
                                                 )
             method_object.save()
 

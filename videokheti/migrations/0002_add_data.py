@@ -17,7 +17,7 @@ class Migration(DataMigration):
 
         for i in list_names:
             crop_object = orm['videokheti.Crop'](name=i, image_file=i.replace('_', '-')+'.png',
-                                                 sound_file=i.replace('_', '-')+'.wav'
+                                                 sound_file=i.replace('_', '-')+'.mp3'
                                                 )
             crop_object.save()
         #insert into TimeYear
@@ -25,7 +25,7 @@ class Migration(DataMigration):
 
         for i in list_names:
             timeyear_object = orm['videokheti.TimeYear'](name=i, image_file=i.replace('_', '-')+'.png',
-                                                 sound_file=i.replace('_', '-')+'.wav'
+                                                 sound_file=i.replace('_', '-')+'.mp3'
                                                 )
             timeyear_object.save()
 

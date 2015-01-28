@@ -1,5 +1,5 @@
 import os
-
+from os import listdir
 from boto.s3.connection import S3Connection
 
 import csv
@@ -32,30 +32,30 @@ class Command(BaseCommand):
         #onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
         # Adding Videos Name to S3 #
         #=======================================================================
-        # for f in listdir('C:\Users\Aadish\Downloads\OneDrive-2015-01-11\Audio\Videonames'):
+        # for f in listdir('C:/Users/Aadish/Desktop/audio'):
         #     print f
         #     video_id = f.split('.')[0]
         #     print video_id
         #     video_obj = Video.objects.get(old_coco_id=video_id)
         #     print video_obj.title
-        #     key = ''.join([str(video_obj.id), '.wav'])
-        #     filepath = ''.join(['C:\Users\Aadish\Downloads\OneDrive-2015-01-11\Audio\Videonames\\', f])
+        #     key = ''.join([str(video_obj.id), '.mp3'])
+        #     filepath = ''.join(['C:/Users/Aadish/Desktop/audio\\', f])
         #     if not bucket.get_key(key):
         #         add_to_s3(bucket, key, filepath)
         #=======================================================================
 
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         csvfile = open(os.path.join(__location__, 'video.csv'), 'rb')
-
+ 
         dict_video = {}
         reader = csv.DictReader(csvfile)
         for i in reader:
             if i['VideoID'] not in dict_video:
                 dict_video[i['VideoID']] = (i['Crop'], i['TimeYear'], i['ActionType'],i['Method'])
         #print dict_video
-
+ 
         rs = bucket.list()
-
+ 
         for key in rs:
             video_id = key.name.split('.')[0]
             coco_video = Video.objects.get(id=video_id)
@@ -68,7 +68,7 @@ class Command(BaseCommand):
                 action_type = ActionType.objects.get(name=read_tuple[2]) if read_tuple[2] != '-' else None
                 method = Method.objects.get(name=read_tuple[3]) if read_tuple[3] != '-' else None
                 image_file = ''.join(['https://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/', str(coco_video.id), '.jpg'])
-                sound_file = ''.join(['https://s3.amazonaws.com/videokheti_audio/', str(coco_video.id), '.wav'])
+                sound_file = ''.join(['https://s3.amazonaws.com/videokheti_audio/', str(coco_video.id), '.mp3'])
                 kheti_video = videokheti_video(coco_video=coco_video, website_id=str(webs_video.uid), 
                                                crop = crop, time_year=time_year, action_type=action_type,
                                                method = method,
@@ -79,4 +79,4 @@ class Command(BaseCommand):
             except Exception as inst:
                 print video_id
                 print inst
- 
+  
