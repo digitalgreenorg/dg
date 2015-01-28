@@ -19,7 +19,8 @@ def home(request):
         crop_objects = Crop.objects.all()
         list_dict = []
         for obj in crop_objects:
-            dic_obj = {'name': obj.name.replace('_', ' '),
+            dic_obj = {#'name': obj.name.replace('_', ' '),
+                       'name': obj.hindi_text,
                        'image': obj.image_file,
                        'audio': obj.sound_file,
                        'id': obj.id,
@@ -48,7 +49,8 @@ def level(request):
         time_objects = TimeYear.objects.all()
         list_dict = []
         for obj in time_objects:
-            dic_obj = {'name': obj.name.replace('_', ' '),
+            dic_obj = {#'name': obj.name.replace('_', ' '),
+                       'name': obj.hindi_text,
                        'image': obj.image_file,
                        'audio': obj.sound_file,
                        'id': obj.id,
@@ -88,7 +90,8 @@ def level(request):
             video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id)
             list_dict = []
             for obj in video_objects:
-                dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+                dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
+                           'name': obj.hindi_text,
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -107,7 +110,8 @@ def level(request):
             action_objects = ActionType.objects.filter(time_year_id=time_id)
             list_dict = []
             for obj in action_objects:
-                dic_obj = {'name': obj.name.replace('_', ' '),
+                dic_obj = {#'name': obj.name.replace('_', ' '),
+                           'name': obj.hindi_text,
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -148,7 +152,8 @@ def level(request):
             method_objects = Method.objects.all()[:3]
             list_dict = []
             for obj in method_objects:
-                dic_obj = {'name': obj.name.replace('_', ' '),
+                dic_obj = {#'name': obj.name.replace('_', ' '),
+                           'name': obj.hindi_text,
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -166,7 +171,8 @@ def level(request):
             method_objects = Method.objects.all()[3:]
             list_dict = []
             for obj in method_objects:
-                dic_obj = {'name': obj.name.replace('_', ' '),
+                dic_obj = {#'name': obj.name.replace('_', ' '),
+                           'name': obj.hindi_text,
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -184,7 +190,8 @@ def level(request):
             video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id)
             list_dict = []
             for obj in video_objects:
-                dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+                dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
+                           'name': obj.hindi_text,
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -228,7 +235,8 @@ def level(request):
         video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id, method_id=method_id)
         list_dict = []
         for obj in video_objects:
-            dic_obj = {'name': obj.coco_video.title.replace('_', ' '),
+            dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
+                       'name': obj.hindi_text,
                         'image': obj.image_file,
                         'audio': obj.sound_file,
                         'id': obj.id,
@@ -301,7 +309,7 @@ def play_video(request):
             video_carousel.append(f)
     video_carousel.sort()
     context = {
-                'title': video.coco_video.title,
+                'title': video.hindi_text,
                 'coco_id': video.coco_video.id,
                 'partner': video.coco_video.partner.partner_name,
                 'partner_image': partner.logoURL,

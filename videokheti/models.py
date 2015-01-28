@@ -9,12 +9,13 @@ class Crop(models.Model):
     name = models.CharField(max_length=45)
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
-
+    hindi_text = models.CharField(max_length=1000, blank=True, null=True)
 
 class TimeYear(models.Model):
     name = models.CharField(max_length=45)
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
+    hindi_text = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class ActionType(models.Model):
@@ -22,12 +23,14 @@ class ActionType(models.Model):
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
     time_year = models.ForeignKey(TimeYear)
+    hindi_text = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class Method(models.Model):
     name = models.CharField(max_length=45)
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
+    hindi_text = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class Video(models.Model):
@@ -39,6 +42,7 @@ class Video(models.Model):
     method = models.ForeignKey(Method, blank=True, null=True)
     image_file = models.CharField(max_length=100)
     sound_file = models.CharField(max_length=100)
+    hindi_text = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class VideoComment(models.Model):
