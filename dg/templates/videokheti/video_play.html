@@ -140,13 +140,13 @@
 	                        <h5 class="media-heading"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> &nbsp {{views}}</h5>
 	                        <h5 class="media-heading"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> &nbsp {{adoptions}}</h5>
 	                    </div>
+	                    <div class="media-right media-middle">
+	                    <a href="https://www.youtube.com/watch?v={{youtube}}" target="_blank">
+                            <img width="60px" style="border-radius: 10px;" class="media-object" src="{{STATIC_URL}}videokheti/content/images/youtube.jpg" alt="...">
+                        </a>
+                        </div>
 	                </div>
                     
-                    <a href="https://www.youtube.com/watch?v={{youtube}}" target="_blank">
-                    <div style="text-align:center; margin-top:10px">
-                        <img width="100px" style="border-radius: 10px;" src="{{STATIC_URL}}videokheti/content/images/youtube.jpg" alt="...">
-                    </div>
-                    </a>
 	                <!-- <div>
 	                    <h6>
 	                        Produced on {{ date_pro|date:"D d M Y" }}
@@ -163,7 +163,7 @@
                 
                 
                 <div style="text-align:center; margin-bottom:20px;">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#forum">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#forum">
                         COMMENTS
                     </button>
                 </div>
