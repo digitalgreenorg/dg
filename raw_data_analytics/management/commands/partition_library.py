@@ -2,20 +2,15 @@ __author__ = 'Lokesh'
 import json, datetime
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from geographies.models import District, Block
 from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
-import xlsxwriter
 import csv
 
-class Command(BaseCommand):
 
-    Dict={}
+class Command(BaseCommand):
+    Dict = {}
     lookup_matrix = {}
     # --- defining options for the command line exceution of the library ---
     option_list = BaseCommand.option_list + (
@@ -70,51 +65,53 @@ class Command(BaseCommand):
 
     # Function accepts the inputs and pass it to handle_controller for further processing
     def handle(self, *args, **options):
-        fields_dict = {}
-        fields_dict['partition'] = options['partition']
-        print "%%%%%%%%%%%%%%%%%%%%%"
-        print fields_dict['partition']
-        fields_dict['value'] = options['value']
-        print "###############"
-        print fields_dict['value']
-
         self.lookup_matrix = self.read_lookup_csv()
-        print self.lookup_matrix
-
-        self.handle_controller(args, options, self.lookup_matrix)
+        result_dataframe = self.handle_controller(args, options, self.lookup_matrix)
+        print "--------------FINAL RESULT---------------"
+        print result_dataframe
+        
 
     def handle_controller(self, args, options, lookup_matrix):
         # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
         # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
-        print "options is ---------"
-        print options
-        print "$$$$$$$$$$$$$$$$$$$"
-        value_list_to_find = []
-        relevantPartitionDictionary={}
-        relevantValueDictionary={}
 
+        relevantPartitionDictionary = {}
+        relevantValueDictionary = {}
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             print "valid input for partition fields"
             for item in options['partition']:
-                if options['partition'][item]!=False:
+                if options['partition'][item] != False:
                     relevantPartitionDictionary[item] = options['partition'][item]
         else:
             print "Warning - Invalid input for partition fields"
 
-
         if self.check_valuefield_validity(options['value']):
             print "valid input for value fields"
             for item in options['value']:
-                if options['value'][item]!=False:
+                if options['value'][item] != False:
                     relevantValueDictionary[item] = options['value'][item]
         else:
             print "Warning - Invalid input for Value fields"
 
+
+        final_df = pd.DataFrame()
+
         for input in relevantValueDictionary:
-            queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, lookup_matrix)
+            queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, lookup_matrix)
             print queryComponents
-        return 0
+            print "----------------------------------Full SQL Query---------------------------"
+            query = self.makeSQLquery(queryComponents[0],queryComponents[1],queryComponents[2],queryComponents[3])
+            print query
+            print "-------------------------------Final Result--------------------------------"
+            df = self.runQuery(query)
+            if final_df.empty:
+                final_df = df
+            else:
+                final_df = pd.merge(final_df, df, how='outer')
+            print df
+            print "---------------------------------Game Over---------------------------------"
+        return final_df
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
     def check_partitionfield_validity(self, partitionField):
@@ -138,22 +135,18 @@ class Command(BaseCommand):
         matrix = {}
         for row in file_data:
             sub_matrix = {}
-            for i in range(0,len(headers)):
-                sub_matrix[headers[i]]=[]
-                temp = row[i+1].split('$')
+            for i in range(0, len(headers)):
+                sub_matrix[headers[i]] = []
+                temp = row[i + 1].split('$')
                 for t in temp:
                     sub_matrix[headers[i]].append(tuple(t.split('#')))
             matrix[row[0]] = sub_matrix
-
-        # for e in matrix:
-        #     print '\n\n---'+str(e)+'::::'
-        #     print str(matrix[e])
-        #     print '\n\n'
         return matrix
 
-    def getRequiredTables(self,partitionDict, valueDictElement, lookup_matrix):
+    def getRequiredTables(self, partitionDict, valueDictElement, args, lookup_matrix):
+        self.Dict.clear()
         selectResult = self.getSelectComponent(partitionDict, valueDictElement)
-        fromResult = self.getFromComponent(partitionDict,valueDictElement,lookup_matrix)
+        fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         print "----------------------------------SELECT PART------------------------------"
@@ -162,131 +155,99 @@ class Command(BaseCommand):
         print fromResult
         print "----------------------------------WHERE PART-------------------------------"
         print whereResult
-        print "----------------------------------GROUP_BY PART----------------------------"
+        print "---------------------------------GROUP_BY PART----------------------------"
         print groupbyResult
-        print "----------------------------------Full SQL Query---------------------------"
-        query = self.makeSQLquery(selectResult,fromResult,whereResult,groupbyResult)
-        print query
-        print "-------------------------------Final Result--------------------------------"
-        df = self.runQuery(query)
-        print df
-        print "---------------------------------Game Over---------------------------------"
-        return '\n\nGetRequiredTables function got over where'
+        return (selectResult, fromResult, whereResult, groupbyResult)
 
-
-    def makeSQLquery(self,select_msg, from_msg, where_msg, groupby_msg):
-        query = 'select '+str(select_msg)+' from '+str(from_msg)+' where '+str(where_msg)+' group by '+str(groupby_msg)
+    def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg):
+        query = 'select ' + str(select_msg) + ' from ' + str(from_msg) + ' where ' + str(
+            where_msg) + ' group by ' + str(groupby_msg)
         return query
 
-    def getSelectComponent(self,partitionElements,valueElement):
+    def getSelectComponent(self, partitionElements, valueElement):
         selectComponentList = []
         for items in partitionElements:
             for i in selectDictionary[items]:
-                if(selectDictionary[items][i]==True):
+                if (selectDictionary[items][i] == True):
                     selectComponentList.append(tableDictionary[items] + '.' + i)
         print selectComponentList
         for i in selectDictionary[valueElement]:
-            if(selectDictionary[valueElement][i]==True):
-
-                selectComponentList.append(i.replace('count(','count(distinct '+str(tableDictionary[valueElement]) + '.'))
-
-        print '??????????????????????\n????????????????????????????'
-        print selectComponentList
+            if (selectDictionary[valueElement][i] == True):
+                selectComponentList.append(
+                    i.replace('count(', 'count(distinct ' + str(tableDictionary[valueElement]) + '.'))
         return ','.join(selectComponentList)
 
-    def makeJoinTable(self,sourceTable,destinationTable,lookup_matrix,occuredTables,Dict):
-        if(sourceTable not in occuredTables):
+    #Function to make tables by recursive calls for tables.
+    def makeJoinTable(self, sourceTable, destinationTable, lookup_matrix, occuredTables, Dict):
+        if (sourceTable not in occuredTables):
             for i in lookup_matrix[sourceTable][destinationTable]:
-                if(i[2]=='self'):
+                if (i[2] == 'self'):
                     print 'SELF'
                     return
-                elif(i[2]=='direct'):
+                elif (i[2] == 'direct'):
                     print 'DIRECT'
-                    if(destinationTable not in occuredTables):
+                    if (destinationTable not in occuredTables):
                         occuredTables.append(destinationTable)
-                    if(sourceTable in Dict.keys()):
-                        if(destinationTable not in Dict[sourceTable]):
+                    if (sourceTable in Dict.keys()):
+                        if (destinationTable not in Dict[sourceTable]):
                             Dict[sourceTable].append(destinationTable)
                     else:
-                        Dict[sourceTable]=[destinationTable]
+                        Dict[sourceTable] = [destinationTable]
                     occuredTables.append(sourceTable)
                     return
                 else:
-                    print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-                    print sourceTable
-                    if(sourceTable in Dict.keys()):
+                    if (sourceTable in Dict.keys()):
                         Dict[sourceTable].append(i[2])
                     else:
-                        Dict[sourceTable]=[i[2]]
+                        Dict[sourceTable] = [i[2]]
                     occuredTables.append(sourceTable)
-                    self.makeJoinTable(i[2],destinationTable,lookup_matrix,occuredTables,Dict)
+                    self.makeJoinTable(i[2], destinationTable, lookup_matrix, occuredTables, Dict)
         else:
             return
 
-    def getFromComponent(self,partitionElements,valueElement,lookup_matrix):
+    #Function to make FROM component of the sql query
+    def getFromComponent(self, partitionElements, valueElement, lookup_matrix):
         partitionTables = []
         for i in partitionElements:
-            if(i in categoryDictionary['geographies']):
-                partitionTables.insert(0,tableDictionary[i])
+            if (i in categoryDictionary['geographies']):
+                partitionTables.insert(0, tableDictionary[i])
             else:
                 partitionTables.append(tableDictionary[i])
-        print '##############################################'
-        print partitionTables
-        print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-        print tableDictionary[valueElement]
-        print '##############################################'
-
         majorTablesList = []
         tablesOccuredList = []
         for index, table in enumerate(partitionTables):
-            minorTablePath=[]
+            minorTablePath = []
             if table not in self.Dict.keys():
-                self.Dict[table]=[]
-            # else:
-            #     self.Dict=[]
-            if(table not in majorTablesList):
+                self.Dict[table] = []
+            if (table not in majorTablesList):
                 minorTablePath.append(table)
-                self.makeJoinTable(table,tableDictionary[valueElement],lookup_matrix,tablesOccuredList,self.Dict)
-            print '()()()()()()()()()()()()()()()()()()()'
-            print minorTablePath
-            print 'Dict is -      - - - - ' + str(self.Dict)
-        majorTablesList=tablesOccuredList
-        print '!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!'
-        print majorTablesList
-        print 'testing From Component'
+                self.makeJoinTable(table, tableDictionary[valueElement], lookup_matrix, tablesOccuredList, self.Dict)
+        majorTablesList = tablesOccuredList
         return ' , '.join(majorTablesList)
 
-    def getWhereComponent(self,partitionElements,valueElement, Dictionary, lookup_matrix):
+    #Function to make whereComponent of the query
+    def getWhereComponent(self, partitionElements, valueElement, Dictionary, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
         for items in partitionElements:
-            if partitionElements[items]!=True:
-                whereComponentList.append(tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
-        print '>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        print whereComponentList
+            if partitionElements[items] != True:
+                whereComponentList.append(
+                    tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
         for i in Dictionary:
             for j in Dictionary[i]:
-                print "***"+str(j)
-                print "*****"+str(lookup_matrix[i][j])
-                print "********"+str(i)
-                print "***********"+str(lookup_matrix[i][j][0][0])
-                print "*************"+str(j)
-                print "*****************"+str(lookup_matrix[i][j][0][1])
-                whereComponentList.append(str(i)+'.'+str(lookup_matrix[i][j][0][0])+'='+str(j)+'.'+str(lookup_matrix[i][j][0][1]))
+                print str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1])
+                whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1]))
         return ' and '.join(whereComponentList)
 
-    def getGroupByComponent(self,partitionElements,valueElement):
+    #Function to make GroupBy component of the sql query
+    def getGroupByComponent(self, partitionElements, valueElement):
         groupbyComponentList = []
         for items in partitionElements:
-            if partitionElements[items]==True:
-                groupbyComponentList.append(tableDictionary[items]+'.'+groupbyDictionary[items])
-        print '<<<<<<<<<<<<<<<<<<<<<<<<\n<<<<<<<<<<<<<<<<<<<<<<<<<<'
-        print 'testing GroupBy Component\n'
+            if partitionElements[items] == True:
+                groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
         return ' , '.join(groupbyComponentList)
 
-
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
-
     def runQuery(self, query):
         # Make connection with the database
         mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen_jan15')

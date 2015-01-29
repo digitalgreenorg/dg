@@ -102,12 +102,12 @@ groupbyDictionary={
 }
 
 selectDictionary={
-    'partner':{'id':True,'partner_name':True},
-    'country':{'id':True,'country_name':True},
-    'state':{'id':True,'state_name':True},
-    'district':{'id':True,'district_name':True},
-    'block':{'id':True,'block_name':True},
-    'village':{'id':True,'village_name':True},
+    'partner':{'id':False,'partner_name':True},
+    'country':{'id':False,'country_name':True},
+    'state':{'id':False,'state_name':True},
+    'district':{'id':False,'district_name':True},
+    'block':{'id':False,'block_name':True},
+    'village':{'id':False,'village_name':True},
     'animator':{'animator_id':True,'animator_name':True,'gender':True},
     'person':{'id':True,'person_name':True,'gender':True},
     'persongroup':{'id':True,'group_name':True},
@@ -119,7 +119,7 @@ selectDictionary={
     'numScreening':{'count(screening_id)':True,'count(distinct screening_id)':False},
 #    'video_n_screening':{'table':'videos_video_wise_data','column':'nScreenings','function':'video_screening_func()'},
 #    'person_n_screening':{'table':'people_person_wise_data','column':'nScreenings','function':'person_screening_func()'},
-    'numAdoption':{'count(id)':True,'count(distinct id)':True},
+    'numAdoption':{'count(id)':True,'count(distinct person_id)':False},
 #    'video_n_adoption':{'table':'videos_video_wise_data','column':'nAdoptions','function':'video_adoption_func()'},
 #    'person_n_adoption':{'table':'people_person_wise_data','column':'nAdoptions','function':'person_adoption_func()'},
     'attendance':{'count(id)':True,'count(distinct id)':True},
