@@ -44,7 +44,7 @@
 	                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
 	                         </button>
 	                </a>
-	                <a class="navbar-brand" href="/agri">digitalGreen</a>
+	                <a class="navbar-brand" href="/agri">digitalGREEN</a>
 	                <audio id="-1">
 	                    <source src="{{STATIC_URL}}videokheti/content/audio/welcome.mp3" type="audio/mpeg">
 	                    Your browser does not support the audio element.
@@ -142,7 +142,7 @@
 	                    </div>
 	                    <div class="media-right media-middle">
 	                    <a href="https://www.youtube.com/watch?v={{youtube}}" target="_blank">
-                            <img width="60px" style="border-radius: 10px;" class="media-object" src="{{STATIC_URL}}videokheti/content/images/youtube.jpg" alt="...">
+                            <img width="60px" style="border-radius: 10px; margin-left:10px;" class="media-object" src="{{STATIC_URL}}videokheti/content/images/youtube.jpg" alt="...">
                         </a>
                         </div>
 	                </div>
@@ -201,7 +201,7 @@
                                 <div class="col-md-8">
                                 <textarea class="form-control" id="commentText" style="width:100%"> </textarea>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-2 text-center">
                                 {% if not request.user.is_authenticated %}
                                     <a href="/login/?next={{request.get_full_path|urlencode}}"><button type="button" class="btn btn-success js-data"  data-id="{{id}}">POST</button></a>
                                 {% else %}
