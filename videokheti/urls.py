@@ -6,6 +6,7 @@ from videokheti.views import comment, get_comments, home, language, level, play_
 
 urlpatterns = patterns('',
     url(r'^$', home, name='home'),
+    url(r'^home/$', TemplateView.as_view(template_name='videokheti_home.html')),
     url(r'^opt/$', level),
     url(r'^video/$', play_video),
     url(r'^comment/$', comment),
