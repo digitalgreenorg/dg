@@ -16,30 +16,34 @@ from videokheti.models import ActionType, Crop, Method, Video, VideoComment, Tim
 
 def home(request):
     if 'videokheti_cookie' in request.COOKIES:
-        crop_objects = Crop.objects.all()
-        list_dict = []
-        for obj in crop_objects:
-            dic_obj = {#'name': obj.name.replace('_', ' '),
-                       'name': obj.hindi_text,
-                       'image': obj.image_file,
-                       'audio': obj.sound_file,
-                       'id': obj.id,
-                       'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
+        if "videokheti_language" in request.COOKIES:
+            language = request.COOKIES["videokheti_language"]
+            crop_objects = Crop.objects.all()
+            list_dict = []
+            for obj in crop_objects:
+                print obj.name
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
+                           'image': obj.image_file,
+                           'audio': obj.sound_file,
+                           'id': obj.id,
+                           'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
+                           }
+                list_dict.append(dic_obj)
+            title = Title.objects.get(table='Crop')
+            context = {
+                       'language': language,
+                       'crop': list_dict,
+                       'title': title.hindi_text if language == "Hindi" else title.title,
+                       'title_audio': 'you-can-name-crop-prompt-graphics.mp3'
                        }
-            list_dict.append(dic_obj)
-        title = Title.objects.get(table='Crop')
-        context = {
-                    'crop': list_dict,
-                    'title': title.hindi_text,
-                    'title_audio': 'you-can-name-crop-prompt-graphics.mp3'
-                   }
-        return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+            return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     else:
         context = {
                     'cookies': 1,
                    }
         response = render_to_response('videokheti_home.html', context, context_instance=RequestContext(request))
         response.set_cookie("videokheti_cookie", 1)
+        response.set_cookie("videokheti_language", "Hindi")
         return response
 
 
@@ -380,3 +384,15 @@ def get_comments(request):
         list_comments.append(obj_dic)
     resp = json.dumps(list_comments)
     return HttpResponse(resp)
+
+
+def language(request):
+    #resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    language = request.GET.get('language', None)
+    if "videokheti_language" in request.COOKIES:
+        if request.COOKIES["videokheti_language"] == language:
+            return HttpResponse('0')
+        else:
+            response = HttpResponse('1')
+            response.set_cookie("videokheti_language", language)
+            return response
