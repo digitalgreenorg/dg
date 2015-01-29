@@ -95,7 +95,7 @@ def level(request):
                           'link': ''.join(['?crop=', crop_id, '&level=1'])
                           }
         breadcrumb_list.append(breadcrumb_obj)
-        if time_id == '2':
+        if time_id == '4':
             # Success stories
             video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id)
             list_dict = []
