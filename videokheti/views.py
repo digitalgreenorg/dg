@@ -18,25 +18,26 @@ def home(request):
     if 'videokheti_cookie' in request.COOKIES:
         if "videokheti_language" in request.COOKIES:
             language = request.COOKIES["videokheti_language"]
-            crop_objects = Crop.objects.all()
-            list_dict = []
-            for obj in crop_objects:
-                print obj.name
-                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
-                           'image': obj.image_file,
-                           'audio': obj.sound_file,
-                           'id': obj.id,
-                           'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
-                           }
-                list_dict.append(dic_obj)
-            title = Title.objects.get(table='Crop')
-            context = {
-                       'language': language,
-                       'crop': list_dict,
-                       'title': title.hindi_text if language == "Hindi" else title.title,
-                       'title_audio': 'you-can-name-crop-prompt-graphics.mp3'
-                       }
-            return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
+        else:
+            language = "Hindi"
+        crop_objects = Crop.objects.all()
+        list_dict = []
+        for obj in crop_objects:
+            dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
+                        'image': obj.image_file,
+                        'audio': obj.sound_file,
+                        'id': obj.id,
+                        'link': ''.join(['opt/?crop=', str(obj.id), '&level=1']),
+                      }
+            list_dict.append(dic_obj)
+        title = Title.objects.get(table='Crop')
+        context = {
+                    'language': language,
+                    'crop': list_dict,
+                    'title': title.hindi_text if language == "Hindi" else title.title,
+                    'title_audio': 'you-can-name-crop-prompt-graphics.mp3'
+                  }
+        return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     else:
         context = {
                     'cookies': 1,
@@ -48,14 +49,17 @@ def home(request):
 
 
 def level(request):
+    if "videokheti_language" in request.COOKIES:
+        language = request.COOKIES["videokheti_language"]
+    else:
+        language = "Hindi"
     level = request.GET.get('level', None)
     if level == '1':
         crop_id = request.GET.get('crop', None)
         time_objects = TimeYear.objects.all()
         list_dict = []
         for obj in time_objects:
-            dic_obj = {#'name': obj.name.replace('_', ' '),
-                       'name': obj.hindi_text,
+            dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
                        'image': obj.image_file,
                        'audio': obj.sound_file,
                        'id': obj.id,
@@ -71,9 +75,10 @@ def level(request):
         title = Title.objects.get(table='TimeYear')
         context = {
                   'crop': list_dict,
-                  'title': title.hindi_text,
+                  'title': title.hindi_text if language == "Hindi" else title.title,
                   'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                   'breadcrumb': breadcrumb_list,
+                  'language': language
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '2':
@@ -95,8 +100,7 @@ def level(request):
             video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id)
             list_dict = []
             for obj in video_objects:
-                dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
-                           'name': obj.hindi_text,
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.coco_video.title.replace('_', ' '),
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -107,17 +111,17 @@ def level(request):
             context = {
                       'crop': list_dict,
                       'video': 1,
-                      'title': title.hindi_text,
+                      'title': title.hindi_text if language == "Hindi" else title.title,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
+                      'language': language,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
             action_objects = ActionType.objects.filter(time_year_id=time_id)
             list_dict = []
             for obj in action_objects:
-                dic_obj = {#'name': obj.name.replace('_', ' '),
-                           'name': obj.hindi_text,
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -127,9 +131,10 @@ def level(request):
             title = Title.objects.get(table='Action')
             context = {
                       'crop': list_dict,
-                      'title': title.hindi_text,
+                      'title': title.hindi_text if language == "Hindi" else title.title,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
+                      'language': language,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '3':
@@ -159,8 +164,7 @@ def level(request):
             method_objects = Method.objects.all()[:3]
             list_dict = []
             for obj in method_objects:
-                dic_obj = {#'name': obj.name.replace('_', ' '),
-                           'name': obj.hindi_text,
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -170,17 +174,17 @@ def level(request):
             title = Title.objects.get(table='Method')
             context = {
                         'crop': list_dict,
-                        'title': title.hindi_text,
+                        'title': title.hindi_text if language == "Hindi" else title.title,
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
+                        'language': language,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         elif action_object.name == 'interculture':
             method_objects = Method.objects.all()[3:]
             list_dict = []
             for obj in method_objects:
-                dic_obj = {#'name': obj.name.replace('_', ' '),
-                           'name': obj.hindi_text,
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -190,17 +194,17 @@ def level(request):
             title = Title.objects.get(table='Method')
             context = {
                         'crop': list_dict,
-                        'title': title.hindi_text,
+                        'title': title.hindi_text if language == "Hindi" else title.title,
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
+                        'language': language,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
             video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id)
             list_dict = []
             for obj in video_objects:
-                dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
-                           'name': obj.hindi_text,
+                dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.coco_video.title.replace('_', ' '),
                            'image': obj.image_file,
                            'audio': obj.sound_file,
                            'id': obj.id,
@@ -211,9 +215,10 @@ def level(request):
             context = {
                       'crop': list_dict,
                       'video': 1,
-                      'title': title.hindi_text,
+                      'title': title.hindi_text if language == "Hindi" else title.title,
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
+                      'language': language,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '4':
@@ -245,26 +250,30 @@ def level(request):
         video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id, method_id=method_id)
         list_dict = []
         for obj in video_objects:
-            dic_obj = {#'name': obj.coco_video.title.replace('_', ' '),
-                       'name': obj.hindi_text,
-                        'image': obj.image_file,
-                        'audio': obj.sound_file,
-                        'id': obj.id,
-                        'link': ''.join(['/agri/video/?video=', str(obj.id)])
+            dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.coco_video.title.replace('_', ' '),
+                       'image': obj.image_file,
+                       'audio': obj.sound_file,
+                       'id': obj.id,
+                       'link': ''.join(['/agri/video/?video=', str(obj.id)])
                        }
             list_dict.append(dic_obj)
         title = Title.objects.get(table='Video')
         context = {
                    'crop': list_dict,
-                    'video': 1,
-                    'title': title.hindi_text,
-                    'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
-                    'breadcrumb': breadcrumb_list,
+                   'video': 1,
+                   'title': title.hindi_text if language == "Hindi" else title.title,
+                   'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
+                   'breadcrumb': breadcrumb_list,
+                   'language': language,
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
 
 
 def play_video(request):
+    if "videokheti_language" in request.COOKIES:
+        language = request.COOKIES["videokheti_language"]
+    else:
+        language = "Hindi"
     video_id = request.GET.get('video', None)
     video = Video.objects.get(id=video_id)
     crop = video.crop if video.crop is not None else None
@@ -320,7 +329,7 @@ def play_video(request):
             video_carousel.append(f)
     video_carousel.sort()
     context = {
-                'title': video.hindi_text,
+                'title': video.hindi_text if language == "Hindi" else video.coco_video.title,
                 'coco_id': video.coco_video.id,
                 'partner': video.coco_video.partner.partner_name,
                 'partner_image': partner.logoURL,
@@ -336,6 +345,7 @@ def play_video(request):
                 'comments': comments,
                 'id': video_id,
                 'video_carousel': video_carousel,
+                'language': language,
               }
     return render_to_response('video_play.html', context, context_instance=RequestContext(request))
 
@@ -396,3 +406,7 @@ def language(request):
             response = HttpResponse('1')
             response.set_cookie("videokheti_language", language)
             return response
+    else:
+        response = HttpResponse('1')
+        response.set_cookie("videokheti_language", language)
+        return response

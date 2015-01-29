@@ -32,18 +32,36 @@
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <div class="form-inline">
-                <a class="navbar-brand audio-click" href="#" data-id="-1" style="padding-top: 2px;">
-                        <button type="button" class="btn btn-success btn-sm" style="font-size: 22px; border-radius: 50%">
-                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
-                         </button>
-                </a>
-                <a class="navbar-brand" href="/agri">digitalGreen</a>
-                <audio id="-1">
-                    <source src="{{STATIC_URL}}videokheti/content/audio/welcome.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+	                <a class="navbar-brand audio-click" href="#" data-id="-1" style="padding-top: 2px;">
+	                        <button type="button" class="btn btn-success btn-sm" style="font-size: 22px; border-radius: 50%">
+	                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
+	                         </button>
+	                </a>
+	                <a class="navbar-brand" href="/agri">digitalGreen</a>
+	                <audio id="-1">
+	                    <source src="{{STATIC_URL}}videokheti/content/audio/welcome.mp3" type="audio/mpeg">
+	                    Your browser does not support the audio element.
+	                </audio>
                 </div>
+            </div>
+            
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="language-click">Hindi</a></li>
+                                <li><a href="#" class="language-click">English</a></li>
+                            </ul>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- /.container -->
@@ -278,6 +296,17 @@
             button.removeClass('btn-info').addClass('btn-success');
             button.removeAttr('disabled');
         });
+    });
+    
+    $(".language-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        $.get( "/agri/language/", { language: $(this).text() })
+            .done(function( data ) {
+                if(data=='1'){
+                    window.location.reload(true);
+                }
+            });
     });
     </script>
 </body>
