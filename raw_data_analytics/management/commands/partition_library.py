@@ -69,7 +69,7 @@ class Command(BaseCommand):
         result_dataframe = self.handle_controller(args, options, self.lookup_matrix)
         print "--------------FINAL RESULT---------------"
         print result_dataframe
-        
+
 
     def handle_controller(self, args, options, lookup_matrix):
         # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
@@ -147,7 +147,7 @@ class Command(BaseCommand):
         self.Dict.clear()
         selectResult = self.getSelectComponent(partitionDict, valueDictElement)
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
-        whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, lookup_matrix)
+        whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         print "----------------------------------SELECT PART------------------------------"
         print selectResult
@@ -226,7 +226,7 @@ class Command(BaseCommand):
         return ' , '.join(majorTablesList)
 
     #Function to make whereComponent of the query
-    def getWhereComponent(self, partitionElements, valueElement, Dictionary, lookup_matrix):
+    def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
         for items in partitionElements:
@@ -237,6 +237,7 @@ class Command(BaseCommand):
             for j in Dictionary[i]:
                 print str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1])
                 whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1]))
+        whereComponentList.append(str(tableDictionary[valueElement])+'.'+str(whereDictionary[valueElement])+' between \''+str(args[0])+'\' and \''+str(args[1]) + '\'')
         return ' and '.join(whereComponentList)
 
     #Function to make GroupBy component of the sql query

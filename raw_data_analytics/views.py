@@ -31,7 +31,7 @@ def execute(request):
     district = [request.POST.get("district")]
     block = [request.POST.get("block")]
     village = [request.POST.get("village")]
-    #animator =[request.POST.get("animator")]  
+    animator =[request.POST.get("animator")]
     
     partner_chk = [request.POST.get("partner_chk")]
     country_chk = [request.POST.get("country_chk")]
@@ -39,7 +39,7 @@ def execute(request):
     district_chk = [request.POST.get("district_chk")]
     block_chk = [request.POST.get("block_chk")]
     village_chk = [request.POST.get("village_chk")]
-    #animator_chk = [request.POST.get("animator_chk")]
+    animator_chk = [request.POST.get("animator_chk")]
     
     screening_chk = [request.POST.get("screening_chk")]
     adoption_chk = [request.POST.get("adoption_chk")]
@@ -90,12 +90,12 @@ def execute(request):
         village = False
 
     
-    '''if(animator[0]=='' and animator_chk[0]!=None):
+    if(animator[0]=='' and animator_chk[0]!=None):
         animator = True 
     elif (animator[0]!='' and animator_chk[0]==None) or (animator[0]!='' and animator_chk[0]!=None):
         animator = str(Animator.objects.get(name=animator[0]).id)
     elif(animator[0]=='' and animator_chk[0]==None):
-        animator = False'''
+        animator = False
 
 
 
@@ -120,7 +120,7 @@ def execute(request):
         now = datetime.datetime.now()
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
-    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village} #,'animator':animator}
+    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator}
     value = {'numScreening':screening, 'numAdoption':adoption}
     print "in views-------------------"
     print partition

@@ -7,7 +7,7 @@ tableDictionary={
     'district':'geographies_district',
     'block':'geographies_block',
     'village':'geographies_village',
-    'animator':'people_animator_wise_data',
+    'animator':'people_animatorwisedata',
     'person':'people_person',
     'persongroup':'people_persongroup',
     'video':'videos_video_wise_data',
