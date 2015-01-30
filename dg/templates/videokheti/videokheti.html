@@ -112,8 +112,8 @@
                                 <img src="{% if video %}{{obj.image}}{% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="" style="width:253px; height:158px !important;"> </img>
                             </a>
                             <div class="caption">
-                                <form class="form-inline">
-                                    <a href="#" data-id="{{obj.id}}" class="audio-click">
+                                <div class="form-inline">
+                                    <a href="#" data-id="{{obj.id}}" class="audio-click" style="text-decoration: none;">
                                         <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 22px; border-radius: 50%; text-align: center;">
                                             <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
                                         </button>
@@ -121,7 +121,7 @@
                                     <a href="{{obj.link}}">
                                     <label style="font-size: {% if language == 'Hindi' %}18px {% else %} 16px {% endif %}; color: #ffffff;">{{obj.name|upper}}</label>
                                     </a>
-                                </form>
+                                </div>
                             </div>
                         </div>
                 
