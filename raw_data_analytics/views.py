@@ -120,35 +120,13 @@ def execute(request):
         now = datetime.datetime.now()
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
-    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator}
+    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village}#,'animator':animator}
     value = {'numScreening':screening, 'numAdoption':adoption}
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
     print value
     management.call_command('partition_library',from_date, to_date, partition=partition,value=value)
-
-
-#def df_html_download(request):
-    header = '''<html>
-                    <head>
-                        <h2> Data Result </h2>
-                        <div name="download_excel">
-                            <a href="/raw_data_analytics/download">Download result as an excel file</a>
-                        </div>
-                    </head>
-                    <body>'''
-    footer = '''</body></html>'''
-
-    html_file = 'dg/templates/raw_data_analytics/library_data.html'
-
-    with open(html_file, 'w') as f:
-        f.write(header)
-        #f.write(df.to_html(classes='df'))
-        f.write(footer)
-
-
-#    df.to_html('dg/templates/raw_data_analytics/library_data.html')
 
     
     return render_to_response('raw_data_analytics/library_data.html', context_instance=RequestContext(request))

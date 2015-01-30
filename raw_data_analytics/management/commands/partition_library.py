@@ -9,6 +9,7 @@ import pandas.io.sql as psql
 import csv
 
 
+
 class Command(BaseCommand):
     Dict = {}
     lookup_matrix = {}
@@ -111,6 +112,29 @@ class Command(BaseCommand):
                 final_df = pd.merge(final_df, df, how='outer')
             print df
             print "---------------------------------Game Over---------------------------------"
+
+            html_file = 'dg/templates/raw_data_analytics/library_data.html'
+            excel_file = 'dg/media/raw_data_analytics/library_data.xls'
+            
+            df.to_excel(excel_file,'Sheet1')
+            
+            header = '''<html>
+                    <head><center>
+                        <h2> Data Result </h2>
+                        <div name="download_excel">
+                            <a href="/media/raw_data_analytics/library_data.xls">Download result as an excel file</a>
+                        </div></center>
+                    </head>
+                    <body></br></br></br></br>'''
+            footer = '''</body></html>'''
+
+            with open(html_file, 'wb') as f:
+                f.write(header)
+                f.write(df.to_html())
+                f.write(footer)
+            f.close()
+
+            
         return final_df
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
@@ -129,7 +153,7 @@ class Command(BaseCommand):
             return False
 
     def read_lookup_csv(self):
-        file_data = csv.reader(open('C:/Users/Lokesh/Documents/dg/dg/media/raw_data_analytics/data_analytics.csv'))
+        file_data = csv.reader(open('C:/Users/Abhishek/Documents/dg/dg/media/raw_data_analytics/data_analytics.csv'))
         headers = next(file_data)
         headers.remove('')
         matrix = {}
@@ -251,8 +275,18 @@ class Command(BaseCommand):
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen_jan15')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
         return temp_df
+
+
+
+
+
+
+
+
+
+
