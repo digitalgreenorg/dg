@@ -87,5 +87,5 @@ class Command(BaseCommand):
                           hindi_text=worksheet.cell_value(curr_row, 1))
                 print row
                 a.save()
-            except:
-                pass
+            except Exception as e:
+                print e

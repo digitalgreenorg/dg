@@ -39,12 +39,16 @@ def home(request):
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     else:
+        language = "Hindi"
+        title = Title.objects.get(table='Home')
         context = {
                     'cookies': 1,
+                    'language': language,
+                    'title': title.hindi_text if language == "Hindi" else title.title,
                    }
         response = render_to_response('videokheti_home.html', context, context_instance=RequestContext(request))
         response.set_cookie("videokheti_cookie", 1)
-        response.set_cookie("videokheti_language", "Hindi")
+        response.set_cookie("videokheti_language", language)
         return response
 
 
@@ -108,6 +112,7 @@ def level(request):
                        }
                 list_dict.append(dic_obj)
             title = Title.objects.get(table='Video')
+            error_message = Title.objects.get(table='Error')
             context = {
                       'crop': list_dict,
                       'video': 1,
@@ -115,6 +120,7 @@ def level(request):
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       'language': language,
+                      'error_message': error_message.hindi_text if language == "Hindi" else error_message.title
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
@@ -212,6 +218,7 @@ def level(request):
                        }
                 list_dict.append(dic_obj)
             title = Title.objects.get(table='Video')
+            error_message = Title.objects.get(table='Error')
             context = {
                       'crop': list_dict,
                       'video': 1,
@@ -219,6 +226,7 @@ def level(request):
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       'language': language,
+                      'error_message': error_message.hindi_text if language == "Hindi" else error_message.title
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '4':
@@ -258,6 +266,7 @@ def level(request):
                        }
             list_dict.append(dic_obj)
         title = Title.objects.get(table='Video')
+        error_message = Title.objects.get(table='Error')
         context = {
                    'crop': list_dict,
                    'video': 1,
@@ -265,6 +274,7 @@ def level(request):
                    'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                    'breadcrumb': breadcrumb_list,
                    'language': language,
+                   'error_message': error_message.hindi_text if language == "Hindi" else error_message.title
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
 

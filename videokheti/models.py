@@ -56,5 +56,5 @@ class VideoComment(models.Model):
 
 class Title(models.Model):
     table = models.CharField(max_length=100, unique=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=1000)
     hindi_text = models.CharField(max_length=1000)
