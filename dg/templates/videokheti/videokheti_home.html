@@ -88,7 +88,7 @@
                     </div>
                     
                     <div class="well text-center">
-                        <h5> {{title}} </h5>
+                        <h5 style="text-transform: none;"> {{title}} </h5>
                     </div>
                 </div>
             </div>
@@ -100,6 +100,19 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <!-- Enabling Google Analytics -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16211208-1");
+            pageTracker._trackPageview();
+            } 
+        catch(err) {}
+    </script>
     
     <script>
     $(".audio-click").click(function(event) {
@@ -114,6 +127,17 @@
             button.removeClass('btn-info').addClass('btn-success');
             window.location.href = "/agri";
         });
+    });
+    
+    $(".language-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        $.get( "/agri/language/", { language: $(this).text() })
+            .done(function( data ) {
+                if(data=='1'){
+                    window.location.href = "/agri/home";
+                }
+            });
     });
     </script>
 

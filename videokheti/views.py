@@ -52,6 +52,20 @@ def home(request):
         return response
 
 
+def home_static(request):
+    if "videokheti_language" in request.COOKIES:
+        language = request.COOKIES["videokheti_language"]
+    else:
+        language = "Hindi"
+    title = Title.objects.get(table='Home')
+    context = {
+                'language': language,
+                'title': title.hindi_text if language == "Hindi" else title.title,
+              }
+    response = render_to_response('videokheti_home.html', context, context_instance=RequestContext(request))
+    return response
+
+
 def level(request):
     if "videokheti_language" in request.COOKIES:
         language = request.COOKIES["videokheti_language"]
