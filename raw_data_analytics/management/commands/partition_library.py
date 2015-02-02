@@ -153,7 +153,7 @@ class Command(BaseCommand):
             return False
 
     def read_lookup_csv(self):
-        file_data = csv.reader(open('C:/Users/Abhishek/Documents/dg/dg/media/raw_data_analytics/data_analytics.csv'))
+        file_data = csv.reader(open('C:/Users/Lokesh/Documents/dg/dg/media/raw_data_analytics/data_analytics.csv'))
         headers = next(file_data)
         headers.remove('')
         matrix = {}
@@ -266,16 +266,16 @@ class Command(BaseCommand):
 
     #Function to make GroupBy component of the sql query
     def getGroupByComponent(self, partitionElements, valueElement):
-        groupbyComponentList = []
+        groupbyComponentList = ['1']
         for items in partitionElements:
-            if partitionElements[items] == True:
+            if partitionElements[items] != False:
                 groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
         return ' , '.join(groupbyComponentList)
 
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen_jan15')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
