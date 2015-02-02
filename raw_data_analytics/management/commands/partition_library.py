@@ -116,7 +116,7 @@ class Command(BaseCommand):
             html_file = 'dg/templates/raw_data_analytics/library_data.html'
             excel_file = 'dg/media/raw_data_analytics/library_data.xls'
             
-            df.to_excel(excel_file,'Sheet1')
+            final_df.to_excel(excel_file,'Sheet1')
             
             header = '''<html>
                     <head><center>
@@ -130,7 +130,7 @@ class Command(BaseCommand):
 
             with open(html_file, 'wb') as f:
                 f.write(header)
-                f.write(df.to_html())
+                f.write(final_df.to_html())
                 f.write(footer)
             f.close()
 

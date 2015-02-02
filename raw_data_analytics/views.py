@@ -16,10 +16,22 @@ from management.commands import partition_library
 from django.core import management
 import datetime
 
-
+import xml.etree.ElementTree as ET
 
 def home(request):
         
+    ''''tree = ET.parse('dg/media/raw_data_analytics/home.xml')
+    root = tree.getroot()
+
+    print len(root.keys())
+    print root.tag
+    print root.attrib
+     
+   
+   #for child in root:
+      #  print (child.tag, root[1].tag)'''
+
+
     return render_to_response('raw_data_analytics/output.html', context_instance=RequestContext(request))
 
     
