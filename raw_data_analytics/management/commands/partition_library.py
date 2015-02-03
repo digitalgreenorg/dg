@@ -113,7 +113,7 @@ class Command(BaseCommand):
             print "---------------------------------Game Over---------------------------------"
 
             html_file = 'dg/templates/raw_data_analytics/library_data.html'
-            excel_file = 'dg/media/raw_data_analytics/library_data.xls'
+            excel_file = 'dg/media/social_website/uploads/raw_data_analytics/library_data.xls'
             
             final_df.to_excel(excel_file,'Sheet1')
             
@@ -121,7 +121,7 @@ class Command(BaseCommand):
                     <head><center>
                         <h2> Data Result </h2>
                         <div name="download_excel">
-                            <a href="/media/raw_data_analytics/library_data.xls">Download result as an excel file</a>
+                            <a href="/media/social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
                         </div></center>
                     </head>
                     <body></br></br></br></br>'''
