@@ -65,7 +65,7 @@ def dropdown2(request):
     
     
 
-    resp = json.dumps([str(i) for i in districts])
+    resp = json.dumps([unicode(i) for i in districts])
     return HttpResponse(resp)
 
 def dropdown3(request):
