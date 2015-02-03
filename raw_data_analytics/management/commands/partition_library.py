@@ -120,7 +120,7 @@ class Command(BaseCommand):
                     <head><center>
                         <h2> Data Result </h2>
                         <div name="download_excel">
-                            <a href="{{static_url}}social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
+                            <a href="/media/social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
                         </div></center>
                     </head>
                     <body></br></br></br></br>'''
