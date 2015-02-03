@@ -113,7 +113,7 @@ class Command(BaseCommand):
             print "---------------------------------Game Over---------------------------------"
 
             html_file = 'dg/templates/raw_data_analytics/library_data.html'
-            excel_file = 'dg/media/social_website/uploads/raw_data_analytics/library_data.xls'
+            excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xls'])
             
             final_df.to_excel(excel_file,'Sheet1')
             
@@ -121,7 +121,7 @@ class Command(BaseCommand):
                     <head><center>
                         <h2> Data Result </h2>
                         <div name="download_excel">
-                            <a href="/media/social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
+                            <a href="{{static_url}}social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
                         </div></center>
                     </head>
                     <body></br></br></br></br>'''
@@ -275,7 +275,7 @@ class Command(BaseCommand):
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd=dg.settings.PASSWORD , db='sandbox_test')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root' , db='digitalgreen_jan15')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
