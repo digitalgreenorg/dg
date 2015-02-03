@@ -24,8 +24,7 @@ class Command(BaseCommand):
         make_option('-c', '--country',
                     action='store',
                     default=False,
-                    dest='country'
-                         '',
+                    dest='country',
                     help='Takes country name as input for filter'),
         make_option('-s', '--state',
                     action='store',
