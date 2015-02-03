@@ -111,8 +111,7 @@ class Command(BaseCommand):
                 final_df = pd.merge(final_df, df, how='outer')
             print df
             print "---------------------------------Game Over---------------------------------"
-
-            html_file = 'dg/templates/raw_data_analytics/library_data.html'
+            html_file = '/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/library_data.html'
             excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xls'])
             
             final_df.to_excel(excel_file,'Sheet1')
