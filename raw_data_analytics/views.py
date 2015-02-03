@@ -50,7 +50,7 @@ def dropdown1(request):
     
     
 
-    resp = json.dumps([str(i) for i in states])
+    resp = json.dumps([unicode(i) for i in states])
     return HttpResponse(resp)
 
 def dropdown2(request):
@@ -80,7 +80,7 @@ def dropdown3(request):
     
     
 
-    resp = json.dumps([str(i) for i in blocks])
+    resp = json.dumps([unicode(i) for i in blocks])
     return HttpResponse(resp)
 def dropdown4(request):
     
@@ -94,7 +94,7 @@ def dropdown4(request):
     
     
 
-    resp = json.dumps([str(i) for i in villages])
+    resp = json.dumps([unicode(i) for i in villages])
     return HttpResponse(resp)
 
 
