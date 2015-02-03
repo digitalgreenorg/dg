@@ -101,9 +101,9 @@ def dropdown4(request):
 def execute(request):
 
     partner = [request.POST.get("partner")]
-    print partner[0]
+    #print partner[0]
     country = [request.POST.get("country")]
-    print country[0]
+    #print country[0]
     state = [request.POST.get("state")]
     
     district = [request.POST.get("district")]
@@ -143,7 +143,6 @@ def execute(request):
     if(state[0]=='-1' and state_chk[0]!=None):
         state = True
     elif (state[0]!= '-1' and state_chk[0]==None) or (state[0]!= '-1' and state_chk[0]!=None):
-        print state[0]
         state = str(State.objects.get(state_name=state[0]).id)
     elif(state[0]=='-1' and state_chk[0]==None):
         state = False
