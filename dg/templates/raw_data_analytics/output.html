@@ -4,20 +4,122 @@
 			<h1>Raw Data Analytics</h1>
 		</head>
 		<body>
+			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+			<script type ='text/javascript'>
+
+			function statechange(src, val) {
+				//alert(val)
+			$.get( "/raw_data_analytics/dropdown1/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   //alert(data_json)
+                   for (i in data_json){
+                   	//alert(data_json[i]);
+                   	$('#stateId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+            }
+
+            function districtchange(src, val) {
+				alert(val)
+			$.get( "/raw_data_analytics/dropdown2/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   //alert(data_json)
+                   for (i in data_json){
+                   	//alert(data_json[i]);
+                   	$('#districtId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+            }
+
+            function blockchange(src, val) {
+				alert(val)
+			$.get( "/raw_data_analytics/dropdown3/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   //alert(data_json)
+                   for (i in data_json){
+                   	//alert(data_json[i]);
+                   	$('#blockId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+
+            }
+            function villagechange(src, val) {
+				alert(val)
+			$.get( "/raw_data_analytics/dropdown4/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   //alert(data_json)
+                   for (i in data_json){
+                   	//alert(data_json[i]);
+                   	$('#villageId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+		}
+
+
+			</script>
+
 			<form action="/raw_data_analytics/execute/" method="POST" enctype="multipart/form-data" >
 				{% csrf_token %}
 				<div name="Filters">
+					
 					<h3>Filters:</h3>
-					<p> Partner: <input id="partner" name="partner" type="text"> </p>
-					<p> Country: <input id="country" name="country" type="text"> </p>
-					<p> State: <input id="state" name="state" type="text"> </p>
-					<p> District: <input id="district" name="district" type="text"> </p>
-					<p> Block: <input id="block" name="block" type="text"> </p>
-					<p> Village: <input id="village" name="village" type="text"> </p>
-					<p> Animator: <input id="animator" name="animator" type="text"> </p>
+					
+
+					<div class='searchbody1' id='partner'>
+				   				<select class='select' name='partner' id = 'partner'>
+					    			<option value='-1'>Select Partner</option>
+										{% if partners %}
+										{% for partner in partners %}
+											<option > {{partner}} </option>{% endfor %}
+										{%endif%}
+				    			</select>				
+					</div></br>
+					<div class='searchbody1' id='country'>
+				   				<select class='select' name='country' id = 'countryId' onChange="statechange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
+										{% if countries %}
+										{% for country in countries %}
+											<option > {{country}} </option>{% endfor %}
+										{%endif%}
+				    			</select>				
+							</div></br>
+
+					<div class='searchbody1' id='state'>
+				   				<select class='select' name='state' id = 'stateId' onChange="districtchange('district', this.value)">
+					    			<option value='-1'>Select State</option>
+										
+				    			</select>				
+					</div></br>
+					<div class='searchbody1' id='district'>
+				   				<select class='select' name='district' id = 'districtId' onChange="blockchange('block', this.value)">
+					    			<option value='-1'>Select District</option>
+										
+				    			</select>				
+					</div></br>
+
+					<div class='searchbody1' id='block'>
+				   				<select class='select' name='block' id = 'blockId' onChange="villagechange('village', this.value)">
+					    			<option value='-1'>Select Block</option>
+										
+				    			</select>				
+					</div></br>
+
+					<div class='searchbody1' id='villageID'>
+				   				<select class='select' name='village' id = 'villageId'>
+					    			<option value='-1'>Select Village</option>
+										
+				    			</select>				
+					</div></br>		
+
+
+					
 				</div>
 				<div name="Partition">
-					<h3>Partitions:</h3>
+					<h3>Columns required in excel output</h3>
 					<input type="checkbox" name="partner_chk" value"partner">Partner &nbsp;
 					<input type="checkbox" name="country_chk" value"country">Country &nbsp;
 					<input type="checkbox" name="state_chk" value"state">State &nbsp;
