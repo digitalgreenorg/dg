@@ -5,7 +5,7 @@ from videokheti.views import comment, get_comments, home, home_static, language,
 
 
 urlpatterns = patterns('',
-    url(r'^$', home, name='home'),
+    url(r'^$', home),
     url(r'^home/$', home_static),
     url(r'^opt/$', level),
     url(r'^video/$', play_video),
