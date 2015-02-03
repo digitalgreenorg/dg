@@ -164,7 +164,8 @@ def execute(request):
     if(village[0]=='-1' and village_chk[0]!=None):
         village = True
     elif (village[0]!='-1' and village_chk[0]==None) or (village[0]!='-1' and village_chk[0]!=None):
-        village = str(Village.objects.get(village_name=village[0]).id)
+        village_uni = unicode(village[0])
+        village = str(Village.objects.filter(village_name=village_uni)[0].id)
     elif(village[0]=='-1' and village_chk[0]==None):
         village = False
 
