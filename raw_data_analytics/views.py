@@ -242,6 +242,11 @@ def execute(request):
     else:
         list_animator = False
 
+    if(attendance_chk[0]!=None):
+        attendance = True
+    else:
+        attendance = False
+
 
 
     if(from_date[0]!=''):
@@ -256,7 +261,7 @@ def execute(request):
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group}
-    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance_chk }
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
