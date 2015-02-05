@@ -111,7 +111,8 @@ class Command(BaseCommand):
                 final_df = pd.merge(final_df, df, how='outer')
             print df
             print "---------------------------------Game Over---------------------------------"
-            html_file = '/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/library_data.html'
+            #/home/ubuntu/code/dg_coco_test/dg/
+            html_file = 'dg/templates/raw_data_analytics/library_data.html'
             excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xls'])
             
             final_df.to_excel(excel_file,'Sheet1')
@@ -266,26 +267,20 @@ class Command(BaseCommand):
     #Function to make GroupBy component of the sql query
     def getGroupByComponent(self, partitionElements, valueElement):
         groupbyComponentList = ['1']
+
+        print 'value element in:' + str(valueElement)
         for items in partitionElements:
             if partitionElements[items] != False:
                 groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
+        if groupbyDictionary[valueElement] != False:
+            groupbyComponentList.append(tableDictionary[valueElement]+'.'+ str(groupbyDictionary[valueElement]))
         return ' , '.join(groupbyComponentList)
 
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd=dg.settings.PASSWORD , db='sandbox_test')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root' , db='digitalgreen_jan15')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
         return temp_df
-
-
-
-
-
-
-
-
-
-
