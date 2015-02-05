@@ -1,35 +1,34 @@
 import json, datetime
-from optparse import make_option
+#from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from management.commands import partition_library
+from django.core import management
+
 from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
-from people.models import Animator
+#from people.models import Animator
 
-import pandas as pd
+'''import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 from management.commands import partition_library
-from django.core import management
-import datetime
+from django.core import management'''
+
 
 import xml.etree.ElementTree as ET
 
 def home(request):
         
-    ''''tree = ET.parse('dg/media/raw_data_analytics/home.xml')
+    '''tree = ET.parse('dg/templates/raw_data_analytics/home.xml')
     root = tree.getroot()
 
-    print len(root.keys())
-    print root.tag
-    print root.attrib
-     
-   
-   #for child in root:
-      #  print (child.tag, root[1].tag)'''
+    for x in range(len(root)):
+        for y in range(len(root[x])):
+            print root[x][y].text'''
 
     countries = Country.objects.all()
    
@@ -38,6 +37,22 @@ def home(request):
     return render_to_response('raw_data_analytics/output.html', {'countries' : countries, 'partners':partners}, context_instance=RequestContext(request))
 
     
+'''def dropdown(request):
+    
+    #country_id = Country.objects.get(country_name=[request.POST.get("partner")][0]).id
+    #state = State.objects.filter(country=country_id)
+
+    selected_option = request.GET.get('selected', None)
+    
+
+    dropdown_items = State.objects.filter(country__country_name = country_selected).values_list('state_name', flat=True)
+    
+    
+
+    resp = json.dumps([unicode(i) for i in states])
+    return HttpResponse(resp)'''
+
+
 def dropdown1(request):
     
     #country_id = Country.objects.get(country_name=[request.POST.get("partner")][0]).id
@@ -101,13 +116,9 @@ def dropdown4(request):
 def execute(request):
 
     partner = [request.POST.get("partner")]
-    #print partner[0]
     country = [request.POST.get("country")]
-    #print country[0]
     state = [request.POST.get("state")]
-    
     district = [request.POST.get("district")]
-    
     block = [request.POST.get("block")]
     village = [request.POST.get("village")]
     #animator =[request.POST.get("animator")]
@@ -119,9 +130,15 @@ def execute(request):
     block_chk = [request.POST.get("block_chk")]
     village_chk = [request.POST.get("village_chk")]
     animator_chk = [request.POST.get("animator_chk")]
+    people_chk = [request.POST.get("people_chk")]
+    group_chk = [request.POST.get("group_chk")]
     
     screening_chk = [request.POST.get("screening_chk")]
     adoption_chk = [request.POST.get("adoption_chk")]
+    no_people_chk = [request.POST.get("no_people_chk")]
+    list_people_chk = [request.POST.get("list_people_chk")]
+    no_animator_chk = [request.POST.get("no_animator_chk")]
+    list_animator_chk = [request.POST.get("list_animator_chk")]
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
@@ -182,7 +199,16 @@ def execute(request):
     elif (animator_chk[0] != None):
         animator = True
 
-
+    if (people_chk[0]==None):
+        people = False
+    elif (people_chk[0] != None):
+        people = True
+    
+    if (group_chk[0]==None):
+        group = False
+    elif (group_chk[0] != None):
+        group = True
+    
 
     if(screening_chk[0]!=None):
         screening = True
@@ -193,6 +219,28 @@ def execute(request):
         adoption = True
     else:
         adoption = False
+
+    if(no_people_chk[0]!=None):
+        no_people = True
+    else:
+        no_people = False
+
+    if(list_people_chk[0]!=None):
+        list_people = True
+    else:
+        list_people = False
+
+    if(no_animator_chk[0]!=None):
+        no_animator = True
+    else:
+        no_animator = False
+
+    if(list_animator_chk[0]!=None):
+        list_animator = True
+    else:
+        list_animator = False
+
+
 
     if(from_date[0]!=''):
         from_date = from_date[0]  
@@ -205,8 +253,8 @@ def execute(request):
         now = datetime.datetime.now()
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
-    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator}
-    value = {'numScreening':screening, 'numAdoption':adoption}
+    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'people':people,'group':group}
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
