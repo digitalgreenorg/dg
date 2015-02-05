@@ -139,6 +139,8 @@ def execute(request):
     list_people_chk = [request.POST.get("list_people_chk")]
     no_animator_chk = [request.POST.get("no_animator_chk")]
     list_animator_chk = [request.POST.get("list_animator_chk")]
+    attendance_chk = [request.POST.get("attendance_chk")]
+    #group_nos_chk = [request.POST.get("group_nos_chk")]
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
@@ -254,7 +256,7 @@ def execute(request):
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group}
-    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator }
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance_chk }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
