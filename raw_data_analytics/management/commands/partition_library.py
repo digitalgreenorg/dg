@@ -113,15 +113,18 @@ class Command(BaseCommand):
             print "---------------------------------Game Over---------------------------------"
             #/home/ubuntu/code/dg_coco_test/dg/
             html_file = 'dg/templates/raw_data_analytics/library_data.html'
-            excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xls'])
-            
+            excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xlsx'])
+
             final_df.to_excel(excel_file,'Sheet1')
-            
+            writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
+            final_df.to_excel(writer, sheet_name='Sheet1')
+
+
             header = '''<html>
                     <head><center>
                         <h2> Data Result </h2>
                         <div name="download_excel">
-                            <a href="/media/social_website/uploads/raw_data_analytics/library_data.xls">Download result as an excel file</a>
+                            <a href="/media/social_website/uploads/raw_data_analytics/library_data.xlsx">Download result as an excel file</a>
                         </div></center>
                     </head>
                     <body></br></br></br></br>'''

@@ -253,7 +253,7 @@ def execute(request):
         now = datetime.datetime.now()
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
-    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'people':people,'group':group}
+    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group}
     value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator }
     print "in views-------------------"
     print partition
