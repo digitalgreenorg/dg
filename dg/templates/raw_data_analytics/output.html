@@ -1,8 +1,8 @@
-<HTML>
-	<center>
-		<head>
-			<h1>Raw Data Analytics</h1>
-		</head>
+<!--<HTML>
+	
+		<head><center>
+			<h1 >Raw Data Analytics</h1>
+		</center></head>
 		<body>
 			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
 			<script type ='text/javascript'>
@@ -63,7 +63,7 @@
                 		$('#villageId').append("<option>"+data_json[i]+"</option>");
                    }
                });
-		}
+			}
 
 
 			</script>
@@ -72,11 +72,11 @@
 				{% csrf_token %}
 				<div name="Filters">
 					
-					<h3>Filters:</h3>
+					<center><h3>Filters:</h3></center>
 				
-		   				<div name='partner' id='partner'>
-		   					<select class='select' name='partner' id = 'partner'>
-				    			<option value='-1'>Select Partner</option>
+		   				<div name='partner' id='partner' style='padding-left:550px;'>
+		   					Partner : <select class='select' name='partner' id = 'partner' style='width:150px;'>
+				    			<option value='-1'>-------------ALL-------------</option>
 									{% if partners %}
 									{% for partner in partners %}
 										<option > {{partner}} </option>{% endfor %}
@@ -84,8 +84,8 @@
 			    			</select>
 			    		</div></br>				
 
-			    		<div name='country' id='countryID'>
-			   				<select class='select' name='country' id = 'countryId' onChange="statechange('state', this.value)">
+			    		<div name='country' id='countryID' style='padding-left:550px;'>
+			   				Country : <select class='select' name='country' id = 'countryId' style='width:150px;' onChange="statechange('state', this.value)">
 				    			<option value='-1'>Select Country</option>
 									{% if countries %}
 									{% for country in countries %}
@@ -94,36 +94,36 @@
 			    			</select>
 			    		</div></br>				
 							
-			   			<div name='state' id='stateID'>	
-			   				<select class='select' name='state' id = 'stateId' onChange="districtchange('district', this.value)">
+			   			<div name='state' id='stateID'style='padding-left:550px;'>	
+			   				State : <select class='select' name='state' id = 'stateId' style='width:150px;' onChange="districtchange('district', this.value)">
 				    			<option value='-1'>Select State</option>
 									
 			    			</select>
 			    		</div></br>				
 							
-		   				<div name='district' id='districtID'>
-			   				<select class='select' name='district' id = 'districtId' onChange="blockchange('block', this.value)">
+		   				<div name='district' id='districtID'style='padding-left:550px;'>
+			   				District : <select class='select' name='district' id = 'districtId' style='width:150px;' onChange="blockchange('block', this.value)">
 				    			<option value='-1'>Select District</option>
 									
 			    			</select>
 			    		</div></br>			
 							
-			   			<div name='block' id='blockID'>	
-			   				<select class='select' name='block' id = 'blockId' onChange="villagechange('village', this.value)">
+			   			<div name='block' id='blockID'style='padding-left:550px;'>	
+			   				Block : <select class='select' name='block' id = 'blockId' style='width:150px;' onChange="villagechange('village', this.value)">
 				    			<option value='-1'>Select Block</option>
 									
 			    			</select>
 			    		</div></br>				
 							
-			   			<div name='village' id='villageID'>	
-			   				<select class='select' name='village' id = 'villageId'>
+			   			<div name='village' id='villageID'style='padding-left:550px;'>	
+			   				Village : <select class='select' name='village' id = 'villageId'style='width:150px;'>
 				    			<option value='-1'>Select Village</option>
 									
 			    			</select>
 			    		</div></br>				
 									
 				</div>
-				
+				<center>
 				<div name="Partition">
 					<h3>Columns required in excel output</h3>
 					<input type="checkbox" name="partner_chk" value"partner">Partner &nbsp;
@@ -157,7 +157,186 @@
 					<input type="submit" value="Submit">
 					<input type="reset" value="Reset">
 				</div>
+			</center></form>	
+		</body>
+	
+</html> -->
+
+<HTML>
+	
+		<head><center>
+			<h1 >Raw Data Analytics</h1>
+			<hr>
+		</center></head>
+		<body>
+			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+			<script type ='text/javascript'>
+
+							
+			function statechange(src, val) {
+				
+			$.get( "/raw_data_analytics/dropdown1/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   $('#stateID ').find('option:gt(0)').remove();
+                   $('#districtID ').find('option:gt(0)').remove();
+                   $('#blockID ').find('option:gt(0)').remove();
+                   $('#villageID ').find('option:gt(0)').remove();
+                    for (i in data_json){
+                       	$('#stateId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+
+
+
+            }
+
+            function districtchange(src, val) {
+				
+			$.get( "/raw_data_analytics/dropdown2/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   $('#districtID ').find('option:gt(0)').remove();
+                   $('#blockID ').find('option:gt(0)').remove();
+                   $('#villageID ').find('option:gt(0)').remove();
+                   for (i in data_json){
+                   		$('#districtId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+            }
+
+            function blockchange(src, val) {
+				
+			$.get( "/raw_data_analytics/dropdown3/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   $('#blockID ').find('option:gt(0)').remove();
+                   $('#villageID ').find('option:gt(0)').remove();                  
+                   for (i in data_json){
+                   		$('#blockId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+
+            }
+            function villagechange(src, val) {
+				
+			$.get( "/raw_data_analytics/dropdown4/", { selected : val })
+               .done(function( data ) {
+                   data_json = JSON.parse(data);
+                   $('#villageID ').find('option:gt(0)').remove();
+                   for (i in data_json){
+                		$('#villageId').append("<option>"+data_json[i]+"</option>");
+                   }
+               });
+			}
+
+
+			</script>
+
+			<form action="/raw_data_analytics/execute/" method="POST" enctype="multipart/form-data" >
+				{% csrf_token %}
+
+				<center><div name="Date">
+					<p><h3> Date: </h3>
+					<h5>From: &nbsp;<input type="date" name="from_date">&nbsp; &nbsp;                         
+					 To: &nbsp; <input type="date" name="to_date">
+					</h5></p>
+				</div></center></br>
+				<div name="sections"style=' width:100%; height:350px; display:block; ' >
+					<div name="Filters"style='padding-left:125px; width:30%; display:inline-block; float:left;' >
+						
+						<h3>Filters:</h3>
+					
+			   				<div name='partner' id='partner' >
+			   					Partner : &nbsp;<select class='select' name='partner' id = 'partner' style='width:150px;'>
+					    			<option value='-1'>-------------ALL-------------</option>
+										{% if partners %}
+										{% for partner in partners %}
+											<option > {{partner}} </option>{% endfor %}
+										{%endif%}
+				    			</select>
+				    		</div></br>				
+
+				    		<div name='country' id='countryID' >
+				   				Country : <select class='select' name='country' id = 'countryId' style='width:150px;' onChange="statechange('state', this.value)">
+					    			<option value='-1'>-------------ALL-------------</option>
+										{% if countries %}
+										{% for country in countries %}
+											<option > {{country}} </option>{% endfor %}
+										{%endif%}
+				    			</select>
+				    		</div></br>				
+								
+				   			<div name='state' id='stateID'>	
+				   				State : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select class='select' name='state' id = 'stateId' style='width:150px;' onChange="districtchange('district', this.value)">
+					    			<option value='-1'>-------------ALL-------------</option>
+										
+				    			</select>
+				    		</div></br>				
+								
+			   				<div name='district' id='districtID'>
+				   				District : &nbsp;<select class='select' name='district' id = 'districtId' style='width:150px;' onChange="blockchange('block', this.value)">
+					    			<option value='-1'>-------------ALL-------------</option>
+										
+				    			</select>
+				    		</div></br>			
+								
+				   			<div name='block' id='blockID'>	
+				   				Block : &nbsp;&nbsp;&nbsp;<select class='select' name='block' id = 'blockId' style='width:150px;' onChange="villagechange('village', this.value)">
+					    			<option value='-1'>-------------ALL-------------</option>
+										
+				    			</select>
+				    		</div></br>				
+								
+				   			<div name='village' id='villageID'>	
+				   				Village :&nbsp; <select class='select' name='village' id = 'villageId'style='width:150px;'>
+					    			<option value='-1'>-------------ALL-------------</option>
+										
+				    			</select>
+				    		</div></br>				
+										
+					</div>
+				
+					<div name="Partition" style=' width:30%; display:inline-block; float:left;' >
+						<h3>Required Columns in Output </h3>
+						<ul style='list-style-type: none;'>
+						<li><input type="checkbox" name="partner_chk" value"partner">Partner 
+						<li><input type="checkbox" name="country_chk" value"country">Country 
+						<li><input type="checkbox" name="state_chk" value"state">State 
+						<li><input type="checkbox" name="district_chk" value"district">District 
+						<li><input type="checkbox" name="block_chk" value"block">Block 
+						<li><input type="checkbox" name="village_chk" value"village">Village 
+						<li><input type="checkbox" name="animator_chk" value"animator">Animator 
+						<li><input type="checkbox" name="people_chk" value"animator">People 
+						<li><input type="checkbox" name="group_chk" value"animator">SHG 
+						<li><input type="checkbox" name="video_chk" value"videos">Videos </ul>
+					</div>
+					
+					<div name="Values" style=' width:30%; display:inline-block; float:left' >
+						<h3> Statistics Required:</h3>
+						<ul style='list-style-type: none;'>
+						<li><input type="checkbox" name="screening_chk" value"screening">Number of Screenings 
+						<li><input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions 
+						<li><input type="checkbox" name="no_people_chk" value"numPeople">Number of People 
+						<li><input type="checkbox" name="list_people_chk" value"listPeople">List of People 
+						<li><input type="checkbox" name="no_animator_chk" value"numAnimators">Number of Animators
+						<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators
+						<li><input type="checkbox" name="attendance_chk" value"attendance">Total Viewers
+						<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
+						<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened
+						<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
+						<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced </ul>
+					</div>
+					
+				</div>
+				<center>
+					<div name="Buttons" style='width:100%; display:block;'>
+						<input type="submit" value="Submit"> &nbsp;&nbsp;
+						<input type="reset" value="Reset">
+					</div>
+				</center>
+
 			</form>	
 		</body>
-	</center>
+	
 </html>
