@@ -19,11 +19,11 @@ from management.commands import partition_library
 from django.core import management'''
 
 
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 
 def home(request):
         
-    '''tree = ET.parse('dg/templates/raw_data_analytics/home.xml')
+    ''''tree = ET.parse('dg/templates/raw_data_analytics/home.xml')
     root = tree.getroot()
 
     for x in range(len(root)):
@@ -132,6 +132,7 @@ def execute(request):
     animator_chk = [request.POST.get("animator_chk")]
     people_chk = [request.POST.get("people_chk")]
     group_chk = [request.POST.get("group_chk")]
+    video_chk = [request.POST.get("video_chk")]
     
     screening_chk = [request.POST.get("screening_chk")]
     adoption_chk = [request.POST.get("adoption_chk")]
@@ -140,7 +141,10 @@ def execute(request):
     no_animator_chk = [request.POST.get("no_animator_chk")]
     list_animator_chk = [request.POST.get("list_animator_chk")]
     attendance_chk = [request.POST.get("attendance_chk")]
-    #group_nos_chk = [request.POST.get("group_nos_chk")]
+    video_screened_num_chk= [request.POST.get("no_video_screened_chk")]
+    video_screened_list_chk= [request.POST.get("list_video_screened_chk")]
+    video_produced_num_chk= [request.POST.get("no_video_produced_chk")]
+    video_produced_list_chk= [request.POST.get("list_video_produced_chk")]
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
@@ -210,6 +214,11 @@ def execute(request):
         group = False
     elif (group_chk[0] != None):
         group = True
+
+    if (video_chk[0]==None):
+        video = False
+    elif (video_chk[0] != None):
+        video = True
     
 
     if(screening_chk[0]!=None):
@@ -247,6 +256,27 @@ def execute(request):
     else:
         attendance = False
 
+    if(video_screened_num_chk[0]!=None):
+        video_screened_num = True
+    else:
+        video_screened_num = False
+
+    if(video_screened_list_chk[0]!=None):
+        video_screened_list = True
+    else:
+        video_screened_list = False
+
+    if(video_produced_num_chk[0]!=None):
+        video_produced_num = True
+    else:
+        video_produced_num = False
+
+    if(video_produced_list_chk[0]!=None):
+        video_produced_list = True
+    else:
+        video_screened_list = False
+
+
 
 
     if(from_date[0]!=''):
@@ -260,8 +290,8 @@ def execute(request):
         now = datetime.datetime.now()
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
-    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group}
-    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance }
+    partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group, 'video':video}
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance,'numVideoScreened':video_screened_num, 'listVideoScreened':video_screened_list,'numVideoProduced':video_produced_num,'listVideoproduced':video_produced_list }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
