@@ -69,6 +69,7 @@ class Command(BaseCommand):
         result_dataframe = self.handle_controller(args, options, self.lookup_matrix)
         print "--------------FINAL RESULT---------------"
         print result_dataframe
+        print "--------------GAME OVER-----------------"
 
 
     def handle_controller(self, args, options, lookup_matrix):
@@ -103,22 +104,23 @@ class Command(BaseCommand):
             print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0],queryComponents[1],queryComponents[2],queryComponents[3])
             print query
-            print "-------------------------------Final Result--------------------------------"
+            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
             print df
-            print "---------------------------------Game Over---------------------------------"
             #/home/ubuntu/code/dg_coco_test/dg/
             html_file = 'dg/templates/raw_data_analytics/library_data.html'
             excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xlsx'])
-
-            final_df.to_excel(excel_file,'Sheet1')
+            print "hello1"
+#            final_df.to_excel(excel_file,'Sheet1',encoding='utf-8')
+            print "hello2"
             writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
-            final_df.to_excel(writer, sheet_name='Sheet1')
-
+            print "hello3"
+            final_df.to_excel(writer, sheet_name='Sheet1',encoding='utf-8')
+            print "hello4"
 
             header = '''<html>
                     <head><center>
