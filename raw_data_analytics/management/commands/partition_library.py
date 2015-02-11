@@ -200,8 +200,10 @@ class Command(BaseCommand):
         print selectComponentList
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
-                selectComponentList.append(
-                    i.replace('count(', 'count(distinct ' + str(tableDictionary[valueElement]) + '.'))
+                if "count" in i:
+                    selectComponentList.append(i.replace('count(', 'count(distinct ' + str(tableDictionary[valueElement]) + '.'))
+                else:
+                    selectComponentList.append(str(tableDictionary[valueElement])+'.'+i)
         return ','.join(selectComponentList)
 
     #Function to make tables by recursive calls for tables.
