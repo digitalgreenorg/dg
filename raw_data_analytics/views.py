@@ -274,7 +274,7 @@ def execute(request):
     if(video_produced_list_chk[0]!=None):
         video_produced_list = True
     else:
-        video_screened_list = False
+        video_produced_list = False
 
 
 
@@ -291,7 +291,7 @@ def execute(request):
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group, 'video':video}
-    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance,'numVideoScreened':video_screened_num, 'listVideoScreened':video_screened_list,'numVideoProduced':video_produced_num,'listVideoproduced':video_produced_list }
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance,'numVideoScreened':video_screened_num, 'listVideoScreened':video_screened_list,'numVideoProduced':video_produced_num,'listVideoProduced':video_produced_list }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"

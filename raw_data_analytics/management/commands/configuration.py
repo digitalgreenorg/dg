@@ -10,7 +10,7 @@ tableDictionary={
     'animator':'people_animatorwisedata',
     'person':'people_person',
     'persongroup':'people_persongroup',
-    'video':'videos_video_wise_data',
+    'video':'videos_video_wisedata',
     'language':'videos_language',
     'sector':'videos_practicesector',
     'practice':'videos_practice',
@@ -28,7 +28,7 @@ tableDictionary={
     'listAnimator':'people_animatorwisedata',
     'listVideoScreened':'videos_video_wisedata',
     'numVideoScreened':'videos_video_wisedata',
-    'listVideoProduces':'Videos_video_wisedata',
+    'listVideoProduced':'videos_video_wisedata',
     'numVideoProduced':'videos_video_wisedata',
 }
 
@@ -60,7 +60,7 @@ whereDictionary={
     'listAnimator':'time_created',
     'listVideoScreened':'date',
     'numVideoScreened':'date',
-    'listVideoProduces':'video_production_end_date',
+    'listVideoProduced':'video_production_end_date',
     'numVideoProduced':'video_production_end_date',
 }
 
@@ -97,7 +97,7 @@ groupbyDictionary={
     'listAnimator':'animator_id',
     'listVideoScreened':'video_id',
     'numVideoScreened':False,
-    'listVideoProduces':'video_id',
+    'listVideoProduced':'video_id',
     'numVideoProduced':False,
 }
 
@@ -129,7 +129,7 @@ selectDictionary={
     'listAnimator':{'animator_name':True,'gender':True},
     'listVideoScreened':{'id':True,'title':True},
     'numVideoScreened':{'count(animator_id)':True,'count(distinct id)':False},
-    'listVideoProduces':{'id':True,'title':True},
+    'listVideoProduced':{'id':True,'title':True},
     'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
 }
 
