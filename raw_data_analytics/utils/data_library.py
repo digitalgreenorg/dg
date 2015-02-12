@@ -55,31 +55,6 @@ class data_lib():
                 final_df = pd.merge(final_df, df, how='outer')
             print df
             # /home/ubuntu/code/dg_coco_test/dg/
-            html_file = 'dg/templates/raw_data_analytics/library_data.html'
-            excel_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/library_data.xlsx'])
-            print "hello1"
-            # final_df.to_excel(excel_file,'Sheet1',encoding='utf-8')
-            print "hello2"
-            writer = pd.ExcelWriter(excel_file, engine='xlsxwriter', options={'encoding': 'utf-8'})
-            print "hello3"
-            final_df.to_excel(writer, sheet_name='Sheet1')
-            print "hello4"
-
-            header = '''<html>
-                        <head><center>
-                            <h2> Data Result </h2>
-                            <div name="download_excel">
-                                <a href="/media/social_website/uploads/raw_data_analytics/library_data.xlsx">Download result as an excel file</a>
-                            </div></center>
-                        </head>
-                        <body></br></br></br></br>'''
-            footer = '''</body></html>'''
-
-            with open(html_file, 'wb') as f:
-                f.write(header)
-                f.write(final_df.to_html())
-                f.write(footer)
-            f.close()
         return final_df
 
     def read_lookup_csv(self):
@@ -240,7 +215,7 @@ class data_lib():
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen_jan15')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()

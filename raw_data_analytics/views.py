@@ -1,20 +1,22 @@
 import json, datetime
 #from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
+#from django.core.management.base import BaseCommand, CommandError
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from management.commands import partition_library
-from django.core import management
+#from management.commands import partition_library
+#from django.core import management
 
 from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
 from utils.data_library import data_lib
 #from people.models import Animator
-
-'''import pandas as pd
-import MySQLdb
+import time, codecs
+import os.path
+import dg.settings
+import pandas as pd
+'''import MySQLdb
 import pandas.io.sql as psql
 from management.commands import partition_library
 from django.core import management'''
@@ -306,10 +308,79 @@ def execute(request):
     print "--------------FINAL RESULT---------------"
     print dataframe_result
     print "--------------GAME OVER-----------------"
+
+    final_html_file=create_excel(dataframe_result)
+
+
+    return render_to_response('raw_data_analytics/'+final_html_file, context_instance=RequestContext(request))
+
+
+
+def create_excel(df):
+
+    millis = str(round(time.time() * 1000))
+        
+    try:
+        data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.xlsx'])
+        f= open(data_file,'wb')
+        f.close()
+
+        writer = pd.ExcelWriter(data_file, engine = 'xlsxwriter')
+        df.to_excel(writer, sheet_name='Sheet1')
+    except Exception:
+        data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.csv'])           
+                       
+
+        f = codecs.open(data_file, 'wb', 'utf-8')
+        f.close()
+
+        df.to_csv(data_file)
+
+    generated_file_name = data_file.split('/')[-1] 
+
+    html_file = 'dg/templates/raw_data_analytics/'+millis+'_library_data.html'
     
-    return render_to_response('raw_data_analytics/library_data.html', context_instance=RequestContext(request))
+    header = '''<html>
+                    <head><center>
+                        <h2> Data Result </h2>
+                        <div name="download_excel">
+                            <a href="/media/social_website/uploads/raw_data_analytics/'''+generated_file_name+'''">Download result as an excel file</a>
+                        </div></center>
+                    </head>
+                    <body></br></br></br></br>'''
+    footer = '''</body></html>'''
 
-
-
-  
     
+    f = codecs.open(html_file, 'wb', 'utf-8')
+    f.write(header)
+    f.write(df.to_html())
+    f.write(footer)
+    f.close()
+    
+    final_html_file = millis+'_library_data.html'
+
+    return final_html_file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
