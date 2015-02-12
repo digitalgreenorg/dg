@@ -10,6 +10,7 @@ from django.core import management
 
 from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
+from utils.data_library import data_lib
 #from people.models import Animator
 
 '''import pandas as pd
@@ -296,8 +297,15 @@ def execute(request):
     print partition
     print "----- inside the views----------------"
     print value
-    management.call_command('partition_library',from_date, to_date, partition=partition,value=value)
-
+    options = {'partition':partition,'value':value}
+    args=[]
+    args.append(from_date)
+    args.append(to_date)
+    dlib = data_lib()
+    dataframe_result = dlib.handle_controller(args,options)
+    print "--------------FINAL RESULT---------------"
+    print dataframe_result
+    print "--------------GAME OVER-----------------"
     
     return render_to_response('raw_data_analytics/library_data.html', context_instance=RequestContext(request))
 

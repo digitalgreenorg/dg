@@ -1,16 +1,10 @@
 __author__ = 'Lokesh'
-import json, datetime
 from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from geographies.models import District, Block
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary
-import pandas as pd
-import MySQLdb
-import pandas.io.sql as psql
-import xlsxwriter
+
+from django.core.management.base import BaseCommand
+
+from raw_data_analytics.utils.configuration import tableDictionary, whereDictionary, selectDictionary
+
 
 class Command(BaseCommand):
 
