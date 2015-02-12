@@ -13,7 +13,6 @@ from programs.models import Partner
 from utils.data_library import data_lib
 #from people.models import Animator
 import time, codecs
-import os.path
 import dg.settings
 import pandas as pd
 '''import MySQLdb
@@ -145,12 +144,13 @@ def execute(request):
     list_animator_chk = [request.POST.get("list_animator_chk")]
     attendance_chk = [request.POST.get("attendance_chk")]
     video_screened_num_chk= [request.POST.get("no_video_screened_chk")]
-    video_screened_list_chk= [request.POST.get("list_video_screened_chk")]
     video_produced_num_chk= [request.POST.get("no_video_produced_chk")]
     video_produced_list_chk= [request.POST.get("list_video_produced_chk")]
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
+
+
 
     if(partner[0]== '-1' and partner_chk[0]!=None):
         partner = True 
@@ -264,10 +264,7 @@ def execute(request):
     else:
         video_screened_num = False
 
-    if(video_screened_list_chk[0]!=None):
-        video_screened_list = True
-    else:
-        video_screened_list = False
+    
 
     if(video_produced_num_chk[0]!=None):
         video_produced_num = True
@@ -294,7 +291,7 @@ def execute(request):
         to_date = '%s-%s-%s' %(now.year, now.month, now.day)
        
     partition={'partner':partner, 'country':country, 'state':state, 'district':district, 'block':block, 'village':village,'animator':animator,'person':people,'persongroup':group, 'video':video}
-    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance,'numVideoScreened':video_screened_num, 'listVideoScreened':video_screened_list,'numVideoProduced':video_produced_num,'listVideoProduced':video_produced_list }
+    value = {'numScreening':screening, 'numAdoption':adoption, 'numPeople':no_people, 'listPeople':list_people, 'numAnimator':no_animator, 'listAnimator':list_animator, 'attendance':attendance,'numVideoScreened':video_screened_num, 'numVideoProduced':video_produced_num,'listVideoProduced':video_produced_list }
     print "in views-------------------"
     print partition
     print "----- inside the views----------------"
@@ -327,6 +324,7 @@ def create_excel(df):
 
         writer = pd.ExcelWriter(data_file, engine = 'xlsxwriter')
         df.to_excel(writer, sheet_name='Sheet1')
+        writer.save()
     except Exception:
         data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.csv'])           
                        

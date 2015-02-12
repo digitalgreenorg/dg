@@ -1,8 +1,6 @@
 __author__ = 'Lokesh'
-import json, datetime
+
 import os.path
-from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
 from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary
 import pandas as pd
 import MySQLdb
@@ -119,15 +117,15 @@ class data_lib():
         for items in partitionElements:
             for i in selectDictionary[items]:
                 if (selectDictionary[items][i] == True):
-                    selectComponentList.append(tableDictionary[items] + '.' + i)
+                    selectComponentList.append(tableDictionary[items] + '.' + i + ' AS ' + items)
         print selectComponentList
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
                 if "count" in i:
                     selectComponentList.append(
-                        i.replace('count(', 'count(distinct ' + str(tableDictionary[valueElement]) + '.'))
+                        i.replace('count(', 'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS ' + valueElement)
                 else:
-                    selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i)
+                    selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i + ' AS ' + valueElement)
         return ','.join(selectComponentList)
 
 
