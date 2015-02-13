@@ -50,10 +50,12 @@ class data_lib():
             if final_df.empty:
                 final_df = df
             else:
+                how=''
                 if len(final_df)>len(df):
                     how = 'left'
                 else:
                     how='right'
+                print how
                 final_df = pd.merge(final_df, df, how=how)
             print df
             # /home/ubuntu/code/dg_coco_test/dg/

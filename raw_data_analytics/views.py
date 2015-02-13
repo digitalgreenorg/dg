@@ -87,11 +87,13 @@ def execute(request):
     
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
+    val_adoption_list = [request.POST.get("adoption_list_chk")]
     val_no_people = [request.POST.get("no_people_chk")]
     val_list_people = [request.POST.get("list_people_chk")]
     val_no_animator = [request.POST.get("no_animator_chk")]
     val_list_animator = [request.POST.get("list_animator_chk")]
     val_attendance = [request.POST.get("attendance_chk")]
+    val_attendees_list = [request.POST.get("attendance_list_chk")]
     val_video_screened_num= [request.POST.get("no_video_screened_chk")]
     val_video_screened_list= [request.POST.get("list_video_screened_chk")]
     val_video_produced_num= [request.POST.get("no_video_produced_chk")]
@@ -109,6 +111,7 @@ def execute(request):
     elif(partner[0]== '-1' and partner_chk[0]==None):
         partner = False
     
+
     if(country[0]=='-1' and country_chk[0]!=None):
         country = True
     elif (country[0]!='-1' and country_chk[0]==None) or (country[0]!='-1' and country_chk[0]!=None):
@@ -187,6 +190,12 @@ def execute(request):
     else:
         adoption = False
 
+    if(val_adoption_list[0]!=None):
+        adopter_list = True
+    else:
+        adopter_list = False
+
+
     if(val_no_people[0]!=None):
         no_people = True
     else:
@@ -211,6 +220,11 @@ def execute(request):
         attendance = True
     else:
         attendance = False
+
+    if(val_attendees_list[0]!=None):
+        attendees_list = True
+    else:
+        attendees_list = False
 
     if(val_video_screened_num[0]!=None):
         video_screened_num = True
@@ -264,12 +278,14 @@ def execute(request):
 
     value = {
              'numScreening':screening, 
-             'numAdoption':adoption, 
+             'numAdoption':adoption,
+             'listAdopter':adopter_list, 
              'numPeople':no_people, 
              'listPeople':list_people, 
              'numAnimator':no_animator, 
              'listAnimator':list_animator, 
              'attendance':attendance,
+             'listAttendees':attendees_list,
              'numVideoScreened':video_screened_num, 
              'listVideoScreened':video_screened_list,
              'numVideoProduced':video_produced_num,
