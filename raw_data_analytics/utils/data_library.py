@@ -213,7 +213,7 @@ class data_lib():
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='root', db='digitalgreen')
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd=dg.settings.DATABASES['default']['PASSWORD'], db=dg.settings.DATABASES['default']['NAME'])
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
