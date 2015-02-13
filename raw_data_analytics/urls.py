@@ -5,9 +5,9 @@ from raw_data_analytics import views
 urlpatterns = patterns('',
     url(r'^$', views.home, name='raw_data_analytics'),
     url(r'^execute/$', views.execute, name='execute'),
-    url(r'^dropdown1/$', views.dropdown1, name='dropdown1'),
-    url(r'^dropdown2/$', views.dropdown2, name='dropdown2'),
-    url(r'^dropdown3/$', views.dropdown3, name='dropdown3'),
-    url(r'^dropdown4/$', views.dropdown4, name='dropdown4'),
+    url(r'^dropdown_state/$', views.dropdown_state, name='dropdown_state'),
+    url(r'^dropdown_district/$', views.dropdown_district, name='dropdown_district'),
+    url(r'^dropdown_block/$', views.dropdown_block, name='dropdown_block'),
+    url(r'^dropdown_vilage/$', views.dropdown_village, name='dropdown_village'),
     
        )

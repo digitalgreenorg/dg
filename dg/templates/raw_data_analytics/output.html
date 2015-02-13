@@ -12,7 +12,7 @@
 							
 			function statechange(src, val) {
 				
-			$.get( "/raw_data_analytics/dropdown1/", { selected : val })
+			$.get( "/raw_data_analytics/dropdown_state/", { selected : val })
                .done(function( data ) {
                    data_json = JSON.parse(data);
                    $('#stateID ').find('option:gt(0)').remove();
@@ -30,7 +30,7 @@
 
             function districtchange(src, val) {
 				
-			$.get( "/raw_data_analytics/dropdown2/", { selected : val })
+			$.get( "/raw_data_analytics/dropdown_district/", { selected : val })
                .done(function( data ) {
                    data_json = JSON.parse(data);
                    $('#districtID ').find('option:gt(0)').remove();
@@ -44,7 +44,7 @@
 
             function blockchange(src, val) {
 				
-			$.get( "/raw_data_analytics/dropdown3/", { selected : val })
+			$.get( "/raw_data_analytics/dropdown_block/", { selected : val })
                .done(function( data ) {
                    data_json = JSON.parse(data);
                    $('#blockID ').find('option:gt(0)').remove();
@@ -57,7 +57,7 @@
             }
             function villagechange(src, val) {
 				
-			$.get( "/raw_data_analytics/dropdown4/", { selected : val })
+			$.get( "/raw_data_analytics/dropdown_village/", { selected : val })
                .done(function( data ) {
                    data_json = JSON.parse(data);
                    $('#villageID ').find('option:gt(0)').remove();
@@ -160,6 +160,7 @@
 						<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators
 						<li><input type="checkbox" name="attendance_chk" value"attendance">Total Viewers
 						<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
+						<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened
 						<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
 						<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced </ul>
 					</div>
