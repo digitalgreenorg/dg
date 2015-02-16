@@ -49,8 +49,10 @@
                    data_json = JSON.parse(data);
                    $('#blockID ').find('option:gt(0)').remove();
                    $('#villageID ').find('option:gt(0)').remove();                  
+                   
                    for (i in data_json){
                    		$('#blockId').append("<option>"+data_json[i]+"</option>");
+            
                    }
                });
 
@@ -61,6 +63,7 @@
                .done(function( data ) {
                    data_json = JSON.parse(data);
                    $('#villageID ').find('option:gt(0)').remove();
+
                    for (i in data_json){
                 		$('#villageId').append("<option>"+data_json[i]+"</option>");
                    }
@@ -154,17 +157,17 @@
 						<ul style='list-style-type: none;'>
 						<li><input type="checkbox" name="screening_chk" value"screening">Number of Screenings 
 						<li><input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions
-						<li><input type="checkbox" name="adoptors_list_chk" value"adoption">List of Adopters 
+						<!--<li><input type="checkbox" name="adoptors_list_chk" value"adoption">List of Adopters -->
 						<li><input type="checkbox" name="no_people_chk" value"numPeople">Number of Registered Viewers 
-						<li><input type="checkbox" name="list_people_chk" value"listPeople">List of Registered Viewers 
+						<!--<li><input type="checkbox" name="list_people_chk" value"listPeople">List of Registered Viewers -->
 						<li><input type="checkbox" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
-						<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators(Mediators)
+						<!--<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators(Mediators)-->
 						<li><input type="checkbox" name="attendance_chk" value"attendance">Number of Viewers
-						<li><input type="checkbox" name="attendance_list_chk" value"attendance_list">List of Viewers
+						<!--<li><input type="checkbox" name="attendance_list_chk" value"attendance_list">List of Viewers-->
 						<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
-						<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened
+						<!--<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened-->
 						<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
-						<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced </ul>
+						<!--<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced--> </ul>
 					</div>
 					
 				</div>

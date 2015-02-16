@@ -87,17 +87,17 @@ def execute(request):
     
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
-    val_adoption_list = [request.POST.get("adoption_list_chk")]
+    #val_adoption_list = [request.POST.get("adoption_list_chk")]
     val_no_people = [request.POST.get("no_people_chk")]
-    val_list_people = [request.POST.get("list_people_chk")]
+    #val_list_people = [request.POST.get("list_people_chk")]
     val_no_animator = [request.POST.get("no_animator_chk")]
-    val_list_animator = [request.POST.get("list_animator_chk")]
+    #val_list_animator = [request.POST.get("list_animator_chk")]
     val_attendance = [request.POST.get("attendance_chk")]
-    val_attendees_list = [request.POST.get("attendance_list_chk")]
+    #val_attendees_list = [request.POST.get("attendance_list_chk")]
     val_video_screened_num= [request.POST.get("no_video_screened_chk")]
-    val_video_screened_list= [request.POST.get("list_video_screened_chk")]
+    #val_video_screened_list= [request.POST.get("list_video_screened_chk")]
     val_video_produced_num= [request.POST.get("no_video_produced_chk")]
-    val_video_produced_list= [request.POST.get("list_video_produced_chk")]
+    #val_video_produced_list= [request.POST.get("list_video_produced_chk")]
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
@@ -190,10 +190,10 @@ def execute(request):
     else:
         adoption = False
 
-    if(val_adoption_list[0]!=None):
+    '''if(val_adoption_list[0]!=None):
         adopter_list = True
     else:
-        adopter_list = False
+        adopter_list = False'''
 
 
     if(val_no_people[0]!=None):
@@ -201,40 +201,40 @@ def execute(request):
     else:
         no_people = False
 
-    if(val_list_people[0]!=None):
+    '''if(val_list_people[0]!=None):
         list_people = True
     else:
-        list_people = False
+        list_people = False'''
 
     if(val_no_animator[0]!=None):
         no_animator = True
     else:
         no_animator = False
 
-    if(val_list_animator[0]!=None):
+    '''if(val_list_animator[0]!=None):
         list_animator = True
     else:
-        list_animator = False
+        list_animator = False'''
 
     if(val_attendance[0]!=None):
         attendance = True
     else:
         attendance = False
 
-    if(val_attendees_list[0]!=None):
+    '''if(val_attendees_list[0]!=None):
         attendees_list = True
     else:
-        attendees_list = False
+        attendees_list = False'''
 
     if(val_video_screened_num[0]!=None):
         video_screened_num = True
     else:
         video_screened_num = False
 
-    if(val_video_screened_list[0]!=None):
+    '''if(val_video_screened_list[0]!=None):
         video_screened_list = True
     else:
-        video_screened_list = False
+        video_screened_list = False'''
 
 
     if(val_video_produced_num[0]!=None):
@@ -242,10 +242,10 @@ def execute(request):
     else:
         video_produced_num = False
 
-    if(val_video_produced_list[0]!=None):
+    '''if(val_video_produced_list[0]!=None):
         video_produced_list = True
     else:
-        video_produced_list = False
+        video_produced_list = False'''
 
     ###############################Date#################################
 
@@ -279,17 +279,17 @@ def execute(request):
     value = {
              'numScreening':screening, 
              'numAdoption':adoption,
-             'listAdopter':adopter_list, 
+           #  'listAdopter':adopter_list, 
              'numPeople':no_people, 
-             'listPeople':list_people, 
+            # 'listPeople':list_people, 
              'numAnimator':no_animator, 
-             'listAnimator':list_animator, 
+             #'listAnimator':list_animator, 
              'attendance':attendance,
-             'listAttendees':attendees_list,
+             #'listAttendees':attendees_list,
              'numVideoScreened':video_screened_num, 
-             'listVideoScreened':video_screened_list,
+             #'listVideoScreened':video_screened_list,
              'numVideoProduced':video_produced_num,
-             'listVideoProduced':video_produced_list 
+             #'listVideoProduced':video_produced_list 
             }
     
     print "----- inside the views----------------"

@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     url(r'^dropdown_state/$', views.dropdown_state, name='dropdown_state'),
     url(r'^dropdown_district/$', views.dropdown_district, name='dropdown_district'),
     url(r'^dropdown_block/$', views.dropdown_block, name='dropdown_block'),
-    url(r'^dropdown_vilage/$', views.dropdown_village, name='dropdown_village'),
+    url(r'^dropdown_village/$', views.dropdown_village, name='dropdown_village'),
     
        )
