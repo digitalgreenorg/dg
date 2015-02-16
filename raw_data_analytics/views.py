@@ -196,10 +196,10 @@ def execute(request):
         adopter_list = False'''
 
 
-    if(val_no_people[0]!=None):
+    '''if(val_no_people[0]!=None):
         no_people = True
     else:
-        no_people = False
+        no_people = False'''
 
     '''if(val_list_people[0]!=None):
         list_people = True
@@ -280,7 +280,7 @@ def execute(request):
              'numScreening':screening, 
              'numAdoption':adoption,
            #  'listAdopter':adopter_list, 
-             'numPeople':no_people, 
+             #'numPeople':no_people, 
             # 'listPeople':list_people, 
              'numAnimator':no_animator, 
              #'listAnimator':list_animator, 
