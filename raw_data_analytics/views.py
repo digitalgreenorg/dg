@@ -315,7 +315,7 @@ def create_excel(df):
 
     millis = str(round(time.time() * 1000))
         
-    try:
+    '''try:
         data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.xlsx'])
         f= open(data_file,'wb')
         f.close()
@@ -323,7 +323,7 @@ def create_excel(df):
         writer = pd.ExcelWriter(data_file, engine = 'xlsxwriter')
         df.to_excel(writer, sheet_name='Sheet1')
         writer.save()
-    except Exception:
+
         data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.csv'])           
                        
 
@@ -331,6 +331,15 @@ def create_excel(df):
         f.close()
 
         df.to_csv(data_file)
+
+    except Exception:'''
+    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.csv'])           
+                   
+
+    f = codecs.open(data_file, 'wb', 'utf-8')
+    f.close()
+
+    df.to_csv(data_file)
 
     generated_file_name = data_file.split('/')[-1] 
 
