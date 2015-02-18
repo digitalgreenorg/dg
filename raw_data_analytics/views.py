@@ -364,27 +364,3 @@ def create_excel(df):
     final_html_file = millis+'_library_data.html'
 
     return final_html_file
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
