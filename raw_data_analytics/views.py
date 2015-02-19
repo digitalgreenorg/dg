@@ -292,7 +292,7 @@ def execute(request):
             list_combo = 'listPeople'
 
         elif (x == "video"):
-            list_combo = videolist[0]
+            list_combo = videolist
         
         
         

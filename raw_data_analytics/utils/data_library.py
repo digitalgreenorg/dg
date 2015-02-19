@@ -34,8 +34,10 @@ class data_lib():
             for item in options['value']:
                 if item=='list' and options['value']['list']!=False:
                     relevantValueDictionary[options['value'][item]] = True
+                    print item
+                    print options['value'][item]
                     relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
-                    relevantPartitionDictionary.remove(categoryDictionary['partitionCumValues'][options['value'][item]])
+                    del relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]]
                 if options['value'][item] != False and item!='list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
@@ -214,11 +216,15 @@ class data_lib():
     # Function to make GroupBy component of the sql query
     def getGroupByComponent(self, partitionElements, valueElement):
         groupbyComponentList = ['1']
+        print '!!!!!!!!!!!!!!!!!!!!!!'
+        print partitionElements
+        print '!!!!!!!!!!!!!!!!!!!!!!'
+        print valueElement
         print 'value element in:' + str(valueElement)
         for items in partitionElements:
             if partitionElements[items] != False:
                 groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
-        if groupbyDictionary[valueElement] == 'self':
+        if groupbyDictionary[valueElement] != False:
             groupbyComponentList.append(tableDictionary[valueElement] + '.' + str(groupbyDictionary[valueElement]))
         return ' , '.join(groupbyComponentList)
 

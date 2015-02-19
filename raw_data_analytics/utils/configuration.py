@@ -30,7 +30,8 @@ tableDictionary={
     'numVideoScreened':'activities_screeningwisedata',
     'listVideoProduced':'videos_video_wisedata',
     'numVideoProduced':'videos_video_wisedata',
-    'list':'self'
+    'list':'self',
+    'listGroup':'people_persongroup'
 }
 
 whereDictionary={
@@ -63,13 +64,14 @@ whereDictionary={
     'numVideoScreened':'screening_date',
     'listVideoProduced':'video_production_end_date',
     'numVideoProduced':'video_production_end_date',
-    'list':'self'
+    'list':'self',
+    'listGroup':'time_created'
 }
 
 
 categoryDictionary={
     'geographies':['country','state','district','block','village'],
-    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listPersonGroup':'persongroup'}
+    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listGroup':'persongroup'}
 }
 
 groupbyDictionary={
@@ -104,7 +106,8 @@ groupbyDictionary={
     'numVideoProduced':False,
     'list':'self',
     'listVideoProduced':'video_id',
-    'listVideoScreened':'video_id'
+    'listVideoScreened':'video_id',
+    'listGroup':'id'
 }
 
 selectDictionary={
@@ -139,7 +142,8 @@ selectDictionary={
     'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
     'list':'self',
     'listVideoProduced':{'id':False,'title':True},
-    'listVideoScreened':{'id':False,'video_title':True}
+    'listVideoScreened':{'id':False,'video_title':True},
+    'listGroup':{'id':False,'group_name':True}
 }
 
 
