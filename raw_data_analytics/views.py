@@ -274,7 +274,7 @@ def execute(request):
     #################################value-partion###########################
 
 
-    if(list_combo == '-1'):
+    if(list_combo[0] == None):
         list_combo = False
         videolist = False
     
