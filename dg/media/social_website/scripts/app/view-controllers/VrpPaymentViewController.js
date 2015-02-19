@@ -258,8 +258,10 @@ define(function (require) {
                     {sTitle: "Village"},
                     {sTitle: "Total Screenings", sClass: "a-center"},
                     {sTitle: "Successful Screenings *", sClass: "a-center"},
+                    {sTitle: "Screening Amount", sClass:"a-center"},
                     {sTitle: "Successful Video Adoptions **", sClass: "a-center"},
-                    {sTitle: "Amount (Rs)", sClass: "a-center"}
+                    {sTitle: "Adoption Amount",sClass:"a-Center"},
+                    {sTitle: "Total Amount (Rs)", sClass: "a-center"}
                 ],
                 "aaData": renderData['report'],   //aaData takes array_table_values and push data in the table.
                 "oTableTools": {
