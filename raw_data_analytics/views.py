@@ -13,6 +13,8 @@ import time, codecs
 import json, datetime
 import pandas as pd
 
+from utils.configuration import categoryDictionary
+
 '''import MySQLdb
 import pandas.io.sql as psql
 from management.commands import partition_library
@@ -85,7 +87,7 @@ def execute(request):
     group_chk = [request.POST.get("group_chk")]
     video_chk = [request.POST.get("video_chk")]
     list_combo = [request.POST.get("list")]
-    videolist = [request.POST.get("list_video")]
+    videolist = str(request.POST.get("list_video"))
     
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
@@ -106,8 +108,11 @@ def execute(request):
 
     ###############################filter#################################
 
+    checked_list = []
+
     if(partner[0]== '-1' and partner_chk[0]!=None):
-        partner = True 
+        partner = True
+        checked_list.append('partner')
     elif (partner[0]!= '-1' and partner_chk[0]==None) or (partner[0]!= '-1' and partner_chk[0]!=None):
         partner = str(Partner.objects.get(partner_name=partner[0]).id)
     elif(partner[0]== '-1' and partner_chk[0]==None):
@@ -116,6 +121,7 @@ def execute(request):
 
     if(country[0]=='-1' and country_chk[0]!=None):
         country = True
+        checked_list.append('country')
     elif (country[0]!='-1' and country_chk[0]==None) or (country[0]!='-1' and country_chk[0]!=None):
         country = str(Country.objects.get(country_name=country[0]).id)
     elif(country[0]== '-1' and country_chk[0]==None):
@@ -123,6 +129,7 @@ def execute(request):
         
     if(state[0]=='-1' and state_chk[0]!=None):
         state = True
+        checked_list.append('state')
     elif (state[0]!= '-1' and state_chk[0]==None) or (state[0]!= '-1' and state_chk[0]!=None):
         state = str(State.objects.get(state_name=state[0]).id)
     elif(state[0]=='-1' and state_chk[0]==None):
@@ -130,6 +137,7 @@ def execute(request):
         
     if(district[0]=='-1' and district_chk[0]!=None):
         district = True
+        checked_list.append('district')
     elif (district[0]!='-1' and district_chk[0]==None) or (district[0]!='-1' and district_chk[0]!=None):
         district = str(District.objects.get(district_name=district[0]).id)
     elif(district[0]=='-1' and district_chk[0]==None):
@@ -137,6 +145,7 @@ def execute(request):
 
     if(block[0]=='-1' and block_chk[0]!=None):
         block = True
+        checked_list.append('block')
     elif (block[0]!='-1' and block_chk[0]==None) or (block[0]!='-1' and block_chk[0]!=None):
         block = str(Block.objects.get(block_name=block[0]).id)
     elif(block[0]=='-1' and block_chk[0]==None):
@@ -144,6 +153,7 @@ def execute(request):
         
     if(village[0]=='-1' and village_chk[0]!=None):
         village = True
+        checked_list.append('village')
     elif (village[0]!='-1' and village_chk[0]==None) or (village[0]!='-1' and village_chk[0]!=None):
         village_uni = unicode(village[0])
         village = str(Village.objects.filter(village_name=village_uni)[0].id)
@@ -164,34 +174,27 @@ def execute(request):
         animator = False
     elif (animator_chk[0] != None):
         animator = True
-        if (list_combo != None):
-            list_combo = 'listAnimator'
-
-
+        checked_list.append('animator')
+        
     if (people_chk[0]==None):
         people = False
     elif (people_chk[0] != None):
         people = True
-        if (list_combo != None):
-            list_combo = 'listPeople'
-
-    
+        checked_list.append('people')
+        
     if (group_chk[0]==None):
         group = False
     elif (group_chk[0] != None):
         group = True
-        if (list_combo != None):
-            list_combo = 'listGroup'
-
+        checked_list.append('group')
+        
 
     if (video_chk[0]==None):
         video = False
     elif (video_chk[0] != None):
         video = True
-        if (list_combo != None):
-            list_combo = 'listVideo'
-
-    
+        checked_list.append('video')
+        
     ###############################Value#################################
 
     if(val_screening[0]!=None):
@@ -269,21 +272,29 @@ def execute(request):
         video_produced_list = False'''
 
     #################################value-partion###########################
+
+
     if(list_combo == '-1'):
         list_combo = False
         videolist = False
-    first_partition = [partner_chk[0], country_chk[0], state_chk[0], district_chk[0], block_chk[0], village_chk[0]]
-    second_partition = [animator_chk[0], people_chk[0], group_chk[0], video_chk[0]]
+    
+    for x in checked_list:
+        if ((x in categoryDictionary['geographies']) or (x == 'partner')):
+            list_combo  = 'numScreening'
 
-    for part_1 in first_partition:
-        for part_2 in second_partition:
-            if ((part_1 != None) and (part_2 == None)): 
-                list_combo = 'numScreening'
+        elif (x == "animator"):
+            list_combo = 'listAnimator'
 
-    for part in second_partition:
-        if (part != None):
-            list_combo = 'list'+part
+        elif (x == "group"):
+            list_combo = 'listGroup'
 
+        elif (x == "people"):
+            list_combo = 'listPeople'
+
+        elif (x == "video"):
+            list_combo = videolist[0]
+        
+        
         
 
 
@@ -330,7 +341,8 @@ def execute(request):
              'numVideoScreened':video_screened_num, 
              #'listVideoScreened':video_screened_list,
              'numVideoProduced':video_produced_num,
-             #'listVideoProduced':video_produced_list 
+             #'listVideoProduced':video_produced_list
+             'list' : list_combo
             }
     
     print "----- inside the views----------------"
