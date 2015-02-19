@@ -1,4 +1,3 @@
-        		
 //function to check extension of uploading file
 function check_validation(file,email_id,block)
 			{

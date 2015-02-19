@@ -84,11 +84,13 @@ def execute(request):
     people_chk = [request.POST.get("people_chk")]
     group_chk = [request.POST.get("group_chk")]
     video_chk = [request.POST.get("video_chk")]
+    list_combo = [request.POST.get("list")]
+    videolist = [request.POST.get("list_video")]
     
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
     #val_adoption_list = [request.POST.get("adoption_list_chk")]
-    val_no_people = [request.POST.get("no_people_chk")]
+    #val_no_people = [request.POST.get("no_people_chk")]
     #val_list_people = [request.POST.get("list_people_chk")]
     val_no_animator = [request.POST.get("no_animator_chk")]
     #val_list_animator = [request.POST.get("list_animator_chk")]
@@ -162,21 +164,33 @@ def execute(request):
         animator = False
     elif (animator_chk[0] != None):
         animator = True
+        if (list_combo != None):
+            list_combo = 'listAnimator'
+
 
     if (people_chk[0]==None):
         people = False
     elif (people_chk[0] != None):
         people = True
+        if (list_combo != None):
+            list_combo = 'listPeople'
+
     
     if (group_chk[0]==None):
         group = False
     elif (group_chk[0] != None):
         group = True
+        if (list_combo != None):
+            list_combo = 'listGroup'
+
 
     if (video_chk[0]==None):
         video = False
     elif (video_chk[0] != None):
         video = True
+        if (list_combo != None):
+            list_combo = 'listVideo'
+
     
     ###############################Value#################################
 
@@ -231,6 +245,13 @@ def execute(request):
     else:
         video_screened_num = False
 
+
+
+    if(val_video_screened_num[0]!=None):
+        video_screened_num = True
+    else:
+        video_screened_num = False
+
     '''if(val_video_screened_list[0]!=None):
         video_screened_list = True
     else:
@@ -246,6 +267,26 @@ def execute(request):
         video_produced_list = True
     else:
         video_produced_list = False'''
+
+    #################################value-partion###########################
+    if(list_combo == '-1'):
+        list_combo = False
+        videolist = False
+    first_partition = [partner_chk[0], country_chk[0], state_chk[0], district_chk[0], block_chk[0], village_chk[0]]
+    second_partition = [animator_chk[0], people_chk[0], group_chk[0], video_chk[0]]
+
+    for part_1 in first_partition:
+        for part_2 in second_partition:
+            if ((part_1 != None) and (part_2 == None)): 
+                list_combo = 'numScreening'
+
+    for part in second_partition:
+        if (part != None):
+            list_combo = 'list'+part
+
+        
+
+
 
     ###############################Date#################################
 

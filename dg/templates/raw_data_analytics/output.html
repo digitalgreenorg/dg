@@ -7,78 +7,14 @@
 		</center></head>
 		<body>
 			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
-			<script type ='text/javascript'>
-
-							
-			function statechange(src, val) {
-				
-			$.get( "/raw_data_analytics/dropdown_state/", { selected : val })
-               .done(function( data ) {
-                   data_json = JSON.parse(data);
-                   $('#stateID ').find('option:gt(0)').remove();
-                   $('#districtID ').find('option:gt(0)').remove();
-                   $('#blockID ').find('option:gt(0)').remove();
-                   $('#villageID ').find('option:gt(0)').remove();
-                    for (i in data_json){
-                       	$('#stateId').append("<option>"+data_json[i]+"</option>");
-                   }
-               });
-
-
-
-            }
-
-            function districtchange(src, val) {
-				
-			$.get( "/raw_data_analytics/dropdown_district/", { selected : val })
-               .done(function( data ) {
-                   data_json = JSON.parse(data);
-                   $('#districtID ').find('option:gt(0)').remove();
-                   $('#blockID ').find('option:gt(0)').remove();
-                   $('#villageID ').find('option:gt(0)').remove();
-                   for (i in data_json){
-                   		$('#districtId').append("<option>"+data_json[i]+"</option>");
-                   }
-               });
-            }
-
-            function blockchange(src, val) {
-				
-			$.get( "/raw_data_analytics/dropdown_block/", { selected : val })
-               .done(function( data ) {
-                   data_json = JSON.parse(data);
-                   $('#blockID ').find('option:gt(0)').remove();
-                   $('#villageID ').find('option:gt(0)').remove();                  
-                   
-                   for (i in data_json){
-                   		$('#blockId').append("<option>"+data_json[i]+"</option>");
-            
-                   }
-               });
-
-            }
-            function villagechange(src, val) {
-				
-			$.get( "/raw_data_analytics/dropdown_village/", { selected : val })
-               .done(function( data ) {
-                   data_json = JSON.parse(data);
-                   $('#villageID ').find('option:gt(0)').remove();
-
-                   for (i in data_json){
-                		$('#villageId').append("<option>"+data_json[i]+"</option>");
-                   }
-               });
-			}
-
-
-			</script>
-
-			<form action="/raw_data_analytics/execute/" method="POST" enctype="multipart/form-data" >
+			<script  src="/media/raw_data_analytics/raw_data_analytics.js"></script>
+			
+			<form action="/raw_data_analytics/execute/" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
 				{% csrf_token %}
 
 				<center><div name="Date">
 					<p><h3> Date: </h3>
-					<h5>From: &nbsp;<input type="date" name="from_date">&nbsp; &nbsp;                         
+					<h5>From: &nbsp;<input type="date" name="from_date">&nbsp; &nbsp;                          
 					 To: &nbsp; <input type="date" name="to_date">
 					</h5></p>
 				</div></center></br>
@@ -146,34 +82,47 @@
 						<li><input type="checkbox" name="district_chk" value"district">District 
 						<li><input type="checkbox" name="block_chk" value"block">Block 
 						<li><input type="checkbox" name="village_chk" value"village">Village 
-						<li><input type="checkbox" name="animator_chk" value"animator">Animator(Mediator) 
-						<li><input type="checkbox" name="people_chk" value"animator">Registered Viewers 
-						<li><input type="checkbox" name="group_chk" value"animator">SHG 
-						<li><input type="checkbox" name="video_chk" value"videos">Videos </ul>
+						<li><input type="checkbox" id="animator_chk"name="animator_chk" value"animator">Animator(Mediator) 
+						<li><input type="checkbox" id="people_chk" name="people_chk" value"animator">Registered Viewers 
+						<li><input type="checkbox" id ="group_chk"name="group_chk" value"animator">SHG 
+						<li><input type="checkbox" id="video_chk" name="video_chk" value"videos">Videos </ul>
 					</div>
 					
 					<div name="Values" style=' width:30%; display:inline-block; float:left' >
 						<h3> Statistics Required:</h3>
 						<ul style='list-style-type: none;'>
-						<li><input type="checkbox" name="screening_chk" value"screening">Number of Screenings 
-						<li><input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions
-						<!--<li><input type="checkbox" name="adoptors_list_chk" value"adoption">List of Adopters -->
-						<!--<li><input type="checkbox" name="no_people_chk" value"numPeople">Number of Registered Viewers --> 
-						<!--<li><input type="checkbox" name="list_people_chk" value"listPeople">List of Registered Viewers -->
-						<li><input type="checkbox" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
-						<!--<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators(Mediators)-->
-						<li><input type="checkbox" name="attendance_chk" value"attendance">Number of Viewers
-						<!--<li><input type="checkbox" name="attendance_list_chk" value"attendance_list">List of Viewers-->
-						<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
-						<!--<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened-->
-						<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
-						<!--<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced--> </ul>
+							<li><input type="checkbox" name="screening_chk" value"screening">Number of Screenings 
+							<li><input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions
+							<!--<li><input type="checkbox" name="adoptors_list_chk" value"adoption">List of Adopters -->
+							<!--<li><input type="checkbox" name="no_people_chk" value"numPeople">Number of Registered Viewers --> 
+							<!--<li><input type="checkbox" name="list_people_chk" value"listPeople">List of Registered Viewers -->
+							<li><input type="checkbox" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
+							<!--<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators(Mediators)-->
+							<li><input type="checkbox" name="attendance_chk" value"attendance">Number of Viewers
+							<!--<li><input type="checkbox" name="attendance_list_chk" value"attendance_list">List of Viewers-->
+							<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
+							<!--<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened-->
+							<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
+							<!--<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced-->
+							<li><input type="checkbox" id="list" name="list" value"list" >List
+						</ul>
+						<div id="listoptions" name='listoptions' style='visibility:hidden'>
+							<!--<ul style='list-style-type: none;'>
+							<li>&nbsp;&nbsp;&nbsp;<input type="radio" name="list_video" value"listVideoProduced" checked>of Videos Produced 
+							<li>&nbsp;&nbsp;&nbsp;<input type="radio" name="list_video" value"listVideoScreened">of Videos Screened 
+							</ul>-->
+							<select class='select' name='list_video' id = 'list_video' style='width:200px;'> 
+								<option value='-1'>-----------------List of------------------</option>
+								<option value='Video_produced'>Produced Videos</option>
+								<option value='Video_screened'>Screened Vidoes</option>
+							</select>
+						</div>
 					</div>
 					
 				</div>
 				<center>
-					<div name="Buttons" style='width:100%; display:block;'>
-						<input type="submit" value="Submit"> &nbsp;&nbsp;
+					<div name="Buttons" style='width:100%; display:block;'onclick="validation_check(this)">
+						<input type="submit" value="Submit" on> &nbsp;&nbsp;
 						<input type="reset" value="Reset">
 					</div>
 				</center>
