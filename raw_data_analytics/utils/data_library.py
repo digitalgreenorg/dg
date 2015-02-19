@@ -35,12 +35,16 @@ class data_lib():
                 if item=='list' and options['value']['list']!=False:
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
+                    relevantPartitionDictionary.remove(categoryDictionary['partitionCumValues'][options['value'][item]])
                 if options['value'][item] != False and item!='list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
             print "Warning - Invalid input for Value fields"
 
         final_df = pd.DataFrame()
+
+        print "%%%%%%%%%%%%%%%%% Relevant Partition Dictionary %%%%%%%%%%%%%%%%%%" + str(relevantPartitionDictionary)
+        print "################# Relevant Value Dictionary ##################" + str(relevantValueDictionary)
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
