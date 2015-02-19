@@ -32,12 +32,19 @@ class data_lib():
         if self.check_valuefield_validity(options['value']):
             print "valid input for value fields"
             for item in options['value']:
-                if options['value'][item] != False:
+                if item=='list' and options['value']['list']!=False:
+                    relevantValueDictionary[options['value'][item]] = True
+                    relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
+                    relevantPartitionDictionary.remove(categoryDictionary['partitionCumValues'][options['value'][item]])
+                if options['value'][item] != False and item!='list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
             print "Warning - Invalid input for Value fields"
 
         final_df = pd.DataFrame()
+
+        print "%%%%%%%%%%%%%%%%% Relevant Partition Dictionary %%%%%%%%%%%%%%%%%%" + str(relevantPartitionDictionary)
+        print "################# Relevant Value Dictionary ##################" + str(relevantValueDictionary)
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
@@ -189,6 +196,7 @@ class data_lib():
     def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
+        print "###########Dictionary is:##################" + str(Dictionary)
         for items in partitionElements:
             if partitionElements[items] != True:
                 whereComponentList.append(
@@ -203,7 +211,6 @@ class data_lib():
                 args[0]) + '\' and \'' + str(args[1]) + '\'')
         return ' and '.join(whereComponentList)
 
-
     # Function to make GroupBy component of the sql query
     def getGroupByComponent(self, partitionElements, valueElement):
         groupbyComponentList = ['1']
@@ -211,10 +218,9 @@ class data_lib():
         for items in partitionElements:
             if partitionElements[items] != False:
                 groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
-        if groupbyDictionary[valueElement] != False:
+        if groupbyDictionary[valueElement] == 'self':
             groupbyComponentList.append(tableDictionary[valueElement] + '.' + str(groupbyDictionary[valueElement]))
         return ' , '.join(groupbyComponentList)
-
 
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):

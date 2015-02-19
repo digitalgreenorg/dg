@@ -24,12 +24,13 @@ tableDictionary={
     'attendance':'activities_personmeetingattendance',
     'numPeople':'people_person',
     'numAnimator':'people_animatorwisedata',
-    'listPeople':'people_person',
-    'listAnimator':'people_animatorwisedata',
+#    'listPeople':'people_person',
+#    'listAnimator':'people_animatorwisedata',
     'listVideoScreened':'activities_screeningwisedata',
     'numVideoScreened':'activities_screeningwisedata',
     'listVideoProduced':'videos_video_wisedata',
     'numVideoProduced':'videos_video_wisedata',
+    'list':'self'
 }
 
 whereDictionary={
@@ -62,11 +63,13 @@ whereDictionary={
     'numVideoScreened':'screening_date',
     'listVideoProduced':'video_production_end_date',
     'numVideoProduced':'video_production_end_date',
+    'list':'self'
 }
 
 
 categoryDictionary={
-    'geographies':['country','state','district','block','village']
+    'geographies':['country','state','district','block','village'],
+    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listPersonGroup':'persongroup'}
 }
 
 groupbyDictionary={
@@ -93,12 +96,15 @@ groupbyDictionary={
     'attendance':False,
     'numPeople':False,
     'numAnimator':False,
-    'listPeople':'id',
-    'listAnimator':'animator_id',
-    'listVideoScreened':'video_id',
+#    'listPeople':'id',
+#    'listAnimator':'animator_id',
+#    'listVideoScreened':'video_id',
     'numVideoScreened':False,
-    'listVideoProduced':'video_id',
+#    'listVideoProduced':'video_id',
     'numVideoProduced':False,
+    'list':'self',
+    'listVideoProduced':'video_id',
+    'listVideoScreened':'video_id'
 }
 
 selectDictionary={
@@ -125,12 +131,15 @@ selectDictionary={
     'attendance':{'count(id)':True,'count(distinct id)':False},
     'numPeople':{'count(id)':True,'count(distinct id)':False},
     'numAnimator':{'count(id)':True,'count(distinct id)':False},
-    'listPeople':{'person_name':True,'gender':False},
-    'listAnimator':{'animator_name':True,'gender':False},
-    'listVideoScreened':{'id':False,'video_title':True},
+#    'listPeople':{'person_name':True,'gender':False},
+#    'listAnimator':{'animator_name':True,'gender':False},
+#    'listVideoScreened':{'id':False,'video_title':True},
     'numVideoScreened':{'count(video_id)':True,'count(distinct id)':False},
-    'listVideoProduced':{'id':False,'title':True},
+#    'listVideoProduced':{'id':False,'title':True},
     'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
+    'list':'self',
+    'listVideoProduced':{'id':False,'title':True},
+    'listVideoScreened':{'id':False,'video_title':True}
 }
 
 
