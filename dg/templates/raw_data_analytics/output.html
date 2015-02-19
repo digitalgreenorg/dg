@@ -9,7 +9,7 @@
 			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
 			<script  src="/media/raw_data_analytics/raw_data_analytics.js"></script>
 			
-			<form action="/raw_data_analytics/execute/" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
+			<form action="/raw_data_analytics/execute/" id="form" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
 				{% csrf_token %}
 
 				<center><div name="Date">
@@ -122,9 +122,8 @@
 				</div>
 				<center>
 					<div name="Buttons" style='width:100%; display:block;'onclick="validation_check(this)">
-						<input type="submit" value="Submit" on> &nbsp;&nbsp;
-						<input type="reset" value="Reset">
-					</div>
+						<input type="submit" value="Submit"> &nbsp;&nbsp;
+						<input type="reset" onclick= "this.form.reset()">
 				</center>
 
 			</form>	

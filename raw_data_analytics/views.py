@@ -294,12 +294,7 @@ def execute(request):
         elif (x == "video"):
             list_combo = videolist
         
-        
-        
-
-
-
-    ###############################Date#################################
+      ##############################Date#################################
 
 
     if(from_date[0]!=''):
@@ -360,7 +355,7 @@ def execute(request):
 
     final_html_file=create_excel(dataframe_result)
 
-    return render_to_response('raw_data_analytics/'+final_html_file, context_instance=RequestContext(request))
+    return render_to_response('raw_data_analytics/temp_html/'+final_html_file, context_instance=RequestContext(request))
 
 
 
@@ -386,7 +381,7 @@ def create_excel(df):
         df.to_csv(data_file)
 
     except Exception:'''
-    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/'+millis+'_library_data.csv'])           
+    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])           
                    
 
     f = codecs.open(data_file, 'wb', 'utf-8')
@@ -396,13 +391,13 @@ def create_excel(df):
 
     generated_file_name = data_file.split('/')[-1] 
 
-    html_file = 'dg/templates/raw_data_analytics/'+millis+'_library_data.html'
+    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
     
     header = '''<html>
                     <head><center>
                         <h2> Data Result </h2>
                         <div name="download_excel">
-                            <a href="/media/social_website/uploads/raw_data_analytics/'''+generated_file_name+'''">Download result as an excel file</a>
+                            <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/'''+generated_file_name+'''">Download result as an excel file</a>
                         </div></center>
                     </head>
                     <body></br></br></br></br>'''
