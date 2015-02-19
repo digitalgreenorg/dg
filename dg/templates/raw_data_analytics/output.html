@@ -23,8 +23,8 @@
 						
 						<h3>Filters:</h3>
 					
-			   				<div name='partner' id='partner' >
-			   					Partner : &nbsp;<select class='select' name='partner' id = 'partner' style='width:150px;'>
+			   				<div name='partner' id='partnerID' >
+			   					Partner : &nbsp;<select class='select' name='partner' id = 'partnerID' style='width:150px;'>
 					    			<option value='-1'>-------------ALL-------------</option>
 										{% if partners %}
 										{% for partner in partners %}
@@ -76,33 +76,33 @@
 					<div name="Partition" style=' width:30%; display:inline-block; float:left;' >
 						<h3>Required Columns in Output </h3>
 						<ul style='list-style-type: none;'>
-						<li><input type="checkbox" name="partner_chk" value"partner">Partner 
-						<li><input type="checkbox" name="country_chk" value"country">Country 
-						<li><input type="checkbox" name="state_chk" value"state">State 
-						<li><input type="checkbox" name="district_chk" value"district">District 
-						<li><input type="checkbox" name="block_chk" value"block">Block 
-						<li><input type="checkbox" name="village_chk" value"village">Village 
-						<li><input type="checkbox" id="animator_chk"name="animator_chk" value"animator">Animator(Mediator) 
-						<li><input type="checkbox" id="people_chk" name="people_chk" value"animator">Registered Viewers 
-						<li><input type="checkbox" id ="group_chk"name="group_chk" value"animator">SHG 
-						<li><input type="checkbox" id="video_chk" name="video_chk" value"videos">Videos </ul>
+						<li><input type="checkbox" id="partner" name="partner_chk" value"partner">Partner 
+						<li><input type="checkbox" id= "country" name="country_chk" value"country">Country 
+						<li><input type="checkbox" id="state" name="state_chk" value"state">State 
+						<li><input type="checkbox" id="district"name="district_chk" value"district">District 
+						<li><input type="checkbox" id="block"name="block_chk" value"block">Block 
+						<li><input type="checkbox" id="village"name="village_chk" value"village">Village 
+						<li><input type="checkbox" id="animator"name="animator_chk" value"animator">Animator(Mediator) 
+						<li><input type="checkbox" id="people" name="people_chk" value"animator">Registered Viewers 
+						<li><input type="checkbox" id ="group"name="group_chk" value"animator">SHG 
+						<li><input type="checkbox" id="video" name="video_chk" value"videos">Videos </ul>
 					</div>
 					
 					<div name="Values" style=' width:30%; display:inline-block; float:left' >
 						<h3> Statistics Required:</h3>
 						<ul style='list-style-type: none;'>
-							<li><input type="checkbox" name="screening_chk" value"screening">Number of Screenings 
-							<li><input type="checkbox" name="adoption_chk" value"adoption">Number of Adoptions
+							<li><input type="checkbox" id="screening" name="screening_chk" value"screening">Number of Screenings 
+							<li><input type="checkbox" id="adoption" name="adoption_chk" value"adoption">Number of Adoptions
 							<!--<li><input type="checkbox" name="adoptors_list_chk" value"adoption">List of Adopters -->
 							<!--<li><input type="checkbox" name="no_people_chk" value"numPeople">Number of Registered Viewers --> 
 							<!--<li><input type="checkbox" name="list_people_chk" value"listPeople">List of Registered Viewers -->
-							<li><input type="checkbox" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
+							<li><input type="checkbox" id="animator_no" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
 							<!--<li><input type="checkbox" name="list_animator_chk" value"listAnimators">List of Animators(Mediators)-->
-							<li><input type="checkbox" name="attendance_chk" value"attendance">Number of Viewers
+							<li><input type="checkbox" id="attendance" name="attendance_chk" value"attendance">Number of Viewers
 							<!--<li><input type="checkbox" name="attendance_list_chk" value"attendance_list">List of Viewers-->
-							<li><input type="checkbox" name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
+							<li><input type="checkbox" id="video_screened_no"name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
 							<!--<li><input type="checkbox" name="list_video_screened_chk" value"listVideoScreened">List of Videos Screened-->
-							<li><input type="checkbox" name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
+							<li><input type="checkbox" id="video_produced_no"name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
 							<!--<li><input type="checkbox" name="list_video_produced_chk" value"listVideoProduced">List of Videos Produced-->
 							<li><input type="checkbox" id="list" name="list" value"list" >List
 						</ul>
@@ -114,7 +114,7 @@
 							<select class='select' name='list_video' id = 'list_video' style='width:200px;'> 
 								<option value='-1'>-----------------List of------------------</option>
 								<option value='listVideoProduced'>Produced Videos</option>
-								<option value='listVideoScreened'>Screened Vidoes</option>
+								<option value='listVideoScreened'>Screened Videos</option>
 							</select>
 						</div>
 					</div>

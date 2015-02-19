@@ -60,7 +60,7 @@ function villagechange(src, val)
 function list_display()
 {
   
-    if((list.checked) && (video_chk.checked))
+    if((list.checked) && (video.checked))
     {
     
         listoptions.style.visibility = "visible";
@@ -73,7 +73,7 @@ function list_display()
 function validation_check()
 {
      
-     var checked_ids = [animator_chk, group_chk, people_chk, video_chk];
+     var checked_ids = [animator, group, people, video];
      var count = 0;
      var i;
      
@@ -86,10 +86,31 @@ function validation_check()
           }
         if (count >1)
         {
-          alert("Along with list please select either Animator, Group, Registered Viewers or Video.");
+          alert("Along with list please select either Animator/Group/egistered Viewers/Video.");
           event.preventDefault();
          
         }
 
      }
+     //alert(list_video.selectedIndex);
+     if( ((animator.checked) && (animator_no.checked))           || 
+         ((people.checked)   && (animator_no.checked))           ||
+         ((people.checked)   && (attendance.checked))            ||
+         ((people.checked)   && (list_video.selectedIndex != 0)) ||
+         ((group.checked)    && (animator_no.checked))           ||
+         ((group.checked)    && (list_video.selectedIndex != 0)) ||
+         ((video.checked)    && (animator_no.checked))           ||
+         ((video.checked)    && (video_screened_no.checked))     ||
+         ((video.checked)    && (video_produced_no.checked)))
+          {
+           alert("Invalid Entry!!!");
+           event.preventDefault(); 
+          }
+
+     if((video.checked) && (list.checked) && (list_video.selectedIndex == 0))
+     {
+        alert("Please select list of videos produced or list of videos produced from dropdown!!!");
+        event.preventDefault(); 
+
+     }  
 }
