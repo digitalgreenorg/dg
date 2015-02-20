@@ -37,7 +37,7 @@ define([
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
             // HTML for form 
-            s_passed["form_template"] = this.form_template;
+            //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
@@ -76,15 +76,16 @@ define([
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
+            this.labels = this.entity_config.labels
             if (this.edit_case) {
-                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
                     this.foreign_entities = this.entity_config.edit.foreign_entities;
                     this.inline = this.entity_config.edit.inline;
                     this.bulk = this.entity_config.edit.bulk;
                 }
             } else {
-                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.add_template_name).html());
                 if (this.entity_config.add) {
                     this.foreign_entities = this.entity_config.add.foreign_entities;
                     this.inline = this.entity_config.add.inline;
@@ -183,7 +184,9 @@ define([
 
         afterRender: function() {
             var that = this;
-
+            
+            //rendering labels
+            this.render_labels();
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -207,6 +210,11 @@ define([
             this.initiate_form_widgets();
         },
 
+        render_labels: function(){
+            $f_el = this.$("#form_template_render");
+            $f_el.append(this.form_template(this.labels));
+        },
+        
         //fetches all foreign collections and renders them when all are fetched
         fetch_and_render_foreign_entities: function() {
             var for_entities_fetch_dfds = []

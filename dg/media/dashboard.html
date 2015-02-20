@@ -369,8 +369,9 @@
 <script type="text/template" id="form_template">
     <div id = "form_div">
         <form name="<%=entity_name%>" class="">
-                        
-            <%=form_template%>
+            
+            <div id = "form_template_render">
+            </div>            
         
             <% if (inline == true) { %>
                 <table id= "inline" class="table">
@@ -466,13 +467,13 @@
         <legend>Add Mediator</legend>
 		<p class="bold-helptext"> All fields in bold are required</p>
         <div class="form-group">
-            <label class="control-label col-sm-2"><b>Name</b></label>
+            <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
                 <input type="text" name="name" class="form-control">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2"><b>Gender</b></label>
+            <label class="control-label col-sm-2"><b><%= gender %></b></label>
             <div class="col-sm-4">
                 <select name="gender" class="form-control">
                     <option value='' selected='selected'>----------</option> 
@@ -482,7 +483,7 @@
             </div>
         </div> 
         <div class="form-group"> 
-            <label class="control-label col-sm-2"><b>Assigned Villages</b></label>
+            <label class="control-label col-sm-2"><b><%= assigned_villages %></b></label>
             <div class="col-sm-4">
                 <select id = "id_ass_villages" name="assigned_villages" class = "chosen-select form-control" multiple>
                 
@@ -490,7 +491,7 @@
             </div>
         </div>
         <div class="form-group"> 
-            <label class="control-label col-sm-2"><b>District</b></label>
+            <label class="control-label col-sm-2"><b><%= district %></b></label>
             <div class="col-sm-4">
                 <select id = "id_district" name="district" class = "chosen-select form-control">
                
@@ -498,7 +499,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2 notbold">Phone number</label>
+            <label class="control-label col-sm-2 notbold"><%= phone_number %></label>
             <div class="col-sm-4">
                 <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
             </div>
