@@ -71,7 +71,7 @@ whereDictionary={
 
 categoryDictionary={
     'geographies':['country','state','district','block','village'],
-    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listGroup':'persongroup', 'numScreening':'numScreening'}
+    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listGroup':'persongroup','numScreening':'numScreening'}
 }
 
 groupbyDictionary={
@@ -100,7 +100,7 @@ groupbyDictionary={
     'numAnimator':False,
     'listPeople':'id',
     'listAnimator':'animator_id',
- #   'listVideoScreened':'video_id',
+#    'listVideoScreened':'video_id',
     'numVideoScreened':False,
 #    'listVideoProduced':'video_id',
     'numVideoProduced':False,

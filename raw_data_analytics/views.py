@@ -86,9 +86,13 @@ def execute(request):
     people_chk = [request.POST.get("people_chk")]
     group_chk = [request.POST.get("group_chk")]
     video_chk = [request.POST.get("video_chk")]
-    list_combo = [request.POST.get("list")]
+    list_combo = str(request.POST.get("list"))
     videolist = str(request.POST.get("list_video"))
     
+    print block_chk
+    print village_chk
+    print list_combo
+    print type(list_combo)
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
     #val_adoption_list = [request.POST.get("adoption_list_chk")]
@@ -274,26 +278,28 @@ def execute(request):
     #################################value-partion###########################
 
 
-    if(list_combo[0] == None):
+    if(list_combo == "None"):
         list_combo = False
         videolist = False
+
+    if(list_combo == 'on'):
     
-    for x in checked_list:
-        if ((x in categoryDictionary['geographies']) or (x == 'partner')):
-            list_combo  = 'numScreening'
+        for x in checked_list:
+            if ((x in categoryDictionary['geographies']) or (x == 'partner')):
+                list_combo  = 'numScreening'
 
-        elif (x == "animator"):
-            list_combo = 'listAnimator'
+            elif (x == "animator"):
+                list_combo = 'listAnimator'
 
-        elif (x == "group"):
-            list_combo = 'listGroup'
+            elif (x == "group"):
+                list_combo = 'listGroup'
 
-        elif (x == "people"):
-            list_combo = 'listPeople'
+            elif (x == "people"):
+                list_combo = 'listPeople'
 
-        elif (x == "video"):
-            list_combo = videolist
-        
+            elif (x == "video"):
+                list_combo = videolist
+            
       ##############################Date#################################
 
 
@@ -391,8 +397,8 @@ def create_excel(df):
 
     generated_file_name = data_file.split('/')[-1] 
 
-    #html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    html_file = '/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    
     header = '''<html>
                     <head><center>
                         <h2> Data Result </h2>
