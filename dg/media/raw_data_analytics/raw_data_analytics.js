@@ -73,20 +73,22 @@ function list_display()
 function validation_check()
 {
      
-     var checked_ids = [animator, group, people, video];
-     var count = 0;
+     var checked_partitions = [animator, group, people, video];
+     var checked_values = [screening, adoption, animator_no, attendance,video_screened_no, video_produced_no]
+     var count_partition = 0;
+     var count_values = 0
      var i;
      
      if(list.checked)
      {
-       for(i=0; i<checked_ids.length; i++)
+       for(i=0; i<checked_partitions.length; i++)
           {
-            if(checked_ids[i].checked)
-              {count ++;}
+            if(checked_partitions[i].checked)
+              {count_partition ++;}
           }
-        if (count >1)
+        if (count_partition >1)
         {
-          alert("Along with list please select either Animator/Group/egistered Viewers/Video.");
+          alert("Along with list please select either Animator/Group/egistered Viewers/Video from Partions");
           event.preventDefault();
          
         }
@@ -113,4 +115,21 @@ function validation_check()
         event.preventDefault(); 
 
      }  
+
+     if(list.checked)
+     {
+       for(i=0; i<checked_values.length; i++)
+          {
+            if(checked_values[i].checked)
+              {count_values ++;}
+          }
+        if (count_values > 0)
+        {
+          alert("No other value fields can be selected along with list!!");
+          event.preventDefault();
+         
+        }
+
+     }
+     
 }
