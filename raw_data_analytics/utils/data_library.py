@@ -17,6 +17,8 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
 
+        print options['partition']
+        print options['value']
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -32,7 +34,7 @@ class data_lib():
         if self.check_valuefield_validity(options['value']):
             print "valid input for value fields"
             for item in options['value']:
-                if item=='list' and options['value']['list']!=False:
+                if item =='list' and options['value']['list']!=False:
                     relevantValueDictionary[options['value'][item]] = True
                     print item
                     print options['value'][item]
