@@ -13,11 +13,12 @@ define([
     'configs',
     'offline_utils',
     'denormalize',
+    'models/user_model',
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer, User) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -70,13 +71,14 @@ define([
         // Refactor possible
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
+            var language = User.get("language");
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
-            this.labels = this.entity_config.labels
+            this.labels = this.entity_config['labels_'+language]
             if (this.edit_case) {
                 this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {

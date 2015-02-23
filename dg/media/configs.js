@@ -131,7 +131,7 @@ function() {
 
     var mediator_configs = {
         'page_header': 'Mediator',
-        'labels': {name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
+        'labels_Hindi': {name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
