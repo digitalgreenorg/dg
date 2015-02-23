@@ -11,7 +11,7 @@ from utils.data_library import data_lib
 
 import time, codecs
 import json, datetime
-import pandas as pd
+#import pandas as pd
 
 from utils.configuration import categoryDictionary
 

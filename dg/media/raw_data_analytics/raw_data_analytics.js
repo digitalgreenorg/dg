@@ -93,6 +93,14 @@ function validation_check()
          
         }
 
+        else if(count_partition == 0)
+        {
+          alert("Select atleast one option from partition fields!!!");
+          event.preventDefault();
+         
+        }
+
+
      }
      //alert(list_video.selectedIndex);
      if( ((animator.checked) && (animator_no.checked))           || 
