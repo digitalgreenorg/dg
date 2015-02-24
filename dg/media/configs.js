@@ -132,6 +132,7 @@ function() {
     var mediator_configs = {
         'page_header': 'Mediator',
         'labels_Hindi': {name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
+        'labels_English': {name: "Name", district: "District", gender: "Gender", phone_number: "Phone Number", assigned_villages: "Assigned Villages"},
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
@@ -934,6 +935,7 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
+        languages: ['Hindi', 'English', 'Telugu'],
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

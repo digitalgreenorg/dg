@@ -249,7 +249,6 @@
     </div>
     <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
     <div class="col-xs-4 align-right">
-        <a id="language" href="{% url 'faq' %}"> Language </a>
         <a id="help" href="{% url 'faq' %}"> Help </a>
         <img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5">
         <img id= "online" src="/media/coco/app/images/online.png" title= "You are online" class="connection-indicator"/>
@@ -440,14 +439,22 @@
                 <form action="" role="form">
                     <fieldset>
                         <div class="clearfix form-group">
-                            <%if(typeof(username)=="undefined"){%>
+                            <%if(typeof(user.username)=="undefined"){%>
                             <input id="username" type="text" placeholder="Username" class="form-control">
                             <%}else{%>
-                            <input id="username" type="text" placeholder="Username" class= "form-control" value="<%= username%>" disabled>
+                            <input id="username" type="text" placeholder="Username" class= "form-control" value="<%= user.username%>" disabled>
                             <%}%>
                         </div>
                         <div class="clearfix form-group">
                             <input id="password" type="password" placeholder="Password" class="form-control">
+                        </div>
+                        <div class="clearfix form-group">
+                            <select id=language name="language" class="form-control">
+                                <option value='' selected='selected'>----------</option>
+                                <% _.each(configs.misc.languages, function(language) { %>
+                                    <option value="<%= language %>"><%= language %></option> 
+                                    <% }); %>
+                            </select>
                         </div>
                         <button id= "login_button" class="btn btn-primary" type="submit" data-loading-text="Logging In...">Sign in</button>
                         <br><a id="change_user">Sign in as a different user</a>
