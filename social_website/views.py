@@ -128,6 +128,11 @@ def search_view(request):
     partner = request.GET.get('partner', None)
     title = request.GET.get('title', None)
     state = request.GET.get('state', None)
+    language = request.GET.get('language', None)
+    category = request.GET.get('category', None)
+    subcategory = request.GET.get('subcategory', None)
+    topic = request.GET.get('topic', None)
+    subject = request.GET.get('subject', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -138,6 +143,11 @@ def search_view(request):
               'partner' : partner,
               'title' : title,
               'state' : state,
+              'language' : language,
+              'category' : category,
+              'subcategory' : subcategory,
+              'topic' : topic,
+              'subject': subject,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     

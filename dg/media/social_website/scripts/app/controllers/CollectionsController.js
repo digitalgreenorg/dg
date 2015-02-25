@@ -100,6 +100,21 @@ define(function(require) {
                 if ($(".js-collections-wrapper").attr('data-state') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
                 }
+                if ($(".js-collections-wrapper").attr('data-language') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('language', $(".js-collections-wrapper").attr('data-language'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-category') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('category', $(".js-collections-wrapper").attr('data-category'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-subcategory') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('subcategory', $(".js-collections-wrapper").attr('data-subcategory'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-topic') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-topic'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-subject') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-subject'), true);
+                }
             }
         },
 
