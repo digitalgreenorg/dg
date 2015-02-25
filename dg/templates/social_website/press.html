@@ -8,17 +8,22 @@
                     {% for med in media %}
                         <li>
                             <div class="media layout-vr-md">
-                                <div class="img img-lg">
+                                <!-- <div class="img img-lg">
                                     <img src="{{STATIC_URL}}assets/images/favicon-white.png" alt="" />
-                                </div>
+                                </div> -->
                                 <div class="bd">
                                     <div class="layout-vr-sm">
                                         <div class="copy copy-lt layout-vr-sm">
                                             {{med.pub_date|date:"b d, Y"|title}}
                                         </div>
-                                        <a href={{med.link}} target='_blank' ><h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{med.title}}</h3></a>
+                                        <a href={{med.link}} target='_blank' ><h2 class="hdg-green hdg-e layout-vr-tiny hdg-bold">{{med.title}}</h2></a>
                                         <p class="copy">
                                             {{med.content}}
+                                        </p>
+                                        <br>
+                                        <p class="copy">
+                                            <iframe  width="944" height="420" sandbox="" src={{med.link}}>
+                                            </iframe>   
                                         </p>
                                     </div>
                                 </div> <!-- End .bd -->
