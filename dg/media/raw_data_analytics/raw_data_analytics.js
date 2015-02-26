@@ -72,30 +72,40 @@ function list_display()
 //validation check
 function validation_check()
 {
-     
-     var checked_partitions = [animator, group, people, video];
+     var error = 0;
+     var checked_partitions = [ partner, country, state, district, block, village]
+     var checked_partitions_restrict = [animator, group, people, video];
      var checked_values = [screening, adoption, animator_no, attendance,video_screened_no, video_produced_no]
-     var count_partition = 0;
+     var count_partition_restrict = 0;
+     count_partition = 0;
      var count_values = 0
      var i;
      
      if(list.checked)
      {
+       for(i=0; i<checked_partitions_restrict.length; i++)
+          {
+            if(checked_partitions_restrict[i].checked)
+              {count_partition_restrict ++;}
+          }
        for(i=0; i<checked_partitions.length; i++)
           {
             if(checked_partitions[i].checked)
               {count_partition ++;}
           }
-        if (count_partition >1)
+        
+        if (count_partition_restrict >1)
         {
           alert("Along with list please select either Animator/Group/egistered Viewers/Video from Partions");
+          error = 1;
           event.preventDefault();
          
         }
 
-        else if(count_partition == 0)
+        else if((count_partition_restrict == 0) && (count_partition == 0)) 
         {
           alert("Select atleast one option from partition fields!!!");
+          error = 1;
           event.preventDefault();
          
         }
@@ -114,12 +124,14 @@ function validation_check()
          ((video.checked)    && (video_produced_no.checked)))
           {
            alert("Invalid Entry!!!");
+           error = 1;
            event.preventDefault(); 
           }
 
      if((video.checked) && (list.checked) && (list_video.selectedIndex == 0))
      {
         alert("Please select list of videos produced or list of videos produced from dropdown!!!");
+        error = 1;
         event.preventDefault(); 
 
      }  
@@ -127,17 +139,27 @@ function validation_check()
      if(list.checked)
      {
        for(i=0; i<checked_values.length; i++)
-          {
+            {
             if(checked_values[i].checked)
               {count_values ++;}
           }
         if (count_values > 0)
         {
           alert("No other value fields can be selected along with list!!");
+          error = 1;
           event.preventDefault();
          
         }
 
      }
-     
+
+     if (error == 0)
+     {
+     loader.style.visibility = "visible";
+     }
+     else
+     {
+      loader.style.visibility = "hidden";
+     }
+
 }

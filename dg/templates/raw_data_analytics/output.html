@@ -5,12 +5,19 @@
 			<h1 >Raw Data Analytics</h1>
 			<hr>
 		</center></head>
-		<body>
+		<body onunload="">
 			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
 			<script  src="/media/raw_data_analytics/raw_data_analytics.js"></script>
+
+
 			
 			<form action="/raw_data_analytics/execute/" id="form" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
 				{% csrf_token %}
+
+				<div id="loader" name = "loader"  style='visibility:hidden; position:absolute;'>
+					<img src= "{{STATIC_URL}}raw_data_analytics/waiting.png" height="100%" width="100%">
+				</div >
+
 
 				<center><div name="Date">
 					<p><h3> Date: </h3>
@@ -120,13 +127,16 @@
 					</div>
 					
 				</div>
+
 				<center>
 					<div name="Buttons" style='width:100%; display:block;'onclick="validation_check(this)">
 						<input type="submit" value="Submit"> &nbsp;&nbsp;
-						<input type="reset" onclick= "this.form.reset()">
+						<input type="button" value="Reset" onClick="history.go(0)">
 				</center>
 
-			</form>	
+			</form>
+
+			
 		</body>
 	
 </html>
