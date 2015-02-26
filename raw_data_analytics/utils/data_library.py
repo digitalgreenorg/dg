@@ -29,7 +29,7 @@ class data_lib():
                 if options['partition'][item] != False:
                     relevantPartitionDictionary[item] = options['partition'][item]
         else:
-    #        print "Warning - Invalid input for partition fields"
+            print "Warning - Invalid input for partition fields"
 
         if self.check_valuefield_validity(options['value']):
     #       print "valid input for value fields"
@@ -43,7 +43,7 @@ class data_lib():
                 if options['value'][item] != False and item!='list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
-    #        print "Warning - Invalid input for Value fields"
+            print "Warning - Invalid input for Value fields"
 
         final_df = pd.DataFrame()
 
