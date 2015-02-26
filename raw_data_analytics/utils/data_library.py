@@ -17,46 +17,46 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
 
-        print options['partition']
-        print options['value']
+    #    print options['partition']
+    #    print options['value']
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
-            print "valid input for partition fields"
+    #        print "valid input for partition fields"
             for item in options['partition']:
                 if options['partition'][item] != False:
                     relevantPartitionDictionary[item] = options['partition'][item]
         else:
-            print "Warning - Invalid input for partition fields"
+    #        print "Warning - Invalid input for partition fields"
 
         if self.check_valuefield_validity(options['value']):
-            print "valid input for value fields"
+    #       print "valid input for value fields"
             for item in options['value']:
                 if item =='list' and options['value']['list']!=False:
                     relevantValueDictionary[options['value'][item]] = True
-                    print item
-                    print options['value'][item]
+    #                print item
+    #                print options['value'][item]
                     relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]]
                 if options['value'][item] != False and item!='list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
-            print "Warning - Invalid input for Value fields"
+    #        print "Warning - Invalid input for Value fields"
 
         final_df = pd.DataFrame()
 
-        print "%%%%%%%%%%%%%%%%% Relevant Partition Dictionary %%%%%%%%%%%%%%%%%%" + str(relevantPartitionDictionary)
-        print "################# Relevant Value Dictionary ##################" + str(relevantValueDictionary)
+    #    print "%%%%%%%%%%%%%%%%% Relevant Partition Dictionary %%%%%%%%%%%%%%%%%%" + str(relevantPartitionDictionary)
+    #    print "################# Relevant Value Dictionary ##################" + str(relevantValueDictionary)
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-            print queryComponents
-            print "----------------------------------Full SQL Query---------------------------"
+    #        print queryComponents
+    #        print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3])
-            print query
-            print "-------------------------------Result--------------------------------"
+    #        print query
+    #        print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
@@ -66,9 +66,9 @@ class data_lib():
                     how = 'left'
                 else:
                     how='right'
-                print how
+    #            print how
                 final_df = pd.merge(final_df, df, how=how)
-            print df
+    #        print df
             # /home/ubuntu/code/dg_coco_test/dg/
         return final_df
 
@@ -84,13 +84,18 @@ class data_lib():
                 sub_matrix[headers[i]] = []
                 temp = row[i + 1].split('$')
                 for t in temp:
-                    sub_matrix[headers[i]].append(tuple(t.split('#')))
+                    if '&' in t:
+                        andtemp = t.split('&')
+                        for vl in andtemp:
+                            sub_matrix[headers[i]].append(tuple(vl.split('#')))
+                    else:
+                        sub_matrix[headers[i]].append(tuple(t.split('#')))
             matrix[row[0]] = sub_matrix
         return matrix
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
     def check_partitionfield_validity(self, partitionField):
-        print partitionField
+    #    print partitionField
         if set(partitionField.keys()).issubset(tableDictionary.keys()):
             return True
         else:
@@ -112,14 +117,14 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-        print "----------------------------------SELECT PART------------------------------"
-        print selectResult
-        print "----------------------------------FROM PART--------------------------------"
-        print fromResult
-        print "----------------------------------WHERE PART-------------------------------"
-        print whereResult
-        print "---------------------------------GROUP_BY PART----------------------------"
-        print groupbyResult
+    #    print "----------------------------------SELECT PART------------------------------"
+    #    print selectResult
+    #    print "----------------------------------FROM PART--------------------------------"
+    #    print fromResult
+    #    print "----------------------------------WHERE PART-------------------------------"
+    #    print whereResult
+    #    print "---------------------------------GROUP_BY PART----------------------------"
+    #    print groupbyResult
         return (selectResult, fromResult, whereResult, groupbyResult)
 
 
@@ -135,7 +140,7 @@ class data_lib():
             for i in selectDictionary[items]:
                 if (selectDictionary[items][i] == True):
                     selectComponentList.append(tableDictionary[items] + '.' + i + ' AS ' + items)
-        print selectComponentList
+    #    print selectComponentList
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
                 if "count" in i:
@@ -151,10 +156,10 @@ class data_lib():
         if (sourceTable not in occuredTables):
             for i in lookup_matrix[sourceTable][destinationTable]:
                 if (i[2] == 'self'):
-                    print 'SELF'
+    #                print 'SELF'
                     return
                 elif (i[2] == 'direct'):
-                    print 'DIRECT'
+    #                print 'DIRECT'
                     if (destinationTable not in occuredTables):
                         occuredTables.append(destinationTable)
                     if (sourceTable in Dict.keys()):
@@ -200,16 +205,17 @@ class data_lib():
     def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
-        print "###########Dictionary is:##################" + str(Dictionary)
+    #    print lookup_matrix
+    #    print "###########Dictionary is:##################" + str(Dictionary)
         for items in partitionElements:
             if partitionElements[items] != True:
                 whereComponentList.append(
                     tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
         for i in Dictionary:
             for j in Dictionary[i]:
-                print str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1])
-                whereComponentList.append(
-                    str(i) + '.' + str(lookup_matrix[i][j][0][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][0][1]))
+                for k in range(0,len(lookup_matrix[i][j])):
+    #                print str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][k][1])
+                    whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][k][1]))
         whereComponentList.append(
             str(tableDictionary[valueElement]) + '.' + str(whereDictionary[valueElement]) + ' between \'' + str(
                 args[0]) + '\' and \'' + str(args[1]) + '\'')
@@ -218,11 +224,11 @@ class data_lib():
     # Function to make GroupBy component of the sql query
     def getGroupByComponent(self, partitionElements, valueElement):
         groupbyComponentList = ['1']
-        print '!!!!!!!!!!!!!!!!!!!!!!'
-        print partitionElements
-        print '!!!!!!!!!!!!!!!!!!!!!!'
-        print valueElement
-        print 'value element in:' + str(valueElement)
+    #    print '!!!!!!!!!!!!!!!!!!!!!!'
+    #    print partitionElements
+    #    print '!!!!!!!!!!!!!!!!!!!!!!'
+    #    print valueElement
+    #    print 'value element in:' + str(valueElement)
         for items in partitionElements:
             if partitionElements[items] != False:
                 groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
