@@ -267,7 +267,7 @@ def execute(request):
              'list' : list_combo
             }
      
-    print "----- inside the views----------------"
+    #print "----- inside the views----------------"
     
     options = {'partition':partition,'value':value}
     args=[]
@@ -276,9 +276,9 @@ def execute(request):
     dlib = data_lib()
     dataframe_result = dlib.handle_controller(args,options)
     
-    print "--------------FINAL RESULT---------------"
-    print dataframe_result
-    print "--------------GAME OVER-----------------"
+    #print "--------------FINAL RESULT---------------"
+    #print dataframe_result
+    #print "--------------GAME OVER-----------------"
 
     final_html_file=create_excel(dataframe_result)
 
@@ -298,8 +298,8 @@ def create_excel(df):
 
     generated_file_name = data_file.split('/')[-1] 
 
-    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    #html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    #html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
     
     header = '''<html>
                     <head><center>
