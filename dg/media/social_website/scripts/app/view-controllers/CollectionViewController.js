@@ -310,13 +310,41 @@ define(function(require) {
         _renderPagination: function(totalCount) {
             var collectionsPerPage = this._state.collectionsPerPage;
             var pages = Math.ceil(totalCount / collectionsPerPage);
+            //alert (pages);
             var paginationPages = [];
-            var i = 0;
-            for (; i < pages; i++) {
-
+            var paginationPerPage = 10;
+            
+            var currentPage = this._state.currentPageNumber
+            
+            if (pages < paginationPerPage){
+                var i = 0;
+                var counter = pages;
+                var first = false;
+                var last = false;
+            }
+            else if (currentPage < paginationPerPage-1){
+                var i = 0
+                var counter = paginationPerPage;
+                var first = false;
+                var last = true;
+            }
+            else if (currentPage + paginationPerPage > pages ){
+                var i = pages - paginationPerPage
+                var counter = i + paginationPerPage
+                var first = true;
+                var last = false;
+            }
+            else{
+                var i = currentPage - 1
+                var counter = i + paginationPerPage
+                var first = true;
+                var last = true;
+            }
+            for (; i < counter; i++) {
                 var currentPageData = {
-                    pageIndex: i,
-                    pageNumber: i + 1
+                        pageIndex: i,
+                        pageNumber: i + 1
+                        
                 };
 
                 if (i == this._state.currentPageNumber) {
@@ -325,8 +353,7 @@ define(function(require) {
 
                 paginationPages.push(currentPageData);
             }
-
-            var renderedPagination = viewRenderer.render(collectionPaginationTemplate, {pages: paginationPages});
+            var renderedPagination = viewRenderer.render(collectionPaginationTemplate, {pages: paginationPages, first: first, last:last, lastPage:pages, lastIndex:pages-1});
 
             this._references.$paginationContainers.html(renderedPagination);
         },

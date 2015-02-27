@@ -954,6 +954,8 @@ padding-right: 20px;
     color: #000000;
     position:relative;
     top: -2px;
+    pointer-events: none;
+    cursor: default;
 }
 
 .pagination > * {
