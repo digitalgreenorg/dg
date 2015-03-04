@@ -5,7 +5,7 @@ from communications.models import Article
 
 def media_view(request):
     if (request.GET.get('latest', None) =="true"):
-        media_list = Article.objects.all().order_by('-pub_date')[O:1]
+        media_list = Article.objects.all().order_by('-pub_date')[0:1]
         paginator = Paginator(media_list, 4) #dividing 4 articles per page
         page = request.GET.get('page')
         try:
