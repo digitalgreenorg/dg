@@ -55,8 +55,8 @@ class data_lib():
     #        print queryComponents
     #        print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3])
-    #        print query
-    #        print "-------------------------------Result--------------------------------"
+            print query
+            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
@@ -68,7 +68,7 @@ class data_lib():
                     how='right'
     #            print how
                 final_df = pd.merge(final_df, df, how=how)
-    #        print df
+            print df
             # /home/ubuntu/code/dg_coco_test/dg/
         return final_df
 
@@ -117,14 +117,14 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-    #    print "----------------------------------SELECT PART------------------------------"
-    #    print selectResult
-    #    print "----------------------------------FROM PART--------------------------------"
-    #    print fromResult
-    #    print "----------------------------------WHERE PART-------------------------------"
-    #    print whereResult
-    #    print "---------------------------------GROUP_BY PART----------------------------"
-    #    print groupbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
         return (selectResult, fromResult, whereResult, groupbyResult)
 
 
