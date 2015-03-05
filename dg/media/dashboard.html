@@ -833,13 +833,13 @@
         <legend>Add Group</legend>
         <p class="bold-helptext"> All fields in bold are required</p>
         <div class="form-group"> 
-            <label class="control-label col-sm-2"><b>Name</b></label>
+            <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
                 <input type="text" name="group_name" class="form-control">
             </div>
         </div>
         <div class="form-group"> 
-            <label class="control-label col-sm-2"><b>Village</b></label>
+            <label class="control-label col-sm-2"><b><%= village %></b></label>
             <div class="col-sm-4">
                 <select id = "id_village" name="village" class="chosen-select form-control">
                     <option value='' selected='selected'>---------</option> 
@@ -880,7 +880,7 @@
 </script>  
 
 <script type="text/template" id="person_inline_header">
-<tr class="hide-header"> <th> Person Name</th><th> Father Name</th><th class = "notbold"> Age</th><th> Gender</th><th class="notbold"> Phone No</th></tr>
+<tr class="hide-header"> <th> <%= person_name %></th><th> <%= father_name %></th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
 </script>
 
 <!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
@@ -891,13 +891,13 @@
             <legend>Add Video</legend>
             <p class="bold-helptext"> All fields in bold are required</p>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Title</label>
+                <label class="col-sm-2 control-label"><%= title %></label>
                 <div class="col-sm-4">
                     <input type="text" name="title" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Video Type</label>
+                <label class="col-sm-2 control-label"><%= video_type %></label>
                 <div class="col-sm-4">
                     <select name="video_type" class="form-control">
                         <option value="" selected="selected">
@@ -922,19 +922,19 @@
                 </div>
             </div> 
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Production Start Date</label>
+                <label class="control-label dis-block col-sm-2"><%= production_start_date %></label>
                 <div class="col-sm-4">
                     <input class="date-picker form-control" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control" placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block control-label col-sm-2">Production End Date</label>
+                <label class="dis-block control-label col-sm-2"><%= production_end_date %></label>
                 <div class="col-sm-4">
                     <input class="date-picker form-control" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control"  placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Language</label>
+                <label class="col-sm-2 control-label"><%= language %></label>
                 <div class="col-sm-4">
                     <select id = "id_language" name="language" class="chosen-select form-control">
                         <option selected="selected" value="">
@@ -944,13 +944,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label notbold">Summary</label>
+                <label class="col-sm-2 control-label notbold"><%= summary %></label>
                 <div class="col-sm-4">
                     <textarea name="summary" class="input-xlarge form-control" rows="4" placeholder="Summary"></textarea>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Village</label>
+                <label class="control-label dis-block col-sm-2"><%= village %></label>
                 <div class="col-sm-4">
                     <select id = "id_village" name="village" class="chosen-select form-control">
                         <option value="">---------- </option>
@@ -958,7 +958,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Facilitator</label>
+                <label class="control-label dis-block col-sm-2"><%= facilitator %></label>
                 <div class="col-sm-4">
                     <select id = "id_facilitator" name="facilitator" class="chosen-select form-control">
                         <option selected="selected" value="">
@@ -968,7 +968,7 @@
                 </div>
             </div>                     
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Camera Operator</label>
+                <label class="control-label dis-block col-sm-2"><%= camera_operator %></label>
                 <div class="col-sm-4">
                     <select id = "id_cameraoperator" name="cameraoperator" class="chosen-select form-control">
                         <option selected="selected" value="">
@@ -978,14 +978,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2"><b>Persons Shown</b></label>
+                <label class="control-label dis-block col-sm-2"><b><%= persons_shown %></b></label>
                 <div class="col-sm-4">
                     <select size="20" class="chosen-select form-control" id = "id_farmers_shown" name="farmers_shown" multiple>
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Actors</label>
+                <label class="control-label dis-block col-sm-2"><%= actors %></label>
                 <div class="col-sm-4">
                     <select class="input-medium form-control" name="actors">
                         <option value="" selected="selected">
@@ -1004,7 +1004,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Video Suitable For</label>
+                <label class="control-label dis-block col-sm-2"><%= video_suitable_for %></label>
                 <div class="col-sm-4">
                     <select name="video_suitable_for" class="form-control">
                         <option value="" selected="selected">
@@ -1029,13 +1029,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block control-label col-sm-2 notbold">Approval Date</label>
+                <label class="dis-block control-label col-sm-2 notbold"><%= approval_date %></label>
                 <div class="col-sm-4">
                     <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block col-sm-2 control-label notbold">Youtube Id</label>
+                <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
                     <input name="youtubeid" type="text" placeholder="youtubeid" class="form-control"><br>
                 </div>

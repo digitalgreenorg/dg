@@ -213,6 +213,8 @@ function() {
 
     var video_configs = {
         'page_header': 'Video',
+        'labels_Hindi': {title: "शीर्षक", video_type: "Video Type", production_start_date: "Production Start Date", production_end_date: "Production End Date", language: "Language", summary: "Summary", village: "Village", facilitator: "Facillitator", camera_operator: "Camera Operator", persons_shown: "Persons Shown", actors: "Actors", video_suitable_for: "Video Suitable For", approval_date: "Approval Date", youtubeid: "Youtube Id"},
+        'labels_English': {title: "Title", video_type: "Video Type", production_start_date: "Production Start Date", production_end_date: "Production End Date", language: "Language", summary: "Summary", village: "Village", facilitator: "Facillitator", camera_operator: "Camera Operator", persons_shown: "Persons Shown", actors: "Actors", video_suitable_for: "Video Suitable For", approval_date: "Approval Date", youtubeid: "Youtube Id"},
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
@@ -378,6 +380,8 @@ function() {
 
     var group_configs = {
         'page_header': 'Group',
+        'labels_Hindi': {name: "नाम", village: "Village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
+        'labels_English': {name: "Name", village: "village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',

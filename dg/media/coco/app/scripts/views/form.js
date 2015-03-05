@@ -286,7 +286,9 @@ define([
         //render header, empty inlines if add case, fetch and render related inlines if edit case
         render_inlines: function() {
             var that = this;
-            this.$('#inline_header').html($('#' + this.inline.header).html());
+            var temp = _.template($('#' + this.inline.header).html());
+            $f_el = this.$('#inline_header');
+            $f_el.append(temp(this.labels));
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
