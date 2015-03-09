@@ -523,27 +523,27 @@
                 <legend>Add Screening</legend>
 				<p class="bold-helptext"> All fields in bold are required</p>
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2">Date</label>
+                    <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
                         <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
                  	</div>
                 </div>
                 <div class="form-group ">
-                    <label class="control-label col-sm-2">Start Time</label>
+                    <label class="control-label col-sm-2"><%= start_time %></label>
                  	<div class="controls bootstrap-timepicker col-sm-4">
                         <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
                  	</div>
                  	<div class="help-block col-sm-4">Use 24 hour format</div>
                 </div>
                 <div class="form-group "> 
-                    <label class="control-label col-sm-2">End Time</label>
+                    <label class="control-label col-sm-2"><%= end_time %></label>
                  	<div class="controls bootstrap-timepicker col-sm-4"> 
                  		<input class="time-picker form-control" id="end_time_picker" type="text" placeholder="HH:MM" name="end_time">
                  	</div>
                  	<div class="help-block col-sm-4">Use 24 hour format</div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Village</label>
+                    <label class="control-label col-sm-2"><%= village %></label>
                 	<div class="col-sm-4"> 
                         <select name="village" id="id_village" class="chosen-select form-control" placeholder="Enter animator to enable">
                         <option value='' selected='selected'>---------</option> 
@@ -551,7 +551,7 @@
                 	</div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Mediator</label>
+                    <label class="control-label col-sm-2"><%= mediator %></label>
                  	<div class="col-sm-4"> 
                         <select name="animator" id="id_animator" class="chosen-select form-control">
                             <option value='' selected='selected'>---------</option> 
@@ -559,20 +559,20 @@
                	    </div>
                 </div>
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2">Videos Screened</label>
+                    <label class="control-label col-sm-2"><%= videos_screened %></label>
                 	<div class="col-sm-4"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
                         </select> 
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Groups Attended</label>
+                    <label class="control-label col-sm-2"><%= groups_attended %></label>
                     <div class="col-sm-4">
                         <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chosen-select form-control"></select> 
                     </div>
                 </div>
                 <div class="form-group">
-                	<label class="control-label col-sm-2 notbold">Person</label>
+                	<label class="control-label col-sm-2 notbold"><%= person %></label>
                 	<div class="col-sm-4">
                         <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
                     </div>

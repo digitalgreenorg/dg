@@ -473,6 +473,8 @@ function() {
 
     var screening_configs = {
         'page_header': 'Screening',
+        'labels_Hindi': {name: "नाम", village: "Village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
+        'labels_English': {name: "Name", village: "village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
         'list_elements': [{'element':'id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
