@@ -105,6 +105,7 @@ class Collection(models.Model):
     views = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
+    description = models.TextField(null=True, blank=True)
     def __unicode__(self):
         return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.state, self.language))
     def get_absolute_url(self):

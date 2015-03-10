@@ -61,6 +61,7 @@ def collection_view(request, partner, state, language, title, video=1):
     duration = sum([v.duration for v in collection.videos.all()])
     related_collections = get_related_collections(collection)
     video_list = [i.video for i in collection.videoincollection_set.all()]
+    description = collection.description
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -76,6 +77,8 @@ def collection_view(request, partner, state, language, title, video=1):
               'tags' : tags,
               'related_collections' : related_collections[:4], # restricting to 4 related collections for now
               }
+    if collection.featured :
+      return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
