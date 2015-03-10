@@ -36,6 +36,7 @@ define(function(require) {
 					this.addInputParam('searchString',false, 0, true)
 					this.addInputParam('offset', true, 0, true);
 					this.addInputParam('limit', true, 0, true);
+					this.addInputParam('featured', true, 0, true);
 					this.addInputParam('filters', false, null, true,
 							collectionsSubModel);
 					this.addInputParam('order_by', false, null, true,

@@ -6,7 +6,7 @@ from dg.settings import COMPLETION_INDEX, FACET_INDEX, VIDEO_INDEX
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
-def get_related_collections(collection):
+def get_related_collections(collection, featured):
     related_collections = []
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices = FACET_INDEX
@@ -22,6 +22,18 @@ def get_related_collections(collection):
                                 }
                   }
         }
+    if featured:
+        q ={"query": {
+                        "bool" : {
+                                  "must_not" : {"term" : { "uid" : collection.uid }},
+                            "should" : [
+                                        { "term": { "featured": True }},
+                                        
+                                        ],
+                            "minimum_should_match" : 1,
+                                }
+                  }
+        }
     try :
         query = json.dumps(q)
         url = "http://localhost:9200/%s/_search" % FACET_INDEX
@@ -32,6 +44,12 @@ def get_related_collections(collection):
     except Exception:
         pass
     return related_collections
+
+def get_featured_collections():
+    related_collections = []
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices = FACET_INDEX
+    conn.refresh(FACET_INDEX)
     
 def create_query(params, language_name):
     language = params.getlist('filters[language][]', None)
@@ -66,6 +84,7 @@ def get_collections_from_elasticsearch(request):
     # TODO: Change this from 'None'?
     searchString = params.get('searchString', 'None')
     partner_uid = params.get('uid', None)
+    featured = params.get('featured', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
         match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
@@ -75,6 +94,17 @@ def get_collections_from_elasticsearch(request):
     elif partner_uid:
         partner_name = Partner.objects.get(uid = partner_uid).name
         match_query = {"match" : {"partner" :{ "query" : partner_name}}}
+    elif featured:
+        match_query = {
+                        "bool" : {
+                                  
+                            "should" : [
+                                        { "term": { "featured": True }},
+                                        
+                                        ],
+                            "minimum_should_match" : 1,
+                                }
+                  }
     else:
         match_query = {"match_all" : {}}
     query = []
@@ -113,9 +143,13 @@ def get_collections_from_elasticsearch(request):
     result_list = []
     try :
         query = json.dumps(q)
+        print query
         url = "http://localhost:9200/%s/_search" % FACET_INDEX
+        print url
         response = urllib2.urlopen(url, query)
+        #print response
         result = json.loads(response.read())
+        #print result
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
@@ -123,7 +157,8 @@ def get_collections_from_elasticsearch(request):
         resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
-        return HttpResponse('0')
+        print ex
+        return HttpResponse(str(ex))
     
 def searchCompletions(request):
     searchString = request.GET.get('searchString')
