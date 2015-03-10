@@ -1,7 +1,7 @@
 __author__ = 'Lokesh'
 
 import os.path
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary
+from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
@@ -15,6 +15,7 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
+        print options;
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -51,7 +52,20 @@ class data_lib():
             else:
                 final_df = pd.merge(final_df, df, how='outer')
             print df
-        return final_df
+        resultant_df = self.order_data(final_df)
+        return resultant_df
+
+    def order_data(self, dataframe):
+        header = dataframe.columns.tolist()
+        ordered_cols = [None]*len(orderDictionary)
+        for col in header:
+            if col not in orderDictionary.keys():
+                ordered_cols.append(col)
+            else:
+                ordered_cols[orderDictionary[col]] = col
+        ordered_cols = filter(lambda a: a != None, ordered_cols)
+        dataframe = dataframe[ordered_cols]
+        return dataframe
 
     def read_lookup_csv(self):
         file_data = csv.reader(open(os.path.join(dg.settings.MEDIA_ROOT + r'/raw_data_analytics/data_analytics.csv')))
@@ -185,9 +199,12 @@ class data_lib():
             for j in Dictionary[i]:
                 for k in range(0,len(lookup_matrix[i][j])):
                     whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][k][1]))
-        whereComponentList.append(
-            str(tableDictionary[valueElement]) + '.' + str(whereDictionary[valueElement]) + ' between \'' + str(
-                args[0]) + '\' and \'' + str(args[1]) + '\'')
+        if '.' in str(whereDictionary[valueElement]):
+            whereComponentList.append(str(whereDictionary[valueElement]) + ' between \'' + str(args[0]) + '\' and \'' + str(args[1]) + '\'')
+        else:
+            whereComponentList.append(
+                str(tableDictionary[valueElement]) + '.' + str(whereDictionary[valueElement]) + ' between \'' + str(
+                    args[0]) + '\' and \'' + str(args[1]) + '\'')
         return ' and '.join(whereComponentList)
 
     # Function to make GroupBy component of the sql query
