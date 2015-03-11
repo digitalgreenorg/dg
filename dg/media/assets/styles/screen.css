@@ -1294,6 +1294,15 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     padding: 2px 0 0 8px;
 }
 
+.vid-star {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: url(../images/star.png) no-repeat 0 0;
+    height: 25px;
+    width: 30px;
+}
+    
 .vid-cat-inner {
     padding: 9px 9px 4px 9px;
 }
