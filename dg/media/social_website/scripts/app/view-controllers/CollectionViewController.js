@@ -128,7 +128,6 @@ define(function(require) {
             var dataFeed = this._references.dataFeed;
             dataFeed.setInputParam('offset', page, true)
             dataFeed.setInputParam('limit', collectionsPerPage, true);
-            //dataFeed.setInputParam('featured', 1, true);
 		    
 			if ($(".js-collections-wrapper").attr('data-searchstring') != ""){
 				dataFeed.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));

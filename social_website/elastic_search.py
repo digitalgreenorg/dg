@@ -94,9 +94,7 @@ def get_collections_from_elasticsearch(request):
                         "bool" : {
                                   
                             "should" : [
-                                        { "term": { "featured": True }},
-                                        
-                                        ],
+                                        { "term": { "featured": True }}, ],
                             "minimum_should_match" : 1,
                                 }
                   }

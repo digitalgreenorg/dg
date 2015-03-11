@@ -119,6 +119,8 @@ define(function(require) {
         },
 
         _onOrderChanged: function(orderCriteria) {
+            if(orderCriteria == "-featured")
+                this._references.collectionViewController.setInputParam('featured', 1);
             this._references.collectionViewController.setInputParam('order_by', orderCriteria);
         },
 
