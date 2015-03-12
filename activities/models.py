@@ -108,6 +108,7 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
+    verified = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)

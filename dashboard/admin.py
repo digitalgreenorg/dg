@@ -135,8 +135,9 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     extra = 3
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
-    list_display = ('date_of_adoption', '__unicode__')
-    search_fields = ['person__person_name', 'person__village__village_name', 'video__title']
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verified')
+    list_editable = ('verified',)
+    search_fields = ['id', 'person__person_name', 'person__village__village_name', 'video__title', 'person__group__group_name', 'date_of_adoption']
     raw_id_fields = ('person', 'video')
 
 
