@@ -347,6 +347,7 @@ class VideoResource(BaseResource):
     farmers_shown = fields.ToManyField('coco.api.PersonResource', 'farmers_shown')
     language = fields.ForeignKey('coco.api.LanguageResource', 'language')
     partner = fields.ForeignKey(PartnerResource, 'partner')
+    non_negotiables = fields.ListField()
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
@@ -371,6 +372,12 @@ class VideoResource(BaseResource):
     
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
+
+    def dehydrate_non_negotiables(self, bundle):
+        return [{'non_negotiable':nn.non_negotiable, 
+                 }  for nn in bundle.obj.nonnegotiable_set.all()]
+
+
 
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
