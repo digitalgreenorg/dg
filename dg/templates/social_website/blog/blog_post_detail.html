@@ -88,7 +88,12 @@
 {% block blog_post_detail_sharebuttons %}
 {% set_short_url_for blog_post %}
 <ul class="social layout-vr-sm" role="navigation">
-<li><a target="_blank" href="http://facebook.com/sharer.php?p[url]={{ request.build_absolute_uri }}&amp;p[title]={{ blog_post.title}}&amp;p[images][0]={{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
+<li><a target="_blank" href="https://www.facebook.com/dialog/feed?
+  app_id=149405231925556
+  &display=popup&caption=An%20example%20caption 
+  &link={{ request.build_absolute_uri }}
+  &description={{ blog_post.title}}
+  &picture={{request.get_host}}{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
 <li><a target="_blank" href="http://twitter.com/home?status={{ blog_post.title|urlencode }}%20{{ blog_post.short_url|urlencode }}%20via @digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4></a></li>
 
 </ul>
