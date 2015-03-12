@@ -121,6 +121,8 @@ define(function(require) {
         _onOrderChanged: function(orderCriteria) {
             if(orderCriteria == "-featured")
                 this._references.collectionViewController.setInputParam('featured', 1);
+            else
+                this._references.collectionViewController.setInputParam('featured', 0);
             this._references.collectionViewController.setInputParam('order_by', orderCriteria);
         },
 
