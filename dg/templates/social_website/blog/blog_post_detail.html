@@ -92,6 +92,7 @@
   app_id=149405231925556
   &display=popup&caption=An%20example%20caption 
   &link={{ request.build_absolute_uri }}
+  &redirect_uri={{ request.build_absolute_uri }}
   &description={{ blog_post.title}}
   &picture={{request.get_host}}{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
 <li><a target="_blank" href="http://twitter.com/home?status={{ blog_post.title|urlencode }}%20{{ blog_post.short_url|urlencode }}%20via @digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4></a></li>
