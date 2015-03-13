@@ -12,11 +12,11 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
-from videos.models import Video, Language
+from videos.models import Video, Language, NonNegotiable
 from models import CocoUser
 
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
 
 class PMANotSaved(Exception):
     pass
@@ -347,7 +347,6 @@ class VideoResource(BaseResource):
     farmers_shown = fields.ToManyField('coco.api.PersonResource', 'farmers_shown')
     language = fields.ForeignKey('coco.api.LanguageResource', 'language')
     partner = fields.ForeignKey(PartnerResource, 'partner')
-    non_negotiables = fields.ListField()
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
@@ -373,10 +372,20 @@ class VideoResource(BaseResource):
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
 
-    def dehydrate_non_negotiables(self, bundle):
-        return [{'non_negotiable':nn.non_negotiable, 
-                 }  for nn in bundle.obj.nonnegotiable_set.all()]
 
+class NonNegotiableResource(BaseResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    class Meta:
+        max_limit = None
+        queryset = NonNegotiable.objects.prefetch_related('video').all()
+        resource_name = 'nonnegotiable'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+        validation = ModelFormValidation(form_class=NonNegotiableForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+    dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
 
 
 class PersonGroupResource(BaseResource):

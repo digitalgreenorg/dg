@@ -254,8 +254,28 @@ function() {
 
 
         },
+        'inline': {
+            'entity': 'nonnegotiable',
+            'default_num_rows': 5,
+            "template": "nonnegotiable_inline",
+            "joining_attribute": {
+                'host_attribute': ["id", "title"],
+                'inline_attribute': "video"
+            },
+            "header": "nonnegotiable_inline_header",
+            'borrow_attributes': [],
+            foreign_entities: {
+                video: {
+                    video: {
+                        placeholder: 'id_video',
+                        name_field: 'title'
+                    }
+                }
+            }
+        },
+
         'form_field_validation': {
-            ignore: [],
+            ignore: ".donotvalidate",
             rules: {
                 title: {
                     required: true,
@@ -358,6 +378,16 @@ function() {
         'rest_api_url': '/coco/api/v2/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var nonnegotiable_configs = {
+        'rest_api_url': '/coco/api/v2/nonnegotiable/',
+        'entity_name': 'nonnegotiable',
+        'sort_field': 'non_negotiable',
         'dashboard_display': {
             listing: false,
             add: false
@@ -990,6 +1020,7 @@ function() {
         adoption: adoption_configs,
         language: language_configs,
         district: district_configs,
+        nonnegotiable: nonnegotiable_configs,
         misc: misc
     }
 
