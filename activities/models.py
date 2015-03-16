@@ -8,6 +8,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
+from coco.base_models import ADOPTION_VERIFICATION
 
 class VRPpayment(models.Manager):
 
@@ -108,7 +109,8 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
-    verified = models.BooleanField(default=False)
+    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=3)
+    verified_by = models.CharField(max_length=20, blank=True, null=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)

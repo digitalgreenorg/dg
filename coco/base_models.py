@@ -46,6 +46,11 @@ SUITABLE_FOR = (
         (5, 'Pending for Approval'),
 )
 
+ADOPTION_VERIFICATION = (
+    (1, 'Approved'),
+    (2, 'Rejected'),
+    (3, 'Not Checked'),
+)
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)

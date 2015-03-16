@@ -23,6 +23,18 @@
     {% url "admin:index" as admin_index_url %}
     var ADMIN_URL = "{{ admin_index_url }}";
 </script>
+
+<script type="text/javascript">
+    $("select").change(function() {
+    var str = "";
+    $( "select option:selected" ).each(function() {
+        if($( this ).text()!='Not Checked'){
+            str += $(this).id + "@";
+        }
+    });
+        console.print(str);
+  });
+</script>
 {% endblock %}
 
 {% block extrahead %}{% endblock %}

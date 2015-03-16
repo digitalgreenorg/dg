@@ -9,6 +9,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
+from django.forms import TextInput, Textarea
 
 
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
@@ -130,13 +131,18 @@ class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ('animator','village')
     search_fields = ['animator__name','village__village_name']
 
+
 class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verified')
-    list_editable = ('verified',)
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':40})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    }
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'verified_by')
+    list_editable = ('verification_status','verified_by')
     list_filter = ('date_of_adoption', )
     search_fields = ['id', 'person__person_name', 'person__village__village_name', 'video__title', 'person__group__group_name']
     raw_id_fields = ('person', 'video')
