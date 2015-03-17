@@ -15,7 +15,7 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
-        #print options;
+        print options;
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -42,16 +42,16 @@ class data_lib():
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-            #print "----------------------------------Full SQL Query---------------------------"
+            print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3])
-            #print query
-            #print "-------------------------------Result--------------------------------"
+            print query
+            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-            #print df
+            print df
         resultant_df = self.order_data(final_df)
         return resultant_df
 
@@ -107,14 +107,14 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-        #print "----------------------------------SELECT PART------------------------------"
-        #print selectResult
-        #print "----------------------------------FROM PART--------------------------------"
-        #print fromResult
-        #print "----------------------------------WHERE PART-------------------------------"
-        #print whereResult
-        #print "---------------------------------GROUP_BY PART----------------------------"
-        #print groupbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
         return (selectResult, fromResult, whereResult, groupbyResult)
 
     def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg):
