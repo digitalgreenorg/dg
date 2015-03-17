@@ -42,16 +42,16 @@ class data_lib():
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-            #print "----------------------------------Full SQL Query---------------------------"
+            print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3])
-            #print query
-            #print "-------------------------------Result--------------------------------"
+            print query
+            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-            #print df
+            print df
         resultant_df = self.order_data(final_df)
         return resultant_df
 

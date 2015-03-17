@@ -10,7 +10,7 @@ tableDictionary={
     'animator':'people_animatorwisedata',
     'person':'people_person',
     'persongroup':'people_persongroup',
-    'video':'videos_video_wisedata',
+    'video':'videos_video',
     'language':'videos_language',
     'sector':'videos_practicesector',
     'practice':'videos_practice',
@@ -24,8 +24,8 @@ tableDictionary={
     'listAnimator':'people_animatorwisedata',
     'listVideoScreened':'activities_screeningwisedata',
     'numVideoScreened':'activities_screeningwisedata',
-    'listVideoProduced':'videos_video_wisedata',
-    'numVideoProduced':'videos_video_wisedata',
+    'listVideoProduced':'videos_video',
+    'numVideoProduced':'videos_video',
     'list':'self',
     'listGroup':'people_persongroup'
 }
@@ -40,7 +40,7 @@ whereDictionary={
     'animator':'animator_id',
     'person':'id',
     'persongroup':'id',
-    'video':'video_id',
+    'video':'id',
     'language':'id',
     'sector':'id',
     'practice':'id',
@@ -76,7 +76,7 @@ groupbyDictionary={
     'animator':'animator_id',
     'person':'id',
     'persongroup':'id',
-    'video':'video_id',
+    'video':'id',
     'language':'id',
     'sector':'id',
     'practice':'id',
@@ -91,8 +91,8 @@ groupbyDictionary={
     'numVideoScreened':False,
     'numVideoProduced':False,
     'list':'self',
-    'listVideoProduced':'video_id',
-    'listVideoScreened':'video_id',
+    'listVideoProduced':'id',
+    'listVideoScreened':'id',
     'listGroup':'id'
 }
 
@@ -106,7 +106,7 @@ selectDictionary={
     'animator':{'animator_id':False,'animator_name':True,'gender':False},
     'person':{'id':False,'person_name':True,'gender':True},
     'persongroup':{'id':False,'group_name':True},
-    'video':{'video_id':False,'title':True},
+    'video':{'id':False,'title':True},
     'language':{'id':False,'language_name':True},
     'sector':{'id':False,'name':True},
     'practice':{'id':False,'practice_name':True},
@@ -118,11 +118,11 @@ selectDictionary={
     'numAnimator':{'count(animator_id)':True,'count(distinct animator_id)':False},
     'listPeople':{'person_name':True,'gender':False},
     'listAnimator':{'animator_name':True,'gender':False},
-    'numVideoScreened':{'count(video_id)':True,'count(distinct video_id)':False},
-    'numVideoProduced':{'count(video_id)':True,'count(distinct video_id)':False},
+    'numVideoScreened':{'count(id)':True,'count(distinct id)':False},
+    'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
     'list':'self',
-    'listVideoProduced':{'video_id':False,'title':True},
-    'listVideoScreened':{'video_id':False,'video_title':True},
+    'listVideoProduced':{'id':False,'title':True},
+    'listVideoScreened':{'id':False,'video_title':True},
     'listGroup':{'id':False,'group_name':True}
 }
 
