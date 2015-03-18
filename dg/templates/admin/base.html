@@ -24,17 +24,6 @@
     var ADMIN_URL = "{{ admin_index_url }}";
 </script>
 
-<script type="text/javascript">
-    $("select").change(function() {
-    var str = "";
-    $( "select option:selected" ).each(function() {
-        if($( this ).text()!='Not Checked'){
-            str += $(this).id + "@";
-        }
-    });
-        console.print(str);
-  });
-</script>
 {% endblock %}
 
 {% block extrahead %}{% endblock %}
@@ -85,6 +74,7 @@
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
         </script>
+
         <script type="text/javascript">
             try {
                 var pageTracker = _gat._getTracker("UA-16211208-1");
@@ -92,5 +82,7 @@
                 } 
         catch(err) {}
         </script>
+
+
 </body>
 </html>
