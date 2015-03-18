@@ -22,7 +22,13 @@
 {% endblock %}
 
 {% block main %}
-
+{% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+{% block blog_post_list_post_featured_image %}
+<div hidden>
+    <img class="img-thumbnail pull-left" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}">
+</div>
+{% endblock %}
+{% endif %}
 {% block blog_post_detail_postedby %}
 {% editable blog_post.publish_date %}
 <h6 class="copy layout-vr-sm">
@@ -88,12 +94,7 @@
 {% block blog_post_detail_sharebuttons %}
 {% set_short_url_for blog_post %}
 <ul class="social layout-vr-sm" role="navigation">
-<li><a target="_blank" href="https://www.facebook.com/dialog/feed?
-  app_id=149405231925556
-  &link={{ request.build_absolute_uri }}
-  &redirect_uri={{ request.build_absolute_uri }}
-  &description={{ blog_post.title}}
-  &picture={{request.get_host}}{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
+<li><a target="_blank" href="http://facebook.com/sharer.php?u={{ request.build_absolute_uri }}&amp;t={{ blog_post.title|urlencode }}"><h4 class="social-icon icon-fb">Facebook</h4></a></li>
 <li><a target="_blank" href="http://twitter.com/home?status={{ blog_post.title|urlencode }}%20{{ blog_post.short_url|urlencode }}%20via @digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4></a></li>
 
 </ul>
