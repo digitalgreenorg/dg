@@ -40,6 +40,7 @@ function QAverification() {
                 if (jQuery(this).find('input[type="text"]').val() == "") {
                     alert("Kindly fill all the Active Verified By fields");
                     event.preventDefault();
+                    return false;
                 }
             }
         });
