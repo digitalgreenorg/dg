@@ -2135,6 +2135,13 @@ ul.carousel-list li{
     margin-right: 30px;
 }
 
+.collection-video-wrapper {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin-right: 30px;
+}
+
 /* News Section */
 
 .news-videoDrawer {

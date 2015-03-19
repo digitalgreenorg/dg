@@ -18,35 +18,37 @@
                 <div class="inner-wrapper">
                     <div class="grid layout-vr-md">
                         <div class="grid-col grid-size1of5 layout-vr-lg">
-                            {% for carousel_video in video_list %}
-                            <div class="layout-vr-md grid-pad-rt-md" style="position:relative; margin-left:5px;">
-                                <div class="vidDrawer-video show-playing">
-                                    <div class="vidDrawer-image">
-                                        {% if is_collection %}
-                                        <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
-                                        {% else %}
-                                        <a href="{{carousel_video.url}}" >
-                                        {% endif %}
-                                            <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="{{carousel_video.title}}"/>
-                                        </a>  
-                                        {% if forloop.counter == video_index %}
-                                        <div class="overlay now-playing">Now Playing</div>
-                                        {% endif %}
+                            <ul>
+                                {% for carousel_video in video_list %}
+                                <li class="layout-vr-md grid-pad-rt-md" style="position:relative; margin-left:5px;">
+                                    <div class="vidDrawer-video show-playing js-vidDrawer-video">
+                                        <div class="vidDrawer-image">
+                                            {% if is_collection %}
+                                            <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                            {% else %}
+                                            <a href="{{carousel_video.url}}" >
+                                            {% endif %}
+                                                <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="{{carousel_video.title}}"/>
+                                            </a>  
+                                            {% if forloop.counter == video_index %}
+                                            <div class="overlay now-playing">Now Playing</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="vidDrawer-flag copy-white">
+                                            {{ carousel_video.duration|seconds_to_duration }}
+                                        </div>
+                                        <div class="" style="padding-right:9px;">
+                                            <span class="copy-extra-lt hdg-source-reg">{{ carousel_video.title }}</span>
+                                        </div>
                                     </div>
-                                    <div class="vidDrawer-flag copy-white">
-                                        {{ carousel_video.duration|seconds_to_duration }}
-                                    </div>
-                                    <div class="" style="padding-right:9px;">
-                                        <span class="copy-extra-lt hdg-source-reg">{{ carousel_video.title }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
 
                         <div class="media grid-col grid-size4of5">
                             
-                            <div class="video-wrapper grid-pad-lt-sm layout-vr-xlg" data-slide="{{video_index}}">
+                            <div class="video-wrapper collection-video-wrapper grid-pad-lt-sm layout-vr-sm" data-slide="{{video_index}}">
                                 <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
                                 <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
                                 <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
@@ -127,7 +129,7 @@
         <section class="wrapper layout-vr-lg">
             <div class="inner-wrapper">
                 <h2 class="hdg-a hdg-source-lt layout-vr-sm">Featured Collections</h2>
-                <ul class="h-list">               
+                <ul class="h-list h-list-md">               
                 {% for related in related_collections %}
                     <li>
                         <div class="vid-cat-selected">
