@@ -1,5 +1,11 @@
 
-//window.onload = list_display;
+window.onload = date;
+
+/*$(document).ready(function() {
+    var cur_date = new Date();
+    $('#date').val(cur_date);
+    alert(cur_date);
+  });*/
 //###############################Populate the dropdowns for filter######################################
 function statechange(src, val) 
 {			
@@ -162,4 +168,12 @@ function validation_check()
       loader.style.visibility = "hidden";
      }
 
+}
+//#######################################onload-date################################################
+function date()
+{
+  date = new Date();
+  document.getElementById('to_date').valueAsDate = date;
+  date.setMonth(date.getMonth() - 1);
+  document.getElementById('from_date').valueAsDate = date;
 }

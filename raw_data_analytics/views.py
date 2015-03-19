@@ -280,12 +280,12 @@ def execute(request):
     #print dataframe_result
     #print "--------------GAME OVER-----------------"
 
-    final_html_file=create_excel(dataframe_result)
+    final_html_file=create_excel_html(dataframe_result, from_date, to_date)
 
     return render_to_response('raw_data_analytics/temp_html/'+final_html_file, context_instance=RequestContext(request))
 
 
-def create_excel(df):
+def create_excel_html(df, from_date, to_date):
 
     millis = str(round(time.time() * 1000))
         
@@ -298,8 +298,8 @@ def create_excel(df):
 
     generated_file_name = data_file.split('/')[-1] 
 
-    #html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    #html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
     
     header = '''<html>
                     <head><center>
@@ -308,6 +308,7 @@ def create_excel(df):
                             <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/'''+generated_file_name+'''">Download result as an excel file</a>
                         </div></center>
                     </head>
+                    <B>From:</B> '''+from_date+''' <B>To:</B> '''+to_date+'''
                     <body></br></br></br></br>'''
     footer = '''</body></html>'''
 
@@ -318,6 +319,8 @@ def create_excel(df):
     f.close()
     
     final_html_file = millis+'_library_data.html'
+    #return render_to_response('raw_data_analytics/temp_html/'+final_html_file)
+
 
     return final_html_file
 
