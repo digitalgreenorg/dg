@@ -20,19 +20,20 @@
                         <div class="grid-col grid-size1of5 layout-vr-lg">
                             {% for carousel_video in video_list %}
                             <div class="layout-vr-md grid-pad-rt-md"  style="position:relative; margin-left:5px;">
-                                <div class="">
-                                    <div class="" style="position:relative; width: 100%; height:100%">
-                                       
-                                        <a href="{{carousel_video.url}}" style="height=100%;">
-                                        
-                                            <img src="{{ carousel_video.thumbnailURL16by9 }}" style="width:100%;" alt="{{carousel_video.title}}"/>
-                                        </a> 
+                                <div class="vidDrawer-video show-playing">
+                                    <div class="vidDrawer-image">
+                                        {% if is_collection %}
+                                        <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                        {% else %}
+                                        <a href="{{carousel_video.url}}" >
+                                        {% endif %}
+                                            <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="{{carousel_video.title}}"/>
+                                        </a>  
                                         {% if forloop.counter == video_index %}
-                                        <div class="" style="position:absolute; background:rgba(0, 0, 0, 0.5); height:100%; top:0; left:0; width:100%;height:100%;">Now Playing </div>
-                                        {% endif %} 
+                                        <div class="overlay now-playing">Now Playing</div>
+                                        {% endif %}
                                     </div>
-                                   
-                                    <div class="">
+                                    <div class="vidDrawer-flag copy-white">
                                         {{ carousel_video.duration|seconds_to_duration }}
                                     </div>
                                     <div class="">
