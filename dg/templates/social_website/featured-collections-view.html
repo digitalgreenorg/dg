@@ -22,7 +22,7 @@
                                 {% for carousel_video in video_list %}
                                 <li class="layout-vr-sm grid-pad-rt-md" style="position:relative;">
                                     <div class="vidDrawer-video show-playing js-vidDrawer-video">
-                                        <div class="vidDrawer-image-collection">
+                                        <div class="vidDrawer-image vidDrawer-image-collection">
                                             {% if is_collection %}
                                             <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
                                             {% else %}
@@ -47,78 +47,79 @@
                         </div>
 
                         <div class="media commentBox grid-col grid-size3of4">
-                            
-                            <div class="video-wrapper collection-video-wrapper grid-pad-lt-sm push-top-sm layout-vr-md" data-slide="{{video_index}}">
-                                <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
-                                <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
-                                <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
-                                    You need Flash player 8+ and JavaScript enabled to view this video.
-                                </div> 
-                            </div>
-
-                            <div class="grid-pad-lt-sm layout-vr-md">   
-                                <p class="hdg-f hdg-source-reg ">{{video.description}}</p>
-                            </div>
-                            <div class="grid-pad-lt-sm">
-                                <div class="hdg-a hdg-source-lt layout-vr-sm">
-                                    <span class="js-comment-count"></span> Comments
+                            <div class = "grid-pad-lt-sm grid-pad-rt-md">
+                                <div class="video-wrapper collection-video-wrapper push-top-sm layout-vr-md" data-slide="{{video_index}}">
+                                    <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
+                                    <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
+                                    <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
+                                        You need Flash player 8+ and JavaScript enabled to view this video.
+                                    </div> 
                                 </div>
 
-                                <div class="js-comments-feed-wrapper">
-                                    <div class="" style="margin-right:20px;">
-                                        <div class="media commentLeft-border">
-                                            <div class="img">
-                                                {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                                     <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
-                                                {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                                     <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
-                                                {% endif %}
-                                                        
-                                            </div>
-                                            <div class="bd">
-                                                <form>
-                                                    <label for="comment" class="text-hide">Comment</label>
-                                                    <textarea class="comment-text" id="comment"></textarea>
-                                                    {% if not request.user.is_authenticated %}
-                                                        <div class="layout-vr-md"></div>
-                                                        <div class="centered layout-vr-md">
-                                                            <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
-                                                        </div>
-                                                    {% else %}
-                                                        <div class="grid layout-vr-md">
-                                                            <!--   <div class="grid-col">
-                                                                <input type="checkbox" id="facebook" />
-                                                                <label class="copy" for="facebook">Post to Facebook</label>
-                                                            </div> -->
-                                                            <div class="grid-rt">
-                                                                <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="centered">
-                                                            <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
-                                                        </div>
+                                <div class="layout-vr-md">   
+                                    <p class="hdg-f hdg-source-reg ">{{video.description}}</p>
+                                </div>
+                                <div class="">
+                                    <div class="hdg-a hdg-source-lt layout-vr-sm">
+                                        <span class="js-comment-count"></span> Comments
+                                    </div>
+
+                                    <div class="js-comments-feed-wrapper">
+                                        <div class="" style="margin-right:20px;">
+                                            <div class="media commentLeft-border">
+                                                <div class="img">
+                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                                         <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                                         <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
                                                     {% endif %}
-                                                </form>
+                                                            
+                                                </div>
+                                                <div class="bd">
+                                                    <form>
+                                                        <label for="comment" class="text-hide">Comment</label>
+                                                        <textarea class="comment-text" id="comment"></textarea>
+                                                        {% if not request.user.is_authenticated %}
+                                                            <div class="layout-vr-md"></div>
+                                                            <div class="centered layout-vr-md">
+                                                                <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="grid layout-vr-md">
+                                                                <!--   <div class="grid-col">
+                                                                    <input type="checkbox" id="facebook" />
+                                                                    <label class="copy" for="facebook">Post to Facebook</label>
+                                                                </div> -->
+                                                                <div class="grid-rt">
+                                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="centered">
+                                                                <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
+                                                            </div>
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="grid layout-vr-md">
-                                            <div class="grid-col">
-                                                <ul class="h-list key">
-                                                    <li class="key-offline">Offline</li>
-                                                    <li class="key-online">Online</li>
-                                                </ul>
+                                            <div class="grid layout-vr-md">
+                                                <div class="grid-col">
+                                                    <ul class="h-list key">
+                                                        <li class="key-offline">Offline</li>
+                                                        <li class="key-online">Online</li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
-                                            <ol class="comment-list js-comment-list">
-                                                <!-- dynamic comments content here -->
-                                            </ol>
-                                        </div>
-                                        <div class="centered">
-                                            <a class="btn js-comments-show-more-btn" href="#">Show More</a>
-                                        </div>
-                                    </div> <!-- End .commentBox-form -->
-                                </div> <!-- End .commentBox -->
+                                            <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
+                                                <ol class="comment-list js-comment-list">
+                                                    <!-- dynamic comments content here -->
+                                                </ol>
+                                            </div>
+                                            <div class="centered layout-vr-sm">
+                                                <a class="btn js-comments-show-more-btn" href="#">Show More</a>
+                                            </div>
+                                        </div> <!-- End .commentBox-form -->
+                                    </div> <!-- End .commentBox -->
+                                </div>
                             </div>
                         </div><!-- End .grid-col -->
                     </div> <!-- Closing Grid and media -->

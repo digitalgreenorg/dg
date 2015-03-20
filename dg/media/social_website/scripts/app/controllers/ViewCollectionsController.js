@@ -157,24 +157,24 @@ define(function(require) {
 
         _initVideoPlayer: function() {
             var videoId = this._references.$videoTarget.data('videoId');
+            var videoPlayerWidth = this._references.$videoTarget.width();
             var that = this;
             if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
                 window.onYouTubeIframeAPIReady = function() {
-                    that.loadPlayer(videoId);
+                    that.loadPlayer(videoId,videoPlayerWidth);
                 };
                 $.getScript('//www.youtube.com/iframe_api');
             } 
             else {
-                  that.loadPlayer(videoId);
+                  that.loadPlayer(videoId,videoPlayerWidth);
             }
         },
         
-        loadPlayer: function(videoId){
+        loadPlayer: function(videoId, videoPlayerWidth){
             var that = this;
             var player = new YT.Player('video-target', {
-                height: '395',
-                width: '703',
                 videoId: videoId,
+                width: videoPlayerWidth,
                 events: {
                   'onReady': that._onYouTubePlayerReady,
                   'onStateChange': function(newState){
@@ -183,7 +183,7 @@ define(function(require) {
                           case 0:
                               var now_playing_video = jQuery('.now-playing').closest('li');
                               var next_video = now_playing_video.next();
-                              console.log(now_playing_video);
+
                               if (next_video.length == 0) {
                                   /* End of current slide or this is the last video altogether */
                                   var next_slide = now_playing_video.closest('ul').closest('li').next();
@@ -193,6 +193,7 @@ define(function(require) {
                                   }
                                   next_video = next_slide.find('ul > li:first-child');
                               }
+                              console.log(jQuery('.now-playing'));
                               window.location.href = next_video.find('.vidDrawer-image a').attr('href');
                           // stop the interval and manually send an update
                           case 2:
