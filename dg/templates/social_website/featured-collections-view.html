@@ -7,7 +7,7 @@
                 <div class="inner-wrapper" id="collection-view">
                     <div class= "layout-vr-lg">
                         <h1 class="hdg-bold hdg-a layout-vr-sm">{{ object.title}} in {{ object.state}}</h1>
-                        <p class="hdg-source-reg hdg-e">{{object.description}}</p>   
+                        <p class="hdg-source-reg hdg-f">{{object.description}}</p>   
                     </div> 
                 </div>
             </div>
@@ -20,7 +20,7 @@
                         <div class="grid-col grid-size1of4 layout-vr-lg">
                             <ul>
                                 {% for carousel_video in video_list %}
-                                <li class="layout-vr-md grid-pad-rt-md" style="position:relative; margin-left:5px;">
+                                <li class="layout-vr-sm grid-pad-rt-md" style="position:relative;">
                                     <div class="vidDrawer-video show-playing js-vidDrawer-video">
                                         <div class="vidDrawer-image-collection">
                                             {% if is_collection %}
@@ -38,7 +38,7 @@
                                             {{ carousel_video.duration|seconds_to_duration }}
                                         </div>
                                         <div class="" style="padding-right:9px;">
-                                            <span class="hdg-source-reg">{{ carousel_video.title }}</span>
+                                            <span class="hdg-source-reg hdg-f">{{ carousel_video.title }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -48,7 +48,7 @@
 
                         <div class="media commentBox grid-col grid-size3of4">
                             
-                            <div class="video-wrapper collection-video-wrapper grid-pad-lt-sm layout-vr-md" data-slide="{{video_index}}">
+                            <div class="video-wrapper collection-video-wrapper grid-pad-lt-sm push-top-sm layout-vr-md" data-slide="{{video_index}}">
                                 <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
                                 <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
                                 <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
@@ -65,7 +65,7 @@
                                 </div>
 
                                 <div class="js-comments-feed-wrapper">
-                                    <div class="commentBox-form">
+                                    <div class="" style="margin-right:20px;">
                                         <div class="media commentLeft-border">
                                             <div class="img">
                                                 {% if "facebook" == request.user.social_auth.all.0.provider %}

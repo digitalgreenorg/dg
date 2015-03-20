@@ -116,7 +116,7 @@ define(function(require) {
             this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
             }
             catch(err){
-                //todo
+                //Todo
             }
         },
 
@@ -183,6 +183,7 @@ define(function(require) {
                           case 0:
                               var now_playing_video = jQuery('.now-playing').closest('li');
                               var next_video = now_playing_video.next();
+                              console.log(now_playing_video);
                               if (next_video.length == 0) {
                                   /* End of current slide or this is the last video altogether */
                                   var next_slide = now_playing_video.closest('ul').closest('li').next();
