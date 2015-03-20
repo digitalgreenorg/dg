@@ -5,9 +5,33 @@
         <section class="gradientBg">
             <div id="main" role="main" class="wrapper">
                 <div class="inner-wrapper" id="collection-view">
-                    <div class= "layout-vr-lg">
-                        <h1 class="hdg-bold hdg-a layout-vr-sm">{{ object.title}} in {{ object.state}}</h1>
-                        <p class="hdg-source-reg hdg-f">{{object.description}}</p>   
+                    <div class="grid layout-vr-md">
+                        <div class="grid-col grid-size2of3">
+                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
+                        </div>
+                        {% if is_collection %}
+                        <div class="grid-col grid-size1of3">
+                            <div class="push-top-sm grid-lt grid-size3of4">
+                                <div class="featured-ft-videoDetails" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
+                                    <ul class="h-list h-list-sm h-list-divided copy copy-white">
+                                       <li>{{ object.videos.all|length }} Videos</li>
+                                       <li>{{ collection_duration|seconds_to_duration }}</li>
+                                   </ul>
+                                </div>
+                            </div>
+                            {% for group in user.groups.all %}
+                                {% if group.name == 'Collection Czars' %}
+                                    <div class="grid-rt grid-size1of4">
+                                        <ul class="filterOptions hdg-upper copy clearfix js-most-filters">
+                                            <li><a href="{% url 'edit_collection' object.uid %}" class="icon-coll-edit icon-addedit" title="Edit this Collection"></a></li>
+                                            <!-- <li><a href="{% url 'about' %}" class="icon-video-edit icon-addedit" title="Edit this Video"></a></li> -->
+                                        </ul>
+                                    </div>        
+                                {% endif %}
+                            {% endfor %}  
+                        </div>
+                        <p class="hdg-source-reg hdg-f">{{object.description}}</p>  
+                        {% endif %}
                     </div> 
                 </div>
             </div>
@@ -59,6 +83,90 @@
                                 <div class="layout-vr-md">   
                                     <p class="hdg-f hdg-source-reg ">{{video.description}}</p>
                                 </div>
+
+
+                                <div class="grid">
+                                    <div class="media grid-col grid-size1of3">
+                                        <div class="img img-size-sq-small">
+                                            <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
+                                        </div>
+                                        <div class="bd">
+                                            <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                                            <p class="copy layout-vr-tiny">Member since {{ object.partner.joinDate.year }}</p>
+                                            <a class="hdg-bold copy" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
+                                            <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state}}</h3>
+                                            <h3 class="copy layout-vr-md">{{ object.language}}</h3>
+                                        </div>
+                                    </div> <!-- End .media -->
+                                    
+                                    
+                                    <div class="grid-col grid-size1of3">
+                                    <!-- Video Stats -->
+                                        <div class="collection-stats">
+                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                                <div class="icon adopted"></div>
+                                                <div class="stat-bar-container">
+                                                    <!-- <div class="left-value js-left-value"></div> -->
+                                                    <div class="right-value js-right-value"></div>
+                                                    <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.adoptions}}">
+                                                        <div class="stat-indicator js-stat-indicator"></div>
+                                                    </div>
+                                                    <div class="right-stat-label">Adopted</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                                <div class="icon views"></div>
+                                                <div class="stat-bar-container">
+                                                    <div class="left-value js-left-value"></div>
+                                                    <div class="right-value js-right-value"></div>
+                                                    <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineViews}}" data-right-value="{{video.offlineViews}}">
+                                                        <div class="stat-indicator js-stat-indicator"></div>
+                                                    </div>
+                                                    <div class="left-stat-label">Online Views</div>
+                                                    <div class="right-stat-label">Offline Views</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                                <div class="icon likes"></div>
+                                                <div class="stat-bar-container">
+                                                    <div class="left-value js-left-value"></div>
+                                                    <div class="right-value js-right-value"></div>
+                                                    <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
+                                                        <div class="stat-indicator js-stat-indicator"></div>
+                                                    </div>
+                                                    <div class="left-stat-label">Online Likes</div>
+                                                    <div class="right-stat-label">Offline Likes</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-col grid-size1of3">
+                                        <div class="grid-pad-lt">    
+                                            <div class="layout-vr-sm">
+                                                <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
+                                                {% if not request.user.is_authenticated %}
+                                                    <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
+                                                {% else %}
+                                                    <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                                {% endif %}
+                                            </div>
+                                            <a class="btn share-btn"><div class="icon"></div>
+                                                <span class="label">Share</span>
+
+                                                <div class="sharethis-wrapper">
+                                                    <div class='st_facebook_hcount' displayText='Facebook'></div>
+                                                    <div class='st_twitter_hcount' displayText='Tweet'></div>
+                                                    <div class='st_linkedin_hcount' displayText='LinkedIn'></div>
+                                                    <div class='st_email_hcount' displayText='Email'></div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="">
                                     <div class="hdg-a hdg-source-lt layout-vr-sm">
                                         <span class="js-comment-count"></span> Comments
