@@ -1789,11 +1789,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .filterOptions-star .icon {
     width: 13px;
-    height: 11px;
-    left: 0;
-    top: 4px;
+    height: 13px;
+    left: 0px;
+    top: 3px;
     background: url(../images/star-gray.png);
-    background-position: 12px 12px;
+    background-position: 0px 0px;
     z-index: 1;
 }
 
