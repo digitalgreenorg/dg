@@ -1783,6 +1783,25 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background-position: -87px -112px;
 }
 
+.filterOptions-star {
+    padding-left: 20px;
+}
+
+.filterOptions-star .icon {
+    width: 13px;
+    height: 13px;
+    left: 0px;
+    top: 3px;
+    background: url(../images/star-gray.png);
+    background-position: 0px 0px;
+    z-index: 1;
+}
+
+.active .filterOptions-star .icon {
+    background: url(../images/star-white.png);
+    background-position: 0px 0px;
+}
+
 
 
 .filterOptions-view {
@@ -1920,6 +1939,12 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     position: relative;
     width: 155px;
     height: 95px;
+}
+
+.vidDrawer-video .vidDrawer-image-collection {
+    position: relative;
+    width: 206px;
+    height: 117px;
 }
 
 .vidDrawer-video .overlay {
@@ -2132,6 +2157,13 @@ ul.carousel-list li{
     float: left;
     width: 703px;
     height: 395px;
+    margin-right: 30px;
+}
+
+.collection-video-wrapper {
+    float: left;
+    width: 100%;
+    height: auto;
     margin-right: 30px;
 }
 
