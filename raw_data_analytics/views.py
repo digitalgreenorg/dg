@@ -12,7 +12,7 @@ from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
 
 from utils.data_library import data_lib
-from utils.configuration import categoryDictionary
+from utils.configuration import categoryDictionary, orderDictionary
 
 
 def home(request):
@@ -155,13 +155,13 @@ def execute(request):
         people = False
     elif (people_chk[0] != None):
         people = True
-        checked_list.append('people')
+        checked_list.append('person')
         
     if (group_chk[0]==None):
         group = False
     elif (group_chk[0] != None):
         group = True
-        checked_list.append('group')
+        checked_list.append('persongroup')
         
     if (video_chk[0]==None):
         video = False
@@ -212,12 +212,16 @@ def execute(request):
         list_combo = False
         videolist = False
 
+    priority = {}
+
     if(list_combo == 'on'):
-    
         for x in checked_list:
             if ((x in categoryDictionary['geographies']) or (x == 'partner')):
-                list_combo  = 'numScreening'
-
+                for x,v in orderDictionary.items():
+                    if x in checked_list:
+                        priority[x] = v
+                list_combo = 'list'+ max(priority.items(), key=lambda x: x[1])[0]
+       
             elif (x == "animator"):
                 list_combo = 'listAnimator'
 
@@ -229,6 +233,29 @@ def execute(request):
 
             elif (x == "video"):
                 list_combo = videolist
+
+        
+        
+        print max(priority.items(), key=lambda x: x[1]) 
+        print type(max(priority.items(), key=lambda x: x[1]))
+        print max(priority.items(), key=lambda x: x[1])[0]      
+
+        #print priority.items()
+
+               #min(d.items(), key=lambda x: x[1])
+
+
+
+            
+
+                
+
+
+
+    print '########################################' 
+    #print priority
+    #print f
+
             
     ##############################Date#################################
 
