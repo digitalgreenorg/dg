@@ -109,7 +109,7 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
-    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=3)
+    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
     verified_by = models.CharField(max_length=20, blank=True, null=True)
 
     def __unicode__(self):

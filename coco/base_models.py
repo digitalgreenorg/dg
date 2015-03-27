@@ -47,9 +47,9 @@ SUITABLE_FOR = (
 )
 
 ADOPTION_VERIFICATION = (
+    (0, 'Not Checked'),
     (1, 'Approved'),
     (2, 'Rejected'),
-    (3, 'Not Checked'),
 )
 
 class CocoModel(models.Model):

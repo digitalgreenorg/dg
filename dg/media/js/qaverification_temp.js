@@ -5,10 +5,10 @@
 
 function QAverification() {
     jQuery(".result-list tr").find("select").change(function () {
-        if (jQuery(this).val() != 3) {
+        if (jQuery(this).val() != 0) {
             jQuery(this).parent().parent().find('input[type="text"]').prop('disabled', false);
         }
-        if (jQuery(this).val() == 3) {
+        if (jQuery(this).val() == 0) {
             jQuery(this).parent().parent().find('input[type="text"]').val("");
             jQuery(this).parent().parent().find('input[type="text"]').prop('disabled', true);
         }
@@ -21,16 +21,16 @@ function QAverification() {
     });
 
     jQuery("#id_verification_status").change(function () {
-        if (jQuery("#id_verification_status").val() != 3) {
+        if (jQuery("#id_verification_status").val() != 0) {
             jQuery("#id_verified_by").prop('disabled', false);
         }
-        if (jQuery("#id_verification_status").val() == 3) {
+        if (jQuery("#id_verification_status").val() == 0) {
             jQuery("#id_verified_by").val("");
             jQuery("#id_verified_by").prop('disabled', true);
         }
     });
 
-    if (jQuery("#id_verification_status option:selected").val() == 3) {
+    if (jQuery("#id_verification_status option:selected").val() == 0) {
         jQuery('#id_verified_by').prop('disabled', true);
     }
 
