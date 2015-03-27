@@ -215,17 +215,24 @@ def execute(request):
     priority = {}
 
     if(list_combo == 'on'):
+        print "hi"
         for x in checked_list:
+            print "bye"
             if ((x in categoryDictionary['geographies']) or (x == 'partner')):
+                print "1"
                 for x,v in orderDictionary.items():
+                    print "2"
                     if x in checked_list:
+                        print "3"
                         priority[x] = v
+                print "4"
                 list_combo = 'list'+ (max(priority.items(), key=lambda x: x[1])[0]).title()
-       
+                     
             elif (x == "animator"):
                 list_combo = 'listAnimator'
 
-            elif (x == "group"):
+            elif (x == "persongroup"):
+                print "5"
                 list_combo = 'listGroup'
 
             elif (x == "people"):
@@ -233,28 +240,6 @@ def execute(request):
 
             elif (x == "video"):
                 list_combo = videolist
-
-        
-        
-        print max(priority.items(), key=lambda x: x[1]) 
-        print type(max(priority.items(), key=lambda x: x[1]))
-        print max(priority.items(), key=lambda x: x[1])[0]      
-
-        #print priority.items()
-
-               #min(d.items(), key=lambda x: x[1])
-
-
-
-            
-
-                
-
-
-
-    print '########################################' 
-    #print priority
-    #print f
 
             
     ##############################Date#################################
