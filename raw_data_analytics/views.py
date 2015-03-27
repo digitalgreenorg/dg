@@ -220,7 +220,7 @@ def execute(request):
                 for x,v in orderDictionary.items():
                     if x in checked_list:
                         priority[x] = v
-                list_combo = 'list'+ max(priority.items(), key=lambda x: x[1])[0]
+                list_combo = 'list'+ (max(priority.items(), key=lambda x: x[1])[0]).title()
        
             elif (x == "animator"):
                 list_combo = 'listAnimator'
