@@ -12,7 +12,7 @@ from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
 
 from utils.data_library import data_lib
-from utils.configuration import categoryDictionary
+from utils.configuration import categoryDictionary, orderDictionary
 
 
 def home(request):
@@ -155,13 +155,13 @@ def execute(request):
         people = False
     elif (people_chk[0] != None):
         people = True
-        checked_list.append('people')
+        checked_list.append('person')
         
     if (group_chk[0]==None):
         group = False
     elif (group_chk[0] != None):
         group = True
-        checked_list.append('group')
+        checked_list.append('persongroup')
         
     if (video_chk[0]==None):
         video = False
@@ -212,12 +212,16 @@ def execute(request):
         list_combo = False
         videolist = False
 
+    priority = {}
+
     if(list_combo == 'on'):
-    
         for x in checked_list:
             if ((x in categoryDictionary['geographies']) or (x == 'partner')):
-                list_combo  = 'numScreening'
-
+                for x,v in orderDictionary.items():
+                    if x in checked_list:
+                        priority[x] = v
+                list_combo = 'list'+ max(priority.items(), key=lambda x: x[1])[0]
+       
             elif (x == "animator"):
                 list_combo = 'listAnimator'
 
@@ -229,6 +233,29 @@ def execute(request):
 
             elif (x == "video"):
                 list_combo = videolist
+
+        
+        
+        print max(priority.items(), key=lambda x: x[1]) 
+        print type(max(priority.items(), key=lambda x: x[1]))
+        print max(priority.items(), key=lambda x: x[1])[0]      
+
+        #print priority.items()
+
+               #min(d.items(), key=lambda x: x[1])
+
+
+
+            
+
+                
+
+
+
+    print '########################################' 
+    #print priority
+    #print f
+
             
     ##############################Date#################################
 
@@ -280,12 +307,12 @@ def execute(request):
     #print dataframe_result
     #print "--------------GAME OVER-----------------"
 
-    final_html_file=create_excel(dataframe_result)
+    final_html_file=create_excel_html(dataframe_result, from_date, to_date)
 
     return render_to_response('raw_data_analytics/temp_html/'+final_html_file, context_instance=RequestContext(request))
 
 
-def create_excel(df):
+def create_excel_html(df, from_date, to_date):
 
     millis = str(round(time.time() * 1000))
         
@@ -308,6 +335,7 @@ def create_excel(df):
                             <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/'''+generated_file_name+'''">Download result as an excel file</a>
                         </div></center>
                     </head>
+                    <B>From:</B> '''+from_date+''' <B>To:</B> '''+to_date+'''
                     <body></br></br></br></br>'''
     footer = '''</body></html>'''
 
@@ -318,6 +346,8 @@ def create_excel(df):
     f.close()
     
     final_html_file = millis+'_library_data.html'
+    #return render_to_response('raw_data_analytics/temp_html/'+final_html_file)
+
 
     return final_html_file
 
