@@ -29,7 +29,7 @@ class data_lib():
 
         if self.check_valuefield_validity(options['value']):
             for item in options['value']:
-                if item =='list' and options['value']['list']!=False:
+                if item =='list' and options['value']['list'] != False:
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]]
@@ -43,7 +43,7 @@ class data_lib():
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
             print "----------------------------------Full SQL Query---------------------------"
-            query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3])
+            query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3], queryComponents[4])
             print query
             print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
@@ -107,6 +107,7 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
+        orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
         #print "----------------------------------SELECT PART------------------------------"
         #print selectResult
         #print "----------------------------------FROM PART--------------------------------"
@@ -115,11 +116,11 @@ class data_lib():
         #print whereResult
         #print "---------------------------------GROUP_BY PART----------------------------"
         #print groupbyResult
-        return (selectResult, fromResult, whereResult, groupbyResult)
+        return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
-    def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg):
+    def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg, orderby_msg):
         query = 'select ' + str(select_msg) + ' from ' + str(from_msg) + ' where ' + str(
-            where_msg) + ' group by ' + str(groupby_msg)
+            where_msg) + ' group by ' + str(groupby_msg) + ' order by ' + str(orderby_msg)
         return query
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -216,6 +217,17 @@ class data_lib():
         if groupbyDictionary[valueElement] != False:
             groupbyComponentList.append(tableDictionary[valueElement] + '.' + str(groupbyDictionary[valueElement]))
         return ' , '.join(groupbyComponentList)
+
+    # Function to make OrderBy component of the sql query
+    def getOrderByComponent(self, partitionElements, valueElements):
+        orderbyComponentList = ['1']
+        ordered_cols = [None]*len(orderDictionary)
+        for items in partitionElements:
+            if partitionElements[items] != False:
+                ordered_cols[orderDictionary[items]] = items
+        ordered_cols = filter(lambda a: a != None, ordered_cols)
+        orderbyComponentList += ordered_cols
+        return ' , '.join(orderbyComponentList)
 
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):

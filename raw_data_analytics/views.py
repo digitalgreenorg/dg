@@ -298,8 +298,8 @@ def create_excel(df):
 
     generated_file_name = data_file.split('/')[-1] 
 
-    #html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
+    #html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
     
     header = '''<html>
                     <head><center>

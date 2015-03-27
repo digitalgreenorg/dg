@@ -27,7 +27,13 @@ tableDictionary={
     'listVideoProduced':'videos_video',
     'numVideoProduced':'videos_video',
     'list':'self',
-    'listGroup':'people_persongroup'
+    'listGroup':'people_persongroup',
+    'listVillage':'geographies_village',
+    'listBlock':'geographies_block',
+    'listDistrict':'geographies_district',
+    'listState':'geographies_state',
+    'listCountry':'geographies_country',
+    'listPartner':'programs_partner'
 }
 
 whereDictionary={
@@ -57,13 +63,21 @@ whereDictionary={
     'listVideoProduced':'video_production_end_date',
     'numVideoProduced':'video_production_end_date',
     'list':'self',
-    'listGroup':'time_created'
+    'listGroup':'time_created',
+    'listVillage':'time_created',
+    'listBlock':'time_created',
+    'listDistrict':'time_created',
+    'listState':'time_created',
+    'listCountry':'time_created',
+    'listPartner':'time_created'
 }
 
 
 categoryDictionary={
     'geographies':['country','state','district','block','village'],
-    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person','listGroup':'persongroup','numScreening':'numScreening'}
+    'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPeople':'person',
+                          'listGroup':'persongroup', 'listVillage':'village','listBlock':'block','listDistrict':'district','listState':'state',
+                          'listCountry':'country','listPartner':'partner','numScreening':'numScreening'}
 }
 
 groupbyDictionary={
@@ -93,7 +107,13 @@ groupbyDictionary={
     'list':'self',
     'listVideoProduced':'id',
     'listVideoScreened':'id',
-    'listGroup':'id'
+    'listGroup':'id',
+    'listVillage':'id',
+    'listBlock':'id',
+    'listDistrict':'id',
+    'listState':'id',
+    'listCountry':'id',
+    'listPartner':'id'
 }
 
 selectDictionary={
@@ -123,7 +143,14 @@ selectDictionary={
     'list':'self',
     'listVideoProduced':{'id':False,'title':True},
     'listVideoScreened':{'id':False,'video_title':True},
-    'listGroup':{'id':False,'group_name':True}
+    'listGroup':{'id':False,'group_name':True},
+    'listVillage':{'village_name':True},
+    'listBlock':{'block_name':True},
+    'listDistrict':{'district_name':True},
+    'listState':{'state_name':True},
+    'listCountry':{'country_name':True},
+    'listPartner':{'partner_name':True}
+
 }
 
 orderDictionary = {
