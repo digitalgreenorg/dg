@@ -1,4 +1,5 @@
 import json, datetime
+import calendar
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
@@ -8,6 +9,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
+
 
 class VRPpayment(models.Manager):
 
@@ -19,7 +21,7 @@ class VRPpayment(models.Manager):
         self.start_dd = 01
         self.end_yyyy = end_period[-4:]
         self.end_mm = end_period[:2]
-        self.end_dd = 01
+        self.end_dd = calendar.monthrange(int(self.end_yyyy),int(self.end_mm))
         self.partner_id = partner_id
         self.block_id = block_id
         self.Screening_all_object = Screening.objects.filter(village__block_id = self.block_id, partner_id=self.partner_id, date__gte=datetime.date(int(self.start_yyyy), int(self.start_mm), self.start_dd), date__lte=datetime.date(int(self.end_yyyy), int(self.end_mm), self.end_dd)).prefetch_related('animator', 'village', 'farmer_groups_targeted', 'videoes_screened', 'farmers_attendance', 'partner')
