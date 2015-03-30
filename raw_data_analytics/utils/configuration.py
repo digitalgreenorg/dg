@@ -136,20 +136,20 @@ selectDictionary={
     'attendance':{'count(person_id)':False,'count(distinct person_id)':True},
 #    'numPeople':{'count(id)':True,'count(distinct id)':False},
     'numAnimator':{'count(animator_id)':True,'count(distinct animator_id)':False},
-    'listPeople':{'person_name':True,'gender':False},
-    'listAnimator':{'animator_name':True,'gender':False},
+    'listPeople':{'distinct(person_name)':True,'gender':False},
+    'listAnimator':{'distinct(animator_name)':True,'gender':False},
     'numVideoScreened':{'count(id)':True,'count(distinct id)':False},
     'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
     'list':'self',
-    'listVideoProduced':{'id':False,'title':True},
-    'listVideoScreened':{'id':False,'video_title':True},
-    'listGroup':{'id':False,'group_name':True},
-    'listVillage':{'village_name':True},
-    'listBlock':{'block_name':True},
-    'listDistrict':{'district_name':True},
-    'listState':{'state_name':True},
-    'listCountry':{'country_name':True},
-    'listPartner':{'partner_name':True}
+    'listVideoProduced':{'id':False,'distinct(title)':True},
+    'listVideoScreened':{'id':False,'distinct(video_title)':True},
+    'listGroup':{'id':False,'distinct(group_name)':True},
+    'listVillage':{'distinct(village_name)':True},
+    'listBlock':{'distinct(block_name)':True},
+    'listDistrict':{'distinct(district_name)':True},
+    'listState':{'distinct(state_name)':True},
+    'listCountry':{'distinct(country_name)':True},
+    'listPartner':{'distinct(partner_name)':True}
 
 }
 
