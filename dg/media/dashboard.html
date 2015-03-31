@@ -1035,19 +1035,33 @@
                         
 
 </script>
-<script type="text/template" id="nonnegotiable_inline">
+<!--<script type="text/template" id="nonnegotiable_inline">
     <tr class="stack-table videoadd" index = <%=index%> name="row<%=index%>">
         <td><div class="form-group"><div class="controls">
                 <input type="text" name="non_negotiable<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm" >
             </div></div>
         </td>
     </tr>
-</script>  
-
+</script>-->  
+<script type="text/template" id="nonnegotiable_inline">
+    <tr class="stack-table videoadd" index = <%=index%> name="row<%=index%>">
+        <td><div class="form-group">
+                <div class="col-sm-4">
+                <textarea name="non_negotiable<%=index%>" class="donotvalidate input-xlarge form-control" rows="2" ></textarea>
+                
+            </div></div>
+        </td>
+    </tr>
+</script>
 <script type="text/template" id="nonnegotiable_inline_header">
 <tr class="hide-header"> <th> Non Negotiables</th></tr>
 </script>
-
+<!--<div class="form-group">
+                <label class="col-sm-2 control-label notbold">Summary</label>
+                <div class="col-sm-4">
+                    <textarea name="summary" class="input-xlarge form-control" rows="4" placeholder="Summary"></textarea>
+                </div>
+            </div> -->
 
 <!--//////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
