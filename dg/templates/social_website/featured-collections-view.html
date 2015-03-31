@@ -2,283 +2,270 @@
 {% include "includes/partials/search.html" %}
 {% load app_tags %}
 
-        <section class="gradientBg">
-            <div id="main" role="main" class="wrapper">
-                <div class="inner-wrapper" id="collection-view">
-                    <div class="grid layout-vr-md">
-                        <div class="grid-col grid-size2of3">
-                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
-                        </div>
-                        {% if is_collection %}
-                        <div class="grid-col grid-size1of3">
-                            <div class="push-top-sm grid-lt grid-size3of4">
-                                <div class="featured-ft-videoDetails" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
-                                    <ul class="h-list h-list-sm h-list-divided copy copy-white">
-                                       <li>{{ object.videos.all|length }} Videos</li>
-                                       <li>{{ collection_duration|seconds_to_duration }}</li>
-                                   </ul>
-                                </div>
-                            </div>
-                            {% for group in user.groups.all %}
-                                {% if group.name == 'Collection Czars' %}
-                                    <div class="grid-rt grid-size1of4">
-                                        <ul class="filterOptions hdg-upper copy clearfix js-most-filters">
-                                            <li><a href="{% url 'edit_collection' object.uid %}" class="icon-coll-edit icon-addedit" title="Edit this Collection"></a></li>
-                                            <!-- <li><a href="{% url 'about' %}" class="icon-video-edit icon-addedit" title="Edit this Video"></a></li> -->
-                                        </ul>
-                                    </div>        
-                                {% endif %}
-                            {% endfor %}  
-                        </div>
-                        <p class="hdg-source-reg hdg-f">{{object.description}}</p>  
-                        {% endif %}
-                    </div> 
+<section class="gradientBg">
+    <div id="main" role="main" class="wrapper">
+        <div class="inner-wrapper" id="collection-view">
+            <div class="grid layout-vr-md">
+                <div class="grid-col grid-size2of3">
+                    <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
                 </div>
-            </div>
-        </section>
-
-        <section class="layout-vr-lg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <div class="grid layout-vr-md">
-                        <div class="grid-col grid-size1of4 layout-vr-lg">
-                            <ul>
-                                {% for carousel_video in video_list %}
-                                <li class="layout-vr-sm grid-pad-rt-md" style="position:relative;">
-                                    <div class="vidDrawer-video show-playing js-vidDrawer-video">
-                                        <div class="vidDrawer-image vidDrawer-image-collection">
-                                            {% if is_collection %}
-                                            <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
-                                            {% else %}
-                                            <a href="{{carousel_video.url}}" >
-                                            {% endif %}
-                                                <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image-collection" alt="{{carousel_video.title}}"/>
-                                            </a>  
-                                            {% if forloop.counter == video_index %}
-                                            <div class="overlay now-playing">Now Playing</div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="vidDrawer-flag copy-white">
-                                            {{ carousel_video.duration|seconds_to_duration }}
-                                        </div>
-                                        <div class="" style="padding-right:9px;">
-                                            <span class="hdg-source-reg hdg-f">{{ carousel_video.title }}</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
+                {% if is_collection %}
+                <div class="grid-col grid-size1of3">
+                    {% for group in user.groups.all %}
+                    {% if group.name == 'Collection Czars' %}
+                    <div class="grid-lt grid-size2of4">
+                        <ul class="filterOptions hdg-upper copy clearfix js-most-filters grid-rt">
+                            <li><a href="{% url 'edit_collection' object.uid %}" class="icon-coll-edit icon-addedit" title="Edit this Collection"></a></li>
+                        </ul>
+                    </div>        
+                    {% endif %}
+                    {% endfor %}
+                    <div class="push-top-sm grid-rt grid-size2of4">
+                        <div class="featured-ft-videoDetails grid-rt" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
+                            <ul class="h-list h-list-sm h-list-divided copy copy-white">
+                                <li>{{ object.videos.all|length }} Videos</li>
+                                <li>{{ collection_duration|seconds_to_duration }}</li>
                             </ul>
                         </div>
+                    </div>
 
-                        <div class="media commentBox grid-col grid-size3of4">
-                            <div class = "grid-pad-lt-sm grid-pad-rt-md">
-                                <div class="video-wrapper collection-video-wrapper push-top-sm layout-vr-md" data-slide="{{video_index}}">
-                                    <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
-                                    <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
-                                    <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
-                                        You need Flash player 8+ and JavaScript enabled to view this video.
-                                    </div> 
+                </div>
+                <div class="media grid-col">
+                    <div class="img img-size-sq-small">
+                        <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
+                        <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                    </div>
+                </div> <!-- End .media -->
+                <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>  
+                {% endif %}
+            </div> 
+        </div>
+    </div>
+</section>
+
+<section class="layout-vr-lg">
+    <div class="wrapper">
+        <div class="inner-wrapper">
+            <div class="grid layout-vr-md">
+                <div class="grid-col grid-size1of4 layout-vr-lg ">
+                    <ul class="boxPlain grid-margin-rt-md">
+                        {% for carousel_video in video_list %}
+                        <li class="layout-vr-md" style="position:relative;">
+                            <div class="vidDrawer-video show-playing js-vidDrawer-video">
+                                <div>
+                                    <span class="hdg-source-reg hdg-f">{{ carousel_video.title }}</span>
                                 </div>
-
-                                <div class="layout-vr-md">   
-                                    <p class="hdg-f hdg-source-reg ">{{video.description}}</p>
-                                </div>
-
-
-                                <div class="grid">
-                                    <div class="media grid-col grid-size1of3">
-                                        <div class="img img-size-sq-small">
-                                            <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                                        </div>
-                                        <div class="bd">
-                                            <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
-                                            <p class="copy layout-vr-tiny">Member since {{ object.partner.joinDate.year }}</p>
-                                            <a class="hdg-bold copy" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
-                                            <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state}}</h3>
-                                            <h3 class="copy layout-vr-md">{{ object.language}}</h3>
-                                        </div>
-                                    </div> <!-- End .media -->
-                                    
-                                    
-                                    <div class="grid-col grid-size1of3">
-                                    <!-- Video Stats -->
-                                        <div class="collection-stats">
-                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
-                                                <div class="icon adopted"></div>
-                                                <div class="stat-bar-container">
-                                                    <!-- <div class="left-value js-left-value"></div> -->
-                                                    <div class="right-value js-right-value"></div>
-                                                    <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.adoptions}}">
-                                                        <div class="stat-indicator js-stat-indicator"></div>
-                                                    </div>
-                                                    <div class="right-stat-label">Adopted</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
-                                                <div class="icon views"></div>
-                                                <div class="stat-bar-container">
-                                                    <div class="left-value js-left-value"></div>
-                                                    <div class="right-value js-right-value"></div>
-                                                    <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineViews}}" data-right-value="{{video.offlineViews}}">
-                                                        <div class="stat-indicator js-stat-indicator"></div>
-                                                    </div>
-                                                    <div class="left-stat-label">Online Views</div>
-                                                    <div class="right-stat-label">Offline Views</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
-                                                <div class="icon likes"></div>
-                                                <div class="stat-bar-container">
-                                                    <div class="left-value js-left-value"></div>
-                                                    <div class="right-value js-right-value"></div>
-                                                    <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
-                                                        <div class="stat-indicator js-stat-indicator"></div>
-                                                    </div>
-                                                    <div class="left-stat-label">Online Likes</div>
-                                                    <div class="right-stat-label">Offline Likes</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="vidDrawer-image">
+                                    {% if is_collection %}
+                                    <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                        <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="{{carousel_video.title}}"/>
+                                    </a>
+                                    {% else %}
+                                    <a href="{{carousel_video.url}}" >
+                                        <img src="{{ carousel_video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="{{carousel_video.title}}"/>
+                                    </a> 
+                                    {% endif %} 
+                                    {% if forloop.counter == video_index %}
+                                    <div class="overlay now-playing">Now Playing</div>
+                                    {% endif %}
+                                    <div class="vidDrawer-flag copy-white">
+                                        {{ carousel_video.duration|seconds_to_duration }}
                                     </div>
-                                    <div class="grid-col grid-size1of3">
-                                        <div class="grid-pad-lt">    
-                                            <div class="layout-vr-sm">
-                                                <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
-                                                {% if not request.user.is_authenticated %}
-                                                    <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
-                                                {% else %}
-                                                    <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
-                                                {% endif %}
-                                            </div>
-                                            <a class="btn share-btn"><div class="icon"></div>
-                                                <span class="label">Share</span>
-
-                                                <div class="sharethis-wrapper">
-                                                    <div class='st_facebook_hcount' displayText='Facebook'></div>
-                                                    <div class='st_twitter_hcount' displayText='Tweet'></div>
-                                                    <div class='st_linkedin_hcount' displayText='LinkedIn'></div>
-                                                    <div class='st_email_hcount' displayText='Email'></div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="">
-                                    <div class="hdg-a hdg-source-lt layout-vr-sm">
-                                        <span class="js-comment-count"></span> Comments
-                                    </div>
-
-                                    <div class="js-comments-feed-wrapper">
-                                        <div class="" style="margin-right:20px;">
-                                            <div class="media commentLeft-border">
-                                                <div class="img">
-                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                                         <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
-                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                                         <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
-                                                    {% endif %}
-                                                            
-                                                </div>
-                                                <div class="bd">
-                                                    <form>
-                                                        <label for="comment" class="text-hide">Comment</label>
-                                                        <textarea class="comment-text" id="comment"></textarea>
-                                                        {% if not request.user.is_authenticated %}
-                                                            <div class="layout-vr-md"></div>
-                                                            <div class="centered layout-vr-md">
-                                                                <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
-                                                            </div>
-                                                        {% else %}
-                                                            <div class="grid layout-vr-md">
-                                                                <!--   <div class="grid-col">
-                                                                    <input type="checkbox" id="facebook" />
-                                                                    <label class="copy" for="facebook">Post to Facebook</label>
-                                                                </div> -->
-                                                                <div class="grid-rt">
-                                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="centered">
-                                                                <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
-                                                            </div>
-                                                        {% endif %}
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <div class="grid layout-vr-md">
-                                                <div class="grid-col">
-                                                    <ul class="h-list key">
-                                                        <li class="key-offline">Offline</li>
-                                                        <li class="key-online">Online</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
-                                                <ol class="comment-list js-comment-list">
-                                                    <!-- dynamic comments content here -->
-                                                </ol>
-                                            </div>
-                                            <div class="centered layout-vr-sm">
-                                                <a class="btn js-comments-show-more-btn" href="#">Show More</a>
-                                            </div>
-                                        </div> <!-- End .commentBox-form -->
-                                    </div> <!-- End .commentBox -->
                                 </div>
                             </div>
-                        </div><!-- End .grid-col -->
-                    </div> <!-- Closing Grid and media -->
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section class="wrapper layout-vr-lg">
-            <div class="inner-wrapper">
-                <h2 class="hdg-a hdg-source-lt layout-vr-sm">Featured Collections</h2>
-                <ul class="h-list h-list-md">               
-                {% for related in related_collections %}
-                    <li>
-                        <div class="vid-cat-selected">
-                            <div class="vid-cat">
-                                <a href="{{related.url}}">
-                                    <img height=124  width=217 src={{related.thumbnailURL}} />
-                                </a>
-                                <div class="vid-flag">
-                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                        <li>{{related.videos|length}} Videos</li>
-                                        <li>{{related.duration|seconds_to_duration}}</li>
-                                    </ul>
-                                </div>
-                                <div class="vid-cat-inner">
-                                    <div class="vid-cat-hd">
-                                        <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
-                                    </div>
-                                    <div class="vid-cat-bd">
-                                        <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
-                                        <p class="copy copy-sm">By: {{related.partner}}</p>
-                                    </div>
-                                    <div class="vid-cat-ft">
-                                        <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
-                                            <li class="like"><span class="text-hide">Likes</span> {{related.likes}}</li>
-                                            <li class="view"><span class="text-hide">Viewed</span> {{related.views}}</li>
-                                            <li class="check"><span class="text-hide">Adopted</span> {{related.adoptions}}</li>
-                                        </ul>
-                                    </div>
-                                </div> <!-- End .vid-inner -->
-                            </div> <!-- End .vid-cat -->
-                        </div>
-                    </li>
-                {% endfor %}
-                <!-- Uncomment when show more is implemented
-                <div class="centered push-top-md">
-                    <a class="btn" href="#">Show More</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                -->
+
+                <div class="grid-col grid-size3of4 layout-vr-sm">
+                    <div class="media">
+                        <div class="video-wrapper collection-video-wrapper layout-vr-md" data-slide="{{video_index}}">
+                            <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
+                            <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
+                            <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
+                                You need Flash player 8+ and JavaScript enabled to view this video.
+                            </div> 
+                        </div>
+                    </div>
+
+                    <div class="layout-vr-sm">
+                        <div class="grid-col hdg-f hdg-source-reg grid-size4of5 ">
+                            {{video.description}}
+                        </div>
+                        <div class= "grid-col grid-size1of5">
+                            <div class="grid-rt">
+                                <div class="layout-vr-sm">
+                                    <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
+                                    {% if not request.user.is_authenticated %}
+                                    <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
+                                    {% else %}
+                                    <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                    {% endif %}
+                                </div>
+                                <a class="btn share-btn"><div class="icon"></div>
+                                    <span class="label">Share</span>
+                                    <div class="sharethis-wrapper">
+                                        <div class='st_facebook_hcount' displayText='Facebook'></div>
+                                        <div class='st_twitter_hcount' displayText='Tweet'></div>
+                                        <div class='st_linkedin_hcount' displayText='LinkedIn'></div>
+                                        <div class='st_email_hcount' displayText='Email'></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="layout-vr-sm">
+                        <div class="grid-col grid-size1of3 grid-lt">
+                            <!-- Video Stats -->
+                            <div class="collection-stats" style="padding-top:30px;">
+                                <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                    <div class="icon adopted"></div>
+                                    <div class="stat-bar-container">
+                                        <!-- <div class="left-value js-left-value"></div> -->
+                                        <div class="right-value js-right-value"></div>
+                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.adoptions}}">
+                                            <div class="stat-indicator js-stat-indicator"></div>
+                                        </div>
+                                        <div class="right-stat-label">Adopted</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-size1of3">
+                            <div class="collection-stats" style="padding-top:30px;">
+                                <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                    <div class="icon views"></div>
+                                    <div class="stat-bar-container">
+                                        <div class="left-value js-left-value"></div>
+                                        <div class="right-value js-right-value"></div>
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineViews}}" data-right-value="{{video.offlineViews}}">
+                                            <div class="stat-indicator js-stat-indicator"></div>
+                                        </div>
+                                        <div class="left-stat-label">Online Views</div>
+                                        <div class="right-stat-label">Offline Views</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-size1of3 grid-rt">
+                            <div class="collection-stats" style="padding-top:30px;">
+                                <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
+                                    <div class="icon likes"></div>
+                                    <div class="stat-bar-container">
+                                        <div class="left-value js-left-value"></div>
+                                        <div class="right-value js-right-value"></div>
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
+                                            <div class="stat-indicator js-stat-indicator"></div>
+                                        </div>
+                                        <div class="left-stat-label">Online Likes</div>
+                                        <div class="right-stat-label">Offline Likes</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        <div class="hdg-a hdg-source-lt layout-vr-sm">
+                            <span class="js-comment-count"></span> Comments
+                        </div>
+                        
+                        <div class="js-comments-feed-wrapper commentBox">
+                            <div class="commentBox-form">
+                                <div class="media commentLeft-border">
+                                    <div class="img">
+                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                        <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="bd">
+                                        <form>
+                                            <label for="comment" class="text-hide">Comment</label>
+                                            <textarea class="comment-text" id="comment"></textarea>
+                                            {% if not request.user.is_authenticated %}
+                                            <div class="layout-vr-md"></div>
+                                            <div class="centered layout-vr-sm">
+                                                <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
+                                            </div>
+                                            {% else %}
+                                            <div class="grid layout-vr-tiny">
+
+                                                <div class="grid-rt">
+                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
+                                                </div>
+                                            </div>
+                                            <div class="centered">
+                                                <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
+                                            </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
+                                    <ol class="comment-list js-comment-list">
+                                        <!-- dynamic comments content here -->
+                                    </ol>
+                                </div>
+                                <div class="centered layout-vr-sm">
+                                    <a class="btn js-comments-show-more-btn" href="#">Show More</a>
+                                </div>
+                            </div> <!-- End .commentBox-form -->
+                        </div> <!-- End .commentBox -->
+
+
+                </div><!-- End .media -->
             </div>
-        </section>
+        </div>
+    </div>                         
+</section>
+
+<section class="wrapper layout-vr-lg">
+    <div class="inner-wrapper">
+        <h2 class="hdg-a hdg-source-lt layout-vr-sm">More Featured Collections</h2>
+        <ul class="h-list h-list-md">               
+            {% for related in related_collections %}
+            <li>
+                <div class="vid-cat-selected">
+                    <div class="vid-cat">
+                        <a href="{{related.url}}">
+                            <img height=124  width=217 src={{related.thumbnailURL}} />
+                        </a>
+                        <div class="vid-star">
+                        </div>
+                        <div class="vid-flag">
+                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                <li>{{related.videos|length}} Videos</li>
+                                <li>{{related.duration|seconds_to_duration}}</li>
+                            </ul>
+                        </div>
+                        <div class="vid-cat-inner">
+                            <div class="vid-cat-hd">
+                                <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
+                            </div>
+                            <div class="vid-cat-bd">
+                                <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
+                                <p class="copy copy-sm">By: {{related.partner}}</p>
+                            </div>
+                            <div class="vid-cat-ft">
+                                <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
+                                    <li class="like"><span class="text-hide">Likes</span> {{related.likes}}</li>
+                                    <li class="view"><span class="text-hide">Viewed</span> {{related.views}}</li>
+                                    <li class="check"><span class="text-hide">Adopted</span> {{related.adoptions}}</li>
+                                </ul>
+                            </div>
+                        </div> <!-- End .vid-inner -->
+                    </div> <!-- End .vid-cat -->
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
 
 
 {% include "includes/footer.html" %}
