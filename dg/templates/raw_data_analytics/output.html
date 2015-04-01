@@ -11,13 +11,8 @@
 
 
 			
-			<form autocomplete="off" action="/raw_data_analytics/execute/" id="form" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
+			<form target="_blank" action="/raw_data_analytics/execute/" id="form" method="POST" enctype="multipart/form-data" onclick="list_display(this)">
 				{% csrf_token %}
-
-				<div id="loader" name = "loader"  style='visibility:hidden; position:absolute;'>
-					<img src= "{{STATIC_URL}}raw_data_analytics/waiting.png" height="100%" width="100%">
-				</div >
-
 
 				<center><div id="date" name="Date">
 					<p><h3> Date: </h3>

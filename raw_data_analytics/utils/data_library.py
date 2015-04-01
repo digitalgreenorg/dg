@@ -15,7 +15,6 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
-        print options;
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -42,16 +41,16 @@ class data_lib():
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-            print "----------------------------------Full SQL Query---------------------------"
+    #        print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3], queryComponents[4])
-            print query
-            print "-------------------------------Result--------------------------------"
+    #        print query
+    #        print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-            print df
+    #        print df
         resultant_df = self.order_data(final_df)
         return resultant_df
 
@@ -125,31 +124,21 @@ class data_lib():
 
     def getSelectComponent(self, partitionElements, valueElement):
         selectComponentList = []
-        print "partitionElements"
-        print partitionElements
-        print "value Elements"
-        print valueElement
         for items in partitionElements:
             for i in selectDictionary[items]:
                 if (selectDictionary[items][i] == True):
                     selectComponentList.append(tableDictionary[items] + '.' + i + ' AS ' + items)
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
-                print i
-                print type(i)
                 x = ['count','distinct']
                 if all(a in i for a in x):
-                    print 'hello1'
                     selectComponentList.append(
                             i.replace('count(distinct', 'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS ' + 'Unique_'+valueElement)
                 elif "count" in i and "distinct" not in i:
-                    print 'hello2'
                     selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement])+'.') + ' AS ' + valueElement)
                 elif "distinct" in i and "count" not in i:
-                    print 'hello3'
                     selectComponentList.insert(0,(i.replace('distinct(',' distinct('+str(tableDictionary[valueElement])+'.') + ' AS ' + valueElement))
                 else:
-                    print 'hello4'
                     selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i + ' AS ' + valueElement)
         return ','.join(selectComponentList)
 
@@ -182,10 +171,6 @@ class data_lib():
     # Function to make FROM component of the sql query
     def getFromComponent(self, partitionElements, valueElement, lookup_matrix):
         partitionTables = []
-        print "partition Elements in from list"
-        print partitionElements
-        print "value elements in from list"
-        print valueElement
         for i in partitionElements:
             if (i in categoryDictionary['geographies']):
                 partitionTables.insert(0, tableDictionary[i])
@@ -202,14 +187,11 @@ class data_lib():
                 minorTablePath.append(table)
                 self.makeJoinTable(table, tableDictionary[valueElement], lookup_matrix, tablesOccuredList, self.Dict)
             counter+=1
-            print 'tablesOccuredList' + str(counter)
-            print tablesOccuredList
         majorTablesList = tablesOccuredList
 
-        # if not partitionElements:
-        #     print "yoyoyoyo singh"
-        #     if valueElement in categoryDictionary['partitionCumValues'].keys():
-        #         majorTablesList.append(tableDictionary[valueElement])
+        if not partitionElements:
+            if valueElement in categoryDictionary['partitionCumValues'].keys():
+                majorTablesList.append(tableDictionary[valueElement])
         return ' , '.join(majorTablesList)
 
 

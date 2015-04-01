@@ -215,24 +215,17 @@ def execute(request):
     priority = {}
 
     if(list_combo == 'on'):
-        print "hi"
         for x in checked_list:
-            print "bye"
             if ((x in categoryDictionary['geographies']) or (x == 'partner')):
-                print "1"
                 for x,v in orderDictionary.items():
-                    print "2"
                     if x in checked_list:
-                        print "3"
                         priority[x] = v
-                print "4"
                 list_combo = 'list'+ (max(priority.items(), key=lambda x: x[1])[0]).title()
                      
             elif (x == "animator"):
                 list_combo = 'listAnimator'
 
             elif (x == "persongroup"):
-                print "5"
                 list_combo = 'listGroup'
 
             elif (x == "people"):
@@ -279,62 +272,28 @@ def execute(request):
              'list' : list_combo
             }
      
-    #print "----- inside the views----------------"
-    
+
     options = {'partition':partition,'value':value}
     args=[]
     args.append(from_date)
     args.append(to_date)
     dlib = data_lib()
     dataframe_result = dlib.handle_controller(args,options)
-    
-    #print "--------------FINAL RESULT---------------"
-    #print dataframe_result
-    #print "--------------GAME OVER-----------------"
 
-    final_html_file=create_excel_html(dataframe_result, from_date, to_date)
+    csv_file=create_excel_html(dataframe_result, from_date, to_date)
 
-    return render_to_response('raw_data_analytics/temp_html/'+final_html_file, context_instance=RequestContext(request))
+    return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
 
 
 def create_excel_html(df, from_date, to_date):
-
     millis = str(round(time.time() * 1000))
-        
-    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])           
-                   
+    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])
     f = codecs.open(data_file, 'wb', 'utf-8')
     f.close()
-
     df.to_csv(data_file)
-
     generated_file_name = data_file.split('/')[-1] 
 
-    html_file = 'dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    #html_file ='/home/ubuntu/code/dg_coco_test/dg/dg/templates/raw_data_analytics/temp_html/'+millis+'_library_data.html'
-    
-    header = '''<html>
-                    <head><center>
-                        <h2> Data Result </h2>
-                        <div name="download_excel">
-                            <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/'''+generated_file_name+'''">Download result as an excel file</a>
-                        </div></center>
-                    </head>
-                    <B>From:</B> '''+from_date+''' <B>To:</B> '''+to_date+'''
-                    <body></br></br></br></br>'''
-    footer = '''</body></html>'''
-
-    f = codecs.open(html_file, 'wb', 'utf-8')
-    f.write(header)
-    f.write(df.to_html())
-    f.write(footer)
-    f.close()
-    
-    final_html_file = millis+'_library_data.html'
-    #return render_to_response('raw_data_analytics/temp_html/'+final_html_file)
-
-
-    return final_html_file
+    return generated_file_name
 
 
 

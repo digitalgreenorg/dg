@@ -102,7 +102,7 @@ function validation_check()
         
         if (count_partition_restrict >1)
         {
-          alert("Along with list please select either Animator/Group/egistered Viewers/Video from Partions");
+          alert("Along with list please select either Animator/Group/Registered Viewers/Video from Partitions");
           error = 1;
           event.preventDefault();
          
@@ -159,14 +159,6 @@ function validation_check()
 
      }
 
-     if (error == 0)
-     {
-     loader.style.visibility = "visible";
-     }
-     else
-     {
-      loader.style.visibility = "hidden";
-     }
 
 }
 //#######################################onload-date################################################
