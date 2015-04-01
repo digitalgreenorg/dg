@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<center>
+    <h2> Data Result </h2>
+
+    <div name="download_excel">
+        <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/{{ filename }}">Download result as an excel
+            file</a>
+    </div>
+</center>
+</head>
+<body>
+<center>
+<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
+</center>
+
+<br/><br/><br/><br/>
+<center>
+{{ dataf | safe }}
+</center>
+</body>
+</html>
