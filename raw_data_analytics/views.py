@@ -278,11 +278,15 @@ def execute(request):
     args.append(from_date)
     args.append(to_date)
     dlib = data_lib()
-    dataframe_result = dlib.handle_controller(args,options)
 
-    csv_file=create_excel_html(dataframe_result, from_date, to_date)
+    if options['value']['list'] == 'on':
+        return render_to_response("raw_data_analytics/error.html",
+                                  context_instance=RequestContext(request))
+    else:    
+        dataframe_result = dlib.handle_controller(args,options)
+        csv_file=create_excel_html(dataframe_result, from_date, to_date)
 
-    return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
+        return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
 
 
 def create_excel_html(df, from_date, to_date):
