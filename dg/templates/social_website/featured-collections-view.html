@@ -166,59 +166,58 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <div class="grid-col grid-size3of4 layout-vr-sm">
+                    <div class="hdg-a hdg-source-lt layout-vr-sm">
+                        <span class="js-comment-count"></span> Comments
+                    </div>
+                    
+                    <div class="js-comments-feed-wrapper commentBox">
+                        <div class="commentBox-form">
+                            <div class="media commentLeft-border">
+                                <div class="img">
+                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                    <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
+                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                    <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
+                                    {% endif %}
 
-                        <div class="hdg-a hdg-source-lt layout-vr-sm">
-                            <span class="js-comment-count"></span> Comments
-                        </div>
-                        
-                        <div class="js-comments-feed-wrapper commentBox">
-                            <div class="commentBox-form">
-                                <div class="media commentLeft-border">
-                                    <div class="img">
-                                        {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture">
-                                        {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                        <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
+                                </div>
+                                <div class="bd">
+                                    <form>
+                                        <label for="comment" class="text-hide">Comment</label>
+                                        <textarea class="comment-text" id="comment"></textarea>
+                                        {% if not request.user.is_authenticated %}
+                                        <div class="layout-vr-md"></div>
+                                        <div class="centered layout-vr-sm">
+                                            <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
+                                        </div>
+                                        {% else %}
+                                        <div class="grid layout-vr-tiny">
+
+                                            <div class="grid-rt">
+                                                <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
+                                            </div>
+                                        </div>
+                                        <div class="centered">
+                                            <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
+                                        </div>
                                         {% endif %}
-
-                                    </div>
-                                    <div class="bd">
-                                        <form>
-                                            <label for="comment" class="text-hide">Comment</label>
-                                            <textarea class="comment-text" id="comment"></textarea>
-                                            {% if not request.user.is_authenticated %}
-                                            <div class="layout-vr-md"></div>
-                                            <div class="centered layout-vr-sm">
-                                                <a class="comment-btn" href="/login/?next={{request.path|urlencode}}">Add a Comment</a>
-                                            </div>
-                                            {% else %}
-                                            <div class="grid layout-vr-tiny">
-
-                                                <div class="grid-rt">
-                                                    <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
-                                                </div>
-                                            </div>
-                                            <div class="centered">
-                                                <input type="submit" value="Add a Comment" class="comment-btn js-comment-btn" />
-                                            </div>
-                                            {% endif %}
-                                        </form>
-                                    </div>
+                                    </form>
                                 </div>
-                                <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
-                                    <ol class="comment-list js-comment-list">
-                                        <!-- dynamic comments content here -->
-                                    </ol>
-                                </div>
-                                <div class="centered layout-vr-sm">
-                                    <a class="btn js-comments-show-more-btn" href="#">Show More</a>
-                                </div>
-                            </div> <!-- End .commentBox-form -->
-                        </div> <!-- End .commentBox -->
-
-
-                </div><!-- End .media -->
+                            </div>
+                            <div class="js-comment-wrapper"  data-video-uid='{{video.uid}}'>
+                                <ol class="comment-list js-comment-list">
+                                    <!-- dynamic comments content here -->
+                                </ol>
+                            </div>
+                            <div class="centered layout-vr-sm">
+                                <a class="btn js-comments-show-more-btn" href="#">Show More</a>
+                            </div>
+                        </div> <!-- End .commentBox-form -->
+                    </div> <!-- End .commentBox -->
+                </div><!-- End .grid-col -->
             </div>
         </div>
     </div>                         
