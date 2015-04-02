@@ -152,9 +152,9 @@ def execute(request):
         checked_list.append('animator')
         
     if (people_chk[0]==None):
-        people = False
+        person = False
     elif (people_chk[0] != None):
-        people = True
+        person = True
         checked_list.append('person')
         
     if (group_chk[0]==None):
@@ -228,7 +228,7 @@ def execute(request):
             elif (x == "persongroup"):
                 list_combo = 'listGroup'
 
-            elif (x == "people"):
+            elif (x == "person"):
                 list_combo = 'listPeople'
 
             elif (x == "video"):
@@ -257,7 +257,7 @@ def execute(request):
                'block':block, 
                'village':village,
                'animator':animator,
-               'person':people,
+               'person':person,
                'persongroup':group, 
                'video':video
               }
