@@ -10,7 +10,7 @@
         {{#person.thumbnailURL}}
         <div class="img comment-left-img">
         <a href="http://www.digitalgreen.org/farmerbook/person/{{person.coco_id}}" target="_blank">
-            <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}"  alt="" />
+            <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}" onerror="this.src='/media/social_website/content/default.png';" alt="" />
         </a>
         </div>
         {{/person.thumbnailURL}}

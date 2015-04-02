@@ -626,11 +626,19 @@ a {
     padding-left: 15px;
 }
 
+.grid-pad-lt-md {
+    padding-left: 20px;
+}
+
 .grid-pad-rt-tiny{
 	padding-right: 7px;
 }
 .grid-pad-rt-md{
 padding-right: 20px;
+}
+
+.grid-margin-rt-sm {
+    margin-right: 14px;
 }
 
 .grid-margin-rt-md {
@@ -1855,6 +1863,82 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background-position: -86px -440px;
 }
 
+/* Featured Collection */
+
+.featured-collection-stats{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.featured-collection-ul {
+    background-color: #f8f7f3;
+    padding-bottom: 20px;
+}
+
+.featured-collection-li {
+    padding-left: 20px;
+    position: relative;
+}
+
+.featured-collection-li.now-playing {
+    background-color: #047d0a;
+}
+
+.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+
+.featured-collection-li:hover {
+    background-color: #047d0a;
+}
+
+.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #dad7d1;
+}
+
+.featured-collection-indicator {
+    background: url(../images/icon-sprite.png) no-repeat -69px -305px;
+    height: 20px;
+    width: 20px;
+    z-index: 1000;
+    position: absolute;
+    left: 12px;
+    top: 15px;
+}
+
+.featured-ft-videoDetails {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding: 15px;
+    display: inline-block;
+}
+
+.collection-ft-videoDetails {
+    background: #000000;
+    background: rgba(0, 0, 0, .8);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding: 5px 9px;
+    display: inline-block;
+    margin-bottom: 18px;
+}
+
+.featured-video-wrapper {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin-right: 0px;
+}
+
 /* ---------------------------------------------------------------------
  Video Drawer
 ------------------------------------------------------------------------ */
@@ -1958,11 +2042,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     height: 95px;
 }
 
-.vidDrawer-video .vidDrawer-image-collection {
-    position: relative;
-    width: 206px;
-    height: 117px;
-}
 
 .vidDrawer-video .overlay {
     display: none;
@@ -2145,43 +2224,12 @@ ul.carousel-list li{
     color: #49cd34;
 }
 
-/* featured section */
-
-.featured {
-    background: #e1ded9;
-    padding: 25px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-}
-
-.featured-ft-videoDetails {
-    background: #000000;
-    background: rgba(0, 0, 0, .8);
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    padding: 5px 9px;
-    display: inline-block;
-    margin-bottom: 18px;
-}
-
 /* Video Wrapper */
 .video-wrapper {
     float: left;
     width: 703px;
     height: 395px;
     margin-right: 30px;
-}
-
-.collection-video-wrapper {
-    float: left;
-    width: 708px;
-    height: auto;
-    margin-right: 0px;
 }
 
 /* News Section */

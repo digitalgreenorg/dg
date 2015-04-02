@@ -176,25 +176,34 @@ define(function(require) {
                 videoId: videoId,
                 width: videoPlayerWidth,
                 events: {
-                  'onReady': that._onYouTubePlayerReady,
-                  'onStateChange': function(newState){
-                      switch (newState.data) {
+                    'onReady': that._onYouTubePlayerReady,
+                    'onStateChange': function(newState){
+                    switch (newState.data) {
                           // playback completed/stopped
                           case 0:
-                              var now_playing_video = jQuery('.now-playing').closest('li');
-                              var next_video = now_playing_video.next();
-
-                              if (next_video.length == 0) {
-                                  /* End of current slide or this is the last video altogether */
-                                  var next_slide = now_playing_video.closest('ul').closest('li').next();
-                                  if (next_slide.length == 0) {
-                                      /* Last video - go back to the first video */
-                                      next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                                  }
-                                  next_video = next_slide.find('ul > li:first-child');
-                              }
-                              console.log(jQuery('.now-playing'));
-                              window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                                var now_playing_video = jQuery('.now-playing');
+                                var next_video;
+                                if (now_playing_video.hasClass('js-featured-collection-li')) {
+                                    next_video = now_playing_video.next('li');
+                                    if (next_video.length == 0) {
+                                        next_video = now_playing_video.closest('ul').find('li:first');
+                                    }
+                                    window.location.href = next_video.find('a').attr('href');
+                                }
+                                else {
+                                    now_playing_video = now_playing_video.closest('li');
+                                    next_video = now_playing_video.next();
+                                    if (next_video.length == 0) {
+                                        /* End of current slide or this is the last video altogether */
+                                        var next_slide = now_playing_video.closest('ul').closest('li').next();
+                                        if (next_slide.length == 0) {
+                                            /* Last video - go back to the first video */
+                                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
+                                        }
+                                        next_video = next_slide.find('ul > li:first-child');
+                                    }
+                                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                                }
                           // stop the interval and manually send an update
                           case 2:
                               that._stopUpdateInterval();
