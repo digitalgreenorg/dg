@@ -181,6 +181,12 @@ define(function(require) {
 
 
         _renderCollections: function(collectionsArray, totalCount) {
+            if (collectionsArray.length == "1" && collectionsArray[0]['error'] == "1"){
+                var renderedHTML = viewRenderer.render(collectionTemplate, {error: true});
+
+                this._references.$collectionsContainer.html(renderedHTML);
+                return;
+            }
             // local references
             var state = this._state;
             var collectionsPerRow = state.collectionsPerRow;

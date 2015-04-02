@@ -142,8 +142,10 @@ def get_collections_from_elasticsearch(request):
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
-        
-        resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
+        if result_list:
+            resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
+        else:
+            resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": "1"},"objects": [{'Message': 'No Collections Found', 'error': "1"}], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
         print ex

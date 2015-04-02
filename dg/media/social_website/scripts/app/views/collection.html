@@ -1,3 +1,7 @@
+                            {{#error}}
+                            <div class="copy">No Collection Found</div>
+                            {{/error}}
+                            {{^error}}
                             <li>
                                 <div class="vid-cat-selected">
                                     <div class="vid-cat">
@@ -33,3 +37,4 @@
                                     </div> <!-- End .vid-cat -->
                                 </div>
                             </li>
+                            {{/error}}
