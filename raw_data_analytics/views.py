@@ -229,7 +229,7 @@ def execute(request):
                 list_combo = 'listGroup'
 
             elif (x == "person"):
-                list_combo = 'listPeople'
+                list_combo = 'listPerson'
 
             elif (x == "video"):
                 list_combo = videolist
