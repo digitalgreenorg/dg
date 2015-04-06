@@ -108,6 +108,8 @@ def get_collections_from_elasticsearch(request):
     if query:
         filter = {"and" : query}
     order_by = params.get('order_by','-likes')
+    if order_by == '-_score':
+        order_by = '-featured'
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
