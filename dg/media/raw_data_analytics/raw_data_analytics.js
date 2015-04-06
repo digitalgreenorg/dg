@@ -86,7 +86,25 @@ function validation_check()
      count_partition = 0;
      var count_values = 0
      var i;
-     
+
+     for(i=0; i<checked_partitions.length; i++)
+          {
+            if(checked_partitions[i].checked)
+              {count_partition ++;}
+          } 
+     for(i=0; i<checked_values.length; i++)
+            {
+            if(checked_values[i].checked)
+              {count_values ++;}
+          }
+
+     if ((count_partition == 0) && (count_values == 0))
+     {
+       alert("Please select some feilds !!");
+       event.preventDefault();
+     }
+
+
      if(list.checked)
      {
        for(i=0; i<checked_partitions_restrict.length; i++)
@@ -94,12 +112,6 @@ function validation_check()
             if(checked_partitions_restrict[i].checked)
               {count_partition_restrict ++;}
           }
-       for(i=0; i<checked_partitions.length; i++)
-          {
-            if(checked_partitions[i].checked)
-              {count_partition ++;}
-          }
-        
         if (count_partition_restrict >1)
         {
           alert("Along with list please select either Animator/Group/Registered Viewers/Video from Partitions");
@@ -144,11 +156,6 @@ function validation_check()
 
      if(list.checked)
      {
-       for(i=0; i<checked_values.length; i++)
-            {
-            if(checked_values[i].checked)
-              {count_values ++;}
-          }
         if (count_values > 0)
         {
           alert("No other value fields can be selected along with list!!");
@@ -158,6 +165,8 @@ function validation_check()
         }
 
      }
+
+
 
 
 }
