@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dg.settings import PERMISSION_DENIED_URL
 
 from elastic_search import get_related_collections, get_related_videos 
-from social_website.models import  Collection, Partner, FeaturedCollection, Video
+from social_website.models import  Collection, Partner, FeaturedCollection, Video, Gallery
 from videos.models import Practice, Video as Dashboard_Video
 
 from mezzanine.blog.models import BlogPost
@@ -106,6 +106,18 @@ def video_view(request, uid):
               'related_collections' : related_collections[:4], # restricting to 4 related collections for now
                }
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request))
+
+def gallery_view(request, uid=None):
+    if uid is not None:
+        a = Gallery.objects.filter(uid=uid)
+        b = Gallery.objects.all().order_by('-uid')
+        return render_to_response('gallery.html' , {'gallerys':a, 'list':b}, context_instance = RequestContext(request))
+    try:
+        gallerys = Gallery.objects.all().order_by('-uid')
+    except Gallery.DoesNotExist:
+        return HttpResponseRedirect(reverse('discover'))
+
+    return render_to_response('gallery.html' , {'gallerys':gallerys[0:1], 'list':gallerys}, context_instance = RequestContext(request))
 
 
 def partner_view(request, partner):

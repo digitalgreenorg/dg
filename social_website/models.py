@@ -160,6 +160,12 @@ class Activity(models.Model):
     type = models.PositiveSmallIntegerField()
     titleURL = models.URLField(max_length=400)
 
+class Gallery(models.Model):
+    uid = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=400, null=True, blank=True)
+    flickrCode = models.TextField()
+
 class Milestone(models.Model):
     uid = models.AutoField(primary_key=True)
     partner = models.ForeignKey(Partner, unique=True)
