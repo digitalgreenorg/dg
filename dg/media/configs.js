@@ -257,6 +257,7 @@ function() {
         'inline': {
             'entity': 'nonnegotiable',
             'default_num_rows': 5,
+            'add_row' : 1,
             "template": "nonnegotiable_inline",
             "joining_attribute": {
                 'host_attribute': ["id", "title"],
@@ -425,6 +426,7 @@ function() {
         'inline': {
             'entity': 'person',
             'default_num_rows': 10,
+            'add_row' : 5,
             "template": "person_inline",
             "joining_attribute": {
                 'host_attribute': ["id", "group_name"],

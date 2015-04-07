@@ -328,7 +328,7 @@ define([
             // compile the template of inline
             var inline_t = _.template($('#' + this.inline.template).html());
             if (typeof(num_rows) != "number")
-                num_rows = 5;
+                num_rows = this.inline.add_row;
             var start_index = get_index_to_start_from();
             // append the new inlines
             for (var i = start_index; i < start_index + num_rows; i++) {
@@ -344,7 +344,7 @@ define([
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
                 if (!all_present_inlines.length)
-                    return 1
+                    return 0
                 var max_index = $(_.last(all_present_inlines)).attr("index");
                 return parseInt(max_index) + 1;
             }
