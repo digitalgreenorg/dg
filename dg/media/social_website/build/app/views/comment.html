@@ -10,27 +10,29 @@
         {{#person.thumbnailURL}}
         <div class="img comment-left-img">
         <a href="http://www.digitalgreen.org/farmerbook/person/{{person.coco_id}}" target="_blank">
-            <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}"  alt="" />
+            <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}" onerror="this.src='/media/social_website/content/default.png';" alt="" />
         </a>
         </div>
         {{/person.thumbnailURL}}
         {{/isOnline}}
         <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
             <div class="comment-left-carat">
-                <div class="comment-hd">
-                <h3 class="copy"><span class="hdg-bold">
-                    {{#isOnline}}
-                        {{user.first_name}} {{user.last_name}}
-                    {{/isOnline}}
-                    {{^isOnline}}
-                        {{person.name}}
-                    {{/isOnline}}
-                </span></h3>
-                </div>
-                <div class="comment-bd">
-                    <p class="copy layout-vr-sm">{{text}}</p>
-                    <p class="copy copy-lt">{{date}}</p>
-                </div>
+                <div class="">
+                <h3 class="copy">
+                    <span class="hdg-bold">
+                        {{#isOnline}}
+                            {{user.first_name}} {{user.last_name}}
+                        {{/isOnline}}
+                        {{^isOnline}}
+                            {{person.name}}
+                        {{/isOnline}}
+                    </span>
+                    <span><p class="hdg-source-lt hdg-f">{{date}}</p></span>
+                </h3>
+                
+                <p class="hdg-source-reg hdg-f">{{text}}</p>
+            </div>
+    
                 <!--div class="comment-ft">
                     <div class="grid">
                         <div class="grid-col">
