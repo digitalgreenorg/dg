@@ -113,7 +113,7 @@ define(function(require) {
             
             state.updateVideoWatchedTimeInterval = undefined;
             try{
-            this._references.videosCarousel.moveToSlide(parseInt(($('.js-video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
+                this._references.videosCarousel.moveToSlide(parseInt(($('.js-video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
             }
             catch(err){
                 //Todo

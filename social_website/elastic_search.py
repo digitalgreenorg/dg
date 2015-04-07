@@ -79,7 +79,6 @@ def get_collections_from_elasticsearch(request):
     searchString = params.get('searchString', 'None')
     partner_uid = params.get('uid', None)
     featured = params.get('featured', None)
-    print featured
     # TODO: Change this from 'None'?
     if searchString != 'None':
         match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
