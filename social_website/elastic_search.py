@@ -89,15 +89,6 @@ def get_collections_from_elasticsearch(request):
     elif partner_uid:
         partner_name = Partner.objects.get(uid = partner_uid).name
         match_query = {"match" : {"partner" :{ "query" : partner_name}}}
-    elif int(featured):
-        match_query = {
-                        "bool" : {
-                                  
-                            "should" : [
-                                        { "term": { "featured": True }}, ],
-                            "minimum_should_match" : 1,
-                                }
-                  }
     else:
         match_query = {"match_all" : {}}
     query = []
@@ -107,9 +98,7 @@ def get_collections_from_elasticsearch(request):
     query = create_query(params, language_name)
     if query:
         filter = {"and" : query}
-    order_by = params.get('order_by','-likes')
-    if order_by == '-_score':
-        order_by = '-featured'
+    order_by = params.get('order_by','-featured')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
