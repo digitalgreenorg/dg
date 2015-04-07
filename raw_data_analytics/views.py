@@ -302,8 +302,6 @@ def create_excel_html(df, from_date, to_date):
     data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])
     f = codecs.open(data_file, 'wb', 'utf-8')
     f.close()
-    print len(df.index)
-    print type(len(df.index))
     df.to_csv(data_file)
     generated_file_name = data_file.split('/')[-1] 
 
