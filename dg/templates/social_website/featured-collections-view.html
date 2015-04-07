@@ -87,7 +87,6 @@
                         {% endfor %}
                     </ul>
                 </div>
-
                 <div class="grid-col grid-size3of4 layout-vr-sm">
                     <div class="grid-pad-lt-md">
                         <div class="media">
@@ -97,9 +96,6 @@
                             </div>
                             <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
                         </div> <!-- End .media -->
-                        
-
-
                         <div class="media">
                             <div class="featured-video-wrapper layout-vr-tiny" data-slide="{{video_index}}">
                                 <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
@@ -109,7 +105,6 @@
                                 </div> 
                             </div>
                         </div>
-
                         <div class="grid layout-vr-md">
                             <div class="grid-col hdg-f hdg-source-reg grid-size4of5 ">
                                 {{video.description}}
@@ -188,8 +183,7 @@
                         </div>
                         <div class="hdg-a hdg-source-lt layout-vr-sm">
                             <span class="js-comment-count"></span> Comments
-                        </div>
-                        
+                        </div> 
                         <div class="js-comments-feed-wrapper commentBox">
                             <div class="commentBox-form">
                                 <div class="media commentLeft-border">
@@ -199,7 +193,6 @@
                                         {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
                                         <img  src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=60">
                                         {% endif %}
-
                                     </div>
                                     <div class="bd">
                                         <form>
@@ -212,7 +205,6 @@
                                             </div>
                                             {% else %}
                                             <div class="grid layout-vr-tiny">
-
                                                 <div class="grid-rt">
                                                     <p class="copy">Posting as {{request.user.first_name}} {{request.user.last_name}} </p>
                                                 </div>
