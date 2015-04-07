@@ -280,13 +280,21 @@ def execute(request):
     dlib = data_lib()
 
     if options['value']['list'] == 'on':
-        return render_to_response("raw_data_analytics/error.html",
+        error = 'Output cannot be generated for this input ! Please check filters and partition field !!'
+        return render_to_response("raw_data_analytics/error.html",{'error': error},
                                   context_instance=RequestContext(request))
-    else:    
-        dataframe_result = dlib.handle_controller(args,options)
-        csv_file=create_excel_html(dataframe_result, from_date, to_date)
+ 
+    else:
 
-        return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
+        dataframe_result = dlib.handle_controller(args,options)
+        if len(dataframe_result.index) == 0:
+            error = 'No output available!!'
+            return render_to_response("raw_data_analytics/error.html",{'error': error},
+                                      context_instance=RequestContext(request))
+        else:
+            csv_file=create_excel_html(dataframe_result, from_date, to_date)
+
+            return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
 
 
 def create_excel_html(df, from_date, to_date):
@@ -294,6 +302,8 @@ def create_excel_html(df, from_date, to_date):
     data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])
     f = codecs.open(data_file, 'wb', 'utf-8')
     f.close()
+    print len(df.index)
+    print type(len(df.index))
     df.to_csv(data_file)
     generated_file_name = data_file.split('/')[-1] 
 

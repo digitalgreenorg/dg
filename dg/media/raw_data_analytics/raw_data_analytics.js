@@ -100,7 +100,7 @@ function validation_check()
 
      if ((count_partition == 0) && (count_values == 0))
      {
-       alert("Please select some feilds !!");
+       alert("Please select some fields !!");
        event.preventDefault();
      }
 
