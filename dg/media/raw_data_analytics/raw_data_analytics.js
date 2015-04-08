@@ -98,7 +98,7 @@ function validation_check()
               {count_values ++;}
           }
 
-     if ((count_partition == 0) && (count_values == 0))
+     if ((count_partition == 0) && (count_values == 0) && (count_partition_restrict == 0) && (!list.checked))
      {
        alert("Please select some fields !!");
        event.preventDefault();
