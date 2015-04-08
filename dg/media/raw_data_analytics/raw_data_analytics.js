@@ -84,7 +84,7 @@ function validation_check()
      var checked_values = [screening, adoption, animator_no, attendance,video_screened_no, video_produced_no]
      var count_partition_restrict = 0;
      count_partition = 0;
-     var count_values = 0
+     var count_values = 0;
      var i;
 
      for(i=0; i<checked_partitions.length; i++)
@@ -93,7 +93,7 @@ function validation_check()
               {count_partition ++;}
           } 
      for(i=0; i<checked_values.length; i++)
-            {
+          {
             if(checked_values[i].checked)
               {count_values ++;}
           }
@@ -104,7 +104,14 @@ function validation_check()
        event.preventDefault();
      }
 
+     else if((count_partition != 0) && (count_values == 0) && (!list.checked))
+     {
+       alert("Please select atleast one value field!!");
+       event.preventDefault();
 
+     }
+
+     
      if(list.checked)
      {
        for(i=0; i<checked_partitions_restrict.length; i++)
@@ -134,9 +141,7 @@ function validation_check()
      if( ((animator.checked) && (animator_no.checked))           || 
          ((people.checked)   && (animator_no.checked))           ||
          ((people.checked)   && (attendance.checked))            ||
-         ((people.checked)   && (list_video.selectedIndex != 0)) ||
          ((group.checked)    && (animator_no.checked))           ||
-         ((group.checked)    && (list_video.selectedIndex != 0)) ||
          ((video.checked)    && (animator_no.checked))           ||
          ((video.checked)    && (video_screened_no.checked))     ||
          ((video.checked)    && (video_produced_no.checked)))

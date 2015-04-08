@@ -285,16 +285,24 @@ def execute(request):
                                   context_instance=RequestContext(request))
  
     else:
+        if not list(set(partition.values()) - set([False])):
 
-        dataframe_result = dlib.handle_controller(args,options)
-        if len(dataframe_result.index) == 0:
-            error = 'No data available for given input!!'
+            error = 'Please select atleast one partition field!!'
             return render_to_response("raw_data_analytics/error.html",{'error': error},
-                                      context_instance=RequestContext(request))
+                context_instance=RequestContext(request))
+        
         else:
-            csv_file=create_excel_html(dataframe_result, from_date, to_date)
 
-            return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
+            dataframe_result = dlib.handle_controller(args,options)
+            if len(dataframe_result.index) == 0:
+                error = 'No data available for given input!!'
+                return render_to_response("raw_data_analytics/error.html",{'error': error},
+                                          context_instance=RequestContext(request))
+            
+            else:
+                csv_file=create_excel_html(dataframe_result, from_date, to_date)
+
+                return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))
 
 
 def create_excel_html(df, from_date, to_date):
