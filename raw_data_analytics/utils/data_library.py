@@ -15,7 +15,7 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
-        print options
+        #print options
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -44,7 +44,7 @@ class data_lib():
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
     #        print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3], queryComponents[4])
-            print query
+            #print query
     #        print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
@@ -57,32 +57,23 @@ class data_lib():
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
-        print dataframe
         header = dataframe.columns.tolist()
-        print header
         arranged_columns = [None]*len(orderDictionary)
         bumper = 0
-        # for i in orderDictionary:
-        #     ordered_cols[ordered_cols[i]]=i
-        # ordered_cols = filter(lambda a: a != None, ordered_cols)
+        
         for items in partitionElements:
             if partitionElements[items] != False:
-                print "hello1"
                 for elements in selectDictionary[items]:
-                    print "hello2"
                     if selectDictionary[items][elements] == True and selectDictionary[items].values().count(True)>1:
-                        print "helloq"
                         arranged_columns[len(arranged_columns)+1]=None
                         arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
                         bumper+=1
                     elif selectDictionary[items][elements] == True:
-                        print "hello32"
                         arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
+        
         arranged_columns = filter(lambda a: a != None, arranged_columns)
         arranged_columns.extend(list(set(header)-set(arranged_columns)))
-        print arranged_columns
         dataframe = dataframe[arranged_columns]
-        print dataframe
         return dataframe
 
     def read_lookup_csv(self):
