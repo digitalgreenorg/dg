@@ -62,28 +62,30 @@
     <section class="wrapper mainBg mainBg-gradient">
         <div class="grid inner-wrapper js-news-feed-wrapper">
             <div class="grid-col grid-size2of4">
-                <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
-                <ul class="v-list-sm">
-                    <li>               
-                        {% for blog_post in blog_posts %}
+                <div class="borderRt">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
+                    <ul class="v-list-sm">
+                        <li>               
+                            {% for blog_post in blog_posts %}
 
-                            <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
-                                <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                            </h3>
-                            <div class="copy-italic">
-                                {{ blog_post.publish_date.date }}
-                            </div>
-                            <p class="copy">
-                                {{ blog_post.content|striptags|slice:":120"}}
-                                <a href="{{ blog_post.get_absolute_url }}">...read more</a>
-                            </p> 
-                            <div class="layout-vr-md"></div>
-                        {% endfor %}
-                    </li> 
-                </ul>             
+                                <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
+                                    <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+                                </h3>
+                                <div class="copy-italic">
+                                    {{ blog_post.publish_date.date }}
+                                </div>
+                                <p class="copy">
+                                    {{ blog_post.content|striptags|slice:":120"}}
+                                    <a href="{{ blog_post.get_absolute_url }}">...read more</a>
+                                </p> 
+                                <div class="layout-vr-md"></div>
+                            {% endfor %}
+                        </li> 
+                    </ul>
+                </div>             
             </div>
             <div class="grid-col grid-size2of4">
-                <div class="borderLt">
+                <div class="grid-pad-lt-md">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
                     <ul class="v-list-md">
                         <li>

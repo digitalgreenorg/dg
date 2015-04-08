@@ -675,7 +675,6 @@ padding-right: 20px;
     padding-right: 35px;
 }
 
-
 /* Border on grid item */
 
 .borderLt {
@@ -683,6 +682,10 @@ padding-right: 20px;
     padding-left: 20px;
 }
 
+.borderRt {
+    border-right: 1px dotted #b2b2b2;
+    padding-right: 20px;
+}
 
 /* ---------------------------------------------------------------------
  Headings
