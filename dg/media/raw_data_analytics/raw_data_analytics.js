@@ -141,7 +141,7 @@ function validation_check()
          ((video.checked)    && (video_screened_no.checked))     ||
          ((video.checked)    && (video_produced_no.checked)))
           {
-           alert("Invalid Entry!!! Selected Partition and Value feilds do not match");
+           alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
            error = 1;
            event.preventDefault(); 
           }
