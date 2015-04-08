@@ -22,7 +22,13 @@
 {% endblock %}
 
 {% block main %}
-
+{% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+{% block blog_post_list_post_featured_image %}
+<div hidden>
+    <img class="img-thumbnail pull-left" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 240 240 %}">
+</div>
+{% endblock %}
+{% endif %}
 {% block blog_post_detail_postedby %}
 {% editable blog_post.publish_date %}
 <h6 class="copy layout-vr-sm">

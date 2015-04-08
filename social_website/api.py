@@ -278,7 +278,7 @@ class VideoLikeResource(ModelResource):
 
 class CommentResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
-    video = fields.ForeignKey(VideoResource, 'video', null=True)
+    video = fields.ForeignKey(VideoResource, 'video', full=True, null=True)
     user = fields.ForeignKey(UserResource, 'user', null=True, full=True)
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
     hydrate_user = partial(dict_to_foreign_uri, field_name='user', resource_name='user')
@@ -286,14 +286,16 @@ class CommentResource(BaseResource):
     
     def dehydrate_user_imageURL(self, bundle):
         if bundle.obj.user:
-            try :
+            try:
                 provider = bundle.obj.user.social_auth.all()[0].provider
             except Exception, ex:
-                return None
+                return "/media/social_website/content/default.png"
             if provider == 'google-oauth2':
                 url =  '%s?sz=75' % bundle.obj.user.social_auth.all()[0].extra_data['picture']
             elif provider == 'facebook':
                 url = 'https://graph.facebook.com/%s/picture?type=large' % bundle.obj.user.social_auth.all()[0].uid
+            else:
+                url = "/media/social_website/content/default.png"
             return url
      
     def hydrate_isOnline(self, bundle):
