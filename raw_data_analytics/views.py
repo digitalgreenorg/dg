@@ -288,7 +288,7 @@ def execute(request):
 
         dataframe_result = dlib.handle_controller(args,options)
         if len(dataframe_result.index) == 0:
-            error = 'No output available!!'
+            error = 'No data available for given input!!'
             return render_to_response("raw_data_analytics/error.html",{'error': error},
                                       context_instance=RequestContext(request))
         else:
