@@ -153,6 +153,43 @@ selectDictionary={
 
 }
 
+headerDictionary = {
+    'partner':{'id':'Partner ID','partner_name':'Partner Name'},
+    'country':{'id':'Country ID','country_name':'Country Name'},
+    'state':{'id':'State ID','state_name':'State Name'},
+    'district':{'id':'District ID','district_name':'District Name'},
+    'block':{'id':'Block ID','block_name':'Block Name'},
+    'village':{'id':'Village ID','village_name':'Village Name'},
+    'animator':{'id':'Animator ID','name':'Animator Name','gender':'Animator Gender'},
+    'person':{'id':'Person ID','person_name':'Person Name','gender':'Person Gender'},
+    'persongroup':{'id':'Person Group ID','group_name':'Group Name'},
+    'video':{'id':'Video ID','title':'Video Title'},
+    'language':{'id':'Video Language ID','language_name':'Video Language'},
+    'sector':{'id':'Sector ID','name':'Sector Name'},
+    'practice':{'id':'Practice ID','practice_name':'Practice Name'},
+    'topic':{'id':'Topic ID','name':'Topic'},
+    'numScreening':{'count(id)':'Number of Screening','count(distinct id)':'Unique Number of Screenings'},
+    'numAdoption':{'count(person_id)':'Number of Adoptions','count(distinct person_id)':'Unique Number of Adoptions'},
+    'attendance':{'count(person_id)':'Number of Viewers','count(distinct person_id)':'Unqiue Number of Viewers'},
+#    'numPeople':{'count(id)':True,'count(distinct id)':False},
+    'numAnimator':{'count(id)':'Number of Animator','count(distinct id)':'Number of '},
+    'listPerson':{'distinct(person_name)':'Person Name','gender':'Person Gender'},
+    'listAnimator':{'distinct(name)':'Animator Name','gender':'Animator Gender'},
+    'numVideoScreened':{'count(id)':'Number of Videos Screened','count(distinct video_id)':'Number of Unique Videos Screened'},
+    'numVideoProduced':{'count(id)':'Number of Videos Produced','count(distinct id)':'Number of Unique Videos Produced'},
+    'list':'self',
+    'listVideoProduced':{'id':'Video ID','distinct(title)':'Video Produced'},
+    'listVideoScreened':{'id':'Video ID','distinct(title)':'Video Screened'},
+    'listGroup':{'id':'Group ID','distinct(group_name)':'Group Name'},
+    'listVillage':{'distinct(village_name)':'Village Name'},
+    'listBlock':{'distinct(block_name)':'Block Name'},
+    'listDistrict':{'distinct(district_name)':'District Name'},
+    'listState':{'distinct(state_name)':'State Name'},
+    'listCountry':{'distinct(country_name)':'Country Name'},
+    'listPartner':{'distinct(partner_name)':'Partner Name'}
+
+}
+
 orderDictionary = {
     'partner':0,
     'country':1,

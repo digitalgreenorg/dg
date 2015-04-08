@@ -1,7 +1,7 @@
 __author__ = 'Lokesh'
 
 import os.path
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary
+from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary, headerDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
@@ -44,7 +44,7 @@ class data_lib():
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
     #        print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3], queryComponents[4])
-    #        print query
+            print query
     #        print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
@@ -52,19 +52,37 @@ class data_lib():
             else:
                 final_df = pd.merge(final_df, df, how='outer')
     #        print df
-        resultant_df = self.order_data(final_df)
+        resultant_df = self.order_data(relevantPartitionDictionary,final_df)
+        resultant_df.index += 1
         return resultant_df
 
-    def order_data(self, dataframe):
+    def order_data(self, partitionElements, dataframe):
+        print dataframe
         header = dataframe.columns.tolist()
-        ordered_cols = [None]*len(orderDictionary)
-        for col in header:
-            if col not in orderDictionary.keys():
-                ordered_cols.append(col)
-            else:
-                ordered_cols[orderDictionary[col]] = col
-        ordered_cols = filter(lambda a: a != None, ordered_cols)
-        dataframe = dataframe[ordered_cols]
+        print header
+        arranged_columns = [None]*len(orderDictionary)
+        bumper = 0
+        # for i in orderDictionary:
+        #     ordered_cols[ordered_cols[i]]=i
+        # ordered_cols = filter(lambda a: a != None, ordered_cols)
+        for items in partitionElements:
+            if partitionElements[items] != False:
+                print "hello1"
+                for elements in selectDictionary[items]:
+                    print "hello2"
+                    if selectDictionary[items][elements] == True and selectDictionary[items].values().count(True)>1:
+                        print "helloq"
+                        arranged_columns[len(arranged_columns)+1]=None
+                        arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
+                        bumper+=1
+                    elif selectDictionary[items][elements] == True:
+                        print "hello32"
+                        arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
+        arranged_columns = filter(lambda a: a != None, arranged_columns)
+        arranged_columns.extend(list(set(header)-set(arranged_columns)))
+        print arranged_columns
+        dataframe = dataframe[arranged_columns]
+        print dataframe
         return dataframe
 
     def read_lookup_csv(self):
@@ -128,19 +146,19 @@ class data_lib():
         for items in partitionElements:
             for i in selectDictionary[items]:
                 if (selectDictionary[items][i] == True):
-                    selectComponentList.append(tableDictionary[items] + '.' + i + ' AS ' + items)
+                    selectComponentList.append(tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
                 x = ['count','distinct']
                 if all(a in i for a in x):
                     selectComponentList.append(
-                            i.replace('count(distinct', 'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS ' + 'Unique_'+valueElement)
+                            i.replace('count(distinct', 'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' + headerDictionary[valueElement][i] + '\'')
                 elif "count" in i and "distinct" not in i:
-                    selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement])+'.') + ' AS ' + valueElement)
+                    selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement])+'.') + ' AS \'' + headerDictionary[valueElement][i] + '\'')
                 elif "distinct" in i and "count" not in i:
-                    selectComponentList.insert(0,(i.replace('distinct(',' distinct('+str(tableDictionary[valueElement])+'.') + ' AS ' + valueElement))
+                    selectComponentList.insert(0,(i.replace('distinct(',' distinct('+str(tableDictionary[valueElement])+'.') + ' AS \'' + headerDictionary[valueElement][i] + '\''))
                 else:
-                    selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i + ' AS ' + valueElement)
+                    selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][i] + '\'')
         return ','.join(selectComponentList)
 
     # Function to make tables by recursive calls for tables.
@@ -230,9 +248,16 @@ class data_lib():
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
         ordered_cols = [None]*len(orderDictionary)
+        bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
-                ordered_cols[orderDictionary[items]] = items
+                for keys in selectDictionary[items]:
+                    if selectDictionary[items][keys] == True and selectDictionary[items].values().count(True)>1:
+                        ordered_cols[len(ordered_cols)+1]=None
+                        ordered_cols[bumper + orderDictionary[items]] = '\''+headerDictionary[items][keys]+'\''
+                        bumper+=1
+                    else:
+                        ordered_cols[bumper + orderDictionary[items]] = '\''+headerDictionary[items][keys]+'\''
         ordered_cols = filter(lambda a: a != None, ordered_cols)
         orderbyComponentList += ordered_cols
         return ' , '.join(orderbyComponentList)
