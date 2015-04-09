@@ -110,7 +110,6 @@ class PersonAdoptPractice(CocoModel):
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
-    verified_by = models.CharField(max_length=20, blank=True, null=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
