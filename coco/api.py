@@ -384,7 +384,7 @@ class NonNegotiableResource(BaseResource):
         validation = ModelFormValidation(form_class=NonNegotiableForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
-    dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
+    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
 
 

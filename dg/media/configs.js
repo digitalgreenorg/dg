@@ -258,12 +258,12 @@ function() {
             'entity': 'nonnegotiable',
             'default_num_rows': 5,
             'add_row' : 1,
-            "template": "nonnegotiable_inline",
-            "joining_attribute": {
+            'template': 'nonnegotiable_inline',
+            'joining_attribute': {
                 'host_attribute': ["id", "title"],
                 'inline_attribute': "video"
             },
-            "header": "nonnegotiable_inline_header",
+            'header': 'nonnegotiable_inline_header',
             'borrow_attributes': [],
             foreign_entities: {
                 video: {
