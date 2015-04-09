@@ -125,3 +125,8 @@ class NonNegotiable(CocoModel):
     id = models.AutoField(primary_key=True)
     non_negotiable = models.CharField(max_length=500)
     video = models.ForeignKey(Video) 
+
+    def __unicode__(self):
+        return  u'%s' % self.non_negotiable
+post_save.connect(save_log, sender=NonNegotiable)
+pre_delete.connect(delete_log, sender=NonNegotiable)
