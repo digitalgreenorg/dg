@@ -38,7 +38,8 @@ def enter_data_into_facet_search(conn, index_name):
                            "thumbnailURL" : obj.thumbnailURL,
                            "uid" : obj.uid,
                            "videos" : vid_data,
-                           "duration" : time
+                           "duration" : time,
+                           "featured": obj.featured,
                            })    
         conn.index(data, index_name, index_name,i+1)
         i+= 1

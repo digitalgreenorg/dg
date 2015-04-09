@@ -626,11 +626,19 @@ a {
     padding-left: 15px;
 }
 
+.grid-pad-lt-md {
+    padding-left: 20px;
+}
+
 .grid-pad-rt-tiny{
 	padding-right: 7px;
 }
 .grid-pad-rt-md{
 padding-right: 20px;
+}
+
+.grid-margin-rt-sm {
+    margin-right: 14px;
 }
 
 .grid-margin-rt-md {
@@ -662,6 +670,11 @@ padding-right: 20px;
 .grid-pad-lt {
     padding-left: 35px;
 }
+
+.grid-pad-rt {
+    padding-right: 35px;
+}
+
 
 /* Border on grid item */
 
@@ -1104,6 +1117,18 @@ padding-right: 20px;
     box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .75);
 }
 
+.img-connect img {
+    border: 1px solid #dbdad5;
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .75);
+    -moz-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .75);
+    box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .75);
+}
+
+.img-connect :hover {
+    border: 2px solid #047d0a;
+}
+
+
 /* ---------------------------------------------------------------------
  Buttons
 ------------------------------------------------------------------------ */
@@ -1294,6 +1319,15 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     padding: 2px 0 0 8px;
 }
 
+.vid-star {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: url(../images/star.png) no-repeat 0 0;
+    height: 25px;
+    width: 30px;
+}
+    
 .vid-cat-inner {
     padding: 9px 9px 4px 9px;
 }
@@ -1774,6 +1808,25 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background-position: -87px -112px;
 }
 
+.filterOptions-star {
+    padding-left: 20px;
+}
+
+.filterOptions-star .icon {
+    width: 13px;
+    height: 13px;
+    left: 0px;
+    top: 3px;
+    background: url(../images/star-gray.png);
+    background-position: 0px 0px;
+    z-index: 1;
+}
+
+.active .filterOptions-star .icon {
+    background: url(../images/star-white.png);
+    background-position: 0px 0px;
+}
+
 
 
 .filterOptions-view {
@@ -1808,6 +1861,82 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .active .filterOptions-adopt .icon {
     background-position: -86px -440px;
+}
+
+/* Featured Collection */
+
+.featured-collection-stats{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.featured-collection-ul {
+    background-color: #f8f7f3;
+    padding-bottom: 20px;
+}
+
+.featured-collection-li {
+    padding-left: 20px;
+    position: relative;
+}
+
+.featured-collection-li.now-playing {
+    background-color: #047d0a;
+}
+
+.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+
+.featured-collection-li:hover {
+    background-color: #047d0a;
+}
+
+.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #dad7d1;
+}
+
+.featured-collection-indicator {
+    background: url(../images/icon-sprite.png) no-repeat -69px -305px;
+    height: 20px;
+    width: 20px;
+    z-index: 1000;
+    position: absolute;
+    left: 12px;
+    top: 15px;
+}
+
+.featured-ft-videoDetails {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding: 15px;
+    display: inline-block;
+}
+
+.collection-ft-videoDetails {
+    background: #000000;
+    background: rgba(0, 0, 0, .8);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding: 5px 9px;
+    display: inline-block;
+    margin-bottom: 18px;
+}
+
+.featured-video-wrapper {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin-right: 0px;
 }
 
 /* ---------------------------------------------------------------------
@@ -1912,6 +2041,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     width: 155px;
     height: 95px;
 }
+
 
 .vidDrawer-video .overlay {
     display: none;
@@ -2092,30 +2222,6 @@ ul.carousel-list li{
 .slide-callToAction:hover {
     background-position: right -50px;
     color: #49cd34;
-}
-
-/* featured section */
-
-.featured {
-    background: #e1ded9;
-    padding: 25px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-}
-
-.featured-ft-videoDetails {
-    background: #000000;
-    background: rgba(0, 0, 0, .8);
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    padding: 5px 9px;
-    display: inline-block;
-    margin-bottom: 18px;
 }
 
 /* Video Wrapper */
@@ -2475,7 +2581,7 @@ sup {
 
 .comment-text {
     position: relative;
-    width: 518px;
+    width: 100%;
     height: 35px;
     top: -1px;
     padding: 1px 10px;
@@ -2511,12 +2617,14 @@ sup {
 
 .comments-left {
     border-bottom: 1px solid #cdcac5;
-    padding: 20px 25px;
+    padding: 20px 20px;
+    background-color: #f8f7f3;
 }
 
 .comment-list > li + li {
-    border-top: 1px dotted #9f9d99;
+    /*border-top: 1px dotted #9f9d99;
     padding-top: 20px;
+    */
 }
 
 .comment-list > li > ol {
@@ -2534,7 +2642,7 @@ sup {
 
 .boxPlain {
     background-color: #f8f7f3;
-    padding: 30px 25px;
+    padding: 25px 25px;
 }
 
 /* Comment form modifications for this page */
@@ -2576,7 +2684,7 @@ textarea.comment-text {
 
 .comment-left {
     background: #ffffff;
-    padding: 18px 23px;
+    padding: 8px 8px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -2599,7 +2707,7 @@ textarea.comment-text {
     width: 15px;
     height: 30px;
     top: 0;
-    left: -38px;
+    left: -23px;
 }
 
 .comment-left-img {
@@ -3272,7 +3380,7 @@ body {
     background-color: rgba(0,0,0,0.3);
     padding-left: 20px;
     margin-left: 764px;
-    margin-top: -50px;
+    margin-top: -35px;
 }
 
 .auth-separator {
