@@ -62,28 +62,30 @@
     <section class="wrapper mainBg mainBg-gradient">
         <div class="grid inner-wrapper js-news-feed-wrapper">
             <div class="grid-col grid-size2of4">
-                <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
-                <ul class="v-list-sm">
-                    <li>               
-                        {% for blog_post in blog_posts %}
+                <div class="borderRt">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
+                    <ul class="v-list-sm">
+                        <li>               
+                            {% for blog_post in blog_posts %}
 
-                            <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
-                                <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                            </h3>
-                            <div class="copy-italic">
-                                {{ blog_post.publish_date.date }}
-                            </div>
-                            <p class="copy">
-                                {{ blog_post.content|striptags|slice:":120"}}
-                                <a href="{{ blog_post.get_absolute_url }}">...read more</a>
-                            </p> 
-                            <div class="layout-vr-md"></div>
-                        {% endfor %}
-                    </li> 
-                </ul>             
+                                <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
+                                    <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+                                </h3>
+                                <div class="copy-italic">
+                                    {{ blog_post.publish_date.date }}
+                                </div>
+                                <p class="copy">
+                                    {{ blog_post.content|striptags|slice:":120"}}
+                                    <a href="{{ blog_post.get_absolute_url }}">...read more</a>
+                                </p> 
+                                <div class="layout-vr-md"></div>
+                            {% endfor %}
+                        </li> 
+                    </ul>   
+                </div>          
             </div>
             <div class="grid-col grid-size2of4">
-                <div class="borderLt">
+                <div class="grid-pad-lt-md">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
                     <ul class="v-list-md">
                         <li>
@@ -150,27 +152,27 @@
         
         <div class="wrapper">
             <div class="inner-wrapper">
-                <div class="grid-col grid-size2of4">
-                    <div class="borderLt grid-pad-rt-md centered">
-                        <div class="grid-rt">
-                            <a  href="/blog" class="btn">VIEW MORE BLOGS</a> 
+                <div class="grid layout-vr-sm">
+                    <div class="grid-col grid-size2of4 layout-vr-sm">
+                        <div class="borderLt grid-pad-rt-md centered">
+                            <div class="grid-rt">
+                                <a  href="/blog" class="btn">VIEW MORE BLOGS</a> 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="grid-col grid-size2of4">
-                    <div class="borderLt grid-pad-rt-md centered">
-                        <div class="grid-rt">
-                            <a  href="{% url 'resources' %}" class="btn">VIEW MORE RESOURCES</a> 
+                    <div class="grid-col grid-size2of4">
+                        <div class="borderLt grid-pad-rt-md centered">
+                            <div class="grid-rt">
+                                <a  href="{% url 'resources' %}" class="btn">VIEW MORE RESOURCES</a> 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
         
         <div class="wrapper layout-vr-md">
-
             <!-- NEWS SECTION-->
             <div class="inner-wrapper">
                 <h2 class="hdg-a hdg-source-lt layout-vr-md">In the News</h2>
@@ -212,7 +214,7 @@
                         </div>
 
                         <div class="js-carousel-nav">
-                            <ul class="h-list img-effects grid-rt" style="padding-right:3px;">
+                            <ul class="h-list img-effects grid-rt" style="padding-right:3px; padding-top:15px">
                                 <li><img src="/media/social_website/content/homepage/Hillary.JPG" width="126px">
                                 </img></li>
                                 <li><img src="/media/social_website/content/homepage/jairam.jpg" width="126px">
@@ -228,10 +230,10 @@
                 <div class="grid-col grid-size2of5">
                     <a href="http://www.bloomberg.com/news/2014-11-23/women-empowered-to-reshape-indian-farming-with-video.html" target="_blank" class="layout-vr-tiny">
                         <div class="grid">
-                            <div class="grid-col grid-size1of3 img-effects ">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
                                 <img class="grid-rt" src="/media/social_website/content/homepage/bloomberg.png" width="80px"></img>
                             </div>
-                            <div class="grid-col grid-size2of3">
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
                                 <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
                                     Microsoft's 10-Minute Movie Stars Inspire Change in Indian Villages
                                 </p>
@@ -240,22 +242,22 @@
                     </a>     
                      <a href="http://www.gatesnotes.com/Development/Innovation" target="_blank" class="layout-vr-tiny">
                         <div class="grid">
-                            <div class="grid-col grid-size1of3 img-effects">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
                                 <img class="grid-rt" src="/media/social_website/content/homepage/gatesnotes.png" width="80px"></img>
                             </div>
-                            <div class=" grid-col grid-size2of3">
+                            <div class=" grid-col grid-size2of3 layout-vr-tiny">
                                 <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
                                     4 Innovations for poor farmers
                                 </p>
                             </div>
                         </div>
                     </a>       
-                   <a href="https://blogs.worldbank.org/endpovertyinsouthasia/digital-libraries-poor" target="_blank" class="layout-vr-tiny">
+                   <a href="https://blogs.worldbank.org/endpovertyinsouthasia/digital-libraries-poor" target="_blank" class="layout-vr-sm">
                         <div class="grid">
-                            <div class="grid-col grid-size1of3 img-effects">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
                                 <img class="grid-rt" src="/media/social_website/content/homepage/wb.png" width="80px"></img>
                             </div>
-                            <div class="grid-col grid-size2of3">
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
                                 <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
                                     Digital libraries for the poor - facilitating bottom-up Innovation through a video-based learning platform
                                 </p>
@@ -264,10 +266,10 @@
                     </a>          
                     <a href="http://www.ndtv.com/article/india/digital-green-catalyses-a-quiet-revolution-in-india-50977"  target="_blank" class="layout-vr-tiny">
                         <div class="grid">
-                            <div class="grid-col grid-size1of3 img-effects">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
                                 <img class="grid-rt" src="/media/social_website/content/homepage/ndtv.png" width="80px"></img>
                             </div>
-                            <div class="grid-col grid-size2of3">
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
                                 <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
                                     Digital Green catalyses a quiet revolution in India
                                 </p>

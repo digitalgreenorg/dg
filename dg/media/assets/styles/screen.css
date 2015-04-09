@@ -675,12 +675,16 @@ padding-right: 20px;
     padding-right: 35px;
 }
 
-
 /* Border on grid item */
 
 .borderLt {
     border-left: 1px dotted #b2b2b2;
     padding-left: 20px;
+}
+
+.borderRt {
+    border-right: 1px dotted #b2b2b2;
+    padding-right: 20px;
 }
 
 
