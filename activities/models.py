@@ -112,7 +112,7 @@ class PersonAdoptPractice(CocoModel):
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
 
     def __unicode__(self):
-        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
+        return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name, self.person.village.village_name, self.video.title)
 
     def get_village(self):
         return self.person.village.id

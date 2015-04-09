@@ -143,7 +143,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     }
     list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
     list_editable = ('verification_status',)
-    list_filter = ('date_of_adoption', )
+    list_filter = ('date_of_adoption', 'verification_status')
     search_fields = ['id', 'person__person_name', 'person__village__village_name', 'video__title', 'person__group__group_name']
     raw_id_fields = ('person', 'video')
 '''    class Media:
