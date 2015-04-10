@@ -93,7 +93,7 @@ def video_view(request, uid):
         collection = Collection.objects.filter(partner=video.partner)[0]
     else:
         collection = Collection.objects.all()[0]
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, False)
     related_videos = get_related_videos(video)
     context = {
                'header': {
