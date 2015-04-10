@@ -59,8 +59,9 @@ def collection_view(request, partner, state, language, title, video=1):
         video = collection.videoincollection_set.all()[video_index - 1].video
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, collection.featured)
     video_list = [i.video for i in collection.videoincollection_set.all()]
+    description = collection.description
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -76,6 +77,8 @@ def collection_view(request, partner, state, language, title, video=1):
               'tags' : tags,
               'related_collections' : related_collections[:4], # restricting to 4 related collections for now
               }
+    if collection.featured :
+      return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
@@ -90,7 +93,7 @@ def video_view(request, uid):
         collection = Collection.objects.filter(partner=video.partner)[0]
     else:
         collection = Collection.objects.all()[0]
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, False)
     related_videos = get_related_videos(video)
     context = {
                'header': {
@@ -128,6 +131,11 @@ def search_view(request):
     partner = request.GET.get('partner', None)
     title = request.GET.get('title', None)
     state = request.GET.get('state', None)
+    language = request.GET.get('language', None)
+    category = request.GET.get('category', None)
+    subcategory = request.GET.get('subcategory', None)
+    topic = request.GET.get('topic', None)
+    subject = request.GET.get('subject', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -138,6 +146,11 @@ def search_view(request):
               'partner' : partner,
               'title' : title,
               'state' : state,
+              'language' : language,
+              'category' : category,
+              'subcategory' : subcategory,
+              'topic' : topic,
+              'subject': subject,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     

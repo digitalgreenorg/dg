@@ -1,3 +1,17 @@
+{% if mem.team == 'Executive Leadership Team' %}
+    <div class="layout-vr-md">
+        <div class="grid-pad-lt-sm">
+            <div class="img img-effects img-size-sq">
+                <img src="{{mem.image.url}}" alt="{{mem.name}}" title="{{mem.name}}">
+            </div>
+            <div class="copy">
+                <p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}, {{mem.designation}}</p>
+             <!--    <p class="copy-sm"><a href="mailto:{{mem.email}}">{{mem.email}}</a></p> -->
+                 <p class="copy-sm"> {{mem.personal_intro}} </p>
+            </div>
+        </div>
+    </div>
+{% else %}
 <div class="grid grid-col grid-size1of3 layout-vr-md">
     <div class="grid-pad-lt-sm">
         <div class="img img-effects img-size-sq">
@@ -10,3 +24,4 @@
         </div>
     </div>
 </div>
+{% endif %}

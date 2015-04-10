@@ -112,7 +112,12 @@ define(function(require) {
             this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
             
             state.updateVideoWatchedTimeInterval = undefined;
-            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
+            try{
+                this._references.videosCarousel.moveToSlide(parseInt(($('.js-video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
+            }
+            catch(err){
+                //Todo
+            }
         },
 
         _initVideoStats: function() {
@@ -152,42 +157,53 @@ define(function(require) {
 
         _initVideoPlayer: function() {
             var videoId = this._references.$videoTarget.data('videoId');
+            var videoPlayerWidth = this._references.$videoTarget.width();
             var that = this;
             if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
                 window.onYouTubeIframeAPIReady = function() {
-                    that.loadPlayer(videoId);
+                    that.loadPlayer(videoId,videoPlayerWidth);
                 };
                 $.getScript('//www.youtube.com/iframe_api');
             } 
             else {
-                  that.loadPlayer(videoId);
+                  that.loadPlayer(videoId,videoPlayerWidth);
             }
         },
         
-        loadPlayer: function(videoId){
+        loadPlayer: function(videoId, videoPlayerWidth){
             var that = this;
             var player = new YT.Player('video-target', {
-                height: '395',
-                width: '703',
                 videoId: videoId,
+                width: videoPlayerWidth,
                 events: {
-                  'onReady': that._onYouTubePlayerReady,
-                  'onStateChange': function(newState){
-                      switch (newState.data) {
+                    'onReady': that._onYouTubePlayerReady,
+                    'onStateChange': function(newState){
+                    switch (newState.data) {
                           // playback completed/stopped
                           case 0:
-                              var now_playing_video = jQuery('.now-playing').closest('li');
-                              var next_video = now_playing_video.next();
-                              if (next_video.length == 0) {
-                                  /* End of current slide or this is the last video altogether */
-                                  var next_slide = now_playing_video.closest('ul').closest('li').next();
-                                  if (next_slide.length == 0) {
-                                      /* Last video - go back to the first video */
-                                      next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                                  }
-                                  next_video = next_slide.find('ul > li:first-child');
-                              }
-                              window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                                var now_playing_video = jQuery('.now-playing');
+                                var next_video;
+                                if (now_playing_video.hasClass('js-featured-collection-li')) {
+                                    next_video = now_playing_video.next('li');
+                                    if (next_video.length == 0) {
+                                        next_video = now_playing_video.closest('ul').find('li:first');
+                                    }
+                                    window.location.href = next_video.find('a').attr('href');
+                                }
+                                else {
+                                    now_playing_video = now_playing_video.closest('li');
+                                    next_video = now_playing_video.next();
+                                    if (next_video.length == 0) {
+                                        /* End of current slide or this is the last video altogether */
+                                        var next_slide = now_playing_video.closest('ul').closest('li').next();
+                                        if (next_slide.length == 0) {
+                                            /* Last video - go back to the first video */
+                                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
+                                        }
+                                        next_video = next_slide.find('ul > li:first-child');
+                                    }
+                                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                                }
                           // stop the interval and manually send an update
                           case 2:
                               that._stopUpdateInterval();
