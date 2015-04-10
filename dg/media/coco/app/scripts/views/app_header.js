@@ -19,8 +19,10 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
         serialize: function() {
             // Send username 
             var username = User.get("username");
+            var language = User.get("language");
             return {
                 username: username,
+                language: language,
             }
         },
 

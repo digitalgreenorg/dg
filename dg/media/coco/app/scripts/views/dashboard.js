@@ -7,7 +7,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         template: "#dashboard",
         events: {
             "click #sync": "sync",
-            "click #inc_download": "inc_download"
+            "click #inc_download": "inc_download",
+            "click .js_language": "language"
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -19,15 +20,19 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             this.background_download();
             _(this)
                 .bindAll('render');
-            //re-render the view when User model changes - to keep username updated    
+            //re-render the view when User model changes - to keep username updated
+            User.on('change', this.render);
             this.upload_entries = upload_collection.length;
         },
 
         serialize: function() {
             // send username and # of uploadQ items to the template 
             var username = User.get("username");
+            var language = User.get("language");
             return {
                 username: username,
+                language: language,
+                configs: configs,
                 upload_entries: this.upload_entries
             }
         },
@@ -292,6 +297,16 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         // check internet connection
         is_internet_connected: function() {
             return navigator.onLine;
+        }, 
+        
+        language: function(e) {
+            e.preventDefault();
+            var language_chosen = $(e.currentTarget).text();
+            var language_current = User.get("language");
+            if(language_chosen!=language_current){
+                User.save({"language":language_chosen});
+            }
+            
         }
     });
 

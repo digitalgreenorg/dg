@@ -11,8 +11,9 @@ define([
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'models/user_model',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online, User) {
 
     // FormController: Brings up the Add/Edit form
 
@@ -32,6 +33,7 @@ var message_combined_failure = "";
             console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
             _.bindAll(this);
+            User.on('change', this.render);
         },
         template: "<div><div id = 'form'></div></div>",
 

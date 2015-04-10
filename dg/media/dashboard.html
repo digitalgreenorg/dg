@@ -207,6 +207,18 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
+                            <div class="dropdown">
+                            <button class="btn btn-default coco_sync dropdown-toggle" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
+                                <%=language%>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="language">
+                                <% _.each(configs.misc.languages, function(language) { %>
+                                    <li role="presentation" class="js_language" name="<%= language %>"><a role="menuitem" tabindex="-1" href="#"><%= language %></a></li>
+                                <% }); %>
+                            
+                            </ul>
+                            </div>
                             <button type="button" class="coco_sync btn btn-default" id="sync">
                                 Sync
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
@@ -259,6 +271,7 @@
             <ul class="pdg-0">
                 <%if(typeof(username)!=undefined){%>
                 <li class="user-dropdown-option">Hi <%=username%>!</li>
+                <li class="user-dropdown-option"><%=language%></li>
                 <li class="user-dropdown-option" id="dropdown-help"><a href="{% url 'faq' %}"> Help </a></li>
                 <li class="user-dropdown-option"><a id="logout" style="cursor:pointer">Log out</a></li>
                 <%}%>
@@ -450,7 +463,7 @@
                         </div>
                         <div class="clearfix form-group">
                             <select id=language name="language" class="form-control">
-                                <option value='' selected='selected'>----------</option>
+                                <option value='' selected='selected'>Language</option>
                                 <% _.each(configs.misc.languages, function(language) { %>
                                     <option value="<%= language %>"><%= language %></option> 
                                     <% }); %>

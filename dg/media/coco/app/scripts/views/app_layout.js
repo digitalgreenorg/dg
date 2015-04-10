@@ -13,7 +13,7 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
             var username = User.get("username");
             console.log(User);
             return {
-                username: username
+                username: username,
             }
                 
         },
