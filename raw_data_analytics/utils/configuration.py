@@ -138,7 +138,7 @@ selectDictionary={
     'numAnimator':{'count(animator_id)':True,'count(distinct animator_id)':False},
     'listPerson':{'distinct(person_name)':True,'gender':False},
     'listAnimator':{'distinct(animator_name)':True,'gender':False},
-    'numVideoScreened':{'count(id)':True,'count(distinct video_id)':False},
+    'numVideoScreened':{'count(video_id)':True,'count(distinct video_id)':False},
     'numVideoProduced':{'count(id)':True,'count(distinct id)':False},
     'list':'self',
     'listVideoProduced':{'id':False,'distinct(title)':True},
