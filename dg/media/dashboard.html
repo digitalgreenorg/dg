@@ -598,23 +598,23 @@
                     <thead class="hide-header">
                         <tr>
                             <th class="notbold">
-                                Delete?
+                                <%= del %>?
                             </th>
                             <th class="notbold">
-                                Sr. No.
+                                <%= sr_no %>
                             </th>
                             <th class="notbold">
-                                Person
+                                <%= person %>
                             </th>
                             <th class="notbold">
-                                Expressed Adopted Video
+                                <%= expressed_adopted_video %>
                             </th>
                             <th class="notbold">
-                                Question Asked
+                                <%= question_asked %>
                             </th>
                             <th class="notbold">
                                 <input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
-                                Interested?
+                                <%= interested %>?
                             </th>
                         </tr>
                     </thead>
@@ -701,7 +701,7 @@
         <fieldset class="form-horizontal">
                 <legend>Edit Adoption</legend>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Person</label>
+                    <label class="control-label col-sm-2"><%= person%></label>
                 	<div class="col-sm-4"> 
                         <select name="person" id="id_person" class="chosen-select form-control">
                         <option value="">---------- </option>
@@ -709,13 +709,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Video</label>
+                    <label class="control-label col-sm-2"><%= video %></label>
                     <div class="col-sm-4">
                         <select name="video" id="id_video" class="chosen-select form-control"></select>
                     </div>
                 </div>
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2">Date</label>
+                    <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
                         <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_adoption">  
                  	</div>
@@ -728,7 +728,7 @@
             <legend>Add Adoption</legend>
             <p class="bold-helptext"> All fields in bold are required</p>
             <div class="form-group">
-                <label class="control-label col-sm-2">Village</label>
+                <label class="control-label col-sm-2"><%= village %></label>
                 <div class="col-sm-4"> 
                 <select name="village" id="id_village" class="chosen-select form-control">
                 <option value="">---------- </option>
@@ -736,13 +736,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2">Groups Attended</label>
+                <label class="control-label col-sm-2"><%= groups_attended %></label>
                 <div class="col-sm-4">
                     <select name="group" id="id_group" multiple="multiple" class="chosen-select form-control"></select>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2 notbold">Person</label>
+                <label class="control-label col-sm-2 notbold"><%= person %></label>
                 <div class="col-sm-4">
                     <select name="float_person" id="id_person" multiple="multiple" class="chosen-select form-control"></select>
                 </div>
@@ -755,19 +755,19 @@
                 <thead>
                     <tr class="hide-header">
                         <th class= "notbold">
-                            Delete?
+                            <%=del%>?
                         </th>
                         <th class = "notbold">
-                            Sr. No.
+                            <%=sr_no%>
                         </th>
                         <th>
-                            Person
+                            <%=person%>
                         </th>
                         <th>
-                            Video
+                            <%=video%>
                         </th>
                         <th>
-                            Date of Adoption
+                            <%=date%>
                         </th>
                     </tr>
                 </thead>
