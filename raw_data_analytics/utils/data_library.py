@@ -1,21 +1,24 @@
 __author__ = 'Lokesh'
 
 import os.path
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary, headerDictionary
+from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, \
+    orderDictionary, headerDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 import csv
 import dg.settings
 
+
 class data_lib():
     Dict = {}
     lookup_matrix = {}
-
+    idElementKey = ''
+    idElementValue = -1
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
-        #print options
+        # print options
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -29,11 +32,12 @@ class data_lib():
 
         if self.check_valuefield_validity(options['value']):
             for item in options['value']:
-                if item =='list' and options['value']['list'] != False:
+                if item == 'list' and options['value']['list'] != False:
                     relevantValueDictionary[options['value'][item]] = True
-                    relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]] = False
+                    relevantPartitionDictionary[
+                        categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]]
-                if options['value'][item] != False and item!='list':
+                if options['value'][item] != False and item != 'list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
             print "Warning - Invalid input for Value fields"
@@ -42,37 +46,40 @@ class data_lib():
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-    #        print "----------------------------------Full SQL Query---------------------------"
-            query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3], queryComponents[4])
-            #print query
-    #        print "-------------------------------Result--------------------------------"
+            print "----------------------------------Full SQL Query---------------------------"
+            query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
+                                      queryComponents[4])
+            print query
+            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-    #        print df
-        resultant_df = self.order_data(relevantPartitionDictionary,final_df)
+                print df
+        resultant_df = self.order_data(relevantPartitionDictionary, final_df)
         resultant_df.index += 1
+        print resultant_df
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
-        arranged_columns = [None]*len(orderDictionary)
+        arranged_columns = [None] * len(orderDictionary)
         bumper = 0
-        
+
         for items in partitionElements:
             if partitionElements[items] != False:
                 for elements in selectDictionary[items]:
-                    if selectDictionary[items][elements] == True and selectDictionary[items].values().count(True)>1:
-                        arranged_columns[len(arranged_columns)+1]=None
+                    if selectDictionary[items][elements] == True and selectDictionary[items].values().count(True) > 1:
+                        arranged_columns[len(arranged_columns) + 1] = None
                         arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
-                        bumper+=1
+                        bumper += 1
                     elif selectDictionary[items][elements] == True:
                         arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
-        
+
         arranged_columns = filter(lambda a: a != None, arranged_columns)
-        arranged_columns.extend(list(set(header)-set(arranged_columns)))
+        arranged_columns.append(headerDictionary[self.idElementKey][groupbyDictionary[self.idElementKey]])
+        arranged_columns.extend(list(set(header) - set(arranged_columns)))
         dataframe = dataframe[arranged_columns]
         return dataframe
 
@@ -117,14 +124,16 @@ class data_lib():
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-        #print "----------------------------------SELECT PART------------------------------"
-        #print selectResult
-        #print "----------------------------------FROM PART--------------------------------"
-        #print fromResult
-        #print "----------------------------------WHERE PART-------------------------------"
-        #print whereResult
-        #print "---------------------------------GROUP_BY PART----------------------------"
-        #print groupbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
+        print "--------------------------------ORDER_BY PART-----------------------------"
+        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg, orderby_msg):
@@ -134,22 +143,46 @@ class data_lib():
 
     def getSelectComponent(self, partitionElements, valueElement):
         selectComponentList = []
+        selectComponentKeysList = []
+        idElementVal = -1
+        idElementKey = ''
         for items in partitionElements:
             for i in selectDictionary[items]:
                 if (selectDictionary[items][i] == True):
-                    selectComponentList.append(tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
+                    selectComponentKeysList.append(items)
+                    selectComponentList.append(
+                        tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
+        for items in selectComponentKeysList:
+            if orderDictionary[items] > idElementVal:
+                idElementVal = orderDictionary[items]
+                idElementKey = items
+
+        self.idElementKey = idElementKey
+        self.idElementValue = idElementVal
+        selectComponentList.append(
+            tableDictionary[idElementKey] + '.' + groupbyDictionary[idElementKey] + ' AS \'' + headerDictionary[idElementKey][
+                groupbyDictionary[idElementKey]] + '\'')
+
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
-                x = ['count','distinct']
+                x = ['count', 'distinct']
                 if all(a in i for a in x):
                     selectComponentList.append(
-                            i.replace('count(distinct', 'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' + headerDictionary[valueElement][i] + '\'')
+                        i.replace('count(distinct',
+                                  'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
+                        headerDictionary[valueElement][i] + '\'')
                 elif "count" in i and "distinct" not in i:
-                    selectComponentList.append(i.replace('count(','count('+str(tableDictionary[valueElement])+'.') + ' AS \'' + headerDictionary[valueElement][i] + '\'')
+                    selectComponentList.append(
+                        i.replace('count(', 'count(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
+                        headerDictionary[valueElement][i] + '\'')
                 elif "distinct" in i and "count" not in i:
-                    selectComponentList.insert(0,(i.replace('distinct(',' distinct('+str(tableDictionary[valueElement])+'.') + ' AS \'' + headerDictionary[valueElement][i] + '\''))
+                    selectComponentList.insert(0, (
+                    i.replace('distinct(', ' distinct(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
+                    headerDictionary[valueElement][i] + '\''))
                 else:
-                    selectComponentList.append(str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][i] + '\'')
+                    selectComponentList.append(
+                        str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][
+                            i] + '\'')
         return ','.join(selectComponentList)
 
     # Function to make tables by recursive calls for tables.
@@ -196,7 +229,7 @@ class data_lib():
             if (table not in majorTablesList):
                 minorTablePath.append(table)
                 self.makeJoinTable(table, tableDictionary[valueElement], lookup_matrix, tablesOccuredList, self.Dict)
-            counter+=1
+            counter += 1
         majorTablesList = tablesOccuredList
 
         if not partitionElements:
@@ -215,10 +248,12 @@ class data_lib():
                     tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
         for i in Dictionary:
             for j in Dictionary[i]:
-                for k in range(0,len(lookup_matrix[i][j])):
-                    whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(lookup_matrix[i][j][k][1]))
+                for k in range(0, len(lookup_matrix[i][j])):
+                    whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(
+                        lookup_matrix[i][j][k][1]))
         if '.' in str(whereDictionary[valueElement]):
-            whereComponentList.append(str(whereDictionary[valueElement]) + ' between \'' + str(args[0]) + '\' and \'' + str(args[1]) + '\'')
+            whereComponentList.append(
+                str(whereDictionary[valueElement]) + ' between \'' + str(args[0]) + '\' and \'' + str(args[1]) + '\'')
         else:
             whereComponentList.append(
                 str(tableDictionary[valueElement]) + '.' + str(whereDictionary[valueElement]) + ' between \'' + str(
@@ -238,17 +273,17 @@ class data_lib():
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
-        ordered_cols = [None]*len(orderDictionary)
+        ordered_cols = [None] * len(orderDictionary)
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in selectDictionary[items]:
-                    if selectDictionary[items][keys] == True and selectDictionary[items].values().count(True)>1:
-                        ordered_cols[len(ordered_cols)+1]=None
-                        ordered_cols[bumper + orderDictionary[items]] = '\''+headerDictionary[items][keys]+'\''
-                        bumper+=1
+                    if selectDictionary[items][keys] == True and selectDictionary[items].values().count(True) > 1:
+                        ordered_cols[len(ordered_cols) + 1] = None
+                        ordered_cols[bumper + orderDictionary[items]] = '\'' + headerDictionary[items][keys] + '\''
+                        bumper += 1
                     else:
-                        ordered_cols[bumper + orderDictionary[items]] = '\''+headerDictionary[items][keys]+'\''
+                        ordered_cols[bumper + orderDictionary[items]] = '\'' + headerDictionary[items][keys] + '\''
         ordered_cols = filter(lambda a: a != None, ordered_cols)
         orderbyComponentList += ordered_cols
         return ' , '.join(orderbyComponentList)
@@ -256,7 +291,9 @@ class data_lib():
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd=dg.settings.DATABASES['default']['PASSWORD'], db=dg.settings.DATABASES['default']['NAME'])
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
+                                   db=dg.settings.DATABASES['default']['NAME'])
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
