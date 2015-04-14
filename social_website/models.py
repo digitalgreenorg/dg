@@ -121,7 +121,6 @@ class Collection(models.Model):
         unique_together = ("title", "partner", 'state', 'language')
 post_save.connect(collection_add_activity, sender=Collection)
 
-
 class VideoinCollection(models.Model):
     video = models.ForeignKey(Video)
     collection = models.ForeignKey(Collection)
@@ -133,6 +132,17 @@ post_save.connect(video_collection_activity, sender=VideoinCollection)
 post_save.connect(update_stats, sender=VideoinCollection)
 post_delete.connect(update_stats, sender=VideoinCollection)
 
+class ResourceVideo(models.Model):
+    FILM = 'f'
+    TESTIMONIAL = 't'
+    video_choice = (
+        (FILM, 'Film'),
+        (TESTIMONIAL, 'Testimonial'),
+        )
+    uid = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200)
+    youtubeID = models.CharField(max_length=50) 
+    videoTag = models.CharField(max_length=2,choices=video_choice,default=FILM)
 
 class FeaturedCollection(models.Model):
     uid = models.AutoField(primary_key=True)

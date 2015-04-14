@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from communications.views import media_view
 from human_resources.views import job_view, member_view
 from events import event_registration
-from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view
+from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view
 
 class DirectTemplateView(TemplateView):
     extra_context = None
@@ -27,8 +27,8 @@ urlpatterns = patterns('',
     url(r'^about/ourwork/$', TemplateView.as_view(template_name='our_work.html'), name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
     url(r'^about/reports/1/$', TemplateView.as_view(template_name='annualreport09.html'), name='annualreport09'),
-    url(r'^about/reports/1/field$', TemplateView.as_view(template_name='field-developments-09.html'), name='annualreport09fields'),
-    url(r'^about/reports/1/learning$', TemplateView.as_view(template_name='learnings-09.html'), name='annualreport09learnings'),
+    url(r'^about/reports/1/field/$', TemplateView.as_view(template_name='field-developments-09.html'), name='annualreport09fields'),
+    url(r'^about/reports/1/learning/$', TemplateView.as_view(template_name='learnings-09.html'), name='annualreport09learnings'),
     url(r'^about/resources/$', TemplateView.as_view(template_name='resources.html'), name='resources'),
     url(r'^about/team/$', member_view, name='team'),
     url(r'^about/tools/$', DirectTemplateView.as_view(template_name='tools.html', extra_context={'header': {'currentPage':'Tools'}}), name='tools'),
@@ -51,7 +51,13 @@ urlpatterns = patterns('',
     # TODO: There are no names used below
     url(r'^press/$', media_view, name='press'),
     url(r'^team/$', member_view, name='team'),
-    url(r'^resources/$', TemplateView.as_view(template_name='resources.html'), name='resources'),
+    url(r'^resources/annual_reports/$', TemplateView.as_view(template_name='annual_reports.html'), name='annual_reports'),
+    url(r'^resources/our_programs/$', TemplateView.as_view(template_name='our_programs.html'), name='our_programs'),
+    url(r'^resources/field_stories/$', TemplateView.as_view(template_name='field_stories.html'), name='field_stories'),
+    url(r'^resources/sop/$', TemplateView.as_view(template_name='sop.html'), name='sop'),
+    url(r'^resources/research/$', TemplateView.as_view(template_name='research.html'), name='research'),
+    url(r'^resources/(?P<uid>.+)/$', resource_view, name='resources'),
+    url(r'^resources/$', resource_view, name='resources'),
     url(r'^sitemap/$', TemplateView.as_view(template_name='sitemap.html'), name='sitemap'),
     url(r'^tools/$', DirectTemplateView.as_view(template_name='tools.html', extra_context={'header': {'currentPage':'Tools'}}), name='tools'),
     url(r'^collection-add/(?P<collection>.+)/$', collection_edit_view, name='edit_collection'),

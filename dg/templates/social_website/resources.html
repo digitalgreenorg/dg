@@ -3,17 +3,67 @@
         <section class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>   
+                    <div class="media layout-vr-xlg">
+                        <div class="grid-col grid-size3of5">
+                            <div class="imgExt img-marginLg-lt img-effects img-size-lg grid-pad-rt-md">
+                                <img src="{{STATIC_URL}}social_website/content/publications.jpg" alt="" />
+                            </div>
+                        </div>
+                        <div class="grid-col grid-size2of5">
+                            <h2 class="hdg-a hdg-source-lt layout-vr-md grid-pad-lt-md">Publications</h2>   
+                            <ul class="link-list grid-pad-lt-md">
+                                <li><a href="/resources/annual_reports/" target="_blank">Annual Reports</a></li>
+                                <li><a href="{{STATIC_URL}}docs/Digital-Green-Key-Facts.pdf" target="_blank">Organizational Brochure</a></li>
+                                <li><a>Our Programs</a></li>
+                                <li><a>Voices from the Field</a></li>
+                                <li><a>Standard Operating Procedures</a></li>
+                                <li><a>Reports, Papers and Case Studies</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </section>
+       
+        <section class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <div class="centered layout-vr-xlg">
+                        {% for x in resources %}
+                        <h2 class="hdg-b hdg-source-reg layout-vr-sm">{{x.title}}</h2>
+                            <iframe width="900" height="525" src="http://www.youtube.com/embed/{{x.youtubeID}}">
+                            </iframe>
+                        {% endfor %}
+                    </div>
+                    <div class="grid layout-vr-md">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-a hdg-source-lt layout-vr-md grid-pad-lt-md">Films</h2>
+                            <ul class="link-list grid-pad-lt-md">
+                                {% for film in film_list %}
+                                    <li><a href="/resources/{{film.uid}}">{{film.title}}</a></li>
+                                {% endfor %}
+                            </ul>                                     
+                        </div>
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-a hdg-source-lt layout-vr-md grid-pad-lt-md">Testimonials</h2>
+                            <ul class="link-list grid-pad-lt-md">
+                                {% for testimonial in testimonial_list %}
+                                    <li><a href="/resources/{{testimonial.uid}}">{{testimonial.title}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
                     <div class="media layout-vr-xlg">
                         <div class='bd'>
                             <div class="grid-col grid-size2of4">
-                                <div class="hdg-e hdg-source-reg layout-vr-sm"> Annual Reports</div>
-                                <ul class="link-list">
-                                    <li><a href="#annualreport13">2013</a></li>
-                                    <li><a href="#annualreport12">2012</a></li>
-                                    <li><a href="#annualreport10-11">2010-2011</a></li>
-                                    <li><a href="#annualreport09-10">2009-2010</a></li>
-                                </ul>
                                 <div class="hdg-e hdg-source-reg layout-vr-sm"> Our Approach</div>
                                 <ul class="link-list">
                                     <li><a href="#sop">Standard Operating Procedures</a></li>
@@ -33,7 +83,6 @@
                                 </ul>
                                 <div class="hdg-e hdg-source-reg layout-vr-sm"> General</div>
                                 <ul class="link-list">
-                                    <li><a href="{{STATIC_URL}}docs/Digital-Green-Key-Facts.pdf"  target="_blank">Key Facts</a></li>
                                     <li><a href="{{STATIC_URL}}docs/success_stories/Voices.pdf"  target="_blank">Voices from the Field - March, 2014</a></li>
                                     <li><a href="{{STATIC_URL}}docs/success_stories/Voices-Ethiopia-February-2015.pdf"  target="_blank">Voices from the Field (Ethiopia) - February, 2015</a></li>
                                 </ul>
@@ -90,71 +139,7 @@
                 </div>
             </div>
         </section>
-        
-        <section id="annualreport13" role="main" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2013</h2>
-                    <div class="media layout-vr-sm">
-                        <iframe class="copy-margin" src="http://www.scribd.com/embeds/231938099/content?start_page=1&view_mode=scroll&show_recommendations=false" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_38757" width="944" height="500" frameborder="0" seamless="">
-                        </iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Annual-Report13.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section id="annualreport12" role="main" class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2012</h2>
-                    <div class="media layout-vr-sm">
-                        <iframe class="copy-margin" src="http://www.scribd.com/embeds/157647606/content?start_page=1&view_mode=scroll&show_recommendations=false" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_38757" width="944" height="500" frameborder="0" seamless="">
-                        </iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Annual-Report12.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section id="annualreport10-11" role="main" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2010-2011</h2>
-                    <div class="media layout-vr-sm">
-                        <iframe class="copy-margin" src="http://www.scribd.com/embeds/79824595/content?start_page=1&amp;view_mode=scroll&show_recommendations=false" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_98872" width="944" height="500" frameborder="0" seamless="">
-                        </iframe>
-                    </div>
-                    <div class="centered layout-vr-xlg">
-                        <a class="btn" data-toggle="modal" href="{{STATIC_URL}}docs/Annual-Report10-11.pdf"><span class="label">DOWNLOAD</span></a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section id="annualreport09-10" class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Report 2009-2010</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="img img-marginLg-rt img-effects img-size-lg">
-                            <a href="{% url 'annualreport09' %}"><img src="{{STATIC_URL}}social_website/content/annualreportlinkimg2.jpg" alt="" />
-                            </a>
-                        </div>
-                        <div class="bd">
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Letter from the CEO</h3>
-                            <p class="copy copy-para">Digital Green works to build technologies and to serve as a resource agency to maximize the potential of the partners and the communities that we work with. The last year has been one of great learning and progress in the field and as a team.</p>
-                            <a href="{% url 'annualreport09' %}">Read More ...</a>
-                        </div>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-		
+        		
         <section id="sop" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
@@ -188,4 +173,5 @@
                 </div>
             </div>
         </section>
+
 {% include "includes/footer.html" %}
