@@ -16,11 +16,13 @@ from videokheti.models import ActionType, Crop, Method, Video, VideoComment, Tim
 
 def home(request):
     if 'videokheti_cookie' in request.COOKIES:
+        video_objects = Video.objects.all()
         if "videokheti_language" in request.COOKIES:
             language = request.COOKIES["videokheti_language"]
         else:
             language = "Hindi"
-        crop_objects = Crop.objects.all()
+        crop_list = video_objects.values_list('crop', flat=True).distinct()
+        crop_objects = Crop.objects.filter(id__in=crop_list)
         list_dict = []
         for obj in crop_objects:
             dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
@@ -74,7 +76,9 @@ def level(request):
     level = request.GET.get('level', None)
     if level == '1':
         crop_id = request.GET.get('crop', None)
-        time_objects = TimeYear.objects.all()
+        video_objects = Video.objects.filter(crop_id=crop_id)
+        time_list = video_objects.values_list('time_year', flat=True).distinct()
+        time_objects = TimeYear.objects.filter(id__in=time_list)
         list_dict = []
         for obj in time_objects:
             dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
@@ -138,7 +142,9 @@ def level(request):
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
-            action_objects = ActionType.objects.filter(time_year_id=time_id)
+            video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id)
+            action_list = video_objects.values_list('action_type', flat=True).distinct()
+            action_objects = ActionType.objects.filter(time_year_id=time_id, id__in=action_list)
             list_dict = []
             for obj in action_objects:
                 dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
@@ -181,7 +187,9 @@ def level(request):
 
         action_object = ActionType.objects.get(id=action_id)
         if action_object.name in ('seed_treatment', 'nutrient_management', 'disease_and_pest_control'):
-            method_objects = Method.objects.all()[:3]
+            video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id)
+            method_list = video_objects.values_list('method', flat=True).distinct()
+            method_objects = Method.objects.filter(id__in=method_list)
             list_dict = []
             for obj in method_objects:
                 dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
@@ -201,7 +209,9 @@ def level(request):
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         elif action_object.name == 'interculture':
-            method_objects = Method.objects.all()[3:]
+            video_objects = Video.objects.filter(crop_id=crop_id, time_year_id=time_id, action_type_id=action_id)
+            method_list = video_objects.values_list('method', flat=True).distinct()
+            method_objects = Method.objects.filter(id__in=method_list)
             list_dict = []
             for obj in method_objects:
                 dic_obj = {'name': obj.hindi_text if language == "Hindi" else obj.name.replace('_', ' '),
