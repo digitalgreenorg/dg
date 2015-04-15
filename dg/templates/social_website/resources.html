@@ -26,7 +26,7 @@
             </div>
         </section>
        
-        <section class="about-bg about-bg-white">
+        <section id="films" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <div class="centered layout-vr-xlg">
@@ -41,7 +41,7 @@
                             <h2 class="hdg-a hdg-source-lt layout-vr-md grid-pad-lt-md">Films</h2>
                             <ul class="link-list grid-pad-lt-md">
                                 {% for film in film_list %}
-                                    <li><a href="/resources/{{film.uid}}">{{film.title}}</a></li>
+                                    <li><a href="/resources/{{film.uid}}/#films">{{film.title}}</a></li>
                                 {% endfor %}
                             </ul>                                     
                         </div>
@@ -49,40 +49,9 @@
                             <h2 class="hdg-a hdg-source-lt layout-vr-md grid-pad-lt-md">Testimonials</h2>
                             <ul class="link-list grid-pad-lt-md">
                                 {% for testimonial in testimonial_list %}
-                                    <li><a href="/resources/{{testimonial.uid}}">{{testimonial.title}}</a></li>
+                                    <li><a href="/resources/{{testimonial.uid}}/#films">{{testimonial.title}}</a></li>
                                 {% endfor %}
                             </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <div class="media layout-vr-xlg">
-                        <div class="hdg-e hdg-source-reg layout-vr-sm"> Our Approach</div>
-                        <ul class="link-list">
-                            <li><a href="#training">Capacity Building for Community Empowerment</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-		
-        <section id="training" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Training</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class='bd'>
-                            <div class="grid-col grid-size2of4">
-                                <ul class="link-list">
-                                    <li><a href="{{STATIC_URL}}docs/training/Brief.pdf"  target="_blank">Brief</a></li>
-                                    <li><a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual.pdf"  target="_blank">Dissemination Training Manual</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
