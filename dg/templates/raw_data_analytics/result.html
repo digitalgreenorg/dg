@@ -1,5 +1,34 @@
-<!DOCTYPE html>
-<html>
+{% include "includes/header.html" %}
+<section id="Raw Data Analytics" class="about-bg">
+	<div class="wrapper">
+		<div class="inner-wrapper">
+			<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>
+		    <div class="media layout-vr-xlg">
+	        	<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
+					<a a href="/media/social_website/uploads/raw_data_analytics/temp_csv/{{ filename }}"> 
+						Download result as an excel file
+					</a>
+				</div></br>
+				<center></br>
+					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
+				
+					<div id="dataframe" class = "copy copy-margin">
+						{{ dataf | safe }}
+					<div>
+				</center>
+			</div>
+		</div>		
+	</div>
+</section>
+<center></br>
+					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
+				
+					<div id="dataframe">
+						{{ dataf | safe }}
+					<div>
+				</center>
+{% include "includes/footer.html" %}
+<!--<html>
 
 <head>
 <center>
@@ -21,4 +50,4 @@
 {{ dataf | safe }}
 </center>
 </body>
-</html>
+</html> -->

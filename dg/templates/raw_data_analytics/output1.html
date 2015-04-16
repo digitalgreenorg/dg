@@ -1,0 +1,142 @@
+{% include "includes/header.html" %}
+	<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+	<script  src="/media/raw_data_analytics/raw_data_analytics.js"></script>
+
+	<section id="Raw Data Analytics" class="about-bg">
+		<div class="wrapper">
+			<div class="inner-wrapper">
+				<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics</h2>
+				<div class="media layout-vr-xlg">
+
+					<!--<p class="copy copy-margin">Raw Data Analytics lets you extract data based on user inputs </p> 
+					<ul class="copy bullet-list ">
+						<li>Filters: </li>
+						<li>Partitions: </li>
+						<li>Values: </li>
+						<li>List: </li>	  	
+					</ul>-->
+
+					<form target="_blank" action="/raw_data_analytics/execute/" id="form" method="POST" 	enctype="multipart/form-data" onclick="list_display(this)">
+						{% csrf_token %}
+
+						<center>
+							<div id="date" name="Date">
+								<p class="copy"> 
+									<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Date:
+									</h3> 
+									<h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">From: 
+										&nbsp;<input type="date" id="from_date" name="from_date">&nbsp;&nbsp;                          
+								 		To: &nbsp; <input type="date" id = "to_date" name="to_date">
+									</h3>
+								</p>
+							</div>
+						</center></br></br></br>
+						
+						<div name="Filters"style='padding-left:77px; width:200;  display:inline-block; padding-right:150px; float:left;' >
+							
+							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Filters:</h3>
+							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
+				   				<div name='partner' id='partnerID' >
+				   					Partner  &nbsp;&nbsp;<select class='select' name='partner' id = 'partnerID' style='width:150px;'>
+						    			<option value='-1'>-------------ALL-------------</option>
+											{% if partners %}
+											{% for partner in partners %}
+												<option > {{partner}} </option>{% endfor %}
+											{%endif%}
+					    			</select>
+					    		</div></br>				
+
+					    		<div name='country' id='countryID' >
+					   				Country  &nbsp;<select class='select' name='country' id = 'countryId' style='width:150px;' onChange="statechange('state', this.value)">
+						    			<option value='-1'>-------------ALL-------------</option>
+											{% if countries %}
+											{% for country in countries %}
+												<option > {{country}} </option>{% endfor %}
+											{%endif%}
+					    			</select>
+					    		</div></br>				
+									
+					   			<div name='state' id='stateID'>	
+					   				State  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select class='select' name='state' id = 'stateId' style='width:150px;' onChange="districtchange('district', this.value)">
+						    			<option value='-1'>-------------ALL-------------</option>
+											
+					    			</select>
+					    		</div></br>				
+									
+				   				<div name='district' id='districtID'>
+					   				District  &nbsp;&nbsp;&nbsp;<select class='select' name='district' id = 'districtId' style='width:150px;' onChange="blockchange('block', this.value)">
+						    			<option value='-1'>-------------ALL-------------</option>
+											
+					    			</select>
+					    		</div></br>			
+									
+					   			<div name='block' id='blockID'>	
+					   				Block  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select class='select' name='block' id = 'blockId' style='width:150px;' onChange="villagechange('village', this.value)">
+						    			<option value='-1'>-------------ALL-------------</option>
+											
+					    			</select>
+					    		</div></br>				
+									
+					   			<div name='village' id='villageID'>	
+					   				Village &nbsp;&nbsp;&nbsp;&nbsp; <select class='select' name='village' id = 'villageId'style='width:150px;'>
+						    			<option value='-1'>-------------ALL-------------</option>
+											
+					    			</select>
+					    		</div></br>				
+											
+						    </div>
+						</div>
+						<div name="Partition" style=' padding-right:110px; display:inline-block; float:left;' >
+							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
+							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
+			   				
+								<ul style='list-style-type: none;'>
+									<li><input type="checkbox" id="partner" name="partner_chk" value"partner">Partner 
+									<li><input type="checkbox" id= "country" name="country_chk" value"country">Country 
+									<li><input type="checkbox" id="state" name="state_chk" value"state">State 
+									<li><input type="checkbox" id="district"name="district_chk" value"district">District 
+									<li><input type="checkbox" id="block"name="block_chk" value"block">Block 
+									<li><input type="checkbox" id="village"name="village_chk" value"village">Village 
+									<li><input type="checkbox" id="animator"name="animator_chk" value"animator">Animator(Mediator) 
+									<li><input type="checkbox" id="people" name="people_chk" value"animator">Registered Viewers 
+									<li><input type="checkbox" id ="group"name="group_chk" value"animator">SHG 
+									<li><input type="checkbox" id="video" name="video_chk" value"videos">Videos 
+								</ul>
+							</div>
+						</div>
+						
+						<div name="Values" style='float:left' >
+							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm"> 
+								Values:</h3>
+							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
+								<ul style='list-style-type: none;'>
+									<li><input type="checkbox" id="screening" name="screening_chk" value"screening">Number of Screenings 
+									<li><input type="checkbox" id="adoption" name="adoption_chk" value"adoption">Number of Adoptions
+									<li><input type="checkbox" id="animator_no" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
+									<li><input type="checkbox" id="attendance" name="attendance_chk" value"attendance">Number of Viewers
+									<li><input type="checkbox" id="video_screened_no"name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
+									<li><input type="checkbox" id="video_produced_no"name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
+									<li><input type="checkbox" id="list" name="list" value"list" >List
+								</ul>
+								<div id="listoptions" name='listoptions' style='visibility:hidden'>
+									<select class='select' name='list_video' id = 'list_video' style='width:200px;'> 
+										<option value='-1'>-----------------List of------------------</option>
+										<option value='listVideoProduced'>Produced Videos</option>
+										<option value='listVideoScreened'>Screened Videos</option>
+									</select>
+								</div>
+							</div>
+						</div></div>
+						
+						<div name="Buttons" class="centered layout-vr-lg">
+		
+							<input class="btn" type="submit" value="Submit"onclick="validation_check(this)" > &nbsp;&nbsp;
+							<input class="btn" type="button" value="Reset" onClick="this.form.reset();">
+						</div>
+						
+					</form>			
+				</div>
+			</div>
+		</div>
+	</section>
+{% include "includes/footer.html" %}

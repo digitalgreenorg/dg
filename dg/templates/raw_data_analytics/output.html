@@ -5,7 +5,7 @@
 			<h1 >Raw Data Analytics</h1>
 			<hr>
 		</center></head>
-		<body onunload="">
+		<body >
 			<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
 			<script  src="/media/raw_data_analytics/raw_data_analytics.js"></script>
 
@@ -113,9 +113,9 @@
 				</div>
 
 				<center>
-					<div name="Buttons" style='width:100%; display:block;'onclick="validation_check(this)">
-						<input type="submit" value="Submit" > &nbsp;&nbsp;
-						<input type="button" value="Reset" onClick="history.go(0)">
+					<div name="Buttons" style='width:100%; display:block;'>
+						<input type="submit" value="Submit"onclick="validation_check(this)" > &nbsp;&nbsp;
+						<input type="button" value="Reset" onClick="this.form.reset();">
 				</center>
 
 			</form>

@@ -21,7 +21,7 @@ def home(request):
    
     partners = Partner.objects.all()
 
-    return render_to_response('raw_data_analytics/output.html', {'countries' : countries, 'partners':partners}, context_instance=RequestContext(request))
+    return render_to_response('raw_data_analytics/output1.html', {'countries' : countries, 'partners':partners}, context_instance=RequestContext(request))
 
     
 def dropdown_state(request):
