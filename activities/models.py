@@ -102,10 +102,6 @@ class PersonMeetingAttendance(CocoModel):
     def __unicode__(self):
         return  u'%s' % (self.id)
 
-class AdoptionCheckComment(CocoModel):
-    id = models.AutoField(primary_key=True)
-    comment_msg = models.CharField(max_length=1000, blank=True)
-
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -129,4 +125,10 @@ class PersonAdoptPractice(CocoModel):
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+
+class AdoptionCheckComment(CocoModel):
+    id = models.AutoField(primary_key=True)
+    adoption = models.ForeignKey(PersonAdoptPractice,null=True)
+    comment_msg = models.TextField(max_length=1000, blank=True, null=True)
+
 

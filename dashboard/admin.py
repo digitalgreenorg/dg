@@ -136,21 +136,28 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
+class AdoptionCheckCommentInline(admin.StackedInline):
+    model = AdoptionCheckComment
+    extra = 1
+
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':40})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status','comment')
-    list_editable = ('verification_status','comment')
+    inlines = [AdoptionCheckCommentInline]
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
+    list_editable = ('verification_status',)
     list_filter = ('date_of_adoption', 'verification_status')
     search_fields = ['id', 'person__person_name', 'person__village__village_name', 'video__title', 'person__group__group_name']
     raw_id_fields = ('person', 'video')
-'''    class Media:
+
+    class Media:
         js = (
                 settings.STATIC_URL + "js/qaverification_temp.js",
         )
-'''
+
+
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('id', '__unicode__')
     search_fields = ['person_name','village__village_name','group__group_name']
