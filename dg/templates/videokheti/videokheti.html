@@ -137,7 +137,18 @@
                 <h5 style="text-transform: none;">{{error_message}}</h5>
             </div>
         {% endif %}
-            
+        {% if videos %}
+        <div class="row">
+            {% for obj in videos|slice:":6" %}
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+                <a href="/agri/video/?video={{obj.id}}">
+                <img class="img-circle img-responsive vid-img" src="{{obj.image_file}}" alt="">
+                </a>
+                <p> </P>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
         <!-- /.row -->
 
     </div>
