@@ -138,18 +138,51 @@
             </div>
         {% endif %}
         {% if videos %}
+        <footer>
+        <hr class="hr-custom">
         <div class="row">
-            {% for obj in videos|slice:":6" %}
-            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
-                <a href="/agri/video/?video={{obj.id}}">
-                <img class="img-circle img-responsive vid-img" src="{{obj.image_file}}" alt="">
-                </a>
-                <p> </P>
-            </div>
-            {% endfor %}
+	        <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6 col-xs-12">
+	            <div id="videoCarousel" class="carousel slide" data-interval="3000" data-ride="carousel">
+	                <!-- Carousel indicators -->
+	                    <ol class="carousel-indicators">
+	                        {% for obj in video_carousel %}
+	                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
+	                        {% endfor %}
+	                    </ol>   
+	                    <!-- Carousel items -->
+	                    <div class="carousel-inner">
+	                        <div class="item active text-center ">
+	                        {% for obj in videos|slice:":6" %}
+	                            
+	                            {% cycle 1 0  as new_row silent %}
+	                                {% if forloop.counter > 2 and new_row %}
+	                                    </div>
+	                                    <div class="item">
+	                                {% endif %}
+	                            
+	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
+	                                <a href="/agri/video/?video={{obj.id}}">
+	                                    <img class="img-responsive img-center vid-img" src="{{STATIC_URL}}videokheti/content/images/play.png" style="background:URL({{obj.image_file}}); background-repeat:no-repeat;" alt="">
+	                                </a>
+	                            </div>
+	                        {% endfor %}
+	                        </div>
+	                    </div>
+	                    <!-- Carousel nav -->
+	                    <a class="carousel-control left" href="#videoCarousel" data-slide="prev" style="width:0%;">
+	                        <span class="glyphicon glyphicon-chevron-left"></span>
+	                    </a>
+	                    <a class="carousel-control right" href="#videoCarousel" data-slide="next">
+	                        <span class="glyphicon glyphicon-chevron-right"></span>
+	                    </a>
+	                </div>
+	            
+	        </div>
         </div>
+        </footer>
         {% endif %}
         <!-- /.row -->
+
 
     </div>
     <!-- /.container -->
