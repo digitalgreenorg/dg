@@ -12,7 +12,7 @@ from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 
 
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 
@@ -141,8 +141,8 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size':40})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
-    list_editable = ('verification_status',)
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status','comment')
+    list_editable = ('verification_status','comment')
     list_filter = ('date_of_adoption', 'verification_status')
     search_fields = ['id', 'person__person_name', 'person__village__village_name', 'video__title', 'person__group__group_name']
     raw_id_fields = ('person', 'video')
@@ -191,3 +191,7 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
+
+class AdoptionCheckComment(admin.ModelAdmin):
+    list_display = ('id','comment')
+    search_fields = ['id','comment']

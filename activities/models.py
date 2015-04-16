@@ -102,6 +102,10 @@ class PersonMeetingAttendance(CocoModel):
     def __unicode__(self):
         return  u'%s' % (self.id)
 
+class AdoptionCheckComment(CocoModel):
+    id = models.AutoField(primary_key=True)
+    comment_msg = models.CharField(max_length=1000, blank=True)
+
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -110,6 +114,7 @@ class PersonAdoptPractice(CocoModel):
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
+    comment = models.OneToOneField(AdoptionCheckComment, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name, self.person.village.village_name, self.video.title)
@@ -124,3 +129,4 @@ class PersonAdoptPractice(CocoModel):
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+

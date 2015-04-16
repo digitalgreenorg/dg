@@ -3,7 +3,7 @@ from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 
 from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DistrictAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, VideoAdmin, VillageAdmin
 
-from activities.models import PersonAdoptPractice, Screening
+from activities.models import PersonAdoptPractice, Screening, AdoptionCheckComment
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
