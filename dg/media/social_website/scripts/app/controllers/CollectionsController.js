@@ -34,7 +34,7 @@ define(function(require) {
                 .setVideosPerDrawer(4);
 
             // set the active filter to be Most Liked to init the collections
-            references.collectionMostFiltersViewController.setActiveFilter('-_score');
+            references.collectionMostFiltersViewController.setActiveFilter('-featured');
             return this;
         },
 
@@ -100,10 +100,29 @@ define(function(require) {
                 if ($(".js-collections-wrapper").attr('data-state') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
                 }
+                if ($(".js-collections-wrapper").attr('data-language') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('language', $(".js-collections-wrapper").attr('data-language'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-category') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('category', $(".js-collections-wrapper").attr('data-category'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-subcategory') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('subcategory', $(".js-collections-wrapper").attr('data-subcategory'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-topic') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-topic'), true);
+                }
+                if ($(".js-collections-wrapper").attr('data-subject') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-subject'), true);
+                }
             }
         },
 
         _onOrderChanged: function(orderCriteria) {
+            if(orderCriteria == "-featured")
+                this._references.collectionViewController.setInputParam('featured', 1);
+            else
+                this._references.collectionViewController.setInputParam('featured', 0);
             this._references.collectionViewController.setInputParam('order_by', orderCriteria);
         },
 

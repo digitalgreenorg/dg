@@ -14,7 +14,6 @@ define(function(require) {
     var Util = require('framework/Util');
     var jQuery = require('jquery');
 
-    require('libs/external/swfobject/swfobject');
     require('libs/external/buttons');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
@@ -100,7 +99,7 @@ define(function(require) {
 
         _initState: function() {
             this.base();
-
+            
             var state = this._state;
 
             state.videoLiked = false;
@@ -113,7 +112,12 @@ define(function(require) {
             this._references.videoLikeDataFeed.fetch(state.videoUID, state.userID);
             
             state.updateVideoWatchedTimeInterval = undefined;
-            this._references.videosCarousel.moveToSlide(parseInt(($('.video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
+            try{
+                this._references.videosCarousel.moveToSlide(parseInt(($('.js-video-wrapper').attr('data-slide')-1)/5),{stopAutoPlay: false});
+            }
+            catch(err){
+                //Todo
+            }
         },
 
         _initVideoStats: function() {
@@ -152,69 +156,75 @@ define(function(require) {
         },
 
         _initVideoPlayer: function() {
-
             var videoId = this._references.$videoTarget.data('videoId');
-
-            var params = { allowScriptAccess: "always" };
-            var atts = { id: "video-player" };
-            swfobject.embedSWF(
-                'http://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
-                'video-target',
-                '703',
-                '395',
-                '8',
-                null,
-                null,
-                params,
-                atts
-            );
-
-            window.onYouTubePlayerReady = this._onYouTubePlayerReady.bind(this);
-        },
-
-        _onYouTubePlayerReady: function() {
-            // clean up the window
-            window.onYouTubePlayerReady = undefined;
-
-            var videoPlayer = jQuery('#video-player').get(0);
-            this._references.videoPlayer = videoPlayer;
-
-            // youtube seems to force us to put functions in the window
-            // we'll do our best to handle that elegantly
-            window.onYouTubePlayerStateChange = this._onYouTubePlayerStateChange.bind(this);
-
-            videoPlayer.addEventListener('onStateChange', 'onYouTubePlayerStateChange');
-            
-            // Below functionality will autoplay the youtube video on all video pages
-            videoPlayer.playVideo();
-        },
-
-        _onYouTubePlayerStateChange: function(newState) {
-            switch (newState) {
-                // playback completed/stopped
-                case 0:
-                    var now_playing_video = jQuery('.now-playing').closest('li');
-                    var next_video = now_playing_video.next();
-                    if (next_video.length == 0) {
-                        /* End of current slide or this is the last video altogether */
-                        var next_slide = now_playing_video.closest('ul').closest('li').next();
-                        if (next_slide.length == 0) {
-                            /* Last video - go back to the first video */
-                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
-                        }
-                        next_video = next_slide.find('ul > li:first-child');
-                    }
-                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
-                // stop the interval and manually send an update
-                case 2:
-                    this._stopUpdateInterval();
-                    this._updateVideoWatchedTime();
-                    break;
-                // playback started
-                case 1:
-                    this._startUpdateInterval();
-                    break;
+            var videoPlayerWidth = this._references.$videoTarget.width();
+            var that = this;
+            if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
+                window.onYouTubeIframeAPIReady = function() {
+                    that.loadPlayer(videoId,videoPlayerWidth);
+                };
+                $.getScript('//www.youtube.com/iframe_api');
+            } 
+            else {
+                  that.loadPlayer(videoId,videoPlayerWidth);
             }
+        },
+        
+        loadPlayer: function(videoId, videoPlayerWidth){
+            var that = this;
+            var player = new YT.Player('video-target', {
+                videoId: videoId,
+                width: videoPlayerWidth,
+                events: {
+                    'onReady': that._onYouTubePlayerReady,
+                    'onStateChange': function(newState){
+                    switch (newState.data) {
+                          // playback completed/stopped
+                          case 0:
+                                var now_playing_video = jQuery('.now-playing');
+                                var next_video;
+                                if (now_playing_video.hasClass('js-featured-collection-li')) {
+                                    next_video = now_playing_video.next('li');
+                                    if (next_video.length == 0) {
+                                        next_video = now_playing_video.closest('ul').find('li:first');
+                                    }
+                                    window.location.href = next_video.find('a').attr('href');
+                                }
+                                else {
+                                    now_playing_video = now_playing_video.closest('li');
+                                    next_video = now_playing_video.next();
+                                    if (next_video.length == 0) {
+                                        /* End of current slide or this is the last video altogether */
+                                        var next_slide = now_playing_video.closest('ul').closest('li').next();
+                                        if (next_slide.length == 0) {
+                                            /* Last video - go back to the first video */
+                                            next_slide = now_playing_video.closest('ul').closest('li').closest('ul').find('li:first');
+                                        }
+                                        next_video = next_slide.find('ul > li:first-child');
+                                    }
+                                    window.location.href = next_video.find('.vidDrawer-image a').attr('href');
+                                }
+                          // stop the interval and manually send an update
+                          case 2:
+                              that._stopUpdateInterval();
+                              that._updateVideoWatchedTime();
+                              break;
+                          // playback started
+                          case 1:
+                              that._startUpdateInterval();
+                              break;
+                      }
+                  }
+                }
+              });
+        },
+
+        _onYouTubePlayerReady: function(event) {
+            // Below functionality will autoplay the youtube video on all video pages for Non-Mobile Devices
+            if (!navigator.userAgent.match(/Mobi/)) {
+                event.target.playVideo();
+            }
+            
         },
 
         _startUpdateInterval: function() {

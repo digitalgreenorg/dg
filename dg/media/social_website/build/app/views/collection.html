@@ -1,9 +1,17 @@
+                            {{#error}}
+                            <div class="copy">No Collection Found</div>
+                            {{/error}}
+                            {{^error}}
                             <li>
                                 <div class="vid-cat-selected">
                                     <div class="vid-cat">
                                         <a href={{url}}>
                                             <img height=124  width=217  src="{{thumbnailURL}}" />
                                         </a>
+                                        {{#featured}}
+                                        <div class="vid-star">    
+                                        </div>
+                                        {{/featured}}
                                         <div class="vid-flag">
                                             <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                                                 <li>{{videos.length}} Video{{#_plural}}s{{/_plural}}</li>
@@ -29,3 +37,4 @@
                                     </div> <!-- End .vid-cat -->
                                 </div>
                             </li>
+                            {{/error}}

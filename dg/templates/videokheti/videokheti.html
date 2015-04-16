@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Video Kheti</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{STATIC_URL}}videokheti/css/heroic-features.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+	            <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        <!-- /.container -->
+    </nav>
+    
+    
+    <!-- Page Content -->
+    <div class="container">
+        {% if breadcrumb %}
+        <ul class="breadcrumb">
+            {% for obj in breadcrumb %}
+                <li>
+                    <a href="{{obj.link}}" style="background-color:black; border: 0px;">
+                        <button type="button" class="btn btn-default btn-xs">
+                            <img class="media-object" src="{{STATIC_URL}}videokheti/content/images/{{obj.image}}" alt="..." style="width:40px; height:40px !important;">
+                        </button>
+                    </a>
+                </li>
+            {% endfor%}
+        </ul>
+        {% endif %}
+        <!-- Title -->
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-lg-12">
+                <form class="form-inline">
+                    {% if title_audio %}
+                    <a href="#" data-id="0" class="audio-click">
+                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 10px; font-size: 22px; border-radius: 50%">
+                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
+                         </button>
+                     </a>
+                     {% endif %}
+                    <label style="font-size: 20px; color: #ffffff;">{{title}}</label>
+                    
+                </form>
+                {% if title_audio %}
+                <audio preload="auto" id="0">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/{{title_audio}}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                </audio>
+                {% endif %}
+            </div>
+        </div>
+        <!-- /.row -->
+
+        
+        <!-- Page Features -->
+        {% if crop %}
+        <div class="row">
+            {% for obj in crop %}
+                {% cycle 1 0 0 0 as new_row silent %}
+                    {% if forloop.counter > 4 and new_row %}
+                        </div>
+                        <div class="row">
+                    {% endif %}
+                    <div class="col-md-3 col-sm-6 hero-feature">
+                        <div class="thumbnail">
+                            <a href="{{obj.link}}">
+                                <img src="{% if video %}{{obj.image}}{% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="" style="width:253px; height:158px !important;"> </img>
+                            </a>
+                            <div class="caption">
+                                <div class="form-inline">
+                                    <a href="#" data-id="{{obj.id}}" class="audio-click" style="text-decoration: none;">
+                                        <button type="button" class="btn btn-success btn-sm" style="margin-right: 18px; font-size: 22px; border-radius: 50%; text-align: center;">
+                                            <span class="glyphicon bigger glyphicon-volume-up" style="vertical-align: -2px;" aria-hidden="true"></span>
+                                        </button>
+                                    </a>
+                                    <a href="{{obj.link}}">
+                                    <label style="font-size: {% if language == 'Hindi' %}18px {% else %} 16px {% endif %}; color: #ffffff;">{{obj.name|upper}}</label>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <audio preload="auto" id="{{obj.id}}">
+                            <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="well text-center">
+                <h5 style="text-transform: none;">{{error_message}}</h5>
+            </div>
+        {% endif %}
+            
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="{{STATIC_URL}}videokheti/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <!-- Enabling Google Analytics -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16211208-1");
+            pageTracker._trackPageview();
+            } 
+        catch(err) {}
+    </script>
+    
+    <script>
+    $(".audio-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var button = $(this).find('.btn');
+        button.removeClass('btn-success').addClass('btn-info');
+        button.attr('disabled','disabled');
+        var audio = $("#"+$(this).data('id'))[0];
+        audio.play();
+        audio.addEventListener('ended', function(){
+            button.removeClass('btn-info').addClass('btn-success');
+            button.removeAttr('disabled');
+        });
+    });
+    
+    $(".language-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        $.get( "/agri/language/", { language: $(this).text() })
+            .done(function( data ) {
+                if(data=='1'){
+                    window.location.reload(true);
+                }
+            });
+    });
+</script>
+
+</body>
+
+</html>

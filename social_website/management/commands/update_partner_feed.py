@@ -31,7 +31,7 @@ class Command(BaseCommand):
             logger.info("%s Rows Added: %s" % (partner.name, final_rows - initial_rows))
 
         # adding village activity
-        file = "".join([MEDIA_ROOT, "village_partner_list.p"])
+        file = "".join([MEDIA_ROOT, "/village_partner_list.p"])
         village_partner_list = pickle.load(open(file, "rb"))
         initial = len(village_partner_list)
         villages = Village.objects.all()

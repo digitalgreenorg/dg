@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Video Kheti</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{STATIC_URL}}videokheti/css/heroic-features.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+	                <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
+            </div>
+            
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.container -->
+    </nav>
+    
+    
+    <!-- Page Content -->
+    <div class="container">
+        {% if breadcrumb %}
+        <ul class="breadcrumb">
+            {% for obj in breadcrumb %}
+                <li>
+                    <a href="{{obj.link}}" style="background-color:black; border: 0px;">
+                        <button type="button" class="btn btn-default btn-xs">
+                            <img class="media-object" src="{% if obj.video %} {{obj.image}} {% else %}{{STATIC_URL}}videokheti/content/images/{{obj.image}} {% endif %}" alt="..." style="width:40px; height:40px !important;">
+                        </button>
+                    </a>
+                </li>
+            {% endfor%}
+        </ul>
+        {% endif %}
+        
+        <!-- Title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>{{title}}</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        
+        <!-- Page Features -->
+        <div class="row">
+            <div class="col-md-9">
+                <div class="well">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{youtube}}?rel=0"></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="col-md-3">
+                <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
+                <!-- Carousel indicators -->
+                    <ol class="carousel-indicators">
+                        {% for obj in video_carousel %}
+                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
+                        {% endfor %}
+                    </ol>   
+                    <!-- Carousel items -->
+                    <div class="carousel-inner">
+                        {% for obj in video_carousel %}
+                            <div class="item {% if forloop.counter == 1 %} active {% endif %}">
+                                <div class="thumbnail">
+                                    <img src="{{STATIC_URL}}social_website/uploads/img/{{coco_id}}/{{obj}}" alt="" style="width:253px; height:158px !important;"> </img>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Carousel nav -->
+                    <a class="carousel-control left" href="#videoCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="carousel-control right" href="#videoCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+                
+                <div class="well">
+	                <div class="media">
+	                    <div class="media-left">
+	                        <img height='50px' width='50px' class="media-object" src="{{STATIC_URL}}social_website/uploads/{{partner_image}}" alt="...">
+	                    </div>
+	                    <div class="media-body">
+	                        <h5 class="media-heading"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> &nbsp {{views}}</h5>
+	                        <h5 class="media-heading"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> &nbsp {{adoptions}}</h5>
+	                    </div>
+	                    <div class="media-right media-middle">
+	                    <a href="https://www.youtube.com/watch?v={{youtube}}" target="_blank">
+                            <img width="60px" style="border-radius: 10px; margin-left:10px;" class="media-object" src="{{STATIC_URL}}videokheti/content/images/youtube.png" alt="...">
+                        </a>
+                        </div>
+	                </div>
+                    
+	                <!-- <div>
+	                    <h6>
+	                        Produced on {{ date_pro|date:"D d M Y" }}
+	                    </h6>
+	                </div> -->
+                
+                <!-- <div class="media">
+                    <h6>
+                        By {{ facillitator }} and {{cameraoperator}}
+                    </h6>
+                </div> -->
+                </div>
+                
+                
+                
+                <div style="text-align:center; margin-bottom:20px;">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#forum">
+                        COMMENTS
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        
+        
+
+        <!-- Modal -->
+        <div class="modal fade" id="forum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">COMMENTS</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="well">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                <label for="exampleInputName2">
+                                    {% if request.user.is_authenticated %}
+	                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+	                                        <img height='50px' width='50px' class="media-object" src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" alt="...">
+	                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+	                                            <img height='50px' width='50px' class="media-object" src="{{request.user.social_auth.all.0.extra_data.picture}}?sz=50" alt="...">
+	                                    {% else %}
+	                                            <img height='50px' width='50px' class="media-object" src="{{STATIC_URL}}social_website/content/default.png" alt="...">
+	                                    {% endif %}
+	                                {% endif %}                
+                                </label>
+                                </div>
+                                <div class="col-md-8">
+                                <textarea class="form-control" id="commentText" style="width:100%"> </textarea>
+                                </div>
+                                <div class="col-md-2 text-center">
+                                {% if not request.user.is_authenticated %}
+                                    <a href="/login/?next={{request.get_full_path|urlencode}}"><button type="button" class="btn btn-success js-data"  data-id="{{id}}">POST</button></a>
+                                {% else %}
+                                    <button type="button" class="btn btn-success js-data" id="post-click" data-id="{{id}}">POST</button>
+                                {% endif %}
+                                
+                                
+                                </div>
+                            </div>
+                            
+                        </form>
+                        </div>
+                        <div class="panel panel-default">
+                            <ul class="list-group" id="commentlist">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="{{STATIC_URL}}videokheti/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <!-- Enabling Google Analytics -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16211208-1");
+            pageTracker._trackPageview();
+            } 
+        catch(err) {}
+    </script>
+    
+    <script>
+    $("#post-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var video = $(this).data('id')
+        var comment = $('textarea#commentText').val().trim();
+        if (comment.length > 0) {
+            $.post( "/agri/comment/", { video: video, comment: comment })
+            .done(function( data ) {
+                data_json = JSON.parse(data);
+                var output_array = ['<li class="list-group-item">', '<div class="media">', '<div class="media-left">', '<img height="30px" width="30px" class="media-object" src="', data_json.fields.imageURL, '" alt="...">', '</div>', '<div class="media-body">', '<h4 class="media-heading">', data_json.fields.personName, '</h4>', '<h6 class="media-heading">', data_json.fields.text, '</h6>', '</div></div></li>'];
+                var html_string = output_array.join("");
+                $("#commentlist").prepend(html_string);
+                $('textarea#commentText').val('');
+            });    
+        }
+        else{
+            $('textarea#commentText').focus();
+        }
+    });
+    
+    $('#forum').on('show.bs.modal', function(){
+        var video = $(".js-data").data('id')
+        if ($('#forum li').length == 0){
+	        $.get( "/agri/get-comments/", { video: video })
+	        .done(function( data ) {
+	            data_json = JSON.parse(data);
+	            for (obj in data_json) {
+	                var output_array = ['<li class="list-group-item">', '<div class="media">', '<div class="media-left">', '<img height="30px" width="30px" class="media-object" src="', data_json[obj].imageURL, '" alt="...">', '</div>', '<div class="media-body">', '<h4 class="media-heading">', data_json[obj].personName, '</h4>', '<h6 class="media-heading">', data_json[obj].text, '</h6>', '</div></div></li>'];
+	                var html_string = output_array.join("");
+	                $("#commentlist").append(html_string);
+	            }
+	        });
+        }
+    });
+    
+    $(".audio-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var button = $(this).find('.btn');
+        button.removeClass('btn-success').addClass('btn-info');
+        button.attr('disabled','disabled');
+        var audio = $("#"+$(this).data('id'))[0];
+        audio.play();
+        audio.addEventListener('ended', function(){
+            button.removeClass('btn-info').addClass('btn-success');
+            button.removeAttr('disabled');
+        });
+    });
+    
+    $(".language-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        $.get( "/agri/language/", { language: $(this).text() })
+            .done(function( data ) {
+                if(data=='1'){
+                    window.location.reload(true);
+                }
+            });
+    });
+    </script>
+</body>
+
+</html>

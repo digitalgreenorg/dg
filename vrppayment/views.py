@@ -110,6 +110,8 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
 
 
 def makereport(request):
+    per_dissemination_rate = 28                     # Amount to be given to VRP for one successful dissemination
+    per_adoption_rate = 12                          # Amount to be given to VRP for one successful adoption
     start_date = request.GET.get('startperiod', None)
     end_date = request.GET.get('endperiod', None)
     selectedpartner = request.GET.get('partner', None)
@@ -129,11 +131,13 @@ def makereport(request):
             for each_video in each_diss['videos_shown_detail']:
                 if (each_video['v_adoption_success_result'] == True):
                     adoption_count = adoption_count + 1
-        final_amount = diss_count * 28 + adoption_count * 12
-        temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, adoption_count, final_amount]
+        final_amount = diss_count * per_dissemination_rate + adoption_count * per_adoption_rate
+        screening_amount = diss_count*per_dissemination_rate
+        adoption_amount  = adoption_count*per_adoption_rate
+        temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, screening_amount, adoption_count, adoption_amount, final_amount]
         output_array.append(temp_arr)
     if not output_array:
-        report_data = [[0,'NaN', 'No Data Available', '', '', '', '']]
+        report_data = [[0,'NaN', 'No Data Available', '', '','','', '', '']]
         resp = json.dumps({"vrppayment":report_data})
     else:
         report_data = output_array

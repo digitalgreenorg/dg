@@ -1,65 +1,76 @@
 {% include "includes/header.html" %}
         {% include "includes/partials/mainCarousel.html" %}
-        
+
         <section id="about" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
+                <div class="inner-wrapper hdg-source-reg layout-vr-lg">
+                    <center>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Vision</span> is a world where all individuals live a life of dignity.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Mission</span> is to integrate innovative technology with global development efforts to improve human well being.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Values</span> include Humility, Excellence, Accountability, Empathy and Integrity.</p>
+                    </center>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        
+        <section id="about" role="main" class="about-bg">
+            <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
                     <div class="media layout-vr-xlg">
                         <div class="imgExt img-marginLg-lt img-effects img-size-lg">
-                            <img src="{{STATIC_URL}}social_website/content/about.jpg" alt="" />
+                            <img class="layout-vr-md" src="{{STATIC_URL}}social_website/content/about.jpg" alt="" />
+                            <div class='bd'>
+                                <div class="hdg-c hdg-source-lt layout-vr-sm hdg-bold">More about Digital Green
+                                </div>
+                                <div class="grid-col grid-size2of4">
+                                    <ul class="link-list">
+                                        <li><a href="{% url 'board' %}">Our Board</a></li>
+                                        <li><a href="{% url 'team' %}">Our Team</a></li>
+                                        <li><a href="{% url 'connect' %}">Our Partners</a></li>
+                                        <li><a href="{% url 'ourwork' %}">Our Work</a></li>
+                                        <li><a href="{% url 'resources' %}">Resources</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-rt grid-size2of4">
+                                    <ul class="link-list">
+                                        <li><a href="{% url 'events' %}">Events</a></li>
+                                        <li><a href="{% url 'press' %}">Digital Green in the News</a></li>
+                                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                        <li><a href="{% url 'donate' %}">Donate</a></li>
+                                        <li><a href="/blog/">Blog</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class='bd'>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our mission is to integrate innovative technology with global development efforts to improve human well being.
-                            </h3>
-                            <p class="copy copy-para"> Learn more about our organization
-                            </p>
-                            <div class="grid-col grid-size2of4">
-                                <ul class="link-list">
-                                    <li><a href="#values">Our values</a></li>
-                                    <li><a href="{% url 'ourwork' %}">Our work</a></li>
-                                    <li><a href="{% url 'connect' %}">Our partners</a></li>
-                                    <li><a href="{% url 'board' %}">Our board</a></li>
-                                    <li><a href="{% url 'team' %}">Our team</a></li>
-                                </ul>
-                            </div>
-                            <div class="grid-rt grid-size2of4">
-                                <ul class="link-list">
-                                    <li><a href="{{STATIC_URL}}docs/Digital-Green-Key-Facts.pdf"  target="_blank">Key Facts</a></li>
-                                    <li><a href="{% url 'resources' %}#annualreport13">Annual report</a></li>
-                                    <li><a href="{% url 'press' %}">Media coverage</a></li>
-                                    <li><a href="{% url 'resources' %}">Resources</a></li>
-                                    <li><a href="{% url 'events' %}">Events</a></li>
-                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                                    <li><a href="{% url 'donate' %}">Donate</a></li>
-                                </ul>
-                            </div>
+                        <div class="bd">
+                            <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
+                            <p class="copy layout-vr-sm"> Digital Green is a not-for-profit international development organization that uses an innovative digital platform for community engagement to improve lives of rural communities across South Asia and Sub-Saharan Africa.</p>
+                            <p class="copy layout-vr-sm"> We partner with local public, private and civil society organizations to share knowledge on improved agricultural practices, livelihoods, health, and nutrition, using locally produced videos and human mediated dissemination. </p>
+                            <p class="copy layout-vr-sm"> In a controlled evaluation, the approach was found to be 10 times more cost-effective and uptake of new practices seven times higher compared to traditional extension services.</p>
+                            <p class="copy layout-vr-sm">Till date, we have produced over 3,700 videos in more than 20 languages, reached 7,448 villages and over 640,000 community members. We currently implement projects in eight states in India and in select areas in Ethiopia, Ghana and Tanzania in Africa in partnership with over 20 partner organizations.</p>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
 
-        <section id="values" class='about-bg'>
+        <section id="values" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Values</h2>    
-                    <div class='layout-vr-xlg'>
-                        <ul class="copy bullet-list">
-                            <li><span class="copy-italic">Humility</span>: We imbue humility in all that we do, while maintaining our pride about who we are, our achievements, and our worth.
-                            </li>
-                            <li><span class="copy-italic">Excellence</span>: We are guided by the firm conviction that success can only be achieved by constantly raising the bar and respecting complete ownership.
-                            </li>
-                            <li><span class="copy-italic">Accountability</span>: We take responsibility and ownership for our commitments, actions and results.
-                            </li>
-                            <li><span class="copy-italic">Empathy</span>: We respect the dignity of each individual, and recognize each person’s merit and contribution to our mission.
-                            </li>
-                            <li><span class="copy-italic">Integrity</span>: We demonstrate honesty, respect for others and trustworthiness in our work and interactions with stakeholders, including the communities we engage with.
-                            </li>
-                        </ul>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Approach</h2>    
+                    <div class='media layout-vr-xlg'>
+                        <div class="imgExt img-marginLg-lt img-effects img-size-lg">
+                            <img src="{{STATIC_URL}}social_website/content/our_approach.jpg" alt="" />
+                        </div>
+                        <div class='bd'>
+                            <p class="copy layout-vr-sm"> We engage with and empower rural communities to produce participatory localized videos, leveraging pre-existing group structures to disseminate these videos through human mediation. These videos are of the community, by the community and for the community.</p>
+                            <p class="copy layout-vr-sm"> The approach includes: (1) a participatory process for video production on improved livelihood practices, (2) a human-mediated learning model for video dissemination and training, (3) a hardware and software technology platform for data management customized to limited or intermittent Internet and electrical grid connectivity, and (4) an iterative model to progressively address the needs and interests of the community with analytical tools.</p>
+                            <p class="copy layout-vr-sm"> Our data management software called Connect Online | Connect Offline (COCO) and Analytics dashboard suite customized to low resource settings are used to collect and analyze near real-time data on dissemination, adoption, and community interest. </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </section>    
         
 {% include "includes/footer.html" %}
