@@ -17,7 +17,15 @@
                     </ul>
                     {% endif %}
                     {% endfor %}
-            </div> 
+                </div> 
+            </div>
+            <div class="media">
+                <div class="img img-size-sq-small">
+                    <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
+                    <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                </div>
+                <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
+            </div> <!-- End .media -->
         </div>
     </div>
 </section>
@@ -28,7 +36,6 @@
             <div class="grid layout-vr-md">
                 <div class="grid-col grid-size1of4 layout-vr-lg">
                     <div class="featured-collection-ul grid-margin-rt-sm layout-vr-lg">
-
                         <div class="featured-ft-videoDetails" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
                             <ul class="h-list h-list-sm h-list-divided hdg-source-lt hdg-e">
                                 <li>{{ object.videos.all|length }} Videos</li>
@@ -88,14 +95,7 @@
                     </ul>
                 </div>
                 <div class="grid-col grid-size3of4 layout-vr-sm">
-                    <div class="grid-pad-lt-md">
-                        <div class="media">
-                            <div class="img img-size-sq-small">
-                                <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                                <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
-                            </div>
-                            <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
-                        </div> <!-- End .media -->
+                    <div class="grid-pad-lt-md"> 
                         <div class="media">
                             <div class="featured-video-wrapper layout-vr-tiny" data-slide="{{video_index}}">
                                 <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
