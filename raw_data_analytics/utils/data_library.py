@@ -148,40 +148,56 @@ class data_lib():
         idElementKey = ''
         print partitionElements
         print valueElement
-        for items in partitionElements:
-            for i in selectDictionary[items]:
-                if (selectDictionary[items][i] == True):
-                    selectComponentKeysList.append(items)
-                    selectComponentList.append(
-                        tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
-        for items in selectComponentKeysList:
-            if orderDictionary[items] > idElementVal:
-                idElementVal = orderDictionary[items]
-                idElementKey = items
+        if not partitionElements and 'list' in valueElement:
+            print "Hello"
+            idElementVal = orderDictionary[categoryDictionary['partitionCumValues'][valueElement]]
+            idElementKey = categoryDictionary['partitionCumValues'][valueElement]
+
+        else:
+            for items in partitionElements:
+                for i in selectDictionary[items]:
+                    if (selectDictionary[items][i] == True):
+                        selectComponentKeysList.append(items)
+                        selectComponentList.append(
+                            tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
+            for items in selectComponentKeysList:
+                if orderDictionary[items] > idElementVal:
+                    idElementVal = orderDictionary[items]
+                    idElementKey = items
 
         self.idElementKey = idElementKey
         self.idElementValue = idElementVal
+
+        print '-----------------'
+        print self.idElementKey
+        print '================='
+        print self.idElementValue
+
         selectComponentList.append(
-            tableDictionary[idElementKey] + '.' + groupbyDictionary[idElementKey] + ' AS \'' + headerDictionary[idElementKey][
-                groupbyDictionary[idElementKey]] + '\'')
+            tableDictionary[self.idElementKey] + '.' + groupbyDictionary[self.idElementKey] + ' AS \'' + headerDictionary[self.idElementKey][
+                groupbyDictionary[self.idElementKey]] + '\'')
 
         for i in selectDictionary[valueElement]:
             if (selectDictionary[valueElement][i] == True):
-                x = ['count', 'distinct']
+                x = ['count(', 'distinct']
                 if all(a in i for a in x):
+                    print "1234"
                     selectComponentList.append(
                         i.replace('count(distinct',
                                   'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                         headerDictionary[valueElement][i] + '\'')
-                elif "count" in i and "distinct" not in i:
+                elif "count(" in i and "distinct" not in i:
+                    print "123456"
                     selectComponentList.append(
                         i.replace('count(', 'count(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                         headerDictionary[valueElement][i] + '\'')
-                elif "distinct" in i and "count" not in i:
+                elif "distinct" in i and "count(" not in i:
+                    print "12345678"
                     selectComponentList.insert(0, (
                     i.replace('distinct(', ' distinct(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                     headerDictionary[valueElement][i] + '\''))
                 else:
+                    print "1234567890"
                     selectComponentList.append(
                         str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][
                             i] + '\'')
