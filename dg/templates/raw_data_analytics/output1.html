@@ -33,11 +33,11 @@
 						</center></br></br></br>
 						
 						<div name="Filters"style='padding-left:77px; width:200;  display:inline-block; padding-right:150px; float:left;' >
-							
 							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Filters:</h3>
 							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
 				   				<div name='partner' id='partnerID' >
-				   					Partner  &nbsp;&nbsp;<select class='select' name='partner' id = 'partnerID' style='width:150px;'>
+				   					Partner  &nbsp;&nbsp;
+				   					<select class='select' name='partner' id = 'partnerID' style='width:150px;'>
 						    			<option value='-1'>-------------ALL-------------</option>
 											{% if partners %}
 											{% for partner in partners %}
@@ -47,7 +47,8 @@
 					    		</div></br>				
 
 					    		<div name='country' id='countryID' >
-					   				Country  &nbsp;<select class='select' name='country' id = 'countryId' style='width:150px;' onChange="statechange('state', this.value)">
+					   				Country  &nbsp;
+					   				<select class='select' name='country' id = 'countryId' style='width:150px;' 	onChange="statechange('state', this.value)">
 						    			<option value='-1'>-------------ALL-------------</option>
 											{% if countries %}
 											{% for country in countries %}
@@ -57,40 +58,39 @@
 					    		</div></br>				
 									
 					   			<div name='state' id='stateID'>	
-					   				State  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select class='select' name='state' id = 'stateId' style='width:150px;' onChange="districtchange('district', this.value)">
+					   				State  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					   				<select class='select' name='state' id = 'stateId' style='width:150px;' 		onChange="districtchange('district', this.value)">
 						    			<option value='-1'>-------------ALL-------------</option>
-											
-					    			</select>
+									</select>
 					    		</div></br>				
 									
 				   				<div name='district' id='districtID'>
-					   				District  &nbsp;&nbsp;&nbsp;<select class='select' name='district' id = 'districtId' style='width:150px;' onChange="blockchange('block', this.value)">
+					   				District  &nbsp;&nbsp;&nbsp;
+					   				<select class='select' name='district' id = 'districtId' style='width:150px;' 	  onChange="blockchange('block', this.value)">
 						    			<option value='-1'>-------------ALL-------------</option>
-											
-					    			</select>
+									</select>
 					    		</div></br>			
 									
 					   			<div name='block' id='blockID'>	
-					   				Block  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select class='select' name='block' id = 'blockId' style='width:150px;' onChange="villagechange('village', this.value)">
+					   				Block  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					   				<select class='select' name='block' id = 'blockId' style='width:150px;' 		onChange="villagechange('village', this.value)">
 						    			<option value='-1'>-------------ALL-------------</option>
-											
-					    			</select>
+									</select>
 					    		</div></br>				
 									
 					   			<div name='village' id='villageID'>	
-					   				Village &nbsp;&nbsp;&nbsp;&nbsp; <select class='select' name='village' id = 'villageId'style='width:150px;'>
+					   				Village &nbsp;&nbsp;&nbsp;&nbsp; 
+					   				<select class='select' name='village' id = 'villageId'style='width:150px;'>
 						    			<option value='-1'>-------------ALL-------------</option>
-											
-					    			</select>
+									</select>
 					    		</div></br>				
-											
-						    </div>
+							</div>
 						</div>
+						
 						<div name="Partition" style=' padding-right:110px; display:inline-block; float:left;' >
 							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
 							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
-			   				
-								<ul style='list-style-type: none;'>
+			   					<ul style='list-style-type: none;'>
 									<li><input type="checkbox" id="partner" name="partner_chk" value"partner">Partner 
 									<li><input type="checkbox" id= "country" name="country_chk" value"country">Country 
 									<li><input type="checkbox" id="state" name="state_chk" value"state">State 
@@ -106,20 +106,19 @@
 						</div>
 						
 						<div name="Values" style='float:left' >
-							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm"> 
-								Values:</h3>
+							<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Values:</h3>
 							<div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
 								<ul style='list-style-type: none;'>
-									<li><input type="checkbox" id="screening" name="screening_chk" value"screening">Number of Screenings 
+									<li><input type="checkbox" id="screening" name="screening_chk" value"screening">Number of Screenings
 									<li><input type="checkbox" id="adoption" name="adoption_chk" value"adoption">Number of Adoptions
 									<li><input type="checkbox" id="animator_no" name="no_animator_chk" value"numAnimators">Number of Animators(Mediators)
 									<li><input type="checkbox" id="attendance" name="attendance_chk" value"attendance">Number of Viewers
 									<li><input type="checkbox" id="video_screened_no"name="no_video_screened_chk" value"numVideoScreened">Number of Videos Screened
 									<li><input type="checkbox" id="video_produced_no"name="no_video_produced_chk" value"numVideoProduced">Number of Videos Produced
-									<li><input type="checkbox" id="list" name="list" value"list" >List
+									<li><input type="checkbox" id="list" name="list" value"list">List
 								</ul>
 								<div id="listoptions" name='listoptions' style='visibility:hidden'>
-									<select class='select' name='list_video' id = 'list_video' style='width:200px;'> 
+									<select class='select' name='list_video' id='list_video' style='width:200px;'> 
 										<option value='-1'>-----------------List of------------------</option>
 										<option value='listVideoProduced'>Produced Videos</option>
 										<option value='listVideoScreened'>Screened Videos</option>
@@ -129,7 +128,7 @@
 						</div>
 						
 						<div name="Buttons" class="centered layout-vr-lg">
-							<input class="btn" type="submit" value="Submit"onclick="validation_check(this)" > &nbsp;&nbsp;
+							<input class="btn" type="submit" value="Submit"onclick="validation_check(this)"> &nbsp;&nbsp;
 							<input class="btn" type="button" value="Reset" onClick="this.form.reset();">
 						</div>
 						
