@@ -100,7 +100,8 @@ def level(request):
                   'title': title.hindi_text if language == "Hindi" else title.title,
                   'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                   'breadcrumb': breadcrumb_list,
-                  'language': language
+                  'language': language,
+                  'videos': video_objects
                   }
         return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '2':
@@ -161,6 +162,7 @@ def level(request):
                       'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                       'breadcrumb': breadcrumb_list,
                       'language': language,
+                      'videos': video_objects,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
     if level == '3':
@@ -206,6 +208,7 @@ def level(request):
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
                         'language': language,
+                        'videos': video_objects,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         elif action_object.name == 'interculture':
@@ -228,6 +231,7 @@ def level(request):
                         'title_audio': 'you-can-select-an-option-prompt-graphics.mp3',
                         'breadcrumb': breadcrumb_list,
                         'language': language,
+                        'videos': video_objects,
                       }
             return render_to_response('videokheti.html', context, context_instance=RequestContext(request))
         else:
