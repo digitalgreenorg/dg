@@ -676,7 +676,7 @@ function() {
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'list_elements': [{'element':'id'},{'header':'Date','element':'date_of_adoption'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
+        'list_elements': [{'element':'id'},{'header':'Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
@@ -749,6 +749,7 @@ function() {
                         'name_field': 'person_name',
                         'name_field_extra_info':'group',
                         'name_field_detail':'group_name',
+                        'name_field_id':'id',
                         'dependency': [{
                             'source_form_element': 'village',
                             'dep_attr': 'village'

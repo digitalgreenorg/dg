@@ -623,10 +623,11 @@ define([
                         var extra_info = "";
                         if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
                             extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                            extra_info_id = f_json[f_entity_desc.name_field_id]
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "") + (extra_info_id !="" ? ' (' + extra_info_id + ')' : "")
                         }));
                     }
                     else {
