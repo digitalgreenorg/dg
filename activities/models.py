@@ -127,8 +127,8 @@ pre_delete.connect(delete_log, sender=PersonAdoptPractice)
 
 class AdoptionCheckComment(CocoModel):
     id = models.AutoField(primary_key=True)
-    adoption = models.ForeignKey(PersonAdoptPractice,null=True)
-    comment_msg = models.TextField(max_length=1000, blank=True, null=True)
+    adoption_id = models.ForeignKey(PersonAdoptPractice,null=True)
+    comment = models.TextField(max_length=1000, blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % (self.comment_msg)
