@@ -620,14 +620,17 @@ define([
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info = "";
-                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
-                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
-                            extra_info_id = f_json[f_entity_desc.name_field_id]
+                        var extra_info_group_name = "";
+                        var extra_info_person_id = ""
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name] != null) {
+                            extra_info_group_name = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name];
+                        }
+                        if (f_json[f_entity_desc.name_field_person_id] != null) {
+                            extra_info_person_id = f_json[f_entity_desc.name_field_person_id]
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "") + (extra_info_id !="" ? ' (' + extra_info_id + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
                         }));
                     }
                     else {
