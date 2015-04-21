@@ -136,6 +136,7 @@ def search_view(request):
     subcategory = request.GET.get('subcategory', None)
     topic = request.GET.get('topic', None)
     subject = request.GET.get('subject', None)
+    order = request.GET.get('order_by', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -151,6 +152,7 @@ def search_view(request):
               'subcategory' : subcategory,
               'topic' : topic,
               'subject': subject,
+              'order': order,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
