@@ -34,7 +34,12 @@ define(function(require) {
                 .setVideosPerDrawer(4);
 
             // set the active filter to be Most Liked to init the collections
-            references.collectionMostFiltersViewController.setActiveFilter('-featured');
+            if ($(".js-collections-wrapper").attr('data-order') != 'None'){
+                this._references.collectionMostFiltersViewController.setActiveFilter($(".js-collections-wrapper").attr('data-order'));
+            }
+            else{
+                references.collectionMostFiltersViewController.setActiveFilter('-featured');
+            }
             return this;
         },
 
