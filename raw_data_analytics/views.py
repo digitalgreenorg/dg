@@ -300,6 +300,9 @@ def execute(request):
                                           context_instance=RequestContext(request))
             
             else:
+                df = dataframe_result.to_json()
+                print df
+                print type(df)
                 csv_file=create_excel_html(dataframe_result, from_date, to_date)
 
                 return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':dataframe_result.to_html()}, context_instance=RequestContext(request))

@@ -1,4 +1,8 @@
 {% include "includes/header.html" %}
+
+<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+<script  src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.min.js"></script>
+
 <section id="Raw Data Analytics" class="about-bg">
 	<div class="wrapper">
 		<div class="inner-wrapper">
@@ -12,21 +16,32 @@
 				<center></br>
 					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
 				
-					<div id="dataframe" class = "copy copy-margin">
+					
 						{{ dataf | safe }}
-					<div>
+
+						<script type="javascript">
+							$('#example').dataTable({
+					        
+					        "aaData": {{ dataf | safe }},
+					    </script>
+					
+					<table id="example">
+					    <thead>
+					      <tr><th>Sites</th></tr>
+					    </thead>
+					    <tbody>
+					      <tr><td>SitePoint</td></tr>
+					      <tr><td>Learnable</td></tr>
+					      <tr><td>Flippa</td></tr>
+					    </tbody>
+					 </table>		
+					
 				</center>
 			</div>
 		</div>		
 	</div>
-</section>
-<center></br>
-					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
-				
-					<div id="dataframe" clas="tableizer-table">
-						{{ dataf | safe }}
-					<div>
-				</center>
+</section> 
+
 {% include "includes/footer.html" %}
 <!--<html>
 
