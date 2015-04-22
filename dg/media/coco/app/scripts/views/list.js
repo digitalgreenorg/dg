@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             //TODO: if !entity_config, handle error etc
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
+            console.log("abc",this.entity_config)
             this.render();
         },
 
@@ -72,14 +73,32 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                         var object = model_object;
                         for (var i = 0; i < element_parts.length; i++) {
                             // To check if the entry is made online or offline. Display "Not uploaded in place of id in case of offline entry"
-                            if(element_parts.length == 1 && element_parts[i] == "id" && object.online_id == undefined){
+                            if(element_parts.length == 1 && element_parts[i] == "online_id" && object.online_id == undefined){
                                 object = "Not Uploaded"
                             }
                             else{
-                                object = object[element_parts[i]];
+                                if(element_parts[i] == 'online_id' && i>0){
+                                    var abcd=Object;
+                                    try {
+                                       Offline.fetch_object(all_configs[element_parts[i - 1]].entity_name, 'id', object['id'])
+                                            .done(function (off_model) {
+                                                alert(off_model);
+                                                abcd = off_model;
+                                            });
+                                                console.log("apple","mango");
+                                                super.object = abcd['attributes']['online_id'];
+                                    }
+                                    catch(err){
+                                       console.log('error:',err);
+                                    }
+                                }
+                                else{
+                                    object = object[element_parts[i]];
+                                }
                             }
                         }
                         if (object != null) {
+                            console.log('yoyo',typeof(object))
                             cell = object;
                         }
                     }
@@ -88,6 +107,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                     // Developer needs to be told that 'element' is compulsory.
                     alert('Error: Add element in list_elements parameter in configs.js');
                 }
+                console.log("hello",cell);
                 return cell;
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {

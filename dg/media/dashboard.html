@@ -783,7 +783,12 @@
                 <div class="controls">
                     <% 
                         var person_label="";
-                        person_label =person_name+"("+father_name+")"+"("+online_id+")";
+                        if(typeof(online_id)!="undefined"){
+                            person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                        }
+                        else{
+                            person_label = person_name+"("+father_name+")"
+                        }
                     %>
                     <input type="text" class="form-control" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
                 </div>
