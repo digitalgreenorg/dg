@@ -37,8 +37,8 @@ class FeaturedCollectionAdmin(admin.ModelAdmin):
     search_fields = ['collection']
 
 class ResourceVideoAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['title', 'youtubeID', 'videoTag']
+    fieldsets = [(None,  {'fields': ['title', 'youtubeID', 'videoTag', 'date']
                           }
                   )]
-    list_display = ('title', 'youtubeID', 'videoTag')
-    search_fields = ['title', 'videoTag']
+    list_display = ('title', 'youtubeID', 'videoTag', 'date')
+    search_fields = ['title', 'youtubeID', 'videoTag']
