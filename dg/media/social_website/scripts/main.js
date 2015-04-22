@@ -1,7 +1,7 @@
 'use strict';
 
 requirejs.config({
-    baseUrl: '/media/social_website/build/',
+    baseUrl: '/media/social_website/scripts/',
 
     paths: {
         framework: 'libs/framework',

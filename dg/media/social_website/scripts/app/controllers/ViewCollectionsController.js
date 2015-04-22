@@ -70,6 +70,8 @@ define(function(require) {
             references.$commentButton = jQuery('.js-comment-btn');
 
             references.$videoTarget = jQuery('#video-target');
+            references.$showMoreButton = jQuery('.js-show-more');
+            references.$vidDesc = jQuery('.js-vid-desc');
 
             var $videosCarouselWrapper = jQuery('#collection-videos-carousel');
             references.videosCarousel = new NCarousel($videosCarouselWrapper, {
@@ -92,6 +94,9 @@ define(function(require) {
 
             boundFunctions.onCommentButtonClick = this._onCommentButtonClick.bind(this);
             references.$commentButton.on('click', boundFunctions.onCommentButtonClick);
+
+            boundFunctions.onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+            references.$showMoreButton.on('click', boundFunctions.onShowMoreButtonClick);
             
             boundFunctions.onCommentLikeButtonClick = this._onCommentLikeButtonClick.bind(this);
             references.$commentsAreaWrapper.on('click', '.js-comment-like-button', boundFunctions.onCommentLikeButtonClick);
@@ -281,6 +286,20 @@ define(function(require) {
             }
 
             this._references.videoLikeDataFeed.fetch(videoUID, userID, function(){}, 'POST');
+        },
+
+        _onShowMoreButtonClick: function(e){
+            e.preventDefault();
+            var references = this._references;
+            if ($(references.$vidDesc).hasClass("featured-line-clamp")){
+                $(references.$vidDesc).removeClass("featured-line-clamp");
+                $(references.$showMoreButton).text("Show Less");
+            }
+            else{
+                $(references.$vidDesc).addClass("featured-line-clamp");
+                $(references.$showMoreButton).text("Show More")
+            }
+
         },
 
         _onCommentButtonClick: function(e) {
