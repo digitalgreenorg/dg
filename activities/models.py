@@ -133,6 +133,6 @@ class AdoptionCheckComment(CocoModel):
     comment = models.TextField(max_length=1000, blank=True, null=True)
 
     def __unicode__(self):
-        return "%s" % (self.comment_msg)
+        return "%s" % (self.comment)
 
 

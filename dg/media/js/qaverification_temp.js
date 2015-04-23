@@ -5,16 +5,16 @@
 function QAverification() {
     jQuery("#id_verification_status").change(function () {
         if (jQuery("#id_verification_status").val() != 0) {
-            jQuery("#id_adoptioncheckcomment_set-0-comment_msg").prop('disabled', false);
+            jQuery(this).parent().parent().parent().parent().find('textarea').prop('disabled', false);
         }
         if (jQuery("#id_verification_status").val() == 0) {
-            jQuery("#id_adoptioncheckcomment_set-0-comment_msg").val("");
-            jQuery("#id_adoptioncheckcomment_set-0-comment_msg").prop('disabled', true);
+            jQuery(this).parent().parent().parent().parent().find('textarea').val("");
+            jQuery(this).parent().parent().parent().parent().find('textarea').prop('disabled', true);
         }
     });
 
     if (jQuery("#id_verification_status option:selected").val() == 0) {
-        jQuery('#id_adoptioncheckcomment_set-0-comment_msg').prop('disabled', true);
+        jQuery("#id_verification_status").parent().parent().parent().parent().find('textarea').prop('disabled', true);
     }
 }
 window.onload = QAverification;
