@@ -1,0 +1,54 @@
+{% include "includes/header.html" %}
+
+<script  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+<script  src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.min.js"></script>
+<script  src="/media/raw_data_analytics/table_load.js"></script>
+
+<section id="Raw Data Analytics" class="about-bg">
+	<div class="wrapper">
+		<div class="inner-wrapper">
+			<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>
+		    <div class="media layout-vr-xlg">
+	        	<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
+					<a a href="/media/social_website/uploads/raw_data_analytics/temp_csv/{{ filename }}"> 
+						Download result as an excel file
+					</a>
+				</div></br>
+				<center></br>
+					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
+					{{ dataf  }}
+					<div id='tablex' data-val-json="{{dataf}}">
+					</div>
+
+					     <table id="example" class="dataTable">
+					    </table>		
+				</center>
+			</div>
+		</div>		
+	</div>
+</section> 
+
+{% include "includes/footer.html" %}
+<!--<html>
+
+<head>
+<center>
+    <h2> Data Result </h2>
+
+    <div name="download_excel">
+        <a href="/media/social_website/uploads/raw_data_analytics/temp_csv/{{ filename }}">Download result as an excel
+            file</a>
+    </div>
+</center>
+</head>
+<body>
+<center></br>
+<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
+</center>
+
+<br/><br/><br/><br/>
+<center>
+{{ dataf | safe }}
+</center>
+</body>
+</html> -->
