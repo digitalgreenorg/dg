@@ -1,8 +1,13 @@
 {% include "includes/header.html" %}
 
-<script  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
-<script  src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.min.js"></script>
+<script  src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script  src="https://cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js"></script>
 <script  src="/media/raw_data_analytics/table_load.js"></script>
+<script  src="/media/social_website/scripts/libs/external/dataTables.tableTools.js"></script>
+
+
+<link rel="stylesheet" media="screen, projection" href="https://cdn.datatables.net/1.10.6/css/jquery.dataTables.css" />
+<link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" />
 
 <section id="Raw Data Analytics" class="about-bg">
 	<div class="wrapper">
