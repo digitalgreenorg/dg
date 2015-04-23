@@ -1,7 +1,8 @@
 {% include "includes/header.html" %}
 
-<script src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
+<script  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.min.js"></script>
 <script  src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.min.js"></script>
+<script  src="/media/raw_data_analytics/table_load.js"></script>
 
 <section id="Raw Data Analytics" class="about-bg">
 	<div class="wrapper">
@@ -15,27 +16,12 @@
 				</div></br>
 				<center></br>
 					<B>From:</B>{{ from_date }}&nbsp; &nbsp; <B>To:</B> {{ to_date }}
-				
-					
-						{{ dataf | safe }}
+					{{ dataf  }}
+					<div id='tablex' data-val-json="{{dataf}}">
+					</div>
 
-						<script type="javascript">
-							$('#example').dataTable({
-					        
-					        "aaData": {{ dataf | safe }},
-					    </script>
-					
-					<table id="example">
-					    <thead>
-					      <tr><th>Sites</th></tr>
-					    </thead>
-					    <tbody>
-					      <tr><td>SitePoint</td></tr>
-					      <tr><td>Learnable</td></tr>
-					      <tr><td>Flippa</td></tr>
-					    </tbody>
-					 </table>		
-					
+					     <table id="example" class="dataTable">
+					    </table>		
 				</center>
 			</div>
 		</div>		
