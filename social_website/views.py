@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dg.settings import PERMISSION_DENIED_URL
 
 from elastic_search import get_related_collections, get_related_videos 
-from social_website.models import  Collection, Partner, FeaturedCollection, Video
+from social_website.models import  Collection, Partner, FeaturedCollection, Video, ResourceVideo
 from videos.models import Practice, Video as Dashboard_Video
 
 from mezzanine.blog.models import BlogPost
@@ -59,8 +59,9 @@ def collection_view(request, partner, state, language, title, video=1):
         video = collection.videoincollection_set.all()[video_index - 1].video
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, collection.featured)
     video_list = [i.video for i in collection.videoincollection_set.all()]
+    description = collection.description
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -76,6 +77,8 @@ def collection_view(request, partner, state, language, title, video=1):
               'tags' : tags,
               'related_collections' : related_collections[:4], # restricting to 4 related collections for now
               }
+    if collection.featured :
+      return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
@@ -90,7 +93,7 @@ def video_view(request, uid):
         collection = Collection.objects.filter(partner=video.partner)[0]
     else:
         collection = Collection.objects.all()[0]
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, False)
     related_videos = get_related_videos(video)
     context = {
                'header': {
@@ -133,6 +136,7 @@ def search_view(request):
     subcategory = request.GET.get('subcategory', None)
     topic = request.GET.get('topic', None)
     subject = request.GET.get('subject', None)
+    order = request.GET.get('order_by', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -148,6 +152,7 @@ def search_view(request):
               'subcategory' : subcategory,
               'topic' : topic,
               'subject': subject,
+              'order': order,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
@@ -245,6 +250,20 @@ def featuredCollection(request):
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
 
+
+def resource_view(request, uid=None):
+    resource_object = ResourceVideo.objects.all()
+    film_list = resource_object.filter(videoTag='f').order_by('-date')
+    testimonial_list = resource_object.filter(videoTag='t').order_by('-date')
+    if uid is not None:
+        selected_video = resource_object.filter(uid=uid)
+        return render_to_response('resources.html' , {'resources':selected_video, 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
+    try:
+        resources = resource_object.order_by('-uid')
+    except ResourceVideo.DoesNotExist:
+        return HttpResponseRedirect(reverse('resources'))
+
+    return render_to_response('resources.html' , {'resources':resources[0:1], 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
 
 
 def footer_view(request):

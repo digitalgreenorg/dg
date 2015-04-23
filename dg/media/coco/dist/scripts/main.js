@@ -6334,16 +6334,12 @@ define('views/upload',[
 
         //removes the view
         tear_down: function() {
-            var dfd = new $.Deferred();
             this.in_progress = false;
             var that = this;
             //modal takes time to hide. Needed to get the correct point of time when upload has finished.
-            $('#upload_modal').on('hidden', function() {
-                that.remove();
-                dfd.resolve();
-            });
+            
             $('#upload_modal').modal('hide');
-            return dfd.promise();
+            $('.modal-backdrop').remove();
         },
 
         // starts the upload process      
@@ -6360,25 +6356,19 @@ define('views/upload',[
                     that.iterate_uploadq(collection)
                         .done(function() {
                             // upload successfully finished
-                            that.tear_down()
-                                .done(function() {
-                                    dfd.resolve();
-                                });
+                            that.tear_down();
+                            dfd.resolve();
                         })
                         .fail(function(error) {
                             // upload failed
-                            that.tear_down()
-                                .done(function() {
-                                    dfd.reject(error);
-                                });
+                            that.tear_down();
+                            dfd.reject(error);
                         });
                 })
                 .fail(function(error) {
                     // failed to retrieve objects to be uploaded
-                    that.tear_down()
-                        .done(function() {
-                            dfd.reject(error);
-                        });
+                    that.tear_down();
+                    dfd.reject(error);
                 });
             return dfd;
         },
@@ -6742,11 +6732,8 @@ define('views/incremental_download',[
                             keyboard: false,
                             backdrop: "static",
                         });
-                        //modal takes time to animate and show up - so wait till it is completely visible to the user
-                        that.$('#incremental_download_modal').on('shown', function() {
-                            dfd.resolve();
-                        });
                         that.$('#incremental_download_modal').modal('show');
+                        dfd.resolve();
                     });
             }
             //set ui for background inc download
@@ -6763,7 +6750,7 @@ define('views/incremental_download',[
         //remove the view
         tear_down: function() {
             this.$('#incremental_download_modal').modal('hide');
-            this.remove();
+            $('.modal-backdrop').remove();
             this.in_progress = false;
         },
 

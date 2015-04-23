@@ -52,7 +52,7 @@ define(function(require) {
 
             var state = this._state;
             state.currentPageNumber = 0;
-            state.commentsPerPage = 10;
+            state.commentsPerPage = 5;
             state.currentCount = 0;
             state.commentAdded = false;
         },
