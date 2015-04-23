@@ -1874,6 +1874,12 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     padding-right: 15px;
 }
 
+.featured-line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
 
 .featured-collection-ul {
     background-color: #f8f7f3;
