@@ -27,7 +27,7 @@ function table_load()
 	full_data.data = formated_json;
 	console.log('yipee', full_data);
 
-	 $('#example').DataTable( {
+	 jQuery('#example').dataTable( {
         "aaData": full_data,
         "aoColumns": keyset
     } );
