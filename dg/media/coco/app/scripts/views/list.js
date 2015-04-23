@@ -86,7 +86,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                                                 abcd = off_model;
                                             });
                                                 console.log("apple","mango");
-                                                super.object = abcd['attributes']['online_id'];
+                                                object = abcd['attributes']['online_id'];
                                     }
                                     catch(err){
                                        console.log('error:',err);
