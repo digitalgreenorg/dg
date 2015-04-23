@@ -253,8 +253,8 @@ def featuredCollection(request):
 
 def resource_view(request, uid=None):
     resource_object = ResourceVideo.objects.all()
-    film_list = resource_object.filter(videoTag='f').order_by('-uid')
-    testimonial_list = resource_object.filter(videoTag='t').order_by('-uid')
+    film_list = resource_object.filter(videoTag='f').order_by('-date')
+    testimonial_list = resource_object.filter(videoTag='t').order_by('-date')
     if uid is not None:
         selected_video = resource_object.filter(uid=uid)
         return render_to_response('resources.html' , {'resources':selected_video, 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
