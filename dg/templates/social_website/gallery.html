@@ -1,0 +1,33 @@
+{% include "includes/header.html" %}
+        {% autoescape off %}     
+        <section id="gallery" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Photo Gallery</h2>
+                    <div class="grid layout-vr-xlg">
+                        <div class='grid-col grid-size2of3 copy'>
+                            {% for obj in gallerys %}
+                                <div>
+                                <a href="/gallery/{{obj.uid}}">
+                                <h3 class='hdg-source-semibold hdg-c hdg-black layout-vr-sm'>{{obj.name}}</h3>
+                                </a>
+                                {{obj.flickrCode|safe}}
+                                </div>
+                                {{break}}
+                            {% endfor %} 
+                        </div>
+                        <div class='grid-col grid-size1of3'>
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Photo Albums</h3>
+                            {% for obj in list %}
+                            <ul class='link-list'>
+                                <li><a href="/gallery/{{obj.uid}}">{{obj.name}}</a></li>
+                            </ul>
+                            {% endfor %}
+                        </div>  
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        {% endautoescape %}
+{% include "includes/footer.html" %}
+
