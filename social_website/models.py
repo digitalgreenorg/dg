@@ -142,6 +142,7 @@ class ResourceVideo(models.Model):
     uid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     youtubeID = models.CharField(max_length=50) 
+    date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
     videoTag = models.CharField(max_length=2,choices=video_choice,default=FILM)
 
 class FeaturedCollection(models.Model):
