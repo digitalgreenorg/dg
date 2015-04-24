@@ -301,22 +301,10 @@ def execute(request):
             
             else:
                 df = dataframe_result.to_json()
-                print df
-                print type(df)
-                csv_file=create_excel_html(dataframe_result, from_date, to_date)
-
-                return render_to_response('raw_data_analytics/result.html', {'filename':csv_file, 'from_date':from_date, 'to_date':to_date, 'dataf':df}, context_instance=RequestContext(request))
+                
+                return render_to_response('raw_data_analytics/result.html', {'from_date':from_date, 'to_date':to_date, 'dataf':df}, context_instance=RequestContext(request))
 
 
-def create_excel_html(df, from_date, to_date):
-    millis = str(round(time.time() * 1000))
-    data_file = ''.join([dg.settings.MEDIA_ROOT, '/raw_data_analytics/temp_csv/'+millis+'_library_data.csv'])
-    f = codecs.open(data_file, 'wb', 'utf-8')
-    f.close()
-    df.to_csv(data_file)
-    generated_file_name = data_file.split('/')[-1] 
-
-    return generated_file_name
 
 
 
