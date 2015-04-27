@@ -18,7 +18,8 @@ calltype="trans" # Can be "trans" for transactional and "promo" for promotional 
 def call_exotel(request):
     req_id = request.GET.get("id")
     vals = CustomFieldTest.objects.get(id__exact=req_id)
-    r = requests.post('https://digitalgreen2:421c11b1235067ca30ca87590c80c31eadc46af0@twilix.exotel.in/v1/Accounts/{sid}/Calls/connect',
+    r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
+        auth=(sid, token),
         data={
             'From': int(vals.mobile_number),
             'CallerId': callerid,
@@ -28,7 +29,8 @@ def call_exotel(request):
             'CallType': calltype,
             'CustomField': vals.CustomField
         })
-    return 1
+    return HttpResponse("job done")
+
 
 def greeting_view(request):
     callSid = request.GET["CallSid"]
