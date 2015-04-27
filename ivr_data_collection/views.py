@@ -1,6 +1,10 @@
 from django.shortcuts import render
 import requests
 from models import CustomFieldTest
+from django.core import urlresolvers
+from django.http import HttpResponse
+from django.shortcuts import render_to_response, render
+
 
 sid = "digitalgreen2"
 token = "421c11b1235067ca30ca87590c80c31eadc46af0"
