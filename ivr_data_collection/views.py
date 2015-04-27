@@ -4,6 +4,7 @@ from models import CustomFieldTest
 from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
+import logging
 
 
 sid = "digitalgreen2"
@@ -40,6 +41,8 @@ def greeting_view(request):
     callSid = request.GET["CallSid"]
     frm = request.GET["From"]
     to = request.GET["To"]
+    logger = logging.getLogger('social_website')
+    logger.info("CustomField Received in Greeting: " + request.GET["CustomField"])
     response = HttpResponse("https://s3.amazonaws.com/dg_ivrs/telugu_greeting.wav",content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
@@ -52,13 +55,14 @@ def custom_field_update(request):
     callSid = request.GET["CallSid"]
     frm = request.GET["From"]
     to = request.GET["To"]
-    response = HttpResponse("https://s3.amazonaws.com/dg_ivrs/greetingtry.mp3",content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
     response["DialWhomNumber"] = ""
     response["CustomField"] =  "pqr"
     vals = CustomFieldTest.objects.get(id__exact=1)
+    logger = logging.getLogger('social_website')
+    logger.info("CustomField Received in CFupdate: " + request.GET["CustomField"])
     vals.CustomField = request.GET["CustomField"]
     vals.save()
     return response
