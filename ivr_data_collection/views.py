@@ -52,7 +52,7 @@ def greeting_view(request):
     return response
 
 def custom_field_update(request):
-    logger.info("CustomField Received in CFupdate 2: " + request.GET["CustomField"])
+    logger.info("CustomField Received in CFupdate 2")
     callSid = request.GET["CallSid"]
     frm = request.GET["From"]
 
