@@ -52,6 +52,7 @@ def greeting_view(request):
     return response
 
 def custom_field_update(request):
+    logger = logging.getLogger('social_website')
     logger.info("CustomField Received in CFupdate 2")
     callSid = request.GET["CallSid"]
     frm = request.GET["From"]
@@ -63,7 +64,7 @@ def custom_field_update(request):
     response["DialWhomNumber"] = ""
     response["CustomField"] =  "pqr"
     vals = CustomFieldTest.objects.get(id__exact=1)
-    logger = logging.getLogger('social_website')
+    
     logger.info("CustomField Received in CFupdate: " + request.GET["CustomField"])
     vals.CustomField = request.GET["CustomField"]
     vals.save()
