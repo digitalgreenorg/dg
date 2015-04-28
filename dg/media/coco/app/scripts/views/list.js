@@ -77,22 +77,6 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                                 object = "Not Uploaded"
                             }
                             else{
-                                if(element_parts[i] == 'online_id' && i>0){
-                                    var abcd=Object;
-                                    try {
-                                       Offline.fetch_object(all_configs[element_parts[i - 1]].entity_name, 'id', object['id'])
-                                            .done(function (off_model) {
-                                                alert(off_model);
-                                                abcd = off_model;
-                                            });
-                                                console.log("apple","mango");
-                                                object = abcd['attributes']['online_id'];
-                                    }
-                                    catch(err){
-                                       console.log('error:',err);
-                                    }
-                                }
-                                else{
                                     object = object[element_parts[i]];
                                 }
                             }
