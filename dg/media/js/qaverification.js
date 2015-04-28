@@ -16,5 +16,9 @@ function QAverification() {
     if (jQuery("#id_verification_status option:selected").val() == 0) {
         jQuery("#id_verification_status").parent().parent().parent().parent().find('textarea').prop('disabled', true);
     }
+
+    if (jQuery("#id_adoptioncheckcomment_set-1-id").length){
+        jQuery("#id_adoptioncheckcomment_set-1-id").parent().hide();
+    }
 }
 window.onload = QAverification;

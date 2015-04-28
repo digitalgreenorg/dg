@@ -148,8 +148,8 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     inlines = [AdoptionCheckCommentInline]
     list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
     list_editable = ('verification_status',)
-    list_filter = ('date_of_adoption', 'verification_status','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name')
-    search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__district__state__state_name']
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name')
+    search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
     class Media:
