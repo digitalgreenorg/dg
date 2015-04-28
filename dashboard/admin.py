@@ -154,7 +154,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-                settings.STATIC_URL + "js/qaverification_temp.js",
+                settings.STATIC_URL + "js/qaverification.js",
         )
 
 
