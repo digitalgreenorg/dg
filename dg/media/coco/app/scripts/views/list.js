@@ -78,20 +78,17 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                             }
                             else{
                                     object = object[element_parts[i]];
-                                }
                             }
                         }
-                        if (object != null) {
-                            console.log('yoyo',typeof(object))
-                            cell = object;
-                        }
+                    }
+                    if (object != null) {
+                        cell = object;
                     }
                 }
                 else {
                     // Developer needs to be told that 'element' is compulsory.
                     alert('Error: Add element in list_elements parameter in configs.js');
                 }
-                console.log("hello",cell);
                 return cell;
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
