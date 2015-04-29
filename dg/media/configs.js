@@ -254,8 +254,29 @@ function() {
 
 
         },
+        'inline': {
+            'entity': 'nonnegotiable',
+            'default_num_rows': 5,
+            'add_row' : 1,
+            'template': 'nonnegotiable_inline',
+            'joining_attribute': {
+                'host_attribute': ["id", "title"],
+                'inline_attribute': "video"
+            },
+            'header': 'nonnegotiable_inline_header',
+            'borrow_attributes': [],
+            foreign_entities: {
+                video: {
+                    video: {
+                        placeholder: 'id_video',
+                        name_field: 'title'
+                    }
+                }
+            }
+        },
+
         'form_field_validation': {
-            ignore: [],
+            ignore: ".donotvalidate",
             rules: {
                 title: {
                     required: true,
@@ -364,6 +385,16 @@ function() {
         }
     };
 
+    var nonnegotiable_configs = {
+        'rest_api_url': '/coco/api/v2/nonnegotiable/',
+        'entity_name': 'nonnegotiable',
+        'sort_field': 'non_negotiable',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var district_configs = {
         'rest_api_url': '/coco/api/v2/district/',
         'entity_name': 'district',
@@ -395,6 +426,7 @@ function() {
         'inline': {
             'entity': 'person',
             'default_num_rows': 10,
+            'add_row' : 5,
             "template": "person_inline",
             "joining_attribute": {
                 'host_attribute': ["id", "group_name"],
@@ -991,6 +1023,7 @@ function() {
         adoption: adoption_configs,
         language: language_configs,
         district: district_configs,
+        nonnegotiable: nonnegotiable_configs,
         misc: misc
     }
 

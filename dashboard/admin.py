@@ -15,7 +15,7 @@ from django.forms import TextInput, Textarea
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-
+from videos.models import  NonNegotiable
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -61,7 +61,14 @@ class ScreeningAdmin(admin.ModelAdmin):
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened',)
 
 
+class NonNegotiablesInline(admin.TabularInline):
+    model =  NonNegotiable
+    raw_id_fields = ("video",)
+    extra = 10
+
+
 class VideoAdmin(admin.ModelAdmin):
+    inlines = [NonNegotiablesInline,]
     fieldsets = [
                 (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','summary', 'partner', 'related_practice']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
