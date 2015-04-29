@@ -536,7 +536,7 @@ class PersonAdoptVideoResource(BaseResource):
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
-    dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)
@@ -546,6 +546,9 @@ class PersonAdoptVideoResource(BaseResource):
 
     def dehydrate_village(self, bundle):
         return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
+
+    def dehydrate_person(self, bundle):
+        return {'id': bundle.obj.person.id, 'online_id': bundle.obj.person.id, 'person_name': bundle.obj.person.person_name}
 
 class LanguageResource(ModelResource):    
     class Meta:
