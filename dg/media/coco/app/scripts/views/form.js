@@ -621,7 +621,11 @@ define([
                         f_json = f_model.toJSON();
                     if (f_json[f_entity_desc.name_field_extra_info]) {
                         var extra_info_group_name = "";
-                        var extra_info_person_id = ""
+                        var extra_info_person_id = "";
+                        var extra_info_father_name = "";
+                        if(f_json[f_entity_desc.name_field_father_name] != null){
+                            extra_info_father_name = f_json[f_entity_desc.name_field_father_name]
+                        }
                         if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name] != null) {
                             extra_info_group_name = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name];
                         }
@@ -630,7 +634,7 @@ define([
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info_father_name != "" ? ' (' + extra_info_father_name + ')' : "") + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
                         }));
                     }
                     else {

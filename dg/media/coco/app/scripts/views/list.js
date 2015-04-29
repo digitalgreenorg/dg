@@ -12,7 +12,6 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             //TODO: if !entity_config, handle error etc
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
-            console.log("abc",this.entity_config)
             this.render();
         },
 

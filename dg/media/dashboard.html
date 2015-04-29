@@ -784,7 +784,12 @@
                     <% 
                         var person_label="";
                         if(typeof(online_id)!="undefined"){
-                            person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                            if(typeof(group)!=""){
+                                person_label = person_name+"("+father_name+")"+"("+group.group_name+")"+"("+online_id+")";
+                            }
+                            else{
+                                person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                            }
                         }
                         else{
                             person_label = person_name+"("+father_name+")"

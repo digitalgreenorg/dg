@@ -779,6 +779,7 @@ function() {
                     float_person: {
                         'placeholder': 'id_person',
                         'name_field': 'person_name',
+                        'name_field_father_name':'father_name',
                         'name_field_extra_info':'group',
                         'name_field_group_name':'group_name',
                         'name_field_person_id':'online_id',
