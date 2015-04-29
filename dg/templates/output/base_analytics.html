@@ -154,7 +154,14 @@
 		<div id='customizetitle'>
 			<div id='customizetitlename'>  </div>			
 		</div>
-		
+		<div id='submitdiv'>                                      
+                    <table id='submittable' cellspacing='0' cellpadding='0'>                        
+                        <tr>
+                            <td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
+                            <td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
+                        </tr>
+                    </table>
+        </div>
 		<div id='customizebody'>			 			
 			<div id='calender' class='customdiv'>
 				<div id='calendertitle' class='customtitle'>										
@@ -270,7 +277,7 @@
 					{% for partner in search_box_params.partners %}
 						<tr>
 							<td id='partnerbodytd2' class='custompartnerbodytd'> 
-								<div id='partnername' class='partnerdiv' {% if partner.highlight == 1 %} style="font-weight:bold;" {% endif %}>{{partner.PARTNER_NAME}}</div> 
+								<div id='partnername' class='partnerdiv' {% if partner.highlight == 1 %} style="font-weight:bold; color:white; background-color:#5b6e1d;" {% endif %}>{{partner.PARTNER_NAME}}</div> 
 								<div class='partnercheckbox'> 
 									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
 								</div> 
@@ -282,16 +289,6 @@
 			</div>				
 			{% endif %}
 			
-			<div id='submitdiv'>										
-					<table id='submittable' cellspacing='0' cellpadding='0'>						
-						<tr>
-							<td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
-							<td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
-						</tr>
-					</table>
-			</div>			
-			<br/>
-			<br/>	
 		</div>
 				
 	</div>
