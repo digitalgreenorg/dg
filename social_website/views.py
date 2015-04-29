@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dg.settings import PERMISSION_DENIED_URL
 
 from elastic_search import get_related_collections, get_related_videos 
-from social_website.models import  Collection, Partner, FeaturedCollection, Video
+from social_website.models import  Collection, Partner, FeaturedCollection, Video, ResourceVideo
 from videos.models import Practice, Video as Dashboard_Video
 
 from mezzanine.blog.models import BlogPost
@@ -136,6 +136,7 @@ def search_view(request):
     subcategory = request.GET.get('subcategory', None)
     topic = request.GET.get('topic', None)
     subject = request.GET.get('subject', None)
+    order = request.GET.get('order_by', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -151,6 +152,7 @@ def search_view(request):
               'subcategory' : subcategory,
               'topic' : topic,
               'subject': subject,
+              'order': order,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
@@ -248,6 +250,20 @@ def featuredCollection(request):
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
 
+
+def resource_view(request, uid=None):
+    resource_object = ResourceVideo.objects.all()
+    film_list = resource_object.filter(videoTag='f').order_by('-date')
+    testimonial_list = resource_object.filter(videoTag='t').order_by('-date')
+    if uid is not None:
+        selected_video = resource_object.filter(uid=uid)
+        return render_to_response('resources.html' , {'resources':selected_video, 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
+    try:
+        resources = resource_object.order_by('-uid')
+    except ResourceVideo.DoesNotExist:
+        return HttpResponseRedirect(reverse('resources'))
+
+    return render_to_response('resources.html' , {'resources':resources[0:1], 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
 
 
 def footer_view(request):
