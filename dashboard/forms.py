@@ -95,7 +95,7 @@ class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonAdoptPractice
-        exclude = ('practice',)
+        exclude = ('practice', 'verification_status')
 
 class PersonForm(CocoModelForm):
     class Meta:
