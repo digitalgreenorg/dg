@@ -81,7 +81,8 @@ def screening_question(request):
     frm = request.GET["From"]
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
-    logger.debug("Screening Question : Call id : " + callSid + " , videoId : " + videoId)
+    log_string = "".join(["Screening Question : Call id : ", callSid, " , videoId : ", videoId])
+    logger.debug(log_string)
     response = HttpResponse(videoDetails[int(videoId)][0],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
@@ -97,8 +98,9 @@ def screening_answer(request, option):
     frm = request.GET["From"]
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
-    logger.debug("Screening Answer : Call id : " + callSid + " , videoId : " + videoId + " option : " + option)
-    response = HttpResponse("",content_type="text/plain")
+    log_string = "".join(["Screening Question : Call id : ", callSid, " , videoId : ", videoId, " option : ", option])
+    logger.debug(log_string)
+    response = HttpResponse(status=200,content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
@@ -112,7 +114,8 @@ def adoption_question(request):
     frm = request.GET["From"]
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
-    logger.debug("Adoption Question : Call id : " + callSid + " , videoId : " + videoId)
+    log_string = "".join(["Adoption Question : Call id : ", callSid, " , videoId : ", videoId])
+    logger.debug(log_string)
     response = HttpResponse(videoDetails[int(videoId)][1],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
@@ -127,8 +130,8 @@ def adoption_answer(request, option):
     frm = request.GET["From"]
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
-    logger.debug("Adoption answer : Call id : " + callSid + " , videoId : " + videoId " option : " + option)
-    response = HttpResponse("",content_type="text/plain")
+    logger.debug("Adoption answer : Call id : " + callSid + " , videoId : " + videoId + " option : " + option)
+    response = HttpResponse(status=200,content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
@@ -142,8 +145,8 @@ def nonnegotiable_question(request, num):
     frm = request.GET["From"]
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
-    logger.debug("Non Negotiable Question :"+ num + " Call id : " + callSid + " , videoId : " + videoId " option : " + option)
-    response = HttpResponse(videoDetails[int(videoId)][2][int(num)],content_type="text/plain")
+    logger.debug("Non Negotiable Question :"+ num + " Call id : " + callSid + " , videoId : " + videoId)
+    response = HttpResponse(videoDetails[int(videoId)][2][int(num)-1],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
@@ -156,8 +159,10 @@ def nonnegotiable_answer(request, num, option):
     videoId = request.GET["CustomField"]
     frm = request.GET["From"]
     to = request.GET["To"]
+    if int(num) >= 4:
+        return HttpResponse(status=406)
     logger = logging.getLogger('ivr_log')
-    logger.debug("Non Negotiable Answer :"+ num + " Call id : " + callSid + " , videoId : " + videoId " option : " + option)
+    logger.debug("Non Negotiable Answer :"+ num + " Call id : " + callSid + " , videoId : " + videoId+ " option : " + option)
     response = HttpResponse("",content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
