@@ -143,7 +143,7 @@ def nonnegotiable_question(request, num):
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
     logger.debug("Non Negotiable Question :"+ num + " Call id : " + callSid + " , videoId : " + videoId " option : " + option)
-    response = HttpResponse(videoDetails[int(videoId)][int(num)+2],content_type="text/plain")
+    response = HttpResponse(videoDetails[int(videoId)][2][int(num)],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
