@@ -82,6 +82,32 @@ def collection_view(request, partner, state, language, title, video=1):
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
+def picoseekho_view(request, uid=1):
+    video_list = [{'uid':1,'title':"Introduction to Pico Projector",'description':"This video introduces how using the pico projector can make the work easier for frontline workers in villages.",'youtubeID':'7qpSC1P9Fi8'},
+    {'uid':2,'title':"Pico set-up",'description':"This video shows how to set up the pico in a room for clear and visible video.",'youtubeID':'o1NbQegGCWM'},
+    {'uid':3,'title':"Playing a video",'description':"This video demonstrates the various steps that need to be followed for selecting and playing a specific video.",'youtubeID':'011IvbCIfuM'},
+    {'uid':4,'title':"Sound",'description':"This video demonstrates how to increase the sound on a pico and how to attach speakers for more sound.",'youtubeID':'xC57bLoWqnI'},
+    {'uid':5,'title':"Pausing and Rewinding ",'description':"This video shows that if a facilitator has to pause the video for a discussion, how they can do so. It also shows how the video can be rewinded, if certain points need to be seen again.",'youtubeID':'DAs3Pcr8d68'},
+    {'uid':6,'title':"Conclusion",'description':"This video summaries the main things that need to be kept in mind for operating a pico projector.",'youtubeID':'7jUv6A9kAKI'}]
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('pico_seekho.html' , context, context_instance = RequestContext(request)) 
+
+
 def video_view(request, uid):
     try:
         video = Video.objects.get(uid=uid)
@@ -261,7 +287,7 @@ def resource_view(request, uid=None):
     try:
         resources = resource_object.order_by('-uid')
     except ResourceVideo.DoesNotExist:
-        return HttpResponseRedirect(reverse('resources'))
+        return HttpResponseRedirect(reverse('about'))
 
     return render_to_response('resources.html' , {'resources':resources[0:1], 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
 
