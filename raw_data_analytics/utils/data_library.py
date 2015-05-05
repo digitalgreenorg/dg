@@ -18,7 +18,7 @@ class data_lib():
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
-        print options
+#        print options
         self.lookup_matrix = self.read_lookup_csv()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
@@ -46,20 +46,20 @@ class data_lib():
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
-            print "----------------------------------Full SQL Query---------------------------"
+#            print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
                                       queryComponents[4])
-            print query
-            print "-------------------------------Result--------------------------------"
+#            print query
+#            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-                print df
+#                print df
         resultant_df = self.order_data(relevantPartitionDictionary, final_df)
         resultant_df.index += 1
-        print resultant_df
+#        print resultant_df
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
@@ -124,16 +124,16 @@ class data_lib():
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-        print "----------------------------------SELECT PART------------------------------"
-        print selectResult
-        print "----------------------------------FROM PART--------------------------------"
-        print fromResult
-        print "----------------------------------WHERE PART-------------------------------"
-        print whereResult
-        print "---------------------------------GROUP_BY PART----------------------------"
-        print groupbyResult
-        print "--------------------------------ORDER_BY PART-----------------------------"
-        print orderbyResult
+#        print "----------------------------------SELECT PART------------------------------"
+#        print selectResult
+#        print "----------------------------------FROM PART--------------------------------"
+#        print fromResult
+#        print "----------------------------------WHERE PART-------------------------------"
+#        print whereResult
+#        print "---------------------------------GROUP_BY PART----------------------------"
+#        print groupbyResult
+#        print "--------------------------------ORDER_BY PART-----------------------------"
+#        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg, orderby_msg):
@@ -146,10 +146,7 @@ class data_lib():
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
-        print partitionElements
-        print valueElement
         if not partitionElements and 'list' in valueElement:
-            print "Hello"
             idElementVal = orderDictionary[categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = categoryDictionary['partitionCumValues'][valueElement]
 
@@ -168,11 +165,6 @@ class data_lib():
         self.idElementKey = idElementKey
         self.idElementValue = idElementVal
 
-        print '-----------------'
-        print self.idElementKey
-        print '================='
-        print self.idElementValue
-
         selectComponentList.append(
             tableDictionary[self.idElementKey] + '.' + groupbyDictionary[self.idElementKey] + ' AS \'' + headerDictionary[self.idElementKey][
                 groupbyDictionary[self.idElementKey]] + '\'')
@@ -181,23 +173,19 @@ class data_lib():
             if (selectDictionary[valueElement][i] == True):
                 x = ['count(', 'distinct']
                 if all(a in i for a in x):
-                    print "1234"
                     selectComponentList.append(
                         i.replace('count(distinct',
                                   'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                         headerDictionary[valueElement][i] + '\'')
                 elif "count(" in i and "distinct" not in i:
-                    print "123456"
                     selectComponentList.append(
                         i.replace('count(', 'count(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                         headerDictionary[valueElement][i] + '\'')
                 elif "distinct" in i and "count(" not in i:
-                    print "12345678"
                     selectComponentList.insert(0, (
                     i.replace('distinct(', ' distinct(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
                     headerDictionary[valueElement][i] + '\''))
                 else:
-                    print "1234567890"
                     selectComponentList.append(
                         str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][
                             i] + '\'')
