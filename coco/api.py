@@ -361,7 +361,7 @@ class VideoResource(BaseResource):
     
     class Meta:
         max_limit = None
-        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown').all()
+        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown', 'partner').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
         authorization = VideoAuthorization()
@@ -394,7 +394,7 @@ class PersonGroupResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     class Meta:
         max_limit = None
-        queryset = PersonGroup.objects.prefetch_related('village').all()
+        queryset = PersonGroup.objects.prefetch_related('village', 'partner').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -440,7 +440,7 @@ class ScreeningResource(BaseResource):
     class Meta:
         max_limit = None
         queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video').all()
+                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video', 'partner').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -512,7 +512,7 @@ class PersonResource(BaseResource):
     
     class Meta:
         max_limit = None
-        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
+        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened', 'partner').all()
         resource_name = 'person'
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
@@ -544,13 +544,13 @@ class PersonAdoptVideoResource(BaseResource):
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person').all()
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person', 'partner').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ['time_created', 'time_modified', 'verification_status']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
