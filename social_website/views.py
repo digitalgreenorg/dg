@@ -83,12 +83,13 @@ def collection_view(request, partner, state, language, title, video=1):
 
 
 def picoseekho_view(request, uid=1):
-    video_list = [{'uid':1,'title':"Introduction to Pico Projector",'description':"This video introduces how using the pico projector can make the work easier for frontline workers in villages.",'youtubeID':'7qpSC1P9Fi8'},
-    {'uid':2,'title':"Pico set-up",'description':"This video shows how to set up the pico in a room for clear and visible video.",'youtubeID':'o1NbQegGCWM'},
-    {'uid':3,'title':"Playing a video",'description':"This video demonstrates the various steps that need to be followed for selecting and playing a specific video.",'youtubeID':'011IvbCIfuM'},
-    {'uid':4,'title':"Sound",'description':"This video demonstrates how to increase the sound on a pico and how to attach speakers for more sound.",'youtubeID':'xC57bLoWqnI'},
-    {'uid':5,'title':"Pausing and Rewinding ",'description':"This video shows that if a facilitator has to pause the video for a discussion, how they can do so. It also shows how the video can be rewinded, if certain points need to be seen again.",'youtubeID':'DAs3Pcr8d68'},
-    {'uid':6,'title':"Conclusion",'description':"This video summaries the main things that need to be kept in mind for operating a pico projector.",'youtubeID':'7jUv6A9kAKI'}]
+    video_list = [
+    {'uid':1,'title':"Using the pico-projector for disseminating information",'description':"Using the pico-projector for sharing information can make the work of a village resource person or mediators much easier. They can use the device to share videos that convince farmers by describing and demonstrating a practice. Birju gets together a group of mediators and helps them master using the pico-projector.",'youtubeID':'7qpSC1P9Fi8'},
+    {'uid':2,'title':"Setting up the pico-projector",'description':"In this video, Birju emphasizes that the image created by the projector must be large and clear, so that all the details in the video are clearly visible to everyone in the room.",'youtubeID':'o1NbQegGCWM'},
+    {'uid':3,'title':"Playing a video",'description':"Birju demonstrates the various steps that need to be followed for selecting and playing a specific video. Videos are sometimes loaded on the pico-projector. They could also be loaded on external memory such as USB keys or SD cards. Once the external memory device is chosen, the list of videos available on the device can be browsed.",'youtubeID':'011IvbCIfuM'},
+    {'uid':4,'title':"Increasing volume and connecting external speakers",'description':"Savita devi points out that viewers should be able to listen to the video as well as they can view it. Birju demonstrates how to increase the sound on a pico and attach external speakers if required.",'youtubeID':'xC57bLoWqnI'},
+    {'uid':5,'title':"Pausing and rewinding for discussion and repetition",'description':"This video shows how a facilitator can pause the video for to encourage recall and discussion. It also shows how the video can be rewound, if certain points need to be seen again.",'youtubeID':'DAs3Pcr8d68'},
+    {'uid':6,'title':"Benefits of following practices",'description':"In conclusion, the group summarizes the main things that need to be kept in mind for operating a pico projector and how that benefits rural community members watching a video.",'youtubeID':'7jUv6A9kAKI'}]
     try:
         video_index = int(uid)
     except (IndexError, AssertionError):
