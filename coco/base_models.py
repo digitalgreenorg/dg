@@ -52,6 +52,29 @@ ADOPTION_VERIFICATION = (
     (2, 'Rejected'),
 )
 
+SCREENING_OBSERVATION = (
+    (0, 'Not Observed'),
+    (1, 'Observed'),
+)
+
+SCREENING_GRADE = (
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+    ('D', 'D'),
+)
+
+VIDEO_REVIEW = (
+    (0, 'Not Reviewed'),
+    (1, 'Reviewed'),
+)
+
+VIDEO_GRADE = (
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+)
+
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)

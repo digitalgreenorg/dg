@@ -10,7 +10,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
-
+from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE
 
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
@@ -46,20 +46,23 @@ class ScreeningForm(forms.ModelForm):
     #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroup.objects.none())
     #animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
     animator = forms.ModelChoiceField(Animator.objects)
-
+    #screening_grade = forms.ChoiceField(widget=forms.RadioSelect(), choices=SCREENING_GRADE)
     #farmers_groups_targeted = forms.ModelChoiceField(PersonGroup.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
-
 
     class Meta:
         model = Screening
 
 class ScreeningAdmin(admin.ModelAdmin):
-    inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
-    list_display = ('date', 'location')
-    search_fields = ['village__village_name']
-    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened',)
-
+    list_display = ('id', 'date', '__unicode__', 'get_animator', 'get_partner', 'observation_status', 'screening_grade')
+    search_fields = ['id', 'village__village_name', 'animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
+    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened', 'partner')
+    list_filter = ('date', 'partner__partner_name', 'observation_status', 'village__block__district__state__state_name')
+    list_editable = ('observation_status', 'screening_grade')
+    class Media:
+        js = (
+                settings.STATIC_URL + "js/qa_screening.js",
+        )
 
 class NonNegotiablesInline(admin.TabularInline):
     model =  NonNegotiable
@@ -72,12 +75,17 @@ class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
                 (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','summary', 'partner', 'related_practice']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
-                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid']}),
+                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid','review_status','video_grade']}),
     ]
-    list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
-    search_fields = ['title', 'village__village_name']
+    list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date', 'review_status', 'video_grade')
+    search_fields = ['id', 'title', 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
+    list_filter = ('review_status', 'village__block__district__state__state_name')
+    list_editable = ('review_status', 'video_grade')
     raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
-
+    class Media:
+        js = (
+                settings.STATIC_URL + "js/qa_video.js",
+        )
 
 class AnimatorAssignedVillages(admin.StackedInline):
     model = AnimatorAssignedVillage

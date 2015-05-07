@@ -9,7 +9,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
-from coco.base_models import ADOPTION_VERIFICATION
+from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE
 
 
 class VRPpayment(models.Manager):
@@ -81,12 +81,20 @@ class Screening(CocoModel):
     videoes_screened = models.ManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     partner = models.ForeignKey(Partner)
+    observation_status = models.IntegerField(max_length=1, choices=SCREENING_OBSERVATION, default=0)
+    screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time","animator","village")
 
     def __unicode__(self):
-        return u'%s %s' % (self.date, self.village)
+        return u'%s' % (self.village.village_name)
+
+    def get_animator(self):
+        return u'%s' % (self.animator.name)
+
+    def get_partner(self):
+        return u'%s' % (self.partner.partner_name)
 
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)
