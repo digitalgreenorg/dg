@@ -5,6 +5,7 @@ from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 import logging
+import json
 
 
 sid = "digitalgreen2"
@@ -19,42 +20,44 @@ timeout="500" # This is also optional
 calltype="trans" # Can be "trans" for transactional and "promo" for promotional content
 
 videoDetails = {
-3012:["link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
-3013:["link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
-3014:["link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
-3015:["link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
+3012:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/namaste.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/non_negotiable_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/non_negotiable_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/non_negotiable_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/non_negotiable_question.wav"]],
+3013:["","link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
+3014:["","link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
+3015:["","link To Screening Question","Link to adoption Question",["link to nn 1","link to nn2","link to nn3","link to nn4"]],
 }
 # Create your views here.
 def call_exotel(request):
-    req_id = request.GET.get("id")
-    vals = CustomFieldTest.objects.get(id__exact=req_id)
     r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
         auth=(sid, token),
         data={
-            'From': int(vals.mobile_number),
+            'From': 9910338592,
             'CallerId': callerid,
             'TimeLimit': timelimit,
             'Url': url,
             'TimeOut': timeout,
             'CallType': calltype,
-            'CustomField': vals.CustomField
+            'CustomField': 1
         })
+    json_data = json.loads(r.text)
+    log_string = "".join(["Call begins : Call id : ", json_data['Call']['Sid'],", Person id : ",person_id, " , videoId : ", videoId])
+    logger.debug(log_string)
     return HttpResponse("job done")
 
 
 def greeting_view(request):
-	#Todo
     callSid = request.GET["CallSid"]
+    videoId = request.GET["CustomField"]
     frm = request.GET["From"]
     to = request.GET["To"]
-    logger = logging.getLogger('social_website')
-    logger.info("CustomField Received in Greeting: " + request.GET["CustomField"])
-    response = HttpResponse("https://s3.amazonaws.com/dg_ivrs/telugu_greeting.wav",content_type="text/plain")
+    logger = logging.getLogger('ivr_log')
+    log_string = "".join(["Screening Question : Call id : ", callSid, " , videoId : ", videoId])
+    logger.debug(log_string)
+    response = HttpResponse(videoDetails[int(videoId)][0],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
     response["DialWhomNumber"] = ""
-    response["CustomField"] =  "pqr"
+    response["CustomField"] =  videoId
     return response
 
 def custom_field_update(request,num):
@@ -83,7 +86,7 @@ def screening_question(request):
     logger = logging.getLogger('ivr_log')
     log_string = "".join(["Screening Question : Call id : ", callSid, " , videoId : ", videoId])
     logger.debug(log_string)
-    response = HttpResponse(videoDetails[int(videoId)][0],content_type="text/plain")
+    response = HttpResponse(videoDetails[int(videoId)][1],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
@@ -116,7 +119,7 @@ def adoption_question(request):
     logger = logging.getLogger('ivr_log')
     log_string = "".join(["Adoption Question : Call id : ", callSid, " , videoId : ", videoId])
     logger.debug(log_string)
-    response = HttpResponse(videoDetails[int(videoId)][1],content_type="text/plain")
+    response = HttpResponse(videoDetails[int(videoId)][2],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
@@ -146,7 +149,7 @@ def nonnegotiable_question(request, num):
     to = request.GET["To"]
     logger = logging.getLogger('ivr_log')
     logger.debug("Non Negotiable Question :"+ num + " Call id : " + callSid + " , videoId : " + videoId)
-    response = HttpResponse(videoDetails[int(videoId)][2][int(num)-1],content_type="text/plain")
+    response = HttpResponse(videoDetails[int(videoId)][3][int(num)-1],content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
     response["To"] = to
