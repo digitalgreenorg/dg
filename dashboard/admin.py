@@ -197,9 +197,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
-
-class IVRAdmin(admin.ModelAdmin):
-    list_display = ('id','mobile_number','CustomField','ivr_call')
-    def ivr_call(self,value):
-        return '<a href="/ivrs/call/?id=%d">call_exotel</a>' % (value.id)
-    ivr_call.allow_tags = True
