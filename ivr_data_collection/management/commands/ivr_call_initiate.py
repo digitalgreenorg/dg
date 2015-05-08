@@ -16,15 +16,6 @@ calltype="trans" # Can be "trans" for transactional and "promo" for promotional 
 
 
 class Command(BaseCommand):
-
-    def handle(self, *args, **options):
-
-        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        csvfile = open(os.path.join(__location__, 'test.csv'), 'rU')
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-        	call_exotel(row['Mobile_Number'], row['Video_ID'], row['Person_ID'])
-
     def call_exotel(mobile_number, video_id, person_id):
         r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
             auth=(sid, token),
@@ -41,3 +32,10 @@ class Command(BaseCommand):
         log_string = "".join(["Call begins : Call id : ", json_data['Call']['Sid'],", Person id : ",person_id, " , videoId : ", video_id])
         logger.debug(log_string)
         return True
+    
+    def handle(self, *args, **options):
+        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        csvfile = open(os.path.join(__location__, 'test.csv'), 'rU')
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+        	call_exotel(row['Mobile_Number'], row['Video_ID'], row['Person_ID'])
