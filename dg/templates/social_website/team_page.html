@@ -5,7 +5,7 @@
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Executive Leadership Team</h2>
                         {% for mem in elt %}
-                            <div class="media  ">
+                            <div class="media">
                             {% include "includes/team_member_info.html" %}
                             </div>
                         {% endfor %}            
@@ -17,7 +17,7 @@
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Program Team, New Delhi</h2>
-                    <div class="media  ">
+                    <div class="media">
                         {% for mem in programs %}
                             {% include "includes/team_member_info.html" %}
                         {% endfor %}
@@ -30,7 +30,7 @@
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Technology Team, New Delhi</h2>
-                    <div class="media  ">
+                    <div class="media">
                         {% for mem in tech %}
                             {% include "includes/team_member_info.html" %}
                         {% endfor %}              
@@ -43,7 +43,7 @@
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Admin-Finance-HR, New Delhi</h2>
-                    <div class="media  ">
+                    <div class="media">
                         {% for mem in support %}
                             {% include "includes/team_member_info.html" %}
                         {% endfor %}
@@ -59,7 +59,7 @@
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">{{place.grouper}} Team</h2>
-                    <div class="media  ">
+                    <div class="media">
                         {% for mem in place.list %}
                             {% include "includes/team_member_info.html" %}
                         {% endfor %}
@@ -68,4 +68,5 @@
             </div>
         </section>
         {% endfor %}
+        
 {% include "includes/footer.html" %}

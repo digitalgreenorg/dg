@@ -586,6 +586,14 @@ a {
     width: 75%;
 }
 
+.grid-customlta {
+    width: 15%;
+}
+
+.grid-customrta {
+    width: 85%;
+}
+
 .grid-size1of3 {
     width: 33.3333%;
 }
