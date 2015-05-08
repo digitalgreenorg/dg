@@ -25,7 +25,7 @@ class Command(BaseCommand):
         for row in reader:
         	print row['Mobile_Number'], row['Video_ID'], row['Person_ID']
 
-    def call_exotel(mobile_number,video_id,person_id):
+    def call_exotel(mobile_number, video_id, person_id):
         r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
             auth=(sid, token),
             data={
@@ -38,6 +38,6 @@ class Command(BaseCommand):
                 'CustomField': video_id
             })
         json_data = json.loads(r.text)
-        log_string = "".join(["Call begins : Call id : ", json_data['Call']['Sid'],", Person id : ",person_id, " , videoId : ", videoId])
+        log_string = "".join(["Call begins : Call id : ", json_data['Call']['Sid'],", Person id : ",person_id, " , videoId : ", video_id])
         logger.debug(log_string)
         return True
