@@ -23,7 +23,7 @@ class Command(BaseCommand):
         csvfile = open(os.path.join(__location__, 'test.csv'), 'rU')
         reader = csv.DictReader(csvfile)
         for row in reader:
-        	print row['Mobile_Number'], row['Video_ID'], row['Person_ID']
+        	call_exotel(row['Mobile_Number'], row['Video_ID'], row['Person_ID'])
 
     def call_exotel(mobile_number, video_id, person_id):
         r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
