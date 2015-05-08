@@ -162,10 +162,10 @@ def nonnegotiable_answer(request, num, option):
     videoId = request.GET["CustomField"]
     frm = request.GET["From"]
     to = request.GET["To"]
-    if int(num) >= 4:
-        return HttpResponse(status=406)
     logger = logging.getLogger('ivr_log')
     logger.debug("Non Negotiable Answer :"+ num + " Call id : " + callSid + " , videoId : " + videoId+ " option : " + option)
+    if int(num) >= 4:
+        return HttpResponse(status=406)
     response = HttpResponse("",content_type="text/plain")
     response["CallSid"] = callSid
     response["From"] = frm
