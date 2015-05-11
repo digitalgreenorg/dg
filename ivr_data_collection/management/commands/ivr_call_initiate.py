@@ -1,5 +1,6 @@
 from xml.dom import minidom
 from django.core.management.base import BaseCommand
+import time
 
 import csv, os, logging, json, requests
 
@@ -35,7 +36,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        csvfile = open(os.path.join(__location__, 'farmer_details.csv'), 'rU')
+        csvfile = open(os.path.join(__location__, 'test.csv'), 'rU')
         reader = csv.DictReader(csvfile)
         count = 0
         for row in reader:
