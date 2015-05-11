@@ -10,9 +10,9 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
-from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE
+from coco.base_models import NONNEGOTIABLE_OPTION
 
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from videos.models import  NonNegotiable
@@ -151,25 +151,20 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
-class AdoptionCheckCommentInline(admin.StackedInline):
-    model = AdoptionCheckComment
-    extra = 1
-
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':40})},
+        models.CharField: {'widget': forms.CheckboxSelectMultiple(choices=NONNEGOTIABLE_OPTION)},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
-    inlines = [AdoptionCheckCommentInline]
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
-    list_editable = ('verification_status',)
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check')
+    list_editable = ('verification_status','non_negotiable_check')
     list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name')
     search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
     class Media:
         js = (
-                settings.STATIC_URL + "js/qaverification.js",
+                settings.STATIC_URL + "js/qa_verification.js",
         )
 
 
@@ -188,7 +183,7 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
-    search_fields = ['state_name', 'country__country_name']
+    search_fields = ['state_ name', 'country__country_name']
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')

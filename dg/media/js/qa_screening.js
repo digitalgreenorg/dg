@@ -24,7 +24,7 @@ function QAscreening() {
         jQuery('.result-list tr').each(function () {
             if (jQuery(this).find("select[name$='grade']").prop('disabled') != true) {
                 if (jQuery(this).find("select[name$='grade']").val() == "") {
-                    alert("Kindly fill all the Active Verified By fields");
+                    alert("Kindly fill all the Active Screening Grade fields");
                     event.preventDefault();
                     return false;
                 }
@@ -49,7 +49,7 @@ function QAscreening() {
     jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
         if (jQuery('#id_screening_grade').prop('disabled')!=true){
             if(jQuery('#id_screening_grade').val()==""){
-                alert("Kindly fill the Verified By field");
+                alert("Kindly fill the Screening Grade field");
                 event.preventDefault();
             }
         }

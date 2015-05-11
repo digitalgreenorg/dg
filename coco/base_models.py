@@ -75,6 +75,14 @@ VIDEO_GRADE = (
     ('C', 'C'),
 )
 
+NONNEGOTIABLE_OPTION = (
+    (1,1),
+    (2,2),
+    (3,3),
+    (4,4),
+    (5,5),
+)
+
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
