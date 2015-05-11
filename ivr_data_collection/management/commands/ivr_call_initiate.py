@@ -35,7 +35,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        csvfile = open(os.path.join(__location__, 'test.csv'), 'rU')
+        csvfile = open(os.path.join(__location__, 'farmer_details.csv'), 'rU')
         reader = csv.DictReader(csvfile)
         for row in reader:
         	self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
