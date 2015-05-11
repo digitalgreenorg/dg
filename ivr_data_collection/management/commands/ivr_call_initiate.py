@@ -38,4 +38,7 @@ class Command(BaseCommand):
         csvfile = open(os.path.join(__location__, 'farmer_details.csv'), 'rU')
         reader = csv.DictReader(csvfile)
         for row in reader:
-        	self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
+            count=count+1
+            if(count%10 == 0):
+                time.sleep(300)
+            self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
