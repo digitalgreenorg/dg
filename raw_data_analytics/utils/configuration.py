@@ -168,7 +168,7 @@ headerDictionary = {
     'sector':{'id':'Sector ID','name':'Sector Name'},
     'practice':{'id':'Practice ID','practice_name':'Practice Name'},
     'topic':{'id':'Topic ID','name':'Topic'},
-    'numScreening':{'count(screening_id)':'Number of Screening','count(distinct screening_id)':'Unique Number of Screenings'},
+    'numScreening':{'count(screening_id)':'Number of Screening','count(distinct screening_id)':'Number of Screenings'},
     'numAdoption':{'count(person_id)':'Number of Adoptions','count(distinct person_id)':'Unique Number of Adoptions'},
     'attendance':{'count(person_id)':'Number of Viewers','count(distinct person_id)':'Unqiue Number of Viewers'},
 #    'numPeople':{'count(id)':True,'count(distinct id)':False},
