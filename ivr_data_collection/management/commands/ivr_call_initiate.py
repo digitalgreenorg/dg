@@ -39,12 +39,14 @@ class Command(BaseCommand):
         csvfile = open(os.path.join(__location__, 'farmer_details.csv'), 'rU')
         reader = csv.DictReader(csvfile)
         for row in reader:
-            while(True):
+            count = 0
+            while(count<5):
                 try:
                     self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
                     break
                 except Exception, e:
                     time.sleep(360) #6 mins
+                    count = count + 1
                     continue
                 
 
