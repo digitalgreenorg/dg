@@ -38,9 +38,14 @@ class Command(BaseCommand):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         csvfile = open(os.path.join(__location__, 'farmer_details.csv'), 'rU')
         reader = csv.DictReader(csvfile)
-        count = 0
         for row in reader:
-            count=count+1
-            if(count%10 == 0):
-                time.sleep(300)
-            self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
+            while(True):
+                try:
+                    self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
+                    break
+                except Exception, e:
+                    time.sleep(360) #6 mins
+                    continue
+                
+
+

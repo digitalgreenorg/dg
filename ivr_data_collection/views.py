@@ -20,9 +20,9 @@ timeout="500" # This is also optional
 calltype="trans" # Can be "trans" for transactional and "promo" for promotional content
 
 videoDetails = {
-3239:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/hindi_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_4.wav"]],
-3205:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/hindi_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_4.wav"]],
-3744:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhojpuri_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_4.wav"]],
+3239:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/hindi_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/bhindi_non_negotiable_question_4.wav"],""],
+3205:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/hindi_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi+wavs/moong_non_negotiable_question_4.wav"],""],
+3744:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhojpuri_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_4.wav"],""],
 }
 # Create your views here.
 def call_exotel(request):
@@ -173,5 +173,19 @@ def nonnegotiable_answer(request, num, option):
     response["CustomField"] =  videoId
     return response
 
+def thanks(request):
+    callSid = request.GET["CallSid"]
+    videoId = request.GET["CustomField"]
+    frm = request.GET["From"]
+    to = request.GET["To"]
+    logger = logging.getLogger('ivr_log')
+    logger.debug("Call finished : Call id : %s , videoId : %s",callSid,videoId)
+    response = HttpResponse(videoDetails[int(videoId)][4],content_type="text/plain")
+    response["CallSid"] = callSid
+    response["From"] = frm
+    response["To"] = to
+    response["DialWhomNumber"] = ""
+    response["CustomField"] =  videoId
+    return response
 
 
