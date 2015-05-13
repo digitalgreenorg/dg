@@ -15,6 +15,8 @@ function QAvideo() {
     });
 
     jQuery('.result-list tr').each(function () {
+        jQuery(this).find("select[name$='status']").css('max-width','120px');
+        jQuery(this).find("select[name$='grade']").css('max-width','100px');
         if (jQuery(this).find("select[name$='status'] option:selected").text() == "Not Reviewed") {
             jQuery(this).find("select[name$='grade']").prop('disabled', true).css('background-color', '#e0e0e0');
         }

@@ -85,16 +85,11 @@ class Screening(CocoModel):
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
 
     class Meta:
-        unique_together = ("date", "start_time", "end_time","animator","village")
+        unique_together = ("date", "start_time", "end_time", "animator", "village")
 
     def __unicode__(self):
         return u'%s' % (self.village.village_name)
 
-    def get_animator(self):
-        return u'%s' % (self.animator.name)
-
-    def get_partner(self):
-        return u'%s' % (self.partner.partner_name)
 
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)

@@ -120,6 +120,10 @@ class Video(CocoModel):
 
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
+
+    def location(self):
+        return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
+
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
 

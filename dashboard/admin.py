@@ -54,10 +54,11 @@ class ScreeningForm(forms.ModelForm):
 
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
-    list_display = ('id', 'date', '__unicode__', 'get_animator', 'get_partner', 'observation_status', 'screening_grade')
-    search_fields = ['id', 'village__village_name', 'animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
-    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened', 'partner')
-    list_filter = ('date', 'partner__partner_name', 'observation_status', 'village__block__district__state__state_name')
+    list_display = ('id', 'date', 'observation_status', 'screening_grade')
+    list_display = ('id', 'date', 'observation_status', 'screening_grade')
+    search_fields = ['id', 'village__village_name', 'partner_partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
+    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
+    list_filter = ('date', 'observation_status','partner__partner_name', 'village__block__district__state__state_name')
     list_editable = ('observation_status', 'screening_grade')
     class Media:
         js = (
@@ -77,9 +78,9 @@ class VideoAdmin(admin.ModelAdmin):
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid','review_status','video_grade']}),
     ]
-    list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date', 'review_status', 'video_grade')
-    search_fields = ['id', 'title', 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
-    list_filter = ('review_status', 'village__block__district__state__state_name')
+    list_display = ('id', 'title', 'location', 'video_production_end_date', 'review_status', 'video_grade')
+    search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
+    list_filter = ('review_status', 'video_grade', 'partner__partner_name' , 'village__block__district__state__state_name')
     list_editable = ('review_status', 'video_grade')
     raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
     class Media:
