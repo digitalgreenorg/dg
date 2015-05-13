@@ -173,7 +173,7 @@ def nonnegotiable_answer(request, num, option):
     response["CustomField"] =  videoId
     return response
 
-def thanks(request):
+def thanks_view(request):
     callSid = request.GET["CallSid"]
     videoId = request.GET["CustomField"]
     frm = request.GET["From"]
