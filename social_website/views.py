@@ -82,6 +82,33 @@ def collection_view(request, partner, state, language, title, video=1):
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
+def picoseekho_view(request, uid=1):
+    video_list = [
+    {'uid':1,'title':"Using the pico projector for disseminating information",'description':"Using the pico projector for sharing information can make the work of a village resource person or mediators much easier. They can use the device to share videos that convince farmers by describing and demonstrating a practice. Birju, a MRP, gets together a group of mediators under him and helps them to master using the pico projector.",'youtubeID':'7qpSC1P9Fi8'},
+    {'uid':2,'title':"Setting up the pico projector",'description':"In this video, Birju emphasizes that the image created by the pico projector must be large and clear, so that all the details in the video are clearly visible to everyone in the room.",'youtubeID':'o1NbQegGCWM'},
+    {'uid':3,'title':"Playing a video",'description':"Birju demonstrates the various steps that need to be followed for selecting and playing a specific video. Videos are sometimes loaded on the pico projector. They could also be loaded on external memory such as USB keys or SD cards. Once the external memory device is chosen, the list of videos available on the device can be browsed.",'youtubeID':'011IvbCIfuM'},
+    {'uid':4,'title':"Increasing volume and connecting external speakers",'description':"Savita devi points out that viewers should be able to listen to the video as well as they can view it. Birju demonstrates how to increase the sound on a pico projector and attach external speakers if required.",'youtubeID':'xC57bLoWqnI'},
+    {'uid':5,'title':"Pausing and rewinding for discussion and repetition",'description':"Birju explains how to pause the video to encourage recall and discussion. Nisar chacha asks how to rewind a video to show certain points again.",'youtubeID':'DAs3Pcr8d68'},
+    {'uid':6,'title':"Benefits of following practices",'description':"In conclusion, the group highlights the need to keep the room dark during screening,checking the pico projector and playing the video before people arrive, keeping the picture and sound clear, and pausing and rewinding the video. Following these practices would benefit the rural community members watching a video.",'youtubeID':'7jUv6A9kAKI'}]
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('pico_seekho.html' , context, context_instance = RequestContext(request)) 
+
+
 def video_view(request, uid):
     try:
         video = Video.objects.get(uid=uid)
@@ -261,7 +288,7 @@ def resource_view(request, uid=None):
     try:
         resources = resource_object.order_by('-uid')
     except ResourceVideo.DoesNotExist:
-        return HttpResponseRedirect(reverse('resources'))
+        return HttpResponseRedirect(reverse('about'))
 
     return render_to_response('resources.html' , {'resources':resources[0:1], 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
 
