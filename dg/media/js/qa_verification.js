@@ -7,7 +7,7 @@ function QAverification() {
     jQuery(".result-list tr").find("select[name$='status']").change(function () {
         if (jQuery(this).val() != 0) {
             if(jQuery(this).val() == 1){
-                jQuery(this).parent().parent().find("input[name$='check']").prop('checked', true).prop('disabled', false).css('background-color', '#ffffff');
+                jQuery(this).parent().parent().find("input[name$='check']").prop('checked', false).prop('disabled', false).css('background-color', '#ffffff');
             }
             if(jQuery(this).val() == 2){
                 jQuery(this).parent().parent().find("input[name$='check']").prop('checked', false).prop('disabled', false).css('background-color', '#ffffff');
@@ -54,7 +54,7 @@ function QAverification() {
     jQuery("#id_verification_status").change(function () {
         if (jQuery("#id_verification_status").val() != 0) {
             if (jQuery("#id_verification_status").val() == 1){
-                jQuery("input[name='non_negotiable_check']").prop('disabled', false).prop('checked', true).css('background-color', '#ffffff');
+                jQuery("input[name='non_negotiable_check']").prop('disabled', false).prop('checked', false).css('background-color', '#ffffff');
             }
             if (jQuery('#id_verification_status').val() == 2){
                 jQuery("input[name='non_negotiable_check']").prop('checked',false).prop('disabled', false).css('background-color', '#ffffff');
