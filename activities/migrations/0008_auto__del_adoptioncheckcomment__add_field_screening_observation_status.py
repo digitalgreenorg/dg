@@ -8,6 +8,9 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Deleting model 'AdoptionCheckComment'
+        db.delete_table(u'activities_adoptioncheckcomment')
+
         # Adding field 'Screening.observation_status'
         db.add_column(u'activities_screening', 'observation_status',
                       self.gf('django.db.models.fields.IntegerField')(default=0, max_length=1),
@@ -18,11 +21,6 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
                       keep_default=False)
 
-        # Adding field 'PersonAdoptPractice.verification_status'
-        db.add_column(u'activities_personadoptpractice', 'verification_status',
-                      self.gf('django.db.models.fields.IntegerField')(default=0, max_length=1),
-                      keep_default=False)
-
         # Adding field 'PersonAdoptPractice.non_negotiable_check'
         db.add_column(u'activities_personadoptpractice', 'non_negotiable_check',
                       self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True),
@@ -30,14 +28,23 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Adding model 'AdoptionCheckComment'
+        db.create_table(u'activities_adoptioncheckcomment', (
+            ('comment', self.gf('django.db.models.fields.TextField')(max_length=1000, null=True, blank=True)),
+            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
+            ('adoption_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['activities.PersonAdoptPractice'], null=True)),
+            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'activities_adoptioncheckcomment_created', null=True, to=orm['auth.User'], blank=True)),
+            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'activities_adoptioncheckcomment_related_modified', null=True, to=orm['auth.User'], blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
+        ))
+        db.send_create_signal(u'activities', ['AdoptionCheckComment'])
+
         # Deleting field 'Screening.observation_status'
         db.delete_column(u'activities_screening', 'observation_status')
 
         # Deleting field 'Screening.screening_grade'
         db.delete_column(u'activities_screening', 'screening_grade')
-
-        # Deleting field 'PersonAdoptPractice.verification_status'
-        db.delete_column(u'activities_personadoptpractice', 'verification_status')
 
         # Deleting field 'PersonAdoptPractice.non_negotiable_check'
         db.delete_column(u'activities_personadoptpractice', 'non_negotiable_check')
