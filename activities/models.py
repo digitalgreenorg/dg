@@ -90,6 +90,8 @@ class Screening(CocoModel):
     def __unicode__(self):
         return u'%s' % (self.village.village_name)
 
+    def screening_location(self):
+        return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
 
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)
@@ -120,12 +122,6 @@ class PersonAdoptPractice(CocoModel):
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
-
-    def get_village(self):
-        return self.person.village.id
-
-    def get_partner(self):
-        return self.partner.id
 
     class Meta:
         unique_together = ("person", "video", "date_of_adoption")

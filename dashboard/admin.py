@@ -54,11 +54,10 @@ class ScreeningForm(forms.ModelForm):
 
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
-    list_display = ('id', 'date', 'observation_status', 'screening_grade')
-    list_display = ('id', 'date', 'observation_status', 'screening_grade')
+    list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade')
     search_fields = ['id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
-    list_filter = ('date', 'observation_status', 'screening_grade', 'partner__partner_name', 'village__block__district__state__state_name')
+    list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name')
     list_editable = ('observation_status', 'screening_grade')
     class Media:
         js = (
@@ -80,7 +79,7 @@ class VideoAdmin(admin.ModelAdmin):
     ]
     list_display = ('id', 'title', 'location', 'video_production_end_date', 'review_status', 'video_grade')
     search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
-    list_filter = ('review_status', 'video_grade', 'partner__partner_name' , 'village__block__district__state__state_name')
+    list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name')
     list_editable = ('review_status', 'video_grade')
     raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
     class Media:
@@ -159,7 +158,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     }
     list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check')
     list_editable = ('verification_status','non_negotiable_check')
-    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name')
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name')
     search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
