@@ -56,9 +56,9 @@ class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
     list_display = ('id', 'date', 'observation_status', 'screening_grade')
     list_display = ('id', 'date', 'observation_status', 'screening_grade')
-    search_fields = ['id', 'village__village_name', 'partner_partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
+    search_fields = ['id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
-    list_filter = ('date', 'observation_status','partner__partner_name', 'village__block__district__state__state_name')
+    list_filter = ('date', 'observation_status', 'screening_grade', 'partner__partner_name', 'village__block__district__state__state_name')
     list_editable = ('observation_status', 'screening_grade')
     class Media:
         js = (
