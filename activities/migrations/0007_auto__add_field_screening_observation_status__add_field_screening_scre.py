@@ -8,47 +8,47 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AdoptionCheckComment'
-        db.create_table(u'activities_adoptioncheckcomment', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'activities_adoptioncheckcomment_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'activities_adoptioncheckcomment_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('adoption_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['activities.PersonAdoptPractice'], null=True)),
-            ('comment', self.gf('django.db.models.fields.TextField')(max_length=1000, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'activities', ['AdoptionCheckComment'])
+        # Adding field 'Screening.observation_status'
+        db.add_column(u'activities_screening', 'observation_status',
+                      self.gf('django.db.models.fields.IntegerField')(default=0, max_length=1),
+                      keep_default=False)
+
+        # Adding field 'Screening.screening_grade'
+        db.add_column(u'activities_screening', 'screening_grade',
+                      self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
+                      keep_default=False)
 
         # Adding field 'PersonAdoptPractice.verification_status'
         db.add_column(u'activities_personadoptpractice', 'verification_status',
                       self.gf('django.db.models.fields.IntegerField')(default=0, max_length=1),
                       keep_default=False)
 
+        # Adding field 'PersonAdoptPractice.non_negotiable_check'
+        db.add_column(u'activities_personadoptpractice', 'non_negotiable_check',
+                      self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        # Deleting model 'AdoptionCheckComment'
-        db.delete_table(u'activities_adoptioncheckcomment')
+        # Deleting field 'Screening.observation_status'
+        db.delete_column(u'activities_screening', 'observation_status')
+
+        # Deleting field 'Screening.screening_grade'
+        db.delete_column(u'activities_screening', 'screening_grade')
 
         # Deleting field 'PersonAdoptPractice.verification_status'
         db.delete_column(u'activities_personadoptpractice', 'verification_status')
 
+        # Deleting field 'PersonAdoptPractice.non_negotiable_check'
+        db.delete_column(u'activities_personadoptpractice', 'non_negotiable_check')
+
 
     models = {
-        u'activities.adoptioncheckcomment': {
-            'Meta': {'object_name': 'AdoptionCheckComment'},
-            'adoption_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['activities.PersonAdoptPractice']", 'null': 'True'}),
-            'comment': ('django.db.models.fields.TextField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'activities_adoptioncheckcomment_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'activities_adoptioncheckcomment_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
         u'activities.personadoptpractice': {
             'Meta': {'unique_together': "(('person', 'video', 'date_of_adoption'),)", 'object_name': 'PersonAdoptPractice'},
             'date_of_adoption': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'non_negotiable_check': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Person']"}),
@@ -82,8 +82,10 @@ class Migration(SchemaMigration):
             'farmers_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['people.Person']", 'null': "'False'", 'through': u"orm['activities.PersonMeetingAttendance']", 'blank': "'False'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'observation_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
+            'screening_grade': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
@@ -349,12 +351,14 @@ class Migration(SchemaMigration):
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'related_practice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Practice']", 'null': 'True', 'blank': 'True'}),
+            'review_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
             'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_video_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_video_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'video_grade': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'video_production_end_date': ('django.db.models.fields.DateField', [], {}),
             'video_production_start_date': ('django.db.models.fields.DateField', [], {}),
             'video_suitable_for': ('django.db.models.fields.IntegerField', [], {}),
