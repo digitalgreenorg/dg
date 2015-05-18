@@ -199,5 +199,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
 
-
-
