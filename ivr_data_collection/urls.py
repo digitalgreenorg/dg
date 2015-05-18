@@ -3,7 +3,6 @@ from views import greeting_view, screening_question, screening_answer, adoption_
 
 urlpatterns = patterns('',
     (r'^greeting/',greeting_view),
-    (r'^updatecustomfield/',custom_field_update), 
     (r'^video/screening/question/',screening_question),
     (r'^video/screening/answer/(?P<option>.+)/',screening_answer),
 
@@ -13,6 +12,4 @@ urlpatterns = patterns('',
     (r'^video/nonnegotiable/question/(?P<num>.+)/',nonnegotiable_question),
     (r'^video/nonnegotiable/answer/(?P<num>.+)/(?P<option>.+)/',nonnegotiable_answer),
     (r'^thanks/',thanks_view),
- 
-
 )
