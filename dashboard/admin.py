@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 
+
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
@@ -197,3 +198,6 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
+
+
+
