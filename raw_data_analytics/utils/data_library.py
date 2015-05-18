@@ -1,27 +1,42 @@
 __author__ = 'Lokesh'
 
 import os.path
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, \
-    orderDictionary, headerDictionary
 import pandas as pd
 import MySQLdb
 import pandas.io.sql as psql
 import csv
 import dg.settings
-
-
+from initialize_data import initialize_library as ilib
+from initialize_lookup_matrix import initialize_lookup as ilookup
 class data_lib():
     Dict = {}
     lookup_matrix = {}
     idElementKey = ''
     idElementValue = -1
+    tableDictionary = {}
+    whereDictionary = {}
+    selectDictionary = {}
+    groupbyDictionary = {}
+    categoryDictionary = {}
+    orderDictionary = {}
+    headerDictionary = {}
+
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     def handle_controller(self, args, options):
 #        print options
-        self.lookup_matrix = self.read_lookup_csv()
+        final_df = pd.DataFrame()
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
+        self.tableDictionary = ilib.initializeTableDict(options)
+        self.whereDictionary = ilib.initializeWhereDict(options)
+        self.selectDictionary = ilib.initializeSelectDict(options)
+        self.groupbyDictionary = ilib.initializeGroupByDict(options)
+        self.orderDictionary = ilib.initializeOrderDict(options)
+        self.categoryDictionary = ilib.initializeCategoryDict(options)
+        self.headerDictionary = ilib.initializeHeaderDict(options)
+        self.lookup_matrix = ilookup.read_lookup_csv()
+
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
@@ -35,14 +50,12 @@ class data_lib():
                 if item == 'list' and options['value']['list'] != False:
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
-                        categoryDictionary['partitionCumValues'][options['value'][item]]] = False
-                    del relevantPartitionDictionary[categoryDictionary['partitionCumValues'][options['value'][item]]]
+                        self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
+                    del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
                 if options['value'][item] != False and item != 'list':
                     relevantValueDictionary[item] = options['value'][item]
         else:
             print "Warning - Invalid input for Value fields"
-
-        final_df = pd.DataFrame()
 
         for input in relevantValueDictionary:
             queryComponents = self.getRequiredTables(relevantPartitionDictionary, input, args, self.lookup_matrix)
@@ -64,58 +77,54 @@ class data_lib():
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
-        arranged_columns = [None] * len(orderDictionary)
+        arranged_columns = [None] * len(self.orderDictionary)
         bumper = 0
 
         for items in partitionElements:
             if partitionElements[items] != False:
-                for elements in selectDictionary[items]:
-                    if selectDictionary[items][elements] == True and selectDictionary[items].values().count(True) > 1:
+                for elements in self.selectDictionary[items]:
+                    if self.selectDictionary[items][elements] == True and self.selectDictionary[items].values().count(True) > 1:
                         arranged_columns[len(arranged_columns) + 1] = None
-                        arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
+                        arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
                         bumper += 1
-                    elif selectDictionary[items][elements] == True:
-                        arranged_columns[bumper + orderDictionary[items]] = headerDictionary[items][elements]
+                    elif self.selectDictionary[items][elements] == True:
+                        arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
 
         arranged_columns = filter(lambda a: a != None, arranged_columns)
-        arranged_columns.append(headerDictionary[self.idElementKey][groupbyDictionary[self.idElementKey]])
+        arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
         arranged_columns.extend(list(set(header) - set(arranged_columns)))
         dataframe = dataframe[arranged_columns]
         return dataframe
 
-    def read_lookup_csv(self):
-        file_data = csv.reader(open(os.path.join(dg.settings.MEDIA_ROOT + r'/raw_data_analytics/data_analytics.csv')))
-        headers = next(file_data)
-        headers.remove('')
-        matrix = {}
-        for row in file_data:
-            sub_matrix = {}
-            for i in range(0, len(headers)):
-                sub_matrix[headers[i]] = []
-                temp = row[i + 1].split('$')
-                for t in temp:
-                    if '&' in t:
-                        andtemp = t.split('&')
-                        for vl in andtemp:
-                            sub_matrix[headers[i]].append(tuple(vl.split('#')))
-                    else:
-                        sub_matrix[headers[i]].append(tuple(t.split('#')))
-            matrix[row[0]] = sub_matrix
-        return matrix
-
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
     def check_partitionfield_validity(self, partitionField):
-        if set(partitionField.keys()).issubset(tableDictionary.keys()):
+        if set(partitionField.keys()).issubset(self.tableDictionary.keys()):
             return True
         else:
             return False
 
     # Function to check validity of the value field inputs by user by comparing with the generalValueList
     def check_valuefield_validity(self, valueField):
-        if set(valueField.keys()).issubset(tableDictionary.keys()):
+        if set(valueField.keys()).issubset(self.tableDictionary.keys()):
             return True
         else:
             return False
+
+    def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg, orderby_msg):
+        query = 'select ' + str(select_msg) + ' from ' + str(from_msg) + ' where ' + str(
+            where_msg) + ' group by ' + str(groupby_msg) + ' order by ' + str(orderby_msg)
+        return query
+
+    # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
+    def runQuery(self, query):
+        # Make connection with the database
+        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
+                                   db=dg.settings.DATABASES['default']['NAME'])
+        # Making dataframe
+        temp_df = psql.read_sql(query, con=mysql_cn)
+        mysql_cn.close()
+        return temp_df
 
     def getRequiredTables(self, partitionDict, valueDictElement, args, lookup_matrix):
         self.Dict.clear()
@@ -136,58 +145,53 @@ class data_lib():
 #        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
-    def makeSQLquery(self, select_msg, from_msg, where_msg, groupby_msg, orderby_msg):
-        query = 'select ' + str(select_msg) + ' from ' + str(from_msg) + ' where ' + str(
-            where_msg) + ' group by ' + str(groupby_msg) + ' order by ' + str(orderby_msg)
-        return query
-
     def getSelectComponent(self, partitionElements, valueElement):
         selectComponentList = []
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
         if not partitionElements and 'list' in valueElement:
-            idElementVal = orderDictionary[categoryDictionary['partitionCumValues'][valueElement]]
-            idElementKey = categoryDictionary['partitionCumValues'][valueElement]
+            idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
+            idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
 
         else:
             for items in partitionElements:
-                for i in selectDictionary[items]:
-                    if (selectDictionary[items][i] == True):
+                for i in self.selectDictionary[items]:
+                    if (self.selectDictionary[items][i] == True):
                         selectComponentKeysList.append(items)
                         selectComponentList.append(
-                            tableDictionary[items] + '.' + i + ' AS \'' + headerDictionary[items][i] + '\'')
+                            self.tableDictionary[items] + '.' + i + ' AS \'' + self.headerDictionary[items][i] + '\'')
             for items in selectComponentKeysList:
-                if orderDictionary[items] > idElementVal:
-                    idElementVal = orderDictionary[items]
+                if self.orderDictionary[items] > idElementVal:
+                    idElementVal = self.orderDictionary[items]
                     idElementKey = items
 
         self.idElementKey = idElementKey
         self.idElementValue = idElementVal
 
         selectComponentList.append(
-            tableDictionary[self.idElementKey] + '.' + groupbyDictionary[self.idElementKey] + ' AS \'' + headerDictionary[self.idElementKey][
-                groupbyDictionary[self.idElementKey]] + '\'')
+            self.tableDictionary[self.idElementKey] + '.' + self.groupbyDictionary[self.idElementKey] + ' AS \'' + self.headerDictionary[self.idElementKey][
+                self.groupbyDictionary[self.idElementKey]] + '\'')
 
-        for i in selectDictionary[valueElement]:
-            if (selectDictionary[valueElement][i] == True):
+        for i in self.selectDictionary[valueElement]:
+            if (self.selectDictionary[valueElement][i] == True):
                 x = ['count(', 'distinct']
                 if all(a in i for a in x):
                     selectComponentList.append(
                         i.replace('count(distinct',
-                                  'count(distinct ' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
-                        headerDictionary[valueElement][i] + '\'')
+                                  'count(distinct ' + str(self.tableDictionary[valueElement]) + '.') + ' AS \'' +
+                        self.headerDictionary[valueElement][i] + '\'')
                 elif "count(" in i and "distinct" not in i:
                     selectComponentList.append(
-                        i.replace('count(', 'count(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
-                        headerDictionary[valueElement][i] + '\'')
+                        i.replace('count(', 'count(' + str(self.tableDictionary[valueElement]) + '.') + ' AS \'' +
+                        self.headerDictionary[valueElement][i] + '\'')
                 elif "distinct" in i and "count(" not in i:
                     selectComponentList.insert(0, (
-                    i.replace('distinct(', ' distinct(' + str(tableDictionary[valueElement]) + '.') + ' AS \'' +
-                    headerDictionary[valueElement][i] + '\''))
+                    i.replace('distinct(', ' distinct(' + str(self.tableDictionary[valueElement]) + '.') + ' AS \'' +
+                    self.headerDictionary[valueElement][i] + '\''))
                 else:
                     selectComponentList.append(
-                        str(tableDictionary[valueElement]) + '.' + i + ' AS \'' + headerDictionary[valueElement][
+                        str(self.tableDictionary[valueElement]) + '.' + i + ' AS \'' + self.headerDictionary[valueElement][
                             i] + '\'')
         return ','.join(selectComponentList)
 
@@ -221,10 +225,10 @@ class data_lib():
     def getFromComponent(self, partitionElements, valueElement, lookup_matrix):
         partitionTables = []
         for i in partitionElements:
-            if (i in categoryDictionary['geographies']):
-                partitionTables.insert(0, tableDictionary[i])
+            if (i in self.categoryDictionary['geographies']):
+                partitionTables.insert(0, self.tableDictionary[i])
             else:
-                partitionTables.append(tableDictionary[i])
+                partitionTables.append(self.tableDictionary[i])
         majorTablesList = []
         tablesOccuredList = []
         counter = 0
@@ -234,13 +238,13 @@ class data_lib():
                 self.Dict[table] = []
             if (table not in majorTablesList):
                 minorTablePath.append(table)
-                self.makeJoinTable(table, tableDictionary[valueElement], lookup_matrix, tablesOccuredList, self.Dict)
+                self.makeJoinTable(table, self.tableDictionary[valueElement], lookup_matrix, tablesOccuredList, self.Dict)
             counter += 1
         majorTablesList = tablesOccuredList
 
         if not partitionElements:
-            if valueElement in categoryDictionary['partitionCumValues'].keys():
-                majorTablesList.append(tableDictionary[valueElement])
+            if valueElement in self.categoryDictionary['partitionCumValues'].keys():
+                majorTablesList.append(self.tableDictionary[valueElement])
         return ' , '.join(majorTablesList)
 
 
@@ -251,18 +255,18 @@ class data_lib():
         for items in partitionElements:
             if partitionElements[items] != True:
                 whereComponentList.append(
-                    tableDictionary[items] + '.' + whereDictionary[items] + '=' + partitionElements[items])
+                    self.tableDictionary[items] + '.' + self.whereDictionary[items] + '=' + partitionElements[items])
         for i in Dictionary:
             for j in Dictionary[i]:
                 for k in range(0, len(lookup_matrix[i][j])):
                     whereComponentList.append(str(i) + '.' + str(lookup_matrix[i][j][k][0]) + '=' + str(j) + '.' + str(
                         lookup_matrix[i][j][k][1]))
-        if '.' in str(whereDictionary[valueElement]):
+        if '.' in str(self.whereDictionary[valueElement]):
             whereComponentList.append(
-                str(whereDictionary[valueElement]) + ' between \'' + str(args[0]) + '\' and \'' + str(args[1]) + '\'')
+                str(self.whereDictionary[valueElement]) + ' between \'' + str(args[0]) + '\' and \'' + str(args[1]) + '\'')
         else:
             whereComponentList.append(
-                str(tableDictionary[valueElement]) + '.' + str(whereDictionary[valueElement]) + ' between \'' + str(
+                str(self.tableDictionary[valueElement]) + '.' + str(self.whereDictionary[valueElement]) + ' between \'' + str(
                     args[0]) + '\' and \'' + str(args[1]) + '\'')
         return ' and '.join(whereComponentList)
 
@@ -271,36 +275,25 @@ class data_lib():
         groupbyComponentList = ['1']
         for items in partitionElements:
             if partitionElements[items] != False:
-                groupbyComponentList.append(tableDictionary[items] + '.' + groupbyDictionary[items])
-        if groupbyDictionary[valueElement] != False:
-            groupbyComponentList.append(tableDictionary[valueElement] + '.' + str(groupbyDictionary[valueElement]))
+                groupbyComponentList.append(self.tableDictionary[items] + '.' + self.groupbyDictionary[items])
+        if self.groupbyDictionary[valueElement] != False:
+            groupbyComponentList.append(self.tableDictionary[valueElement] + '.' + str(self.groupbyDictionary[valueElement]))
         return ' , '.join(groupbyComponentList)
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
-        ordered_cols = [None] * len(orderDictionary)
+        ordered_cols = [None] * len(self.orderDictionary)
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
-                for keys in selectDictionary[items]:
-                    if selectDictionary[items][keys] == True and selectDictionary[items].values().count(True) > 1:
+                for keys in self.selectDictionary[items]:
+                    if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
                         ordered_cols[len(ordered_cols) + 1] = None
-                        ordered_cols[bumper + orderDictionary[items]] = '\'' + headerDictionary[items][keys] + '\''
+                        ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
-                        ordered_cols[bumper + orderDictionary[items]] = '\'' + headerDictionary[items][keys] + '\''
+                        ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
         ordered_cols = filter(lambda a: a != None, ordered_cols)
         orderbyComponentList += ordered_cols
         return ' , '.join(orderbyComponentList)
-
-    # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
-    def runQuery(self, query):
-        # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
-                                   db=dg.settings.DATABASES['default']['NAME'])
-        # Making dataframe
-        temp_df = psql.read_sql(query, con=mysql_cn)
-        mysql_cn.close()
-        return temp_df
