@@ -935,6 +935,8 @@ function() {
         download_chunk_size: 2000,
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
+        login_url: "/coco/login/",
+        logout_url: "/coco/logout/",
         afterFullDownload: function(start_time, download_status){
             return saveTimeTaken();
             function saveTimeTaken(){
