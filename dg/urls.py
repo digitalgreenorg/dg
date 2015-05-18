@@ -84,8 +84,6 @@ urlpatterns = patterns('',
     (r'^ivrs/',include('ivr_data_collection.urls')),
     (r"^", include("mezzanine.urls")),
 
-
-
 )
 
 # Static files serving locally
