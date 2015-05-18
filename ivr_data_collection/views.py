@@ -1,6 +1,5 @@
 from django.shortcuts import render
 import requests
-from models import CustomFieldTest
 from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
@@ -25,23 +24,6 @@ videoDetails = {
 3744:["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhojpuri_introduction.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_screening_question.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_adoption_question.wav",["https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_1.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_2.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_3.wav","https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhindi_non_negotiable_4.wav"],"https://s3.amazonaws.com/dg_ivrs/bihar_pilot/bhojpuri_audios/bhijpuri+wavs/bhojpuri_thanks.wav"],
 }
 # Create your views here.
-def call_exotel(request):
-    r = requests.post('https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'.format(sid=sid),
-        auth=(sid, token),
-        data={
-            'From': 9910338592,
-            'CallerId': callerid,
-            'TimeLimit': timelimit,
-            'Url': url,
-            'TimeOut': timeout,
-            'CallType': calltype,
-            'CustomField': 1
-        })
-    json_data = json.loads(r.text)
-    log_string = "".join(["Call begins : Call id : ", json_data['Call']['Sid'],", Person id : ",person_id, " , videoId : ", videoId])
-    logger.debug(log_string)
-    return HttpResponse("job done")
-
 
 def greeting_view(request):
     callSid = request.GET["CallSid"]
@@ -59,24 +41,6 @@ def greeting_view(request):
     response["CustomField"] =  videoId
     return response
 
-def custom_field_update(request,num):
-    # logger = logging.getLogger('social_website')
-    # logger.info("CustomField Received in CFupdate 2")
-    # logger.info("CustomField Received in CFupdate: " + request.GET["CustomField"])
-
-    # callSid = request.GET["CallSid"]
-    frm = request.GET["From"]
-    # to = request.GET["To"]
-    # response["CallSid"] = callSid
-    # response["From"] = frm
-    # response["To"] = to
-    # response["DialWhomNumber"] = ""
-    # response["CustomField"] =  "pqr"
-    # vals.CustomField = request.GET["CustomField"]
-    # vals.save()
-    return HttpResponse(frm)
-
-
 def screening_question(request):
     callSid = request.GET["CallSid"]
     videoId = request.GET["CustomField"]
@@ -92,7 +56,6 @@ def screening_question(request):
     response["DialWhomNumber"] = ""
     response["CustomField"] =  videoId
     return response
-
 
 def screening_answer(request, option):
     callSid = request.GET["CallSid"]
@@ -187,5 +150,4 @@ def thanks_view(request):
     response["DialWhomNumber"] = ""
     response["CustomField"] =  videoId
     return response
-
 
