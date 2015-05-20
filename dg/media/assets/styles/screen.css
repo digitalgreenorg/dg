@@ -2934,9 +2934,16 @@ textarea.comment-text {
 	height: 0;
 }
 
-.line-clamp{
+.line-clamp.team-line-clamp{
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
+.line-clamp.board-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;  
     overflow:hidden;
 }

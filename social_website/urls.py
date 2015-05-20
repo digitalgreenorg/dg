@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from communications.views import media_view
 from human_resources.views import job_view, member_view
 from events import event_registration
-from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view
+from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view, board_view
 
 class DirectTemplateView(TemplateView):
     extra_context = None
@@ -23,7 +23,7 @@ class DirectTemplateView(TemplateView):
 urlpatterns = patterns('',
     url(r'^$', social_home, name="home"),    
     url(r'^about/$', DirectTemplateView.as_view(template_name='about.html', extra_context={'header':{'jsController':'About', 'currentPage':'About'}}), name='about'),
-    url(r'^about/board/$', TemplateView.as_view(template_name='board.html'), name='board'),
+    url(r'^about/board/$', board_view, name='board'),
     url(r'^about/ourwork/$', TemplateView.as_view(template_name='our_work.html'), name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
     url(r'^about/training/picoseekho/(?P<uid>.+)/$', picoseekho_view, name='picoseekho'),
