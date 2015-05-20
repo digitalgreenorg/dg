@@ -39,13 +39,10 @@ define([
           User.fetch({
               success: function(model){
                   console.log("USERMODEL : successfully fetched");
-                  if (!model.attributes.loggedin){
-                      this.$('#login_modal').modal({
-                          keyboard: false,
-                          backdrop: "static",
-                      });
-                  }
-                  
+                  this.$('#login_modal').modal({
+                       keyboard: false,
+                       backdrop: "static",
+                  });
               },
               error: function(){
                   console.log("USERMODEL :  fetch failed") 

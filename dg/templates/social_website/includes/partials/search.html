@@ -1,11 +1,11 @@
     <!-- Search -->
-    <section class="search-bg layout-vr-xlg" role="search">
+    <section class="search-bg layout-vr-md" role="search">
         <div class="wrapper js-search-wrapper" data-url="{% url 'discover' %}">
             <div class="search-wrapper">
                 <div class="search">
                     <div class="search-input-wrapper">
                         <label for="search">Search</label>
-                        	<input id="search" type="text" placeholder="Type here to search for Collections, Videos and Partners" value="{{searchString|default:''}}" autocomplete="off"/>
+                        	<input id="search" type="text" placeholder="Type here to search for collections, videos and partners" value="{{searchString|default:''}}" autocomplete="off"/>
                         <ul class="js-search-items-container search-items-container">
                             <!-- dynamic search completion content -->
                         </ul>

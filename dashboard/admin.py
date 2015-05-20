@@ -9,9 +9,10 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
+from django.forms import TextInput, Textarea
 
 
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 
@@ -91,7 +92,7 @@ class AnimatorInline(admin.TabularInline):
 
 class VillageAdmin(admin.ModelAdmin):
     list_display = ('village_name', 'block')
-    search_fields = ['village_name', 'block__block_name']
+    search_fields = ['village_name', 'block__block_name', 'block__district__state__state_name']
     inlines = [PersonGroupInline]
 
 
@@ -130,14 +131,31 @@ class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ('animator','village')
     search_fields = ['animator__name','village__village_name']
 
+
 class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
+class AdoptionCheckCommentInline(admin.StackedInline):
+    model = AdoptionCheckComment
+    extra = 1
+
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
-    list_display = ('date_of_adoption', '__unicode__')
-    search_fields = ['person__person_name', 'person__village__village_name', 'video__title']
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':40})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    }
+    inlines = [AdoptionCheckCommentInline]
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
+    list_editable = ('verification_status',)
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name')
+    search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
+
+    class Media:
+        js = (
+                settings.STATIC_URL + "js/qaverification.js",
+        )
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -147,7 +165,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 class BlockAdmin(admin.ModelAdmin):
     list_display = ('block_name', 'district')
-    search_fields = ['block_name', 'district__district_name']
+    search_fields = ['block_name', 'district__district_name', 'district__state__state_name']
 
 class DistrictAdmin(admin.ModelAdmin):
     list_display = ('district_name', 'state')
@@ -180,3 +198,4 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
+

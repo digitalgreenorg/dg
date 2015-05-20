@@ -1,4 +1,5 @@
 import json, datetime
+import calendar
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
@@ -8,6 +9,8 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
+from coco.base_models import ADOPTION_VERIFICATION
+
 
 class VRPpayment(models.Manager):
 
@@ -19,7 +22,7 @@ class VRPpayment(models.Manager):
         self.start_dd = 01
         self.end_yyyy = end_period[-4:]
         self.end_mm = end_period[:2]
-        self.end_dd = 01
+        self.end_dd = calendar.monthrange(int(self.end_yyyy),int(self.end_mm))[1]
         self.partner_id = partner_id
         self.block_id = block_id
         self.Screening_all_object = Screening.objects.filter(village__block_id = self.block_id, partner_id=self.partner_id, date__gte=datetime.date(int(self.start_yyyy), int(self.start_mm), self.start_dd), date__lte=datetime.date(int(self.end_yyyy), int(self.end_mm), self.end_dd)).prefetch_related('animator', 'village', 'farmer_groups_targeted', 'videoes_screened', 'farmers_attendance', 'partner')
@@ -108,9 +111,10 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
+    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
 
     def __unicode__(self):
-        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
+        return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
 
     def get_village(self):
         return self.person.village.id
@@ -122,3 +126,13 @@ class PersonAdoptPractice(CocoModel):
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+
+class AdoptionCheckComment(CocoModel):
+    id = models.AutoField(primary_key=True)
+    adoption_id = models.ForeignKey(PersonAdoptPractice,null=True)
+    comment = models.TextField(max_length=1000, blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s" % (self.comment)
+
+

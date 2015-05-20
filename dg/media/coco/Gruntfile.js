@@ -210,7 +210,7 @@ module.exports = function( grunt ) {
                     'underscore': 'libs/backbone/underscore-min',
                     'backbone': 'libs/backbone/backbone-min',
                     'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
-                    'datatable': 'libs/datatablejs_media/js/jquery.dataTables.min',
+                    'datatables': 'libs/datatablejs_media/js/jquery.dataTables.min',
                     'form_field_validator': 'libs/jquery.validate',
                     'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
                     'syphon':'libs/backbone.syphon',
@@ -219,8 +219,7 @@ module.exports = function( grunt ) {
                     'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',    
                     'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',    
                     'jquery_cookie':'libs/jquery.cookie',
-                    'tabletools': 'libs/tabletools_media/js/Tabletools',
-                    'zeroclipboard': 'libs/tabletools_media/js/ZeroClipboard.min',
+                    'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
                     'configs': 'empty:',
                 },
             // name: "main"

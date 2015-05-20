@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Digital Green</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{STATIC_URL}}videokheti/home/grayscale.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/agri"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Header -->
+    <header class="intro" style="background-image: none !important;">
+        <div class="intro-body">
+            <div class="container">
+                <div>
+                    <div class="row text-center">
+                        <h1>
+                        <a href="#" data-id="0" class="audio-click">
+                                        <button type="button" class="btn btn-success btn-lg" style="font-size: 180px; border-radius: 50%; text-align: center;">
+                                            <span class="glyphicon bigger glyphicon-volume-up" aria-hidden="true" style="vertical-align: -30px; margin-left: 30px; margin-right: 30px"></span>
+                                        </button>
+                                    </a>
+                        </h1>
+                        
+                        <audio preload="auto" id="0">
+                            <source src="{{STATIC_URL}}videokheti/content/audio/welcome.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <div class="row text-center">
+                        <h3 style="text-transform: none;">
+                        <a href="/agri">
+                               <span class="glyphicon bigger glyphicon-arrow-right" style="vertical-align: -2px; color:white;" aria-hidden="true"></span>
+                        </a>
+                        </h3>
+                    </div>
+                    
+                    <div class="well text-center">
+                        <h5 style="text-transform: none; margin-bottom: 0px;"> {{title}} </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- jQuery -->
+    <script src="{{STATIC_URL}}videokheti/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
+    
+    <!-- Enabling Google Analytics -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-16211208-1");
+            pageTracker._trackPageview();
+            } 
+        catch(err) {}
+    </script>
+    
+    <script>
+    $(".audio-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        var button = $(this).find('.btn');
+        button.removeClass('btn-success').addClass('btn-info');
+        button.attr('disabled','disabled');
+        var audio = $("#"+$(this).data('id'))[0];
+        audio.play();
+        audio.addEventListener('ended', function(){
+            button.removeClass('btn-info').addClass('btn-success');
+            window.location.href = "/agri";
+        });
+    });
+    
+    $(".language-click").click(function(event) {
+        event.preventDefault();
+        //alert($(this).data('id'));
+        $.get( "/agri/language/", { language: $(this).text() })
+            .done(function( data ) {
+                if(data=='1'){
+                    window.location.href = "/agri/home";
+                }
+            });
+    });
+    </script>
+
+</body>
+
+</html>

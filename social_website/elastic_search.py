@@ -6,7 +6,7 @@ from dg.settings import COMPLETION_INDEX, FACET_INDEX, VIDEO_INDEX
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
-def get_related_collections(collection):
+def get_related_collections(collection, featured):
     related_collections = []
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices = FACET_INDEX
@@ -17,6 +17,18 @@ def get_related_collections(collection):
                             "should" : [
                                         {"terms" : { "subject" : [collection.subject] }},
                                         {"terms" : { "topic" : [collection.topic] }},
+                                        ],
+                            "minimum_should_match" : 1,
+                                }
+                  }
+        }
+    if featured:
+        q ={"query": {
+                        "bool" : {
+                                  "must_not" : {"term" : { "uid" : collection.uid }},
+                            "should" : [
+                                        { "term": { "featured": True }},
+                                        
                                         ],
                             "minimum_should_match" : 1,
                                 }
@@ -66,6 +78,7 @@ def get_collections_from_elasticsearch(request):
     # TODO: Change this from 'None'?
     searchString = params.get('searchString', 'None')
     partner_uid = params.get('uid', None)
+    featured = params.get('featured', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
         match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
@@ -84,7 +97,7 @@ def get_collections_from_elasticsearch(request):
     query = create_query(params, language_name)
     if query:
         filter = {"and" : query}
-    order_by = params.get('order_by','-likes')
+    order_by = params.get('order_by','-featured')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
@@ -119,11 +132,14 @@ def get_collections_from_elasticsearch(request):
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
-        
-        resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
+        if result_list:
+            resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
+        else:
+            resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": "1"},"objects": [{'Message': 'No Collections Found', 'error': "1"}], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
-        return HttpResponse('0')
+        print ex
+        return HttpResponse(str(ex))
     
 def searchCompletions(request):
     searchString = request.GET.get('searchString')

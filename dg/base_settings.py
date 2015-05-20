@@ -90,6 +90,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_PATH, 'templates/social_website'),
+    os.path.join(PROJECT_PATH, 'templates/videokheti'),
     os.path.join(PROJECT_PATH, 'templates'),
     os.path.join(PROJECT_PATH, 'templates/output'),
     os.path.join(PROJECT_PATH, 'templates/static_site'),
@@ -158,6 +159,7 @@ INSTALLED_APPS = (
     'mezzanine.twitter',
     'filebrowser_safe',
     'grappelli_safe',
+    'videokheti',
 )
 
 # Store these package names here as they may change in the future since

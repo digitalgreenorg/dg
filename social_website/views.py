@@ -1,6 +1,7 @@
 import ast
 import datetime
 import json
+import random
 import urllib2
 
 from django import forms
@@ -20,8 +21,10 @@ from django.views.decorators.csrf import csrf_exempt
 from dg.settings import PERMISSION_DENIED_URL
 
 from elastic_search import get_related_collections, get_related_videos 
-from social_website.models import  Collection, Partner, FeaturedCollection, Video
+from social_website.models import  Collection, Partner, FeaturedCollection, Video, ResourceVideo
 from videos.models import Practice, Video as Dashboard_Video
+
+from mezzanine.blog.models import BlogPost
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
@@ -30,14 +33,17 @@ class CustomUserCreationForm(UserCreationForm):
 def social_home(request):
     language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
     language = sorted(set(language))
+    blog = BlogPost.objects.all()[:3]
     context= {
         'header': {
             'jsController':'Home',
             'currentPage':'Home',
-            'loggedIn':False
+            'loggedIn':False,
+            'random':random.randint(0, 1),
              },
         'language':language,
-        }
+        'blog_posts':blog,
+                }
     return render_to_response('home.html', context, context_instance = RequestContext(request))
 
 def collection_view(request, partner, state, language, title, video=1):
@@ -53,8 +59,9 @@ def collection_view(request, partner, state, language, title, video=1):
         video = collection.videoincollection_set.all()[video_index - 1].video
     tags = [x for x in [video.category,video.subcategory,video.topic,video.subtopic,video.subject] if x is not u'']
     duration = sum([v.duration for v in collection.videos.all()])
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, collection.featured)
     video_list = [i.video for i in collection.videoincollection_set.all()]
+    description = collection.description
     context= {
               'header': {
                          'jsController':'ViewCollections',
@@ -70,7 +77,36 @@ def collection_view(request, partner, state, language, title, video=1):
               'tags' : tags,
               'related_collections' : related_collections[:4], # restricting to 4 related collections for now
               }
+    if collection.featured :
+      return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
+
+
+def picoseekho_view(request, uid=1):
+    video_list = [
+    {'uid':1,'title':"Using the pico projector for disseminating information",'description':"Using the pico projector for sharing information can make the work of a village resource person or mediators much easier. They can use the device to share videos that convince farmers by describing and demonstrating a practice. Birju, a MRP, gets together a group of mediators under him and helps them to master using the pico projector.",'youtubeID':'7qpSC1P9Fi8'},
+    {'uid':2,'title':"Setting up the pico projector",'description':"In this video, Birju emphasizes that the image created by the pico projector must be large and clear, so that all the details in the video are clearly visible to everyone in the room.",'youtubeID':'o1NbQegGCWM'},
+    {'uid':3,'title':"Playing a video",'description':"Birju demonstrates the various steps that need to be followed for selecting and playing a specific video. Videos are sometimes loaded on the pico projector. They could also be loaded on external memory such as USB keys or SD cards. Once the external memory device is chosen, the list of videos available on the device can be browsed.",'youtubeID':'011IvbCIfuM'},
+    {'uid':4,'title':"Increasing volume and connecting external speakers",'description':"Savita devi points out that viewers should be able to listen to the video as well as they can view it. Birju demonstrates how to increase the sound on a pico projector and attach external speakers if required.",'youtubeID':'xC57bLoWqnI'},
+    {'uid':5,'title':"Pausing and rewinding for discussion and repetition",'description':"Birju explains how to pause the video to encourage recall and discussion. Nisar chacha asks how to rewind a video to show certain points again.",'youtubeID':'DAs3Pcr8d68'},
+    {'uid':6,'title':"Benefits of following practices",'description':"In conclusion, the group highlights the need to keep the room dark during screening,checking the pico projector and playing the video before people arrive, keeping the picture and sound clear, and pausing and rewinding the video. Following these practices would benefit the rural community members watching a video.",'youtubeID':'7jUv6A9kAKI'}]
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('pico_seekho.html' , context, context_instance = RequestContext(request)) 
 
 
 def video_view(request, uid):
@@ -84,7 +120,7 @@ def video_view(request, uid):
         collection = Collection.objects.filter(partner=video.partner)[0]
     else:
         collection = Collection.objects.all()[0]
-    related_collections = get_related_collections(collection)
+    related_collections = get_related_collections(collection, False)
     related_videos = get_related_videos(video)
     context = {
                'header': {
@@ -122,6 +158,12 @@ def search_view(request):
     partner = request.GET.get('partner', None)
     title = request.GET.get('title', None)
     state = request.GET.get('state', None)
+    language = request.GET.get('language', None)
+    category = request.GET.get('category', None)
+    subcategory = request.GET.get('subcategory', None)
+    topic = request.GET.get('topic', None)
+    subject = request.GET.get('subject', None)
+    order = request.GET.get('order_by', None)
     context= {
               'header': {
                          'jsController':'Collections',
@@ -132,6 +174,12 @@ def search_view(request):
               'partner' : partner,
               'title' : title,
               'state' : state,
+              'language' : language,
+              'category' : category,
+              'subcategory' : subcategory,
+              'topic' : topic,
+              'subject': subject,
+              'order': order,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
     
@@ -229,6 +277,20 @@ def featuredCollection(request):
     resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
 
+
+def resource_view(request, uid=None):
+    resource_object = ResourceVideo.objects.all()
+    film_list = resource_object.filter(videoTag='f').order_by('-date')
+    testimonial_list = resource_object.filter(videoTag='t').order_by('-date')
+    if uid is not None:
+        selected_video = resource_object.filter(uid=uid)
+        return render_to_response('resources.html' , {'resources':selected_video, 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
+    try:
+        resources = resource_object.order_by('-uid')
+    except ResourceVideo.DoesNotExist:
+        return HttpResponseRedirect(reverse('about'))
+
+    return render_to_response('resources.html' , {'resources':resources[0:1], 'film_list':film_list, 'testimonial_list':testimonial_list}, context_instance = RequestContext(request))
 
 
 def footer_view(request):

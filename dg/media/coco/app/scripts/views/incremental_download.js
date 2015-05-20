@@ -67,11 +67,8 @@ define([
                             keyboard: false,
                             backdrop: "static",
                         });
-                        //modal takes time to animate and show up - so wait till it is completely visible to the user
-                        that.$('#incremental_download_modal').on('shown', function() {
-                            dfd.resolve();
-                        });
                         that.$('#incremental_download_modal').modal('show');
+                        dfd.resolve();
                     });
             }
             //set ui for background inc download
@@ -88,7 +85,7 @@ define([
         //remove the view
         tear_down: function() {
             this.$('#incremental_download_modal').modal('hide');
-            this.remove();
+            $('.modal-backdrop').remove();
             this.in_progress = false;
         },
 

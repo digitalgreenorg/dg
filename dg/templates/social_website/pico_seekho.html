@@ -1,0 +1,101 @@
+{% include "includes/header.html" %}
+{% load app_tags %}
+        
+        <section id="picoseekho" role="main" class="push-top-lg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <div class="layout-vr-md">
+                        <h2 class="hdg-b hdg-source-lt layout-vr-md hdg-bold">Pico Seekho (पीको सीखो)</h2>
+                        <div class="hdg-source-reg hdg-f layout-vr-md">Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our partners as well as the community. We train community people in both video production and video dissemination. During video dissemination, a low-cost battery-operated pico projector is used to show the videos. This course is in Hindi, on learning the operation of pico projector. The course comprises of a set of videos which describe how to use a pico projector and a handout which gives more pico model-specific details. Trainers can learn how to use these videos in a training though the Pico Operation Training Manual. It is accompanied by a scoresheet which can help assess how much the participants  have learnt about pico operation.
+                        </div>    
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section class="layout-vr-md">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <div class="grid layout-vr-md">
+                        <div class="grid-col grid-size1of4 layout-vr-lg">
+                            <div class="featured-collection-ul grid-margin-rt-sm layout-vr-lg">
+                                <div class="featured-ft-videoDetails">
+                                    <ul class="h-list h-list-sm h-list-divided hdg-source-lt hdg-e">
+                                        <li>6 Videos</li>
+                                        <li>15:35</li>
+                                    </ul>
+                                </div>
+                                <ul>
+                                    {% for pico_video in video_list %}
+                                    <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                                        <a href="{% url 'picoseekho' forloop.counter %}" >
+                                            <div class="featured-collection-indicator"></div>
+                                            <div class="featured-collection-title">
+                                                {{ pico_video.title }}
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                <ul>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-size3of4 layout-vr-sm">
+                            <div class="grid-pad-lt-md"> 
+                                <div class="media">
+                                    <div class="featured-video-wrapper layout-vr-tiny" data-slide="{{video_index}}">
+                                        <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
+                                        <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
+                                        <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="{{video.uid}}">
+                                            You need Flash player 8+ and JavaScript enabled to view this video.
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="layout-vr-md">
+                                    <div class="hdg-f hdg-source-reg"> 
+                                        {{video.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <div class="media layout-vr-lg">
+                        <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
+                        <div class="hdg-f hdg-source-reg grid">
+                            <div class="grid-col grid-size1of3 layout-vr-lg">
+                                <a href="{{STATIC_URL}}docs/pico_seekho/por315.pdf" target="_blank">
+                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                        <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="380" width="270" alt=""/> 
+                                    </div>
+                                    <div class="centered">Pico POR315 Handout</div>
+                                </a>
+                            </div>
+                            <div class="grid-col grid-size1of3 layout-vr-lg">
+                                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Assessment_Hindi.pdf" target="_blank">
+                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                        <img src="{{STATIC_URL}}docs/pico_seekho/assessment.png" height="380" width="270" alt=""/>
+                                    </div>
+                                    <div class="centered">Pico Game Scoresheet</div>
+                                </a>
+                            </div>
+                            <div class="grid-col grid-size1of3 layout-vr-lg">
+                                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Training_Manual.pdf" target="_blank">
+                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                        <img src="{{STATIC_URL}}docs/pico_seekho/manual.png" height="380" width="270" alt=""/>
+                                    </div>
+                                    <div class="centered">Pico Training Manual</div>
+                                </a>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </section>
+
+{% include "includes/footer.html" %}

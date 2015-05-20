@@ -97,7 +97,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-    {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %}
+    {{ blog_post.publish_date|date:"F d, Y" }}
 </h6>
 {% endeditable %}
 {% endblock %}
