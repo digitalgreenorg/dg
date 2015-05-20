@@ -92,7 +92,7 @@ class AnimatorInline(admin.TabularInline):
 
 class VillageAdmin(admin.ModelAdmin):
     list_display = ('village_name', 'block')
-    search_fields = ['village_name', 'block__block_name']
+    search_fields = ['village_name', 'block__block_name', 'block__district__state__state_name']
     inlines = [PersonGroupInline]
 
 
