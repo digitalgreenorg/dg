@@ -40,7 +40,7 @@ class Command(BaseCommand):
         reader = csv.DictReader(csvfile)
         for row in reader:
             count = 0
-            while(count<5):
+            while(count<2):
                 try:
                     self.call_exotel(row['Mobile_Number'],row['Video_ID'],row['Person_ID'])
                     break
