@@ -24,6 +24,8 @@ function QAverification() {
     jQuery('.result-list tr').each(function () {
         jQuery(this).find("ul").css('width','150px');
         jQuery(this).find("li").css('display','inline');
+        jQuery(this).find("select[name$='status']").css('max-width','120px');
+        jQuery(this).find("select[name$='verified_by']").css('max-width','100px');
         if (jQuery(this).find("select[name$='status'] option:selected").text() == "Not Checked") {
             jQuery(this).find("input[name$='check']").prop('checked',false).prop('disabled', true).css('background-color', '#e0e0e0');
             jQuery(this).find("select[name$='verified_by']").prop('disabled', true).css('background-color', '#e0e0e0');
