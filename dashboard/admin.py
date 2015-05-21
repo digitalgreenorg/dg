@@ -54,11 +54,11 @@ class ScreeningForm(forms.ModelForm):
 
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
-    list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade')
+    list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade', 'observer')
     search_fields = ['id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
-    list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name')
-    list_editable = ('observation_status', 'screening_grade')
+    list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name', 'observer')
+    list_editable = ('observation_status', 'screening_grade', 'observer')
     class Media:
         js = (
                 settings.STATIC_URL + "js/qa_screening.js",
@@ -75,12 +75,12 @@ class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
                 (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','summary', 'partner', 'related_practice']}),
                 (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
-                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid','review_status','video_grade']}),
+                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid','review_status','video_grade','reviewer']}),
     ]
-    list_display = ('id', 'title', 'location', 'video_production_end_date', 'review_status', 'video_grade')
+    list_display = ('id', 'title', 'location', 'video_production_end_date', 'review_status', 'video_grade', 'reviewer')
     search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
-    list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name')
-    list_editable = ('review_status', 'video_grade')
+    list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
+    list_editable = ('review_status', 'video_grade', 'reviewer')
     raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
     class Media:
         js = (
@@ -156,9 +156,9 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
         models.CharField: {'widget': forms.CheckboxSelectMultiple(choices=NONNEGOTIABLE_OPTION)},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check')
-    list_editable = ('verification_status','non_negotiable_check')
-    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name')
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check', 'verified_by')
+    list_editable = ('verification_status','non_negotiable_check', 'verified_by')
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name', 'verified_by')
     search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 

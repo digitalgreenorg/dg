@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW
+from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, VERIFIED_BY
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -114,6 +114,7 @@ class Video(CocoModel):
     partner = models.ForeignKey(Partner)
     review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
+    reviewer = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     class Meta:
         unique_together = ("title", "video_production_start_date", "video_production_end_date", "village")

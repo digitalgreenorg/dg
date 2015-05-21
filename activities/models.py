@@ -9,7 +9,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
-from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE
+from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY
 
 
 class VRPpayment(models.Manager):
@@ -83,6 +83,7 @@ class Screening(CocoModel):
     partner = models.ForeignKey(Partner)
     observation_status = models.IntegerField(max_length=1, choices=SCREENING_OBSERVATION, default=0)
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
+    observer = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -118,7 +119,7 @@ class PersonAdoptPractice(CocoModel):
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
-
+    verified_by = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
