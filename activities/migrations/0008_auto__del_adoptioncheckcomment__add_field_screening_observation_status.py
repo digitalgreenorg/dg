@@ -21,9 +21,19 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
                       keep_default=False)
 
+        # Adding field 'Screening.observer'
+        db.add_column(u'activities_screening', 'observer',
+                      self.gf('django.db.models.fields.IntegerField')(max_length=1, null=True, blank=True),
+                      keep_default=False)
+
         # Adding field 'PersonAdoptPractice.non_negotiable_check'
         db.add_column(u'activities_personadoptpractice', 'non_negotiable_check',
                       self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'PersonAdoptPractice.verified_by'
+        db.add_column(u'activities_personadoptpractice', 'verified_by',
+                      self.gf('django.db.models.fields.IntegerField')(max_length=1, null=True, blank=True),
                       keep_default=False)
 
 
@@ -46,8 +56,14 @@ class Migration(SchemaMigration):
         # Deleting field 'Screening.screening_grade'
         db.delete_column(u'activities_screening', 'screening_grade')
 
+        # Deleting field 'Screening.observer'
+        db.delete_column(u'activities_screening', 'observer')
+
         # Deleting field 'PersonAdoptPractice.non_negotiable_check'
         db.delete_column(u'activities_personadoptpractice', 'non_negotiable_check')
+
+        # Deleting field 'PersonAdoptPractice.verified_by'
+        db.delete_column(u'activities_personadoptpractice', 'verified_by')
 
 
     models = {
@@ -64,6 +80,7 @@ class Migration(SchemaMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'activities_personadoptpractice_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'activities_personadoptpractice_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'verification_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
+            'verified_by': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Video']"})
         },
         u'activities.personmeetingattendance': {
@@ -90,6 +107,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'observation_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
+            'observer': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'screening_grade': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
@@ -359,6 +377,7 @@ class Migration(SchemaMigration):
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'related_practice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Practice']", 'null': 'True', 'blank': 'True'}),
             'review_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
+            'reviewer': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),

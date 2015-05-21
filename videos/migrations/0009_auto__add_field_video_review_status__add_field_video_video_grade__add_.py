@@ -18,6 +18,11 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
                       keep_default=False)
 
+        # Adding field 'Video.reviewer'
+        db.add_column(u'videos_video', 'reviewer',
+                      self.gf('django.db.models.fields.IntegerField')(max_length=1, null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting field 'Video.review_status'
@@ -25,6 +30,9 @@ class Migration(SchemaMigration):
 
         # Deleting field 'Video.video_grade'
         db.delete_column(u'videos_video', 'video_grade')
+
+        # Deleting field 'Video.reviewer'
+        db.delete_column(u'videos_video', 'reviewer')
 
 
     models = {
@@ -296,6 +304,7 @@ class Migration(SchemaMigration):
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
             'related_practice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Practice']", 'null': 'True', 'blank': 'True'}),
             'review_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
+            'reviewer': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
