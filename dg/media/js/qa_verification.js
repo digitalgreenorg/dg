@@ -8,13 +8,16 @@ function QAverification() {
         if (jQuery(this).val() != 0) {
             if(jQuery(this).val() == 1){
                 jQuery(this).parent().parent().find("input[name$='check']").prop('checked', false).prop('disabled', false).css('background-color', '#ffffff');
+                jQuery(this).parent().parent().find("select[name$='verified_by']").prop('disabled', false).css('background-color', '#ffffff');
             }
             if(jQuery(this).val() == 2){
                 jQuery(this).parent().parent().find("input[name$='check']").prop('checked', false).prop('disabled', false).css('background-color', '#ffffff');
+                jQuery(this).parent().parent().find("select[name$='verified_by']").prop('disabled', false).css('background-color', '#ffffff');
             }
         }
         if (jQuery(this).val() == 0) {
             jQuery(this).parent().parent().find("input[name$='check']").prop('checked',false).prop('disabled', true).css('background-color', '#e0e0e0');
+            jQuery(this).parent().parent().find("select[name$='verified_by']").prop('disabled', true).val('').css('background-color', '#e0e0e0');
         }
     });
 
@@ -23,6 +26,7 @@ function QAverification() {
         jQuery(this).find("li").css('display','inline');
         if (jQuery(this).find("select[name$='status'] option:selected").text() == "Not Checked") {
             jQuery(this).find("input[name$='check']").prop('checked',false).prop('disabled', true).css('background-color', '#e0e0e0');
+            jQuery(this).find("select[name$='verified_by']").prop('disabled', true).css('background-color', '#e0e0e0');
         }
     });
 
@@ -32,6 +36,11 @@ function QAverification() {
         var flag = 0;
         jQuery('.result-list tr').each(function () {
             if (jQuery(this).find("input[name$='check']").prop('disabled') != true) {
+                if (jQuery(this).find("select[name$='verified_by']").val() == ""){
+                    alert("Kindly fill all active verified by fields");
+                    event.preventDefault();
+                    return false;
+                }
                 if (jQuery(this).find("select[name$='status'] option:selected").text() == "Approved") {
                     jQuery(this).find("input[name$='check']").each(function () {
                         if (!this.checked) {
@@ -55,22 +64,32 @@ function QAverification() {
         if (jQuery("#id_verification_status").val() != 0) {
             if (jQuery("#id_verification_status").val() == 1){
                 jQuery("input[name='non_negotiable_check']").prop('disabled', false).prop('checked', false).css('background-color', '#ffffff');
+                jQuery("select[name='verified_by']").prop('disabled', false).css('background-color', '#ffffff');
             }
             if (jQuery('#id_verification_status').val() == 2){
                 jQuery("input[name='non_negotiable_check']").prop('checked',false).prop('disabled', false).css('background-color', '#ffffff');
+                jQuery("select[name='verified_by']").prop('disabled', false).css('background-color', '#ffffff');
             }
         }
         if (jQuery("#id_verification_status").val() == 0) {
             jQuery("input[name='non_negotiable_check']").prop('checked',false).prop('disabled',true).css('background-color', '#e0e0e0');
+            jQuery("select[name='verified_by']").prop('disabled', true).val("").css('background-color', '#e0e0e0');
         }
     });
 
     if (jQuery("#id_verification_status option:selected").val() == 0) {
         jQuery("input[name='non_negotiable_check']").prop('disabled', true).css('background-color', '#e0e0e0');
+        jQuery("select[name='verified_by']").prop('disabled', true).css('background-color', '#e0e0e0');
     }
 
     jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
         if (jQuery("input[name='non_negotiable_check']").prop('disabled')!=true){
+            if(jQuery("#id_verified_by").val() == ""){
+                alert("Please fill the Verified By field");
+                event.preventDefault();
+                return false;
+            }
+
             if(jQuery("#id_verification_status").val() == 1){
                 jQuery("input[name='non_negotiable_check']").each(function(){
                     if(!this.checked){
