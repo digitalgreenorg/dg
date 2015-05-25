@@ -36,4 +36,4 @@ def member_view(request):
   
 def job_view(request):
     job_list = Job.objects.all()
-    return render_to_response('career.html',{'job_list':job_list, 'header': {'currentPage':'Careers'}}, context_instance=RequestContext(request))
+    return render_to_response('career.html',{'job_list':job_list, 'header': {'jsController':'Team', 'loggedIn':False,'currentPage':'Careers'}}, context_instance=RequestContext(request))
