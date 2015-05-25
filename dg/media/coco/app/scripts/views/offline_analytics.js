@@ -1,4 +1,4 @@
-/*define([
+define([
     'jquery',
     'underscore',
     'backbone',
@@ -6,11 +6,12 @@
     'configs',
     'indexeddb-backbone',
     'layoutmanager',
+    'libs/highcharts',
   	'offline_utils'],
-  	function(jquery, underscore, backbone, layoutmanager, indexeddb,all_configs, Offline){
-  		var ListView = Backbone.Layout.extend({
+  	function($, underscore, backbone, idb, all_configs, indexeddb, layoutmanager,highcharts, Offline){
+  		var AnalyticsView = Backbone.Layout.extend({
 
-        template: "#graph_view_template",
+        template: "#analytics_template",
         initialize: function(){
           this.entity_config = all_configs['village'];
           console.log("Initializing graph view");
@@ -80,43 +81,64 @@
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
             });
-
-
-console.log("*********************************");
-            var dict = [];
+            console.log("*****************************");
+            var dict = {};
             for(var i=0; i<array_table_values.length; i++)
             {
-                var village = array_table_values[i][1];
+                var count = 0;
                 var block = array_table_values[i][2];
-                var count = 1;
-                
                 for (var j=0; j<array_table_values.length; j++)
                 {
-                    
-                    if(block == array_table_values[j][2]){  
-                        count++;
+                    if(block == array_table_values[j][2])
+                    {count++;}
+                }  
+                dict[block] = count;            
+             }
+            var data = JSON.stringify(dict);
+            console.log(data);
+            console.log(typeof data);
+            $(function () {
+                var processed_json = new Array();   
+                $.getJSON(data, function(data) {
+                    // Populate series
+                    for (i = 0; i < data.length; i++){
+                        processed_json.push([data[i].key, data[i].value]);
                     }
+                 
+                    // draw chart
+                    $('#container').highcharts({
+                    chart: {
+                        type: "column"
+                    },
+                    title: {
+                        text: "Block data"
+                    },
+                    xAxis: {
+                        type: 'category',
+                        allowDecimals: false,
+                        title: {
+                            text: "Blocks"
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: "Villages"
+                        }
+                    },
+                    series: [{
+                        name: 'Blocks',
+                        data: processed_json
+                    }]
+                }); 
+            });
+        });
 
-                }
-                if(block in Object.keys(dict)){
-                    console.log("hi");
-                }
-                for(var key in dict){
-                    for (var k in dict[key]){
-                        console.log(dict[key][k]);                
-                    }
-                }
-            
-                   dict.push({
-                    key:   block,
-                    value: count
-                    
-                    });
-                
-            }    
-            
-            
-            //console.log(typeof dict);
-            //console.log(Object.keys(dict));
-            //console.log(dict);
+            console.log("*****************************");
+        }
+
+    });
+    
+  // Our module now returns our view
+  return AnalyticsView;
+});
             
