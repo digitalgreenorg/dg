@@ -13,7 +13,7 @@ from libs.image_utils import ProcessedImage
 from libs.s3_utils import add_to_s3
 
 
-def get_youtube_entry(youtubeid, url):
+def get_youtube_entry(youtubeid, url='https://www.googleapis.com/youtube/v3/videos?part=id&id='):
     logger = logging.getLogger('social_website')
     if youtubeid != "":
         try:
