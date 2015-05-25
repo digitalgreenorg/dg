@@ -2,7 +2,6 @@ import os
 import logging
 from datetime import timedelta, date, datetime
 import json
-import re
 import urllib2
 
 import isodate
