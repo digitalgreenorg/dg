@@ -79,7 +79,7 @@ def update_video_youtubeid_s3(vid):
         if not bucket.get_key(key):
             img = ProcessedImage()
             try:
-                url = entry['items'][0]['snippet']['thumbnails']['medium']['url']
+                url = entry['items'][0]['snippet']['thumbnails']['high']['url']
                 filepath = os.path.join(file_save_dir, url.split("/")[-1])
                 img.set_image_from_url(url, filepath)
                 found_thumbnail = True
