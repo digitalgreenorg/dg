@@ -1,26 +1,27 @@
 import os
 import logging
 from datetime import timedelta, date, datetime
+import json
+import re
+import urllib2
 
-import gdata.youtube.service
+import isodate
 from boto.s3.connection import S3Connection
 
 from videos.models import Video
-from dg.settings import ACCESS_KEY, SECRET_KEY, MEDIA_ROOT, YOUTUBE_SIMPLE_ACCESS
+from dg.settings import ACCESS_KEY, SECRET_KEY, MEDIA_ROOT, GOOGLE_API_KEY
 from libs.image_utils import ProcessedImage
 from libs.s3_utils import add_to_s3
 
 
-def get_youtube_entry(youtubeid):
+def get_youtube_entry(youtubeid, url):
     logger = logging.getLogger('social_website')
     if youtubeid != "":
         try:
-            yt_service = gdata.youtube.service.YouTubeService()
-            yt_service.developer_key = YOUTUBE_SIMPLE_ACCESS
-            yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id=youtubeid)
-            if entry is not None:
-                return entry
+            response = urllib2.urlopen(''.join([url, youtubeid, '&key=', GOOGLE_API_KEY]))
+            data = json.loads(response.read())
+            if int(data['pageInfo']['totalResults']) > 0:
+                return data
         except Exception, inst:
             logger.error("YoutubeID: %s Error: %s" % (youtubeid, str(inst)))
     return None
@@ -29,23 +30,15 @@ def get_youtube_entry(youtubeid):
 def get_online_stats(yt_entry):
     stats = {
              'views': 0,
-             'duration': 0,
              'likes': 0,
             }
     try:
-        stats['views'] = int(yt_entry.statistics.view_count)
-    except AttributeError:
+        stats['views'] = int(yt_entry['items'][0]['statistics']['viewCount'])
+    except Exception:
         pass
     try:
-        stats['duration'] = int(yt_entry.media.duration.seconds)
-    except AttributeError:
-        pass
-    try:
-        if yt_entry.rating:
-            stats['likes'] = int((float(yt_entry.rating.average)*float(yt_entry.rating.num_raters)-float(yt_entry.rating.num_raters))/4)
-        else:
-            stats['likes'] = 0
-    except AttributeError:
+        stats['likes'] = int(yt_entry['items'][0]['statistics']['likeCount'])
+    except Exception:
         pass
     return stats
 
@@ -79,30 +72,27 @@ def update_video_youtubeid_s3(vid):
     if cleaned_id != vid.youtubeid:
         vid.youtubeid = cleaned_id
         vid.save()
-    #Fetch the video entry from Youtube
-    entry = get_youtube_entry(cleaned_id)
+    url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2C+contentDetails&id='
+    entry = get_youtube_entry(cleaned_id, url)
     if entry:
         # Update thumbnails on s3
         key = "".join([location_raw_images, str(vid.id), '.jpg'])
         if not bucket.get_key(key):
             img = ProcessedImage()
-            found_thumbnail = False
-            for thumbnail in entry.media.thumbnail:
-                try:
-                    url = thumbnail.url
-                    filepath = os.path.join(file_save_dir, thumbnail.url.split("/")[-1])
-                    img.set_image_from_url(url, filepath)
-                    found_thumbnail = True
-                    break
-                except:
-                    continue
+            try:
+                url = entry['items'][0]['snippet']['thumbnails']['medium']['url']
+                filepath = os.path.join(file_save_dir, url.split("/")[-1])
+                img.set_image_from_url(url, filepath)
+                found_thumbnail = True
+            except:
+                found_thumbnail = False
             if found_thumbnail:
                 img_borderless = img.remove_border()
                 filepath_borderless = os.path.join(file_save_dir, ("raw.jpg"))
                 img_borderless.save(filepath_borderless)
                 add_to_s3(bucket, key, filepath_borderless)
                 print key
-
+ 
                 img_cropped = img_borderless.crop(217, 124)
                 filepath_16by9 = os.path.join(file_save_dir, ("16.jpg"))
                 img_cropped.save(filepath_16by9)
@@ -113,7 +103,7 @@ def update_video_youtubeid_s3(vid):
                 logger = logging.getLogger('social_website')
                 logger.info('Image does not exist for youtubeID')
         # Update duration
-        duration = timedelta(seconds = int(entry.media.duration.seconds))
+        duration = isodate.parse_duration(entry['items'][0]['contentDetails']['duration'])
         if vid.duration != str(duration):
             vid.duration = str(duration)
             vid.save()
