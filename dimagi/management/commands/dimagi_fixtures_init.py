@@ -79,4 +79,4 @@ class Command(BaseCommand):
             create_fixture(commcare_users, commcare_project_name, list_group, list_village, list_mediator)
             # Run Video Fixtures on 5 Day of the Week
             if (datetime.utcnow().weekday() % 5) == 0 or not Update:
-                create_fixture_video(commcare_project_name)
+                create_fixture_video(commcare_project_name, commcare_users, commcare_project.group_name)

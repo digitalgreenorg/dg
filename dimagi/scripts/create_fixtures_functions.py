@@ -7,7 +7,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 
 from activities.models import PersonMeetingAttendance, Screening
-from geographies.models import Village
+from geographies.models import Village, State
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
 from dg.settings import MEDIA_ROOT, DIMAGI_USERNAME, DIMAGI_PASSWORD
@@ -104,7 +104,7 @@ def write_group_info(group_dict_list, workbook):
         row += 1
 
 
-def write_distinct_video(vid_list, workbook):
+def write_distinct_video(vid_list, workbook, group_name):
     sheet = workbook.add_worksheet('unique_video')
     row = 0
     sheet.write(row, 0, "field: id")
@@ -117,11 +117,11 @@ def write_distinct_video(vid_list, workbook):
         if vid.title:
             sheet.write(row, 0, str(id))
             sheet.write(row, 1, unicode(vid.title))
-            sheet.write(row, 2, 'warangal')
+            sheet.write(row, 2, str(group_name))
             row += 1
 
 
-def write_latest_video_info(vid_dict, workbook):
+def write_latest_video_info(vid_dict, workbook, group_name):
     sheet = workbook.add_worksheet('video')
     row = 0
     sheet.write(row, 0, "field: id")
@@ -133,12 +133,12 @@ def write_latest_video_info(vid_dict, workbook):
         sheet.write(row, 0, str(record['id']))
         sheet.write(row, 1, record['low_val'])
         sheet.write(row, 2, record['high_val'])
-        sheet.write(row, 3, 'warangal')
+        sheet.write(row, 3, str(group_name))
         row += 1
     sheet.write(row, 0, "0")
     sheet.write(row, 1, "2013-01-01")
     sheet.write(row, 2, "2100-12-31")
-    sheet.write(row, 3, 'warangal')
+    sheet.write(row, 3, str(group_name))
     return sheet
 
 
@@ -195,7 +195,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
             print 'No villages assigned to %s' % user.username
 
 
-def create_fixture_video(project_name):
+def create_fixture_video(project_name, users, group_name):
     filename = os.path.join(MEDIA_ROOT, "dimagi", "%s_fixtures_video.xlsx" % (project_name))
     workbook = xlsxwriter.Workbook(filename)
 
@@ -227,16 +227,21 @@ def create_fixture_video(project_name):
     sheet.write(row, 4, "high")
     sheet.write(row, 5, "")
 
-    video_list = Screening.objects.filter(village__block__district__state__state_name__in=['Andhra Pradesh', 'Telangana']).values_list('videoes_screened', flat=True).order_by('-date')
+    village_list = []
+    for user in users:
+        village_list.append(list(user.coco_user.villages.all().values_list('id', flat=True)))
+    villages = reduce(lambda x, y: x + y, village_list)
+    user_states = State.objects.filter(district__block__village__id__in=villages).distinct().values_list('id', flat=True)
+    video_list = Screening.objects.filter(village__block__district__state__id__in=user_states).values_list('videoes_screened', flat=True).order_by('-date')
     video_list = [i for i in video_list if i is not None]
     video_list = set(video_list)
-    write_distinct_video(video_list, workbook)
+    write_distinct_video(video_list, workbook, group_name)
     video_schedule_list_of_dict = []
     for id in list(video_list)[:10]:
         video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01',
                                         'high_val': '2020-01-01'})
-    write_latest_video_info(video_schedule_list_of_dict, workbook)
+    write_latest_video_info(video_schedule_list_of_dict, workbook, group_name)
     workbook.close()
 
     # Uploading Fixtures to Commcare

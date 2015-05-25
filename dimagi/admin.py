@@ -5,7 +5,7 @@ class XMLSubmissionAdmin(admin.ModelAdmin):
     search_fields = ['username', 'xml_data', 'error_code', 'error_message']
 
 class CommCareProjectAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['name']
+    fieldsets = [(None,  {'fields': ['name', 'group_name', 'group_id']
                           }
                   )]
     list_display = ('name',)
@@ -25,3 +25,4 @@ class CommCareCaseAdmin(admin.ModelAdmin):
                           }
                   )]
     list_display = ('person', 'guid', 'is_open')
+    search_fields = ['project__name']

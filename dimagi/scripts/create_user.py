@@ -10,9 +10,9 @@ def create_dimagi_user(sender, **kwargs):
     if instance.pk is None:
         instance.username = instance.coco_user.user.username
         url = "".join(["https://www.commcarehq.org/a/", str(instance.project.name), "/api/v0.5/user/"])
-        payload = {"username": instance.coco_user.user.username,
+        payload = {"username": "".join([instance.coco_user.user.username, '@', str(instance.project.name), '.commcarehq.org']),
                    "password": "123",
-                   "groups": ["b0bba9ba517f83baf88d090e8b620753"]
+                   "groups": [str(instance.project.group_id)]
                    }
         r = requests.post(url, data=json.dumps(payload), auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
         content = json.loads(r.content)

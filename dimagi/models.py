@@ -39,6 +39,8 @@ class XMLSubmission(models.Model):
 
 class CommCareProject(models.Model):
     name = models.CharField(max_length=100, unique='True')
+    group_name = models.CharField(max_length=100, null=True, blank=True)
+    group_id = models.CharField(max_length=100, null=True, blank=True)
     last_updated_time = models.DateTimeField(default=datetime.datetime.utcnow)
     
     def _get_fixture_url(self):
