@@ -2948,6 +2948,13 @@ textarea.comment-text {
     overflow:hidden;
 }
 
+.line-clamp.career-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
 /* Carousel Styles */
 
 .main-carousel {

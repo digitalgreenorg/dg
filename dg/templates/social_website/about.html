@@ -1,19 +1,7 @@
 {% include "includes/header.html" %}
-        {% include "includes/partials/mainCarousel.html" %}
-
-        <section id="values" role="main" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper hdg-source-reg layout-vr-lg">
-                    <center>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Vision</span> is a world where all individuals live a life of dignity.</p>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Mission</span> is to integrate innovative technology with global development efforts to improve human well being.</p>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Values</span> include Humility, Excellence, Accountability, Empathy and Integrity.</p>
-                    </center>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
+        {# include "includes/partials/mainCarousel.html" #}
         
-        <section id="about" role="main" class="about-bg">
+        <section id="about" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <div class="media layout-vr-xlg">
@@ -23,7 +11,7 @@
                                 <div class="hdg-c hdg-source-lt layout-vr-sm hdg-bold">More about Digital Green
                                 </div>
                                 <div class="grid-col grid-size2of4">
-                                    <ul class="link-list grid-pad-lt-sm">
+                                    <ul class="link-list">
                                         <li><a href="{% url 'connect' %}">Our Partners</a></li>
                                         <li><a href="{% url 'ourwork' %}">Our Work</a></li>
                                         <li><a href="{% url 'board' %}">Our Board</a></li>
@@ -42,7 +30,6 @@
                                     </ul>
                                 </div>
                             </div>
-
                         </div>
                         <div class="bd">
                             <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
@@ -52,6 +39,18 @@
                             <p class="copy layout-vr-sm">Since 2008 and by April 2015, we had reached over 660,646 community members across 7,645 villages in 4 countries through 3,782 videos explaining best practices related to health, nutrition and agriculture and produced by local community groups. The 522 community members trained by us shot these videos, which were then disseminated and explained by the 6,403 community members, also trained and mentored by us. As many as 343,609 of the viewers have adopted one or more of the best practice promoted through these videos.</p>
                         </div>
                     </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="values" role="main" class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper hdg-source-reg layout-vr-lg">
+                    <center>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Vision</span> is a world where all individuals live a life of dignity.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Mission</span> is to integrate innovative technology with global development efforts to improve human well being.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Values</span> include Humility, Excellence, Accountability, Empathy and Integrity.</p>
+                    </center>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
