@@ -9,7 +9,7 @@ from twython import Twython
 
 from dg.settings import APP_KEY_TWITTER, APP_SECRET_TWITTER, OAUTH_TOKEN_TWITTER, OAUTH_TOKEN_SECRET_TWITTER
 from dg.settings import APP_KEY_LINKEDIN, APP_SECRET_LINKEDIN, OAUTH_TOKEN_LINKEDIN, OAUTH_SECRET_LINKEDIN
-from dg.settings import PROJECT_PATH
+from dg.settings import PROJECT_PATH, GOOGLE_API_KEY
 
 class WebsiteFooter():
     def __init__(self):
@@ -93,9 +93,9 @@ class WebsiteFooter():
         self.linkedin = linkedin_followers
     
     def fetch_youtube_videos(self):
-        response = urllib2.urlopen('https://gdata.youtube.com/feeds/api/users/digitalgreenorg/uploads?v=2&alt=jsonc&max-results=0')
+        response = urllib2.urlopen(''.join(['https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCao3IRuu7wnPxWcQcILfEEA&key=', GOOGLE_API_KEY]))
         data = json.loads(response.read())
-        youtube_videos = data['data']['totalItems']
+        youtube_videos = data['items'][0]['statistics']['videoCount']
         youtube_videos = '{:,}'.format(int(youtube_videos))
         self.youtube = youtube_videos
 

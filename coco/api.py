@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
@@ -421,10 +422,11 @@ class ScreeningResource(BaseResource):
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
     hydrate_partner = partial(assign_partner)
     
+    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
     class Meta:
         max_limit = None
         queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video', 'partner').all()
+                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video', 'partner').filter(date__gte=datetime(2013,1,1))
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -519,7 +521,8 @@ class PersonResource(BaseResource):
     def dehydrate_videos_seen(self, bundle):
         videos_seen = [{'id': video.id, 'title': video.title} for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
-        
+
+# For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
 class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
@@ -528,7 +531,7 @@ class PersonAdoptVideoResource(BaseResource):
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person', 'partner').all()
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('person__village__in')
