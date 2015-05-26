@@ -76,6 +76,10 @@ module.exports = function( grunt ) {
                           {
                               name: 'controllers/VrpPaymentController',
                               exclude: ["main"]
+                          },
+                          {
+                              name: 'controllers/TeamController',
+                              exclude: ["main"]
                           }
 	    		         ]
         	}

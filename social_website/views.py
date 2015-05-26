@@ -238,16 +238,6 @@ def searchFilters(request):
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 
-def board_view(request):
-    context = {
-        'header': {
-            'jsController':'Team',
-            'currentPage':'Board',
-            'loggedIn':False
-            },
-    }
-    return render_to_response('board.html', context, context_instance=RequestContext(request))
-
 def featuredCollection(request):
     language_name = request.GET.get('language__name', None)
     featured_collections = FeaturedCollection.objects.filter(collection__language=language_name, show_on_language_selection=True).order_by('-uid')
