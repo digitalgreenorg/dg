@@ -92,47 +92,61 @@ define([
                     if(block == array_table_values[j][2])
                     {count++;}
                 }  
-                dict[block] = count;            
-             }
-            var data = JSON.stringify(dict);
-            console.log(data);
-            console.log(typeof data);
-            $(function () {
-                var processed_json = new Array();   
-                $.getJSON(data, function(data) {
-                    // Populate series
-                    for (i = 0; i < data.length; i++){
-                        processed_json.push([data[i].key, data[i].value]);
-                    }
-                 
-                    // draw chart
-                    $('#container').highcharts({
+                dict[block] = count;
+                }
+            console.log(dict);
+            console.log(typeof dict);
+
+            // var data = JSON.stringify(dict);
+            // console.log(data);
+            // console.log(typeof data);
+            $(document).ready(function() {
+
+                var options = {
                     chart: {
-                        type: "column"
-                    },
-                    title: {
-                        text: "Block data"
+                        renderTo: 'container',
+                        title: {
+                            text: ''    
+                        },
+                        type: 'column'
                     },
                     xAxis: {
-                        type: 'category',
-                        allowDecimals: false,
+                        categories: [],
                         title: {
-                            text: "Blocks"
+                            text: 'Blocks'
                         }
+                        
                     },
                     yAxis: {
                         title: {
-                            text: "Villages"
-                        }
+                            text: 'Villages',
+                            
+                            
+                        },
+                        tickInterval: 1,
+                        minRange: 1,
+                        allowDecimals: false
                     },
                     series: [{
-                        name: 'Blocks',
-                        data: processed_json
+                        data: []
                     }]
-                }); 
-            });
-        });
+                    
+                };
+                display_data(dict);
+                function display_data(dict) {
+                    for (var key in dict) {
+                        if (dict.hasOwnProperty(key)) {
+                           //console.log(key + " -> " + dict[key]);
+                        options.xAxis.categories.push(key);
+                        options.series[0].data.push(dict[key]);    
+                          }
+                        }
+                    //options.xAxis.categories = data.categories;
+                    //options.series[0] = data.data;
+                    var chart = new Highcharts.Chart(options);
+                }
 
+            });
             console.log("*****************************");
         }
 
