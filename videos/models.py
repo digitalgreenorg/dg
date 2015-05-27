@@ -120,3 +120,13 @@ class Video(CocoModel):
         return  u'%s (%s)' % (self.title, self.village)
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
+
+class NonNegotiable(CocoModel):
+    id = models.AutoField(primary_key=True)
+    video = models.ForeignKey(Video)
+    non_negotiable = models.CharField(max_length=500)
+
+    def __unicode__(self):
+        return  u'%s' % self.non_negotiable
+post_save.connect(save_log, sender=NonNegotiable)
+pre_delete.connect(delete_log, sender=NonNegotiable)
