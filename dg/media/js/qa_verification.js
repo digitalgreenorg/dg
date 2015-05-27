@@ -39,7 +39,7 @@ function QAverification() {
         jQuery('.result-list tr').each(function () {
             if (jQuery(this).find("input[name$='check']").prop('disabled') != true) {
                 if (jQuery(this).find("select[name$='verified_by']").val() == ""){
-                    alert("Kindly fill all active verified by fields");
+                    alert("Kindly fill all active \"Verified By\" fields");
                     event.preventDefault();
                     return false;
                 }
@@ -47,7 +47,7 @@ function QAverification() {
                     jQuery(this).find("input[name$='check']").each(function () {
                         if (!this.checked) {
                             flag = 1;
-                            alert("Kindly select all checkboxes for Approved Verification fields");
+                            alert("Kindly select all \"checkboxes\" for \"Approved Verification\" fields");
                             event.preventDefault();
                             return false;
                         }
@@ -87,7 +87,7 @@ function QAverification() {
     jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
         if (jQuery("input[name='non_negotiable_check']").prop('disabled')!=true){
             if(jQuery("#id_verified_by").val() == ""){
-                alert("Please fill the Verified By field");
+                alert("Please fill the \"Verified By\" field");
                 event.preventDefault();
                 return false;
             }
@@ -95,7 +95,7 @@ function QAverification() {
             if(jQuery("#id_verification_status").val() == 1){
                 jQuery("input[name='non_negotiable_check']").each(function(){
                     if(!this.checked){
-                        alert("Kindly select all check boxes");
+                        alert("Kindly select all \"check boxes\"");
                         event.preventDefault();
                         return false;
                     }
