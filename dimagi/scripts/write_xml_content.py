@@ -14,7 +14,7 @@ def write_person_content(file, i, case_id, owner_id, person, videos_seen, videos
     file.write('<n'+unicode(i)+':create>\n')
     file.write('<n'+unicode(i)+':case_type>person</n'+unicode(i)+':case_type>\n')
     file.write('<n'+unicode(i)+':owner_id>'  + owner_id + '</n'+unicode(i)+':owner_id>\n')
-    file.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '</n'+unicode(i)+':case_name>\n')
+    file.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '(' + unicode(person.father_name) + ')' + '</n'+unicode(i)+':case_name>\n')
     file.write('</n'+unicode(i)+':create>\n')
     file.write('<n'+unicode(i)+':update>\n')
     file.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')

@@ -237,7 +237,7 @@ def create_fixture_video(project_name, users, group_name):
     video_list = set(video_list)
     write_distinct_video(video_list, workbook, group_name)
     video_schedule_list_of_dict = []
-    for id in list(video_list)[:10]:
+    for id in list(video_list):
         video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01',
                                         'high_val': '2020-01-01'})
