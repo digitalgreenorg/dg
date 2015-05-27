@@ -78,6 +78,12 @@ VIDEO_GRADE = (
 VERIFIED_BY = (
     (0,'Digital Green'),
     (1,'Partner'),
+    (2,'Third Party'),
+)
+
+REVIEW_BY = (
+    (0,'Digital Green'),
+    (1,'Partner'),
 )
 
 NONNEGOTIABLE_OPTION = (
