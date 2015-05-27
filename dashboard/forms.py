@@ -95,7 +95,7 @@ class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonAdoptPractice
-        exclude = ('practice', 'verification_status')
+        exclude = ('practice', 'verification_status', 'non_negotiable_check')
 
 class PersonForm(CocoModelForm):
     class Meta:
@@ -126,7 +126,7 @@ class VillageForm(CocoModelForm):
 class VideoForm(CocoModelForm):       
     class Meta:
         model = Video
-        exclude = ('related_practice',)
+        exclude = ('related_practice','review_status','video_grade')
 
 class NonNegotiableForm(CocoModelForm):       
     class Meta:
@@ -135,7 +135,7 @@ class NonNegotiableForm(CocoModelForm):
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance',)   
+        exclude = ('farmers_attendance','observation_status','screening_grade')
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
