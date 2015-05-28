@@ -4,34 +4,49 @@
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Join Us</h2>
-                    <div class="grid layout-vr-xlg">
-                        <div class='grid-col grid-size1of3'>
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Current Openings</h3>
-                            {% regroup job_list by geography.name as jobs %}
-                            
-                            {% for location_jobs in jobs %}
-                            <a href="#{{ location_jobs.grouper }}" class="hdg-f hdg-bold">{{location_jobs.grouper }}</a>
-                            <ul class='link-list'>
-                                {% for job in location_jobs.list %}
-                                    <li><a href="#{{job.title|slugify}}">{{job.title}}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            {% endfor %}
-                        </div>  
-                        <div class='grid-col grid-size2of3 copy layout-vr-sm'>
-                            <p class='copy-para'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity.
+                    <div class="grid layout-vr-xlg"> 
+                        <div class='grid-col grid-size2of4 copy layout-vr-sm'>
+                            <p class='copy-para grid-pad-rt-sm'>Digital Green is an international non-profit development organization that builds and deploys information and communication technologies to amplify the effectiveness of development efforts for sustained social change, globally. Our approach combines technology and social organization to improve the cost-effectiveness and broaden community participation in existing best practices. We partner with public and private organizations across domains such as agriculture, livelihood, health and nutrition.
                             </p>
-                            <p class='copy-para'>We offer a dynamic and enabling work environment and competitive compensation, based on experience and qualifications, comparable to leading national level development sector organizations. 
+                            <p class='copy-para grid-pad-rt-sm'>We are headquartered in New Delhi, India with regional offices in Andhra Pradesh, Bihar, Jharkhand, Karnataka, Madhya Pradesh and Odisha. We have a country office in Addis Ababa, Ethiopia.
                             </p>
-                            <p class='copy-para'>If you would like to be part of the Digital Green family, submit your application with a cover note, current CV and at least three references to jobs@digitalgreen.org. If you are student, you can also apply for an internship position.
+                            <p class='copy-para grid-pad-rt-sm'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity. We offer a dynamic and enabling work environment and competitive compensation, based on experience and qualifications, comparable to leading national level development sector organizations. If you would like to be part of the Digital Green family, submit your application with a cover note, current CV and at least three references to jobs@digitalgreen.org. If you are student, you can also apply for an internship position.
                             </p>
-                            <p><a class="hdg-source-reg hdg-c" style="float:right" href="/team/"> Get to Know Our Team</a>
-                            </p>
+                        </div>
+                        <div class="grid-col grid-size2of4">
+                            <div class="grid-pad-lt-sm layout-vr-md">
+                                <iframe width="450" height="300" src="http://www.youtube.com/embed/EzLOCulWXjk">
+                                </iframe>
+                            </div>
+                            <div class="grid-pad-lt-sm layout-vr-sm">
+                                <ul class="link-list">    
+                                    <li><a href="https://youtu.be/EzLOCulWXjk" target="_blank">Play the video to learn more about our work environment</a></li>
+                                    <li><a href="/resources/" target="_blank">Learn more about our work</a></li>
+                                    <li><a href="/team/">Get to know our team</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
+        </section>
+
+        <section class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Current Openings</h2>
+                    {% regroup job_list by geography.name as jobs %}
+                    {% for location_jobs in jobs %}
+                    <a href="#{{location_jobs.grouper}}" class="hdg-f hdg-bold">{{location_jobs.grouper}}</a>
+                    <ul class='link-list grid-pad-lt-sm layout-vr-md'>
+                        {% for job in location_jobs.list %}
+                            <li><a href="#{{job.title|slugify}}">{{job.title}}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
         </section>
         
 {% for job in job_list %}
@@ -49,37 +64,39 @@
                 </div> 
         </section>
     {% endifchanged %}
-            <section id='{{job.title|slugify}}' class="{% cycle section_background %}">
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
-                        <div class='layout-vr-xlg'>
-                            <p class='copy copy-para'>{{job.description}}
-                            </p>
-                            {% if job.keyresponsibility_set.all %}
-                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
-                                <ul class='bullet-list copy copy-para'>
-                                    {% for keyres in job.keyresponsibility_set.all %}
-                                        <li>{{keyres}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            {% if job.experiencequalification_set.all %}
-                                <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
-                                <ul class='bullet-list copy copy-para'>
-                                    {% for exp in job.experiencequalification_set.all %}
-                                        <li>{{exp}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            <p class='copy'>{{job.conclusion}}
-                            </p>
-                        </div>
+
+        <section id='{{job.title|slugify}}' class="{% cycle section_background %}">
+            <div class="wrapper">
+                <div class="inner-wrapper">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">{{job.title}}</h2>
+                    <div class='layout-vr-xlg'>
+                        <p class='copy copy-para'>{{job.description}}
+                        </p>
+                        {% if job.keyresponsibility_set.all %}
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for keyres in job.keyresponsibility_set.all %}
+                                    <li>{{keyres}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if job.experiencequalification_set.all %}
+                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Qualification and Skills</h3>
+                            <ul class='bullet-list copy copy-para'>
+                                {% for exp in job.experiencequalification_set.all %}
+                                    <li>{{exp}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <p class='copy'>{{job.conclusion}}
+                        </p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
+
 {% endfor %}
 
 {% endautoescape %}
