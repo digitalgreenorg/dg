@@ -19,7 +19,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -364,6 +364,8 @@
         </div>
     </div>
     <button id="reset_database" class="btn btn-small btn-primary mrg-top-20" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
+    <button id="upload_database" class="btn btn-small btn-primary mrg-top-20" title= "Download entries to be synced bacjed to server in json file">Download Entries to be Synced</button>
+    <a id="exportLink" download="data.json"></a>
 </script>
 
 <script type="text/template" id="form_template">

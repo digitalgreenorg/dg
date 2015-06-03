@@ -20,7 +20,8 @@ define([
         upload_entries: null,
         events: {
             "click button#download": "download",
-            "click button#reset_database": "reset"
+            "click button#reset_database": "reset",
+            "click button#upload_database": "upload"
         },
 
         initialize: function() {
@@ -119,8 +120,39 @@ define([
             if (val == true) {
                 Offline.reset_database();
             }
+        },
+        
+     // Resets the offline db
+        upload: function() {
+            var link = $("#exportLink");
+            if(this.upload_entries > 0){
+                var serializedData = JSON.stringify(upload_collection.toJSON());
+                link.attr("href",'data:Application/octet-stream,'+encodeURIComponent(serializedData));
+                //link.trigger("click");
+                this.fakeClick(link[0]);
+            }
+            else{
+                alert("no entries to be synced");
+            }
+        },
+        
+            
+        fakeClick: function(anchorObj) {
+            if (anchorObj.click) {
+                anchorObj.click()
+            } else if(document.createEvent) {
+                if(event.target !== anchorObj) {
+                    var evt = document.createEvent("MouseEvents"); 
+                    evt.initMouseEvent("click", true, true, window, 
+                            0, 0, 0, 0, 0, false, false, false, false, 0, null); 
+                    var allowDefault = anchorObj.dispatchEvent(evt);
+                    // you can check allowDefault for false to see if
+                    // any handler called evt.preventDefault().
+                    // Firefox will *not* redirect to anchorObj.href
+                    // for you. However every other browser will.
+                }
+            }
         }
-
 
     });
 
