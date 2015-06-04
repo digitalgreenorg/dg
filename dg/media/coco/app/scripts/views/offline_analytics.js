@@ -11,7 +11,9 @@ define([
   	function($, underscore, backbone, idb, all_configs, indexeddb, layoutmanager,highcharts, Offline){
   		var AnalyticsView = Backbone.Layout.extend({
 
+        
         template: "#analytics_template",
+        
         initialize: function(){
           this.entity_config = all_configs['village'];
           console.log("Initializing graph view");
@@ -149,6 +151,7 @@ define([
             });
             console.log("*****************************");
         }
+    
 
     });
     
