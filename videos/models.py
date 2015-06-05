@@ -132,6 +132,8 @@ class NonNegotiable(CocoModel):
     id = models.AutoField(primary_key=True)
     video = models.ForeignKey(Video)
     non_negotiable = models.CharField(max_length=500)
+    physically_verifiable = models.BooleanField(db_index=True, default=False)
+    
 
     def __unicode__(self):
         return  u'%s' % self.non_negotiable

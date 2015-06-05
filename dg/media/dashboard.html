@@ -1056,21 +1056,29 @@
  
 <script type="text/template" id="nonnegotiable_inline">
     <tr class="stack-table videoadd" index = <%=index%> name="row<%=index%>">
-        <td>
-            <div class="form-group" ><div class="controls">
-                <div class="col-sm-1 control-label notbold" ><%=index + 1%>.</div>
-                <div class="col-sm-5">
-                    <textarea name="non_negotiable<%=index%>" class=" input-xlarge form-control" maxlength="500"rows="1"></textarea>
-                </div>
-            </div>
+    <td>
+                <%=index+1%>.</td>
+
+    <td ><div class="form-group"><div class="controls">
+            <textarea name="non_negotiable<%=index%>" class=" input-xlarge form-control" maxlength="500"rows="1" style="resize:vertical; width:82%;"></textarea>
+                
+            </div></div>
         </td>
+
+    <td><div class="form-group"><div class="controls">
+            <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable" >
+                
+            </div></div>
+        </td>
+        
     </tr>
 </script>
 
 <script type="text/template" id="nonnegotiable_inline_header">
-    <tr class="hide-header">
-        <th> Non Negotiables
-        </th>
+    <tr class="hide-header">  
+       <th class="col-md-1 control-label notbold"> Sr. No.</th>
+       <th class="col-md-6 control-label notbold"> Non Negotiables</th>
+       <th class="col-md-5 control-label notbold">Physically Verifiable</th>             
     </tr>
 </script>
 
