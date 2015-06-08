@@ -126,7 +126,11 @@ function() {
             listing: true,
             add: false
         },
-        'sort_field': 'village_name'
+        'sort_field': 'village_name',
+        'xaxis' : 'Blocks',
+        'yaxis' : 'Number of villages',
+        'key' : 2,
+        'graph_type' : 'column'                
     };
 
     var mediator_configs = {
@@ -218,6 +222,11 @@ function() {
         'entity_name': 'video',
         'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'sort_field': 'title',
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of videos produced',
+        'key' : 2,
+        'graph_type' : 'column',
+                
         'foreign_entities': {
             'mediator': {
                 "facilitator": {
@@ -472,6 +481,11 @@ function() {
         'list_elements': [{'element':'id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of screenings',
+        'key' : 3,
+        'graph_type' : 'column',
+            
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
@@ -678,6 +692,11 @@ function() {
         'inc_table_name': 'personadoptpractice',
         'list_elements': [{'element':'id'},{'header':'Date','element':'date_of_adoption'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of adoptions',
+        'key' : 4,
+        'graph_type' : 'column',
+                
         form_field_validation: {
             ignore: [],
 			rules: {
@@ -933,6 +952,7 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
+        analytics_entities : ["village","video","screening","adoption"],
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

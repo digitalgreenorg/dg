@@ -1,5 +1,5 @@
 //The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
-define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login','views/offline_analytics', 'models/user_model', 'auth'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, AnalyticsView, User, Auth) {
+define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login','views/offline_analytics', 'models/user_model', 'auth','configs'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, AnalyticsView, User, Auth,configs) {
 
     var AppLayout = Backbone.Layout.extend({
         template: "#page_layout",
@@ -36,9 +36,15 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
         },
 
         render_analytics: function(){
-            var analytics_view = new AnalyticsView();
-            this.setView("#content", analytics_view);
-
+            var i;
+            for(i=1; i<=configs.misc.analytics_entities.length; i++)
+            {
+                var analytics_view = new AnalyticsView({
+                entities : configs.misc.analytics_entities[i-1],
+                container: 'container'+i
+                });
+                this.setView("#content", analytics_view);
+            }           
         },
 
         render_home_view: function() {
@@ -64,3 +70,4 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
     });
     return new AppLayout;
 });
+s

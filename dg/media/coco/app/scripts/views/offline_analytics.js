@@ -9,27 +9,31 @@ define([
     'libs/highcharts',
   	'offline_utils'],
   	function($, underscore, backbone, idb, all_configs, indexeddb, layoutmanager,highcharts, Offline){
-  		var AnalyticsView = Backbone.Layout.extend({
+  		
+        var AnalyticsView = Backbone.Layout.extend({
 
         
         template: "#analytics_template",
         
-        initialize: function(){
-          this.entity_config = all_configs['village'];
+        initialize: function(para){
+          this.entity_config = all_configs[para.entities];
+          this.container = para.container;
+          this.xaxis = all_configs[para.entities]['xaxis'];
+          this.yaxis = all_configs[para.entities]['yaxis'];
+          this.key = all_configs[para.entities]['key'];
+          this.graph_type = all_configs[para.entities]['graph_type'];
           console.log("Initializing graph view");
           _.bindAll(this);
           this.render();
          },
 
       	serialize: function () {
-            //send these to the list page template
             return {
                 page_header: "Analytics",
             };
         },
 
         afterRender: function () {
-            //Fetch entity's full data from offline DB and call render_data when fetched
             Offline.fetch_collection(this.entity_config.entity_name)
                 .done(this.render_data)
                 .fail(function () {
@@ -88,73 +92,52 @@ define([
             for(var i=0; i<array_table_values.length; i++)
             {
                 var count = 0;
-                var block = array_table_values[i][2];
+                var block = array_table_values[i][this.key];
                 for (var j=0; j<array_table_values.length; j++)
                 {
-                    if(block == array_table_values[j][2])
+                    if(block == array_table_values[j][this.key])
                     {count++;}
                 }  
                 dict[block] = count;
+            }            
+            var options = {
+                title: {
+                    text: ''
+                },
+                chart: {
+                    renderTo: this.container,
+                    type: this.graph_type,
+                },
+                xAxis: {
+                    categories: [],
+                    title: {
+                        text: this.xaxis,
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: this.yaxis,
+                    },
+                    tickInterval: 1,
+                    minRange: 1,
+                    allowDecimals: false
+                },
+                series: [{
+                    data: []
+                }]
+            };
+            for (var key in dict) 
+            {
+                if (dict.hasOwnProperty(key)) 
+                {            
+                    options.xAxis.categories.push(key);
+                    options.series[0].data.push(dict[key]);    
                 }
-            console.log(dict);
-            console.log(typeof dict);
-
-            // var data = JSON.stringify(dict);
-            // console.log(data);
-            // console.log(typeof data);
-            $(document).ready(function() {
-
-                var options = {
-                    chart: {
-                        renderTo: 'container',
-                        title: {
-                            text: ''    
-                        },
-                        type: 'column'
-                    },
-                    xAxis: {
-                        categories: [],
-                        title: {
-                            text: 'Blocks'
-                        }
-                        
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Villages',
-                            
-                            
-                        },
-                        tickInterval: 1,
-                        minRange: 1,
-                        allowDecimals: false
-                    },
-                    series: [{
-                        data: []
-                    }]
-                    
-                };
-                display_data(dict);
-                function display_data(dict) {
-                    for (var key in dict) {
-                        if (dict.hasOwnProperty(key)) {
-                           //console.log(key + " -> " + dict[key]);
-                        options.xAxis.categories.push(key);
-                        options.series[0].data.push(dict[key]);    
-                          }
-                        }
-                    //options.xAxis.categories = data.categories;
-                    //options.series[0] = data.data;
-                    var chart = new Highcharts.Chart(options);
-                }
-
-            });
+            }
+            var chart = new Highcharts.Chart(options);            
             console.log("*****************************");
         }
-    
-
-    });
-    
+    });  
   // Our module now returns our view
   return AnalyticsView;
 });

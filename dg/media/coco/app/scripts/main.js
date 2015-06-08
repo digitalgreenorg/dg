@@ -16,6 +16,7 @@ require.config({
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
         'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
+        'highcharts': 'libs/highcharts',
         'configs': '../../../configs'
     },
 
@@ -66,6 +67,10 @@ require.config({
             deps: ["jquery"]
         },
         'time_picker': {
+            deps: ["jquery"]
+        },
+        'highcharts': {
+            exports: "Highcharts",
             deps: ["jquery"]
         }
     }
