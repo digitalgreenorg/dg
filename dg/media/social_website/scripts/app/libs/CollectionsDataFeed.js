@@ -77,7 +77,9 @@ define(function(require) {
 							/ unprocessedData.meta.limit;
 
 					// store total count
-					dataModel.set('totalCount',
+					if(unprocessedData.objects[0].error==1)
+						dataModel.set('totalCount',0)
+					else dataModel.set('totalCount',
 							unprocessedData.meta.total_count);
 
 					// import collections from data
