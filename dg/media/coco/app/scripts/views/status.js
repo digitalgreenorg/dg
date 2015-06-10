@@ -2,6 +2,7 @@
 // It checks whether offline db exists or not, if not initiates the full download module.
 
 define([
+    'views/upload_file',
     'jquery',
     'underscore',
     'layoutmanager',
@@ -11,8 +12,9 @@ define([
     'collections/upload_collection',
     'views/notification',
     'offline_utils',
+    'models/user_model',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline) {
+], function(FileView, jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline, user) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -21,7 +23,8 @@ define([
         events: {
             "click button#download": "download",
             "click button#reset_database": "reset",
-            "click button#upload_database": "upload"
+            "click button#upload_database": "upload",
+            "click button#upload_file": "uploadModal"
         },
 
         initialize: function() {
@@ -124,19 +127,59 @@ define([
         
      // Resets the offline db
         upload: function() {
+            alert(user)
             var link = $("#exportLink");
+            var that = this;
+            var entity_dfds = [];
             if(this.upload_entries > 0){
-                var serializedData = JSON.stringify(upload_collection.toJSON());
-                link.attr("href",'data:Application/octet-stream,'+encodeURIComponent(serializedData));
-                //link.trigger("click");
-                this.fakeClick(link[0]);
+                var a = {user: user, 
+                        uploads: upload_collection.toJSON()
+                        }
+                for (var member in configs) {
+                    if (member == "misc")
+                        continue;
+                    
+                    var entity_dfd = Offline.fetch_collection(configs[member]["entity_name"])
+                                        .done(function(entity_collection){
+                                            a[entity_collection.__proto__.storeName] = entity_collection.toJSON();
+                                            
+                                        })
+                                        .fail(function () {
+                                            notifs_view.add_alert({
+                                                notif_type: "error",
+                                                message: "Error reading data for listing."
+                                            });
+                                        });
+                    entity_dfds.push(entity_dfd);
+                }
+                $.when.apply($, entity_dfds)
+                .done(function() {
+                    var serializedData = JSON.stringify(a);
+                    var data = new Blob([serializedData], { type: 'application/octet-stream' }); 
+                    var csvUrl = URL.createObjectURL(data);
+                    link.attr("href",csvUrl);
+                    that.fakeClick(link[0]);
+                })
+                .fail(function() {
+                    notifs_view.add_alert({
+                        notif_type: "error",
+                        message: "Error reading data for listing."
+                    });
+                });
+                //var a = [user, upload_collection.toJSON()]
+                
+                
             }
             else{
                 alert("no entries to be synced");
             }
         },
         
-            
+        uploadModal: function() {
+            var file_view = new FileView();
+            this.setView("#modal", file_view);
+        },
+        
         fakeClick: function(anchorObj) {
             if (anchorObj.click) {
                 anchorObj.click()
