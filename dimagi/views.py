@@ -17,17 +17,22 @@ class SubmissionNotSaved(Exception):
 def save_submission(request):
     submission = XMLSubmission()
     ##For a test ping from Dimagi
-    if not request.body:
+    try:
+        if not request.body:
+            return HttpResponse(status=201)
+        submission.xml_data = request.body
+        submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        submission.save()
+        status, msg = save_in_db(submission)
+        submission.error_code = status
+        submission.error_message = msg
+        update_submission(submission)
+        submission.save()
         return HttpResponse(status=201)
-    submission.xml_data = request.body
-    submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    submission.save()
-    status, msg = save_in_db(submission)
-    submission.error_code = status
-    submission.error_message = msg
-    update_submission(submission)
-    submission.save()
-    return HttpResponse(status=201)
+    except Exception as ex:
+        error = "Error in save_submission " + str(ex)
+        sendmail("Exception in Mobile COCO", error)
+        return HttpResponse(status=201)
 
 def save_in_db(submission):
     xml_string = submission.xml_data
