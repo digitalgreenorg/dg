@@ -34,6 +34,7 @@ def save_submission(request):
         sendmail("Exception in Mobile COCO", error)
         return HttpResponse(status=201)
 
+
 def save_in_db(submission):
     xml_string = submission.xml_data
     xml_parse = minidom.parseString(xml_string)
@@ -62,7 +63,7 @@ def save_in_db(submission):
 
 
 def update_submission(obj):
-    if obj.xml_data== '':
+    if obj.xml_data == '':
         obj.type = "Error"
         obj.app_version = 0
     else:
@@ -83,12 +84,12 @@ def update_submission(obj):
             start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
             start_date = str(start[0])
             start_time = str(start[1].split('.')[0])
-            obj.start_time = start_date+" "+start_time
+            obj.start_time = start_date + " " + start_time
 
             end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
             end_date = str(end[0])
             end_time = str(end[1].split('.')[0])
-            obj.end_time = end_date+" "+end_time
+            obj.end_time = end_date + " " + end_time
 
         elif data.getElementsByTagName('device_report'):
             obj.type = "Report"
