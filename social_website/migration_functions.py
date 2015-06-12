@@ -1,3 +1,4 @@
+import datetime
 import gc
 from collections import defaultdict 
 
@@ -102,6 +103,9 @@ def update_website_video(vid):
         date = vid.video_production_end_date
         offline_stats = get_offline_stats(vid.id)
         online_stats = get_online_stats(yt_entry)
+        temp = vid.duration if vid.duration is not None else datetime.time(0,0,0)
+        duration = datetime.datetime.combine(datetime.date.today(), temp) - datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0))
+        duration = int(duration.total_seconds())
         if vid.related_practice is not None:
             sector = vid.related_practice.practice_sector.name if vid.related_practice.practice_sector else ''
             subsector = vid.related_practice.practice_subsector.name if vid.related_practice.practice_subsector else ''
@@ -119,7 +123,7 @@ def update_website_video(vid):
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = vid.duration, onlineViews = online_stats['views'],
+                                onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         except Video.DoesNotExist:
@@ -127,7 +131,7 @@ def update_website_video(vid):
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = vid.duration, onlineViews = online_stats['views'],
+                                onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
             website_vid.save()
