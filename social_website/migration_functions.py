@@ -119,7 +119,7 @@ def update_website_video(vid):
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                onlineLikes = online_stats['likes'], duration = vid.duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         except Video.DoesNotExist:
@@ -127,7 +127,7 @@ def update_website_video(vid):
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
-                                onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
+                                onlineLikes = online_stats['likes'], duration = vid.duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
             website_vid.save()
