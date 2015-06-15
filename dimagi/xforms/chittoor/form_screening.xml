@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:vellum="http://commcarehq.org/xforms/vellum">
 	<h:head>
-		<h:title>Screening Form</h:title>
+		<h:title>Screening Form [en]</h:title>
 		<model>
 			<instance>
-				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/14E94611-71B6-439E-9930-F5537CC14FC7" uiVersion="1" version="1" name="Screening Form">
+				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/14E94611-71B6-439E-9930-F5537CC14FC7" uiVersion="1" version="1" name="Screening Form [en]">
 					<date />
 					<time />
 					<selected_village />
@@ -57,56 +57,6 @@
 			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0" />
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0" />
 			<itext>
-				<translation lang="en">
-					<text id="date-label">
-						<value>Date</value>
-					</text>
-					<text id="date-constraintMsg">
-						<value>>Future date not allowed.</value>
-					</text>
-					<text id="time-label">
-						<value>Time</value>
-					</text>
-					<text id="selected_village-label">
-						<value>Village</value>
-					</text>
-					<text id="selected_mediator-label">
-						<value>Mediator</value>
-					</text>
-					<text id="selected_group-label">
-						<value>Group</value>
-					</text>
-					<text id="selected_video-label">
-						<value>Video</value>
-					</text>
-					<text id="attendance_record-label">
-						<value>Attendance Record</value>
-					</text>
-					<text id="attended-label">
-						<value><output ref="/data/attendance_record/attendee_name"></output></value>
-					</text>
-					<text id="attended_yes-label">
-						<value>Yes</value>
-					</text>
-					<text id="attended_no-label">
-						<value>No</value>
-					</text>
-					<text id="interested-label">
-						<value>Interested</value>
-					</text>
-					<text id="interested_yes-label">
-						<value>Yes</value>
-					</text>
-					<text id="interested_no-label">
-						<value>No</value>
-					</text>
-					<text id="question_asked-label">
-						<value>Question Asked</value>
-					</text>
-					<text id="form_done-label">
-						<value>Your form has been completed. Press Done to continue</value>
-					</text>
-				</translation>
 				<translation lang="tel" default="">
 					<text id="date-label">
 						<value>తేది</value>
@@ -157,6 +107,56 @@
 						<value> పూర్తి అయింది కొనసాగించడానికి </value>
 					</text>
 				</translation>
+				<translation lang="en">
+					<text id="date-label">
+						<value>Date</value>
+					</text>
+					<text id="date-constraintMsg">
+						<value>&gt;Future date not allowed.</value>
+					</text>
+					<text id="time-label">
+						<value>Time</value>
+					</text>
+					<text id="selected_village-label">
+						<value>Village</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>Mediator</value>
+					</text>
+					<text id="selected_group-label">
+						<value>Group</value>
+					</text>
+					<text id="selected_video-label">
+						<value>Video</value>
+					</text>
+					<text id="attendance_record-label">
+						<value>Attendance Record</value>
+					</text>
+					<text id="attended-label">
+						<value><output ref="/data/attendance_record/attendee_name"></output></value>
+					</text>
+					<text id="attended_yes-label">
+						<value>Yes</value>
+					</text>
+					<text id="attended_no-label">
+						<value>No</value>
+					</text>
+					<text id="interested-label">
+						<value>Interested</value>
+					</text>
+					<text id="interested_yes-label">
+						<value>Yes</value>
+					</text>
+					<text id="interested_no-label">
+						<value>No</value>
+					</text>
+					<text id="question_asked-label">
+						<value>Question Asked</value>
+					</text>
+					<text id="form_done-label">
+						<value>Your form has been completed. Press Done to continue</value>
+					</text>
+				</translation>
 			</itext>
 		</model>
 	</h:head>
@@ -181,13 +181,13 @@
 				<value ref="id"></value>
 			</itemset>
 		</select1>
-		<select ref="/data/selected_group">
+		<select1 ref="/data/selected_group">
 			<label ref="jr:itext('selected_group-label')" />
 			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
 				<label ref="name"></label>
 				<value ref="id"></value>
 			</itemset>
-		</select>
+		</select1>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')" />
 			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listoftopvideos,id) ]">
@@ -204,7 +204,7 @@
 		</select1>
 		<group>
 			<label ref="jr:itext('attendance_record-label')" />
-			<repeat nodeset="/data/attendance_record" jr:count="/data/num_people">
+			<repeat nodeset="/data/attendance_record" jr:count="/data/num_people" jr:noAddRemove="true()">
 				<select1 ref="/data/attendance_record/attended">
 					<label ref="jr:itext('attended-label')" />
 					<item>
