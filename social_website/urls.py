@@ -23,7 +23,7 @@ class DirectTemplateView(TemplateView):
 urlpatterns = patterns('',
     url(r'^$', social_home, name="home"),    
     url(r'^about/$', DirectTemplateView.as_view(template_name='about.html', extra_context={'header':{'jsController':'About', 'currentPage':'About'}}), name='about'),
-    url(r'^about/board/$', TemplateView.as_view(template_name='board.html'), name='board'),
+    url(r'^about/board/$', DirectTemplateView.as_view(template_name='board.html', extra_context={'header':{'jsController':'Team', 'currentPage':'Board'}}), name='board'),
     url(r'^about/ourwork/$', TemplateView.as_view(template_name='our_work.html'), name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
     url(r'^about/training/picoseekho/(?P<uid>.+)/$', picoseekho_view, name='picoseekho'),

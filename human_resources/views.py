@@ -21,6 +21,11 @@ def member_view(request):
                         } for member in other_teams]
     other_teams_list = sorted(other_teams_list, key=lambda k: (k['place'], k['hierarchy_num']))
     context = {
+        'header': {
+            'jsController':'Team',
+            'currentPage':'Team',
+            'loggedIn':False
+            },
         'elt': elt_team,
         'tech': tech_team,
         'support': support_team,
