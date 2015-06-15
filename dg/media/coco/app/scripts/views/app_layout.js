@@ -70,4 +70,4 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
     });
     return new AppLayout;
 });
-s
+
