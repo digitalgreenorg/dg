@@ -38,7 +38,7 @@ define(function(require) {
                 .setVideosPerDrawer(5);
 
             // set the active filter to be Most Liked to init the collections
-            references.collectionMostFiltersViewController.setActiveFilter('-likes');
+            references.collectionMostFiltersViewController.setActiveFilter('-featured');
             
             this._getNewsFeed();
             this._getFeaturedCollection();
