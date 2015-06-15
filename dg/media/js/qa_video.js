@@ -30,12 +30,12 @@ function QAvideo() {
         jQuery('.result-list tr').each(function () {
             if (jQuery(this).find("select[name$='grade']").prop('disabled') != true) {
                 if (jQuery(this).find("select[name$='reviewer']").val() == ""){
-                    alert("Kindly fill all active Reviewer fields");
+                    alert("Kindly fill all active \"Reviewer\" fields");
                     event.preventDefault();
                     return false;
                 }
                  if (jQuery(this).find("select[name$='grade']").val() == "") {
-                    alert("Kindly fill all the Active Video Grade fields");
+                    alert("Kindly fill all the active \"Video Grade\" fields");
                     event.preventDefault();
                     return false;
                 }
@@ -63,13 +63,13 @@ function QAvideo() {
     jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
         if (jQuery('#id_video_grade').prop('disabled')!=true){
             if(jQuery("#id_reviewer").val() == ""){
-                alert("Please fill the Reviewer field");
+                alert("Please fill the \"Reviewer\" field");
                 event.preventDefault();
                 return false;
             }
 
              if(jQuery('#id_video_grade').val()==""){
-                alert("Kindly fill the Video Grade field");
+                alert("Kindly fill the \"Video Grade\" field");
                 event.preventDefault();
             }
         }
