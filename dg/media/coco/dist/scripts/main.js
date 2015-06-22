@@ -5476,6 +5476,7 @@ define('views/form',[
                 .timepicker({
                     minuteStep: 1,
                     defaultTime: false,
+                    showSeconds:true,
                     showMeridian: false
                 });
         },
@@ -7410,8 +7411,7 @@ define('auth',[
         if (!internet_connected())
             dfd.resolve();
             
-        // the logout endpoint should be made configurable
-        $.post("/coco/logout/")
+        $.post(all_configs.misc.logout_url)
             .done(function(resp) {
                 return dfd.resolve();
             })
@@ -7476,8 +7476,7 @@ define('auth',[
         var dfd = new $.Deferred();
         if (!internet_connected())
             return dfd.resolve();
-        //the endpoint should be made configurable     
-        $.post("/coco/login/", {
+        $.post(all_configs.misc.login_url, {
             "username": username,
             "password": password
         })
@@ -8122,8 +8121,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 var enable_months;
                 // check entity's config for whether to show list/add links for this entity
                 if (configs[member].dashboard_display) {
-                    listing = configs[member].dashboard_display.listing;
-                    add = configs[member].dashboard_display.add;
+                    if ('listing' in configs[member].dashboard_display) 
+                        listing = configs[member].dashboard_display.listing;
+                    if ('add' in configs[member].dashboard_display)
+                        add = configs[member].dashboard_display.add;
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){
@@ -11839,7 +11840,7 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
                 }
                 return {sTitle: header};
             });
-            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+            if (!('dashboard_display' in this.entity_config) || (!('edit' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['edit'] != false) {
                 header_row.push({sTitle: "Edit"});
             }
             return header_row;
@@ -11880,7 +11881,7 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
                 }
                 return cell;
             });
-            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+            if (!('dashboard_display' in this.entity_config) || (!('edit' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['edit'] != false) {
                 row.push('<a href="#' + this.entity_config.entity_name + '/edit/' + model_object['id'] + '" class="edit" title="Edit this entry"><i class="glyphicon glyphicon-pencil"></i></a>');
 
             }
@@ -12752,7 +12753,7 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
         },
         edit: function(entity_name, id) {
         	//Check if entity present in url is valid or not and if edit view of that entity is enable in case it is valid
-        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
+        	if(this.entity_valid(entity_name) && this.entity_edit_enabled(entity_name)){
         		this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, parseInt(id));
@@ -12778,8 +12779,8 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
         entity_list_enabled: function(entity_name){
             var listing = true;
             if(configs[entity_name].dashboard_display)
-            {
-            	listing = configs[entity_name].dashboard_display.listing;
+            {   if ('listing' in configs[entity_name].dashboard_display) 
+            	    listing = configs[entity_name].dashboard_display.listing;
             }
             return listing;
         },
@@ -12789,7 +12790,8 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
             var enable_months;
             if(configs[entity_name].dashboard_display)
             {
-                add = configs[entity_name].dashboard_display.add;
+                if ('add' in configs[entity_name].dashboard_display)
+                    add = configs[entity_name].dashboard_display.add;
                 enable_months = configs[entity_name].dashboard_display.enable_months;
             }
             if(typeof enable_months != 'undefined'){
@@ -12802,6 +12804,28 @@ define('router',['jquery', 'underscore', 'backbone', 'views/app_layout', 'config
                 }
             }
             return add;
+        },
+        
+      //Check if edit view was allowed in configs so that user may not directly enter the url and access form
+        entity_edit_enabled: function(entity_name){
+            var edit = true;
+            var enable_months;
+            if(configs[entity_name].dashboard_display)
+            {
+                if ('edit' in configs[entity_name].dashboard_display)
+                 edit = configs[entity_name].dashboard_display.edit;
+                enable_months = configs[entity_name].dashboard_display.enable_months;
+            }
+            if(typeof enable_months != 'undefined'){
+                var d = new Date();
+                n = d.getMonth();
+                n=n+1;
+                res=$.inArray(n, enable_months);
+                if(res === -1){
+                    edit=false;
+                }
+            }
+            return edit;
         },
         //check_login wrapper for checking whether user is logged in before routing to any of the above defined routes 
         check_login_wrapper: function() {
