@@ -205,8 +205,12 @@ function() {
             errorPlacement: function(label, element) {
                 element.parent().append(label);
             }
+        },
+        'dashboard_display': {
+            listing: true,
+            add: true,
+            edit:true
         }
-
     };
 
     var video_configs = {
