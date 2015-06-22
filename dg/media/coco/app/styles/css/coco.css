@@ -582,6 +582,12 @@ h1 small{
 		width: 35%; 
 	}
 
+    .stack-table td div div div:before {
+        position: absolute;
+        left: -100px;
+        width: 50%; 
+    }
+
 	.groupadd td:nth-of-type(1):before { content: "Person Name"; }
 	.groupadd td:nth-of-type(2):before { content: "Father Name"; }
 	.groupadd td:nth-of-type(3):before { content: "Age"; }
@@ -600,7 +606,11 @@ h1 small{
 	.adoptionadd td:nth-of-type(3):before { content: "Person"; }
 	.adoptionadd td:nth-of-type(4):before { content: "Video"; }
 	.adoptionadd td:nth-of-type(5):before { content: "Date of Adoption"; }
-}
+
+    .videoadd td:nth-of-type(1):before { content: "Sr. No"; }
+    .videoadd td:nth-of-type(2):before { content: "Non Negotiable"; }
+    .videoadd td:nth-of-type(3):before { content: "Physically Verifiable"; }
+    }
 
 @media(max-width:1200px){
 

@@ -228,11 +228,14 @@ def create_fixture_video(project_name, users, group_name):
     sheet.write(row, 5, "")
 
     village_list = []
+    partner_list = []
     for user in users:
         village_list.append(list(user.coco_user.villages.all().values_list('id', flat=True)))
+        if user.coco_user.partner_id not in partner_list:
+            partner_list.append(user.coco_user.partner_id)
     villages = reduce(lambda x, y: x + y, village_list)
     user_states = State.objects.filter(district__block__village__id__in=villages).distinct().values_list('id', flat=True)
-    video_list = Screening.objects.filter(village__block__district__state__id__in=user_states).values_list('videoes_screened', flat=True).order_by('-date')
+    video_list = Screening.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('videoes_screened', flat=True).order_by('-date')
     video_list = [i for i in video_list if i is not None]
     video_list = set(video_list)
     write_distinct_video(video_list, workbook, group_name)
