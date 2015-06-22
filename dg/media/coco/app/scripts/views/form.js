@@ -441,7 +441,6 @@ define([
                 .timepicker({
                     minuteStep: 1,
                     defaultTime: false,
-                    showSeconds:true,
                     showMeridian: false
                 });
         },
