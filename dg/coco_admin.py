@@ -4,7 +4,7 @@ from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DistrictAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, VideoAdmin, VillageAdmin
 
 from activities.models import PersonAdoptPractice, Screening
-from coco.models import CocoUser
+from coco.models import CocoUser, UploadEntries
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
@@ -42,3 +42,4 @@ coco_admin.register(PracticeTopic, PracticeTopicAdmin)
 coco_admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 coco_admin.register(PracticeSubject, PracticeSubjectAdmin)
 coco_admin.register(CocoUser, CocoUserAdmin)
+coco_admin.register(UploadEntries)
