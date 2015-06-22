@@ -3,8 +3,10 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_save
 
 from base_models import CocoModel
+from data_log import upload_entries
 from geographies.models import Village
 from programs.models import Partner
 from videos.models import Video
@@ -53,3 +55,4 @@ def validate_file_extension(value):
 class UploadEntries(CocoModel):
     upload_file = models.FileField(upload_to='coco_entries/', validators=[validate_file_extension])
     user = models.ForeignKey(User, editable=False, null=True)
+post_save.connect(upload_entries, sender=UploadEntries)

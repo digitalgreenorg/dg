@@ -13,6 +13,16 @@ class TimestampException(Exception):
 class UserDoesNotExist(Exception):
     pass
 
+
+def upload_entries(sender, **kwargs ):
+    instance = kwargs["instance"]
+    if kwargs["created"]:
+        a = instance.upload_file.read()
+        d= json.loads(a)
+        print d['user']['username']
+        instance.user = User.objects.get(username=d['user']['username'])
+        instance.save()
+
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
