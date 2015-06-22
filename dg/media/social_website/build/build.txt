@@ -148,3 +148,7 @@ text!app/views/district.html
 text!app/views/block.html
 app/view-controllers/VrpPaymentViewController.js
 app/controllers/VrpPaymentController.js
+
+app/controllers/TeamController.js
+----------------
+app/controllers/TeamController.js
