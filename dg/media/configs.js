@@ -258,6 +258,8 @@ function() {
             'entity': 'nonnegotiable',
             'default_num_rows': 5,
             'add_row' : 1,
+            'req_nonnegotiable' : 1,
+            'error_message' : 'Add atleast one Non-negotiable',
             'template': 'nonnegotiable_inline',
             'joining_attribute': {
                 'host_attribute': ["id", "title"],
