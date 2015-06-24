@@ -16,31 +16,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'training', ['Trainer'])
 
-        # Adding model 'Training'
-        db.create_table(u'training_training', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('taining_date', self.gf('django.db.models.fields.DateField')()),
-            ('place', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'])),
-        ))
-        db.send_create_signal(u'training', ['Training'])
-
-        # Adding M2M table for field trainer on 'Training'
-        db.create_table(u'training_training_trainer', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('training', models.ForeignKey(orm[u'training.training'], null=False)),
-            ('trainer', models.ForeignKey(orm[u'training.trainer'], null=False))
-        ))
-        db.create_unique(u'training_training_trainer', ['training_id', 'trainer_id'])
-
-        # Adding M2M table for field mediator_attendance on 'Training'
-        db.create_table(u'training_training_mediator_attendance', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('training', models.ForeignKey(orm[u'training.training'], null=False)),
-            ('animator', models.ForeignKey(orm[u'people.animator'], null=False))
-        ))
-        db.create_unique(u'training_training_mediator_attendance', ['training_id', 'animator_id'])
-
         # Adding model 'Module'
         db.create_table(u'training_module', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -58,10 +33,43 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'training', ['Question'])
 
+        # Adding model 'Training'
+        db.create_table(u'training_training', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('training_date', self.gf('django.db.models.fields.DateField')()),
+            ('place', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'])),
+        ))
+        db.send_create_signal(u'training', ['Training'])
+
+        # Adding M2M table for field trainer on 'Training'
+        db.create_table(u'training_training_trainer', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('training', models.ForeignKey(orm[u'training.training'], null=False)),
+            ('trainer', models.ForeignKey(orm[u'training.trainer'], null=False))
+        ))
+        db.create_unique(u'training_training_trainer', ['training_id', 'trainer_id'])
+
+        # Adding model 'MediatorScore'
+        db.create_table(u'training_mediatorscore', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('training', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Training'])),
+            ('animator', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['people.Animator'])),
+            ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Question'])),
+            ('score', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal(u'training', ['MediatorScore'])
+
 
     def backwards(self, orm):
         # Deleting model 'Trainer'
         db.delete_table(u'training_trainer')
+
+        # Deleting model 'Module'
+        db.delete_table(u'training_module')
+
+        # Deleting model 'Question'
+        db.delete_table(u'training_question')
 
         # Deleting model 'Training'
         db.delete_table(u'training_training')
@@ -69,14 +77,8 @@ class Migration(SchemaMigration):
         # Removing M2M table for field trainer on 'Training'
         db.delete_table('training_training_trainer')
 
-        # Removing M2M table for field mediator_attendance on 'Training'
-        db.delete_table('training_training_mediator_attendance')
-
-        # Deleting model 'Module'
-        db.delete_table(u'training_module')
-
-        # Deleting model 'Question'
-        db.delete_table(u'training_question')
+        # Deleting model 'MediatorScore'
+        db.delete_table(u'training_mediatorscore')
 
 
     models = {
@@ -218,6 +220,14 @@ class Migration(SchemaMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
+        u'training.mediatorscore': {
+            'Meta': {'object_name': 'MediatorScore'},
+            'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Question']"}),
+            'score': ('django.db.models.fields.IntegerField', [], {}),
+            'training': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Training']"})
+        },
         u'training.module': {
             'Meta': {'object_name': 'Module'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -241,10 +251,9 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Training'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']"}),
-            'mediator_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.Animator']", 'symmetrical': 'False'}),
             'place': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'taining_date': ('django.db.models.fields.DateField', [], {}),
-            'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['training.Trainer']", 'symmetrical': 'False'})
+            'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['training.Trainer']", 'symmetrical': 'False'}),
+            'training_date': ('django.db.models.fields.DateField', [], {})
         },
         u'videos.language': {
             'Meta': {'object_name': 'Language'},

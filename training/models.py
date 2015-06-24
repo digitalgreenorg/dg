@@ -20,10 +20,9 @@ class Question(models.Model):
 	question_number = models.IntegerField()
 	question_text = models.CharField(max_length=200)
 
-
 class Training(models.Model):
 	id = models.AutoField(primary_key=True)
-	taining_date = models.DateField()
+	training_date = models.DateField()
 	place = models.CharField(max_length=200)
 	trainer = models.ManyToManyField(Trainer, null=False, blank=False)
 	language = models.ForeignKey(Language, null=False, blank=False)
