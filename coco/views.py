@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
 from models import CocoUser
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def coco_v2(request):
     return render(request,'dashboard.html')
     
