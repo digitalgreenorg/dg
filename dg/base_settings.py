@@ -160,6 +160,7 @@ INSTALLED_APPS = (
     'filebrowser_safe',
     'grappelli_safe',
     'videokheti',
+    'training',
 )
 
 # Store these package names here as they may change in the future since
