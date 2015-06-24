@@ -7,10 +7,11 @@ from coco.models import FullDownloadStats
 from models import CocoUser
 from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
+
 def coco_v2(request):
     return render(request,'dashboard.html')
-    
+
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
