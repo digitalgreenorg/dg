@@ -142,6 +142,27 @@ def video_add(data, user_id, partner_id, d):
     obj.save()
 
 
+def nonnegotiable_add(data, user_id, partner_id, d):
+    from videos.models import NonNegotiable, Video
+    video_id = None
+    for entry in d['video']:
+        if entry['id'] == data['video']['id']:
+            if 'online_id' in entry:
+                video_id = entry['online_id']
+            else:
+                video_object = Video.objects.get(title=entry['title'],
+                                                 video_production_start_date=entry['video_production_start_date'],
+                                                 video_production_end_date=entry['video_production_end_date'],
+                                                 village_id=entry['village']['id'])
+                video_id = video_object.id
+
+    obj = NonNegotiable(user_created_id=user_id, user_modified_id=user_id,
+                        non_negotiable=data['non_negotiable'],
+                        physically_verifiable=True if data['physically_verifiable'] != None else False,
+                        video_id=video_id)
+    obj.save()
+
+
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
