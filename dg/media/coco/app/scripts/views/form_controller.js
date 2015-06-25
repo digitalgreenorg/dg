@@ -117,7 +117,8 @@ var message_combined_failure = "";
                             this.form.show_errors(err);
                             return ;
                         }
-                    }var inlines_dfd = new $.Deferred();
+                    }
+                    var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
                 }
                 // save the normal form object or the inline parent form
