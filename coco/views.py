@@ -3,12 +3,14 @@ from django.contrib import auth
 from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
+from django.views.decorators.csrf import csrf_exempt
 from coco.models import FullDownloadStats
 from models import CocoUser
 
 def coco_v2(request):
     return render(request,'dashboard.html')
 
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
