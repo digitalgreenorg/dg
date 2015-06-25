@@ -673,11 +673,11 @@ function() {
 				},
 				start_time: {
 					required: 'Screening start time is required',
-					validateTime: 'Enter the start time in the form of HH:MM:SS. Use 24 hour format',
+					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
 				},
 				end_time: {
 					required: 'Screening end time is required',
-					validateTime: 'Enter the end time in the form of HH:MM:SS. Use 24 hour format',
+					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
 				animator: "Mediator is required",
