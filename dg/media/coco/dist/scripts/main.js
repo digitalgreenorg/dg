@@ -12032,6 +12032,21 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
+                    {
+                        if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
+                            notifs_view.add_alert({
+                                notif_type: "error",
+                                message: this.form.inline.error_message
+                            });
+                            var err = {};
+                            err[that.form.entity_name] = {
+                                    __all__: ['Error']
+                            };
+                            this.form.show_errors(err);
+                            return ;
+                        }
+                    }
                     var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
                 }
