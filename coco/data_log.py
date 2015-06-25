@@ -15,13 +15,118 @@ class UserDoesNotExist(Exception):
 
 
 def upload_entries(sender, **kwargs ):
+    from coco.models import CocoUser
     instance = kwargs["instance"]
     if kwargs["created"]:
         a = instance.upload_file.read()
         d= json.loads(a)
-        print d['user']['username']
-        instance.user = User.objects.get(username=d['user']['username'])
+        user_object = User.objects.get(username=d['user']['username'])
+        instance.user = user_object
         instance.save()
+        partner = CocoUser.objects.get(user=user_object).partner
+        upload_entries = d['uploads']
+        for entry in upload_entries:
+            if str(entry['action']) == 'A':
+                #str(entry['entity_name'])()
+                globals()[str(entry['entity_name']) + '_add'](entry['data'], user_object.id, partner.id, d)
+            if str(entry['action']) == 'E':
+                #str(entry['entity_name'])()
+                globals()[str(entry['entity_name']) + '_edit'](entry['data'], user_object.id, partner.id, d['mediator'])
+
+def mediator_add(data, user_id, partner_id, d):
+    from people.models import Animator, AnimatorAssignedVillage
+    print data['phone_no']
+    obj = Animator(user_created_id=user_id, user_modified_id=user_id, name=data['name'],
+                   gender=data['gender'], 
+                   phone_no=data['phone_no'] if data['phone_no'] != None else "",
+                   partner_id=partner_id,
+                   district_id=data['district']['id'])
+    obj.save()
+    for vil in data["assigned_villages"]:
+        obj_vil = AnimatorAssignedVillage(animator_id=obj.id, village_id=vil['id'])
+        obj_vil.save()
+
+
+def mediator_edit(data, user_id, parter_id, district_data):
+    from people.models import Animator
+    if data['online_id']:
+        mediator_obj = Animator.objects.get(id=data['online_id'])
+
+
+def group_add(data, user_id, partner_id, d):
+    from people.models import PersonGroup
+    obj = PersonGroup(user_created_id=user_id, user_modified_id=user_id,
+                      group_name=data['group_name'],
+                      partner_id=partner_id,
+                      village_id=data['village']['id'])
+    obj.save()
+
+
+def person_add(data, user_id, partner_id, d):
+    from people.models import Person, PersonGroup
+    group_id = None
+    if data['group']['id'] is not None:
+        for entry in d['group']:
+            if entry['id'] == data['group']['id']:
+                if 'online_id' in entry:
+                    group_id = entry['online_id']
+                else:
+                    group_object = PersonGroup.objects.get(group_name=entry['group_name'], village_id=entry['village']['id'])
+                    group_id = group_object.id
+                break
+    obj = Person(user_created_id=user_id, user_modified_id=user_id, 
+                 person_name=data['person_name'],
+                 father_name=data['father_name'],
+                 village_id=data['village']['id'],
+                 gender=data['gender'],
+                 age=data['age'],
+                 phone_no=data['phone_no'] if data['phone_no'] != None else "",
+                 group_id=group_id,
+                 partner_id=partner_id)
+
+    obj.save()
+
+def video_add(data, user_id, partner_id, d):
+    from people.models import Animator, Person, PersonGroup
+    from videos.models import Video
+    
+    facilitator_id = None
+    cameraoperator_id = None
+    for entry in d['mediator']:
+        if entry['id'] == data['facilitator']['id']:
+            if 'online_id' in entry:
+                facilitator_id = entry['online_id']
+            else:
+                facilitator_object = Animator.objects.get(name=entry['name'],
+                                                          gender=entry['gender'],
+                                                          district_id=entry['district']['id'],
+                                                          partner_id=entry['partner']['id'])
+                facilitator_id = facilitator_object.id
+        if entry['id'] == data['cameraoperator']['id']:
+            if 'online_id' in entry:
+                cameraoperator_id = entry['online_id']
+            else:
+                cameraoperator_object = Animator.objects.get(name=entry['name'],
+                                                             gender=entry['gender'],
+                                                             district_id=entry['district']['id'],
+                                                             partner_id=entry['partner']['id'])
+                cameraoperator_id = cameraoperator_object.id
+    obj = Video(user_created_id=user_id, user_modified_id=user_id,
+                title=data['title'], 
+                video_type=data['video_type'],
+                language_id=data['language']['id'],
+                summary=data['summary'],
+                video_production_start_date=data['video_production_start_date'],
+                video_production_end_date=data['video_production_end_date'],
+                village_id=data['village']['id'],
+                facilitator_id=facilitator_id,
+                cameraoperator_id=cameraoperator_id,
+                video_suitable_for=data['video_suitable_for'],
+                actors=data['actors'],
+                youtubeid=data['youtubeid'],
+                partner_id=partner_id)
+ 
+    obj.save()
 
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
