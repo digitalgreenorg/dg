@@ -86,10 +86,11 @@ def person_add(data, user_id, partner_id, d):
 
     obj.save()
 
+
 def video_add(data, user_id, partner_id, d):
     from people.models import Animator, Person, PersonGroup
     from videos.models import Video
-    
+
     facilitator_id = None
     cameraoperator_id = None
     for entry in d['mediator']:
@@ -115,7 +116,7 @@ def video_add(data, user_id, partner_id, d):
                 title=data['title'], 
                 video_type=data['video_type'],
                 language_id=data['language']['id'],
-                summary=data['summary'],
+                summary=data['summary'] if data['summary'] != None else "",
                 video_production_start_date=data['video_production_start_date'],
                 video_production_end_date=data['video_production_end_date'],
                 village_id=data['village']['id'],
@@ -123,10 +124,23 @@ def video_add(data, user_id, partner_id, d):
                 cameraoperator_id=cameraoperator_id,
                 video_suitable_for=data['video_suitable_for'],
                 actors=data['actors'],
-                youtubeid=data['youtubeid'],
+                approval_date=data['approval_date'],
+                youtubeid=data['youtubeid'] if data['youtubeid'] != None else "",
                 partner_id=partner_id)
- 
     obj.save()
+
+    for person in data['farmers_shown']:
+        for entry in d['person']:
+            if entry['id'] == person['id']:
+                if 'online_id' in entry:
+                    person_obj = Person.objects.get(id=entry['online_id'])
+                else:
+                    person_obj = Person.objects.get(person_name=entry['person_name'],
+                                                    father_name=entry['father_name'],
+                                                    village_id=entry['village']['id'])
+                obj.farmers_shown.add(person_obj)
+    obj.save()
+
 
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
