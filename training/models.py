@@ -7,35 +7,39 @@ from people.models import Animator
 class Trainer(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
-	state = models.ForeignKey(State, null=True, blank=True)
-
-class Module(models.Model):
-	id = models.AutoField(primary_key=True)
-	module_name = models.CharField(max_length=50)
+	email = models.EmailField()
 
 class Question(models.Model):
 	id = models.AutoField(primary_key=True)
-	module = models.ForeignKey(Module, null=False, blank=False)
+	assessment = models.ForeignKey(Assessment, null=False, blank=False)
+	section = models.IntegerField()
+	serial = models.IntegerField()
+	text = models.CharField()
+
+class Translation(models.Model):
+	question = models.ForeignKey(Question, null=False, blank=False)
+	text = models.CharField()
 	language = models.ForeignKey(Language, null=False, blank=False)
-	question_number = models.IntegerField()
-	question_text = models.CharField(max_length=200)
+
+class Assessment(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=50)
 
 class Training(models.Model):
 	id = models.AutoField(primary_key=True)
-	training_date = models.DateField()
+	date = models.DateField()
 	place = models.CharField(max_length=200)
+	state = models.ForeignKey(State, null=True, blank=True)
 	trainer = models.ManyToManyField(Trainer, null=False, blank=False)
 	language = models.ForeignKey(Language, null=False, blank=False)
+	participants = ManyToManyField(Animator)
 
-class MediatorScore(models.Model):
+class Score(models.Model):
 	id = models.AutoField(primary_key=True)
 	training = models.ForeignKey(Training, null=False, blank=False)
-	animator = models.ForeignKey(Animator, null=False, blank=False)
+	participant = models.ForeignKey(Animator, null=False, blank=False)
 	question = models.ForeignKey(Question, null=False, blank=False)
 	score = models.IntegerField()
-
-
-
 
 
 
