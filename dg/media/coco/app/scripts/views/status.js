@@ -23,8 +23,7 @@ define([
         events: {
             "click button#download": "download",
             "click button#reset_database": "reset",
-            "click button#upload_database": "upload",
-            "click button#upload_file": "uploadModal"
+            "click button#upload_database": "upload"
         },
 
         initialize: function() {

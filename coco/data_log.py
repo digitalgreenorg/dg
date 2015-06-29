@@ -31,7 +31,7 @@ def upload_entries(sender, **kwargs ):
                 globals()[str(entry['entity_name']) + '_add'](entry['data'], user_object.id, partner.id, d)
             if str(entry['action']) == 'E':
                 #str(entry['entity_name'])()
-                globals()[str(entry['entity_name']) + '_edit'](entry['data'], user_object.id, partner.id, d['mediator'])
+                globals()[str(entry['entity_name']) + '_edit'](entry['data'], user_object.id, partner.id, d)
 
 def mediator_add(data, user_id, partner_id, d):
     from people.models import Animator, AnimatorAssignedVillage
@@ -47,10 +47,15 @@ def mediator_add(data, user_id, partner_id, d):
         obj_vil.save()
 
 
-def mediator_edit(data, user_id, parter_id, district_data):
+def mediator_edit(data, user_id, parter_id):
     from people.models import Animator
     if data['online_id']:
         mediator_obj = Animator.objects.get(id=data['online_id'])
+    else:
+        mediator_obj = Animator.objects.get(name=data['name'],
+                             gender=data['gender'],
+                             district_id=data['district']['id'],
+                             partner_id=data['partner']['id'])
 
 
 def group_add(data, user_id, partner_id, d):
@@ -60,6 +65,14 @@ def group_add(data, user_id, partner_id, d):
                       partner_id=partner_id,
                       village_id=data['village']['id'])
     obj.save()
+
+
+def group_edit(data, user_id, parter_id):
+    from people.models import PersonGroup
+    if data['online_id']:
+        group_obj = PersonGroup.objects.get(id=data['online_id'])
+    else:
+        group_obj = PersonGroup.objects.get(group_name=data['group_name'], village_id=data['village']['id'])
 
 
 def person_add(data, user_id, partner_id, d):
@@ -85,6 +98,16 @@ def person_add(data, user_id, partner_id, d):
                  partner_id=partner_id)
 
     obj.save()
+
+
+def person_edit(data, user_id, partner_id):
+    from people.models import Person, PersonGroup
+    if data['online_id']:
+        person_obj = Person.objects.get(id=data['online_id'])
+    else:
+        person_obj = Person.objects.get(person_name=data['person_name'],
+                                        father_name=data['father_name'],
+                                        village_id=data['village']['id'])
 
 
 def video_add(data, user_id, partner_id, d):
@@ -142,6 +165,17 @@ def video_add(data, user_id, partner_id, d):
     obj.save()
 
 
+def video_edit(data, user_id, partner_id):
+    from videos.models import Video
+    if data['online_id']:
+        video_obj = Video.objects.get(id=data['online_id'])
+    else:
+        video_obj = Video.objects.get(title=data['title'],
+                                      video_production_start_date=data['video_production_start_date'],
+                                      video_production_end_date=data['video_production_end_date'],
+                                      village_id=data['village']['id'])
+
+
 def nonnegotiable_add(data, user_id, partner_id, d):
     from videos.models import NonNegotiable, Video
     video_id = None
@@ -161,6 +195,155 @@ def nonnegotiable_add(data, user_id, partner_id, d):
                         physically_verifiable=True if data['physically_verifiable'] != None else False,
                         video_id=video_id)
     obj.save()
+
+
+def adoption_add(data, user_id, partner_id, d):
+    from activities.models import PersonAdoptPractice
+    from people.models import Person
+    from videos.models import Video
+    video_id = None
+    for entry in d['video']:
+        if entry['id'] == data['video']['id']:
+            if 'online_id' in entry:
+                video_id = entry['online_id']
+            else:
+                video_object = Video.objects.get(title=entry['title'],
+                                                 video_production_start_date=entry['video_production_start_date'],
+                                                 video_production_end_date=entry['video_production_end_date'],
+                                                 village_id=entry['village']['id'])
+                video_id = video_object.id
+
+    person_id = None
+    for entry in d['person']:
+        if entry['id'] == data['person']['id']:
+            if 'online_id' in entry:
+                person_id = entry['online_id']
+            else:
+                person_object = Person.objects.get(person_name=entry['person_name'],
+                                                   father_name=entry['father_name'],
+                                                   village_id=entry['village']['id'])
+                person_id = person_object.id
+
+    obj = PersonAdoptPractice(user_created_id=user_id, user_modified_id=user_id,
+                              video_id=video_id,
+                              person_id=person_id,
+                              partner_id=partner_id,
+                              date_of_adoption=data['date_of_adoption']
+                              )
+    obj.save()
+
+
+def adoption_edit(data, user_id, partner_id):
+    from activities.models import PersonAdoptPractice
+    if data['online_id']:
+        pap_obj = PersonAdoptPractice.objects.get(id=data['online_id'])
+    else:
+        pap_obj = PersonAdoptPractice.objects.get(person_id=data['person']['id'],
+                                                  video_id=data['video']['id'],
+                                                  date_of_adoption=data['date_of_adoption'])
+
+
+def screening_add(data, user_id, partner_id, d):
+    from activities.models import Screening
+    from people.models import Animator, Person, PersonGroup
+    from videos.models import Video
+
+    animator_id = None
+    for entry in d['mediator']:
+        if entry['id'] == data['animator']['id']:
+            if 'online_id' in entry:
+                animator_id = entry['online_id']
+            else:
+                animator_object = Animator.objects.get(name=entry['name'],
+                                                          gender=entry['gender'],
+                                                          district_id=entry['district']['id'],
+                                                          partner_id=entry['partner']['id'])
+                animator_id = animator_object.id
+
+    obj = Screening(user_created_id=user_id, user_modified_id=user_id,
+                    date=data['date'],
+                    start_time=data['start_time'],
+                    end_time=data['end_time'],
+                    village_id=data['village']['id'],
+                    animator_id=animator_id,
+                    partner_id=partner_id
+                    )
+    obj.save()
+
+    for group in data['farmer_groups_targeted']:
+        for entry in d['group']:
+            if entry['id'] == group['id']:
+                if 'online_id' in entry:
+                    group_obj = PersonGroup.objects.get(id=entry['online_id'])
+                else:
+                    group_obj = PersonGroup.objects.get(group_name=entry['group_name'], village_id=entry['village']['id'])
+                obj.farmer_groups_targeted.add(group_obj)
+                break
+    obj.save()
+    for video in data['videoes_screened']:
+        for entry in d['video']:
+            if entry['id'] == video['id']:
+                if 'online_id' in entry:
+                    video_obj = Video.objects.get(id=entry['online_id'])
+                else:
+                    video_obj = Video.objects.get(title=entry['title'],
+                                                  video_production_start_date=entry['video_production_start_date'],
+                                                  video_production_end_date=entry['video_production_end_date'],
+                                                  village_id=entry['village']['id'])
+                    obj.videoes_screened.add(video_obj)
+                    break
+    obj.save()
+    save_pma(data["farmers_attendance"], user_id, obj.id, d)
+
+
+def screening_edit(data, user_id, partner_id):
+    from activities.models import Screening
+    if data['online_id']:
+        screening_obj = Screening.objects.get(id=data['online_id'])
+    else:
+        screening_obj = Screening.objects.get(date=data['date'],
+                                              start_time=data['start_time'],
+                                              end_time=data['end_time'],
+                                              animator_id=data['animator']['id'],
+                                              village_id=data['village']['id'])
+
+
+def save_pma(pmas, user_id, screening_id, d):
+    from activities.models import PersonMeetingAttendance
+    from people.models import Person
+    from videos.models import Video
+    for pma in pmas:
+        video_id = None
+        if pma["expressed_adoption_video"]["id"] != None:
+            for entry in d['video']:
+                if entry['id'] == pma["expressed_adoption_video"]['id']:
+                    if 'online_id' in entry:
+                        video_id = entry['online_id']
+                    else:
+                        video_obj = Video.objects.get(title=entry['title'],
+                                                     video_production_start_date=entry['video_production_start_date'],
+                                                     video_production_end_date=entry['video_production_end_date'],
+                                                     village_id=entry['village']['id'])
+                        video_id = video_obj.id
+                        break
+        for entry in d['person']:
+            if str(entry['id']) == str(pma['person_id']):
+                print "came here"
+                if 'online_id' in entry:
+                    person_id = entry['online_id']
+                else:
+                    person_obj = Person.objects.get(person_name=entry['person_name'],
+                                                    father_name=entry['father_name'],
+                                                    village_id=entry['village']['id'])
+                    person_id = person_obj.id
+                    break
+        obj = PersonMeetingAttendance(user_created_id=user_id, user_modified_id=user_id,
+                                      screening_id=screening_id,
+                                      person_id=person_id,
+                                      interested=True if pma['interested'] == 'true' else False,
+                                      expressed_question=pma['expressed_question'],
+                                      expressed_adoption_video_id=video_id)
+        obj.save()
 
 
 def save_log(sender, **kwargs ):
