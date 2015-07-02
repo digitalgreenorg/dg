@@ -2,7 +2,6 @@
 // It checks whether offline db exists or not, if not initiates the full download module.
 
 define([
-    'views/upload_file',
     'jquery',
     'underscore',
     'layoutmanager',
@@ -14,7 +13,7 @@ define([
     'offline_utils',
     'models/user_model',
     'indexeddb-backbone'
-], function(FileView, jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline, user) {
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline, user) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -126,7 +125,6 @@ define([
         
      // Resets the offline db
         upload: function() {
-            alert(user)
             var link = $("#exportLink");
             var that = this;
             var entity_dfds = [];
@@ -172,11 +170,6 @@ define([
             else{
                 alert("no entries to be synced");
             }
-        },
-        
-        uploadModal: function() {
-            var file_view = new FileView();
-            this.setView("#modal", file_view);
         },
         
         fakeClick: function(anchorObj) {
