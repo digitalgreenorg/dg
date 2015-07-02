@@ -105,12 +105,7 @@ var message_combined_failure = "";
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
                     if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
                     {
-                        if ( this.form.inline.req_nonnegotiable >= this.inline_models.length){
-                            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                            // notifs_view.add_alert({
-                            //     notif_type: "error",
-                            //     message: this.form.inline.error_message
-                            // });
+                        if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
                             var err = {};
                             err[that.form.entity_name] = {
                                     __all__: ['Error: ' + this.form.inline.error_message]
