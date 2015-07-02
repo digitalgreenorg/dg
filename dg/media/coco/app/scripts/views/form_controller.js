@@ -115,6 +115,9 @@ var message_combined_failure = "";
                                     __all__: ['Error']
                             };
                             this.form.show_errors(err);
+                            var add_validation = this.form.inline.validation_chk;
+                            $(add_validation).removeClass("donotvalidate");
+                            $(add_validation).valid();
                             return ;
                         }
                     }
