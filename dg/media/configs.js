@@ -260,6 +260,7 @@ function() {
             'default_num_rows': 5,
             'add_row' : 1,
             'req_nonnegotiable' : 1,
+            'exemption_video_type': '2', 
             'error_message' : 'Add Non-negotiable',
             'template': 'nonnegotiable_inline',
             'joining_attribute': {
