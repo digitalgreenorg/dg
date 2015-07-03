@@ -114,6 +114,7 @@ var message_combined_failure = "";
                             var add_validation = this.form.inline.validation_chk;
                             $(add_validation).removeClass("donotvalidate");
                             $(add_validation).valid();
+                            $(add_validation).addClass("donotvalidate");
                             return ;
                         }
                     }
