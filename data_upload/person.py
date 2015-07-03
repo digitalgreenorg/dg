@@ -20,7 +20,7 @@ def upload_data(file, user_id, block_id):
 
     #check required fields
     req_field = ['Village_Name', 'Shg_Name', 'Member_Name', 'Member_Surname',
-                 'Husband_Father_Name', 'Husband_Father_Surname']
+                 'Husband_Father_Name', 'Husband_Father_Surname', 'Gender(M/F)']
 
     for row in rows:
         if row.keys() <= req_field:
@@ -134,13 +134,15 @@ def execute_upoad(file, user_id, block_id):
             person_name = ' '.join([str(row['Member_Name']), str(row['Member_Surname'])])
             father_name = ' '.join([str(row['Husband_Father_Name']),
                                     str(row['Husband_Father_Surname'])])
+            gender = str(row['Gender(M/F)'])
+
             person = Person(user_created_id=user_id.id,
                             partner_id=user_id.partner.id,
                             person_name=person_name,
                             father_name=father_name,
                             village_id=village_map[unicode(row['Village_Name'])],
                             group_id=group_map[row['Shg_Name'] + unicode(row['Village_Name'])],
-                            gender='F')
+                            gender=gender)
             person.save()
             wrtr_success.writerow([i, person_name])
             person_success_file.flush()
