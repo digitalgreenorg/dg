@@ -12032,18 +12032,18 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
-                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable) && (this.form.final_json.video_type != this.form.inline.exemption_video_type))
                     {
                         if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
-                            notifs_view.add_alert({
-                                notif_type: "error",
-                                message: this.form.inline.error_message
-                            });
                             var err = {};
                             err[that.form.entity_name] = {
-                                    __all__: ['Error']
+                                    __all__: ['Error: ' + this.form.inline.error_message]
                             };
                             this.form.show_errors(err);
+                            var add_validation = this.form.inline.validation_chk;
+                            $(add_validation).removeClass("donotvalidate");
+                            $(add_validation).valid();
+                            $(add_validation).addClass("donotvalidate");
                             return ;
                         }
                     }
