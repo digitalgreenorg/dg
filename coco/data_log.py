@@ -30,7 +30,7 @@ def upload_entries(sender, **kwargs):
             if str(entry['action']) == 'A':
                 globals()[str(entry['entity_name']) + '_add'](entry['data'], user_object.id, partner.id, d)
             if str(entry['action']) == 'E':
-                globals()[str(entry['entity_name']) + '_edit'](entry['data'], user_object.id, partner.id, d)
+                globals()[str(entry['entity_name']) + '_edit'](entry['data'], user_object.id, partner.id, d, entry['id'])
 
 
 def mediator_add(data, user_id, partner_id, d):
@@ -50,16 +50,25 @@ def mediator_add(data, user_id, partner_id, d):
         print "Duplicate Mediator Entry"
 
 
-def mediator_edit(data, user_id, partner_id, d):
-    print data
+def mediator_edit(data, user_id, partner_id, d, entry_id):
     from people.models import Animator, AnimatorAssignedVillage
     if 'online_id' in data:
         mediator_obj = Animator.objects.get(id=data['online_id'])
     else:
-        mediator_obj = Animator.objects.get(name=data['name'],
-                                            gender=data['gender'],
-                                            district_id=data['district']['id'],
-                                            partner_id=partner_id)
+        try:
+            mediator_obj = Animator.objects.get(name=data['name'],
+                                                gender=data['gender'],
+                                                district_id=data['district']['id'],
+                                                partner_id=partner_id)
+        except Animator.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'mediator' and entry['data']['id'] == data['id']:
+
+                    mediator_obj = Animator.objects.get(name=entry['data']['name'],
+                                                        gender=entry['data']['gender'],
+                                                        district_id=entry['data']['district']['id'],
+                                                        partner_id=partner_id)
+                    break
     mediator_obj.user_modified_id = user_id
     mediator_obj.name = data['name']
     mediator_obj.gender = str(data['gender'])
@@ -86,12 +95,19 @@ def group_add(data, user_id, partner_id, d):
         print "Group Already Exists"
 
 
-def group_edit(data, user_id, partner_id, d):
+def group_edit(data, user_id, partner_id, d, entry_id):
     from people.models import PersonGroup
     if 'online_id' in data:
         group_obj = PersonGroup.objects.get(id=data['online_id'])
     else:
-        group_obj = PersonGroup.objects.get(group_name=data['group_name'], village_id=data['village']['id'])
+        try:
+            group_obj = PersonGroup.objects.get(group_name=data['group_name'], village_id=data['village']['id'])
+        except PersonGroup.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'group' and entry['data']['id'] == data['id']:
+
+                    group_obj = PersonGroup.objects.get(group_name=entry['data']['group_name'], village_id=entry['data']['village']['id'])
+                    break
     group_obj.user_modified_id = user_id
     group_obj.group_name = data['group_name']
     group_obj.partner_id = partner_id
@@ -127,14 +143,21 @@ def person_add(data, user_id, partner_id, d):
         print "Person Already Exists"
 
 
-def person_edit(data, user_id, partner_id, d):
+def person_edit(data, user_id, partner_id, d, entry_id):
     from people.models import Person, PersonGroup
     if 'online_id' in data:
         person_obj = Person.objects.get(id=data['online_id'])
     else:
-        person_obj = Person.objects.get(person_name=data['person_name'],
-                                        father_name=data['father_name'],
-                                        village_id=data['village']['id'])
+        try:
+            person_obj = Person.objects.get(person_name=data['person_name'],
+                                            father_name=data['father_name'],
+                                            village_id=data['village']['id'])
+        except Person.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'person' and entry['data']['id'] == data['id']:
+
+                    group_obj = PersonGroup.objects.get(group_name=entry['data']['group_name'], village_id=entry['data']['village']['id'])
+                    break
     group_id = None
     if data['group']['id'] is not None:
         for entry in d['group']:
@@ -198,7 +221,8 @@ def video_add(data, user_id, partner_id, d):
                     approval_date=data['approval_date'],
                     youtubeid=data['youtubeid'] if data['youtubeid'] != None else "",
                     partner_id=partner_id)
-        obj.save()
+        with transaction.atomic():
+            obj.save()
         for person in data['farmers_shown']:
             for entry in d['person']:
                 if entry['id'] == person['id']:
@@ -214,16 +238,26 @@ def video_add(data, user_id, partner_id, d):
         print "Video Already Exists"
 
 
-def video_edit(data, user_id, partner_id, d):
+def video_edit(data, user_id, partner_id, d, entry_id):
     from people.models import Animator, Person
     from videos.models import Video
     if 'online_id' in data:
         video_obj = Video.objects.get(id=data['online_id'])
     else:
-        video_obj = Video.objects.get(title=data['title'],
-                                      video_production_start_date=data['video_production_start_date'],
-                                      video_production_end_date=data['video_production_end_date'],
-                                      village_id=data['village']['id'])
+        try:
+            video_obj = Video.objects.get(title=data['title'],
+                                          video_production_start_date=data['video_production_start_date'],
+                                          video_production_end_date=data['video_production_end_date'],
+                                          village_id=data['village']['id'])
+        except Video.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'video' and entry['data']['id'] == data['id']:
+
+                    video_obj = Video.objects.get(title=entry['data']['title'],
+                                                  video_production_start_date=entry['data']['video_production_start_date'],
+                                                  video_production_end_date=entry['data']['video_production_end_date'],
+                                                  village_id=entry['data']['village']['id'])
+                    break
     facilitator_id = None
     cameraoperator_id = None
     for entry in d['mediator']:
@@ -331,21 +365,31 @@ def adoption_add(data, user_id, partner_id, d):
                                   partner_id=partner_id,
                                   date_of_adoption=data['date_of_adoption']
                                   )
-        obj.save()
+        with transaction.atomic():
+            obj.save()
     except IntegrityError:
         print "Adoption Already Exists"
 
 
-def adoption_edit(data, user_id, partner_id, d):
+def adoption_edit(data, user_id, partner_id, d, entry_id):
     from activities.models import PersonAdoptPractice
     from people.models import Person
     from videos.models import Video
     if data['online_id']:
         pap_obj = PersonAdoptPractice.objects.get(id=data['online_id'])
     else:
-        pap_obj = PersonAdoptPractice.objects.get(person_id=data['person']['id'],
-                                                  video_id=data['video']['id'],
-                                                  date_of_adoption=data['date_of_adoption'])
+        try:
+            pap_obj = PersonAdoptPractice.objects.get(person_id=data['person']['id'],
+                                                      video_id=data['video']['id'],
+                                                      date_of_adoption=data['date_of_adoption'])
+        except PersonAdoptPractice.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'adoption' and entry['data']['id'] == data['id']:
+
+                    pap_obj = PersonAdoptPractice.objects.get(person_id=entry['data']['person']['id'],
+                                                              video_id=entry['data']['video']['id'],
+                                                              date_of_adoption=entry['data']['date_of_adoption'])
+                    break
     video_id = None
     for entry in d['video']:
         if entry['id'] == data['video']['id']:
@@ -402,48 +446,59 @@ def screening_add(data, user_id, partner_id, d):
                         animator_id=animator_id,
                         partner_id=partner_id
                         )
+        with transaction.atomic():
+            obj.save()
+
+        for group in data['farmer_groups_targeted']:
+            for entry in d['group']:
+                if entry['id'] == group['id']:
+                    if 'online_id' in entry:
+                        group_obj = PersonGroup.objects.get(id=entry['online_id'])
+                    else:
+                        group_obj = PersonGroup.objects.get(group_name=entry['group_name'], village_id=entry['village']['id'])
+                    obj.farmer_groups_targeted.add(group_obj)
+                    break
         obj.save()
+        for video in data['videoes_screened']:
+            for entry in d['video']:
+                if entry['id'] == video['id']:
+                    if 'online_id' in entry:
+                        video_obj = Video.objects.get(id=entry['online_id'])
+                    else:
+                        video_obj = Video.objects.get(title=entry['title'],
+                                                      video_production_start_date=entry['video_production_start_date'],
+                                                      video_production_end_date=entry['video_production_end_date'],
+                                                      village_id=entry['village']['id'])
+                    obj.videoes_screened.add(video_obj)
+                    break
+        obj.save()
+        save_pma(data["farmers_attendance"], user_id, obj.id, d)
     except IntegrityError:
         print "Screening Already Exists"
 
-    for group in data['farmer_groups_targeted']:
-        for entry in d['group']:
-            if entry['id'] == group['id']:
-                if 'online_id' in entry:
-                    group_obj = PersonGroup.objects.get(id=entry['online_id'])
-                else:
-                    group_obj = PersonGroup.objects.get(group_name=entry['group_name'], village_id=entry['village']['id'])
-                obj.farmer_groups_targeted.add(group_obj)
-                break
-    obj.save()
-    for video in data['videoes_screened']:
-        for entry in d['video']:
-            if entry['id'] == video['id']:
-                if 'online_id' in entry:
-                    video_obj = Video.objects.get(id=entry['online_id'])
-                else:
-                    video_obj = Video.objects.get(title=entry['title'],
-                                                  video_production_start_date=entry['video_production_start_date'],
-                                                  video_production_end_date=entry['video_production_end_date'],
-                                                  village_id=entry['village']['id'])
-                    obj.videoes_screened.add(video_obj)
-                    break
-    obj.save()
-    save_pma(data["farmers_attendance"], user_id, obj.id, d)
 
-
-def screening_edit(data, user_id, partner_id, d):
+def screening_edit(data, user_id, partner_id, d, entry_id):
     from activities.models import PersonMeetingAttendance, Screening
     from people.models import Animator, PersonGroup
     from videos.models import Video
     if data['online_id']:
         screening_obj = Screening.objects.get(id=data['online_id'])
     else:
-        screening_obj = Screening.objects.get(date=data['date'],
-                                              start_time=data['start_time'],
-                                              end_time=data['end_time'],
-                                              animator_id=data['animator']['id'],
-                                              village_id=data['village']['id'])
+        try:
+            screening_obj = Screening.objects.get(date=data['date'],
+                                                  start_time=data['start_time'],
+                                                  end_time=data['end_time'],
+                                                  animator_id=data['animator']['id'],
+                                                  village_id=data['village']['id'])
+        except Screening.DoesNotExist:
+            for entry in d['uploads'][int(entry_id)-2::-1]:
+                if entry['entity_name'] == 'screening' and entry['data']['id'] == data['id']:
+                    screening_obj = Screening.objects.get(date=entry['data']['date'],
+                                                          start_time=entry['data']['start_time'],
+                                                          end_time=entry['data']['end_time'],
+                                                          animator_id=entry['data']['animator']['id'],
+                                                          village_id=entry['data']['village']['id'])
+                    break
     animator_id = None
     for entry in d['mediator']:
         if entry['id'] == data['animator']['id']:
@@ -532,11 +587,9 @@ def save_pma(pmas, user_id, screening_id, d):
 
 
 def save_log(sender, **kwargs ):
-    print sender
     instance = kwargs["instance"]
     action = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
-    print sender
     model_dict = model_to_dict(instance)
     previous_time_stamp = get_latest_timestamp()
     try:
@@ -555,10 +608,7 @@ def save_log(sender, **kwargs ):
         village_id = instance.person.village.id
     else:
         village_id = instance.village.id
-    print instance
-    print instance.partner.id
     partner_id = None if sender is ["Village", 'Language', 'NonNegotiable'] else instance.partner.id
-    print partner_id
     ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)
