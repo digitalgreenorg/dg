@@ -37,7 +37,7 @@
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Current Openings</h2>
                     {% regroup job_list by geography.name as jobs %}
                     {% for location_jobs in jobs %}
-                    <a href="#{{location_jobs.grouper}}" class="hdg-f hdg-bold">{{location_jobs.grouper}}</a>
+                    <a href="#{{location_jobs.grouper}}" class="hdg-f hdg-bold layout-vr-sm">{{location_jobs.grouper}}</a>
                     <ul class='link-list grid-pad-lt-sm layout-vr-md'>
                         {% for job in location_jobs.list %}
                             <li><a href="#{{job.title|slugify}}">{{job.title}}</a>
