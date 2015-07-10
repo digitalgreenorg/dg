@@ -174,8 +174,13 @@ define(function(require) {
             // move to the end
             var that=this
             setTimeout(function(){
-                that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
-            that._onAwardsTickerLoad();
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
+                    that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
+                    that._references.$awardsTicker.css({'left':'0px'});
+                    that._onAwardsTickerLoad();
+                });
+                
             }, 5*1000);
         },
 
