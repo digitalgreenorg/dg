@@ -1153,6 +1153,13 @@ a {
     border: 1px solid #047d0a
 }
 
+.img-circular {
+   width: 150px;
+   height: 150px;
+   border-radius: 100px;
+   -webkit-border-radius: 100px;
+   -moz-border-radius: 100px;
+}
 
 /* ---------------------------------------------------------------------
  Buttons
