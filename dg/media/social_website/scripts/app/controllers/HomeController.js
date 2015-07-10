@@ -73,6 +73,7 @@ define(function(require) {
             
             // play button 
             references.$playButton = jQuery('.play-button');
+            references.$awardsTicker = jQuery('.js-awards-ticker');
         },
 
         _initEvents: function() {
@@ -89,6 +90,8 @@ define(function(require) {
             
             boundFunctions.onPlayButtonClick = this._onVideoPlayButtonClick.bind(this);
             references.$playButton.on('click', boundFunctions.onPlayButtonClick);
+
+            this._onAwardsTickerLoad();
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -165,6 +168,15 @@ define(function(require) {
         
         _onVideoPlayButtonClick: function(e) {
         	this._initVideoPlayer();
+        },
+
+        _onAwardsTickerLoad: function(e){
+            // move to the end
+            var that=this
+            setTimeout(function(){
+                that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
+            that._onAwardsTickerLoad();
+            }, 5*1000);
         },
 
         /**
