@@ -187,7 +187,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator,
             workbook.close()
             # Uploading Fixtures to Commcare
             url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
-            payload = {'replace': 'false'} if Update else {'replace': 'true'}
+            payload = {'replace': 'false'}
             files = {'file-to-upload': open(filename, 'rb')}
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
