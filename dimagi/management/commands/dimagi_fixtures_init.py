@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     r = requests.get(url_village, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
                     village_data = json.loads(r.content)
                     for obj in village_data['objects']:
-                        list_village.append((str(obj['fields']['id']), str(obj['fields']['name'])))
+                        list_village.append(str(obj['fields']['id']))
                     if(village_data['meta']['next']):
                         url_village = "".join(["https://www.commcarehq.org/a/", commcare_project_name, "/api/v0.5/fixture/", str(group_data['meta']['next'])])
                     else:
