@@ -142,7 +142,7 @@ def write_latest_video_info(vid_dict, workbook, group_name):
     return sheet
 
 
-def create_fixture(users, project_name, list_group, list_village, list_mediator):
+def create_fixture(users, project_name, list_group, list_village, list_mediator, Update):
     # getting user information in list of dictionaries; dictionary contains ursrname, uder_id and villages assigned
     data = []
     for user in users:
@@ -187,7 +187,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
             workbook.close()
             # Uploading Fixtures to Commcare
             url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
-            payload = {'replace': 'false'}
+            payload = {'replace': 'false'} if Update else {'replace': 'true'}
             files = {'file-to-upload': open(filename, 'rb')}
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
