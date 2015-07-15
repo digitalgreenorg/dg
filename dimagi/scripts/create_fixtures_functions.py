@@ -157,7 +157,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
         villages = user.coco_user.villages.all()
         if villages:
             for vil in villages:
-                if str(vil.id) not in list_village:
+                if (str(vil.id), str(username)) not in list_village:
                     village_dict = {}
                     village_dict['village_id'] = vil.id
                     village_dict['village_name'] = vil.village_name
