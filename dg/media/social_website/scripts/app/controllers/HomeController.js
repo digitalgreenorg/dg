@@ -74,6 +74,8 @@ define(function(require) {
             // play button 
             references.$playButton = jQuery('.play-button');
             references.$awardsTicker = jQuery('.js-awards-ticker');
+            references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
+            references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
         },
 
         _initEvents: function() {
@@ -91,7 +93,11 @@ define(function(require) {
             boundFunctions.onPlayButtonClick = this._onVideoPlayButtonClick.bind(this);
             references.$playButton.on('click', boundFunctions.onPlayButtonClick);
 
-            this._onAwardsTickerLoad();
+            boundFunctions.onAwardsLeftClick = this._onAwardsLeftClick.bind(this);
+            references.$awardsTickerLeftArrow.on('click', boundFunctions.onAwardsLeftClick)
+
+            boundFunctions.onAwardsRightClick = this._onAwardsRightClick.bind(this);
+            references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -170,18 +176,25 @@ define(function(require) {
         	this._initVideoPlayer();
         },
 
-        _onAwardsTickerLoad: function(e){
+        _onAwardsLeftClick: function(e){
             // move to the end
             var that=this
-            setTimeout(function(){
                 var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
                 that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
                     that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
                     that._references.$awardsTicker.css({'left':'0px'});
-                    that._onAwardsTickerLoad();
                 });
-                
-            }, 5*1000);
+        },
+
+        _onAwardsRightClick: function(e){
+            // move to the end
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left: '+'+width+'px'},400,'swing', function(){
+                    var lastChild = that._references.$awardsTicker.children().last();
+                    that._references.$awardsTicker.prepend(lastChild);
+                    that._references.$awardsTicker.css({'left': '0px'});
+                });
         },
 
         /**
