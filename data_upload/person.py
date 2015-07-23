@@ -52,7 +52,7 @@ def execute_upoad(file, user_id, block_id):
     csvfile = open(file, 'rb')
     rows_villages = csv.DictReader(csvfile)
 
-    village_querry_set = Village.objects.values_list('village_name','id')
+    village_querry_set = Village.objects.values_list('village_name','id').filter(block_id=block_id.id)
     village_map = dict(village_querry_set)
     i = 0
     for row in rows_villages:
