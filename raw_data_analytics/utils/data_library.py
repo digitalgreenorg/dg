@@ -121,7 +121,9 @@ class data_lib():
         # Make connection with the database
         mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
                                    passwd=dg.settings.DATABASES['default']['PASSWORD'],
-                                   db=dg.settings.DATABASES['default']['NAME'])
+                                   db=dg.settings.DATABASES['default']['NAME'],
+                                    charset = 'utf8',
+                                     use_unicode = True)
         # Making dataframe
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
