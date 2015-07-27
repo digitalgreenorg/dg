@@ -11,7 +11,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):		
 		host = 'localhost'
 		user = 'root'
-		password = 'root'
+		password = '#0.Green11017.'
 		database = 'digitalgreen'
 
 		con = MySQLdb.connect(
