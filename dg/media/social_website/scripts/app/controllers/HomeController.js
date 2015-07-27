@@ -76,6 +76,7 @@ define(function(require) {
             references.$awardsTicker = jQuery('.js-awards-ticker');
             references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
             references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
+            references.$awardsElements = jQuery('.js-description');
         },
 
         _initEvents: function() {
@@ -98,6 +99,9 @@ define(function(require) {
 
             boundFunctions.onAwardsRightClick = this._onAwardsRightClick.bind(this);
             references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
+
+            boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
+            references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -195,6 +199,15 @@ define(function(require) {
                     that._references.$awardsTicker.prepend(lastChild);
                     that._references.$awardsTicker.css({'left': '0px'});
                 });
+        },
+
+        _onAwardsElementClick: function(e){
+            var element = e.currentTarget;
+            var data = element.getAttribute('data');
+            $('.js-awards-description-show').removeClass('js-awards-description-show');
+            $('.js-awards-description').each(function(index, element) {
+                if($(this).attr('data')==data) $(this).addClass('js-awards-description-show');
+            });
         },
 
         /**
