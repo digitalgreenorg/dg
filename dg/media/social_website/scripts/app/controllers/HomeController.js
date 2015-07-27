@@ -101,7 +101,7 @@ define(function(require) {
             references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
 
             boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
-            references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
+            references.$awardsElements.on('hover', boundFunctions.onAwardsElementClick);
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -181,17 +181,6 @@ define(function(require) {
         },
 
         _onAwardsLeftClick: function(e){
-            // move to the end
-            var that=this
-                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
-                that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
-                    that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
-                    that._references.$awardsTicker.css({'left':'0px'});
-                });
-        },
-
-        _onAwardsRightClick: function(e){
-            // move to the end
             var that=this
                 var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
                 that._references.$awardsTicker.animate({left: '+'+width+'px'},400,'swing', function(){
@@ -199,6 +188,16 @@ define(function(require) {
                     that._references.$awardsTicker.prepend(lastChild);
                     that._references.$awardsTicker.css({'left': '0px'});
                 });
+        },
+
+        _onAwardsRightClick: function(e){
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
+                    that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
+                    that._references.$awardsTicker.css({'left':'0px'});
+                });
+
         },
 
         _onAwardsElementClick: function(e){

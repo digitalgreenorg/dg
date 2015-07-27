@@ -3879,12 +3879,40 @@ table.tableizer-table {
 Awards Strip 
 ------------------------------------------------------------------------ */
 
-.awards-description{
-    background: grey;
-    border: 1px solid black;
+.awards-container {
+    position: relative;
+}
+
+.awards-left-arrow {
+    left: 0;
+    top: 50px;
+    position: absolute;
+}
+
+.awards-right-arrow {
+    right: 0; 
+    top: 50px; 
+    position: absolute;
+}
+
+.awards-ticker {
+    position: relative;
+    overflow: hidden; 
+    left: 40px; 
+    height: 130px; 
+    width: 865px
+}
+
+.awards-ticker > ul {
+    position: absolute;
+    left: 0;
+}
+
+.awards-description {
+    text-align: center;
     display: none;
 }
 
-.awards-description.js-awards-description-show{
+.awards-description.js-awards-description-show {
     display: block;
 }
