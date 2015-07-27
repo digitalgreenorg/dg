@@ -20,11 +20,12 @@ def upload_data(file, user_id, block_id):
 
     #check required fields
     req_field = ['Village_Name', 'Shg_Name', 'Member_Name', 'Member_Surname',
-                 'Husband_Father_Name', 'Husband_Father_Surname', 'Gender(M/F)']
+                 'Husband_Father_Name', 'Husband_Father_Surname','Gender(M/F)']
+
+    optional_field = ['Age','Phone_Number']
 
     for row in rows:
-        if row.keys() <= req_field:
-        #if set(req_field) == set(row.keys()) and len(req_field) == len(row.keys()):
+        if set(row.keys()) >= set(req_field):
             execute_upoad(file, user_id, block_id)
             break
         else:
@@ -135,14 +136,26 @@ def execute_upoad(file, user_id, block_id):
             father_name = ' '.join([str(row['Husband_Father_Name']),
                                     str(row['Husband_Father_Surname'])])
             gender = str(row['Gender(M/F)'])
-
+            if (row['Age'] == ''):
+                age = None
+            else:
+                age = float(row['Age'])
+   
+            if (str(row['Phone_Number']) == ''):
+                phone_number = str('')
+            else:
+                phone_number = str(row['Phone_Number'])
+            
             person = Person(user_created_id=user_id.id,
                             partner_id=user_id.partner.id,
                             person_name=person_name,
                             father_name=father_name,
                             village_id=village_map[unicode(row['Village_Name'])],
                             group_id=group_map[row['Shg_Name'] + unicode(row['Village_Name'])],
-                            gender=gender)
+                            gender=gender,
+                            age = age,
+                            phone_no = phone_number
+                            )
             person.save()
             wrtr_success.writerow([i, person_name])
             person_success_file.flush()
