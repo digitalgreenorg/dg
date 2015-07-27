@@ -206,7 +206,7 @@ define(function(require) {
             var data = element.getAttribute('data');
             $('.js-awards-description-show').removeClass('js-awards-description-show');
             $('.js-awards-description').each(function(index, element) {
-                if($(this).attr('data')==data) $(this).addClass('js-awards-description-show');
+                if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
             });
         },
 

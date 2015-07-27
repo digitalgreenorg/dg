@@ -3874,3 +3874,17 @@ table.tableizer-table {
 				border: 2px solid Black;
 				}
 
+
+/* -----------------------------------------------------------------------
+Awards Strip 
+------------------------------------------------------------------------ */
+
+.awards-description{
+    background: grey;
+    border: 1px solid black;
+    display: none;
+}
+
+.awards-description.js-awards-description-show{
+    display: block;
+}
