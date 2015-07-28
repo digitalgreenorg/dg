@@ -3910,6 +3910,8 @@ Awards Strip
 
 .awards-description {
     text-align: center;
+    width: 80%;
+    padding-left: 90px;
     display: none;
 }
 

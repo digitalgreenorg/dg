@@ -187,6 +187,11 @@ define(function(require) {
                     var lastChild = that._references.$awardsTicker.children().last();
                     that._references.$awardsTicker.prepend(lastChild);
                     that._references.$awardsTicker.css({'left': '0px'});
+                    $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
                 });
         },
 
@@ -196,8 +201,13 @@ define(function(require) {
                 that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
                     that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
                     that._references.$awardsTicker.css({'left':'0px'});
+                     $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
                 });
-
+               
         },
 
         _onAwardsElementClick: function(e){
