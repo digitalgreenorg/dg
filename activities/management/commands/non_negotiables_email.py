@@ -1,5 +1,4 @@
 import datetime
-import csv
 import xlwt
 
 import MySQLdb
@@ -28,7 +27,7 @@ class Command(BaseCommand):
 			vid.video_id as 'Video ID', 
 			v.title as 'Video Title', 
 			vid.non_negotiable as 'Non-Negotiables',
-			vid.time_created as 'Created Date'
+			vid.time_created as 'Entry Date'
 		FROM 
 			videos_nonnegotiable vid
 			join videos_video v on v.id = vid.video_id
@@ -45,7 +44,7 @@ class Command(BaseCommand):
 		field_hdrs = [i[0] for i in mysql.description]
 
 		#file = 'C:/Users/Abhishek/Documents/dg/dg/media/social_website/uploads/non_negotiable.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/non_negotiable.csv'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/non_negotiable.xls'
 				
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Sheet1')
@@ -67,9 +66,20 @@ class Command(BaseCommand):
 		wb.save(file)
 
 		email_list=['abhishekchandran@digitalgreen.org','aditya@digitalgreen.org']
-		subject = 'NonNegotiables entered till '+str(datetime.date.today())
+		subject = 'Non-Negotiables till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'	
-		body = 'PFA'
+		body = """Hi all,
+
+This is a weekly automated email to monitor non-negotiables entry.
+
+Non-negotiables were made mandatory in COCO video form from July. It is very important to ensure that correct non-negotiables are being entered by partners. They can also be modified in COCO Admin by DG staff. Soon non-negotiables will be shown on the website and downloadable cheat sheets next to the corresponding video. 
+
+Please ensure Non-negotiables with proper content are added from your respective region.
+
+Thank you for your support!
+
+Tech team
+system@digitalgreen.org"""
 		for email in email_list:
 			if email:
 				to_email = email
