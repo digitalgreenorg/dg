@@ -65,7 +65,7 @@ class Command(BaseCommand):
 					ws.write(i, j, cell)
 		wb.save(file)
 
-		email_list=['abhishekchandran@digitalgreen.org','aditya@digitalgreen.org']
+		email_list=['system@digitalgreen.org']
 		subject = 'Non-Negotiables till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'	
 		body = """Hi all,
