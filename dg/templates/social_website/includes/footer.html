@@ -1,12 +1,51 @@
             <div class="follow">	
                 <div class="wrapper">
                     <div class="inner-wrapper">
-                        <div class="hdg-follow">
-                            <h3 class="hdg-a hdg-source-lt">Follow Us</h3>
+                        <div class="grid">
+                            <div class="hdg-follow grid-col grid-size3of4">
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-f hdg-source-semibold">Who We Are</h3>
+                                    <ul class="hdg-source-reg">
+                                        <li><a href="{% url 'team' %}">Our Team</a></li>
+                                        <li><a href="{% url 'board' %}">Our Board</a></li>
+                                        <li><a href="{% url 'ourwork' %}">Our Work</a></li>
+                                        <li><a href="{% url 'connect' %}">Our Partners</a></li>
+                                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-f hdg-source-semibold">What We Do</h3>
+                                    <ul class="hdg-source-reg">
+                                        <li><a href="{% url 'our_programs' %}">Our Programs</a></li>
+                                        <li><a href="{% url 'resources' %}">Our Operations</a></li>
+                                        <li><a href="{% url 'events' %}">Events</a></li>
+                                        <li><a href="/blog">Blog</a></li>
+                                        <li><a href="{% url 'press' %}">In the News</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-f hdg-source-semibold">Technology We Use</h3>
+                                    <ul class="hdg-source-reg">
+                                        <li><a href="{% url 'tools' %}">Tools</a></li>
+                                        <li><a href="{% url 'discover' %}">Video Library</a></li>
+                                        <li><a href="{% url 'picoseekho' %}">Pico Seekho</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-f hdg-source-semibold">Work With Us</h3>
+                                    <ul class="hdg-source-reg">
+                                        <li><a href="{% url 'career' %}">Careers</a></li>
+                                        <li><a href="{% url 'donate' %}">Donate</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="grid-col grid-size1of4">
+                                <h3 class="hdg-f hdg-source-semibold">Follow Us On</h3>
+                                <ul class="social" role="navigation">
+        						    {% include "includes/partials/footer_social_media.html" %}
+                                </ul>
+                            </div>
                         </div>
-                        <ul class="social" role="navigation">
-						{% include "includes/partials/footer_social_media.html" %}
-                        </ul>
                     </div> <!-- End .inner-wrapper -->
                 </div>  <!-- End .wrapper -->
             </div> <!-- End .follow -->
@@ -17,25 +56,13 @@
                         <div class="inner-wrapper">
                             <nav role="navigation">
                                 <ul class="copy-lt hdg-upper copy footer-links">
-                                    <li><a href="/blog">Blog</a></li>
-                                    <li><a href="{% url 'press' %}">Press</a></li>
-                                    <li><a href="{% url 'events' %}">Events</a></li>
-                                    <li><a href="{% url 'career' %}">Careers</a></li>
-                                    <li><a href="{% url 'donate' %}">Donate</a></li>
-                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                                    <li><a href="{% url 'sitemap' %}">Site Map</a></li>
+                                    <li><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a></li>
+                                    <li><a href="{% url 'sitemap' %}" target="_blank">Sitemap</a></li>
                                 </ul>
                             </nav>
                             <a class="footer-btn" href="/coco/" target="_blank">Coco</a>
                         </div>
                     </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <div class="copyright copy">
-                            <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a>
-                        </div>
-                    </div>
                 </div>  <!-- End .wrapper -->
             </footer>
         </div>

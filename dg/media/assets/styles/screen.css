@@ -459,15 +459,15 @@ a {
 }
 
 .social > li {
-    width: 145px;
+    width: 45px;
     float: left;
 }
 
 .social-icon {
     text-indent: -9999px;
     display: block;
-    height: 45px;
-    width: 45px;
+    height: 40px;
+    width: 40px;
     margin: 0 auto;
     margin-bottom: 5px
 }
@@ -492,6 +492,26 @@ a {
     background: url(../images/icon-sprite.png) no-repeat 0 -647px;
 }
 
+.icon-footer-facebook {
+    background: url(../images/facebook-footer-icon.png) no-repeat;
+}
+
+.icon-footer-twitter {
+    background: url(../images/twitter-footer-icon.png) no-repeat;
+}
+
+.icon-footer-gplus {
+    background: url(../images/gplus-footer-icon.png) no-repeat;
+}
+
+.icon-footer-youtube {
+    background: url(../images/youtube-footer-icon.png) no-repeat;
+}
+
+.icon-footer-linkedin {
+    background: url(../images/linkedin-footer-icon.png) no-repeat;
+}
+
 .sub-text {
     color: #636360;
     color: rgba(0, 0, 0, .6);
@@ -513,7 +533,7 @@ a {
 .footer {
     background: #6bb155;
     border-top: 4px solid #047d0a;
-    padding: 6px 0 10px 0;
+    padding: 8px 0 14px 0;
 }
 
 .footer-links {
@@ -557,7 +577,7 @@ a {
 }
 
 .copyright {
-    padding: 15px 0 20px 0;
+    padding: 10px 0 0px 0;
     color: #726f6f;
 }
 
