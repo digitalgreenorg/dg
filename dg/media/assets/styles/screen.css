@@ -446,7 +446,7 @@ a {
 .follow {
     background: #f3f2eb;
     border-top: 1px solid #e5e5e5;
-    padding: 39px 0 36px 0;
+    padding: 30px 0 30px 0;
 }
 
 .hdg-follow {
@@ -459,15 +459,15 @@ a {
 }
 
 .social > li {
-    width: 45px;
+    width: 35px;
     float: left;
 }
 
 .social-icon {
     text-indent: -9999px;
     display: block;
-    height: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
     margin: 0 auto;
     margin-bottom: 5px
 }
@@ -510,6 +510,10 @@ a {
 
 .icon-footer-linkedin {
     background: url(../images/linkedin-footer-icon.png) no-repeat;
+}
+
+.icon-footer-flickr {
+    background: url(../images/flickr-footer-icon.png) no-repeat;
 }
 
 .sub-text {
@@ -770,6 +774,11 @@ a {
 
 .hdg-f {
     font-size: 14px;
+    line-height: 1.4;
+}
+
+.hdg-footer {
+    font-size: 15px;
     line-height: 1.4;
 }
 
