@@ -101,7 +101,7 @@ define(function(require) {
             references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
 
             boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
-            references.$awardsElements.on('hover', boundFunctions.onAwardsElementClick);
+            references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
         },
 
         _onOrderChanged: function(orderCriteria) {

@@ -3916,12 +3916,14 @@ Awards Strip
     left: 0;
     top: 50px;
     position: absolute;
+    cursor: pointer;
 }
 
 .awards-right-arrow {
     right: 0; 
     top: 50px; 
     position: absolute;
+    cursor: pointer;
 }
 
 .awards-ticker {
@@ -3935,6 +3937,7 @@ Awards Strip
 .awards-ticker > ul {
     position: absolute;
     left: 0;
+    cursor: pointer;
 }
 
 .awards-description {
@@ -3946,4 +3949,14 @@ Awards Strip
 
 .awards-description.js-awards-description-show {
     display: block;
+}
+
+.awards-shadow {
+    opacity: 1;
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.awards-shadow:hover {
+    opacity: .6;
 }
