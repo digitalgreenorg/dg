@@ -1,12 +1,78 @@
             <div class="follow">	
                 <div class="wrapper">
                     <div class="inner-wrapper">
-                        <div class="hdg-follow">
-                            <h3 class="hdg-a hdg-source-lt">Follow Us</h3>
+                        <div class="grid">
+                            <div class="hdg-follow grid-col grid-size3of4 layout-vr-sm">
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-source-semibold hdg-e">Who we are</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                        <li><a href="{% url 'team' %}">Our Team</a></li>
+                                        <li><a href="{% url 'board' %}">Our Board</a></li>
+                                        <li><a href="{% url 'ourwork' %}">Our Work</a></li>
+                                        <li><a href="{% url 'connect' %}">Our Partners</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">What we do</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                        <li><a href="{% url 'our_programs' %}">Our Programs</a></li>
+                                        <li><a href="{% url 'resources' %}">Resources</a></li>
+                                        <li><a href="/blog">Blog</a></li>
+                                        <li><a href="{% url 'press' %}">In the News</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">Technology we use</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                        <li><a href="{% url 'tools' %}">Tools</a></li>
+                                        <li><a href="{% url 'discover' %}">Video Library</a></li>
+                                        <li><a href="{% url 'picoseekho' %}">Pico Seekho</a></li>
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">Work with us</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                        <li><a href="{% url 'career' %}">Careers</a></li>
+                                        <li><a href="{% url 'donate' %}">Donate</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="grid-col grid-size1of4">
+                                <h3 class="hdg-f hdg-source-semibold">Follow Us</h3>
+                                <ul class="social layout-vr-sm" role="navigation">
+        						    {% include "includes/partials/footer_social_media.html" %}
+                                </ul>
+                                <!-- Begin MailChimp Signup Form -->
+                                <link rel="stylesheet" type="text/css" media="screen" href="{{STATIC_URL}}assets/styles/mailchimp.css" />
+                                <style type="text/css">
+                                    #mc_embed_signup{clear:left; font:14px Helvetica,Arial,sans-serif;  width:auto;}
+                                    /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+                                       We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+                                </style>
+                                <div id="mc_embed_signup">
+                                    <form action="//digitalgreen.us7.list-manage.com/subscribe/post?u=d51864c6725a6ba45cd160867&amp;id=944c549f98" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                                        <div id="mc_embed_signup_scroll">
+                                            <div class="mc-field-group">
+                                                <label class="hdg-source-semibold hdg-f" for="mce-EMAIL">Email ID</label>
+                                                <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+                                            </div>
+                                            <div id="mce-responses" class="clear">
+                                                <div class="response" id="mce-error-response" style="display:none"></div>
+                                                <div class="response" id="mce-success-response" style="display:none"></div>
+                                            </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                            <div style="position: absolute; left: -5000px;">
+                                                <input type="text" name="b_d51864c6725a6ba45cd160867_944c549f98" tabindex="-1" value="">
+                                            </div>
+                                            <div class="clear">
+                                                <input type="submit" value="Subscribe to Our Newsletter" name="subscribe" id="mc-embedded-subscribe" class="button">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+                                <!--End mc_embed_signup-->
+                            </div>
                         </div>
-                        <ul class="social" role="navigation">
-						{% include "includes/partials/footer_social_media.html" %}
-                        </ul>
                     </div> <!-- End .inner-wrapper -->
                 </div>  <!-- End .wrapper -->
             </div> <!-- End .follow -->
@@ -17,25 +83,13 @@
                         <div class="inner-wrapper">
                             <nav role="navigation">
                                 <ul class="copy-lt hdg-upper copy footer-links">
-                                    <li><a href="/blog">Blog</a></li>
-                                    <li><a href="{% url 'press' %}">Press</a></li>
-                                    <li><a href="{% url 'events' %}">Events</a></li>
-                                    <li><a href="{% url 'career' %}">Careers</a></li>
-                                    <li><a href="{% url 'donate' %}">Donate</a></li>
-                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                                    <li><a href="{% url 'sitemap' %}">Site Map</a></li>
+                                    <li><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a></li>
+                                    <li><a href="{% url 'sitemap' %}" target="_blank">Sitemap</a></li>
                                 </ul>
                             </nav>
                             <a class="footer-btn" href="/coco/" target="_blank">Coco</a>
                         </div>
                     </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <div class="copyright copy">
-                            <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a>
-                        </div>
-                    </div>
                 </div>  <!-- End .wrapper -->
             </footer>
         </div>
