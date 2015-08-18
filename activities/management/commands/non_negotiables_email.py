@@ -65,14 +65,14 @@ class Command(BaseCommand):
 					ws.write(i, j, cell)
 		wb.save(file)
 
-		email_list=['system@digitalgreen.org']
+		email_list=['all@digitalgreen.org']
 		subject = 'Non-Negotiables till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'	
 		body = """Hi all,
 
 This is a weekly automated email to monitor non-negotiables entry.
 
-Non-negotiables were made mandatory in COCO video form from July. It is very important to ensure that correct non-negotiables are being entered by partners. They can also be modified in COCO Admin by DG staff. We hope to show non-negotiables on the website and downloadable cheat sheets next to the corresponding video. 
+Non-negotiables were made mandatory in COCO video form from July. It is important to ensure that correct non-negotiables are being entered by partners. They can also be modified in COCO Admin by DG staff. We hope to show non-negotiables on the website and downloadable cheat sheets next to the corresponding video. 
 
 Please ensure high quality of data entry for Non-negotiables from your respective region.
 
