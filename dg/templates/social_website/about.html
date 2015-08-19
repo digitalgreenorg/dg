@@ -1,19 +1,7 @@
 {% include "includes/header.html" %}
-        {% include "includes/partials/mainCarousel.html" %}
-
-        <section id="values" role="main" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper hdg-source-reg layout-vr-lg">
-                    <center>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Vision</span> is a world where all individuals live a life of dignity.</p>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Mission</span> is to integrate innovative technology with global development efforts to improve human well being.</p>
-                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Values</span> include Humility, Excellence, Accountability, Empathy and Integrity.</p>
-                    </center>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
+        {# include "includes/partials/mainCarousel.html" #}
         
-        <section id="about" role="main" class="about-bg">
+        <section id="about" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <div class="media layout-vr-xlg">
@@ -22,40 +10,48 @@
                             <div class='bd'>
                                 <div class="hdg-c hdg-source-lt layout-vr-sm hdg-bold">More about Digital Green
                                 </div>
-                                <div class="grid-col grid-size1of3">
+                                <div class="grid-col grid-size2of4">
                                     <ul class="link-list">
-                                        <li><a href="{% url 'board' %}">Our Board</a></li>
-                                        <li><a href="{% url 'team' %}">Our Team</a></li>
                                         <li><a href="{% url 'connect' %}">Our Partners</a></li>
                                         <li><a href="{% url 'ourwork' %}">Our Work</a></li>
-                                    </ul>
-                                </div>
-                                <div class="grid-col grid-size1of3">
-                                    <ul class="link-list">
-                                        <li><a href="{% url 'resources' %}">Resources</a></li>
+                                        <li><a href="{% url 'board' %}">Our Board</a></li>
+                                        <li><a href="{% url 'team' %}">Our Team</a></li>
                                         <li><a href="{% url 'events' %}">Events</a></li>
                                         <li><a href="{% url 'press' %}">In the News</a></li>
-                                        <li><a href="/blog/">Blog</a></li>
                                     </ul>
                                 </div>
-                                <div class="grid-rt grid-size1of3">
+                                <div class="grid-col grid-size2of4">
                                     <ul class="link-list">
+                                        <li><a href="{% url 'resources' %}">Resources</a></li>
+                                        <li><a href="/blog/">Blog</a></li>
                                         <li><a href="{% url 'picoseekho' %}">Pico Seekho</a></li>
                                         <li><a href="{% url 'donate' %}">Donate</a></li>
                                         <li><a href="{% url 'contact' %}">Contact Us</a></li>
                                     </ul>
                                 </div>
                             </div>
-
                         </div>
                         <div class="bd">
                             <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
-                            <p class="copy layout-vr-sm"> Digital Green is a not-for-profit international development organization that uses an innovative digital platform for community engagement to improve lives of rural communities across South Asia and Sub-Saharan Africa.</p>
-                            <p class="copy layout-vr-sm"> We partner with local public, private and civil society organizations to share knowledge on improved agricultural practices, livelihoods, health, and nutrition, using locally produced videos and human mediated dissemination. </p>
-                            <p class="copy layout-vr-sm"> In a controlled evaluation, the approach was found to be 10 times more cost-effective and uptake of new practices seven times higher compared to traditional extension services.</p>
-                            <p class="copy layout-vr-sm">Till date, we have produced over 3,700 videos in more than 20 languages, reached 7,448 villages and over 640,000 community members. We currently implement projects in eight states in India and in select areas in Ethiopia, Ghana and Tanzania in Africa in partnership with over 20 partner organizations.</p>
+                            <p class="copy layout-vr-sm">Digital Green is a not-for-profit international development organization that uses an innovative digital platform for community engagement to improve lives of rural communities across South Asia and Sub-Saharan Africa.</p>
+                            <p class="copy layout-vr-sm">We partner with local public, private and civil society organizations to share knowledge on improved agricultural practices, livelihoods, health, and nutrition, using locally produced videos and human mediated dissemination. In a controlled evaluation, the approach was <a href="http://itidjournal.org/itid/article/view/322" target="_blank">found to be 10 times more cost-effective</a> and uptake of new practices seven times higher compared to traditional extension services.</p> 
+                            <p class="copy layout-vr-sm">We are currently implementing projects in collaboration with over 20 partner organizations across 9 states in India and parts of Ethiopia, Afghanistan, Ghana, Niger and Tanzania.</p>
+                            <p class="copy layout-vr-sm">Since 2008 and as of April 2015, we have reached over 660,646 individuals across 7,645 villages through 3,782 videos, which showcase and demonstrate best practices. These videos were produced by 522 community members trained by us and screened in an interactive format by 6,403 trained community members. As many as 343,609 of the viewers have adopted one or more of the best practices promoted through these videos.</p>
+                            <p class="copy layout-vr-sm">You can view the analytics <a href="/analytics/overview_module" target="_blank">here</a>.</p>
                         </div>
                     </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="values" role="main" class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper hdg-source-reg layout-vr-lg">
+                    <center>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Vision</span> is a world where all individuals live a life of dignity.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Mission</span> is to integrate innovative technology with global development efforts to improve human well being.</p>
+                        <p class="hdg-e layout-vr-sm"> <span class="hdg-e hdg-source-bold">Our Values</span> include Humility, Excellence, Accountability, Empathy and Integrity.</p>
+                    </center>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>

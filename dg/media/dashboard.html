@@ -624,10 +624,20 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-				<% 
-					var person_label="";
-					person_label =person_name+"("+father_name+")";
-				%>
+                    <%
+                        var person_label="";
+                        if(typeof(online_id)!="undefined"){
+                            if(group.group_name!=null){
+                                person_label = person_name+"("+father_name+")"+"("+group.group_name+")"+"("+online_id+")";
+                            }
+                            else{
+                                person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                            }
+                        }
+                        else{
+                            person_label = person_name+"("+father_name+")"
+                        }
+                    %>
                     <input type="text" class="input-sm form-control" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
                 </div>
             </div>
@@ -783,7 +793,17 @@
                 <div class="controls">
                     <% 
                         var person_label="";
-                        person_label =person_name+"("+father_name+")";
+                        if(typeof(online_id)!="undefined"){
+                            if(group.group_name!=null){
+                                person_label = person_name+"("+father_name+")"+"("+group.group_name+")"+"("+online_id+")";
+                            }
+                            else{
+                                person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                            }
+                        }
+                        else{
+                            person_label = person_name+"("+father_name+")"
+                        }
                     %>
                     <input type="text" class="form-control" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
                 </div>
@@ -1032,9 +1052,36 @@
                 </div>
             </div>
         </fieldset>
-                        
-
 </script>
+
+<script type="text/template" id="nonnegotiable_inline">
+    <tr class="stack-table videoadd" index = <%=index%> name="row<%=index%>">
+    <td>
+                <%=index+1%>.</td>
+
+    <td ><div class="form-group"><div class="controls">
+            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" ></textarea>
+                
+            </div></div>
+        </td>
+
+    <td><div class="form-group"><div class="controls">
+            <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable" >
+                
+            </div></div>
+        </td>
+        
+    </tr>
+</script>
+
+<script type="text/template" id="nonnegotiable_inline_header">
+    <tr class="hide-header">  
+       <th class="col-md-1 control-label notbold"> Sr. No.</th>
+       <th class="col-md-6 control-label notbold"> Non Negotiables</th>
+       <th class="col-md-5 control-label notbold">Physically Verifiable</th>             
+    </tr>
+</script>
+
 <!--//////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
 <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->

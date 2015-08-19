@@ -446,7 +446,7 @@ a {
 .follow {
     background: #f3f2eb;
     border-top: 1px solid #e5e5e5;
-    padding: 39px 0 36px 0;
+    padding: 30px 0 30px 0;
 }
 
 .hdg-follow {
@@ -459,15 +459,15 @@ a {
 }
 
 .social > li {
-    width: 145px;
+    width: 35px;
     float: left;
 }
 
 .social-icon {
     text-indent: -9999px;
     display: block;
-    height: 45px;
-    width: 45px;
+    height: 30px;
+    width: 30px;
     margin: 0 auto;
     margin-bottom: 5px
 }
@@ -492,6 +492,30 @@ a {
     background: url(../images/icon-sprite.png) no-repeat 0 -647px;
 }
 
+.icon-footer-facebook {
+    background: url(../images/facebook-footer-icon.png) no-repeat;
+}
+
+.icon-footer-twitter {
+    background: url(../images/twitter-footer-icon.png) no-repeat;
+}
+
+.icon-footer-gplus {
+    background: url(../images/gplus-footer-icon.png) no-repeat;
+}
+
+.icon-footer-youtube {
+    background: url(../images/youtube-footer-icon.png) no-repeat;
+}
+
+.icon-footer-linkedin {
+    background: url(../images/linkedin-footer-icon.png) no-repeat;
+}
+
+.icon-footer-flickr {
+    background: url(../images/flickr-footer-icon.png) no-repeat;
+}
+
 .sub-text {
     color: #636360;
     color: rgba(0, 0, 0, .6);
@@ -513,7 +537,7 @@ a {
 .footer {
     background: #6bb155;
     border-top: 4px solid #047d0a;
-    padding: 6px 0 10px 0;
+    padding: 8px 0 14px 0;
 }
 
 .footer-links {
@@ -557,7 +581,7 @@ a {
 }
 
 .copyright {
-    padding: 15px 0 20px 0;
+    padding: 10px 0 0px 0;
     color: #726f6f;
 }
 
@@ -584,6 +608,14 @@ a {
 
 .grid-size3of4 {
     width: 75%;
+}
+
+.grid-teampage-size1of7 {
+    width: 15%;
+}
+
+.grid-teampage-size6of7 {
+    width: 85%;
 }
 
 .grid-size1of3 {
@@ -618,7 +650,7 @@ a {
     float: right;
 }
 
-.grid-pad-lt-tiny{
+.grid-pad-lt-tiny {
 	padding-left: 7px;
 }
 
@@ -630,11 +662,16 @@ a {
     padding-left: 20px;
 }
 
-.grid-pad-rt-tiny{
+.grid-pad-rt-tiny {
 	padding-right: 7px;
 }
-.grid-pad-rt-md{
-padding-right: 20px;
+
+.grid-pad-rt-sm {
+    padding-right: 15px;
+}
+
+.grid-pad-rt-md {
+    padding-right: 20px;
 }
 
 .grid-margin-rt-sm {
@@ -737,6 +774,11 @@ padding-right: 20px;
 
 .hdg-f {
     font-size: 14px;
+    line-height: 1.4;
+}
+
+.hdg-footer {
+    font-size: 15px;
     line-height: 1.4;
 }
 
@@ -1136,6 +1178,17 @@ padding-right: 20px;
     border: 2px solid #047d0a;
 }
 
+.img-board {
+    border: 1px solid #047d0a
+}
+
+.img-circular {
+   width: 120px;
+   height: 120px;
+   border-radius: 100px;
+   -webkit-border-radius: 100px;
+   -moz-border-radius: 100px;
+}
 
 /* ---------------------------------------------------------------------
  Buttons
@@ -2917,6 +2970,20 @@ textarea.comment-text {
 	height: 0;
 }
 
+.line-clamp.team-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
+.line-clamp.board-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
 /* Carousel Styles */
 
 .main-carousel {
@@ -3819,7 +3886,7 @@ div.social-wrap button.googleplus {
  ------------------------------------------------------------------------ */
 table.tableizer-table {
 				border: 2px solid Black; font-family: Arial, Helvetica, sans-serif
-				font-size: 12px;
+				font-size: 10px;
 				display:block;
 				float:left;
 				} 
@@ -3829,10 +3896,67 @@ table.tableizer-table {
 				border: 2px solid Black;
 				}
 			.tableizer-table th {
-				padding: 8px;
+				padding: 5px;
 				background-color:White; 
 				color: Black;
 				font-weight: bold;
 				border: 2px solid Black;
 				}
 
+
+/* -----------------------------------------------------------------------
+Awards Strip 
+------------------------------------------------------------------------ */
+
+.awards-container {
+    position: relative;
+}
+
+.awards-left-arrow {
+    left: 0;
+    top: 50px;
+    position: absolute;
+    cursor: pointer;
+}
+
+.awards-right-arrow {
+    right: 0; 
+    top: 50px; 
+    position: absolute;
+    cursor: pointer;
+}
+
+.awards-ticker {
+    position: relative;
+    overflow: hidden; 
+    left: 40px; 
+    height: 130px; 
+    width: 865px
+}
+
+.awards-ticker > ul {
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+}
+
+.awards-description {
+    text-align: center;
+    width: 80%;
+    padding-left: 90px;
+    display: none;
+}
+
+.awards-description.js-awards-description-show {
+    display: block;
+}
+
+.awards-shadow {
+    opacity: 1;
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.awards-shadow:hover {
+    opacity: .6;
+}

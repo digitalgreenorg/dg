@@ -5363,7 +5363,7 @@ define('views/form',[
             // compile the template of inline
             var inline_t = _.template($('#' + this.inline.template).html());
             if (typeof(num_rows) != "number")
-                num_rows = 5;
+                num_rows = this.inline.add_row;
             var start_index = get_index_to_start_from();
             // append the new inlines
             for (var i = start_index; i < start_index + num_rows; i++) {
@@ -5379,7 +5379,7 @@ define('views/form',[
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
                 if (!all_present_inlines.length)
-                    return 1
+                    return 0
                 var max_index = $(_.last(all_present_inlines)).attr("index");
                 return parseInt(max_index) + 1;
             }
@@ -5655,13 +5655,21 @@ define('views/form',[
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info = "";
-                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
-                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        var extra_info_group_name = "";
+                        var extra_info_person_id = "";
+                        var extra_info_father_name = "";
+                        if(f_json[f_entity_desc.name_field_father_name] != null){
+                            extra_info_father_name = f_json[f_entity_desc.name_field_father_name]
+                        }
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name] != null) {
+                            extra_info_group_name = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name];
+                        }
+                        if (f_json[f_entity_desc.name_field_person_id] != null) {
+                            extra_info_person_id = f_json[f_entity_desc.name_field_person_id]
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info_father_name != "" ? ' (' + extra_info_father_name + ')' : "") + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
                         }));
                     }
                     else {
@@ -11854,16 +11862,16 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
                         var object = model_object;
                         for (var i = 0; i < element_parts.length; i++) {
                             // To check if the entry is made online or offline. Display "Not uploaded in place of id in case of offline entry"
-                            if(element_parts.length == 1 && element_parts[i] == "id" && object.online_id == undefined){
+                            if(element_parts.length == 1 && element_parts[i] == "online_id" && object.online_id == undefined){
                                 object = "Not Uploaded"
                             }
                             else{
-                                object = object[element_parts[i]];
+                                    object = object[element_parts[i]];
                             }
                         }
-                        if (object != null) {
-                            cell = object;
-                        }
+                    }
+                    if (object != null) {
+                        cell = object;
                     }
                 }
                 else {
@@ -12024,6 +12032,21 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable) && (this.form.final_json.video_type != this.form.inline.exemption_video_type))
+                    {
+                        if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
+                            var err = {};
+                            err[that.form.entity_name] = {
+                                    __all__: ['Error: ' + this.form.inline.error_message]
+                            };
+                            this.form.show_errors(err);
+                            var add_validation = this.form.inline.validation_chk;
+                            $(add_validation).removeClass("donotvalidate");
+                            $(add_validation).valid();
+                            $(add_validation).addClass("donotvalidate");
+                            return ;
+                        }
+                    }
                     var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
                 }

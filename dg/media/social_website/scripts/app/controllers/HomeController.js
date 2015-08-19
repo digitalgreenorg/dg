@@ -38,7 +38,7 @@ define(function(require) {
                 .setVideosPerDrawer(5);
 
             // set the active filter to be Most Liked to init the collections
-            references.collectionMostFiltersViewController.setActiveFilter('-likes');
+            references.collectionMostFiltersViewController.setActiveFilter('-featured');
             
             this._getNewsFeed();
             this._getFeaturedCollection();
@@ -73,6 +73,10 @@ define(function(require) {
             
             // play button 
             references.$playButton = jQuery('.play-button');
+            references.$awardsTicker = jQuery('.js-awards-ticker');
+            references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
+            references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
+            references.$awardsElements = jQuery('.js-description');
         },
 
         _initEvents: function() {
@@ -89,6 +93,15 @@ define(function(require) {
             
             boundFunctions.onPlayButtonClick = this._onVideoPlayButtonClick.bind(this);
             references.$playButton.on('click', boundFunctions.onPlayButtonClick);
+
+            boundFunctions.onAwardsLeftClick = this._onAwardsLeftClick.bind(this);
+            references.$awardsTickerLeftArrow.on('click', boundFunctions.onAwardsLeftClick)
+
+            boundFunctions.onAwardsRightClick = this._onAwardsRightClick.bind(this);
+            references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
+
+            boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
+            references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -165,6 +178,45 @@ define(function(require) {
         
         _onVideoPlayButtonClick: function(e) {
         	this._initVideoPlayer();
+        },
+
+        _onAwardsLeftClick: function(e){
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left: '+'+width+'px'},400,'swing', function(){
+                    var lastChild = that._references.$awardsTicker.children().last();
+                    that._references.$awardsTicker.prepend(lastChild);
+                    that._references.$awardsTicker.css({'left': '0px'});
+                    $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
+                });
+        },
+
+        _onAwardsRightClick: function(e){
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
+                    that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
+                    that._references.$awardsTicker.css({'left':'0px'});
+                     $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
+                });
+               
+        },
+
+        _onAwardsElementClick: function(e){
+            var element = e.currentTarget;
+            var data = element.getAttribute('data');
+            $('.js-awards-description-show').removeClass('js-awards-description-show');
+            $('.js-awards-description').each(function(index, element) {
+                if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+            });
         },
 
         /**
