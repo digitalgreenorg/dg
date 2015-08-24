@@ -15,7 +15,6 @@ class ExotelService(object):
     initiate_call_urlformat = 'https://twilix.exotel.in/v1/Accounts/{sid}/Calls/connect.json'
     custom_field = ''
     status_callback = ''
-    applets = []
     #TODO  make a standard status callback that records the usual stuff
     
     def __init__(self, service_name, sid, token, caller_id, flow_id, **kwargs):
@@ -24,6 +23,7 @@ class ExotelService(object):
         self.token = token
         self.caller_id = caller_id
         self.flow_id = flow_id
+        self.applets = []
         for key, value in kwargs.items():
             setattr(self, key, value)
     
@@ -62,14 +62,15 @@ class ExotelService(object):
         self.applets.append(applet)
         
     def urlpatterns(self):
-        print "are we okey?"
         #applet = GreetingApplet("hello", "http://helloaudiofile")
         #pattern_list = applet.urlpatterns()
         pattern_list = []
         for applet in self.applets:
-            pattern_list.extend(applet.urlpatterns())
-        print "are we okey? ah"
+            pattern_list.extend(applet.urlpatterns(self.name))
         urlpatterns = patterns('', url(r'^{0}/'.format(self.name), include(pattern_list)))
-        print urlpatterns
         return urlpatterns
+    
+    class Meta:
+        abstract=True
+
 

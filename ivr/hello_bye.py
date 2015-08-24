@@ -8,25 +8,10 @@ class HelloBye(ExotelService):
     token = "421c11b1235067ca30ca87590c80c31eadc46af0"
     caller_id="01130018178"
     flow_id = "27037"
-    
-    def __init__(self, name, **kwargs):
-        try:
-            hello_audio = kwargs["hello_audio"]
-        except AttributeError:
-            hello_audio = "http://helloaudiofile"+name
-        try:
-            bye_audio = kwargs["bye_audio"]
-        except AttributeError:
-            bye_audio = "http://byeaudiofile"+name
-        
-        super(self.__class__, self).__init__(name, self.sid, self.token, self.caller_id, self.flow_id)
-        self.add_applet(GreetingApplet("hello", hello_audio))
-        self.add_applet(GreetingApplet("bye", bye_audio))
-    
-    def __init__(self, name, hello_audio, bye_audio):
-        super(self.__class__, self).__init__(name, self.sid, self.token, self.caller_id, self.flow_id)
-        self.add_applet(GreetingApplet("hello", hello_audio))
-        self.add_applet(GreetingApplet("bye", bye_audio))
+    applets = {
+        'hello': GreetingApplet("http://helloaudiofile"),
+        'bye': GreetingApplet("http://byeaudiofile"),
+    } 
 
 # Code in urls.py
 # from django.conf.urls import patterns

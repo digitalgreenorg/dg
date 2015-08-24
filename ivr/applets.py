@@ -2,8 +2,7 @@ from django.conf.urls import include, patterns, url
 from django.http import HttpResponse
 from django.views.generic import View
 
-class GreetingApplet(View):
-    service_name = ""
+class GreetingApplet(object):
     def __init__(self, applet_name, audio_url):
         self.applet_name = applet_name
         self.audio_url = audio_url
@@ -11,10 +10,11 @@ class GreetingApplet(View):
     def get(self, request):
         return HttpResponse(self.audio_url)
     
-    def urlpatterns(self):
-        urlpattern = patterns('',
-            url(r'^{service_name}/{0}/$'.format(self.applet_name), self.(service_name).as_view()),
-        )
+    def urlpatterns(self, service_name):
+        type_name = '{0}_{1}_audio'.format(service_name, self.applet_name)
+        print type_name
+        AppletView = type(type_name, (View, GreetingApplet), self.__dict__)
+        urlpattern = patterns('', url(r'^{0}/$'.format(self.applet_name), AppletView.as_view()))
         return urlpattern
 
 class ServiceGreeting(GreetingApplet):
