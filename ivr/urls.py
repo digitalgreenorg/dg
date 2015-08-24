@@ -13,8 +13,6 @@ flow_id = "27037"
 hello_bye_andhra = ExotelService("h", sid, token, caller_id, flow_id)
 hello_bye_andhra.add_applet(GreetingApplet("h", "http://helloandhraaudiofile2"))
 
-hello_bye = ExotelService("hello_bye_andhra", sid, token, caller_id, flow_id)
-hello_bye.add_applet(GreetingApplet("helloandhra", "http://helloandhraaudiofile1"))
 
 services = []
 services.extend(hello_bye_andhra.urlpatterns())

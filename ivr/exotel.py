@@ -62,8 +62,6 @@ class ExotelService(object):
         self.applets.append(applet)
         
     def urlpatterns(self):
-        #applet = GreetingApplet("hello", "http://helloaudiofile")
-        #pattern_list = applet.urlpatterns()
         pattern_list = []
         for applet in self.applets:
             pattern_list.extend(applet.urlpatterns(self.name))
