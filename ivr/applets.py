@@ -12,7 +12,6 @@ class GreetingApplet(object):
     
     def urlpatterns(self, service_name):
         type_name = '{0}_{1}_audio'.format(service_name, self.applet_name)
-        print type_name
         AppletView = type(type_name, (View, GreetingApplet), self.__dict__)
         urlpattern = patterns('', url(r'^{0}/$'.format(self.applet_name), AppletView.as_view()))
         return urlpattern

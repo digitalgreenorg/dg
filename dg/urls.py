@@ -82,11 +82,9 @@ urlpatterns = patterns('',
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     (r'^agri/', include(videokheti.urls)),
     (r'^ivrs/',include('ivr.urls')),
-    
     (r"^", include("mezzanine.urls")),
 
 )
-print urlpatterns
 
 # Static files serving locally
 if settings.DEBUG:
