@@ -269,7 +269,6 @@ function() {
                 video: {
                     video: {
                         placeholder: 'id_video',
-                        name_field_video_id:'online_id',
                         name_field: 'title'
                     }
                 }
@@ -390,6 +389,14 @@ function() {
         'rest_api_url': '/coco/api/v2/nonnegotiable/',
         'entity_name': 'nonnegotiable',
         'sort_field': 'non_negotiable',
+        'foreign_entities': {
+                'video': {
+                    'video': {
+                        'placeholder': 'id_video',
+                        'name_field': 'title'
+                    }
+                }
+            },
         'dashboard_display': {
             listing: false,
             add: false
