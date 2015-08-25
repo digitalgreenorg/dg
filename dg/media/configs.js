@@ -269,6 +269,7 @@ function() {
                 video: {
                     video: {
                         placeholder: 'id_video',
+                        name_field_video_id:'online_id',
                         name_field: 'title'
                     }
                 }
