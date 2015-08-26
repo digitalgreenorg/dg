@@ -3,6 +3,10 @@ import dg.settings
 
 import time, codecs
 import json, datetime
+from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+from dg.settings import PERMISSION_DENIED_URL
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -14,7 +18,10 @@ from programs.models import Partner
 from utils.data_library import data_lib
 from utils.configuration import categoryDictionary, orderDictionary
 
-
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0,
+                  login_url=PERMISSION_DENIED_URL)
+@csrf_protect
 def home(request):
         
     countries = Country.objects.all()
