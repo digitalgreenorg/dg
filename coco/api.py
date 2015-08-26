@@ -147,7 +147,6 @@ def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
     return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
 
-
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
@@ -235,7 +234,6 @@ class NonNegotiableAuthorization(Authorization):
         return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
     
     def read_detail(self, object_list, bundle):
-        #To add adoption for the video seen which is outside user access
         if bundle.obj.id in get_user_non_negotiable(bundle.request.user.id):
             return True
         else:
@@ -389,7 +387,6 @@ class VideoResource(BaseResource):
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
 
-
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
     class Meta:
@@ -403,7 +400,6 @@ class NonNegotiableResource(BaseResource):
         always_return_data = True
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
-
 
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
