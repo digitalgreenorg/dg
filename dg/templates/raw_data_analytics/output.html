@@ -10,13 +10,33 @@
 						{% csrf_token %}
 
 						<center>
+							<script type="text/javascript">
+    							var datefield=document.createElement("input")
+							    datefield.setAttribute("type", "date")
+							    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+							        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+							        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+							        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
+							    }
+							</script>
+ 
+							<script>
+								if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+									var d = new Date();
+									d.setMonth(d.getMonth() - 1);
+								    jQuery(function($){ //on document.ready
+								        $('#to_date').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate", new Date());
+					 					$('#from_date').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate", d);
+								    })
+								}
+							</script>
 							<div id="date" name="Date">
 								<p class="copy"> 
 									<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Date:
 									</h3> 
 									<h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">From: 
-										&nbsp;<input type="date" id="from_date" name="from_date">&nbsp;&nbsp;                          
-								 		To: &nbsp; <input type="date" id = "to_date" name="to_date">
+										&nbsp;<input type="date" id="from_date" name="from_date" size="20">&nbsp;&nbsp;                          
+								 		To: &nbsp; <input type="date" id = "to_date" name="to_date" size="20">
 									</h3>
 								</p>
 							</div>
