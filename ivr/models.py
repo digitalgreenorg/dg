@@ -7,12 +7,13 @@ class Call(models.Model):
     state = models.CharField(max_length=100)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-    
+        
     def attempt(self, call_dict):
         # call data to be initialized when a call is attmepted
         # self.duration = call_dict['Duration']
         # self.to = call_dict['To']
         # self.from = call_dict['From']
+        # self.attributes = props
             #date_updated = models.DateTimeField()
             #startTime
             #endTime
@@ -23,3 +24,5 @@ class Call(models.Model):
         # this function adds the information and saves it in the db
         # http://support.exotel.in/support/solutions/articles/48278-outbound-call-to-connect-a-customer-to-an-app
         return None
+
+

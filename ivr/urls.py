@@ -25,3 +25,9 @@ print services
 urlpatterns = patterns('', 
     *(services)
 )
+
+# TODO
+# Code up models
+# Migrate models
+# Test state models
+# Test harness
