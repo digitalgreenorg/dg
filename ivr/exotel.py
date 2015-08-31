@@ -25,7 +25,7 @@ class ExotelService(object):
     
     def __init__(self):
         class_name = "CallEndView{0}".format(self.name)
-        self.ServiceCallEndView = type(class_name, (CallEndView,), {'name':class_name})
+        self.ServiceCallEndView = type(class_name, (CallEndView,), {})
     
     def __init__(self, service_name, sid, token, caller_id, flow_id):
         self.name = service_name

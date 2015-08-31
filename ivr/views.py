@@ -11,7 +11,7 @@ from models import Call
 class CallEndView(View):
     @classmethod
     def get_name(cls):
-        return cls.name
+        return cls.__name__
     
     @classmethod
     def get(cls, request):
