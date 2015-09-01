@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'grappelli_safe',
     'videokheti',
     'ivr_data_collection',
+    'IVR',
 )
 
 # Store these package names here as they may change in the future since

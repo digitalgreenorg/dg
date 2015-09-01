@@ -1,5 +1,6 @@
 from django.conf.urls import include, patterns, url
 from hello_bye import HelloBye
+from jharkhand_pilot import JharkhandPilot
 
 # url of a greeting audio is /ivrs/service_name/applet_name/
 
@@ -18,6 +19,8 @@ hello = HelloBye()
 services.extend(hello.urlpatterns())
 greeting = HelloBye(name="greeting")
 services.extend(greeting.urlpatterns())
+jharkhand_pilot = JharkhandPilot()
+services.extend(jharkhand_pilot.urlpatterns())
 print services
 
 # To add a service add the call the urlpatterns of the service over here
