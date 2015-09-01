@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponse
 from django.views.generic import View
+from models import Call
 
 from views import AudioView, CallEndView, PassthruView
 
@@ -59,7 +60,7 @@ class ExotelService(object):
         r = requests.post(call_url, auth=(self.sid, self.token), data=post_data)
         response_data = json.loads(r.text)
         call_sid = response_data['Call']['Sid'],
-        call = models.Call(response_data['Call'])
+        call = Call(exotel_call_id = call_sid)
         call['state'] = json.dumps(self.init_state())
         call['props'] = json.dumps(self.init_props())
         call.save()
