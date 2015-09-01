@@ -25,7 +25,6 @@ from mcoco_admin import mcoco_admin
 import website_archive_urls
 import deoanalytics.urls
 import ivr_data_collection.urls
-import IVR
 
 coco_admin.index_template = 'social_website/index.html'
 coco_admin.login_template = 'social_website/login.html'
@@ -82,7 +81,7 @@ urlpatterns = patterns('',
     (r'^analytics/vrptool/',include('vrppayment.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     (r'^agri/', include(videokheti.urls)),
-    (r'^ivrs/',include('IVR.urls')),
+    (r'^ivrs/',include('ivr.urls')),
     (r"^", include("mezzanine.urls")),
 
 )

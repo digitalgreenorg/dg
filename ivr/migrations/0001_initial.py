@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Call'
-        db.create_table(u'IVR_call', (
+        db.create_table(u'ivr_call', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('exotel_call_id', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('attributes', self.gf('django.db.models.fields.CharField')(max_length=100)),
@@ -17,16 +17,16 @@ class Migration(SchemaMigration):
             ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('time_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
-        db.send_create_signal(u'IVR', ['Call'])
+        db.send_create_signal(u'ivr', ['Call'])
 
 
     def backwards(self, orm):
         # Deleting model 'Call'
-        db.delete_table(u'IVR_call')
+        db.delete_table(u'ivr_call')
 
 
     models = {
-        u'IVR.call': {
+        u'ivr.call': {
             'Meta': {'object_name': 'Call'},
             'attributes': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'exotel_call_id': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
@@ -37,4 +37,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['IVR']
+    complete_apps = ['ivr']
