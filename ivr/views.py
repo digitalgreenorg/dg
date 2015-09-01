@@ -29,7 +29,7 @@ class AudioView(View):
         audio_url = None
         
         call_id = request.GET["CallSid"]
-        props = json.loads(request.GET["CustomField"])
+        props = request.GET["CustomField"]
         if hasattr(cls, 'audio_url'):
             audio_url = cls.audio_url
         else:

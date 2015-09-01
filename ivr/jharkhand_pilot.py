@@ -19,7 +19,7 @@ class JharkhandPilot(ExotelService):
             'greeting': ('audio', "http://audiofile"  + self.name),
             'message': ('audio', self.get_required_message),
             'ivr_menu': ('audio', "http://IVR_menu_audio_file"),
-            'ivr_menu_repeat': ('passthru', self.revert_state)
+            'ivr_menu_repeat': ('passthru', self.revert_state),
             'missed_call': ('passthru', self.handle_missed_call),
         }
         class_name = "CallEndView{0}".format(self.name)
