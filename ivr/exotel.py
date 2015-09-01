@@ -59,7 +59,7 @@ class ExotelService(object):
         
         r = requests.post(call_url, auth=(self.sid, self.token), data=post_data)
         response_data = json.loads(r.text)
-        call_sid = response_data['CallSid'],
+        call_sid = response_data['CallSid']
         call = Call(exotel_call_id = call_sid)
         call['state'] = json.dumps(self.init_state())
         call['props'] = json.dumps(self.init_props())
