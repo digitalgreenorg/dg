@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 from models import Call
 
-from views import AudioView, CallEndView, PassthruView
+from views import AudioView, CallEndView, PassthruView, MissedCallView
 
 # Exotel's uptime information available for everyone to see at http://status.exotel.in.
 
@@ -43,8 +43,8 @@ class ExotelService(object):
         return {}
     
     def init_call(self, mobile_number, props=None):
-        call_url = initiate_call_urlformat.format(sid=self.sid)
-        flow_url = flow_urlformat.format(flow_id=self.flow_id)
+        call_url = self.initiate_call_urlformat.format(sid=self.sid)
+        flow_url = self.flow_urlformat.format(flow_id=self.flow_id)
         #TODO create a call object. add the id to the CustomField. save the call object
         post_data = {
             'From' :  int(mobile_number),
@@ -59,7 +59,7 @@ class ExotelService(object):
         
         r = requests.post(call_url, auth=(self.sid, self.token), data=post_data)
         response_data = json.loads(r.text)
-        call_sid = response_data['Call']['Sid'],
+        call_sid = response_data['CallSid'],
         call = Call(exotel_call_id = call_sid)
         call['state'] = json.dumps(self.init_state())
         call['props'] = json.dumps(self.init_props())
@@ -81,6 +81,8 @@ class ExotelService(object):
                     raise Exception("View function type incorrect")
             elif url_type == 'passthru':
                 MyView = type(class_name, (PassthruView,), {'process': view_func})
+            elif url_type == 'missedcall':
+                MyView = type(class_name, (MissedCallView,), {'process': view_func})
             else:
                 raise Exception("View type should be audio or passthru")
             urls.append(url(r'^{0}/'.format(url_endpoint), MyView.as_view()))

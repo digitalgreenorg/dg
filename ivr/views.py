@@ -62,9 +62,19 @@ class PassthruView(View):
         props = request.GET["CustomField"]
         call = Call.objects.get(exotel_call_id=call_id)
         state = json.loads(call.state)
-        (status, new_state) = self.process(audio_url_format, props, state)
+        (status, new_state) = cls.process(props, state)
         call.state = json.dumps(new_state)
         call.save()
+        return HttpResponse(status=status)
+
+
+class MissedCallView(View):
+      
+    @classmethod
+    def get(cls, request):
+        call_id = request.GET["CallSid"]
+        props = request.GET["From"]
+        status = cls.process(props = props)
         return HttpResponse(status=status)
 
 
