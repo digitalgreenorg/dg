@@ -74,7 +74,7 @@ class MissedCallView(View):
     def get(cls, request):
         call_id = request.GET["CallSid"]
         props = request.GET["From"]
-        status = cls.process(props = props)
+        status = cls.process(props)
         return HttpResponse(status=status)
 
 
