@@ -256,8 +256,12 @@ function() {
         },
         'inline': {
             'entity': 'nonnegotiable',
+            'validation_chk': '#non_negotiable0',
             'default_num_rows': 5,
             'add_row' : 1,
+            'req_nonnegotiable' : 1,
+            'exemption_video_type': '2', 
+            'error_message' : 'Add Non-negotiable',
             'template': 'nonnegotiable_inline',
             'joining_attribute': {
                 'host_attribute': ["id", "title"],
@@ -389,6 +393,14 @@ function() {
         'rest_api_url': '/coco/api/v2/nonnegotiable/',
         'entity_name': 'nonnegotiable',
         'sort_field': 'non_negotiable',
+        'foreign_entities': {
+                'video': {
+                    'video': {
+                        'placeholder': 'id_video',
+                        'name_field': 'title'
+                    }
+                }
+            },
         'dashboard_display': {
             listing: false,
             add: false
@@ -671,11 +683,11 @@ function() {
 				},
 				start_time: {
 					required: 'Screening start time is required',
-					validateTime: 'Enter the start time in the form of HH:MM:SS. Use 24 hour format',
+					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
 				},
 				end_time: {
 					required: 'Screening end time is required',
-					validateTime: 'Enter the end time in the form of HH:MM:SS. Use 24 hour format',
+					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
 				animator: "Mediator is required",

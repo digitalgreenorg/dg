@@ -5,7 +5,7 @@
         <div class="inner-wrapper grid layout-vr-md">
             <div class="grid-col grid-size1of3">
                 <div class="grid-pad-rt-md centered">
-                    <h2 class="hdg-b hdg-source-lt  layout-vr-tiny">Who we are</h2>
+                    <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we are</h2>
                     <p class="hdg-f centered hdg-source-reg layout-vr-sm">A not-for-profit which brings together technology and social organisations to improve agriculture, health and nutrition
 					</p>
                     <a  href="{% url 'about' %}" class="btn">Read our story</a>   
@@ -67,7 +67,6 @@
                     <ul class="v-list-sm">
                         <li>               
                             {% for blog_post in blog_posts %}
-
                                 <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
                                     <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
                                 </h3>
@@ -170,11 +169,10 @@
                 </div>
             </div>
         </div>
-
         
         <div class="wrapper layout-vr-md">
             <!-- NEWS SECTION-->
-            <div class="inner-wrapper">
+            <div class="inner-wrapper layout-vr-md">
                 <h2 class="hdg-a hdg-source-lt layout-vr-md">In the News</h2>
                 <div class="grid">
                 <div class="grid-col grid-size3of5">
@@ -184,30 +182,29 @@
                                 <li>
                                     <img src="/media/social_website/content/homepage/Hillary.JPG" width="100%">
                                     </img>
-                                    <span class="image-carousel hdg-source-reg hdg-e hdg-white image-carousel-caption push-top-md">
-                                            Rikin Gandhi, CEO, Digital Green with Hillary Clinton
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Rikin Gandhi, CEO, Digital Green with Hillary Clinton
                                     </span>
                                 </li>
                                 <li>
                                     <img src="/media/social_website/content/homepage/jairam.jpg" width="100%">
                                     </img>
-                                    <span class="image-carousel hdg-source-reg hdg-e hdg-white image-carousel-caption push-top-md">
-                                        Jairam Ramesh, Minister of Rural Development, meets with Digital Green.
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Ministry of Rural Development, Govt. of India, appoints Digital Green as the National Support Organization for its flagship, National Rural Livelihood Program.
                                     </span>
                                 </li>
                                 <li>
                                     <img src="/media/social_website/content/homepage/rikin_ted.jpg" width="100%">
                                     </img>
-                                    <span class="image-carousel hdg-source-reg hdg-e hdg-white image-carousel-caption push-top-md">
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
                                         Rikin Gandhi at a TED talk about using ICT and the "American Idol" model in agriculture.    
                                     </span>
                                 </li>
                                 <li>
                                     <img src="/media/social_website/content/homepage/gic.jpg" width="100%">
                                     </img>
-                                    
-                                    <span class=" image-carousel hdg-source-reg hdg-e hdg-white image-carousel-caption push-top-md">
-                                    Digital Green is the Google Impact awardee for India
+                                    <span class=" image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Digital Green is the Google Impact awardee for India
                                     </span>
                                 </li>
                             </ul>
@@ -291,5 +288,83 @@
                 </div>
             </div>
         </div>
+
+        <div class="wrapper layout-vr-md">
+            <!-- AWARDS-->
+            <div class="inner-wrapper">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Awards</h2>
+                <div class="awards-container">
+                    <div class="js-awards-left-arrow awards-left-arrow">
+                        <img src="/media/assets/images/awards-ticker-left.png" alt="Left" height="20" width="12">
+                    </div>
+                    <div class="awards-ticker layout-vr-md">
+                        <ul class="js-awards-ticker h-list">
+                            <li data='1' class="js-description"> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/google-impact-challenge.png" alt="Google Impact Challenge" title="Google Impact Challenge" height="130" width="130"/> 
+                            </li>
+                            <li data='2' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/fortune.png" alt="Fortune" title="Fortune" height="130" width="130"/>
+                            </li>
+                            <li data='3' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/ashoka-india-fellowship.png" alt="Ashoka India Fellowship" title="Ashoka India Fellowship" height="130" width="130"/>
+                            </li>
+                            <li data='4' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/MIT-innovators.png" alt="MIT Tech Review" title="MIT Tech Review" height="130" width="130"/>
+                            </li>
+                            <li data='5' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/stockholm-challenge.png" alt="Stockholm Challenge" title="Stockholm Challenge" height="130" width="130"/>
+                            </li>
+                            <li data='6' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/TED-fellows.png" alt="Ted Fellow" title="Ted Fellow" height="130" width="130"/>
+                            </li>
+                            <li data='7' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/IFA-norman-borlaug.png" alt="IFA Norman Borlaug" title="IFA Norman Borlaug Award - 2012" height="130" width="130"/>
+                            </li>
+                            <li data='8' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/manthan.png" alt="Manthan" title="The Manthan Award - South Asia 2010" height="130" width="130"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="js-awards-right-arrow awards-right-arrow">
+                        <img src="/media/assets/images/awards-ticker-right.png" alt="Right" height="20" width="12">
+                    </div>
+                </div>
+                <div class="hdg-f hdg-source-reg">
+                    <div class="awards-description js-awards-description js-awards-description-show" data='1'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Google Impact Challenge, 2013</a>
+                        <p>Digital Green won the Google Impact Challenge in 2013. <a class="hdg-source-semibold" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='2'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Fortune’s Global Forum Visionaries in Agriculture, 2010</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as Fortune’s Global Forum Visionary in 2010. <a class="hdg-source-semibold" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='3'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Ashoka Fellow</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi is an Ashoka Fellow since 2010. <a class="hdg-source-semibold" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='4'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Innovator under 35 by MIT Technology Review, 2010</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as an innovator under 35 by MIT’s Tech Review in 2010.<a class="hdg-source-semibold" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='5'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Stockholm Challenge, 2008</a>
+                        <p>Digital Green won the Stockholm Challenge in 2008. <a class="hdg-source-semibold" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='6'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.ted.com/profiles/299130/fellow">TED Fellow</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi is a TED Fellow (Agricultural Tech Innovator) <a class="hdg-source-semibold" target="_blank" href="http://www.ted.com/profiles/299130/fellow">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='7'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">IFA Norman Borlaug Award, 2012</a>
+                        <p>Digital Green's founder and CEO, Rikin Gandhi received the IFA Norman Borlaug Award in 2012. <a class="hdg-source-semibold" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='8'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny">Manthan Award South Asia in Environment, 2008</a>
+                        <p>Digital Green won the Manthan Award South Asia in 2008 in the category Environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 {% include "includes/footer.html"%}
