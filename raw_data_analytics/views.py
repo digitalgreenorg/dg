@@ -19,7 +19,7 @@ from utils.data_library import data_lib
 from utils.configuration import categoryDictionary, orderDictionary
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='cocoadmin').count() > 0,
+@user_passes_test(lambda u: u.groups.filter(name='data_extractor').count() > 0,
                   login_url=PERMISSION_DENIED_URL)
 @csrf_protect
 def home(request):
