@@ -29,8 +29,11 @@ define([
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
         stop_upload: function() {
+            alert("1");
             console.log("stopping upload");
+            alert("2");
             this.user_interrupt = true;
+            alert("3");
         },
 
         //increment the progress bar
@@ -280,6 +283,8 @@ define([
                                 })
                                 .fail(function(error) {
                                     // server returned error when uploading object
+                                    alert("Connection lost. Please try again after sometime");
+                                    alert(error);
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
                                     // show the object in its form with the error - to let user fix it and continue with upload
