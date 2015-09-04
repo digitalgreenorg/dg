@@ -109,6 +109,7 @@ define([
             // upload_collection is a pre-defined backbone collection attached to the uploadQ table in offline db
             upload_collection.fetch({
                 success: function(collection) {
+                    //alert(collection.length);
                     dfd.resolve(collection);
                 },
                 error: function(error) {
@@ -279,9 +280,11 @@ define([
                                 })
                                 .fail(function(error) {
                                     // server connection not established with server/ internet connection lost 
-                                    if(error.status == 0)
-                                    {   
-                                        alert("Connection lost. Please try again after sometime");
+                                    if(error.status == 0) {
+                                        var uploaded = that.upload_status["uploaded"];
+                                        var total = that.upload_status["total"];
+                                        var not_uploaded = total - uploaded;
+                                        alert("Connection lost. Please try again after sometime!! \nUploaded : " + uploaded + "\nPending    : " + not_uploaded);
                                         that.tear_down();  
                                     }
                                     // server returned error when uploading object
