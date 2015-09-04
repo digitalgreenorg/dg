@@ -28,12 +28,9 @@ define([
         },
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
-        stop_upload: function() {
-            alert("1");
+        stop_upload: function() {      
             console.log("stopping upload");
-            alert("2");
             this.user_interrupt = true;
-            alert("3");
         },
 
         //increment the progress bar
@@ -71,7 +68,6 @@ define([
             this.in_progress = false;
             var that = this;
             //modal takes time to hide. Needed to get the correct point of time when upload has finished.
-            
             $('#upload_modal').modal('hide');
             $('.modal-backdrop').remove();
         },
@@ -282,9 +278,13 @@ define([
                                         });
                                 })
                                 .fail(function(error) {
+                                    // server connection not established with server/ internet connection lost 
+                                    if(error.status == 0)
+                                    {   
+                                        alert("Connection lost. Please try again after sometime");
+                                        that.tear_down();  
+                                    }
                                     // server returned error when uploading object
-                                    alert("Connection lost. Please try again after sometime");
-                                    alert(error);
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
                                     // show the object in its form with the error - to let user fix it and continue with upload
