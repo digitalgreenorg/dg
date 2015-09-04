@@ -109,7 +109,6 @@ define([
             // upload_collection is a pre-defined backbone collection attached to the uploadQ table in offline db
             upload_collection.fetch({
                 success: function(collection) {
-                    //alert(collection.length);
                     dfd.resolve(collection);
                 },
                 error: function(error) {
@@ -286,6 +285,7 @@ define([
                                         var not_uploaded = total - uploaded;
                                         alert("Connection lost. Please try again after sometime!! \nUploaded : " + uploaded + "\nPending    : " + not_uploaded);
                                         that.tear_down();  
+                                        location.reload();
                                     }
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
