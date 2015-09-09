@@ -94,6 +94,34 @@
         </div>
     </div>
 </script>
+<script type="text/template" id="upload_status_template">
+    <div id="upload_status_modal" class="modal fade" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upload Error</h3>
+                    <h4>Internet connectivity lost. Please try after sometime!</h4>
+                </div>
+                <div class="modal-body">
+                    <br>
+                    <table class="table">
+                        <tr>
+                            <td id="upl_total"> </td>
+                        </tr>
+                        <tr>
+                            <td id="upl_done"> </td>
+                        </tr>
+                            <td id="upl_pending"> </td>                           
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="Ok" type="button" class="btn">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
 <script type="text/template" id="incremental_download_template">
     <div id="incremental_download_modal" class="modal fade" >
         <div class="modal-dialog">

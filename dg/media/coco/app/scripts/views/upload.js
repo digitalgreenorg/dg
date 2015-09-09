@@ -10,9 +10,10 @@ define([
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'views/upload_status',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -54,6 +55,7 @@ define([
         //initializes the global vars used, ui
         initialize_upload: function() {
             this.user_interrupt = false;
+            this.internet_connectivity_lost = false;
             this.in_progress = true;
             this.$('#upload_modal').modal({
                 keyboard: false,
@@ -186,23 +188,38 @@ define([
                 //stop the process
                 return whole_upload_dfd.reject("User stopped Sync");
             }
+
+            else if (this.internet_connectivity_lost){
+                 //put the upload object back
+                this.upload_collection.unshift(this.current_entry);
+                //stop the process
+                return whole_upload_dfd.reject("Internet Lost during Upload");
+            }
             // process the object
             else {
                 this.process_upload_entry(this.current_entry)
                     .fail(function(error) {
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
+                        if (that.internet_connectivity_lost) {
+                        //put the upload object back
+                        that.upload_collection.unshift(this.current_entry);
+                        //stop the process
+                        return whole_upload_dfd.reject("Internet Lost during Upload");
+                        }
                         //it would be reached in foll cases:
                         //object to be uploaded doesn't exists in offline anymore
                         //ConvertNamespace failed
                         //online_id couldn't be injected
                         //The object discarded in upload error form could not be deleted
+                        //Internet connectivity lost during upload
                     })
                     .done(function() {
                         console.log("SUCESSFULLY UPLOADED AN OBJECT");
                     })
                     .always(function() {
                         // delete the object..finished processing it
+                        if (!that.internet_connectivity_lost) {
                         that.current_entry.destroy();
                         // continue processing the objects even if this object failed
                         //  increment progress bar
@@ -210,7 +227,7 @@ define([
                         // increment upload status
                         that.upload_status["uploaded"]++;
                         //recursively process the rest of the objects
-                        that.pick_next(whole_upload_dfd);
+                        that.pick_next(whole_upload_dfd);}
                     });
             }
 
@@ -282,10 +299,12 @@ define([
                                     if(error.status == 0) {
                                         var uploaded = that.upload_status["uploaded"];
                                         var total = that.upload_status["total"];
-                                        var not_uploaded = total - uploaded;
-                                        alert("Connection lost. Please try again after sometime!! \nUploaded : " + uploaded + "\nPending    : " + not_uploaded);
-                                        that.tear_down();  
-                                        location.reload();
+                                        var pending = total - uploaded;
+                                        alert("Connection lost. Please try again after sometime!! \nUploaded : " + uploaded + "\nPending    : " + pending);
+                                        //that.tear_down();  
+                                        that.internet_connectivity_lost = true;
+                                        that.status_view(total, uploaded, pending);
+                                        dfd.reject(error);
                                     }
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
@@ -307,6 +326,16 @@ define([
                     } else
                         dfd.reject(error);
                 });
+        },
+
+        status_view: function(total, uploaded, pending) {
+            console.log("Upload Status View Initialised");
+            this.UploadStatusView_v = new UploadStatusView();
+            $(this.UploadStatusView_v.el)
+                .appendTo('body');
+            this.UploadStatusView_v.render();
+            this.UploadStatusView_v.get_status(total, uploaded, pending);
+                
         },
 
         // show the json in its form with the error returned by server - let user fix it
