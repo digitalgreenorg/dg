@@ -298,7 +298,6 @@ define([
                                 })
                                 .fail(function(error) {
                                     // server connection not established with server/ internet connection lost 
-                                    alert(error.status);
                                     if(error.status == 0) {
                                         var uploaded = that.upload_status["uploaded"];
                                         var total = that.upload_status["total"];
