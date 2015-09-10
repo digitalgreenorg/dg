@@ -95,7 +95,7 @@
     </div>
 </script>
 <script type="text/template" id="upload_status_template">
-    <div id="upload_status_modal" class="modal fade" >
+    <div id="upload_status_modal" class="modal" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -105,12 +105,12 @@
                 <div class="modal-body">
                     <br>
                     <table class="table">
-                        <tr>
+                        <tr><td>Total data to be uploaded:</td> 
                             <td id="upl_total"> </td>
                         </tr>
-                        <tr>
+                        <tr><td>Data uploaded:</td>
                             <td id="upl_done"> </td>
-                        </tr>
+                        </tr><td>Data pending to be uploaded:</td>
                             <td id="upl_pending"> </td>                           
                         </tr>
                     </table>

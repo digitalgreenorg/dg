@@ -1,3 +1,4 @@
+//this view displays upload status of collections in upload_q i.e. number of enteries uploaded and are pending to be uploaded, when connection with server is aborted
 define([
     'jquery',
     'underscore',
@@ -8,8 +9,8 @@ define([
         var UploadStatusView = Backbone.Layout.extend({
 
         initialize: function() {
-            console.log("UPLOAD: initializing new upload view");
-            _.bindAll(this);
+            console.log("UPLOAD: initializing new upload status view");
+             _(this).bindAll('tear_down');
         },
 
         template: "#upload_status_template",
@@ -34,9 +35,10 @@ define([
         },
 
         update_pending: function(pending){
-            $('upl_pending').html(pending);
+            $('#upl_pending').html(pending);
         },
 
+        //feeds data to template
         get_status: function(total, uploaded, pending) {
             this.update_total(total);
             this.update_done(uploaded);
@@ -44,8 +46,6 @@ define([
         }
 
     });
-
-
 
     // Our module now returns our view
     return UploadStatusView;

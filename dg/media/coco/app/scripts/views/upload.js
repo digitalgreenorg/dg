@@ -201,6 +201,7 @@ define([
                     .fail(function(error) {
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
+                        //check for internet connectivity
                         if (that.internet_connectivity_lost) {
                         //put the upload object back
                         that.upload_collection.unshift(this.current_entry);
@@ -219,6 +220,7 @@ define([
                     })
                     .always(function() {
                         // delete the object..finished processing it
+                        //if internet connectivity exists
                         if (!that.internet_connectivity_lost) {
                         that.current_entry.destroy();
                         // continue processing the objects even if this object failed
@@ -300,8 +302,7 @@ define([
                                         var uploaded = that.upload_status["uploaded"];
                                         var total = that.upload_status["total"];
                                         var pending = total - uploaded;
-                                        alert("Connection lost. Please try again after sometime!! \nUploaded : " + uploaded + "\nPending    : " + pending);
-                                        //that.tear_down();  
+                                        that.tear_down();  
                                         that.internet_connectivity_lost = true;
                                         that.status_view(total, uploaded, pending);
                                         dfd.reject(error);
@@ -331,9 +332,12 @@ define([
         status_view: function(total, uploaded, pending) {
             console.log("Upload Status View Initialised");
             this.UploadStatusView_v = new UploadStatusView();
+            //append div-modal to body of dashboard.html
             $(this.UploadStatusView_v.el)
                 .appendTo('body');
             this.UploadStatusView_v.render();
+            //display the modal
+            $('#upload_status_modal').modal('show');
             this.UploadStatusView_v.get_status(total, uploaded, pending);
                 
         },
