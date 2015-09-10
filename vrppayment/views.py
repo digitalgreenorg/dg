@@ -77,7 +77,7 @@ def make_dissemination_list(custom_object, vrp_id):
         each_diss_det_dict['videos_shown_detail'] = diss_video_details
         if total_person_expected > 0:
             attendance_perc = farmer_attendance_count * 100 / total_person_expected
-            each_diss_det_dict['result_success'] = True if attendance_perc > 60 else False
+            each_diss_det_dict['result_success'] = True if attendance_perc > 70 else False
         else:
             each_diss_det_dict['result_success'] = False
         dissemination_details.append(each_diss_det_dict)

@@ -132,9 +132,9 @@ def execute_upoad(file, user_id, block_id):
     for row in rows_persons:
         i = i + 1
         try:
-            person_name = ' '.join([str(row['Member_Name']), str(row['Member_Surname'])])
-            father_name = ' '.join([str(row['Husband_Father_Name']),
-                                    str(row['Husband_Father_Surname'])])
+            person_name = ' '.join([unicode(row['Member_Name']), unicode(row['Member_Surname'])])
+            father_name = ' '.join([unicode(row['Husband_Father_Name']),
+                                    unicode(row['Husband_Father_Surname'])])
             gender = str(row['Gender(M/F)'])
             if (row['Age'] == ''):
                 age = None
