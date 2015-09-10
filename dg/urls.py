@@ -11,6 +11,7 @@ import feeds.urls
 import social_website.api_urls
 import social_website.urls
 import videokheti.urls
+import training.urls
 
 from django.contrib import admin
 admin.autodiscover()
@@ -58,6 +59,7 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
+    (r'^training/', include(training.urls)),
 
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard

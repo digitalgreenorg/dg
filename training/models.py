@@ -8,22 +8,22 @@ class Trainer(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
 	email = models.EmailField()
+	language = models.ForeignKey(Language, null=False, blank=False)
+
+class Assessment(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=50)
 
 class Question(models.Model):
 	id = models.AutoField(primary_key=True)
 	assessment = models.ForeignKey(Assessment, null=False, blank=False)
 	section = models.IntegerField()
 	serial = models.IntegerField()
-	text = models.CharField()
+	text = models.CharField(max_length = 100)
 
 class Translation(models.Model):
 	question = models.ForeignKey(Question, null=False, blank=False)
-	text = models.CharField()
-	language = models.ForeignKey(Language, null=False, blank=False)
-
-class Assessment(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+	text = models.CharField(max_length = 100)
 
 class Training(models.Model):
 	id = models.AutoField(primary_key=True)
@@ -32,7 +32,7 @@ class Training(models.Model):
 	state = models.ForeignKey(State, null=True, blank=True)
 	trainer = models.ManyToManyField(Trainer, null=False, blank=False)
 	language = models.ForeignKey(Language, null=False, blank=False)
-	participants = ManyToManyField(Animator)
+	participants = models.ManyToManyField(Animator)
 
 class Score(models.Model):
 	id = models.AutoField(primary_key=True)
