@@ -8,7 +8,6 @@ from tastypie.models import ApiKey
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        print request.POST
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
@@ -20,11 +19,9 @@ def login(request):
                 api_key.save()
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
-                print api_key    
             return HttpResponse(api_key.key)
         else:
             return HttpResponse("0")
     else:
         return HttpResponse("0")
     return HttpResponse("0")
-
