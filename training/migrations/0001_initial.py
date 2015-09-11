@@ -12,32 +12,42 @@ class Migration(SchemaMigration):
         db.create_table(u'training_trainer', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('state', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['geographies.State'], null=True, blank=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
+            ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'])),
         ))
         db.send_create_signal(u'training', ['Trainer'])
 
-        # Adding model 'Module'
-        db.create_table(u'training_module', (
+        # Adding model 'Assessment'
+        db.create_table(u'training_assessment', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('module_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
         ))
-        db.send_create_signal(u'training', ['Module'])
+        db.send_create_signal(u'training', ['Assessment'])
 
         # Adding model 'Question'
         db.create_table(u'training_question', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('module', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Module'])),
-            ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'])),
-            ('question_number', self.gf('django.db.models.fields.IntegerField')()),
-            ('question_text', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('assessment', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Assessment'])),
+            ('section', self.gf('django.db.models.fields.IntegerField')()),
+            ('serial', self.gf('django.db.models.fields.IntegerField')()),
+            ('text', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal(u'training', ['Question'])
+
+        # Adding model 'Translation'
+        db.create_table(u'training_translation', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Question'])),
+            ('text', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal(u'training', ['Translation'])
 
         # Adding model 'Training'
         db.create_table(u'training_training', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('training_date', self.gf('django.db.models.fields.DateField')()),
+            ('date', self.gf('django.db.models.fields.DateField')()),
             ('place', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('state', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['geographies.State'], null=True, blank=True)),
             ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'])),
         ))
         db.send_create_signal(u'training', ['Training'])
@@ -50,26 +60,37 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(u'training_training_trainer', ['training_id', 'trainer_id'])
 
-        # Adding model 'MediatorScore'
-        db.create_table(u'training_mediatorscore', (
+        # Adding M2M table for field participants on 'Training'
+        db.create_table(u'training_training_participants', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('training', models.ForeignKey(orm[u'training.training'], null=False)),
+            ('animator', models.ForeignKey(orm[u'people.animator'], null=False))
+        ))
+        db.create_unique(u'training_training_participants', ['training_id', 'animator_id'])
+
+        # Adding model 'Score'
+        db.create_table(u'training_score', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('training', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Training'])),
-            ('animator', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['people.Animator'])),
+            ('participant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['people.Animator'])),
             ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Question'])),
             ('score', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'training', ['MediatorScore'])
+        db.send_create_signal(u'training', ['Score'])
 
 
     def backwards(self, orm):
         # Deleting model 'Trainer'
         db.delete_table(u'training_trainer')
 
-        # Deleting model 'Module'
-        db.delete_table(u'training_module')
+        # Deleting model 'Assessment'
+        db.delete_table(u'training_assessment')
 
         # Deleting model 'Question'
         db.delete_table(u'training_question')
+
+        # Deleting model 'Translation'
+        db.delete_table(u'training_translation')
 
         # Deleting model 'Training'
         db.delete_table(u'training_training')
@@ -77,8 +98,11 @@ class Migration(SchemaMigration):
         # Removing M2M table for field trainer on 'Training'
         db.delete_table('training_training_trainer')
 
-        # Deleting model 'MediatorScore'
-        db.delete_table(u'training_mediatorscore')
+        # Removing M2M table for field participants on 'Training'
+        db.delete_table('training_training_participants')
+
+        # Deleting model 'Score'
+        db.delete_table(u'training_score')
 
 
     models = {
@@ -220,40 +244,49 @@ class Migration(SchemaMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
-        u'training.mediatorscore': {
-            'Meta': {'object_name': 'MediatorScore'},
-            'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']"}),
+        u'training.assessment': {
+            'Meta': {'object_name': 'Assessment'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        u'training.question': {
+            'Meta': {'object_name': 'Question'},
+            'assessment': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Assessment']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'section': ('django.db.models.fields.IntegerField', [], {}),
+            'serial': ('django.db.models.fields.IntegerField', [], {}),
+            'text': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'training.score': {
+            'Meta': {'object_name': 'Score'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'participant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']"}),
             'question': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Question']"}),
             'score': ('django.db.models.fields.IntegerField', [], {}),
             'training': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Training']"})
         },
-        u'training.module': {
-            'Meta': {'object_name': 'Module'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'module_name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'training.question': {
-            'Meta': {'object_name': 'Question'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']"}),
-            'module': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Module']"}),
-            'question_number': ('django.db.models.fields.IntegerField', [], {}),
-            'question_text': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
         u'training.trainer': {
             'Meta': {'object_name': 'Trainer'},
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.State']", 'null': 'True', 'blank': 'True'})
+            'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         u'training.training': {
             'Meta': {'object_name': 'Training'},
+            'date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']"}),
+            'participants': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.Animator']", 'symmetrical': 'False'}),
             'place': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['training.Trainer']", 'symmetrical': 'False'}),
-            'training_date': ('django.db.models.fields.DateField', [], {})
+            'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.State']", 'null': 'True', 'blank': 'True'}),
+            'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['training.Trainer']", 'symmetrical': 'False'})
+        },
+        u'training.translation': {
+            'Meta': {'object_name': 'Translation'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Question']"}),
+            'text': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'videos.language': {
             'Meta': {'object_name': 'Language'},
