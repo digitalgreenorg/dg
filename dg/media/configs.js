@@ -681,7 +681,7 @@ function() {
 				date: {
 					required: 'Screening date is required',
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
-                    invalidDate: 'Invalid date',
+                    invalidDate: 'Future date can\'t be added',
 				},
 				start_time: {
 					required: 'Screening start time is required',
@@ -741,7 +741,8 @@ function() {
                 },                
                 date_of_adoption: {
                     required: true,
-					validateDate: true
+					validateDate: true,
+                    invalidDate : { date : 'date' },
                 }
             },
             messages: {
@@ -752,7 +753,8 @@ function() {
 					required: "video is required"
 				},
 				date_of_adoption: {
-					required: "Date of Adoption is required"
+					required: "Date of Adoption is required",
+                    invalidDate: 'Future date can\'t be added',
 				}
 			},
             highlight: function(element, errorClass, validClass) {
