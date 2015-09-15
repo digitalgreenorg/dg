@@ -152,7 +152,7 @@ CREATE INDEX village_precalculation_copy_block_id ON village_precalculation_copy
 CREATE INDEX village_precalculation_copy_district_id ON village_precalculation_copy(district_id, date);
 CREATE INDEX village_precalculation_copy_country_id ON village_precalculation_copy(country_id, date);
 
---Screeingwisedata table for raw_data_analytics
+-- Screeingwisedata table for raw_data_analytics
 DROP TABLE IF EXISTS `activities_screeningwisedata`;
 CREATE TABLE `activities_screeningwisedata` (
   `id` int(11) not null AUTO_INCREMENT,
@@ -181,7 +181,7 @@ CREATE INDEX activities_screeningwisedata_animator_id ON activities_screeningwis
 CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id); 
 CREATE INDEX activities_screeningwisedata_video_id ON activities_screeningwisedata(video_id);
 
---Animatorwisedata for raw_data_analytics
+-- Animatorwisedata for raw_data_analytics
 DROP TABLE IF EXISTS `people_animatorwisedata`;
 CREATE TABLE `people_animatorwisedata` ( 
   `id` int(11) not null AUTO_INCREMENT,
