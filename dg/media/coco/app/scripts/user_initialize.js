@@ -13,6 +13,8 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
         timeOrder, 'End time should be later than start time');
         $.validator.addMethod('dateOrder',
         dateOrder, 'End date should be later than start date');
+        $.validator.addMethod('invalidDate',
+        invalidDate,'Invalid date');
 
         //onLogin callback ... used to check for reset database trigger
         //this thing belongs somewhere else...in app initialize probably...its a framework's thing
@@ -114,6 +116,31 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
             } else {
                 check = false;
             }
+            return check;
+        }
+
+        function invalidDate(value){
+            var check = false;
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            var today = yyyy+'/'+mm+'/'+dd;
+            if(value > today)
+            {
+                alert("hi");
+            }
+            else
+            {
+                alert("bye");;
+            }
+
             return check;
         }
     return {

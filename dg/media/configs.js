@@ -659,7 +659,8 @@ function() {
             rules: {
                 date: {
                     required: true,
-                    validateDate: true
+                    validateDate: true,
+                    invalidDate : { date : 'date' }
                 },
                 start_time: {
                     required: true,
@@ -680,6 +681,7 @@ function() {
 				date: {
 					required: 'Screening date is required',
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
+                    invalidDate: 'Invalid date',
 				},
 				start_time: {
 					required: 'Screening start time is required',
