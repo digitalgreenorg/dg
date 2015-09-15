@@ -173,7 +173,7 @@ CREATE TABLE `activities_screeningwisedata` (
   `video_title` VARCHAR(200) not null,
   `persongroup_id` INT(11),
   PRIMARY KEY (`id`)
-)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX activities_screeningwisedata_screening_id ON activities_screeningwisedata(screening_id);
 CREATE INDEX activities_screeningwisedata_village_id ON activities_screeningwisedata(village_id); 
@@ -200,7 +200,7 @@ CREATE TABLE `people_animatorwisedata` (
   `assignedvillage_id` BIGINT(20),
   `start_date` date, 
   PRIMARY KEY (`id`)
-)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
