@@ -8,7 +8,7 @@ from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Min, Count
 
-from people.models import Person
+from people.models import Person, Animator, AnimatorAssignedVillage
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from geographies.models import Village
 from videos.models import Video
@@ -34,7 +34,7 @@ class AnalyticsSync():
         import subprocess
         import MySQLdb
         #Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'digitalgreen', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'dg_sandbox', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not recreate schema")
         print "Recreated schema"
