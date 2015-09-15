@@ -20,3 +20,5 @@ xlwt==0.7.5
 Pillow==2.5.1
 unicodecsv==0.9.4
 isodate==0.5.1
+pandas
+numpy
