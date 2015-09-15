@@ -98,6 +98,27 @@ class AnalyticsSync():
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into person_adopt_practice_myisam"
 
+            #activities_screeningwisedata
+            self.db_cursor.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
+                                        screening_id, old_coco_id, screening_date, start_time, end_time, location, village_id, animator_id, 
+                                        partner_id, video_id, video_title, persongroup_id) 
+                                        SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
+                                        A.old_coco_id, A.date, A.start_time, A.end_time, A.location, A.village_id, A.animator_id, A.partner_id, B.video_id, D.title, C.PERSONGROUP_ID 
+                                        from activities_screening A join activities_screening_videoes_screened B on B.screening_id=A.id join videos_video D on B.video_id=D.id 
+                                        join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
+            print "Finished insert into activities_screeningwisedata"
+
+            #people_animatorwisedata
+            self.db_cursor.execute("""INSERT INTO people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified, 
+                                        animator_id, old_coco_id, animator_name,gender, phone_no, partner_id, district_id, total_adoptions, 
+                                        assignedvillage_id, start_date )
+                                        SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
+                                        A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date 
+                                        from people_animator A 
+                                        join people_animatorassignedvillage B on A.id=B.animator_id""")
+            print "Finished insert into people_animatorwisedata"
+
+
             # main_data_dst stores all the counts for every date , every village and every partner                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0, tot_male_act = 0,
                 tot_fem_act = 0, tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
