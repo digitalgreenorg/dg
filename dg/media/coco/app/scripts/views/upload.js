@@ -309,7 +309,7 @@ define([
                                     }
 
                                     else if(error.status == 401){
-                                        alert('Session time out. Login in again with internet connected');
+                                        alert('Session time out. Login in again!');
                                         that.tear_down();
                                         that.server_connectivity_lost = true;
                                         dfd.reject(error);
