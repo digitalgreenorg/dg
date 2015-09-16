@@ -660,7 +660,7 @@ function() {
                 date: {
                     required: true,
                     validateDate: true,
-                    invalidDate : { date : 'date' }
+                    invalidDate : true
                 },
                 start_time: {
                     required: true,
@@ -742,7 +742,7 @@ function() {
                 date_of_adoption: {
                     required: true,
 					validateDate: true,
-                    invalidDate : { date : 'date' },
+                    invalidDate : true,
                 }
             },
             messages: {

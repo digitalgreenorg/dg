@@ -120,7 +120,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
         }
 
         function invalidDate(value){
-            alert("hi");
             var check = false;
             var today = new Date();
             var dd = today.getDate();
@@ -137,7 +136,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
             var selected_date = Date.parse(value);
             if( selected_date > current_date){
                 check = false;
-                alert(check);
             }
             else{
                 check = true;
