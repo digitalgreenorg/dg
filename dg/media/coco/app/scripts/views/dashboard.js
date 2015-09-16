@@ -151,7 +151,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     .always(function() {
                     //upload finished
                     //start inc download - even if upload failed and internet connectivity is available 
-                    if(!UploadView.internet_connectivity_lost)  {
+                    if(!UploadView.server_connectivity_lost)  {
                         that.inc_download({
                             background: false
                         })

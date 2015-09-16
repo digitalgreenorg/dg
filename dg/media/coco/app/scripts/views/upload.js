@@ -55,7 +55,7 @@ define([
         //initializes the global vars used, ui
         initialize_upload: function() {
             this.user_interrupt = false;
-            this.internet_connectivity_lost = false;
+            this.server_connectivity_lost = false;
             this.in_progress = true;
             this.$('#upload_modal').modal({
                 keyboard: false,
@@ -189,7 +189,7 @@ define([
                 return whole_upload_dfd.reject("User stopped Sync");
             }
 
-            else if (this.internet_connectivity_lost){
+            else if (this.server_connectivity_lost){
                  //put the upload object back
                 this.upload_collection.unshift(this.current_entry);
                 //stop the process
@@ -202,7 +202,7 @@ define([
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
                         //check for internet connectivity
-                        if (that.internet_connectivity_lost) {
+                        if (that.server_connectivity_lost) {
                         //put the upload object back
                         that.upload_collection.unshift(this.current_entry);
                         //stop the process
@@ -221,7 +221,7 @@ define([
                     .always(function() {
                         // delete the object..finished processing it
                         //if internet connectivity exists
-                        if (!that.internet_connectivity_lost) {
+                        if (!that.server_connectivity_lost) {
                         that.current_entry.destroy();
                         // continue processing the objects even if this object failed
                         //  increment progress bar
@@ -303,10 +303,18 @@ define([
                                         var total = that.upload_status["total"];
                                         var pending = total - uploaded;
                                         that.tear_down();  
-                                        that.internet_connectivity_lost = true;
+                                        that.server_connectivity_lost = true;
                                         that.status_view(total, uploaded, pending);
                                         dfd.reject(error);
                                     }
+
+                                    else if(error.status == 401){
+                                        alert('Session time out. Login in again with internet connected');
+                                        that.tear_down();
+                                        that.server_connectivity_lost = true;
+                                        dfd.reject(error);
+                                    }
+                                    
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
