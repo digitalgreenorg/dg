@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
 
-from models import Trainer, Assessment, Question, Translation, Training, Score
+from models import Trainer, Assessment, Question, Training, Score
+from geographies.models import District, Village
+from programs.models import Partner
 from videos.models import Language
 from tastypie import fields
 from tastypie.authorization import Authorization, DjangoAuthorization
@@ -13,7 +15,7 @@ from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
-from people.models import Animator
+from people.models import Animator, AnimatorAssignedVillage
 
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
 
@@ -72,6 +74,27 @@ def dict_to_foreign_uri_m2m_coco(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
+class PartnerResource(ModelResource):
+	class Meta:
+		queryset = Partner.objects.all()
+		resource_name = 'partner'
+		authentication = ApiKeyAuthentication()
+		authorization = Authorization()
+
+class VillageResource(ModelResource):
+	class Meta:
+		queryset = Village.objects.all()
+		resource_name = 'village'
+		authentication = ApiKeyAuthentication()
+		authorization = Authorization()
+
+class DistrictResource(ModelResource):
+    class Meta:
+        queryset = District.objects.all()
+        resource_name = 'district'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+        max_limit = None
 
 
 class TrainerResource(ModelResource):
@@ -94,8 +117,8 @@ class LanguageResource(ModelResource):
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
     assigned_villages = fields.ListField()
-    partner = fields.ForeignKey('coco.api.PartnerResource', 'partner')
-    district = fields.ForeignKey('coco.api.DistrictResource', 'district', null=True)
+    partner = fields.ForeignKey('training.api.PartnerResource', 'partner')
+    district = fields.ForeignKey('training.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
         authentication = ApiKeyAuthentication()
@@ -106,8 +129,8 @@ class MediatorResource(ModelResource):
         excludes = ['time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
-    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m_coco, field_name='assigned_villages', resource_name = 'village')
-    hydrate_district = partial(dict_to_foreign_uri_coco, field_name ='district')
+    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+    hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
     
     def dehydrate_assigned_villages(self, bundle):
         return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
@@ -134,6 +157,7 @@ class AssessmentResource(ModelResource):
 		authorization = Authorization()
 
 class QuestionResource(ModelResource):
+	language = fields.ForeignKey('training.api.LanguageResource', 'language')
 	assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
 	class Meta:
 		resource_name = 'question'
@@ -142,16 +166,9 @@ class QuestionResource(ModelResource):
 		authorization = Authorization()
 	dehydrate_assessment = partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
 	hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
+	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
+	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
 
-class TranslationResource(ModelResource):
-	question = fields.ForeignKey('training.api.QuestionResource', 'question')
-	class Meta:
-		resource_name = 'translation'
-		queryset = Question.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
-	dehydrate_question = partial(foreign_key_to_id, field_name='question', sub_field_names=['id','text'])
-	hydrate_question = partial(dict_to_foreign_uri, field_name='question')
 
 class TrainingResource(ModelResource):
 	language = fields.ForeignKey('training.api.LanguageResource', 'language')
