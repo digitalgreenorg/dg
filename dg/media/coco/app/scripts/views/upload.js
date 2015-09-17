@@ -11,9 +11,10 @@ define([
     'offline_utils',
     'online_utils',
     'views/upload_status',
+    'auth',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView, auth) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -206,7 +207,7 @@ define([
                         //put the upload object back
                         that.upload_collection.unshift(this.current_entry);
                         //stop the process
-                        return whole_upload_dfd.reject("Internet Lost during Upload");
+                        return whole_upload_dfd.reject("Server connection lost during Upload");
                         }
                         //it would be reached in foll cases:
                         //object to be uploaded doesn't exists in offline anymore
@@ -313,6 +314,7 @@ define([
                                         that.tear_down();
                                         that.server_connectivity_lost = true;
                                         dfd.reject(error);
+                                        //auth.logout();
                                     }
                                     
                                     // server returned error when uploading object
