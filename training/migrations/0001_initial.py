@@ -8,6 +8,21 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'TrainingUser'
+        db.create_table(u'training_traininguser', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='training_user', unique=True, to=orm['auth.User'])),
+        ))
+        db.send_create_signal(u'training', ['TrainingUser'])
+
+        # Adding M2M table for field states on 'TrainingUser'
+        db.create_table(u'training_traininguser_states', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('traininguser', models.ForeignKey(orm[u'training.traininguser'], null=False)),
+            ('state', models.ForeignKey(orm[u'geographies.state'], null=False))
+        ))
+        db.create_unique(u'training_traininguser_states', ['traininguser_id', 'state_id'])
+
         # Adding model 'Trainer'
         db.create_table(u'training_trainer', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -73,6 +88,12 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'TrainingUser'
+        db.delete_table(u'training_traininguser')
+
+        # Removing M2M table for field states on 'TrainingUser'
+        db.delete_table('training_traininguser_states')
+
         # Deleting model 'Trainer'
         db.delete_table(u'training_trainer')
 
@@ -272,6 +293,12 @@ class Migration(SchemaMigration):
             'place': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.State']", 'null': 'True', 'blank': 'True'}),
             'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['training.Trainer']", 'null': 'True', 'blank': 'True'})
+        },
+        u'training.traininguser': {
+            'Meta': {'object_name': 'TrainingUser'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'states': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['geographies.State']", 'symmetrical': 'False'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'training_user'", 'unique': 'True', 'to': u"orm['auth.User']"})
         },
         u'videos.language': {
             'Meta': {'object_name': 'Language'},
