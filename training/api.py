@@ -6,7 +6,7 @@ from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
 
 from models import Trainer, Assessment, Question, Training, Score
-from geographies.models import District, Village
+from geographies.models import District, Village, State
 from programs.models import Partner
 from videos.models import Language
 from tastypie import fields
@@ -262,7 +262,7 @@ class MediatorResource(BaseResource):
         queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
-        validation = ModelFormValidation(form_class=AnimatorForm)
+        #validation = ModelFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
