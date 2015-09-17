@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
 
-from models import Trainer, Assessment, Question, Training, Score
+from models import Trainer, Assessment, Question, Training, Score, TrainingUser
 from geographies.models import District, Village, State
 from programs.models import Partner
 from videos.models import Language
