@@ -13,7 +13,7 @@ from tastypie import fields
 from tastypie.authorization import Authorization, DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from tastypie.exceptions import ImmediateHttpResponse
+from tastypie.exceptions import ImmediateHttpResponse, NotFound
 from tastypie.resources import ModelResource
 from people.models import Animator, AnimatorAssignedVillage
 
@@ -89,19 +89,36 @@ class VillageResource(ModelResource):
 		authentication = ApiKeyAuthentication()
 		authorization = Authorization()
 
+def get_user_districts(user_id):
+	coco_user = TrainingUser.objects.get(user_id = user_id)
+	user_states = coco_user.get_states()
+	districts_of_states = District.objects.filter(state__in = user_states).values_list('id', flat = True)
+	return districts_of_states
+
+class DistrictAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_districts(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_districts(bundle.request.user.id):
+            return True
+        # Is the requested object owned by the user?
+        else:
+            raise NotFound( "Not allowed to download District")
+
 class DistrictResource(ModelResource):
     class Meta:
         queryset = District.objects.all()
         resource_name = 'district'
         authentication = ApiKeyAuthentication()
-        authorization = Authorization()
+        authorization = DistrictAuthorization()
         max_limit = None
 
 def get_user_mediators(user_id):
     coco_user = TrainingUser.objects.get(user_id = user_id)
     user_states = coco_user.get_states()
     mediators_from_same_state = Animator.objects.filter(district__state__id__in = user_states).distinct().values_list('id', flat = True)      
-    return mediators_from_same_district
+    return mediators_from_same_state
 
 class StateAuthorization(Authorization):
     def __init__(self,field):
@@ -159,8 +176,9 @@ class TrainerResource(ModelResource):
 	language = fields.ForeignKey('training.api.LanguageResource', 'language')
 	class Meta:
 		resource_name = 'trainer'
-		queryset = Trainer.objects.all()
+		queryset = Trainer.objects.prefetch_related('language').all()
 		authentication = ApiKeyAuthentication()
+		always_return_data = True
 		authorization = Authorization()
 	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
 	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
@@ -182,7 +200,7 @@ class MediatorResource(ModelResource):
         authentication = ApiKeyAuthentication()
         queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
-        authorization = Authorization()
+        authorization = MediatorAuthorization()
         always_return_data = True
         excludes = ['time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
@@ -230,13 +248,30 @@ class QuestionResource(ModelResource):
 
 class TrainingResource(ModelResource):
 	language = fields.ForeignKey('training.api.LanguageResource', 'language')
-	state = fields.ForeignKey('training.api.StateResource', 'state')
+	assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
+	trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
+	participants = fields.ToManyField('training.api.MediatorResource', 'participants')
 	class Meta:
 		resource_name = 'training'
 		queryset = Training.objects.all()
 		authentication = ApiKeyAuthentication()
 		authorization = Authorization()
+		always_return_data = True
 	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+	hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
+	hydrate_trainer = partial(dict_to_foreign_uri_m2m, field_name = 'trainer', resource_name = 'trainer')
+	hydrate_participants = partial(dict_to_foreign_uri_m2m, field_name = 'participants', resource_name = 'mediator')
+	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])	
+	dehydrate_assessment = 	partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
+
+	def dehydrate_trainer(self, bundle):
+	        return [{'id': trainer.id, 'name':trainer.name} for trainer in bundle.obj.trainer.all() ]
+
+	def dehydrate_participants(self, bundle):
+		return [{'id':mediator.id, 'name':mediator.name} for mediator in bundle.obj.participants.all()]
+
+	
+
 
 #------------------------------------------------------------------------------------------#
 
@@ -245,72 +280,34 @@ class StateResource(ModelResource):
     
     class Meta:
         max_limit = None
-        queryset = State.objects.all()
-        resource_name = 'state'
+        queryset = State.objects.all()        
+	resource_name = 'state'
         authentication = ApiKeyAuthentication()
         authorization = StateAuthorization('id__in')
         always_return_data = True
 
-class MediatorResource(BaseResource):
-    mediator_label = fields.CharField()
-    assigned_villages = fields.ListField()
-    partner = fields.ForeignKey('coco.api.PartnerResource', 'partner')
-    district = fields.ForeignKey('coco.api.DistrictResource', 'district', null=True)
+class ScoreResource(ModelResource):
+    participant = fields.ForeignKey('training.api.MediatorResource', 'participant')
+    training = fields.ForeignKey('training.api.TrainingResource', 'training')
+    question = fields.ForeignKey('training.api.QuestionResource', 'question')
     class Meta:
         max_limit = None
-        authentication = SessionAuthentication()
-        queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
-        resource_name = 'mediator'
-        authorization = MediatorAuthorization()
-        #validation = ModelFormValidation(form_class=AnimatorForm)
+        queryset = Score.objects.all()
+        resource_name = 'score'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
         always_return_data = True
-        excludes = ['time_created', 'time_modified' ]
-    dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
-    dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
-    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
-    hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
+    hydrate_participant = partial(dict_to_foreign_uri, field_name='participant', resource_name='mediator')
+    hydrate_training = partial(dict_to_foreign_uri, field_name='training')
+    hydrate_question = partial(dict_to_foreign_uri, field_name='question')
     
-    def dehydrate_assigned_villages(self, bundle):
-        return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
+    dehydrate_participant = partial(foreign_key_to_id, field_name='participant', sub_field_names=['id','name'])
+    dehydrate_training = partial(foreign_key_to_id, field_name='training', sub_field_names=['id'])
+    dehydrate_question = partial(foreign_key_to_id, field_name='question', sub_field_names=['id','text'])	
 
-    def dehydrate_mediator_label(self,bundle):
-        #for sending out label incase of dropdowns
-        return ','.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
-            
-    def obj_create(self, bundle, **kwargs):
-        bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
-        vil_list = bundle.data.get('assigned_villages')
-        for vil in vil_list:
-            vil = Village.objects.get(id = int(vil.split('/')[-2]))
-            u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
-            u.save()
-    
-        return bundle
 
-    def obj_update(self, bundle, **kwargs):
-        #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
-        mediator_id = bundle.data.get('id')
-        vil_id_list = []
-        for vil_resource in bundle.data.get('assigned_villages'):
-            vil_id_list.append(int(vil_resource.split('/')[-2]))
-        existing_vil_ids = AnimatorAssignedVillage.objects.filter(animator__id=mediator_id).values_list('village__id', flat=True)
-        #delete only if assigned villages are different
-        if len(list(set(vil_id_list) & set(existing_vil_ids))) != len(vil_id_list) :
-            #first delete the old associations
-            del_objs = AnimatorAssignedVillage.objects.filter(animator__id=mediator_id).delete()
-            #add new villages again
-            vil_list = bundle.data.get('assigned_villages')
-            for vil in vil_list:
-                vil = Village.objects.get(id = int(vil.split('/')[-2]))
-                u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
-                u.save()
-    
-        return bundle
-        
-    def hydrate_partner(self, bundle):
-        partner_id = get_user_partner_id(bundle.request.user.id)
-        if partner_id:
-            bundle.data['partner'] ="/coco/api/v2/partner/"+str(partner_id)+"/"
-        return bundle
+
+
+
+
 #---------------------------------------------------------------------------#

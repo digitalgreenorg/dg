@@ -262,7 +262,7 @@ class MediatorResource(BaseResource):
     class Meta:
         max_limit = None
         authentication = SessionAuthentication()
-        queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
+        queryset = Animator.objects.prefetch_related('assigned_villages', 'district').all()
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         validation = ModelFormValidation(form_class=AnimatorForm)

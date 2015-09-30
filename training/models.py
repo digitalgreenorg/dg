@@ -37,7 +37,7 @@ class Training(models.Model):
 	id = models.AutoField(primary_key=True)
 	date = models.DateField()
 	place = models.CharField(max_length=200)
-	state = models.ForeignKey(State, null=True, blank=True)
+	assessment = models.ForeignKey(Assessment, null=True, blank=True)
 	trainer = models.ManyToManyField(Trainer, null=True, blank=True)
 	language = models.ForeignKey(Language, null=True, blank=True)
 	participants = models.ManyToManyField(Animator)
