@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateField')()),
             ('place', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('state', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['geographies.State'], null=True, blank=True)),
+            ('assessment', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['training.Assessment'], null=True, blank=True)),
             ('language', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Language'], null=True, blank=True)),
         ))
         db.send_create_signal(u'training', ['Training'])
@@ -286,12 +286,12 @@ class Migration(SchemaMigration):
         },
         u'training.training': {
             'Meta': {'object_name': 'Training'},
+            'assessment': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['training.Assessment']", 'null': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']", 'null': 'True', 'blank': 'True'}),
             'participants': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.Animator']", 'symmetrical': 'False'}),
             'place': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.State']", 'null': 'True', 'blank': 'True'}),
             'trainer': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['training.Trainer']", 'null': 'True', 'blank': 'True'})
         },
         u'training.traininguser': {
