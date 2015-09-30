@@ -183,7 +183,7 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
-    search_fields = ['state_ name', 'country__country_name']
+    search_fields = ['state_name', 'country__country_name']
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
