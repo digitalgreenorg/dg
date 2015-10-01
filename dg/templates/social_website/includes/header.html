@@ -71,21 +71,28 @@
             </div>
             <div id="survey" class="survey media">
                 <div class="feedback-modal img-size-sq-small">
-                    <a href="#openModal" class="btn"><img src="{{STATIC_URL}}social_website/content/feedback/feedback.png">Feedback</img></a>
+                    <a href="#surveyModal" class="btn"><img src="{{STATIC_URL}}social_website/content/feedback/feedback.png"> Feedback</img></a>
                 </div>
-                <div id="openModal" class="modalDialog">
-                    <div class="centered">
+                <div id="surveyModal" class="modalDialog">
+                    <div class="">
                         <a href="#close" title="Close" class="close">X</a>
-                        <h2 class="hdg-e layout-vr-sm">Thanks for visiting!</h2>
+                        <h2 class="hdg-e layout-vr-sm centered">Thanks for visiting!</h2>
                         <p class="hdg-f layout-vr-sm">Please take a moment to share your feedback to help us improve your experience.</p>
-                        <div class="img-size-feedback">
-                            <img src="{{STATIC_URL}}social_website/content/feedback/very_sad.png"></img>
-                            <img src="{{STATIC_URL}}social_website/content/feedback/sad.png"></img>
-                            <img src="{{STATIC_URL}}social_website/content/feedback/neutral.png"></img>
-                            <img src="{{STATIC_URL}}social_website/content/feedback/happy.png"></img>
-                            <img src="{{STATIC_URL}}social_website/content/feedback/very_happy.png"></img>
+                        <div class="img-size-feedback centered layout-vr-sm">
+                            <img data="5" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_happy.png"></img>
+                            <img data="4" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/happy.png"></img>
+                            <img data="3" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/neutral.png"></img>
+                            <img data="2" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/sad.png"></img>
+                            <img data="1" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_sad.png"></img>
                         </div>
-                        <a href="" target="_blank" class="btn">SUBMIT</a>
+                        <div class="js-modal comment-survey">
+                            <p class="hdg-f layout-vr-sm">Any comments you'd like to share with us?</p>
+                            <textarea id="comments" name="comments" class="layout-vr-sm" id="comments" rows="4" cols="59"></textarea>
+                            <p class="hdg-f layout-vr-md">If you would like a response from us, please enter your e-mail address.
+                            <input id="email" type="text" name="email" class="layout-vr-md" id="email" style="width:99%">
+                            <a id="button" class="btn js-submit-form">SUBMIT</a>
+                            <div id="result"></div>
+                        </div>
                     </div>
                 </div>
             </div>

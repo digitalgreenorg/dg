@@ -59,6 +59,11 @@ define(function(require) {
             // helpers
             var $searchContainer = jQuery(".js-search-wrapper");
             references.searchViewController = new SearchViewController($searchContainer);
+
+            //survey
+            references.$feedbackModal = jQuery(".js-modal");
+            references.$smileyClick = jQuery(".js-smiley-click")
+            references.$submitForm = jQuery(".js-submit-form")
         },
         
         _initEvents: function() {
@@ -69,6 +74,12 @@ define(function(require) {
 
             boundFunctions.onUserImageClick = this._onUserImageClick.bind(this);
             references.$userImage.on('click', boundFunctions.onUserImageClick);
+
+            boundFunctions.onSmileyClick = this._onSmileyClick.bind(this);
+            references.$smileyClick.on('click', boundFunctions.onSmileyClick);
+
+            boundFunctions.onSubmitClick = this._onSubmitClick.bind(this);
+            references.$submitForm.on('click', boundFunctions.onSubmitClick);
         },
 
         _onOptionChanged: function(value) {
@@ -81,6 +92,41 @@ define(function(require) {
             this._references.$userDropDown.toggle();
             this._references.$userDropDownArrow.toggle();
             $('html, body').animate({scrollTop:0}, 'slow');
+        },
+
+        _onSmileyClick: function(e){
+            e.preventDefault();
+            $(".selected").removeClass("selected");
+            var a = $(e.currentTarget);
+            a.addClass("selected");
+            this._references.$feedbackModal.removeClass("comment-survey");
+        },
+
+        _onSubmitClick: function(){
+            var comments = $("#comments").val();
+            var email = $("#email").val();
+            var csrf_token = $("#csrftoken").val();
+            var a = $(".selected");
+            var rating = a.attr("data");
+            $.ajax({
+                url : "/feedbacksubmit_json", 
+                type : "POST",
+                dataType: "json", 
+                data : {
+                    comments: comments,
+                    email: email,
+                    rating: rating
+                    },
+                success : function(json) {
+                    $('#result').append('ServerResponse:'+json.server_response);
+                    location.href="#close";
+                },
+                error : function(xhr,errmsg,err) {
+                    alert(xhr.status + ": " + xhr.responseText);
+                    location.href="#close";
+                }
+            });
+            return false;
         },
 
         /**

@@ -1136,7 +1136,7 @@ a {
 
 .media .img-size-sq-small img{
 	width: 60px;
-	height: 60px;
+	height: 10px;
 }
 
 .media .img-size-feedback img{
@@ -1146,7 +1146,11 @@ a {
 }
 
 .img-size-feedback :hover {
-    opacity: 0.5
+    opacity: 0.5;
+}
+
+.img-size-feedback .selected {
+    opacity: 0.5;
 }
 
 .media .img-size-logo img{
@@ -4008,13 +4012,17 @@ Awards Strip
 }
 
 .modalDialog > div {
-    width: 400px;
+    width: 375px;
     position: relative;
     margin: 10% auto;
-    padding: 25px 35px 30px 30px;
+    padding: 25px 25px 25px 25px;
     border-radius: 10px;
     border: 2px solid #090;
     background: #fff;
+}
+
+.selected {
+    opacity: 0.6;
 }
 
 .close {
@@ -4038,4 +4046,8 @@ Awards Strip
 
 .close:hover { 
     background: #090; 
+}
+
+.comment-survey {
+    display: none;
 }
