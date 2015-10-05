@@ -4048,6 +4048,30 @@ Awards Strip
     background: #090; 
 }
 
+/* WebKit, Blink, Edge */
+::-webkit-input-placeholder { 
+    font-size: 12px;
+}
+
+/* Mozilla Firefox 4 to 18 */
+:-moz-placeholder { 
+   font-size: 12px;
+}
+
+/* Mozilla Firefox 19+ */
+::-moz-placeholder { 
+   font-size: 12px;
+}
+
+/* Internet Explorer 10-11 */
+:-ms-input-placeholder { 
+   font-size: 12px;
+}
+
+.text-width-survey {
+    width: 99%;
+}
+
 .comment-survey {
     display: none;
 }

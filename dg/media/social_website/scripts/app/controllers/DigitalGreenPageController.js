@@ -118,7 +118,6 @@ define(function(require) {
                     rating: rating
                     },
                 success : function(json) {
-                    $('#result').append('ServerResponse:'+json.server_response);
                     location.href="#close";
                 },
                 error : function(xhr,errmsg,err) {
