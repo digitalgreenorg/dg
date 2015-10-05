@@ -62,8 +62,9 @@ define(function(require) {
 
             //survey
             references.$feedbackModal = jQuery(".js-modal");
-            references.$smileyClick = jQuery(".js-smiley-click")
-            references.$submitForm = jQuery(".js-submit-form")
+            references.$smileyClick = jQuery(".js-smiley-click");
+            references.$submitForm = jQuery(".js-submit-form");
+            references.$modalClick = jQuery(".js-modal-click");
         },
         
         _initEvents: function() {
@@ -74,6 +75,9 @@ define(function(require) {
 
             boundFunctions.onUserImageClick = this._onUserImageClick.bind(this);
             references.$userImage.on('click', boundFunctions.onUserImageClick);
+
+            boundFunctions.onModalClick = this._onModalClick.bind(this);
+            references.$modalClick.on('click', boundFunctions.onModalClick);
 
             boundFunctions.onSmileyClick = this._onSmileyClick.bind(this);
             references.$smileyClick.on('click', boundFunctions.onSmileyClick);
@@ -94,11 +98,18 @@ define(function(require) {
             $('html, body').animate({scrollTop:0}, 'slow');
         },
 
+        _onModalClick: function(e){
+            $(".js-modal").addClass("comment-survey");
+            $('#comments').val('');
+            $('#email').val('');
+            $(".icon-selected").removeClass("icon-selected");
+        },
+
         _onSmileyClick: function(e){
             e.preventDefault();
-            $(".selected").removeClass("selected");
+            $(".icon-selected").removeClass("icon-selected");
             var a = $(e.currentTarget);
-            a.addClass("selected");
+            a.addClass("icon-selected");
             this._references.$feedbackModal.removeClass("comment-survey");
         },
 
@@ -106,7 +117,7 @@ define(function(require) {
             var comments = $("#comments").val();
             var email = $("#email").val();
             var csrf_token = $("#csrftoken").val();
-            var a = $(".selected");
+            var a = $(".icon-selected");
             var rating = a.attr("data");
             $.ajax({
                 url : "/feedbacksubmit_json", 

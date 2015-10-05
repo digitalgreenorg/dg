@@ -1149,7 +1149,7 @@ a {
     opacity: 0.5;
 }
 
-.img-size-feedback .selected {
+.img-size-feedback .icon-selected {
     opacity: 0.5;
 }
 
@@ -3983,10 +3983,12 @@ Awards Strip
 
 .feedback-modal {
     position: fixed;
-    top: 3;
+    top: 1;
     right: 0;
-    bottom: 0;
-    left: 10;
+    bottom: 1;
+    left: 1;
+    margin-top: 200px;
+    margin-bottom: 200px;
     z-index: 9999;
 }
 
@@ -4021,7 +4023,7 @@ Awards Strip
     background: #fff;
 }
 
-.selected {
+.icon-selected {
     opacity: 0.6;
 }
 

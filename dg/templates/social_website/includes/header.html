@@ -70,8 +70,8 @@
                 </div>
             </div>
             <div id="survey" class="survey media">
-                <div class="feedback-modal img-size-sq-small">
-                    <a href="#surveyModal" class="btn">Feedback</img></a>
+                <div class="feedback-modal">
+                    <a href="#surveyModal" class="js-modal-click"><img src="{{STATIC_URL}}social_website/content/feedback/feedback.png"></img></a>
                 </div>
                 <div id="surveyModal" class="modalDialog">
                     <div class="">
@@ -86,9 +86,8 @@
                             <img data="1" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_sad.png"></img>
                         </div>
                         <div class="js-modal comment-survey">
-                            <textarea placeholder="Any comments?" value="Any comments you'd like to share with us?" id="comments" name="comments" class="layout-vr-sm text-width-survey" id="comments" rows="8"></textarea>
-                            <p class="hdg-f">If you would like a response from us, please enter your</p>
-                            <p class="hdg-f layout-vr-sm">e-mail address.</p>
+                            <textarea placeholder="Any comments?" id="comments" name="comments" class="layout-vr-sm text-width-survey" id="comments" rows="8"></textarea>
+                            <p class="hdg-f layout-vr-sm">Want a response? Share your email address.</p>
                             <input id="email" type="text" name="email" class="layout-vr-md text-width-survey" id="email"> 
                             <p class="hdg-f centered layout-vr-md">Thank You!</p>
                             <div class="centered">
