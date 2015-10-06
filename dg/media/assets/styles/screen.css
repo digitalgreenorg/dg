@@ -4078,6 +4078,10 @@ Awards Strip
     height: 25px;
 }
 
+.btn-pointer-feedback {
+    cursor: pointer;
+}
+
 .comment-survey {
     display: none;
 }
