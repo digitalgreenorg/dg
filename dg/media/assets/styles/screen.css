@@ -4070,8 +4070,12 @@ Awards Strip
    font-size: 12px;
 }
 
-.text-width-survey {
+.text-width-feedback {
     width: 99%;
+}
+
+.text-height-feedback {
+    height: 25px;
 }
 
 .comment-survey {
