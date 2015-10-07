@@ -20,7 +20,7 @@ class JharkhandPilot(ExotelService):
             'message': ('audio', self.get_required_message),
             'ivr_menu': ('audio', "http://ivr_menu_audio_file"),
             'ivr_menu_repeat': ('passthru', self.revert_state),
-            'missed_call': ('missedcall', self.handle_missed_call),
+            'missed_call': ('missedcall', self.init_call),
         }
         class_name = "CallEndView{0}".format(self.name)
         self.ServiceCallEndView = type(class_name, (CallEndView,), {'name':class_name})
@@ -66,11 +66,3 @@ class JharkhandPilot(ExotelService):
         n=state["n"]
         state["n"] = n-1
 
-    def handle_missed_call(self, props):
-        # init new call with the number from props.
-        number = int(props)
-        time.sleep(10) # sleep for 10 seconds to hope that the initial missed call has been finished by then. MAYBE NOT NEEDED
-        self.init_call(number)
-        #discarding return values of init_call
-        return 200
-        

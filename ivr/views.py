@@ -34,12 +34,15 @@ class AudioView(View):
             audio_url = cls.audio_url
         else:
             args = (inspect.getargspec(cls.process)).args
+            # The view needs to use both state, which is dynamic, and properties, that are fixed for a call
             if 'props' in args and 'state' in args:
                 call = Call.objects.get(exotel_call_id=call_id)
                 state = json.loads(call.state)
                 ret_val = cls.process(props, state)
+                # The view returns only the URL of the audio file
                 if type(ret_val) == StringType:
                     audio_url = ret_val
+                # The view returns the URL of the audio file AND needs to change the state in the database
                 elif type(ret_val) == TupleType:
                     audio_url = ret_val[0]
                     new_state = ret_val[1]
@@ -47,6 +50,7 @@ class AudioView(View):
                     call.save()
                 else:
                     raise Exception("Process function defined incorrectly.")
+            # The view uses properties fixed at the beginning of the call to identify the audio url
             elif 'props' in args:
                 audio_url = cls.process(props)
             else:
@@ -67,17 +71,14 @@ class PassthruView(View):
         call.save()
         return HttpResponse(status=status)
 
-
 class MissedCallView(View):
-      
+
     @classmethod
     def get(cls, request):
         call_id = request.GET["CallSid"]
         props = request.GET["From"]
+        # TODO create a call in the db. save it's details.
+        time.sleep(5) # sleep for 5 seconds to hope that the initial missed call has been finished by then. MAYBE NOT NEEDED
         status = cls.process(props)
         return HttpResponse(status=status)
 
-
-
-
-    
