@@ -84,8 +84,7 @@ urlpatterns = patterns('',
     (r'^agri/', include(videokheti.urls)),
     (r"^", include("mezzanine.urls")),
 
-    #AJAX
-    url(r'^feedbacksubmit$', 'dg.feedback_view.main'),
+    #AJAX for Feedback
     url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
 )
 

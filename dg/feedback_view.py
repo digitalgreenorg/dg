@@ -3,9 +3,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
-import coco.urls
-import social_website.api_urls
-import social_website.urls
 from communications.models import Feedback
 
 from django.http import *
@@ -13,10 +10,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import simplejson
 from django.views.decorators.csrf import csrf_exempt
-import socket
-
-def main(request):
-   return render_to_response('home.html', context_instance=RequestContext(request))
 
 @csrf_exempt
 def ajax(request):
