@@ -42,10 +42,11 @@ class ExotelService(object):
     def init_props(self):
         return {}
     
-    def init_call(self, mobile_number, props=None):
+    def init_call(self, mobile_number):
         call_url = self.initiate_call_urlformat.format(sid=self.sid)
         flow_url = self.flow_urlformat.format(flow_id=self.flow_id)
         #TODO create a call object. add the id to the CustomField. save the call object
+        props = self.init_props()
         post_data = {
             'From' :  int(mobile_number),
             'CallerId' : self.caller_id,
@@ -56,7 +57,6 @@ class ExotelService(object):
             'StatusCallback' : reverse(self.ServiceCallEndView.get_name()),
             'CustomField' : json.dumps(props),
         }
-        
         r = requests.post(call_url, auth=(self.sid, self.token), data=post_data)
         response_data = json.loads(r.text)
         call_sid = response_data['Call']['Sid']
