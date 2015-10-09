@@ -39,7 +39,7 @@ class HelloBye(ExotelService):
         return props
     
     def all_the_way(self, props, state):
-        if state["n"] is 10:
+        if state["n"] is 3:
             state["all the way"] = True
             status = 200
         else:
