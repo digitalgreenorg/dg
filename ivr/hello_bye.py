@@ -9,7 +9,7 @@ class HelloBye(ExotelService):
     sid = "digitalgreen2"
     token = "421c11b1235067ca30ca87590c80c31eadc46af0"
     caller_id="01130018178"
-    flow_id = "27037"
+    flow_id = "54820"
     views = {}
     
     def __init__(self, **kwargs):
@@ -43,6 +43,7 @@ class HelloBye(ExotelService):
             state["all the way"] = True
             status = 200
         else:
+            state["all the way"] = False
             status = 305
         return (status, state)
     
@@ -53,7 +54,7 @@ class HelloBye(ExotelService):
         return (audio, state)
     
     def get_daily_greeting(self, props):
-        propped = json.loads(props)
-        day_of_week = props["day"]
+        properties = json.loads(props)
+        day_of_week = properties["day"]
         return "http://hello{0}".format(day_of_week) + self.name
         

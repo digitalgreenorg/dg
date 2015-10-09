@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Call(models.Model):
     exotel_call_id = models.CharField(max_length=100)
-    attributes = models.CharField(max_length=100)
+    attributes = models.CharField(max_length=500)
     state = models.CharField(max_length=100)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)

@@ -1,5 +1,6 @@
 import inspect
 import json
+import time
 
 from types import StringType, TupleType
 from django.conf.urls import include, patterns, url
@@ -20,7 +21,7 @@ class CallEndView(View):
         call_id = request.GET["CallSid"]
         call = Call.objects.get(exotel_call_id=call_id)
         #final_response_dict = json.loads(request)
-        call.end(response = request.GET["CustomField"])
+        call.end(response = request)
         return HttpResponse(0)
 
 class AudioView(View):
