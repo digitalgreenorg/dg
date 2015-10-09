@@ -21,6 +21,7 @@ class HelloBye(ExotelService):
             'daily_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_thanks.mp3"),
             'nth_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_thanks.mp3"),
             'all_the_way': ('passthru', self.all_the_way),
+            'missed_call': ('missedcall', self.init_call),
         }
         class_name = "CallEndView{0}".format(self.name)
         self.ServiceCallEndView = type(class_name, (CallEndView,), {'name':class_name})
