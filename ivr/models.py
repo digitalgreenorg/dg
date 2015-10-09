@@ -23,7 +23,7 @@ class Call(models.Model):
         # arguments are a dictionary of relevant data
         # this function adds the information and saves it in the db
         # http://support.exotel.in/support/solutions/articles/48278-outbound-call-to-connect-a-customer-to-an-app
-        self.final_response_dict = response
+        self.attributes = response
         self.save()
         return None
 

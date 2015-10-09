@@ -1,6 +1,8 @@
 from exotel import ExotelService
 from views import CallEndView
 
+import json
+
 class HelloBye(ExotelService):
     name = "hello_bye"
     #TODO some of these must come from settings
@@ -51,6 +53,7 @@ class HelloBye(ExotelService):
         return (audio, state)
     
     def get_daily_greeting(self, props):
+        propped = json.loads(props)
         day_of_week = props["day"]
         return "http://hello{0}".format(day_of_week) + self.name
         

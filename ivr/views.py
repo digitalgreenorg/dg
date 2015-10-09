@@ -19,8 +19,8 @@ class CallEndView(View):
         #TODO end_call should be called from a URL which is sent above as statuscallback
         call_id = request.GET["CallSid"]
         call = Call.objects.get(exotel_call_id=call_id)
-        final_response_dict = json.loads(request)
-        call.end(final_response_dict = final_response_dict)
+        #final_response_dict = json.loads(request)
+        call.end(response = request.GET["CustomField"])
         return HttpResponse(0)
 
 class AudioView(View):
