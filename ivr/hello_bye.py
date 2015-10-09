@@ -17,9 +17,9 @@ class HelloBye(ExotelService):
             self.name = kwargs["name"]
 
         self.views = {
-            'hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/greeting_telugu_2.wav"),
-            'daily_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/greeting_telugu_2.wav"),
-            'nth_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/greeting_telugu_2.wav"),
+            'hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
+            'daily_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
+            'nth_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
             'all_the_way': ('passthru', self.all_the_way),
             'missed_call': ('missedcall', self.init_call),
         }
