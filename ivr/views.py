@@ -81,5 +81,4 @@ class MissedCallView(View):
         # TODO create a call in the db. save it's details.
         time.sleep(5) # sleep for 5 seconds to hope that the initial missed call has been finished by then. MAYBE NOT NEEDED
         status = cls.process(props)
-        return HttpResponse(status=status)
-
+        return HttpResponse(status=200) #We don't need to send a response because passthru is asynchronous 
