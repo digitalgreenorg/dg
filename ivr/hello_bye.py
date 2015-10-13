@@ -17,9 +17,9 @@ class HelloBye(ExotelService):
             self.name = kwargs["name"]
 
         self.views = {
-            'hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
-            'daily_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
-            'nth_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/hindi_introduction.mp3"),
+            'hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/moong_adoption_question.mp3"),
+            'daily_hello': ('audio', "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/moong_adoption_question.mp3"),
+            'nth_hello': ('audio', self.get_nth_hello),
             'all_the_way': ('passthru', self.all_the_way),
             'missed_call': ('missedcall', self.init_call),
         }
@@ -40,7 +40,7 @@ class HelloBye(ExotelService):
         return props
     
     def all_the_way(self, props, state):
-        if state["n"] is 3:
+        if state["n"] is 2:
             state["all the way"] = True
             status = 200
         else:
@@ -50,7 +50,8 @@ class HelloBye(ExotelService):
     
     def get_nth_hello(self, props, state):
         n = state["n"]
-        audio = "http://hello{0}".format(n) + self.name
+        #audio = "http://hello{0}".format(n) + self.name
+        audio = "https://s3.amazonaws.com/dg_ivrs/bihar_pilot/hindi_audios/moong_adoption_question.mp3"
         state["n"] = n+1
         return (audio, state)
     
