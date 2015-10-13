@@ -9,7 +9,22 @@ from django.views.generic import View
 
 from models import Call
 
-class CallEndView(View):
+class ExotelView(View):
+    @classmethod
+    def exotel_response(cls, request, payload, status=200):
+        callSid = request.GET["CallSid"]
+        props = request.GET["CustomField"]
+        frm = request.GET["From"]
+        to = request.GET["To"]
+        response = HttpResponse(payload, content_type="text/plain", status=status)
+        response["CallSid"] = callSid
+        response["From"] = frm
+        response["To"] = to
+        response["DialWhomNumber"] = ""
+        response["CustomField"] =  props
+        return response
+
+class CallEndView(ExotelView):
     @classmethod
     def get_name(cls):
         return cls.__name__
@@ -22,13 +37,13 @@ class CallEndView(View):
         call = Call.objects.get(exotel_call_id=call_id)
         #final_response_dict = json.loads(request)
         call.end(response = request)
-        return HttpResponse(0)
+        response = cls.exotel_response(request, 0)
+        return response
 
-class AudioView(View):
+class AudioView(ExotelView):
     @classmethod
     def get(cls, request):
         audio_url = None
-        
         call_id = request.GET["CallSid"]
         props = request.GET["CustomField"]
         if hasattr(cls, 'audio_url'):
@@ -57,9 +72,10 @@ class AudioView(View):
             else:
                 raise Exception("Process function defined incorrectly.")
         
-        return HttpResponse(audio_url, status=200)
+        response = cls.exotel_response(request, audio_url)
+        return response
 
-class PassthruView(View):
+class PassthruView(ExotelView):
       
     @classmethod
     def get(cls, request):
@@ -70,9 +86,10 @@ class PassthruView(View):
         (status, new_state) = cls.process(props, state)
         call.state = json.dumps(new_state)
         call.save()
-        return HttpResponse(status=status)
+        response = cls.exotel_response(request, None, status=status)
+        return response
 
-class MissedCallView(View):
+class MissedCallView(ExotelView):
 
     @classmethod
     def get(cls, request):
