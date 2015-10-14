@@ -1,5 +1,13 @@
 from django.db import models
 
+from geographies.models import District
+
+IVR_SERVICE = (
+        ('hello', 'hello'),
+        ('greeting', 'greeting'),
+        ('jharkhand_pilot', 'jharkhand_pilot'),
+)
+
 # Create your models here.
 class Call(models.Model):
     exotel_call_id = models.CharField(max_length=100)
@@ -27,4 +35,8 @@ class Call(models.Model):
         self.save()
         return None
 
-
+class Broadcast(models.Model):
+    service = models.CharField(max_length=20, choices=IVR_SERVICE)
+    audio_file = models.CharField(max_length=100)
+    district = models.ManyToManyField(District)
+    schedule_call = models.DateTimeField()    

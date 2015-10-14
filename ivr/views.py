@@ -36,7 +36,7 @@ class CallEndView(ExotelView):
         call_id = request.GET["CallSid"]
         call = Call.objects.get(exotel_call_id=call_id)
         #final_response_dict = json.loads(request)
-        call.end(response = request)
+        call.end(response = request.GET)
         response = cls.exotel_response(request, 0)
         return response
 

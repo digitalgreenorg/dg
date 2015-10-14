@@ -37,25 +37,6 @@ class JharkhandPilot(ExotelService):
         props = {}
         return props
 
-    
-    # def all_the_way(self, props, state):
-    #     if state["n"] is 10:
-    #         state["all the way"] = True
-    #         status = 200
-    #     else:
-    #         status = 305
-    #     return (status, state)
-    
-    # def get_nth_hello(self, props, state):
-    #     n = state["n"]
-    #     audio = "http://hello{0}".format(n) + self.name
-    #     state["n"] = n+1
-    #     return (audio, state)
-    
-    # def get_daily_greeting(self, props):
-    #     day_of_week = props["day"]
-    #     return "http://hello{0}".format(day_of_week) + self.name
-
     def get_required_message(self, props, state):
         #get call object and check state, change the state, return the required audio.
         n = state["n"]

@@ -18,6 +18,8 @@ services = []
 hello = HelloBye()
 services.extend(hello.urlpatterns())
 greeting = HelloBye(name="greeting")
+# class Greeting(HelloBye):
+# 	name="greeting"
 services.extend(greeting.urlpatterns())
 jharkhand_pilot = JharkhandPilot()
 services.extend(jharkhand_pilot.urlpatterns())
