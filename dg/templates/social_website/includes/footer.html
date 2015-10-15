@@ -69,43 +69,17 @@
                                         </div>
                                     </form>
                                 </div>
-                                <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+                                <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+                                <script type='text/javascript'>
+                                (function($) {
+                                    window.fnames = new Array(); 
+                                    window.ftypes = new Array();
+                                    fnames[0]='EMAIL';
+                                    ftypes[0]='email';
+                                }(jQuery));
+                                var $mcj = jQuery.noConflict(true);
+                                </script>
                                 <!--End mc_embed_signup-->
-
-                                 <!-- Google Code for Newsletter Sign Up Conversion Page
-                                In your html page, add the snippet and call
-                                goog_report_conversion when someone clicks on the
-                                chosen link or button. -->
-                                <script type="text/javascript">
-                                /* <![CDATA[ */
-                                goog_snippet_vars = function() {
-                                    var w = window;
-                                    w.google_conversion_id = 1021729762;
-                                    w.google_conversion_label = "2mg8CNeQwF8Q4reZ5wM";
-                                    w.google_remarketing_only = false;
-                                }
-                                // DO NOT CHANGE THE CODE BELOW.
-                                goog_report_conversion = function(url) {
-                                    goog_snippet_vars();
-                                    window.google_conversion_format = "3";
-                                    window.google_is_call = true;
-                                    var opt = new Object();
-                                    opt.onload_callback = function() {
-                                        if (typeof(url) != 'undefined') {
-                                            window.location = url;
-                                        }
-                                    }
-                                    var conv_handler = window['google_trackConversion'];
-                                    if (typeof(conv_handler) == 'function') {
-                                        conv_handler(opt);
-                                    }
-                                }
-                                /* ]]> */
-                                </script>
-                                <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js">
-                                </script>
-                                <!-- End of Google Conversion Tracker Code  -->
-
                             </div>
                         </div>
                     </div> <!-- End .inner-wrapper -->
@@ -177,6 +151,40 @@
 	        })();
 	    </script>
 	    <!-- End Inspectlet Embed Code -->
+
+        <!-- Google Code for Newsletter Sign Up Conversion Page
+        In your html page, add the snippet and call
+        goog_report_conversion when someone clicks on the
+        chosen link or button. -->
+        <script type="text/javascript">
+        /* <![CDATA[ */
+        goog_snippet_vars = function() {
+            var w = window;
+            w.google_conversion_id = 1021729762;
+            w.google_conversion_label = "2mg8CNeQwF8Q4reZ5wM";
+            w.google_remarketing_only = false;
+        }
+        // DO NOT CHANGE THE CODE BELOW.
+        goog_report_conversion = function(url) {
+            goog_snippet_vars();
+            window.google_conversion_format = "3";
+            window.google_is_call = true;
+            var opt = new Object();
+            opt.onload_callback = function() {
+                if (typeof(url) != 'undefined') {
+                    window.location = url;
+                }
+            }
+            var conv_handler = window['google_trackConversion'];
+            if (typeof(conv_handler) == 'function') {
+                conv_handler(opt);
+            }
+        }
+        /* ]]> */
+        </script>
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js">
+        </script>
+        <!-- End of Google Conversion Tracker Code  -->
 
     </body>
 </html>

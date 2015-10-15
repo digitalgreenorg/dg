@@ -69,6 +69,34 @@
                     </ul>
                 </div>
             </div>
+            <div id="survey" class="survey media">
+                <div class="feedback-modal">
+                    <a href="#surveyModal" class="js-modal-click"><img src="{{STATIC_URL}}social_website/content/feedback/feedback.png"></img></a>
+                </div>
+                <div id="surveyModal" class="modalDialog">
+                    <div class="">
+                        <a href="#close" title="Close" class="close">X</a>
+                        <h2 class="hdg-e layout-vr-sm centered">Thanks for visiting!</h2>
+                        <p class="hdg-f layout-vr-sm">Please take a moment to share your feedback to help us improve your experience.</p>
+                        <div class="img-size-feedback centered layout-vr-sm">
+                            <img data="5" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_happy.png"></img>
+                            <img data="4" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/happy.png"></img>
+                            <img data="3" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/neutral.png"></img>
+                            <img data="2" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/sad.png"></img>
+                            <img data="1" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_sad.png"></img>
+                        </div>
+                        <div class="js-modal comment-survey">
+                            <textarea placeholder="Any comments?" id="comments" name="comments" class="layout-vr-sm hdg-f text-width-feedback" id="comments" rows="8"></textarea>
+                            <p class="hdg-f layout-vr-sm">Share your email address to hear back from us.</p>
+                            <input placeholder="E-Mail ID (Optional)" id="email" type="text" name="email" class="layout-vr-sm hdg-f text-width-feedback text-height-feedback" id="email"> 
+                            <p class="hdg-f hdg-semibold centered layout-vr-sm">Thank You!</p>
+                            <div class="centered">
+                                <a id="button" class="btn js-submit-form btn-pointer-feedback">SUBMIT</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="header-fixed">
                 <div class="header-wrapper clearfix">
                     <header class="global-nav">
