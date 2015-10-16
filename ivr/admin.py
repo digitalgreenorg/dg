@@ -16,6 +16,12 @@ class CallAdmin(admin.ModelAdmin):
     list_display = ('exotel_call_id', 'attributes', 'state',)
     search_fields =['exotel_call_id',]
 
+class AudioAdmin(admin.ModelAdmin):
+    fieldsets = [(None,  {'fields': ['audio_file', 'title', 'meta', 'description', 'audio_status',]
+                          }
+                  )]
+    list_display = ('audio_file', 'title', 'meta', 'description', 'audio_status',)
+    search_fields =['title',]
 
 class BroadcastAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['service', 'audio_file', 'district', 'schedule_call',]

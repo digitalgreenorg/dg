@@ -2,10 +2,17 @@ from django.db import models
 
 from geographies.models import District
 
+from dg.base_settings import MEDIA_ROOT
+
 IVR_SERVICE = (
         ('hello', 'hello'),
         ('greeting', 'greeting'),
         ('jharkhand_pilot', 'jharkhand_pilot'),
+)
+
+AUDIO_STATUS = (
+        ('1', 'Active'),
+        ('0', 'InActive'),
 )
 
 # Create your models here.
@@ -35,8 +42,15 @@ class Call(models.Model):
         self.save()
         return None
 
+class Audio(models.Model):
+    audio_file = models.FileField(upload_to=MEDIA_ROOT+'ivrs/')
+    title = models.CharField(max_length=100)
+    meta = models.TextField(max_length=1000, null=True, blank=True)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    audio_status = models.CharField(max_length=20, choices=AUDIO_STATUS)
+
 class Broadcast(models.Model):
     service = models.CharField(max_length=20, choices=IVR_SERVICE)
-    audio_file = models.CharField(max_length=100)
+    audio_file = models.ForeignKey(Audio)
     district = models.ManyToManyField(District)
     schedule_call = models.DateTimeField()    
