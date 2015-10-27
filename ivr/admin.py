@@ -24,7 +24,7 @@ class AudioAdmin(admin.ModelAdmin):
     search_fields =['title',]
 
 class BroadcastAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['service', 'audio_file', 'district', 'schedule_call',]
+    fieldsets = [(None,  {'fields': ['service', 'audio_file', 'channels', 'schedule_call',]
                           }
                   )]
     list_display = ('service', 'audio_file', 'district_list', 'schedule_call',)

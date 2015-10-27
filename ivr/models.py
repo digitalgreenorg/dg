@@ -42,15 +42,23 @@ class Call(models.Model):
         self.save()
         return None
 
+class Channel(models.Model):
+    name = models.CharField(max_length=50)
+
+class IvrSubscriber(models.Model):
+    name = models.CharField(max_length=50)
+    phone_no = models.CharField(max_length=13)
+    subscribed_channels = models.ManyToManyField(Channel)
+
 class Audio(models.Model):
     audio_file = models.FileField(upload_to=MEDIA_ROOT+'ivrs/')
     title = models.CharField(max_length=100)
-    meta = models.TextField(max_length=1000, null=True, blank=True)
+    channels = models.ManyToManyField(Channel)
     description = models.TextField(max_length=1000, null=True, blank=True)
     audio_status = models.CharField(max_length=20, choices=AUDIO_STATUS)
 
 class Broadcast(models.Model):
     service = models.CharField(max_length=20, choices=IVR_SERVICE)
     audio_file = models.ForeignKey(Audio)
-    district = models.ManyToManyField(District)
+    channels = models.ManyToManyField(Channel)
     schedule_call = models.DateTimeField()    
