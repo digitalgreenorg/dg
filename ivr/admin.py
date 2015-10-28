@@ -16,11 +16,26 @@ class CallAdmin(admin.ModelAdmin):
     list_display = ('exotel_call_id', 'attributes', 'state',)
     search_fields =['exotel_call_id',]
 
-class AudioAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['audio_file', 'title', 'meta', 'description', 'audio_status',]
+class ChannelAdmin(admin.ModelAdmin):
+    fieldsets = [(None,  {'fields': ['name',]
                           }
                   )]
-    list_display = ('audio_file', 'title', 'meta', 'description', 'audio_status',)
+    list_display = ('name',)
+    search_fields =['name',]
+
+class IvrSubscriberAdmin(admin.ModelAdmin):
+    fieldsets = [(None,  {'fields': ['name', 'phone_no',]
+                          }
+                  )]
+    list_display = ('name', 'phone_no',)
+    search_fields =['name', 'phone_no',]
+
+
+class AudioAdmin(admin.ModelAdmin):
+    fieldsets = [(None,  {'fields': ['audio_file', 'title', 'description', 'audio_status',]
+                          }
+                  )]
+    list_display = ('audio_file', 'title', 'description', 'audio_status',)
     search_fields =['title',]
 
 class BroadcastAdmin(admin.ModelAdmin):
