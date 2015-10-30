@@ -55,7 +55,7 @@ class ScreeningForm(forms.ModelForm):
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
     list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade', 'observer')
-    search_fields = ['id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
+    search_fields = ['user_created__username', 'id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
     list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name', 'observer')
     list_editable = ('observation_status', 'screening_grade', 'observer')
@@ -159,7 +159,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check', 'verified_by')
     list_editable = ('verification_status','non_negotiable_check', 'verified_by')
     list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name', 'verified_by')
-    search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
+    search_fields = ['user_created__username', 'id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
     class Media:
@@ -183,7 +183,7 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
-    search_fields = ['state_ name', 'country__country_name']
+    search_fields = ['state_name', 'country__country_name']
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')

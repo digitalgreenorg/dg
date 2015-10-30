@@ -10,7 +10,7 @@
                             </p>
                             <p class='copy-para grid-pad-rt-sm'>We are headquartered in New Delhi, India with regional offices in Andhra Pradesh, Bihar, Jharkhand, Karnataka, Madhya Pradesh and Odisha. We have a country office in Addis Ababa, Ethiopia.
                             </p>
-                            <p class='copy-para grid-pad-rt-sm'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity. We offer a dynamic and enabling work environment and competitive compensation, based on experience and qualifications, comparable to leading national level development sector organizations. If you would like to be part of the Digital Green family, submit your application with a cover note, current CV and at least three references to jobs@digitalgreen.org. If you are student, you can also apply for an internship position.
+                            <p class='copy-para grid-pad-rt-sm'>We are looking for highly qualified and passionate individuals to be part of our movement to ensure communities worldwide live with dignity. We offer a dynamic and enabling work environment and competitive compensation, based on experience and qualifications, comparable to leading national level development sector organizations. If you would like to be part of the Digital Green family, email your application with a cover note and resume to <a href="mailto:jobs@digitalgreen.org">jobs@digitalgreen.org</a>. If you are student, you can also apply for an internship position.
                             </p>
                         </div>
                         <div class="grid-col grid-size2of4">
@@ -19,8 +19,7 @@
                                 </iframe>
                             </div>
                             <div class="grid-pad-lt-sm layout-vr-sm">
-                                <ul class="link-list">    
-                                    <li><a href="https://youtu.be/EzLOCulWXjk" target="_blank">Play the video to learn more about our work environment</a></li>
+                                <ul class="link-list">
                                     <li><a href="/resources/" target="_blank">Learn more about our work</a></li>
                                     <li><a href="/team/">Get to know our team</a></li>
                                 </ul>
@@ -37,7 +36,7 @@
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Current Openings</h2>
                     {% regroup job_list by geography.name as jobs %}
                     {% for location_jobs in jobs %}
-                    <a href="#{{location_jobs.grouper}}" class="hdg-f hdg-bold">{{location_jobs.grouper}}</a>
+                    <a href="#{{location_jobs.grouper}}" class="hdg-f hdg-bold layout-vr-sm">{{location_jobs.grouper}}</a>
                     <ul class='link-list grid-pad-lt-sm layout-vr-md'>
                         {% for job in location_jobs.list %}
                             <li><a href="#{{job.title|slugify}}">{{job.title}}</a>

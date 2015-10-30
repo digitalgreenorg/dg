@@ -7,6 +7,7 @@ import coco.urls
 import data_upload.urls
 import dimagi.urls
 import feeds.urls
+import raw_data_analytics.urls
 
 import social_website.api_urls
 import social_website.urls
@@ -65,6 +66,7 @@ urlpatterns = patterns('',
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
     (r'^training/', include(training.urls)),
+    (r'^raw_data_analytics/', include(raw_data_analytics.urls)),
 
     (r'^get_log/?$', send_updated_log),
     # End imports from dashboard
@@ -89,6 +91,8 @@ urlpatterns = patterns('',
     (r'^agri/', include(videokheti.urls)),
     (r"^", include("mezzanine.urls")),
 
+    #AJAX for Feedback
+    url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
 )
 
 # Static files serving locally

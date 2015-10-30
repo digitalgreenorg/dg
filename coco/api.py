@@ -142,7 +142,11 @@ def get_user_videos(user_id):
     ###Get videos screened to allow inter partner sharing of videos
     videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(videos_seen) + list(user_videos))
-    
+
+def get_user_non_negotiable(user_id):
+    video_list = get_user_videos(user_id)
+    return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
@@ -224,6 +228,16 @@ class VideoAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download video")
+
+class NonNegotiableAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_non_negotiable(bundle.request.user.id):
+            return True
+        else:
+            raise NotFound( "Not allowed to download Non-Negotiable")
 
 class BaseResource(ModelResource):
     
@@ -373,7 +387,6 @@ class VideoResource(BaseResource):
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
 
-
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
     class Meta:
@@ -381,13 +394,12 @@ class NonNegotiableResource(BaseResource):
         queryset = NonNegotiable.objects.prefetch_related('video').all()
         resource_name = 'nonnegotiable'
         authentication = SessionAuthentication()
-        authorization = Authorization()
+        authorization = NonNegotiableAuthorization()
         validation = ModelFormValidation(form_class=NonNegotiableForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
-
 
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')

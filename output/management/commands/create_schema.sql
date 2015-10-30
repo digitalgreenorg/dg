@@ -151,3 +151,56 @@ CREATE INDEX village_precalculation_copy_village_id ON village_precalculation_co
 CREATE INDEX village_precalculation_copy_block_id ON village_precalculation_copy(block_id, date);
 CREATE INDEX village_precalculation_copy_district_id ON village_precalculation_copy(district_id, date);
 CREATE INDEX village_precalculation_copy_country_id ON village_precalculation_copy(country_id, date);
+
+-- Screeingwisedata table for raw_data_analytics
+DROP TABLE IF EXISTS `activities_screeningwisedata`;
+CREATE TABLE `activities_screeningwisedata` (
+  `id` int(11) not null AUTO_INCREMENT,
+  `user_created_id` INT(11),
+  `time_created` DATETIME,
+  `user_modified_id` INT(11),
+  `time_modified` DATETIME,
+  `screening_id` INT(11) default null,
+  `old_coco_id` BIGINT(20),
+  `screening_date` DATE not null,
+  `start_time` TIME not null,
+  `end_time` TIME not null,
+  `location` VARCHAR(200) not null,
+  `village_id` INT(11) not null,
+  `animator_id` INT(11) not null,
+  `partner_id` INT(11) not null,
+  `video_id` INT(11),
+  `video_title` VARCHAR(200) not null,
+  `persongroup_id` INT(11),
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE INDEX activities_screeningwisedata_screening_id ON activities_screeningwisedata(screening_id);
+CREATE INDEX activities_screeningwisedata_village_id ON activities_screeningwisedata(village_id); 
+CREATE INDEX activities_screeningwisedata_animator_id ON activities_screeningwisedata(animator_id);
+CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id); 
+CREATE INDEX activities_screeningwisedata_video_id ON activities_screeningwisedata(video_id);
+
+-- Animatorwisedata for raw_data_analytics
+DROP TABLE IF EXISTS `people_animatorwisedata`;
+CREATE TABLE `people_animatorwisedata` ( 
+  `id` int(11) not null AUTO_INCREMENT,
+  `user_created_id` int(11),
+  `time_created` datetime,
+  `user_modified_id` int(11),
+  `time_modified` datetime,
+  `animator_id` int(11) default null,
+  `old_coco_id` BIGINT(20),
+  `animator_name` VARCHAR(100),
+  `gender` VARCHAR(1),
+  `phone_no` VARCHAR(100),
+  `partner_id` INT(11),
+  `district_id` INT(11),
+  `total_adoptions` INT(10),
+  `assignedvillage_id` BIGINT(20),
+  `start_date` date, 
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
+CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
