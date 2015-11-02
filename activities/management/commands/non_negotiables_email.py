@@ -68,7 +68,7 @@ class Command(BaseCommand):
 		email_list=['all@digitalgreen.org']
 		subject = 'Non-Negotiables till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'	
-		body = """Hi all,
+		body = """Hi Programs Team,
 
 This is a weekly automated email to monitor non-negotiables entry.
 

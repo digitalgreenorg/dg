@@ -59,6 +59,12 @@ define(function(require) {
             // helpers
             var $searchContainer = jQuery(".js-search-wrapper");
             references.searchViewController = new SearchViewController($searchContainer);
+
+            //survey
+            references.$feedbackModal = jQuery(".js-modal");
+            references.$smileyClick = jQuery(".js-smiley-click");
+            references.$submitForm = jQuery(".js-submit-form");
+            references.$modalClick = jQuery(".js-modal-click");
         },
         
         _initEvents: function() {
@@ -69,6 +75,15 @@ define(function(require) {
 
             boundFunctions.onUserImageClick = this._onUserImageClick.bind(this);
             references.$userImage.on('click', boundFunctions.onUserImageClick);
+
+            boundFunctions.onModalClick = this._onModalClick.bind(this);
+            references.$modalClick.on('click', boundFunctions.onModalClick);
+
+            boundFunctions.onSmileyClick = this._onSmileyClick.bind(this);
+            references.$smileyClick.on('click', boundFunctions.onSmileyClick);
+
+            boundFunctions.onSubmitClick = this._onSubmitClick.bind(this);
+            references.$submitForm.on('click', boundFunctions.onSubmitClick);
         },
 
         _onOptionChanged: function(value) {
@@ -81,6 +96,47 @@ define(function(require) {
             this._references.$userDropDown.toggle();
             this._references.$userDropDownArrow.toggle();
             $('html, body').animate({scrollTop:0}, 'slow');
+        },
+
+        _onModalClick: function(e){
+            $(".js-modal").addClass("comment-survey");
+            $('#comments').val('');
+            $('#email').val('');
+            $(".icon-selected").removeClass("icon-selected");
+        },
+
+        _onSmileyClick: function(e){
+            e.preventDefault();
+            $(".icon-selected").removeClass("icon-selected");
+            var a = $(e.currentTarget);
+            a.addClass("icon-selected");
+            this._references.$feedbackModal.removeClass("comment-survey");
+        },
+
+        _onSubmitClick: function(){
+            var comments = $("#comments").val();
+            var email = $("#email").val();
+            var csrf_token = $("#csrftoken").val();
+            var a = $(".icon-selected");
+            var rating = a.attr("data");
+            $.ajax({
+                url : "/feedbacksubmit_json", 
+                type : "POST",
+                dataType: "json", 
+                data : {
+                    comments: comments,
+                    email: email,
+                    rating: rating
+                    },
+                success : function(json) {
+                    location.href="#close";
+                },
+                error : function(xhr,errmsg,err) {
+                    alert(xhr.status + ": " + xhr.responseText);
+                    location.href="#close";
+                }
+            });
+            return false;
         },
 
         /**

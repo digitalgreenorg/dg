@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'feeds',
     'deoanalytics',
     'data_upload',
+    'raw_data_analytics',
     'mezzanine.boot',
     'mezzanine.conf',
     'mezzanine.core',
@@ -162,6 +163,7 @@ INSTALLED_APPS = (
     'videokheti',
     'ivr_data_collection',
     'ivr',
+    'training',
 )
 
 # Store these package names here as they may change in the future since

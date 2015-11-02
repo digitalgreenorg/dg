@@ -73,6 +73,8 @@ define(function(require) {
             
             // play button 
             references.$playButton = jQuery('.play-button');
+
+            // awards ticker
             references.$awardsTicker = jQuery('.js-awards-ticker');
             references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
             references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
