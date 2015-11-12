@@ -1,6 +1,6 @@
 {% include "includes/header.html" %}
         
-        <section id="india" class="about-bg">
+        <section id="india" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - India</h2>
@@ -123,7 +123,7 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id="africa" class="about-bg about-bg-white">
+        <section id="africa" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Africa</h2>
@@ -151,6 +151,26 @@
                         <a href="{% url 'partner' 'AGRA' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/agra.png" alt="" />
+                            </li>
+                        </a>
+                    </ul>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="afghanisthan" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Afghanisthan</h2>
+                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
+                        <a href="{% url 'partner' 'CHAMP' %}">
+                            <li class="img-connect"> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/champ.png" alt="" />
+                            </li>
+                        </a>
+                        <a href="{% url 'partner' 'NHLP' %}">
+                            <li class="img-connect"> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/mail.jpg" alt="" />
                             </li>
                         </a>
                     </ul>
