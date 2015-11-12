@@ -21,9 +21,15 @@ class Trainer(models.Model):
 	email = models.EmailField()
 	language = models.ForeignKey(Language, null=True, blank=True)
 
+	def __unicode__(self):
+		return self.name
+
 class Assessment(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
+
+	def __unicode__(self):
+		return self.name
 
 class Question(models.Model):
 	id = models.AutoField(primary_key=True)
@@ -32,6 +38,9 @@ class Question(models.Model):
 	section = models.IntegerField()
 	serial = models.IntegerField()
 	text = models.CharField(max_length = 100)
+
+	def __unicode__(self):
+		return self.text
 
 class Training(models.Model):
 	id = models.AutoField(primary_key=True)
@@ -48,9 +57,3 @@ class Score(models.Model):
 	participant = models.ForeignKey(Animator, null=True, blank=True)
 	question = models.ForeignKey(Question, null=True, blank=True)
 	score = models.IntegerField()
-
-
-
-
-
-
