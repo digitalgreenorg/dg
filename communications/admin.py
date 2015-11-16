@@ -13,9 +13,9 @@ class ArticleAdmin(admin.ModelAdmin):
         
 class FeedbackAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['rating', 'comments', 'email',
-                                     'date']
+                                     'time,']
                           }
                   )]
-    list_display = ('rating', 'comments', 'email', 'date')
+    list_display = ('rating', 'comments', 'email', 'time',)
     search_fields = ['email']
     list_filter = ['date']
