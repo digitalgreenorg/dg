@@ -13,7 +13,8 @@ class Article(models.Model):
         return '%s' %(self.title)
 
 class Feedback(models.Model):
-	rating = models.IntegerField(default=5)
-	comments = models.CharField(max_length=1000)
-	email = models.EmailField(max_length=254)
-	date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
+    rating = models.IntegerField(default=5)
+    comments = models.CharField(max_length=1000)
+    email = models.EmailField(max_length=254)
+    date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
+    time = models.DateTimeField(default=datetime.datetime.utcnow)
