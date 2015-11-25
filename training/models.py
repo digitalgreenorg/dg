@@ -12,6 +12,9 @@ class TrainingUser(models.Model):
     user = models.OneToOneField(User, related_name="training_user")
     states = models.ManyToManyField(State)
 
+    def __unicode__(self):
+    	return self.user.username
+
     def get_states(self):
     	return self.states.all()
 
