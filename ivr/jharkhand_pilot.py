@@ -2,6 +2,7 @@ from exotel import ExotelService
 from views import CallEndView
 from models import Broadcast, IvrSubscriber
 import time
+import json
 
 class JharkhandPilot(ExotelService):
     name = "jharkhand_pilot"
@@ -28,30 +29,6 @@ class JharkhandPilot(ExotelService):
         self.ServiceCallEndView = type(class_name, (CallEndView,), {'name':class_name})
         #super(HelloBye, self).__init__()
     
-    def init_call(self, mobile_number):
-        call_url = self.initiate_call_urlformat.format(sid=self.sid)
-        flow_url = self.flow_urlformat.format(flow_id=self.flow_id)
-        #TODO create a call object. add the id to the CustomField. save the call object
-        props = self.init_props()
-        post_data = {
-            'From' :  int(mobile_number),
-            'CallerId' : self.caller_id,
-            'Url' : flow_url,
-            'TimeLimit' : self.time_limit,
-            'TimeOut' : self.time_out,
-            'CallType' : self.call_type,
-            'StatusCallback' : reverse(self.ServiceCallEndView.get_name()),
-            'CustomField' : json.dumps(props),
-        }
-        r = requests.post(call_url, auth=(self.sid, self.token), data=post_data)
-        response_data = json.loads(r.text)
-        call_sid = response_data['Call']['Sid']
-        call = Call(exotel_call_id = call_sid)
-        call.state = json.dumps(self.init_state())
-        call.props = json.dumps(props)
-        call.save()
-        return {"id": call.id, "exotel_id": call_sid}
-
     def init_state(self):
         state = {
             "n": 1
