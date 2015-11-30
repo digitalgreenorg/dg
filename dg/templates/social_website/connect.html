@@ -1,10 +1,50 @@
 {% include "includes/header.html" %}
+
+        <section id="investors" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media grid">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Investors</h2>
+                    <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
+                        <a href="http://rural.nic.in/" target="_blank">
+                            <div class="grid-pad-lt-md img-connect layout-vr-sm">
+                                <img src="{{STATIC_URL}}social_website/content/partners/mrd.jpg" alt=""/>
+                            </div>
+                        </a>
+                        <div class="grid-pad-lt-md grid-pad-rt layout-vr-md">
+                            <p class="js-intro line-clamp partner-line-clamp"><a class="hdg-source-semibold">Ministry of Rural Development (Government of India):</a> In 2014, we entered into a national level memorandum of understanding (MOU) with the National Rural Livelihoods Promotion Society (NRLPS) as a National Support Organization (NSO) to expand the Digital Green approach to state rural livelihoods missions and partners. <br>
+                            Out of the total outlay for this project, the Government of India's Ministry of Rural Development (MoRD) and state governments cover almost 70% of the cost, while the Bill & Melinda Gates Foundation covers 30%. Currently we're partnering with eight state rural livelihood promotion societies, namely, Bihar, Rajasthan, Andhra, Telengana, Madhya Pradesh, Odisha, Maharashtra and Karnataka.
+                            <br>
+                            Timeline: ?</p>
+                            <a href="#" class="js-show-more hdg-green">Show More</a>
+                        </div>
+                    </div>
+                    <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
+                        <a href="http://www.gatesfoundation.org/" target="_blank">
+                            <div class="grid-pad-lt-md img-connect layout-vr-sm">
+                                <img src="{{STATIC_URL}}social_website/content/partners/bmgf.jpg" alt=""/>
+                            </div>
+                        </a>
+                        <p class="grid-pad-lt-md grid-pad-rt"><a class="hdg-source-semibold">Bill & Melinda Gates Foundation (BMGF) </a> funded us in reaching 10,000 households and 500,000 farmers to support the extension services of Government of India’s National Rural Livelihood Mission. </p>
+                        <p class="grid-pad-lt-md grid-pad-rt layout-vr-md"> Timeline: Jan 2012 – Dec 2016 </p>
+                    </div>
+                    <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
+                        <a href="https://www.gov.uk/government/organisations/department-for-international-development" target="_blank">
+                            <div class="grid-pad-lt-md img-connect layout-vr-sm">
+                                <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt=""/>
+                            </div>
+                        </a>
+                        <p class="grid-pad-lt-md grid-pad-rt"><a class="hdg-source-semibold">Department for International Development (DFID) </a> supported us in reaching over 60,000 households in 400 villages in India, and 200 villages in Ethiopia and Ghana. </p>
+                        <p class="grid-pad-lt-md grid-pad-rt layout-vr-md"> Timeline: Oct 2012 – March 2015 </p>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
         
-        <section id="india" class="about-bg about-bg-white">
+        <section id="india" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - India</h2>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="{% url 'partner' 'PRADAN' %}">
                             <li class="img-connect">
                                 <img src="{{STATIC_URL}}social_website/content/partners/pradan.jpg" alt=""/>
@@ -30,8 +70,6 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/asa.png" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <a href="{% url 'partner' 'ACCESS' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/access.png" alt=""/>
@@ -42,6 +80,8 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/dpip.png" alt="" />
                             </li>
                         </a>
+                    </ul>
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="{% url 'partner' 'PRAGATI' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/pragati.png" alt="" />
@@ -57,8 +97,6 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/baif.jpg" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <a href="{% url 'partner' 'SPRING' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/spring.png" alt=""/>
@@ -79,13 +117,13 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/rmnt.jpg" alt="" />
                             </li>
                         </a>
+                    </ul>
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="{% url 'partner' 'PANI-JJ' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/pani.jpg" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <a href="{% url 'partner' 'PANI-IILD' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/pani.jpg" alt="" />
@@ -111,8 +149,6 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/idf.jpg" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <a href="{% url 'partner' 'JSLPS' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/jslps.jpg" alt="" />
@@ -123,11 +159,11 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id="africa" class="about-bg">
+        <section id="africa" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Africa</h2>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="{% url 'partner' 'WCF' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/wcf.jpg" alt=""/>
@@ -158,11 +194,11 @@
             </div> <!-- End .wrapper -->
         </section>
 
-        <section id="afghanisthan" class="about-bg about-bg-white">
+        <section id="afghanisthan" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Afghanisthan</h2>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="{% url 'partner' 'CHAMP' %}">
                             <li class="img-connect"> 
                                 <img src="{{STATIC_URL}}social_website/content/partners/champ.png" alt="" />
@@ -178,11 +214,11 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id="research" class="about-bg">
+        <section id="research" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Research and Technology Partners</h2>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="http://www.africarice.org/" target="_blank">
                             <li class="img-connect">
                                 <img src="{{STATIC_URL}}social_website/content/partners/africarice.jpg" alt=""/>
@@ -208,8 +244,6 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/ucb.jpg" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <li class="img-effects">
                             <img src="{{STATIC_URL}}social_website/content/partners/mkisan.png" alt=""/>
                         </li>
@@ -218,6 +252,8 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/agro_know.png" alt="" />
                             </li>
                         </a>
+                    </ul>
+                    <ul class="h-list layout-vr-lg img-size-partner h-list-md">
                         <a href="http://www.d-rev.org/" target="_blank">
                             <li class="img-connect">
                                 <img src="{{STATIC_URL}}social_website/content/partners/d-rev.png" alt="" />
@@ -233,8 +269,6 @@
                                 <img src="{{STATIC_URL}}social_website/content/partners/awaz_de.jpg" alt="" />
                             </li>
                         </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-md">
                         <a href="http://research.microsoft.com/en-us/labs/india/" target="_blank">
                             <li class="img-connect">
                                 <img src="{{STATIC_URL}}social_website/content/partners/msr.png" alt=""/>
@@ -253,48 +287,6 @@
                         <a href="http://google.com/" target="_blank">
                             <li class="img-connect">                        
                                 <img src="{{STATIC_URL}}social_website/content/partners/google.jpg" alt="" />
-                            </li>
-                        </a>
-                    </ul>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section id="investors" class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper media">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Investors</h2>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-xxxlg key">
-                        <a href="http://www.gatesfoundation.org/" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/bmgf.jpg" alt=""/>
-                            </li>
-                        </a>
-                        <a href="https://www.gov.uk/government/organisations/department-for-international-development" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="http://rural.nic.in/" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/mrd.jpg" alt="" />
-                            </li>
-                        </a>
-                    </ul>
-                    <ul class="h-list layout-vr-lg img-size-logo h-list-xxxlg key">
-                        <a href="http://www.fordfoundation.org/" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/ford.jpg" alt=""/>
-                            </li>
-                        </a>
-                        <a href="http://www.vodafone-foundation.in/" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/vodafone.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="http://www.oracle.com/index.html" target="_blank">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/oracle.png" alt="" />
                             </li>
                         </a>
                     </ul>

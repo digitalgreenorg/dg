@@ -1163,6 +1163,11 @@ a {
 	height: 222px;
 }
 
+.media .img-size-partner img{
+    width: 123px;
+    height: 87px;
+}
+
 .media .img-marginLg-lt {
     margin-left: 65px;
 }
@@ -2998,6 +3003,13 @@ textarea.comment-text {
 .line-clamp.board-line-clamp{
     display: -webkit-box;
     -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
+.line-clamp.partner-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;  
     overflow:hidden;
 }
