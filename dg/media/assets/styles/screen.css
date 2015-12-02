@@ -786,6 +786,10 @@ a {
     line-height: 1.4;
 }
 
+.hdg-partners {
+    font-size: 15px;
+}
+
 .hdg-upper {
     text-transform: uppercase;
 }
