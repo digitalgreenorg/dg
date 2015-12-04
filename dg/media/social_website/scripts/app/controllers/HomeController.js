@@ -79,7 +79,7 @@ define(function(require) {
             references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
             references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
             references.$awardsElements = jQuery('.js-description');
-            references.$investorTicker = jQuery('js-investor-ticker');
+            references.$investorTicker = jQuery('.js-investor-ticker');
 
         },
 
@@ -107,9 +107,9 @@ define(function(require) {
             boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
             references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
 
-            boundFunctions.playInvestorTicker = this._playInvestorTicker.bind(this);
-            references.$investorTicker.on('load', boundFunctions.playInvestorTicker);
-            //this._playInvestorTicker();
+            //boundFunctions.playInvestorTicker = this._playInvestorTicker.bind(this);
+            //references.$investorTicker.on('load', boundFunctions.playInvestorTicker);
+            this._playInvestorTicker();
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -226,16 +226,16 @@ define(function(require) {
             });
         },
 
-        _playInvestorTicker: function(e){
+        _playInvestorTicker: function(){
             var that=this;
-            setTimeout(function(){
+            console.log("here");
+            setInterval(function(){
                 var width = that._references.$investorTicker.children().first().width() + 16; // compensate for margins
                 that._references.$investorTicker.animate({left:'-'+width+'px'},400,'swing', function() {
-                    that._references.$investorTicker.append(that._references.$investorTicker.children.first());
+                    that._references.$investorTicker.append(that._references.$investorTicker.children().first());
                     that._references.$investorTicker.css({'left':'0px'});
-                    that._playInvestorTicker();
                 });
-            }, 5*1000);
+            }, 5000);
         },
 
         /**
