@@ -191,10 +191,10 @@ define(function(require) {
         _onAwardsLeftClick: function(e){
             var that=this
                 var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
-                that._references.$awardsTicker.animate({left: '+'+width+'px'},400,'swing', function(){
-                    var lastChild = that._references.$awardsTicker.children().last();
-                    that._references.$awardsTicker.prepend(lastChild);
-                    that._references.$awardsTicker.css({'left': '0px'});
+                var lastChild = that._references.$awardsTicker.children().last();
+                that._references.$awardsTicker.prepend(lastChild);
+                that._references.$awardsTicker.css({'left': '-'+width+'px'});
+                that._references.$awardsTicker.animate({left: '+'+0+'px'},400,'swing', function(){
                     $('.js-awards-description-show').removeClass('js-awards-description-show');
                     var data = that._references.$awardsTicker.children().first().attr('data');
                     $('.js-awards-description').each(function(index, element) {
@@ -230,12 +230,12 @@ define(function(require) {
             var that=this;
             console.log("here");
             setInterval(function(){
-                var width = that._references.$investorTicker.children().first().width() + 16; // compensate for margins
-                that._references.$investorTicker.animate({left:'-'+width+'px'},400,'swing', function() {
+                var width = that._references.$investorTicker.children().first().width() + 26; // compensate for margins
+                that._references.$investorTicker.animate({left:'-'+width+'px'},3000,'linear', function() {
                     that._references.$investorTicker.append(that._references.$investorTicker.children().first());
                     that._references.$investorTicker.css({'left':'0px'});
                 });
-            }, 5000);
+            }, 3000);
         },
 
         /**

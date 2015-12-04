@@ -3965,7 +3965,7 @@ Awards Strip
     overflow: hidden; 
     left: 40px; 
     height: 130px; 
-    width: 865px
+    width: 865px;
 }
 
 .awards-ticker > ul {
@@ -4001,19 +4001,27 @@ Investor Ticker
 
 .investors-container {
     position: relative;
+    overflow: hidden;
 }
 
 .investors-ticker {
     position: relative;
-    overflow: hidden; 
-    left: 40px; 
+    overflow-y: hidden;  
     height: 91px; 
-    width: 865px
+    width: 1200px;
 }
 
 .investors-ticker > ul {
     position: absolute;
     left: 0;
+}
+
+.heading-partner {
+    opacity: 1
+}
+
+.heading-partner:hover{
+    opacity: 0.6;
 }
 
 /* -----------------------------------------------------------------------
