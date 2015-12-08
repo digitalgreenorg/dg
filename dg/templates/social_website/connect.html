@@ -154,124 +154,200 @@
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - India</h2>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'PRADAN' %}">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/pradan.jpg" alt=""/>
-                            </li>
-                        </a>                        
-                        <a href="{% url 'partner' 'BRLPS' %}">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/jeevika.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'SERP' %}">                        
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/serp.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'ICRISAT' %}">
-                            <li class="img-connect">                        
-                                <img src="{{STATIC_URL}}social_website/content/partners/icrisat.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'ASA' %}">
-                            <li class="img-connect">                        
-                                <img src="{{STATIC_URL}}social_website/content/partners/asa.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'ACCESS' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/access.png" alt=""/>
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'DPIP' %}">
-                            <li class="img-connect">                         
-                                <img src="{{STATIC_URL}}social_website/content/partners/dpip.png" alt="" />
-                            </li>
-                        </a>
-                    </ul>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'PRAGATI' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/pragati.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'VARRAT' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/varrat.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'BAIF' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/baif.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'SPRING' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/spring.png" alt=""/>
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'PATH' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/path.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'SPS' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/sps.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'RMNT' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/rmnt.jpg" alt="" />
-                            </li>
-                        </a>
-                    </ul>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'PANI-JJ' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/pani.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'PANI-IILD' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/pani.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'PCI' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/pci.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'Department of Agriculture, Government of Odisha' %}">
-                            <li class="img-connect">
-                                <img src="{{STATIC_URL}}social_website/content/partners/doa-odisha.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'MSSRF' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/mssrf.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'IDF' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/idf.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'JSLPS' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/jslps.jpg" alt="" />
-                            </li>
-                        </a>
-                    </ul>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'MPRAF' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/mpraf.png" alt="" />
-                            </li>
-                        </a>
-                    </ul>
+                    <div class="grid centered">
+	                    <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+	                    	<a href="{% url 'partner' 'PRADAN' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/pradan.jpg" alt=""/>
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'PRADAN' %}" class="hdg-source-semibold">Pradan</a>
+	                    </div>
+	                    <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+		                    <a href="{% url 'partner' 'BRLPS' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/jeevika.jpg" alt="" />
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'BRLPS' %}" class="hdg-source-semibold">BRLPS</a>
+	                    </div>
+	                    <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+	                    	<a href="{% url 'partner' 'SERP' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/serp.jpg" alt=""/>
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'SERP' %}" class="hdg-source-semibold">SERP - AP</a>
+	                    </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'SERP-IB' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/serp.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'SERP-IB' %}" class="hdg-source-semibold">SERP - Telangana</a>
+                        </div>
+	                    <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+	                    	<a href="{% url 'partner' 'ICRISAT' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/icrisat.png" alt=""/>
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'ICRISAT' %}" class="hdg-source-semibold">ICRISAT</a>
+	                    </div>
+	                    <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+	                    	<a href="{% url 'partner' 'ASA' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/asa.png" alt=""/>
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'ASA' %}" class="hdg-source-semibold">ASA</a>
+	                    </div>
+	                    <div class="grid-col grid-size1of7 img-size-partner layout-vr-md">
+	                    	<a href="{% url 'partner' 'ACCESS' %}">
+	                            <div class="img-connect">
+	                                <img src="{{STATIC_URL}}social_website/content/partners/access.png" alt=""/>
+	                            </div>
+	                        </a>
+	                        <a href="{% url 'partner' 'ACCESS' %}" class="hdg-source-semibold">ACCESS</a>
+	                    </div>
+                    </div>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'DPIP' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/dpip.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'DPIP' %}" class="hdg-source-semibold">DPIP</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'PRAGATI' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/pragati.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'PRAGATI' %}" class="hdg-source-semibold">Pragati</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'VARRAT' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/varrat.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'VARRAT' %}" class="hdg-source-semibold">VARRAT</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'BAIF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/baif.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'BAIF' %}" class="hdg-source-semibold">BAIF</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'SPRING' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/spring.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'SPRING' %}" class="hdg-source-semibold">SPRING</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'PATH' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/path.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'PATH' %}" class="hdg-source-semibold">PATH</a>
+                        </div>
+                        <div class="grid-col grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'SPS' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/sps.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'SPS' %}" class="hdg-source-semibold">SPS</a>
+                        </div>
+                    </div>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'RMNT' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/rmnt.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'RMNT' %}" class="hdg-source-semibold">RMNT</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'PANI-JJ' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/pani.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'PANI-IILD' %}" class="hdg-source-semibold">PANI-JJ</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'PANI-IILD' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/pani-brel.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'PANI-IILD' %}" class="hdg-source-semibold">PANI-IILD</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'PCI' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/pci.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'PCI' %}" class="hdg-source-semibold">PCI</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'Department of Agriculture, Government of Odisha' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/doa-odisha.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'Department of Agriculture, Government of Odisha' %}" class="hdg-source-semibold">Dept. of Agriculture</a>
+                            <br>
+                            <a href="{% url 'partner' 'Department of Agriculture, Government of Odisha' %}" class="hdg-source-semibold">Govt. of Odisha</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'MSSRF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/mssrf.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'MSSRF' %}" class="hdg-source-semibold">MSSRF</a>
+                        </div>
+                        <div class="grid-col grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'IDF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/idf.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'IDF' %}" class="hdg-source-semibold">IDF</a>
+                        </div>
+                    </div>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'JSLPS' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/jslps.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'JSLPS' %}" class="hdg-source-semibold">JSLPS</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'MPRAF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/mpraf.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'MPRAF' %}" class="hdg-source-semibold">MPRAF</a>
+                        </div>
+                    </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
@@ -280,33 +356,48 @@
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Africa</h2>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'WCF' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/wcf.jpg" alt=""/>
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'OA-SAA' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/oxfam.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'OA-SAA' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/saa.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'IDE' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/ide.jpg" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'AGRA' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/agra.png" alt="" />
-                            </li>
-                        </a>
-                    </ul>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'WCF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/wcf.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'WCF' %}" class="hdg-source-semibold">WCF</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'OA-SAA' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/oxfam.jpg" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'OA-SAA' %}" class="hdg-source-semibold">OA</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'OA-SAA' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/saa.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'OA-SAA' %}" class="hdg-source-semibold">SAA</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'IDE' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/ide.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'IDE' %}" class="hdg-source-semibold">IDE</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'AGRA' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/agra.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'AGRA' %}" class="hdg-source-semibold">AGRA</a>
+                        </div>
+                    </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
@@ -315,18 +406,24 @@
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Afghanisthan</h2>
-                    <ul class="h-list layout-vr-md img-size-partner h-list-md">
-                        <a href="{% url 'partner' 'CHAMP' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/champ.png" alt="" />
-                            </li>
-                        </a>
-                        <a href="{% url 'partner' 'NHLP' %}">
-                            <li class="img-connect"> 
-                                <img src="{{STATIC_URL}}social_website/content/partners/mail.png" alt="" />
-                            </li>
-                        </a>
-                    </ul>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'CHAMP' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/champ.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'CHAMP' %}" class="hdg-source-semibold">CHAMP</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'NHLP' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/mail.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'NHLP' %}" class="hdg-source-semibold">NHLP</a>
+                        </div>
+                    </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
