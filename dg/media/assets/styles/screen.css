@@ -686,6 +686,9 @@ a {
     margin-left: 70px;
 }
 
+.grid-pad-rt-connect {
+    margin-right: 9px;
+}
 /* Push styles */
 
 .push-top-tiny {
@@ -1147,6 +1150,11 @@ a {
     width: 40px;
     height: 40px;
     cursor: pointer;
+}
+
+.media .img-size-contact img{
+    width: 463px;
+    height: 444px;  
 }
 
 .img-size-feedback :hover {
