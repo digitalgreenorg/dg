@@ -79,6 +79,8 @@ define(function(require) {
             references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
             references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
             references.$awardsElements = jQuery('.js-description');
+            references.$investorTicker = jQuery('.js-investor-ticker');
+
         },
 
         _initEvents: function() {
@@ -104,6 +106,10 @@ define(function(require) {
 
             boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
             references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
+
+            //boundFunctions.playInvestorTicker = this._playInvestorTicker.bind(this);
+            //references.$investorTicker.on('load', boundFunctions.playInvestorTicker);
+            this._playInvestorTicker();
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -185,10 +191,10 @@ define(function(require) {
         _onAwardsLeftClick: function(e){
             var that=this
                 var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
-                that._references.$awardsTicker.animate({left: '+'+width+'px'},400,'swing', function(){
-                    var lastChild = that._references.$awardsTicker.children().last();
-                    that._references.$awardsTicker.prepend(lastChild);
-                    that._references.$awardsTicker.css({'left': '0px'});
+                var lastChild = that._references.$awardsTicker.children().last();
+                that._references.$awardsTicker.prepend(lastChild);
+                that._references.$awardsTicker.css({'left': '-'+width+'px'});
+                that._references.$awardsTicker.animate({left: '+'+0+'px'},400,'swing', function(){
                     $('.js-awards-description-show').removeClass('js-awards-description-show');
                     var data = that._references.$awardsTicker.children().first().attr('data');
                     $('.js-awards-description').each(function(index, element) {
@@ -203,13 +209,12 @@ define(function(require) {
                 that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
                     that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
                     that._references.$awardsTicker.css({'left':'0px'});
-                     $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    $('.js-awards-description-show').removeClass('js-awards-description-show');
                     var data = that._references.$awardsTicker.children().first().attr('data');
                     $('.js-awards-description').each(function(index, element) {
                         if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
                     });
                 });
-               
         },
 
         _onAwardsElementClick: function(e){
@@ -219,6 +224,18 @@ define(function(require) {
             $('.js-awards-description').each(function(index, element) {
                 if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
             });
+        },
+
+        _playInvestorTicker: function(){
+            var that=this;
+            console.log("here");
+            setInterval(function(){
+                var width = that._references.$investorTicker.children().first().width() + 26; // compensate for margins
+                that._references.$investorTicker.animate({left:'-'+width+'px'},3000,'linear', function() {
+                    that._references.$investorTicker.append(that._references.$investorTicker.children().first());
+                    that._references.$investorTicker.css({'left':'0px'});
+                });
+            }, 3000);
         },
 
         /**

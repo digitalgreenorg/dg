@@ -686,6 +686,9 @@ a {
     margin-left: 70px;
 }
 
+.grid-pad-rt-connect {
+    margin-right: 9px;
+}
 /* Push styles */
 
 .push-top-tiny {
@@ -784,6 +787,10 @@ a {
 .hdg-footer {
     font-size: 15px;
     line-height: 1.4;
+}
+
+.hdg-partners {
+    font-size: 15px;
 }
 
 .hdg-upper {
@@ -1145,6 +1152,11 @@ a {
     cursor: pointer;
 }
 
+.media .img-size-contact img{
+    width: 463px;
+    height: 444px;  
+}
+
 .img-size-feedback :hover {
     opacity: 0.5;
 }
@@ -1161,6 +1173,11 @@ a {
 .media .img-size-partner-location img{
 	width: 302px;
 	height: 222px;
+}
+
+.media .img-size-partner img{
+    width: 123px;
+    height: 87px;
 }
 
 .media .img-marginLg-lt {
@@ -3002,6 +3019,13 @@ textarea.comment-text {
     overflow:hidden;
 }
 
+.line-clamp.partner-line-clamp{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;  
+    overflow:hidden;
+}
+
 /* Carousel Styles */
 
 .main-carousel {
@@ -3949,7 +3973,7 @@ Awards Strip
     overflow: hidden; 
     left: 40px; 
     height: 130px; 
-    width: 865px
+    width: 865px;
 }
 
 .awards-ticker > ul {
@@ -3979,8 +4003,38 @@ Awards Strip
     opacity: .6;
 }
 
-/* Modal for Survey */
+/* -----------------------------------------------------------------------
+Investor Ticker 
+------------------------------------------------------------------------ */
 
+.investors-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.investors-ticker {
+    position: relative;
+    overflow-y: hidden;  
+    height: 91px; 
+    width: 1200px;
+}
+
+.investors-ticker > ul {
+    position: absolute;
+    left: 0;
+}
+
+.heading-partner {
+    opacity: 1
+}
+
+.heading-partner:hover{
+    opacity: 0.6;
+}
+
+/* -----------------------------------------------------------------------
+Modal for Survey
+------------------------------------------------------------------------ */
 .feedback-modal {
     position: fixed;
     top: 1;
