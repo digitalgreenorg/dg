@@ -16,7 +16,7 @@ def save_screening_data(xml_tree):
         xml_data = xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid=str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
-        mediator = commcare_user.mediator
+        mediator = commcare_user.mediator.id
         for record in xml_data:
             try:
                 screening_data = {}
@@ -31,6 +31,7 @@ def save_screening_data(xml_tree):
                 screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
                 if  screening_data['selected_video'] == '0' :
                     screening_data['selected_video'] = record.getElementsByTagName('additional_selected_video')[0].firstChild.data
+                
                 #Check if 'attendance_record' or 'attended' tag
                 pma_record =[]
                 if record.getElementsByTagName('attendance_record'):                
@@ -55,12 +56,21 @@ def save_screening_data(xml_tree):
                     for person in screening_data['attendance_record']:
                         pma = {}
                         pma['person_id'] = person
+                        pma['interested'] = 0
+                        pma['question'] = ""
                         pma_record.append(pma)
                     error_msg = 'Successful'
+                
                 #Adding question asked to first farmer 
-                if pma_record:
-                    if record.getElementsByTagName('Feedback'):
-                        pma_record[0]['question'] = record.getElementsByTagName('Feedback')[0].firstChild.data
+                try:
+                    if pma_record:
+                        if record.getElementsByTagName('Feedback')[0].firstChild:
+                            pma_record[0]['question'] = str(record.getElementsByTagName('Feedback')[0].firstChild.data)
+                except Exception as e:
+                    error = "Error in saving Feedback: " + str(e)
+                    error_msg = 'feedback_save_error'
+                    sendmail("Exception in Mobile COCO. Error in feedback (Line 91)", error)
+
                 # time is returned as string, doing funky things to retrieve it in time format  
                 temp_time = screening_data['time'].split('.')
                 temp_time = time.strptime(temp_time[0], "%H:%M:%S")
@@ -89,6 +99,7 @@ def save_screening_data(xml_tree):
                     if status['pma'] == error_list['PMA_SAVE_ERROR']:
                         status['screening'] = error_list['PMA_SAVE_ERROR']
                         error_msg = 'pma_save_error'
+                
                 except Screening.DoesNotExist as e:
                     screening = Screening(date=screening_data['date'],
                                           start_time=screening_data['start_time'],
@@ -98,14 +109,17 @@ def save_screening_data(xml_tree):
                                           animator_id=screening_data['selected_mediator'],
                                           partner=cocouser.partner,
                                           user_created=cocouser.user)
+
                     try:
                         screening.full_clean()
                         screening.save()
                         status['screening'] = 1
+   
                         try:
                             screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
                             screening.videoes_screened = screening_data['selected_video'].split(" ")
                             screening.save()
+                     
                         except Exception as e:
                             error = "Error in Saving Groups and Videos : " + str(e)
                             status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
@@ -121,7 +135,7 @@ def save_screening_data(xml_tree):
                         status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                         error_msg = 'screening_save_error'
                         error = "Error in Saving Screening : " + str(err)
-                        sendmail("Exception in Mobile COCO. Screening save error (Line 87)", error)
+                        sendmail("Exception in Mobile COCO. Screening save error (Line 111)", error)
 
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_READ_ERROR']
@@ -178,8 +192,8 @@ def save_adoption_data(xml_tree):
                                                   date_of_adoption=adoption_data['date'],
                                                   video_id=adoption_data['selected_video'],
                                                   partner=cocouser.partner,
-                                                  user_created=cocouser.user
-                                                  )
+                                                  user_created=cocouser.user)
+
                         pap.full_clean()
                         pap.save()
                         status = 1

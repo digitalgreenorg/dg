@@ -18,7 +18,7 @@ from dimagi.scripts.exception_email import sendmail
 class Command(BaseCommand):
     
     def handle(self, *args, **options):
-        xml_object = XMLSubmission.objects.get(id=12098)
+        xml_object = XMLSubmission.objects.get(id=12072)
         xml_string = xml_object.xml_data
         xml_parse = minidom.parseString(xml_string)
         save_mobile_data.save_screening_data(xml_parse)
