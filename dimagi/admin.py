@@ -16,7 +16,7 @@ class CommCareUserAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['username', 'guid', 'coco_user', 'project', 'mediator']
                           }
                   )]
-    list_display = ('username', 'guid', 'coco_user', 'project', 'mediator')
+    list_display = ('username', 'coco_user', 'project', 'mediator')
     search_fields = ['username']
 
 

@@ -16,6 +16,7 @@ def save_screening_data(xml_tree):
         xml_data = xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid=str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
+        mediator = commcare_user.mediator
         for record in xml_data:
             try:
                 screening_data = {}
@@ -23,26 +24,43 @@ def save_screening_data(xml_tree):
                 screening_data['time'] = record.getElementsByTagName('time')[0].firstChild.data
                 screening_data['selected_village'] = record.getElementsByTagName('selected_village')[0].firstChild.data
                 screening_data['selected_group'] = record.getElementsByTagName('selected_group')[0].firstChild.data
-                screening_data['selected_mediator'] = record.getElementsByTagName('selected_mediator')[0].firstChild.data
+                if record.getElementsByTagName('selected_mediator'):
+                    screening_data['selected_mediator'] = record.getElementsByTagName('selected_mediator')[0].firstChild.data
+                else:
+                    screening_data['selected_mediator'] = mediator
                 screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
                 if  screening_data['selected_video'] == '0' :
                     screening_data['selected_video'] = record.getElementsByTagName('additional_selected_video')[0].firstChild.data
-                screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
-                pma_record = []
-                for person in screening_data['attendance_record']:
-                    if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
+                #Check if 'attendance_record' or 'attended' tag
+                pma_record =[]
+                if record.getElementsByTagName('attendance_record'):                
+                    screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
+                    for person in screening_data['attendance_record']:
+                        if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
+                            pma = {}
+                            pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
+                            if person.getElementsByTagName('interested')[0].firstChild:
+                                pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
+                            else:
+                                pma['interested'] = 0
+                            if person.getElementsByTagName('question_asked')[0].firstChild:
+                                pma['question'] = person.getElementsByTagName('question_asked')[0].firstChild.data
+                            else:
+                                pma['question'] = ""
+                            pma_record.append(pma)
+                    error_msg = 'Successful'
+                else:
+                    attendance_list =  str(record.getElementsByTagName('attended')[0].firstChild.data)
+                    screening_data['attendance_record'] = map(int, str.split(attendance_list))
+                    for person in screening_data['attendance_record']:
                         pma = {}
-                        pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
-                        if person.getElementsByTagName('interested')[0].firstChild:
-                            pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
-                        else:
-                            pma['interested'] = 0
-                        if person.getElementsByTagName('question_asked')[0].firstChild:
-                            pma['question'] = person.getElementsByTagName('question_asked')[0].firstChild.data
-                        else:
-                            pma['question'] = ""
+                        pma['person_id'] = person
                         pma_record.append(pma)
-                error_msg = 'Successful'
+                    error_msg = 'Successful'
+                #Adding question asked to first farmer 
+                if pma_record:
+                    if record.getElementsByTagName('Feedback'):
+                        pma_record[0]['question'] = record.getElementsByTagName('Feedback')[0].firstChild.data
                 # time is returned as string, doing funky things to retrieve it in time format  
                 temp_time = screening_data['time'].split('.')
                 temp_time = time.strptime(temp_time[0], "%H:%M:%S")
@@ -50,6 +68,7 @@ def save_screening_data(xml_tree):
                 screening_data['start_time'] = temp_time.time()
                 screening_data['end_time'] = temp_time + timedelta(minutes=45)
                 screening_data['end_time'] = screening_data['end_time'].time()
+
                 try:
                     ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
                     status['screening'] = 1
