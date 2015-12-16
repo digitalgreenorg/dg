@@ -8,8 +8,8 @@ class HelloBye(ExotelService):
     #TODO some of these must come from settings
     sid = "digitalgreen2"
     token = "421c11b1235067ca30ca87590c80c31eadc46af0"
-    caller_id="01139595020"
-    flow_id = "58748"
+    caller_id="01139595953"
+    flow_id = "58687"
     views = {}
     
     def __init__(self, **kwargs):
