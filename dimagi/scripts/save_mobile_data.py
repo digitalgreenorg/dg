@@ -68,8 +68,7 @@ def save_screening_data(xml_tree):
                             pma_record[0]['question'] = str(record.getElementsByTagName('Feedback')[0].firstChild.data)
                 except Exception as e:
                     error = "Error in saving Feedback: " + str(e)
-                    error_msg = 'feedback_save_error'
-                    sendmail("Exception in Mobile COCO. Error in feedback (Line 91)", error)
+                    sendmail("Exception in Mobile COCO. Error in feedback (Line 68)", error)
 
                 # time is returned as string, doing funky things to retrieve it in time format  
                 temp_time = screening_data['time'].split('.')
@@ -124,7 +123,7 @@ def save_screening_data(xml_tree):
                             error = "Error in Saving Groups and Videos : " + str(e)
                             status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                             error_msg = 'screening_save_error'
-                            sendmail("Exception in Mobile COCO. Error in saving groups and videos (Line 91)", error)
+                            sendmail("Exception in Mobile COCO. Error in saving groups and videos (Line 120)", error)
 
                         status['pma'] = save_pma(pma_record, screening.id, status['screening'])
                         if status['pma'] == error_list['PMA_SAVE_ERROR']:
@@ -135,13 +134,13 @@ def save_screening_data(xml_tree):
                         status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                         error_msg = 'screening_save_error'
                         error = "Error in Saving Screening : " + str(err)
-                        sendmail("Exception in Mobile COCO. Screening save error (Line 111)", error)
+                        sendmail("Exception in Mobile COCO. Screening save error (Line 114)", error)
 
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_READ_ERROR']
                 error_msg = 'screening_read_error'
                 error = "Error in Reading Screening : " + str(ex)
-                sendmail("Exception in Mobile COCO. Screening read error (Line 22)", error)
+                sendmail("Exception in Mobile COCO. Error in reading XML.", error)
 
     except Exception as e:
         status['screening'] = error_list['USER_NOT_FOUND']
@@ -167,7 +166,7 @@ def save_pma(pma_record, Sid, status):
         except ValidationError, e:
             status = error_list['PMA_SAVE_ERROR'] 
             error = "Error in Saving PMA : " + str(e)
-            sendmail("Exception in Mobile COCO. Error in Saving PMA {Line 134)", error)
+            sendmail("Exception in Mobile COCO. Error in Saving PMA {Line 164)", error)
     return status
 
 
