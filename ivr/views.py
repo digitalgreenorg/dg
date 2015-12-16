@@ -6,6 +6,7 @@ from types import StringType, TupleType
 from django.conf.urls import include, patterns, url
 from django.http import HttpResponse
 from django.views.generic import View
+from ivr.scripts.exception_email import sendmail
 
 from models import Call
 
@@ -33,11 +34,16 @@ class CallEndView(ExotelView):
     def get(cls, request):
         #TODO retrieve the call object and save the status of the call
         #TODO end_call should be called from a URL which is sent above as statuscallback
-        call_id = request.GET["CallSid"]
-        call = Call.objects.get(exotel_call_id=call_id)
-        #final_response_dict = json.loads(request)
-        call.end(response = request.GET)
-        response = cls.exotel_response(request, 0)
+        response = HttpResponse(status = 200)
+        try: 
+            call_id = request.GET["CallSid"]
+            call = Call.objects.get(exotel_call_id=call_id)
+            #final_response_dict = json.loads(request)
+            call.end(response = request.GET)
+            response = cls.exotel_response(request, 0)
+        except Exception as e:
+            error = "Error: " + e + request
+            sendmail("Error in ending call", error)
         return response
 
 class AudioView(ExotelView):
@@ -52,18 +58,22 @@ class AudioView(ExotelView):
             args = (inspect.getargspec(cls.process)).args
             # The view needs to use both state, which is dynamic, and properties, that are fixed for a call
             if 'props' in args and 'state' in args:
-                call = Call.objects.get(exotel_call_id=call_id)
-                state = json.loads(call.state)
-                ret_val = cls.process(props, state)
-                # The view returns only the URL of the audio file
-                if type(ret_val) == StringType:
-                    audio_url = ret_val
-                # The view returns the URL of the audio file AND needs to change the state in the database
-                elif type(ret_val) == TupleType:
-                    audio_url = ret_val[0]
-                    new_state = ret_val[1]
-                    call.state = json.dumps(new_state)
-                    call.save()
+                try:
+                    call = Call.objects.get(exotel_call_id=call_id)
+                    state = json.loads(call.state)
+                    ret_val = cls.process(props, state)
+                    # The view returns only the URL of the audio file
+                    if type(ret_val) == StringType:
+                        audio_url = ret_val
+                    # The view returns the URL of the audio file AND needs to change the state in the database
+                    elif type(ret_val) == TupleType:
+                        audio_url = ret_val[0]
+                        new_state = ret_val[1]
+                        call.state = json.dumps(new_state)
+                        call.save()
+                except Exception as e:
+                    error = "Error in IVR" + str(error)
+                    sendmail("Error in saving call", error)
                 else:
                     raise Exception("Process function defined incorrectly.")
             # The view uses properties fixed at the beginning of the call to identify the audio url
