@@ -6,7 +6,8 @@ from types import StringType, TupleType
 from django.conf.urls import include, patterns, url
 from django.http import HttpResponse
 from django.views.generic import View
-from ivr.scripts.exception_email import sendmail
+
+from exception_email import sendmail
 
 from models import Call
 
