@@ -9,7 +9,7 @@ class HelloBye(ExotelService):
     sid = "digitalgreen2"
     token = "421c11b1235067ca30ca87590c80c31eadc46af0"
     caller_id="01139595020"
-    flow_id = "54820"
+    flow_id = "58748"
     views = {}
     
     def __init__(self, **kwargs):
