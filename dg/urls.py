@@ -8,6 +8,7 @@ import data_upload.urls
 import dimagi.urls
 import feeds.urls
 import raw_data_analytics.urls
+import loop.urls
 
 import social_website.api_urls
 import social_website.urls
@@ -66,6 +67,7 @@ urlpatterns = patterns('',
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
     (r'^training/', include(training.urls)),
+    (r'^loop/', include(loop.urls)),
     (r'^raw_data_analytics/', include(raw_data_analytics.urls)),
 
     (r'^get_log/?$', send_updated_log),

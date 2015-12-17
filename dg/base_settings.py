@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'grappelli_safe',
     'videokheti',
     'training',
+    'loop',
 )
 
 # Store these package names here as they may change in the future since
