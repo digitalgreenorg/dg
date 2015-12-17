@@ -16,7 +16,8 @@ def save_screening_data(xml_tree):
         xml_data = xml_tree.getElementsByTagName('data')
         commcare_user = CommCareUser.objects.get(guid=str(xml_tree.getElementsByTagName('n0:userID')[0].childNodes[0].nodeValue))
         cocouser = commcare_user.coco_user
-        mediator = commcare_user.mediator.id
+        if commcare_user.mediator.id:
+            mediator = commcare_user.mediator.id
         for record in xml_data:
             try:
                 screening_data = {}
