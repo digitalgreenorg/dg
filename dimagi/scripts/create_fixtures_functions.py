@@ -198,6 +198,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator,
             files = {'file-to-upload': open(filename, 'rb')}
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
+            print "Uploaded: "+filename
         else:
             print 'No villages assigned to %s' % user.username
 
