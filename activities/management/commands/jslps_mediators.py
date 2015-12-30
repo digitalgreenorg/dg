@@ -51,12 +51,10 @@ class Command(BaseCommand):
 			except Exception as e:
 				print ac, an, e
 
-			try:	
+			try:
+				animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()	
 				animator_added = list(JSLPS_Animator.objects.values_list('animator_id'))
 				animator_added = [i[0] for i in animator_added]
-				a_n = JSLPS_Animator.objects.get(animator_code = ac)
-				a_n.animator = animator
-				a_n.save()
 				if animator.id not in animator_added:
 					ja = JSLPS_Animator(animator_code = ac,
 										animator = animator)

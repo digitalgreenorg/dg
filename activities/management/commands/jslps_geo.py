@@ -29,8 +29,8 @@ class Command(BaseCommand):
 					print dc, e			
 			try:
 				district = District.objects.filter(state_id = 2).get(district_name = dn)
-				d_n = JSLPS_District.objects.get(district_code = dc)
-				'''d_n.district = district
+				'''d_n = JSLPS_District.objects.get(district_code = dc)
+				d_n.district = district
 				d_n.save()
 				print dc, "distict-foreign key saved in new"'''
 				district_added = list(JSLPS_District.objects.values_list('district_code'))
@@ -58,8 +58,8 @@ class Command(BaseCommand):
 			
 			try:
 				block = Block.objects.get(block_name = bn)
-				b_n = JSLPS_Block.objects.get(block_code = bc)
-				'''b_n.block = block
+				'''b_n = JSLPS_Block.objects.get(block_code = bc)
+				b_n.block = block
 				b_n.save()
 				print bc, "block-foreign key saved in new"'''
 				block_added = list(JSLPS_Block.objects.values_list('block_code'))
@@ -87,17 +87,17 @@ class Command(BaseCommand):
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
-				v_n = JSLPS_Village.objects.get(village_code = vc)
+				'''v_n = JSLPS_Village.objects.get(village_code = vc)
 				v_n.Village = village
 				v_n.save()
-				print vc, "village-foreign key saved in new"
+				print vc, "village-foreign key saved in new"'''
 				village_added = list(JSLPS_Village.objects.values_list('village_code'))
 				village_added = [i[0] for i in village_added]
 
 				if vc not in village_added:
 					jv = JSLPS_Village(village_code = vc,
 									village_name = vn,
-									village = village)
+									Village = village)
 					jv.save()
 					print vc, "village saved in new"
 			except Exception as e:

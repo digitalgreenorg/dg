@@ -30,14 +30,11 @@ class Command(BaseCommand):
 				if gn not in group_set.values():
 					gp = PersonGroup(group_name = gn,
 									village = village.Village,
-									partner = partner)
+									partner = partner
+									)
 					gp.save()
 					print "Group saved in old"
 				group = PersonGroup.objects.filter(group_name = gn, village_id = village.Village.id).get()
-				g_n = JSLPS_Persongroup.objects.get(group_code = gc)
-				g_n.group = group
-				g_n.save()
-				print vc, "group-foreign key saved in new"
 				group_added = list(JSLPS_Persongroup.objects.values_list('group_id'))
 				group_added = [i[0] for i in group_added]
 				if group.id not in group_added:
