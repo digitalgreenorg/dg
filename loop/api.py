@@ -110,4 +110,4 @@ class LoopUserResource(ModelResource):
 		authorization = Authorization()
 	hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
 	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
-	dehydrate_user = partial(foreign_key_to_id,, field_name='user', sub_field_names=['id','username'])
+	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
