@@ -6,7 +6,7 @@ from api import FarmerResource, VillageResource
 from loop import views
 
 api = Api(api_name = "v1")
-api.register(VillageResource)
+api.register(VillageResource())
 
 urlpatterns = patterns('',
     url(r'^$', views.home, name='loop'),
