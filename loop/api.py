@@ -87,7 +87,7 @@ class BlockResource(ModelResource):
 class VillageResource(ModelResource):
 	block = fields.ForeignKey(BlockResource, 'block', full=True)
 	class Meta:
-		allowed_methods = ['POST','GET']
+		allowed_methods = ['post','get']
 		queryset = Village.objects.all()
 		resource_name = 'village'
 		authorization = Authorization()
