@@ -104,7 +104,7 @@ class FarmerResource(ModelResource):
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
 	assigned_villages = fields.ListField()
-		class Meta:
+	class Meta:
 		queryset = LoopUser.objects.prefetch_related('assigned_villages','user')
 		resource_name = 'loopUser'
 		authorization = Authorization()
