@@ -6,7 +6,6 @@ from api import FarmerResource, VillageResource
 from loop import views
 
 api = Api(api_name = "v1")
-api.register(FarmerResource)
 api.register(VillageResource)
 
 urlpatterns = patterns('',
