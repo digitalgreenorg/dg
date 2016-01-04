@@ -109,7 +109,7 @@ class CombinedTransaction(LoopModel):
 	class Meta:
 		db_table = 'combined_transaction'
 
-class log(LoopModel):
+class Log(LoopModel):
 	id = models.AutoField(primary_key=True)
 	user = models.CharField(max_length=50)
 	data = models.CharField(max_length=5000)

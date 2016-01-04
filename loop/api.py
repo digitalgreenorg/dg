@@ -49,13 +49,6 @@ class UserResource(ModelResource):
        # filtering = {'username':ALL,
        #              }
 
-class UploadResource(ModelResource):
-	class Meta:
-		queryset = Upload.objects.all()
-		resource_name = 'upload'
-		authentication = Authentication()
-		authorization = Authorization()
-
 class CountryResource(ModelResource):
 	class Meta:
 		queryset = Country.objects.all()
