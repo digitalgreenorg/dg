@@ -14,15 +14,6 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
-class LoopUser(LoopModel):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, related_name="loop_user")
-    role = models.IntegerField(choices = RoleChoice)
-    assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
-
-    def __unicode__(self):
-    	return self.user.username
-
 class Country(LoopModel):
 	id = models.AutoField(primary_key=True)
 	country_name = models.CharField(max_length=50)
@@ -63,6 +54,15 @@ class Village(LoopModel):
 	
 	def __unicode__(self):
 		return self.village_name
+
+class LoopUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, related_name="loop_user")
+    role = models.IntegerField(choices = RoleChoice)
+    assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
+
+    def __unicode__(self):
+    	return self.user.username
 
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)
