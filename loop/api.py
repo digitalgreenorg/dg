@@ -91,6 +91,7 @@ class VillageResource(ModelResource):
 		queryset = Village.objects.all()
 		resource_name = 'village'
 		authorization = Authorization()
+		authentication = Authentication()
 
 class FarmerResource(ModelResource):
 	village = fields.ForeignKey(VillageResource, 'village', full=True)
