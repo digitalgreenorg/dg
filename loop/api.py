@@ -3,6 +3,9 @@ from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from django.forms.models import model_to_dict
 from tastypie import fields, utils
+from functools import partial
+
+from django.contrib.auth.models import User
 from models import *
 
 def foreign_key_to_id(bundle, field_name,sub_field_names):
