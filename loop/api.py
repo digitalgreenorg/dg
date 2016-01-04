@@ -46,8 +46,8 @@ class UserResource(ModelResource):
        resource_name='user'
        excludes = ['is_active', 'is_staff', 'is_superuser', 'date_joined',
                    'last_login']
-       filtering = {'username':ALL,
-                    }
+       # filtering = {'username':ALL,
+       #              }
 
 class UploadResource(ModelResource):
 	class Meta:
