@@ -18,6 +18,7 @@ from dimagi.models import CommCareUser
 def write_type_info(workbook):
     sheet = workbook.add_worksheet('types')
     row = 0
+    #header row
     sheet.write(row, 0, "name")
     sheet.write(row, 1, "tag")
     sheet.write(row, 2, "field 1")
@@ -53,6 +54,7 @@ def write_type_info(workbook):
 def write_village_info(village_dict_list, workbook):
     sheet = workbook.add_worksheet('village')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "user 1")
@@ -69,6 +71,7 @@ def write_village_info(village_dict_list, workbook):
 def write_mediator_info(mediator_dict_list, workbook):
     sheet = workbook.add_worksheet('mediator')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "field: village_id")
@@ -89,6 +92,7 @@ def write_mediator_info(mediator_dict_list, workbook):
 def write_group_info(group_dict_list, workbook):
     sheet = workbook.add_worksheet('group')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "field: village_id")
@@ -107,6 +111,7 @@ def write_group_info(group_dict_list, workbook):
 def write_distinct_video(vid_list, workbook, group_name):
     sheet = workbook.add_worksheet('unique_video')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name")
     sheet.write(row, 2, 'group 1')
@@ -151,9 +156,11 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator,
         write_type_info(workbook)
         username = user.username
         user_id = user.guid
+        
         village_dict_list = []
         mediator_dict_list = []
         group_dict_list = []
+        
         villages = user.coco_user.villages.all()
         if villages:
             for vil in villages:
@@ -191,6 +198,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator,
             files = {'file-to-upload': open(filename, 'rb')}
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
+            print "Uploaded: "+filename
         else:
             print 'No villages assigned to %s' % user.username
 
@@ -229,6 +237,7 @@ def create_fixture_video(project_name, users, group_name):
 
     village_list = []
     partner_list = []
+    
     for user in users:
         village_list.append(list(user.coco_user.villages.all().values_list('id', flat=True)))
         if user.coco_user.partner_id not in partner_list:
