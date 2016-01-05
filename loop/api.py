@@ -160,7 +160,7 @@ class CombinedTransactionResource(ModelResource):
 	class Meta:
 		queryset = CombinedTransaction.objects.all()
 		resource_name = 'combinedtransaction'
-		authorization = Authorization()
+		authorization = VillageAuthorization('farmer__village_id__in')
 		authentication = ApiKeyAuthentication()
 	dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
 	dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
