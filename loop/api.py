@@ -1,4 +1,4 @@
-from tastypie.authentication import Authentication
+from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from django.forms.models import model_to_dict
@@ -92,7 +92,7 @@ class VillageResource(ModelResource):
 		queryset = Village.objects.all()
 		resource_name = 'village'
 		authorization = Authorization()
-		authentication = Authentication()
+		authentication = ApiKeyAuthentication()
 
 class FarmerResource(ModelResource):
 	village = fields.ForeignKey(VillageResource, 'village', full=True)
