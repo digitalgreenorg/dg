@@ -110,7 +110,7 @@ class LoopUserResource(ModelResource):
 	assigned_villages = fields.ListField()
 	class Meta:
 		queryset = LoopUser.objects.prefetch_related('assigned_villages','user')
-		resource_name = 'loopUser'
+		resource_name = 'loopuser'
 		authorization = Authorization()
 	hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
 	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
@@ -130,3 +130,22 @@ class MandiResource(ModelResource):
 		authorization = Authorization()
 	dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
 	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+
+class CombinedTransactionResource(ModelResource):
+	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+	farmer = fields.ForeignKey(FarmerResource,'farmer')
+	crop = fields.ForeignKey(CropResource,'crop')
+	mandi = fields.ForeignKey(MandiResource,'mandi')
+	class Meta:
+		queryset = CombinedTransaction.objects.all()
+		resource_name = 'combinedtransaction'
+		authorization = Authorization()
+		authentication = ApiKeyAuthentication()
+	dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
+	dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
+	dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
+	dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
+	hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
+	hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
+	hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+	hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator', resource_name='loopuser')
