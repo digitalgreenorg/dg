@@ -16,3 +16,6 @@ loop_admin.register(Country)
 loop_admin.register(LoopUser)
 loop_admin.register(Crop)
 loop_admin.register(Farmer)
+loop_admin.register(CombinedTransaction)
+loop_admin.register(Mandi)
+
