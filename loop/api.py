@@ -111,7 +111,7 @@ class VillageResource(ModelResource):
 		always_return_data = True
 		queryset = Village.objects.all()
 		resource_name = 'village'
-		authorization = VillageAuthorization()
+		authorization = VillageAuthorization('id__in')
 		authentication = ApiKeyAuthentication()
 	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
