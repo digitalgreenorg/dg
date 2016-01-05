@@ -9,6 +9,8 @@ from requests.auth import HTTPDigestAuth
 from dg.settings import DIMAGI_USERNAME, DIMAGI_PASSWORD
 from write_xml_content import write_close_person_content, write_closing_meta, write_opening_meta, write_person_content, write_person_update_content 
 
+from dimagi.scripts.exception_email import sendmail
+
 
 def close_case(cases, filename):
     file = codecs.open(filename, "w",'utf-8')
@@ -47,8 +49,13 @@ def update_case(cases, filename, project_name):
 
         #check for changes in the cases in dimagi
 
-        r = requests.get(url, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
-        data = json.loads(r.content)
+        try:
+            r = requests.get(url, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
+            data = json.loads(r.content)
+        except Exception as e:
+            error = "Person Name: "+str(person.person_name)+" Person ID: "+str(person.id)+" Case ID: "+str(case_id)+" Error: "+str(e)
+            sendmail("Error in Uploading Cases", error)
+
         video_seen_in_case = sorted(data['properties']['videos_seen'].split())
         video_seen_in_db = sorted(videos_seen.split())
         print cmp(video_seen_in_case, video_seen_in_db)
