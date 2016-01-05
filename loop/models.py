@@ -75,6 +75,8 @@ class LoopUser(LoopModel):
         return self.user.username
     class Meta:
         unique_together = ("user",)
+    def get_villages(self):
+    	return self.assigned_villages.all()
 
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)

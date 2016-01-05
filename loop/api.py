@@ -38,6 +38,26 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
+class VillageAuthorization(Authorization):
+    def __init__(self,field):
+        self.village_field = field
+    
+    def read_list(self, object_list, bundle):
+        villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        kwargs = {}
+        kwargs[self.village_field] = villages
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.village_field] = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Village" )
+
 class UserResource(ModelResource):
    # We need to store raw password in a virtual field because hydrate method
    # is called multiple times depending on if it's a POST/PUT/PATCH request
@@ -91,7 +111,7 @@ class VillageResource(ModelResource):
 		always_return_data = True
 		queryset = Village.objects.all()
 		resource_name = 'village'
-		authorization = Authorization()
+		authorization = VillageAuthorization()
 		authentication = ApiKeyAuthentication()
 	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
