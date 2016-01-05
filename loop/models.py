@@ -126,6 +126,7 @@ class CombinedTransaction(LoopModel):
 
 	class Meta:
 		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price",)
+        db_table = 'combined_transaction'
 
 
 class Log(LoopModel):
