@@ -8,6 +8,7 @@ from loop.views import *
 api = Api(api_name = "v1")
 api.register(VillageResource())
 api.register(LoopUserResource())
+api.register(FarmerResource())
 
 urlpatterns = patterns('',
     url(r'^$', home, name='loop'),

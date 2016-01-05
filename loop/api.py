@@ -102,6 +102,8 @@ class FarmerResource(ModelResource):
 		queryset = Farmer.objects.all()
 		resource_name = 'farmer'
 		authorization = Authorization()
+	dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+	hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
