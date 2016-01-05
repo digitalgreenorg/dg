@@ -93,6 +93,8 @@ class VillageResource(ModelResource):
 		resource_name = 'village'
 		authorization = Authorization()
 		authentication = ApiKeyAuthentication()
+	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
+	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
 class FarmerResource(ModelResource):
 	village = fields.ForeignKey(VillageResource, 'village', full=True)
