@@ -21,7 +21,7 @@ class Country(LoopModel):
 	def __unicode__(self):
 		return self.country_name
 	class Meta:
-		unique_together = ('country_name')
+		unique_together = ("country_name")
 
 class State(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -31,7 +31,7 @@ class State(LoopModel):
 	def __unicode__(self):
 		return self.state_name
 	class Meta:
-		unique_together = ('state_name')
+		unique_together = ("state_name")
 
 class District(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -41,7 +41,7 @@ class District(LoopModel):
 	def __unicode__(self):
 		return self.district_name
 	class Meta:
-		unique_together = ('district_name')
+		unique_together = ("district_name")
 
 class Block(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -51,7 +51,7 @@ class Block(LoopModel):
 	def __unicode__(self):
 		return self.block_name
 	class Meta:
-		unique_together = ('block_name')
+		unique_together = ("block_name")
 
 class Village(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -63,7 +63,7 @@ class Village(LoopModel):
 	def __unicode__(self):
 		return self.village_name
 	class Meta:
-		unique_together = ('village_name')
+		unique_together = ("village_name")
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -74,7 +74,7 @@ class LoopUser(LoopModel):
     def __unicode__(self):
         return self.user.username
     class Meta:
-        unique_together = ('user')
+        unique_together = ("user")
 
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -87,7 +87,7 @@ class Farmer(LoopModel):
 	def __unicode__(self):
 		return self.name;
 	class Meta:
-		unique_together = ('phone')
+		unique_together = ("phone")
 
 class Crop(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -98,7 +98,7 @@ class Crop(LoopModel):
 	def __unicode__(self):
 		return self.crop_name
 	class Meta:
-		unique_together = ('crop_name')
+		unique_together = ("crop_name")
 
 class Mandi(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -110,7 +110,7 @@ class Mandi(LoopModel):
 	def __unicode__(self):
 		return self.mandi_name
 	class Meta:
-		unique_together = ('mandi_name','district')
+		unique_together = ("mandi_name","district")
 
 class CombinedTransaction(LoopModel):
  	id = models.AutoField(primary_key=True)
@@ -125,7 +125,7 @@ class CombinedTransaction(LoopModel):
 	pay_amount = models.FloatField()
 
 	class Meta:
-		unique_together = ('date', 'aggregator','farmer','crop','mandi','crop_price')
+		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price")
 
 
 class Log(LoopModel):
