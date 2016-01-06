@@ -117,15 +117,15 @@ class VillageResource(ModelResource):
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
 class FarmerResource(ModelResource):
-	village = fields.ForeignKey(VillageResource, 'village', full=True)
+    village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
-	class Meta:
-		queryset = Farmer.objects.all()
-		resource_name = 'farmer'
-		authorization = VillageAuthorization('village_id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
-	hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    class Meta:
+        queryset = Farmer.objects.all()
+        resource_name = 'farmer'
+        authorization = VillageAuthorization('village_id__in')
+        authentication = ApiKeyAuthentication()
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
