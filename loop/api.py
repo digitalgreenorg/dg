@@ -133,7 +133,8 @@ class FarmerResource(MultipartResource, ModelResource):
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
         queryset = Farmer.objects.all()
-        resource_name = 'farmer'
+        resource_name = 'farmer'.
+        always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
