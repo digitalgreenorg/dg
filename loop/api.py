@@ -146,13 +146,13 @@ class FarmerResource(MultipartResource, ModelResource):
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
-        else:
-            bundle.obj = attempt[0]
+        else:t
+            bundle.obj = atempt[0]
 
         print type(bundle)
         print type(bundle.obj)
         print bundle
-        result['id'] = bundle.data['id']
+        result['id'] = bundle.obj.id
         result['error'] = 'Duplicate Entry'
         return result
 
