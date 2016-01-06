@@ -144,7 +144,7 @@ class FarmerResource(MultipartResource, ModelResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
-        attempt = Farmer.objects.filter(phone = kwargs['phone'])
+        attempt = Farmer.objects.filter(phone = bundle.data['phone'])
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
