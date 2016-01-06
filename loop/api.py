@@ -149,7 +149,7 @@ class FarmerResource(MultipartResource, ModelResource):
         print bundle.data
         result = {}
         if attempt.count() < 1:
-            bundle.obj = Farmer(*kwargs)
+            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(bundle.data['village']['id']))
         else:
             raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
 
