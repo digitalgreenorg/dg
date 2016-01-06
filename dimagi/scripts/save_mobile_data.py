@@ -54,6 +54,7 @@ def save_screening_data(xml_tree):
                 else:
                     attendance_list =  str(record.getElementsByTagName('attended')[0].firstChild.data)
                     screening_data['attendance_record'] = map(int, str.split(attendance_list))
+                    #if empty: 'NoneType' object has no attribute 'data' error in email. Not Using if statement here.
                     for person in screening_data['attendance_record']:
                         pma = {}
                         pma['person_id'] = person
@@ -61,15 +62,15 @@ def save_screening_data(xml_tree):
                         pma['question'] = ""
                         pma_record.append(pma)
                     error_msg = 'Successful'
-                
-                #Adding question asked to first farmer 
-                try:
-                    if pma_record:
-                        if record.getElementsByTagName('Feedback')[0].firstChild:
-                            pma_record[0]['question'] = str(record.getElementsByTagName('Feedback')[0].firstChild.data)
-                except Exception as e:
-                    error = "Error in saving Feedback: " + str(e)
-                    sendmail("Exception in Mobile COCO. Error in feedback (Line 68)", error)
+                    
+                    #Adding question asked to first farmer 
+                    try:
+                        if pma_record:
+                            if record.getElementsByTagName('Feedback')[0].firstChild:
+                                pma_record[0]['question'] = str(record.getElementsByTagName('Feedback')[0].firstChild.data)
+                    except Exception as e:
+                        error = "Error in saving Feedback: " + str(e)
+                        sendmail("Exception in Mobile COCO. Error in feedback (Line 68)", error)
 
                 # time is returned as string, doing funky things to retrieve it in time format  
                 temp_time = screening_data['time'].split('.')
