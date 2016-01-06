@@ -148,6 +148,8 @@ class FarmerResource(MultipartResource, ModelResource):
         attempt = Farmer.objects.filter(phone = bundle.data['phone'])
         print kwargs
         print bundle.data
+        print bundle.data['village']
+        print bundle.data['village'].split('/')
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = int(bundle.data['village'].split('/')[-2])))
