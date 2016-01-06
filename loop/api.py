@@ -133,7 +133,7 @@ class FarmerResource(MultipartResource, ModelResource):
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
         queryset = Farmer.objects.all()
-        resource_name = 'farmer'.
+        resource_name = 'farmer'
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
