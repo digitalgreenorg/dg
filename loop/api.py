@@ -143,12 +143,18 @@ class FarmerResource(MultipartResource, ModelResource):
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
         attempt = Farmer.objects.filter(**kwargs)
+        result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
         else:
-            bundle.obj['id'] = attempt[0].pk
-            bundle.obj['error'] = 'Duplicate Entry'
-        return bundle
+            bundle.obj = attempt[0]
+
+        print type(bundle)
+        print type(bundle.obj)
+        print bundle
+        result['id'] = bundle.data['id']
+        result['error'] = 'Duplicate Entry'
+        return result
 
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
