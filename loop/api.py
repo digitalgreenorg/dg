@@ -1,3 +1,4 @@
+from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
@@ -147,8 +148,7 @@ class FarmerResource(MultipartResource, ModelResource):
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
         else:
-            bundle.obj = attempt[0]
-            bundle.error = 'Duplicate Error'
+            raise ImmediateHttpResponse("Duplicate : " , attempt[0].id)
 
         # print type(bundle)
         # print type(bundle.obj)
