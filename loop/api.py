@@ -148,7 +148,7 @@ class FarmerResource(MultipartResource, ModelResource):
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
         else:
-            raise ImmediateHttpResponse("Duplicate : " + str(attempt[0].id))
+            raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
 
         # print type(bundle)
         # print type(bundle.obj)
