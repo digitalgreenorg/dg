@@ -138,6 +138,8 @@ class FarmerResource(ModelResource):
         print bundle.data
         print bundle.data['village']
         ids = bundle.data['village'].split("/")[-2]
+        print type(ids)
+        print ids
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = ids))
