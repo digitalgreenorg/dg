@@ -134,23 +134,12 @@ class FarmerResource(ModelResource):
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
         attempt = Farmer.objects.filter(phone = bundle.data['phone'])
-        print kwargs
-        print bundle.data
-        print bundle.data['village']
-        ids = bundle.data['village'].split("/")[-2]
-        print type(ids)
-        print ids
         result = {}
         if attempt.count() < 1:
-            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = ids))
+            # bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = bundle.obj.id))
+            bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
             raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
-
-        # print type(bundle)
-        # print type(bundle.obj)
-        # print bundle
-        # result['id'] = bundle.obj.id
-        # result['error'] = 'Duplicate Entry'
         return bundle
 
 class LoopUserResource(ModelResource):
