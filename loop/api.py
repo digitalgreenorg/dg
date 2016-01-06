@@ -58,6 +58,18 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class MultipartResource(object):
+    def deserialize(self, request, data, format=None):
+        if not format:
+            format = request.META.get('CONTENT_TYPE', 'application/json')
+        if format == 'application/x-www-form-urlencoded':
+            return request.POST
+        if format.startswith('multipart'):
+            data = request.POST.copy()
+            data.update(request.FILES)
+            return data
+        return super(MultipartResource, self).deserialize(request, data, format)
+
 class UserResource(ModelResource):
    # We need to store raw password in a virtual field because hydrate method
    # is called multiple times depending on if it's a POST/PUT/PATCH request
@@ -116,7 +128,7 @@ class VillageResource(ModelResource):
 	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
-class FarmerResource(ModelResource):
+class FarmerResource(MultipartResource, ModelResource):
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
