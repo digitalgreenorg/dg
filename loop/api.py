@@ -147,7 +147,7 @@ class FarmerResource(MultipartResource, ModelResource):
             bundle.obj = Farmer(*kwargs)
         else:
             bundle.obj = {}
-            bundle.obj['id'] = attempt[0].id
+            bundle.obj['pk'] = attempt[0].pk
             bundle.obj['error'] = 'Duplicate Entry'
         return bundle
 class LoopUserResource(ModelResource):
