@@ -142,7 +142,7 @@ class FarmerResource(MultipartResource, ModelResource):
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
-
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
         attempt = Farmer.objects.filter(phone = bundle.data['phone'])
@@ -150,7 +150,7 @@ class FarmerResource(MultipartResource, ModelResource):
         print bundle.data
         result = {}
         if attempt.count() < 1:
-            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(json.loads(bundle.data['village']['id'])))
+            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(json.loads(bundle.data['village'])['id']))
         else:
             raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
 
