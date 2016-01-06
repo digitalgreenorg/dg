@@ -146,9 +146,8 @@ class FarmerResource(MultipartResource, ModelResource):
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
         else:
-            bundle.obj = {}
-            bundle.obj['pk'] = attempt[0].pk
-            bundle.obj['error'] = 'Duplicate Entry'
+            bundle.obj = attempt[0]
+            bundle['error'] = 'Duplicate Entry'
         return bundle
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
