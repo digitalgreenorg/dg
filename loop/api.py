@@ -147,7 +147,7 @@ class FarmerResource(MultipartResource, ModelResource):
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
         else:
-            bundle.obj = atempt[0]
+            bundle.obj = attempt[0]
 
         print type(bundle)
         print type(bundle.obj)
