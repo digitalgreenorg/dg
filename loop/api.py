@@ -143,12 +143,13 @@ class FarmerResource(MultipartResource, ModelResource):
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
         attempt = Farmer.objects.filter(**kwargs)
+        result = {}
         if attempt.count() < 1:
-            bundle.obj = Farmer(*kwargs)
+            result = Farmer(*kwargs)
         else:
-            bundle.obj = attempt[0]
-            bundle['error'] = 'Duplicate Entry'
-        return bundle
+            result['id'] = attempt[0].id
+            result['error'] = 'Duplicate Entry'
+        return result
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
 	assigned_villages = fields.ListField()
