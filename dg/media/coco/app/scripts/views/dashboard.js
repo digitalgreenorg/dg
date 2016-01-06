@@ -171,11 +171,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                                 notif_type: "error",
                                 message: "Sync Incomplete. Failed to do Incremental Download: " + error
                             });
-
                         });
                     }
                 });
-
             })
                 .fail(function(model, error) {
                 // if DB is not downloaded, start the full download    
@@ -187,7 +185,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     });
                 }
             });
-
         },
         
         //method to initiate full download
@@ -296,7 +293,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             return navigator.onLine;
         }
     });
-
 
     // Our module now returns our view
     return DashboardView;

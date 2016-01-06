@@ -115,6 +115,7 @@ define([
 
         // Resets the offline db
         reset: function() {
+            // check if user has unsynced data in upload queue
             if(upload_collection.length > 0){
                 var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
                 if (val == true) {

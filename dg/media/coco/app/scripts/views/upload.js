@@ -189,7 +189,6 @@ define([
                 //stop the process
                 return whole_upload_dfd.reject("User stopped Sync");
             }
-
             else if (this.server_connectivity_lost){
                  //put the upload object back
                 this.upload_collection.unshift(this.current_entry);
@@ -308,15 +307,13 @@ define([
                                         that.status_view(total, uploaded, pending);
                                         dfd.reject(error);
                                     }
-
+                                    // unauthorised server connection i.e. when user is logged out from website( when django session expires)
                                     else if(error.status == 401){
                                         alert('Session time out. Login in again!');
                                         that.tear_down();
                                         that.server_connectivity_lost = true;
                                         dfd.reject(error);
-                                        //auth.logout();
                                     }
-                                    
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
@@ -338,7 +335,7 @@ define([
                         dfd.reject(error);
                 });
         },
-
+        // show the status of upladed/yet to uploaded data from upload queue
         status_view: function(total, uploaded, pending) {
             console.log("Upload Status View Initialised");
             this.UploadStatusView_v = new UploadStatusView();

@@ -105,7 +105,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
             return check;
         }
 
-
         function timeOrder(value, element, options) {
             var check = false;
             var start = $('#' + options.start_time)
@@ -145,6 +144,4 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
     return {
         run: run
     };
-
-
 });
