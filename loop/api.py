@@ -139,6 +139,14 @@ class FarmerResource(MultipartResource, ModelResource):
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle = self.full_hydrate(bundle)
+        attempt = Farmer.objects.filter(**kwargs)
+        if attempt.count() < 1:
+            bundle.obj = Farmer(*kwargs)
+        else:
+            bundle.obj = attempt[0]
+        return bundle
 class LoopUserResource(ModelResource):
 	user = fields.ForeignKey(UserResource, 'user')
 	assigned_villages = fields.ListField()
