@@ -137,10 +137,10 @@ class FarmerResource(ModelResource):
         print kwargs
         print bundle.data
         print bundle.data['village']
-        print bundle.data['village'].split("/")[-2]
+        ids = int(bundle.data['village'].split("/")[-2])
         result = {}
         if attempt.count() < 1:
-            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = int(bundle.data['village'].split("/")[-2])))
+            bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = ids))
         else:
             raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
 
