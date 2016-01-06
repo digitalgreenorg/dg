@@ -235,12 +235,19 @@ def create_fixture_video(project_name, users, group_name):
             partner_list.append(user.coco_user.partner_id)
     villages = reduce(lambda x, y: x + y, village_list)
     user_states = State.objects.filter(district__block__village__id__in=villages).distinct().values_list('id', flat=True)
-    video_list = Screening.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('videoes_screened', flat=True).order_by('-date')
-    video_list = [i for i in video_list if i is not None]
-    video_list = set(video_list)
-    write_distinct_video(video_list, workbook, group_name)
+    
+    #Video List from Videos Screened
+    #video_list = Screening.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('videoes_screened', flat=True).order_by('-date')
+    #video_list = [i for i in video_list if i is not None]
+    #video_list = set(video_list)
+
+    #Video List from Video Table
+    videos_list = Video.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('id', flat=True)
+    videos_list = [i for i in videos_list if i is not None]
+
+    write_distinct_video(videos_list, workbook, group_name)
     video_schedule_list_of_dict = []
-    for id in list(video_list):
+    for id in list(videos_list):
         video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01',
                                         'high_val': '2020-01-01'})
