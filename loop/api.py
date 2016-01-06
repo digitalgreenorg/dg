@@ -58,101 +58,116 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class UserResource(ModelResource):
+   # We need to store raw password in a virtual field because hydrate method
+   # is called multiple times depending on if it's a POST/PUT/PATCH request
+
+   class Meta:
+       authorization = Authorization()
+       allowed_methods = ['get', 'patch', 'put', 'post']
+       always_return_data = True
+       queryset = User.objects.all()
+       resource_name='user'
+       excludes = ['is_active', 'is_staff', 'is_superuser', 'date_joined',
+                   'last_login']
+       # filtering = {'username':ALL,
+       #              }
+
 class CountryResource(ModelResource):
-    class Meta:
-        queryset = Country.objects.all()
-        resource_name = 'country'
-        fields = ["country_name"]
-        authorization = Authorization()
+	class Meta:
+		queryset = Country.objects.all()
+		resource_name = 'country'
+		fields = ["country_name"]
+		authorization = Authorization()
 
 class StateResource(ModelResource):
-    country = fields.ForeignKey(CountryResource, attribute='country', full=True)
-    class Meta:
-        queryset = State.objects.all()
-        resource_name = 'state'
-        fields = ["state_name"]
-        authorization = Authorization()
+	country = fields.ForeignKey(CountryResource, attribute='country', full=True)
+	class Meta:
+		queryset = State.objects.all()
+		resource_name = 'state'
+		fields = ["state_name"]
+		authorization = Authorization()
 
 class DistrictResource(ModelResource):
-    state = fields.ForeignKey(StateResource, 'state', full=True)
-    class Meta:
-        queryset = District.objects.all()
-        resource_name = 'district'
-        fields = ["district_name"]
-        authorization = Authorization()
+	state = fields.ForeignKey(StateResource, 'state', full=True)
+	class Meta:
+		queryset = District.objects.all()
+		resource_name = 'district'
+		fields = ["district_name"]
+		authorization = Authorization()
 
 class BlockResource(ModelResource):
-    district = fields.ForeignKey(DistrictResource, 'district', full=True)
-    class Meta:
-        queryset = Block.objects.all()
-        resource_name = 'block'
-        fields = ["block_name"]
-        authorization = Authorization()
+	district = fields.ForeignKey(DistrictResource, 'district', full=True)
+	class Meta:
+		queryset = Block.objects.all()
+		resource_name = 'block'
+		fields = ["block_name"]
+		authorization = Authorization()
 
 class VillageResource(ModelResource):
-    block = fields.ForeignKey(BlockResource, 'block', full=True)
-    class Meta:
-        allowed_methods = ['post','get']
-        always_return_data = True
-        queryset = Village.objects.all()
-        resource_name = 'village'
-        authorization = VillageAuthorization('id__in')
-        authentication = ApiKeyAuthentication()
-    dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
-    hydrate_block = partial(dict_to_foreign_uri, field_name='block')
+	block = fields.ForeignKey(BlockResource, 'block', full=True)
+	class Meta:
+		allowed_methods = ['post','get']
+		always_return_data = True
+		queryset = Village.objects.all()
+		resource_name = 'village'
+		authorization = VillageAuthorization('id__in')
+		authentication = ApiKeyAuthentication()
+	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
+	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
 class FarmerResource(ModelResource):
-    village = fields.ForeignKey(VillageResource, 'village', full=True)
-    image=fields.FileField(attribute='img', null=True, blank=True)
-    class Meta:
-        queryset = Farmer.objects.all()
-        resource_name = 'farmer'
-        authorization = VillageAuthorization('village_id__in')
-        authentication = ApiKeyAuthentication()
-    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
-    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+	village = fields.ForeignKey(VillageResource, 'village', full=True)
+    image = fields.FileField(attribute='img', null=True, blank=True)
+	class Meta:
+		queryset = Farmer.objects.all()
+		resource_name = 'farmer'
+		authorization = VillageAuthorization('village_id__in')
+		authentication = ApiKeyAuthentication()
+	dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+	hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
 class LoopUserResource(ModelResource):
-    user = fields.ForeignKey(UserResource, 'user')
-    assigned_villages = fields.ListField()
-    class Meta:
-        queryset = LoopUser.objects.prefetch_related('assigned_villages','user')
-        resource_name = 'loopuser'
-        authorization = Authorization()
-    hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
-    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
-    dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
+	user = fields.ForeignKey(UserResource, 'user')
+	assigned_villages = fields.ListField()
+	class Meta:
+		queryset = LoopUser.objects.prefetch_related('assigned_villages','user')
+		resource_name = 'loopuser'
+		authorization = Authorization()
+	hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
+	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
 class CropResource(ModelResource):
-    class Meta:
-        queryset = Crop.objects.all()
-        resource_name = 'crop'
-        authorization = Authorization()
+	class Meta:
+		queryset = Crop.objects.all()
+		resource_name = 'crop'
+		authorization = Authorization()
 
 class MandiResource(ModelResource):
-    district = fields.ForeignKey(DistrictResource, 'district')
-    class Meta:
-        queryset = Mandi.objects.all()
-        resource_name = 'mandi'
-        authorization = Authorization()
-    dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
-    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+	district = fields.ForeignKey(DistrictResource, 'district')
+	class Meta:
+		queryset = Mandi.objects.all()
+		resource_name = 'mandi'
+		authorization = Authorization()
+	dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
+	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
 class CombinedTransactionResource(ModelResource):
-    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
-    farmer = fields.ForeignKey(FarmerResource,'farmer')
-    crop = fields.ForeignKey(CropResource,'crop')
-    mandi = fields.ForeignKey(MandiResource,'mandi')
-    class Meta:
-        queryset = CombinedTransaction.objects.all()
-        resource_name = 'combinedtransaction'
-        authorization = VillageAuthorization('farmer__village_id__in')
-        authentication = ApiKeyAuthentication()
-    dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
-    dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
-    dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
-    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
-    hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
-    hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
-    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
-    hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator', resource_name='loopuser')
+	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+	farmer = fields.ForeignKey(FarmerResource,'farmer')
+	crop = fields.ForeignKey(CropResource,'crop')
+	mandi = fields.ForeignKey(MandiResource,'mandi')
+	class Meta:
+		queryset = CombinedTransaction.objects.all()
+		resource_name = 'combinedtransaction'
+		authorization = VillageAuthorization('farmer__village_id__in')
+		authentication = ApiKeyAuthentication()
+	dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
+	dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
+	dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
+	dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
+	hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
+	hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
+	hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+	hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator', resource_name='loopuser')
