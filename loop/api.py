@@ -12,6 +12,9 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
+class FarmerNotSaved(Exception):
+    pass
+        
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
@@ -136,7 +139,7 @@ class FarmerResource(ModelResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=422))
+            raise FarmerNotSaved("Duplicate : " + str(attempt[0].id)
         return bundle
 
 class LoopUserResource(ModelResource):
