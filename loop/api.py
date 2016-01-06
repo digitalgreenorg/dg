@@ -137,7 +137,7 @@ class FarmerResource(ModelResource):
         print kwargs
         print bundle.data
         print bundle.data['village']
-        ids = int(bundle.data['village'].split("/")[-2])
+        ids = bundle.data['village'].split("/")[-2]
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = ids))
