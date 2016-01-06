@@ -146,6 +146,7 @@ class FarmerResource(MultipartResource, ModelResource):
         bundle = self.full_hydrate(bundle)
         attempt = Farmer.objects.filter(phone = bundle.data['phone'])
         print kwargs
+        print bundle.data
         result = {}
         if attempt.count() < 1:
             bundle.obj = Farmer(*kwargs)
