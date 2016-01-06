@@ -5,6 +5,7 @@ from tastypie.resources import ModelResource
 from django.forms.models import model_to_dict
 from tastypie import fields, utils
 from functools import partial
+from django.http import  HttpResponse
 
 from django.contrib.auth.models import User
 from models import *
