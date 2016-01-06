@@ -133,12 +133,10 @@ class FarmerResource(ModelResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Farmer.objects.filter(phone = bundle.data['phone'])
-        result = {}
         if attempt.count() < 1:
-            # bundle.obj = Farmer(name = bundle.data['name'], phone = bundle.data['phone'], village = Village.objects.get(id = bundle.obj.id))
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=501))
+            raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=422))
         return bundle
 
 class LoopUserResource(ModelResource):
