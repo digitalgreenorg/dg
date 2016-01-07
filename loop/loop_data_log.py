@@ -82,7 +82,7 @@ def send_updated_log(request):
         timestamp = request.POST['timestamp']
         if timestamp:
             try:
-                apikey_object = ApiKey.objects.get(apikey = int(apikey))
+                apikey_object = ApiKey.objects.get(key = apikey)
                 user = apikey_object.user
             except Exception, e:
                 return HttpResponse("-1", status=401)
