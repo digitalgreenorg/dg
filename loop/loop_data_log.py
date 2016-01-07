@@ -5,7 +5,11 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.db.models import get_model
 from django.forms.models import model_to_dict
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+
+from tastypie.models import ApiKey
+
 class TimestampException(Exception):
     pass
 class UserDoesNotExist(Exception):
@@ -70,21 +74,30 @@ def get_latest_timestamp():
         timestamp = None
     return timestamp
 
+@csrf_exempt
 def send_updated_log(request):
-    timestamp = request.GET.get('timestamp', None)
-    if timestamp:
-        LoopUser = get_model('loop','LoopUser')
-        LoopUserVillages = get_model('Loop','LoopUser_villages')
-        try:
-            loop_user = LoopUser.objects.get(user_id=request.user.id)
-        except Exception as e:
-            raise UserDoesNotExist('User with id: '+str(request.user.id) + 'does not exist')
-        villages = LoopUserVillages.objects.filter(loopuser_id = loop_user.id).values_list('village_id', flat = True)
-        Log = get_model('loop', 'Log')
-        rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop'])
-        rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer'])
-        rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
-        if rows:
-            data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-            return HttpResponse(data, mimetype="application/json")
+    if request.method == 'POST':
+        username = request.POST['username']
+        apikey = request.POST['apikey']
+        timestamp = request.POST['timestamp']
+        if timestamp:
+            try:
+                apikey_object = ApiKey.objects.get(apikey = apikey)
+                user = apikey_object.user
+            except Exception, e:
+                return HttpResponse("0")
+            LoopUser = get_model('loop','LoopUser')
+            LoopUserVillages = get_model('Loop','LoopUser_villages')
+            try:
+                loop_user = LoopUser.objects.get(user_id=user.id)
+            except Exception as e:
+                raise UserDoesNotExist('User with id: '+str(user.id) + 'does not exist')
+            villages = LoopUserVillages.objects.filter(loopuser_id = loop_user.id).values_list('village_id', flat = True)
+            Log = get_model('loop', 'Log')
+            rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop'])
+            rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer'])
+            rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
+            if rows:
+                data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
+                return HttpResponse(data, mimetype="application/json")
     return HttpResponse("0")
