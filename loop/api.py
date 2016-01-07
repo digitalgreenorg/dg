@@ -133,6 +133,7 @@ class BlockResource(BaseResource):
 		authorization = Authorization()
 
 class VillageResource(BaseResource):
+	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	block = fields.ForeignKey(BlockResource, 'block', full=True)
 	class Meta:
 		allowed_methods = ['post','get']
@@ -176,6 +177,7 @@ class LoopUserResource(BaseResource):
 	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
 class CropResource(BaseResource):
+	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	class Meta:
 		queryset = Crop.objects.all()
 		resource_name = 'crop'
@@ -191,6 +193,7 @@ class MandiResource(BaseResource):
 	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
 class CombinedTransactionResource(BaseResource):
+	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
 	farmer = fields.ForeignKey(FarmerResource,'farmer')
 	crop = fields.ForeignKey(CropResource,'crop')
