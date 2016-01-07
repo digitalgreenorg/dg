@@ -14,13 +14,13 @@ from models import *
 
 class FarmerNotSaved(Exception):
     pass
-        
+
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
         dict = {}
         for sub_field in sub_field_names:
-            dict[sub_field] = None 
+            dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
     return dict
@@ -28,7 +28,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('id'):
-        bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
+        bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name,
                                                     str(field_dict.get('id')))
     else:
         bundle.data[field_name] = None
@@ -48,7 +48,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 class VillageAuthorization(Authorization):
     def __init__(self,field):
         self.village_field = field
-    
+
     def read_list(self, object_list, bundle):
         villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
         kwargs = {}
@@ -139,7 +139,7 @@ class FarmerResource(ModelResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved("Duplicate : " + str(attempt[0].id)
+            raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
         return bundle
 
 class LoopUserResource(ModelResource):
