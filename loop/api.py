@@ -27,9 +27,9 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict.get('onlineId'):
         bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name,
-                                                    str(field_dict.get('id')))
+                                                    str(field_dict.get('onlineId')))
     else:
         bundle.data[field_name] = None
     return bundle
