@@ -80,7 +80,7 @@ class LoopUser(LoopModel):
     class Meta:
         unique_together = ("user",)
     def get_villages(self):
-    	return self.assigned_villages.all()
+        return self.assigned_villages.all()
 
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -120,8 +120,8 @@ class Mandi(LoopModel):
 		unique_together = ("mandi_name","district",)
 
 class CombinedTransaction(LoopModel):
- 	id = models.AutoField(primary_key=True)
- 	date = models.DateField(auto_now=False)
+	id = models.AutoField(primary_key=True)
+	date = models.DateField(auto_now=False)
 	aggregator = models.ForeignKey(LoopUser)
 	farmer = models.ForeignKey(Farmer)
 	crop = models.ForeignKey(Crop)
@@ -136,11 +136,11 @@ class CombinedTransaction(LoopModel):
 
 class Log(models.Model):
 	id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
-    user = models.ForeignKey(User, null=True)
-    village = models.IntegerField(null=True)
-    action = models.IntegerField()
-    entry_table = models.CharField(max_length=100)
-    model_id = models.IntegerField(null=True)
+	timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
+	user = models.ForeignKey(User, null=True)
+	village = models.IntegerField(null=True)
+	action = models.IntegerField()
+	entry_table = models.CharField(max_length=100)
+	model_id = models.IntegerField(null=True)
 	def __unicode__(self):
 		return self.mediator
