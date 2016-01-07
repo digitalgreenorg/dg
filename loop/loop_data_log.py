@@ -77,7 +77,6 @@ def get_latest_timestamp():
 @csrf_exempt
 def send_updated_log(request):
     if request.method == 'POST':
-        username = request.POST['username']
         apikey = request.POST['apikey']
         timestamp = request.POST['timestamp']
         if timestamp:
