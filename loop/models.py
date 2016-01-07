@@ -96,8 +96,8 @@ class Farmer(LoopModel):
 		return self.name;
 	class Meta:
 		unique_together = ("phone","name")
-post_save.connect(save_log, sender="Farmer")
-pre_delete.connect(delete_log, sender="Farmer")
+post_save.connect(save_log, sender=Farmer)
+pre_delete.connect(delete_log, sender=Farmer)
 
 class Crop(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -110,8 +110,8 @@ class Crop(LoopModel):
 		return self.crop_name
 	class Meta:
 		unique_together = ("crop_name",)
-post_save.connect(save_log, sender="Crop")
-pre_delete.connect(delete_log, sender="Crop")
+post_save.connect(save_log, sender=Crop)
+pre_delete.connect(delete_log, sender=Crop)
 
 class Mandi(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -139,8 +139,8 @@ class CombinedTransaction(LoopModel):
 
 	class Meta:
 		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price",)
-post_save.connect(save_log, sender="CombinedTransaction")
-pre_delete.connect(delete_log, sender="CombinedTransaction")
+post_save.connect(save_log, sender=CombinedTransaction)
+pre_delete.connect(delete_log, sender=CombinedTransaction)
 
 class Log(models.Model):
 	id = models.AutoField(primary_key=True)
