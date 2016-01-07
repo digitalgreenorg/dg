@@ -22,10 +22,10 @@ def login(request):
                 api_key.save()
             return HttpResponse(api_key.key)
         else:
-            return HttpResponse("0")
+            return HttpResponse("0", status=401 )
     else:
-        return HttpResponse("0")
-    return HttpResponse("0")
+        return HttpResponse("0", status = 403)
+    return HttpResponse("0", status=400)
 
 def home(request):
 	print request

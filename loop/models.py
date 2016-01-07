@@ -21,7 +21,7 @@ class Logout(models.Model):
 class Country(LoopModel):
 	id = models.AutoField(primary_key=True)
 	country_name = models.CharField(max_length=50)
-	
+
 	def __unicode__(self):
 		return self.country_name
 	class Meta:
@@ -41,7 +41,7 @@ class District(LoopModel):
 	id = models.AutoField(primary_key=True)
 	district_name = models.CharField(max_length=50)
 	state = models.ForeignKey(State)
-		
+
 	def __unicode__(self):
 		return self.district_name
 	class Meta:
@@ -63,7 +63,7 @@ class Village(LoopModel):
 	latitude = models.FloatField(null=True, blank=True)
 	longitude = models.FloatField(null=True, blank=True)
 	block = models.ForeignKey(Block)
-	
+
 	def __unicode__(self):
 		return self.village_name
 	class Meta:
@@ -101,7 +101,7 @@ class Crop(LoopModel):
 	crop_name = models.CharField(max_length=30)
 	measuring_unit = models.CharField(max_length=20)
 	image_path = models.CharField(max_length=100)
-		
+
 	def __unicode__(self):
 		return self.crop_name
 	class Meta:
@@ -113,7 +113,7 @@ class Mandi(LoopModel):
 	latitude = models.FloatField(null=True)
 	longitude =  models.FloatField(null=True)
 	district = models.ForeignKey(District)
-		
+
 	def __unicode__(self):
 		return self.mandi_name
 	class Meta:
@@ -128,18 +128,19 @@ class CombinedTransaction(LoopModel):
 	mandi = models.ForeignKey(Mandi)
 	crop_amount = models.FloatField()
 	crop_price = models.FloatField()
-	pay_status = models.CharField(max_length=1)
+	pay_status = models.IntegerField()
 	pay_amount = models.FloatField()
 
 	class Meta:
 		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price",)
 
-class Log(LoopModel):
+class Log(models.Model):
 	id = models.AutoField(primary_key=True)
-	model = models.CharField(max_length=20)
-	object_id = models.IntegerField()
-	village = models.ForeignKey(Village, null= True, blank = True)
-	action = models.CharField(max_length=50, null=True, default=None)
+    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
+    user = models.ForeignKey(User, null=True)
+    village = models.IntegerField(null=True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null=True)
 	def __unicode__(self):
 		return self.mediator
-
