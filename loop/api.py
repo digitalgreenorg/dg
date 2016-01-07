@@ -65,6 +65,27 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class BaseResource(ModelResource):
+    
+    def full_hydrate(self, bundle):
+        bundle = super(BaseResource, self).full_hydrate(bundle)
+        bundle.obj.user_modified_id = bundle.request.user.id
+        return bundle
+    
+    def obj_create(self, bundle, **kwargs):
+        """
+        A ORM-specific implementation of ``obj_create``.
+        """
+        bundle.obj = self._meta.object_class()
+
+        for key, value in kwargs.items():
+            setattr(bundle.obj, key, value)
+
+        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
+        bundle = self.full_hydrate(bundle)
+        bundle.obj.user_created_id = bundle.request.user.id
+        return self.save(bundle)
+
 class UserResource(ModelResource):
    # We need to store raw password in a virtual field because hydrate method
    # is called multiple times depending on if it's a POST/PUT/PATCH request
@@ -80,14 +101,14 @@ class UserResource(ModelResource):
        # filtering = {'username':ALL,
        #              }
 
-class CountryResource(ModelResource):
+class CountryResource(BaseResource):
 	class Meta:
 		queryset = Country.objects.all()
 		resource_name = 'country'
 		fields = ["country_name"]
 		authorization = Authorization()
 
-class StateResource(ModelResource):
+class StateResource(BaseResource):
 	country = fields.ForeignKey(CountryResource, attribute='country', full=True)
 	class Meta:
 		queryset = State.objects.all()
@@ -95,7 +116,7 @@ class StateResource(ModelResource):
 		fields = ["state_name"]
 		authorization = Authorization()
 
-class DistrictResource(ModelResource):
+class DistrictResource(BaseResource):
 	state = fields.ForeignKey(StateResource, 'state', full=True)
 	class Meta:
 		queryset = District.objects.all()
@@ -103,7 +124,7 @@ class DistrictResource(ModelResource):
 		fields = ["district_name"]
 		authorization = Authorization()
 
-class BlockResource(ModelResource):
+class BlockResource(BaseResource):
 	district = fields.ForeignKey(DistrictResource, 'district', full=True)
 	class Meta:
 		queryset = Block.objects.all()
@@ -111,7 +132,7 @@ class BlockResource(ModelResource):
 		fields = ["block_name"]
 		authorization = Authorization()
 
-class VillageResource(ModelResource):
+class VillageResource(BaseResource):
 	block = fields.ForeignKey(BlockResource, 'block', full=True)
 	class Meta:
 		allowed_methods = ['post','get']
@@ -123,7 +144,7 @@ class VillageResource(ModelResource):
 	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
-class FarmerResource(ModelResource):
+class FarmerResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
@@ -142,7 +163,7 @@ class FarmerResource(ModelResource):
             raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
         return bundle
 
-class LoopUserResource(ModelResource):
+class LoopUserResource(BaseResource):
 	user = fields.ForeignKey(UserResource, 'user')
 	assigned_villages = fields.ListField()
 	class Meta:
@@ -153,13 +174,13 @@ class LoopUserResource(ModelResource):
 	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
 	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
-class CropResource(ModelResource):
+class CropResource(BaseResource):
 	class Meta:
 		queryset = Crop.objects.all()
 		resource_name = 'crop'
 		authorization = Authorization()
 
-class MandiResource(ModelResource):
+class MandiResource(BaseResource):
 	district = fields.ForeignKey(DistrictResource, 'district')
 	class Meta:
 		queryset = Mandi.objects.all()
@@ -168,7 +189,7 @@ class MandiResource(ModelResource):
 	dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
 	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
-class CombinedTransactionResource(ModelResource):
+class CombinedTransactionResource(BaseResource):
 	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
 	farmer = fields.ForeignKey(FarmerResource,'farmer')
 	crop = fields.ForeignKey(CropResource,'crop')
