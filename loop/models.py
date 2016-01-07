@@ -14,6 +14,10 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
+class Logout(models.Model):
+    user = models.ForeignKey(User, editable = False, null=True, blank=True)
+    time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
 class Country(LoopModel):
 	id = models.AutoField(primary_key=True)
 	country_name = models.CharField(max_length=50)
@@ -41,7 +45,7 @@ class District(LoopModel):
 	def __unicode__(self):
 		return self.district_name
 	class Meta:
-		unique_together = ("district_name",)
+		unique_together = ("district_name","state")
 
 class Block(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -51,7 +55,7 @@ class Block(LoopModel):
 	def __unicode__(self):
 		return self.block_name
 	class Meta:
-		unique_together = ("block_name",)
+		unique_together = ("block_name","district")
 
 class Village(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -63,7 +67,7 @@ class Village(LoopModel):
 	def __unicode__(self):
 		return self.village_name
 	class Meta:
-		unique_together = ("village_name",)
+		unique_together = ("village_name","block")
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -89,10 +93,11 @@ class Farmer(LoopModel):
 	def __unicode__(self):
 		return self.name;
 	class Meta:
-		unique_together = ("phone",)
+		unique_together = ("phone","name")
 
 class Crop(LoopModel):
 	id = models.AutoField(primary_key=True)
+	image_path = models.CharField(max_length = 500 , default = None, null = True, blank=True)
 	crop_name = models.CharField(max_length=30)
 	measuring_unit = models.CharField(max_length=20)
 	image_path = models.CharField(max_length=100)
@@ -128,16 +133,13 @@ class CombinedTransaction(LoopModel):
 
 	class Meta:
 		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price",)
-        db_table = 'combined_transaction'
-
 
 class Log(LoopModel):
 	id = models.AutoField(primary_key=True)
-	user = models.CharField(max_length=50)
-	data = models.CharField(max_length=5000)
-	timestamp = models.DateTimeField(auto_now=False)
-	type = models.CharField(max_length=50, null=True, default=None)
-
+	model = models.CharField(max_length=20)
+	object_id = models.IntegerField()
+	village = models.ForeignKey(Village, null= True, blank = True)
+	action = models.CharField(max_length=50, null=True, default=None)
 	def __unicode__(self):
 		return self.mediator
 
