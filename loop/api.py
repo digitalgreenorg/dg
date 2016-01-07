@@ -145,6 +145,7 @@ class VillageResource(BaseResource):
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
 class FarmerResource(BaseResource):
+	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
