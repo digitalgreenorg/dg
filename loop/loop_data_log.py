@@ -85,7 +85,7 @@ def send_updated_log(request):
                 apikey_object = ApiKey.objects.get(apikey = apikey)
                 user = apikey_object.user
             except Exception, e:
-                return HttpResponse("0")
+                return HttpResponse("-1", status=401)
             LoopUser = get_model('loop','LoopUser')
             LoopUserVillages = get_model('Loop','LoopUser_villages')
             try:
