@@ -154,7 +154,7 @@ class FarmerResource(BaseResource):
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
-    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['onlineId','village_name'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['phone'])
