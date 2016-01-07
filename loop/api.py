@@ -146,7 +146,6 @@ class VillageResource(BaseResource):
 	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
 class FarmerResource(BaseResource):
-    id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
@@ -155,7 +154,7 @@ class FarmerResource(BaseResource):
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
-    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['onlineId','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['phone'])
@@ -163,6 +162,9 @@ class FarmerResource(BaseResource):
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
             raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['onlineId'] = bundle.data['id']       
         return bundle
 
 class LoopUserResource(BaseResource):
