@@ -87,12 +87,11 @@ def send_updated_log(request):
             except Exception, e:
                 return HttpResponse("-1", status=401)
             LoopUser = get_model('loop','LoopUser')
-            LoopUserVillages = get_model('Loop','LoopUser_villages')
             try:
                 loop_user = LoopUser.objects.get(user_id=user.id)
             except Exception as e:
                 raise UserDoesNotExist('User with id: '+str(user.id) + 'does not exist')
-            villages = LoopUserVillages.objects.filter(loopuser_id = loop_user.id).values_list('village_id', flat = True)
+            villages = loop_user.get_villages()
             Log = get_model('loop', 'Log')
             rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop'])
             rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer'])
