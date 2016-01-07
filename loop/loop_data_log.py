@@ -26,7 +26,7 @@ def save_log(sender, **kwargs ):
     if sender == "Village":
         village_id = instance.id
         user = None
-    elif sender == "Crop"
+    elif sender == "Crop":
         village_id = None
         user = None
     else:
