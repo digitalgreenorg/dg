@@ -235,7 +235,7 @@ class CombinedTransactionResource(BaseResource):
 #        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"],  crop=bundle.obj.crop, farmer = bundle.obj.farmer, mandi = bundle.obj.mandi, price = bundle.data["price"])
         attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"])
         if attempt.count() < 1:
-            bundle = super(CropResource, self).obj_create(bundle, **kwargs)
+            bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
         else:
             raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
         return bundle
