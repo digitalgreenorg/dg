@@ -225,7 +225,7 @@ class CombinedTransactionResource(BaseResource):
         authorization = VillageAuthorization('farmer__village_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-    dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
+    dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','name'])
     dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
     dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
     hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
