@@ -232,7 +232,7 @@ class CombinedTransactionResource(BaseResource):
     hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], farmer = bundle.obj.farmer, crop=bundle.obj.crop, mandi = bundle.obj.mandi, price = bundle.data["price"])
+        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"],  crop=bundle.obj.crop, farmer = bundle.obj.farmer, mandi = bundle.obj.mandi, price = bundle.data["price"])
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
