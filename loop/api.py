@@ -156,13 +156,12 @@ class FarmerResource(BaseResource):
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['phone'])
+        attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise ImmediateHttpResponse(response = HttpResponse("Duplicate : " + str(attempt[0].id), status=422))
+            raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
         return bundle
-        
     def dehydrate(self, bundle):
         bundle.data['onlineId'] = bundle.data['id']
         return bundle
