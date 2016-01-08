@@ -12,7 +12,7 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
-class FarmerNotSaved(Exception):
+class FarmerNotSaved(ValidationError):
     def __init__(self, message, **kwargs):
         # Call the base class constructor with the parameters it needs
         super(ValidationError, self).__init__(message)
