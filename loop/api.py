@@ -160,7 +160,11 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
+            error_dict = {}
+            error_dict['id'] = attempt[0].id
+            error_dict['message'] = 'Duplicate's
+            error = json.dumps(error_dict)
+            raise FarmerNotSaved(error)
         return bundle
     def dehydrate(self, bundle):
         bundle.data['onlineId'] = bundle.data['id']
