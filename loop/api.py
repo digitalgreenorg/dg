@@ -12,15 +12,12 @@ import json
 
 from django.contrib.auth.models import User
 from models import *
+class FarmerSaveError(Object):
+    def __init__(**kwargs):
+        self.error = *kwargs
 
 class FarmerNotSaved(Exception):
-    def __init__(self, message, **kwargs):
-        # Call the base class constructor with the parameters it needs
-        super(FarmerNotSaved, self).__init__(message)
-        # Now for your custom code...
-        self.errors={}
-        for key, value in kwargs.iteritems():
-            self.errors[key] = value
+    pass
 
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
@@ -167,7 +164,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved(id = attempt[0].id, message = 'Duplicate')
+            raise FarmerNotSaved(FarmerSaveError(id = attempt[0].id, error = "Duplicate"))
         return bundle
     def dehydrate(self, bundle):
         bundle.data['onlineId'] = bundle.data['id']
