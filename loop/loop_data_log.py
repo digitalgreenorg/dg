@@ -33,6 +33,9 @@ def save_log(sender, **kwargs ):
     elif sender == "Crop":
         village_id = None
         user = None
+    elif sender == "CombinedTransaction":
+        village_id = instance.farmer.village.id
+        user = instance.user_created
     else:
         village_id = instance.village.id # farmer add
     Log = get_model('loop', 'Log')
