@@ -163,8 +163,7 @@ class FarmerResource(BaseResource):
             error_dict = {}
             error_dict['id'] = attempt[0].id
             error_dict['message'] = 'Duplicate'
-            error = json.dumps(error_dict)
-            raise FarmerNotSaved(error)
+            raise FarmerNotSaved(error_dict)
         return bundle
     def dehydrate(self, bundle):
         bundle.data['onlineId'] = bundle.data['id']
