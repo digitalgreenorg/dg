@@ -139,17 +139,19 @@ class BlockResource(BaseResource):
 		authorization = Authorization()
 
 class VillageResource(BaseResource):
-	block = fields.ForeignKey(BlockResource, 'block', full=True)
-	class Meta:
-		allowed_methods = ['post','get']
-		always_return_data = True
-		queryset = Village.objects.all()
-		resource_name = 'village'
-		authorization = VillageAuthorization('id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
-	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
-
+    block = fields.ForeignKey(BlockResource, 'block', full=True)
+    class Meta:
+        allowed_methods = ['post','get']
+        always_return_data = True
+        queryset = Village.objects.all()
+        resource_name = 'village'
+        authorization = VillageAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
+    dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
+    hydrate_block = partial(dict_to_foreign_uri, field_name='block')
+    def dehydrate(self, bundle):
+        bundle.data['onlineId'] = bundle.data['id']
+        return bundle
 class FarmerResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
@@ -201,13 +203,16 @@ class CropResource(BaseResource):
         return bundle
 
 class MandiResource(BaseResource):
-	district = fields.ForeignKey(DistrictResource, 'district')
-	class Meta:
-		queryset = Mandi.objects.all()
-		resource_name = 'mandi'
-		authorization = Authorization()
-	dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
-	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    district = fields.ForeignKey(DistrictResource, 'district')
+    class Meta:
+        queryset = Mandi.objects.all()
+        resource_name = 'mandi'
+        authorization = Authorization()
+    dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    def dehydrate(self, bundle):
+        bundle.data['onlineId'] = bundle.data['id']
+        return bundle
 
 class CombinedTransactionResource(BaseResource):
     farmer = fields.ForeignKey(FarmerResource,'farmer')
@@ -219,8 +224,8 @@ class CombinedTransactionResource(BaseResource):
         authorization = VillageAuthorization('farmer__village_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
-    dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
+    dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['onlineId','farmer_name'])
+    dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['onlineId','crop_name'])
     dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
     hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
     hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
