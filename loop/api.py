@@ -6,16 +6,17 @@ from django.forms.models import model_to_dict
 from tastypie import fields, utils
 from functools import partial
 from django.http import  HttpResponse
+from django.core.exceptions import ValidationError
 
 import json
 
 from django.contrib.auth.models import User
 from models import *
 
-class FarmerNotSaved(Exception):
+class FarmerNotSaved(ValidationError):
     def __init__(self, message, **kwargs):
         # Call the base class constructor with the parameters it needs
-        super(Exception, self).__init__(message)
+        super(ValidationError, self).__init__(message)
         # Now for your custom code...
         for key, value in kwargs.iteritems():
             self.errors[key] = value
