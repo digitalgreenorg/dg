@@ -87,7 +87,7 @@ class LoopUser(LoopModel):
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=100)
-#	gender = models.CharField(max_length=1)		# M/F
+	gender = models.CharField(max_length=1)		# M/F
 	phone = models.CharField(max_length=13)
 	image = models.ImageField(upload_to='loop/farmer/', null=True, blank=True)
 	village = models.ForeignKey(Village)
@@ -104,7 +104,6 @@ class Crop(LoopModel):
 	image_path = models.CharField(max_length = 500 , default = None, null = True, blank=True)
 	crop_name = models.CharField(max_length=30, null = False, blank = False)
 	measuring_unit = models.CharField(max_length=20, default = "kg")
-	image_path = models.CharField(max_length=100)
 
 	def __unicode__(self):
 		return self.crop_name
@@ -131,10 +130,10 @@ class CombinedTransaction(LoopModel):
 	farmer = models.ForeignKey(Farmer)
 	crop = models.ForeignKey(Crop)
 	mandi = models.ForeignKey(Mandi)
-	crop_amount = models.FloatField()
-	crop_price = models.FloatField()
-	pay_status = models.IntegerField()
-	pay_amount = models.FloatField()
+	quantity = models.FloatField()
+	price = models.FloatField()
+	status = models.IntegerField()
+	amount = models.FloatField()
 
 	class Meta:
 		unique_together = ("date","farmer","crop","mandi","crop_price",)
