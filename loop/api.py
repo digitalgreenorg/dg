@@ -18,6 +18,7 @@ class FarmerNotSaved(Exception):
         # Call the base class constructor with the parameters it needs
         super(FarmerNotSaved, self).__init__(message)
         # Now for your custom code...
+        self.errors={}
         for key, value in kwargs.iteritems():
             self.errors[key] = value
 
