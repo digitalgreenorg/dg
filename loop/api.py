@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from models import *
 class FarmerSaveError(Object):
     def __init__(**kwargs):
-        self.error = **kwargs
+        self.error = kwargs
 
 class FarmerNotSaved(Exception):
     pass
