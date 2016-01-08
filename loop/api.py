@@ -162,7 +162,7 @@ class FarmerResource(BaseResource):
         else:
             error_dict = {}
             error_dict['id'] = attempt[0].id
-            error_dict['message'] = 'Duplicate's
+            error_dict['message'] = 'Duplicate'
             error = json.dumps(error_dict)
             raise FarmerNotSaved(error)
         return bundle
