@@ -15,6 +15,12 @@ from models import *
 class FarmerNotSaved(Exception):
     pass
 
+class CropNotSaved(Exception):
+    pass
+
+class TransacrionNotSaved(Exception):
+    pass
+
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
@@ -178,10 +184,21 @@ class LoopUserResource(BaseResource):
 	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
 class CropResource(BaseResource):
-	class Meta:
-		queryset = Crop.objects.all()
-		resource_name = 'crop'
-		authorization = Authorization()
+    class Meta:
+        queryset = Crop.objects.all()
+        resource_name = 'crop'
+        authorization = Authorization()
+        always_return_data = True
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = Crop.objects.filter(crop_name = bundle.data['crop_name'])
+        if attempt.count() < 1:
+            bundle = super(CropResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['onlineId'] = bundle.data['id']
+        return bundle
 
 class MandiResource(BaseResource):
 	district = fields.ForeignKey(DistrictResource, 'district')
@@ -193,20 +210,28 @@ class MandiResource(BaseResource):
 	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
 class CombinedTransactionResource(BaseResource):
-	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
-	farmer = fields.ForeignKey(FarmerResource,'farmer')
-	crop = fields.ForeignKey(CropResource,'crop')
-	mandi = fields.ForeignKey(MandiResource,'mandi')
-	class Meta:
-		queryset = CombinedTransaction.objects.all()
-		resource_name = 'combinedtransaction'
-		authorization = VillageAuthorization('farmer__village_id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
-	dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
-	dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
-	dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
-	hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
-	hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
-	hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
-	hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator', resource_name='loopuser')
+    farmer = fields.ForeignKey(FarmerResource,'farmer')
+    crop = fields.ForeignKey(CropResource,'crop')
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    class Meta:
+        queryset = CombinedTransaction.objects.all()
+        resource_name = 'combinedtransaction'
+        authorization = VillageAuthorization('farmer__village_id__in')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
+    dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
+    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
+    hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
+    hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], farmer = bundle.obj.farmer, crop=bundle.obj.crop, mandi = bundle.obj.mandi, crop_price = bundle.data["crop_price"])
+        if attempt.count() < 1:
+            bundle = super(CropResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['onlineId'] = bundle.data['id']
+        return bundle

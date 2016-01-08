@@ -128,7 +128,6 @@ class Mandi(LoopModel):
 class CombinedTransaction(LoopModel):
 	id = models.AutoField(primary_key=True)
 	date = models.DateField(auto_now=False)
-	aggregator = models.ForeignKey(LoopUser)
 	farmer = models.ForeignKey(Farmer)
 	crop = models.ForeignKey(Crop)
 	mandi = models.ForeignKey(Mandi)
