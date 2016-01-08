@@ -66,12 +66,12 @@ class VillageAuthorization(Authorization):
             raise NotFound( "Not allowed to download Village" )
 
 class BaseResource(ModelResource):
-    
+
     def full_hydrate(self, bundle):
         bundle = super(BaseResource, self).full_hydrate(bundle)
         bundle.obj.user_modified_id = bundle.request.user.id
         return bundle
-    
+
     def obj_create(self, bundle, **kwargs):
         """
         A ORM-specific implementation of ``obj_create``.
@@ -133,7 +133,6 @@ class BlockResource(BaseResource):
 		authorization = Authorization()
 
 class VillageResource(BaseResource):
-	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	block = fields.ForeignKey(BlockResource, 'block', full=True)
 	class Meta:
 		allowed_methods = ['post','get']
@@ -164,7 +163,7 @@ class FarmerResource(BaseResource):
             raise FarmerNotSaved("Duplicate : " + str(attempt[0].id))
         return bundle
     def dehydrate(self, bundle):
-        bundle.data['onlineId'] = bundle.data['id']       
+        bundle.data['onlineId'] = bundle.data['id']
         return bundle
 
 class LoopUserResource(BaseResource):
@@ -179,7 +178,6 @@ class LoopUserResource(BaseResource):
 	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
 class CropResource(BaseResource):
-	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	class Meta:
 		queryset = Crop.objects.all()
 		resource_name = 'crop'
@@ -195,7 +193,6 @@ class MandiResource(BaseResource):
 	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
 class CombinedTransactionResource(BaseResource):
-	id = fields.IntegerField(attribute = 'onlineId',null = True, blank = True)
 	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
 	farmer = fields.ForeignKey(FarmerResource,'farmer')
 	crop = fields.ForeignKey(CropResource,'crop')
