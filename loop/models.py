@@ -102,8 +102,8 @@ pre_delete.connect(delete_log, sender=Farmer)
 class Crop(LoopModel):
 	id = models.AutoField(primary_key=True)
 	image_path = models.CharField(max_length = 500 , default = None, null = True, blank=True)
-	crop_name = models.CharField(max_length=30)
-	measuring_unit = models.CharField(max_length=20)
+	crop_name = models.CharField(max_length=30, null = False, blank = False)
+	measuring_unit = models.CharField(max_length=20, default = "kg")
 	image_path = models.CharField(max_length=100)
 
 	def __unicode__(self):
