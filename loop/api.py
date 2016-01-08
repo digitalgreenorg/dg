@@ -13,7 +13,7 @@ import json
 from django.contrib.auth.models import User
 from models import *
 class FarmerSaveError(object):
-    def __init__(**kwargs):
+    def __init__(self, **kwargs):
         self.error = kwargs
 
 class FarmerNotSaved(Exception):
