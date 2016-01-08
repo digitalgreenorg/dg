@@ -137,7 +137,7 @@ class CombinedTransaction(LoopModel):
 	pay_amount = models.FloatField()
 
 	class Meta:
-		unique_together = ("date", "aggregator","farmer","crop","mandi","crop_price",)
+		unique_together = ("date","farmer","crop","mandi","crop_price",)
 post_save.connect(save_log, sender=CombinedTransaction)
 pre_delete.connect(delete_log, sender=CombinedTransaction)
 
