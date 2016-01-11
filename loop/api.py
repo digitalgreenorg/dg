@@ -72,6 +72,18 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class CombinedTransactionAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(user_created_id = bundle.request.user.id).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        obj = object_list.filter(user_created_id = bundle.request.user.id).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Transaction" )
+
 class BaseResource(ModelResource):
 
     def full_hydrate(self, bundle):
@@ -222,7 +234,7 @@ class CombinedTransactionResource(BaseResource):
     class Meta:
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
-        authorization = VillageAuthorization('farmer__village_id__in')
+        authorization = CombinedTransactionAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','name'])
