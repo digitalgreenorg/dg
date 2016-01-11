@@ -70,6 +70,8 @@ class Village(LoopModel):
 		return self.village_name
 	class Meta:
 		unique_together = ("village_name","block")
+post_save.connect(save_log, sender=Village)
+pre_delete.connect(delete_log, sender=Village)
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
