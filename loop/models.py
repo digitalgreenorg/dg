@@ -148,5 +148,3 @@ class Log(models.Model):
 	action = models.IntegerField()
 	entry_table = models.CharField(max_length=100)
 	model_id = models.IntegerField(null=True)
-	def __unicode__(self):
-		return self.mediator
