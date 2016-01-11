@@ -85,9 +85,9 @@ def send_updated_log(request):
     return HttpResponse("0")
 
 def get_latest_timestamp():
-    ServerLog = get_model('coco', 'ServerLog')
+    Log = get_model('loop', 'Log')
     try:
-        timestamp = ServerLog.objects.latest('id')
+        timestamp = Log.objects.latest('timestamp')
     except Exception as e:
         timestamp = None
     return timestamp
