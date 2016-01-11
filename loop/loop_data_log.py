@@ -110,7 +110,7 @@ def send_updated_log(request):
             rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
             data_list=[]
             for row in rows:
-                data_list += get_log_object(row)
+                data_list.append(get_log_object(row))
             if rows:
                 data = serializers.serialize('json', data_list)
                 return HttpResponse(data, mimetype="application/json")
