@@ -142,7 +142,7 @@ pre_delete.connect(delete_log, sender=CombinedTransaction)
 
 class Log(models.Model):
 	id = models.AutoField(primary_key=True)
-	timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
+	timestamp = models.DateTimeField(auto_now_add = False, default=datetime.datetime.utcnow)
 	user = models.ForeignKey(User, null=True)
 	village = models.IntegerField(null=True)
 	action = models.IntegerField()
