@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from tastypie.models import ApiKey, create_api_key
+from data_log import get_latest_timestamp
 
 # Create your views here.
 @csrf_exempt
@@ -20,7 +21,7 @@ def login(request):
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
-            return HttpResponse(api_key.key)
+            return HttpResponse({'key':api_key.key, 'timestamp' : get_latest_timestamp()})
         else:
             return HttpResponse("0", status=401 )
     else:
