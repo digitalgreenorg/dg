@@ -106,8 +106,8 @@ def send_updated_log(request):
             villages = loop_user.get_villages()
             Log = get_model('loop', 'Log')
             rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop']).values()
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer']).values()
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction']).values()
+            rows = rows + Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer']).values()
+            rows = rows + Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction']).values()
             data_list=[]
             for row in rows:
                 data_list.append(get_log_object(row))
