@@ -76,6 +76,7 @@ def get_latest_timestamp():
     Log = get_model('loop', 'Log')
     try:
         timestamp = Log.objects.latest('id')
+        print timestamp
     except Exception as e:
         timestamp = None
     return timestamp
