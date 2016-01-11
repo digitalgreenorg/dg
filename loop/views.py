@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from tastypie.models import ApiKey, create_api_key
-from data_log import get_latest_timestamp
+from loop_data_log import get_latest_timestamp
 
 # Create your views here.
 @csrf_exempt
