@@ -238,7 +238,7 @@ class CombinedTransactionResource(BaseResource):
         farmer = Farmer.objects.get(id = bundle.data["farmer"]["onlineId"])
         crop = Crop.objects.get(id = bundle.data["crop"]["onlineId"])
         mandi = Mandi.objects.get(id = bundle.data["mandi"]["onlineId"])
-        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"])
+        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
         else:
