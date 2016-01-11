@@ -61,7 +61,7 @@ def delete_log(sender, **kwargs ):
         village_id = None
         user = None
     elif sender == "CombinedTransaction":
-        village_id = None
+        village_id = instance.farmer.village.id
         user = instance.user_created
     else:
         village_id = instance.village.id # farmer add
