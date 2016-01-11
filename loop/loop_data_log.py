@@ -90,8 +90,8 @@ def get_latest_timestamp():
 @csrf_exempt
 def send_updated_log(request):
     if request.method == 'POST':
-        apikey = request.POST["apikey"]
-        timestamp = request.POST["timestamp"]
+        apikey = request.POST['apikey']
+        timestamp = request.POST['timestamp']
         if timestamp:
             try:
                 apikey_object = ApiKey.objects.get(key = apikey)
