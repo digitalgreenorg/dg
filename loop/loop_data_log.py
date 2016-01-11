@@ -73,9 +73,9 @@ def delete_log(sender, **kwargs ):
         pass
 
 def get_log_object(log_object):
-    Obj_model = get_model('loop', log_object.entry_table)
-    obj = Obj_model.objects.get(id = log_object.model_id)
-    data = {'log':model_to_dict(log_object), 'data':model_to_dict(obj), 'online_id':obj.id}
+    Obj_model = get_model('loop', log_object['entry_table'])
+    obj = Obj_model.objects.filter(id = log_object['model_id']).values()
+    data = {'log':log_object, 'data':obj[0], 'online_id':obj[0]["id"]}
     return data
 
 def get_latest_timestamp():
@@ -105,9 +105,9 @@ def send_updated_log(request):
                 raise UserDoesNotExist('User with id: '+str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
             Log = get_model('loop', 'Log')
-            rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop'])
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer'])
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
+            rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop']).values()
+            rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer']).values()
+            rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction']).values()
             data_list=[]
             for row in rows:
                 data_list.append(get_log_object(row))
