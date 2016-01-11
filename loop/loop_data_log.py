@@ -15,6 +15,15 @@ class TimestampException(Exception):
 class UserDoesNotExist(Exception):
     pass
 
+class DatetimeEncoder(json.JSONEncoder):
+   def default(self, obj):
+       if isinstance(obj, datetime.datetime):
+           return obj.strftime('%Y-%m-%dT%H:%M:%SZ')
+       elif isinstance(obj, date):
+           return obj.strftime('%Y-%m-%d')
+       # Let the base class default method raise the TypeError
+       return json.JSONEncoder.default(self, obj)
+
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
@@ -112,6 +121,6 @@ def send_updated_log(request):
             for row in rows:
                 data_list.append(get_log_object(row))
             if rows:
-                data = serializers.serialize('json', data_list)
+                data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, mimetype="application/json")
     return HttpResponse("0")
