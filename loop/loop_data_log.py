@@ -112,6 +112,6 @@ def send_updated_log(request):
             for row in rows:
                 data_list.append(get_log_object(row))
             if rows:
-                data = serializers.serialize('json', data_list, fields = ('data','log','online_id'))
+                data = json.dumps(data_list)
                 return HttpResponse(data, mimetype="application/json")
     return HttpResponse("0")
