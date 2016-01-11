@@ -186,7 +186,7 @@ class FarmerResource(BaseResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
-            bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
+            bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
             raise FarmerNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
@@ -218,6 +218,13 @@ class CropResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
+            raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(CropResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Crop.objects.filter(crop_name = bundle.data['crop_name'])
             raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
@@ -260,6 +267,16 @@ class CombinedTransactionResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
         else:
+            raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+        crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+        mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
+        try:
+            bundle = super(CombinedTransactionResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
             raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
