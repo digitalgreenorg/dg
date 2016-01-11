@@ -89,7 +89,7 @@ class Farmer(LoopModel):
 	name = models.CharField(max_length=100)
 	gender = models.CharField(max_length=1)		# M/F
 	phone = models.CharField(max_length=13)
-	image = models.ImageField(upload_to='loop/farmer/', null=True, blank=True)
+	image_path = models.CharField(max_length = 500 , default = None, null = True, blank=True)
 	village = models.ForeignKey(Village)
 
 	def __unicode__(self):
