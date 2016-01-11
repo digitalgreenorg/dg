@@ -23,7 +23,7 @@ def save_log(sender, **kwargs ):
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
     except Exception, ex:
         user = None
-
+    
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     if sender == "Village":
@@ -50,7 +50,7 @@ def delete_log(sender, **kwargs ):
     user = None
     if instance.user_created_id:
         if instance.user_modified_id:
-            user = User.objects.get(id = instance.user_modified_id)
+            user = User.objects.get(id = instance.user_modified_id) 
         else:
             user = User.objects.get(id = instance.user_created_id)
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
