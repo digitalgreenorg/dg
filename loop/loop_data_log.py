@@ -75,7 +75,7 @@ def delete_log(sender, **kwargs ):
 def get_log_object(log_object):
     Obj_model = get_model('loop', log_object.entry_table)
     obj = Obj_model.objects.get(id = log_object.model_id)
-    data = {'log':log_object, 'data':obj, 'online_id':obj.id}
+    data = {'log':model_to_dict(log_object), 'data':model_to_dict(obj), 'online_id':obj.id}
     return data
 
 def get_latest_timestamp():
