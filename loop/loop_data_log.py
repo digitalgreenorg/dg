@@ -84,7 +84,7 @@ def delete_log(sender, **kwargs ):
 def get_log_object(log_object):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
-        obj = Obj_model.objects.get(id = log_object.model_id).prefetch_related()
+        obj = Obj_model.objects.get(id = log_object.model_id)
         data = {'log':model_to_dict(log_object), 'data':model_to_dict(obj), 'online_id':obj.id}
     except Exception, e:
         data = {'log':model_to_dict(log_object), 'data': None, 'online_id':log_object.model_id}
