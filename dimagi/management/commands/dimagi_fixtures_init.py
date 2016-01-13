@@ -62,7 +62,7 @@ class Command(BaseCommand):
                     for obj in village_data['objects']:
                         list_village.append(str(obj['fields']['id']))
                     if(village_data['meta']['next']):
-                        url_village = "".join(["https://www.commcarehq.org/a/", commcare_project_name, "/api/v0.5/fixture/", str(group_data['meta']['next'])])
+                        url_village = "".join(["https://www.commcarehq.org/a/", commcare_project_name, "/api/v0.5/fixture/", str(village_data['meta']['next'])])
                     else:
                         break
                 print len(list_village)
@@ -72,11 +72,11 @@ class Command(BaseCommand):
                     for obj in mediator_data['objects']:
                         list_mediator.append((str(obj['fields']['id']), str(obj['fields']['village_id'])))
                     if(mediator_data['meta']['next']):
-                        url_mediator = "".join(["https://www.commcarehq.org/a/", commcare_project_name, "/api/v0.5/fixture/", str(group_data['meta']['next'])])
+                        url_mediator = "".join(["https://www.commcarehq.org/a/", commcare_project_name, "/api/v0.5/fixture/", str(mediator_data['meta']['next'])])
                     else:
                         break
                 print len(list_mediator)
             create_fixture(commcare_users, commcare_project_name, list_group, list_village, list_mediator, Update)
-            # Run Video Fixtures on 5 Day of the Week
+            # Run Video Fixtures on 5 Days of the Week
             if (datetime.utcnow().weekday() % 5) == 0 or not Update:
                 create_fixture_video(commcare_project_name, commcare_users, commcare_project.group_name)
