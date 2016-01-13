@@ -14,7 +14,8 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
-        if user is not None and user.is_active:
+        loop_user = LoopUser.objects.filter(user = user)
+        if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
             try:
                 api_key = ApiKey.objects.get(user=user)
@@ -22,7 +23,7 @@ def login(request):
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
             log_object = get_latest_timestamp()
-            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp)}))
+            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp), 'mode' = loop_user[0].mode}))
         else:
             return HttpResponse("0", status=401 )
     else:
