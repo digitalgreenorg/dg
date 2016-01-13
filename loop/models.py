@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
 
 RoleChoice = ((1, "Admin"), (2, "Aggregator"))
+ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
@@ -78,6 +79,7 @@ class LoopUser(LoopModel):
     user = models.OneToOneField(User, related_name="loop_user")
     role = models.IntegerField(choices = RoleChoice)
     assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
+    mode = models.IntegerField(choices = ModelChoice, default = 1)
 
     def __unicode__(self):
         return self.user.username
