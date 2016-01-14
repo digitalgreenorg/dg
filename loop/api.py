@@ -202,7 +202,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+            raise FarmerNotSaved({"id" : integer(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
