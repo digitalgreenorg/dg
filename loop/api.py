@@ -72,6 +72,27 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class MandiAuthorization(Authorization):
+
+    def read_list(self, object_list, bundle):
+        villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        district_list = []
+        for village in villages:
+            if village.block.district_id not in district_list:
+                district_list.append(village.block.district_id)
+        return object_list.filter(district_id__in = district_list)
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.village_field] = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Village" )
+
+
 class CombinedTransactionAuthorization(Authorization):
     def read_list(self, object_list, bundle):
         return object_list.filter(user_created_id = bundle.request.user.id).distinct()
@@ -189,7 +210,7 @@ class FarmerResource(BaseResource):
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
-            raise FarmerNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+            raise FarmerNotSaved({"id" : integer(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
     def dehydrate(self, bundle):
@@ -267,7 +288,7 @@ class CombinedTransactionResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
         else:
-            raise CropNotSaved({"id" : attempt[0].id, "error" : "Duplicate"})
+            raise CropNotSaved({"id" :integer(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def obj_update(self, bundle, request=None, **kwargs):
         farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
