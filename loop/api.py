@@ -202,7 +202,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved({"id" : integer(attempt[0].id), "error" : "Duplicate"})
+            raise FarmerNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -210,7 +210,7 @@ class FarmerResource(BaseResource):
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
-            raise FarmerNotSaved({"id" : integer(attempt[0].id), "error" : "Duplicate"})
+            raise FarmerNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
     def dehydrate(self, bundle):
