@@ -84,8 +84,12 @@ class MandiAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
-        kwargs = {}
-        kwargs[self.village_field] = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        district_list = []
+        for village in villages:
+            if village.block.district_id not in district_list:
+                district_list.append(village.block.district_id)
+        kwargs['district_id__in'] = district_list
         obj = object_list.filter(**kwargs).distinct()
         if obj:
             return True
