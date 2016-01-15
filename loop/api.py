@@ -18,7 +18,7 @@ class FarmerNotSaved(Exception):
 class CropNotSaved(Exception):
     pass
 
-class TransacrionNotSaved(Exception):
+class TransactionNotSaved(Exception):
     pass
 
 def foreign_key_to_id(bundle, field_name,sub_field_names):
@@ -292,7 +292,7 @@ class CombinedTransactionResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
         else:
-            raise CropNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
+            raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def obj_update(self, bundle, request=None, **kwargs):
         farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
@@ -302,7 +302,7 @@ class CombinedTransactionResource(BaseResource):
             bundle = super(CombinedTransactionResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
-            raise CropNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+            raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
