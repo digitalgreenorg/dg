@@ -88,7 +88,8 @@ class MandiAuthorization(Authorization):
         district_list = []
         for village in villages:
             if village.block.district_id not in district_list:
-                district_list.append(village.block.district_id)
+                district_list.append(village.block.district_id).
+        kwargs={}
         kwargs['district_id__in'] = district_list
         obj = object_list.filter(**kwargs).distinct()
         if obj:
