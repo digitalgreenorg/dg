@@ -262,7 +262,7 @@ class MandiResource(BaseResource):
     class Meta:
         queryset = Mandi.objects.all()
         resource_name = 'mandi'
-        authorization = MandiAuthorization()
+        authorization = Authorization()
     dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
     def dehydrate(self, bundle):
