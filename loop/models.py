@@ -41,14 +41,14 @@ class State(LoopModel):
 		unique_together = ("state_name",)
 
 class District(LoopModel):
-	id = models.AutoField(primary_key=True)
-	district_name = models.CharField(max_length=50)
-	state = models.ForeignKey(State)
+    id = models.AutoField(primary_key=True)
+    district_name = models.CharField(max_length=50)
+    state = models.ForeignKey(State)
 
-	def __unicode__(self):
-		return self.district_name
-	class Meta:
-		unique_together = ("district_name","state")
+    def __unicode__(self):
+        return self.district_name
+    class Meta:
+        unique_together = ("district_name","state")
 
 class Block(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -80,6 +80,7 @@ class LoopUser(LoopModel):
     role = models.IntegerField(choices = RoleChoice)
     assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
     mode = models.IntegerField(choices = ModelChoice, default = 1)
+    phone_number = models.CharField(max_length = 14, null = False, blank = False, default = "0")
 
     def __unicode__(self):
         return self.user.username

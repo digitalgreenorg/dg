@@ -9,6 +9,8 @@ from loop_data_log import get_latest_timestamp
 from models import LoopUser
 
 # Create your views here.
+HELPLINE_NUMBER = "09891256494"
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -24,7 +26,7 @@ def login(request):
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
             log_object = get_latest_timestamp()
-            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp), 'mode' : loop_user[0].mode }))
+            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp), 'mode' : loop_user[0].mode, 'helpline' : HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number }))
         else:
             return HttpResponse("0", status=401 )
     else:
