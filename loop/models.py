@@ -73,7 +73,7 @@ pre_delete.connect(delete_log, sender=Village)
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="loop_user")
-    name = models.CharField(max_length=100);
+    name = models.CharField(max_length=100, default="default");
     role = models.IntegerField(choices = RoleChoice)
     assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
     mode = models.IntegerField(choices = ModelChoice, default = 1)
