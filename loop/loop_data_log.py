@@ -117,9 +117,9 @@ def send_updated_log(request):
                 raise UserDoesNotExist('User with id: '+str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
             Log = get_model('loop', 'Log')
-            rows = Log.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Crop'])
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, village__in = villages, entry_table__in = ['Farmer','Village'])
-            rows = rows | Log.objects.filter(timestamp__gte = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
+            rows = Log.objects.filter(timestamp__gt = timestamp, entry_table__in = ['Crop'])
+            rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = ['Farmer','Village'])
+            rows = rows | Log.objects.filter(timestamp__gt = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
             data_list=[]
             for row in rows:
                 data_list.append(get_log_object(row))
