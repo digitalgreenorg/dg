@@ -256,6 +256,7 @@ class CropResource(BaseResource):
         return bundle
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['image_path'] = bundle.data['crop_name']
         return bundle
 
 class MandiResource(BaseResource):
