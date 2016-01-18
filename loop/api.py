@@ -220,7 +220,7 @@ class FarmerResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle['image_path'] = bundle['name'] + bundle['phone']
+        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
 class LoopUserResource(BaseResource):
