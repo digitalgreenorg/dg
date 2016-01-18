@@ -17,10 +17,6 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
-class Logout(models.Model):
-    user = models.ForeignKey(User, editable = False, null=True, blank=True)
-    time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-
 class Country(LoopModel):
 	id = models.AutoField(primary_key=True)
 	country_name = models.CharField(max_length=50)
@@ -84,8 +80,6 @@ class LoopUser(LoopModel):
 
     def __unicode__(self):
         return self.user.username
-    class Meta:
-        unique_together = ("user",)
     def get_villages(self):
         return self.assigned_villages.all()
 
