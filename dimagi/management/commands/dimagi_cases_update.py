@@ -39,7 +39,7 @@ class Command(BaseCommand):
                             case_new_list.append({'person': person, 'user': user})
 
             #===================================================================
-            # Close Case will be handles later
+            # Close Case will be handled later
             # Algorithm
             # Go through all the open cases
             # If the person exist don't do anything
@@ -77,9 +77,10 @@ class Command(BaseCommand):
             #===================================================================
 
                 if len(case_update_list):
-                    print 'in update cases'
+                    print 'updating cases'
                     filename_updatecases = os.path.join(MEDIA_ROOT, "dimagi", "updates", "%s_%s_updatecase.xml" % (commcare_project_name, user.username))
                     update_case(case_update_list, filename_updatecases, commcare_project_name)
+                    
                     try:
                         response_update = commcare_project.upload_case_file(filename_updatecases)
                         if response_update == 201 or response_update == 200:

@@ -1,28 +1,42 @@
+from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from django.forms.models import model_to_dict
 from tastypie import fields, utils
 from functools import partial
+from django.http import  HttpResponse
+from django.core.exceptions import ValidationError
+
+import json
 
 from django.contrib.auth.models import User
 from models import *
+class FarmerNotSaved(Exception):
+    pass
+
+class CropNotSaved(Exception):
+    pass
+
+class TransactionNotSaved(Exception):
+    pass
 
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
         dict = {}
         for sub_field in sub_field_names:
-            dict[sub_field] = None 
+            dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
+        dict["online_id"] = dict['id']
     return dict
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
-        bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
-                                                    str(field_dict.get('id')))
+    if field_dict.get('online_id'):
+        bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name,
+                                                    str(field_dict.get('online_id')))
     else:
         bundle.data[field_name] = None
     return bundle
@@ -41,7 +55,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 class VillageAuthorization(Authorization):
     def __init__(self,field):
         self.village_field = field
-    
+
     def read_list(self, object_list, bundle):
         villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
         kwargs = {}
@@ -58,6 +72,65 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Village" )
 
+class MandiAuthorization(Authorization):
+
+    def read_list(self, object_list, bundle):
+        villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        district_list = []
+        for village in villages:
+            if village.block.district_id not in district_list:
+                district_list.append(village.block.district_id)
+        return object_list.filter(district_id__in = district_list)
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+        district_list = []
+        for village in villages:
+            if village.block.district_id not in district_list:
+                district_list.append(village.block.district_id)
+        kwargs={}
+        kwargs['district_id__in'] = district_list
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Village" )
+
+
+class CombinedTransactionAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(user_created_id = bundle.request.user.id).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        obj = object_list.filter(user_created_id = bundle.request.user.id).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Transaction" )
+
+class BaseResource(ModelResource):
+
+    def full_hydrate(self, bundle):
+        bundle = super(BaseResource, self).full_hydrate(bundle)
+        bundle.obj.user_modified_id = bundle.request.user.id
+        return bundle
+
+    def obj_create(self, bundle, **kwargs):
+        """
+        A ORM-specific implementation of ``obj_create``.
+        """
+        bundle.obj = self._meta.object_class()
+
+        for key, value in kwargs.items():
+            setattr(bundle.obj, key, value)
+
+        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
+        bundle = self.full_hydrate(bundle)
+        bundle.obj.user_created_id = bundle.request.user.id
+        return self.save(bundle)
+
 class UserResource(ModelResource):
    # We need to store raw password in a virtual field because hydrate method
    # is called multiple times depending on if it's a POST/PUT/PATCH request
@@ -73,14 +146,14 @@ class UserResource(ModelResource):
        # filtering = {'username':ALL,
        #              }
 
-class CountryResource(ModelResource):
+class CountryResource(BaseResource):
 	class Meta:
 		queryset = Country.objects.all()
 		resource_name = 'country'
 		fields = ["country_name"]
 		authorization = Authorization()
 
-class StateResource(ModelResource):
+class StateResource(BaseResource):
 	country = fields.ForeignKey(CountryResource, attribute='country', full=True)
 	class Meta:
 		queryset = State.objects.all()
@@ -88,7 +161,7 @@ class StateResource(ModelResource):
 		fields = ["state_name"]
 		authorization = Authorization()
 
-class DistrictResource(ModelResource):
+class DistrictResource(BaseResource):
 	state = fields.ForeignKey(StateResource, 'state', full=True)
 	class Meta:
 		queryset = District.objects.all()
@@ -96,7 +169,7 @@ class DistrictResource(ModelResource):
 		fields = ["district_name"]
 		authorization = Authorization()
 
-class BlockResource(ModelResource):
+class BlockResource(BaseResource):
 	district = fields.ForeignKey(DistrictResource, 'district', full=True)
 	class Meta:
 		queryset = Block.objects.all()
@@ -104,29 +177,53 @@ class BlockResource(ModelResource):
 		fields = ["block_name"]
 		authorization = Authorization()
 
-class VillageResource(ModelResource):
-	block = fields.ForeignKey(BlockResource, 'block', full=True)
-	class Meta:
-		allowed_methods = ['post','get']
-		always_return_data = True
-		queryset = Village.objects.all()
-		resource_name = 'village'
-		authorization = VillageAuthorization('id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
-	hydrate_block = partial(dict_to_foreign_uri, field_name='block')
+class VillageResource(BaseResource):
+    block = fields.ForeignKey(BlockResource, 'block', full=True)
+    class Meta:
+        allowed_methods = ['post','get']
+        always_return_data = True
+        queryset = Village.objects.all()
+        resource_name = 'village'
+        authorization = VillageAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
+    dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
+    hydrate_block = partial(dict_to_foreign_uri, field_name='block')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+class FarmerResource(BaseResource):
+    village = fields.ForeignKey(VillageResource, 'village', full=True)
+    image = fields.FileField(attribute='img', null=True, blank=True)
+    class Meta:
+        queryset = Farmer.objects.all()
+        resource_name = 'farmer'
+        always_return_data = True
+        authorization = VillageAuthorization('village_id__in')
+        authentication = ApiKeyAuthentication()
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
+        if attempt.count() < 1:
+            bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise FarmerNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
 
-class FarmerResource(ModelResource):
-	village = fields.ForeignKey(VillageResource, 'village', full=True)
-	class Meta:
-		queryset = Farmer.objects.all()
-		resource_name = 'farmer'
-		authorization = VillageAuthorization('village_id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
-	hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Farmer.objects.filter(phone = bundle.data['phone'], name = bundle.data['name'])
+            raise FarmerNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
 
-class LoopUserResource(ModelResource):
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
+        return bundle
+
+class LoopUserResource(BaseResource):
 	user = fields.ForeignKey(UserResource, 'user')
 	assigned_villages = fields.ListField()
 	class Meta:
@@ -137,36 +234,78 @@ class LoopUserResource(ModelResource):
 	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
 	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
 
-class CropResource(ModelResource):
-	class Meta:
-		queryset = Crop.objects.all()
-		resource_name = 'crop'
-		authorization = Authorization()
+class CropResource(BaseResource):
+    class Meta:
+        queryset = Crop.objects.all()
+        resource_name = 'crop'
+        authorization = Authorization()
+        always_return_data = True
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = Crop.objects.filter(crop_name = bundle.data['crop_name'])
+        if attempt.count() < 1:
+            bundle = super(CropResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise CropNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(CropResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Crop.objects.filter(crop_name = bundle.data['crop_name'])
+            raise CropNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
-class MandiResource(ModelResource):
-	district = fields.ForeignKey(DistrictResource, 'district')
-	class Meta:
-		queryset = Mandi.objects.all()
-		resource_name = 'mandi'
-		authorization = Authorization()
-	dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
-	hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+class MandiResource(BaseResource):
+    district = fields.ForeignKey(DistrictResource, 'district')
+    class Meta:
+        queryset = Mandi.objects.all()
+        resource_name = 'mandi'
+        authorization = Authorization()
+    dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
-class CombinedTransactionResource(ModelResource):
-	aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
-	farmer = fields.ForeignKey(FarmerResource,'farmer')
-	crop = fields.ForeignKey(CropResource,'crop')
-	mandi = fields.ForeignKey(MandiResource,'mandi')
-	class Meta:
-		queryset = CombinedTransaction.objects.all()
-		resource_name = 'combinedtransaction'
-		authorization = VillageAuthorization('farmer__village_id__in')
-		authentication = ApiKeyAuthentication()
-	dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','farmer_name'])
-	dehydrate_aggregator = partial(foreign_key_to_id, field_name='aggregator', sub_field_names=['id','loopuser_user_username'])
-	dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
-	dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
-	hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
-	hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
-	hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
-	hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator', resource_name='loopuser')
+class CombinedTransactionResource(BaseResource):
+    crop = fields.ForeignKey(CropResource,'crop')
+    farmer = fields.ForeignKey(FarmerResource,'farmer')
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    class Meta:
+        queryset = CombinedTransaction.objects.all()
+        resource_name = 'combinedtransaction'
+        authorization = CombinedTransactionAuthorization()
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+    dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','name'])
+    dehydrate_crop = partial(foreign_key_to_id, field_name='crop', sub_field_names=['id','crop_name'])
+    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
+    hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
+    hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+    def obj_create(self, bundle, request=None, **kwargs):
+        farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+        crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+        mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
+        attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+        if attempt.count() < 1:
+            bundle = super(CombinedTransactionResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+        crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+        mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
+        try:
+            bundle = super(CombinedTransactionResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+            raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle

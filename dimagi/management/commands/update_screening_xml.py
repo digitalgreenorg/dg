@@ -9,11 +9,16 @@ from dimagi.scripts.exception_email import sendmail
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        xml_data = XMLSubmission.objects.filter(error_code__isnull=True)
-
+        xml_data = XMLSubmission.objects.filter(error_code=-3)
+        print len(xml_data)
+        length = 0
         for obj in xml_data:
+            length = length + 1
             xml_string = obj.xml_data
             xml_parse = minidom.parseString(xml_string)
+            print "#" + str(obj.id)
+            old_msg = obj.error_message
+            old_code = obj.error_code
             status = error_list['SUCCESS']
             msg = "success"
             if xml_parse.getElementsByTagName('data'):
@@ -35,7 +40,6 @@ class Command(BaseCommand):
             else:
                 status = error_list['UNIDENTIFIED_FORM']
                 msg = 'Unidentified form. No data tag.'
-            print status, msg
             try:
                 obj.error_code = status
                 obj.error_message = msg
@@ -43,3 +47,5 @@ class Command(BaseCommand):
             except Exception as ex:
                 error = "Error in Updating XML Submission : " + str(ex)
                 sendmail("Exception in update_screening_xml", error)
+            print old_msg, old_code, obj.error_message, obj.error_code
+        print length
