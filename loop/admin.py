@@ -15,12 +15,10 @@ loop_admin.register(State)
 loop_admin.register(Country)
 loop_admin.register(LoopUser)
 loop_admin.register(Crop)
-loop_admin.register(Farmer)
+loop_admin.register(Farmer, FarmerAdmin)
 loop_admin.register(CombinedTransaction)
 loop_admin.register(Mandi)
 
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone', 'village__village_name')
     search_fields = ['name', 'phone', 'village__village_name']
-
-
