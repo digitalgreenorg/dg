@@ -195,6 +195,8 @@ class FarmerResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
     class Meta:
+        limit=0
+        max_limit=0
         queryset = Farmer.objects.all()
         resource_name = 'farmer'
         always_return_data = True
@@ -236,6 +238,8 @@ class LoopUserResource(BaseResource):
 
 class CropResource(BaseResource):
     class Meta:
+        limit = 0
+        max_limit=0
         queryset = Crop.objects.all()
         resource_name = 'crop'
         authorization = Authorization()
@@ -276,6 +280,8 @@ class CombinedTransactionResource(BaseResource):
     farmer = fields.ForeignKey(FarmerResource,'farmer')
     mandi = fields.ForeignKey(MandiResource,'mandi')
     class Meta:
+        limit=0
+        max_limit=0
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
         authorization = CombinedTransactionAuthorization()
