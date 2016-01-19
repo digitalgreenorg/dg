@@ -8,8 +8,8 @@ class LoopAdmin(AdminSite):
 		return request.user.is_active
 
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone', 'village__village_name')
-    search_fields = ['name', 'phone', 'village__village_name']
+    list_display = ('name', 'phone', 'village_village_name')
+    search_fields = ['name', 'phone', 'village_village_name']
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village)
