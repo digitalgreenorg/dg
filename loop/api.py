@@ -284,7 +284,7 @@ class CombinedTransactionResource(BaseResource):
         max_limit=0
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
-        authorization = CombinedTransactionAuthorization()
+        authorization = VillageAuthorization('farmer__village_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_farmer = partial(foreign_key_to_id, field_name='farmer', sub_field_names=['id','name'])
