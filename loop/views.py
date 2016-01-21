@@ -26,7 +26,7 @@ def login(request):
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
             log_object = get_latest_timestamp()
-            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp), 'name':loop_user[0].name, 'mode' : loop_user[0].mode, 'helpline' : HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number }))
+            return HttpResponse(json.dumps({'key':api_key.key, 'timestamp' : str(log_object.timestamp), 'full_name':loop_user[0].name, 'mode' : loop_user[0].mode, 'helpline' : HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number }))
         else:
             return HttpResponse("0", status=401 )
     else:
