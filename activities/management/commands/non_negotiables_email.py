@@ -6,12 +6,14 @@ import MySQLdb
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
 
+from dg.settings import DATABASES
+
 class Command(BaseCommand):
 	def handle(self, *args, **options):		
 		host = 'localhost'
-		user = 'root'
-		password = '#0.Green11017.'
-		database = 'digitalgreen'
+		user = DATABASES['default']['USER']
+		password = DATABASES['default']['PASSWORD']
+		database = DATABASES['default']['NAME']
 
 		con = MySQLdb.connect(
 			db = database, host=host, 
