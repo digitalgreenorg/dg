@@ -182,6 +182,9 @@ class TrainerResource(ModelResource):
 		authorization = Authorization()
 	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
 	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class LanguageResource(ModelResource):
 	class Meta:
@@ -189,6 +192,9 @@ class LanguageResource(ModelResource):
 		queryset = Language.objects.all()
 		authentication = ApiKeyAuthentication()
 		authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
