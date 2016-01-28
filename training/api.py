@@ -173,25 +173,25 @@ class BaseResource(ModelResource):
 #---------------------------------------------------------------------------------#
 
 class TrainerResource(ModelResource):
-	language = fields.ForeignKey('training.api.LanguageResource', 'language')
-	class Meta:
-		resource_name = 'trainer'
-		queryset = Trainer.objects.prefetch_related('language').all()
-		authentication = ApiKeyAuthentication()
-		always_return_data = True
-		authorization = Authorization()
-	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
-	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    language = fields.ForeignKey('training.api.LanguageResource', 'language')
+    class Meta:
+        resource_name = 'trainer'
+        queryset = Trainer.objects.prefetch_related('language').all()
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        authorization = Authorization()
+    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
+    hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
 class LanguageResource(ModelResource):
-	class Meta:
-		resource_name = 'language'
-		queryset = Language.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        resource_name = 'language'
+        queryset = Language.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
