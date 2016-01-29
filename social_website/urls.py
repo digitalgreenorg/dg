@@ -64,8 +64,6 @@ urlpatterns = patterns('',
     url(r'^resources/$', resource_view, name='resources'),
     url(r'^sitemap/$', TemplateView.as_view(template_name='sitemap.html'), name='sitemap'),
     url(r'^tools/$', DirectTemplateView.as_view(template_name='tools.html', extra_context={'header': {'currentPage':'Tools'}}), name='tools'),
-    url(r'^training/$', TemplateView.as_view(template_name='training.html'), name='training'),
-    url(r'^training/picoseekho/$', picoseekho_view, name='picoseekho'),
     url(r'^collection-add/(?P<collection>.+)/$', collection_edit_view, name='edit_collection'),
     url(r'^collection-add/$', collection_add_view, name='create_collection'),
 )
