@@ -114,9 +114,9 @@ def picoseekho_view(request, uid=1):
 
 def documentation_view(request, uid=1):
     video_list = [
-    {'uid':1, 'title':"Preparation for Digital Green Video Dissemination", 'description':"", 'youtubeID':'fHWiTB5zs1Y'},
-    {'uid':2, 'title':"Filling of the Digital Green Dissemination Form", 'description':"",'youtubeID':'cLx1-3KmF7w'},
-    {'uid':3, 'title':"Filling of the Digital Green Adoption Form and Adoption Verification", 'description':"",'youtubeID':'6gVg7OS0pEs'},
+    {'uid':1, 'title':"Preparation for Digital Green Video Dissemination", 'description':"Preparing for the video dissemination beforehand can ensure that the dissemination goes smoothly. They can prepare by watching the video, noting down non-negotiables, charging the equipment and reminding SHG members a day before the dissemination. Abha, an experienced VRP, invites two other new VRPs to learn the process from her.", 'youtubeID':'fHWiTB5zs1Y'},
+    {'uid':2, 'title':"Filling of the Digital Green Dissemination Form", 'description':"Disseminations conducted by VRPs follow a standard procedure, where the VRP discusses about the video, shows the video, pauses the video in critical places, takes questions from the audience and summarizes the video with the non-negotiables adoption points. The VRP also fills a form to document which video was shown and who came. The new VRPs observe how Abha fills her form and conducts her dissemination.",'youtubeID':'cLx1-3KmF7w'},
+    {'uid':3, 'title':"Filling of the Digital Green Adoption Form and Adoption Verification", 'description':"After the dissemination, the VRP conducts adoption verification at each individual farmer's field to verify whether they have adopted the new practice that was shown to them and how well they have adopted it. Abha takes the two VRPs on the adoption verification visit and demonstrates how to check all the non-negotiables points, by asking both open and close-ended questions. She uses both recollection and physical verification to determine whether a non-negotiable point has been adopted. She documents this information in the adoption verification form.",'youtubeID':'6gVg7OS0pEs'},
     ]
 
     try:
