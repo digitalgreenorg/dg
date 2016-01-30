@@ -1,12 +1,12 @@
 {% include "includes/header.html" %}
 {% load app_tags %}
         
-        <section id="documentation" role="main" class="push-top-lg">
+        <section id="disseminationprep" role="main" class="push-top-lg">
             <div class="wrapper">
                 <div class="inner-wrapper">
                     <div class="layout-vr-md">
-                        <h2 class="hdg-b hdg-source-lt layout-vr-md hdg-bold">Documentation</h2>
-                        <div class="hdg-source-reg hdg-f layout-vr-md">Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our partners as well as the community. We train community people in both video production and video dissemination. This course is in Hindi, on the process of preparing for a video dissemination, conducting a dissemination, filling the dissemination form, conducting a proper adoption verification and also documenting it.
+                        <h2 class="hdg-b hdg-source-lt layout-vr-md hdg-bold">Preparation for Dissemination</h2>
+                        <div class="hdg-source-reg hdg-f layout-vr-md">Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our partners as well as the community. We train community people in both video production and video dissemination. This course is in Hindi, on the process of preparing for a video dissemination.
                         </div>    
                     </div>
                 </div> <!-- End .inner-wrapper -->
@@ -28,7 +28,7 @@
                                 <ul>
                                     {% for video in video_list %}
                                         <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
-                                            <a href="{% url 'documentation' forloop.counter %}" >
+                                            <a href="{% url 'disseminationprep' forloop.counter %}" >
                                                 <div class="featured-collection-indicator"></div>
                                                 <div class="featured-collection-title">
                                                     {{ video.title }}
@@ -81,7 +81,7 @@
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                                             </div>
                                             <div class="vid-cat-ft">
-                                                <p>Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our...</p>
+                                                <p>During video dissemination, a low-cost battery-operated pico projector is used to show the videos. This course is in Hindi, on learning the ...</p>
                                             </div>
                                         </div> <!-- End .vid-inner -->
                                     </div> <!-- End .vid-cat -->
