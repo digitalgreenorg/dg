@@ -136,6 +136,30 @@ def disseminationprep_view(request, uid=1):
     return render_to_response('dissemination_prep.html' , context, context_instance = RequestContext(request)) 
 
 
+def disseminationform_view(request, uid=1):
+    video_list = [
+    {'uid':1, 'title':"Filling of the Digital Green Dissemination Form", 'description':"Disseminations conducted by VRPs follow a standard procedure, where the VRP discusses about the video, shows the video, pauses the video in critical places, takes questions from the audience and summarizes the video with the non-negotiables adoption points. The VRP also fills a form to document which video was shown and who came. The new VRPs observe how Abha fills her form and conducts her dissemination.",'youtubeID':'cLx1-3KmF7w'},
+    ]
+
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('dissemination_form.html' , context, context_instance = RequestContext(request)) 
+
+
 def video_view(request, uid):
     try:
         video = Video.objects.get(uid=uid)
