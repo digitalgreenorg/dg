@@ -160,6 +160,30 @@ def disseminationform_view(request, uid=1):
     return render_to_response('dissemination_form.html' , context, context_instance = RequestContext(request)) 
 
 
+def adoptionverification_view(request, uid=1):
+    video_list = [
+    {'uid':1, 'title':"Filling of the Digital Green Adoption Form and Adoption Verification", 'description':"After the dissemination, the VRP conducts adoption verification at each individual farmer's field to verify whether they have adopted the new practice that was shown to them and how well they have adopted it. Abha takes the two VRPs on the adoption verification visit and demonstrates how to check all the non-negotiables points, by asking both open and close-ended questions. She uses both recollection and physical verification to determine whether a non-negotiable point has been adopted. She documents this information in the adoption verification form.",'youtubeID':'6gVg7OS0pEs'},
+    ]
+
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('adoption_verification.html' , context, context_instance = RequestContext(request)) 
+
+
 def video_view(request, uid):
     try:
         video = Video.objects.get(uid=uid)
