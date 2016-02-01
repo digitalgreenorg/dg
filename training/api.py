@@ -228,7 +228,7 @@ class MediatorResource(ModelResource):
         return bundle
     
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
+        return [{'id': vil.id, 'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
 
     def dehydrate_mediator_label(self,bundle):
         #for sending out label incase of dropdowns
