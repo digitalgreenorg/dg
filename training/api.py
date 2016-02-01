@@ -310,7 +310,7 @@ class StateResource(ModelResource):
     class Meta:
         max_limit = None
         queryset = State.objects.all()        
-    resource_name = 'state'
+        resource_name = 'state'
         authentication = ApiKeyAuthentication()
         authorization = StateAuthorization('id__in')
         always_return_data = True
