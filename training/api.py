@@ -77,18 +77,24 @@ def dict_to_foreign_uri_m2m_coco(bundle, field_name, resource_name):
 #---------------------------------------------------------------------------------------------#
 
 class PartnerResource(ModelResource):
-	class Meta:
-		queryset = Partner.objects.all()
-		resource_name = 'partner'
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        queryset = Partner.objects.all()
+        resource_name = 'partner'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class VillageResource(ModelResource):
-	class Meta:
-		queryset = Village.objects.all()
-		resource_name = 'village'
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        queryset = Village.objects.all()
+        resource_name = 'village'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 def get_user_districts(user_id):
 	coco_user = TrainingUser.objects.get(user_id = user_id)
@@ -114,6 +120,9 @@ class DistrictResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = DistrictAuthorization()
         max_limit = None
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 def get_user_mediators(user_id):
     coco_user = TrainingUser.objects.get(user_id = user_id)
