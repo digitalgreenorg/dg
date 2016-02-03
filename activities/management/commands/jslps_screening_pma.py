@@ -12,7 +12,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		
 		partner = Partner.objects.get(id = 24)
-		'''url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("C:\Users\Abhishek\Desktop\\screening.xml", 'w')
 		xml_file.write(contents)
@@ -96,7 +96,7 @@ class Command(BaseCommand):
 							except Exception as e:
 								print sc, e
 					except Screening.DoesNotExist as e:
-						print e'''
+						print e
 
 
 		#saving pma
