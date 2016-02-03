@@ -1,3 +1,4 @@
+import urllib2
 from django.core.management.base import BaseCommand
 from geographies.models import *
 import xml.etree.ElementTree as ET
@@ -6,7 +7,14 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-		tree = ET.parse('C:\Users\Abhishek\Desktop\MasterData.xml')
+
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		contents = url.read()
+		xml_file = open("C:\Users\Abhishek\Desktop\\geo.xml", 'w')
+		xml_file.write(contents)
+		xml_file.close()
+
+		tree = ET.parse('C:\Users\Abhishek\Desktop\geo.xml')
 		root = tree.getroot()
 		state = State.objects.get(id = 2)
 		for c in root.findall('MasterData'):
@@ -58,10 +66,6 @@ class Command(BaseCommand):
 			
 			try:
 				block = Block.objects.get(block_name = bn)
-				'''b_n = JSLPS_Block.objects.get(block_code = bc)
-				b_n.block = block
-				b_n.save()
-				print bc, "block-foreign key saved in new"'''
 				block_added = list(JSLPS_Block.objects.values_list('block_code'))
 				block_added = [i[0] for i in block_added]
 

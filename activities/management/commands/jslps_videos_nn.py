@@ -20,7 +20,6 @@ class Command(BaseCommand):
 		#ADD MEDIATORS - UT(name, gender, district.id)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\\video.xml')
 		root = tree.getroot()
-
 		for c in root.findall('VedioMasterData'):
 			vdc = c.find('VideoID').text
 			vn = c.find('VideoTitle').text
@@ -32,24 +31,19 @@ class Command(BaseCommand):
 				ln = 18
 			elif (ln ==3):
 				ln =10
-			sm = unicode(c.find('Summary').text)
+			if unicode(c.find('Summary').text) is not None:
+				sm = unicode(c.find('Summary').text)
+			else:
+				sm = ''
 			dc = c.find('DistrictCode').text
 			bc = c.find('BlockCode').text
 			vc = c.find('VillageCode').text
-			fc = int(c.find('Facililator').text)
+			fc = 1623
 			co = int(c.find('Camera_Operator').text)
 			fr = map(int, c.find('MemberIDList').text.split(','))
 			act= c.find('Actors').text
 			sf = int(c.find('Suitable_For').text)
-			if c.find('ApprovalDt') is not None:
-				ad = datetime.strptime(c.find('ApprovalDt').text, '%d/%m/%Y')
-			else:
-				ad = ''
-			if c.find('YouTubeID') is not None:
-				yt = c.find('YouTubeID').text
-			else:
-				yt = ''
-
+			
 			error = 0
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
@@ -58,14 +52,19 @@ class Command(BaseCommand):
 				camera_operator = JSLPS_Animator.objects.get(animator_code = co)
 				farmer_list = []
 				for i in fr:
-					fr = JSLPS_Person.objects.get(person_code = i)
-					farmer_list.append(fr)
-			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, JSLPS_Person.DoesNotExist, Language.DoesNotExist) as e:
+					try:
+						fr = JSLPS_Person.objects.get(person_code = str(i))
+						farmer_list.append(fr.person)
+					except JSLPS_Person.DoesNotExist as e:
+						fr = JSLPS_Person.objects.get(person_code = str(82435))
+						farmer_list.append(fr.person)
+
+			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
 				print e
 				error = 1
 
 			if(error == 0):
-				video_xml = vn+' '+str(village.Village.id)
+				video_xml = vn+' '+str(village.Village.village_name)
 				video_set = dict(Video.objects.filter(village_id = village.Village.id).values_list('title','village'))
 				video_db = []
 				for key, value in video_set.iteritems():
@@ -76,34 +75,35 @@ class Command(BaseCommand):
 						vid = Video(title = vn,
 									video_type = vt,
 									language = language,
+									summary = sm,
 									video_production_start_date = sd,
 									video_production_end_date = ed,
-									village = village,
-									facilitator = facililator,
-									cameraoperator = camera_operator,
-									approval_date = ad,
+									village = village.Village,
+									facilitator = facililator.animator,
+									cameraoperator = camera_operator.animator,
 									video_suitable_for = sf,
 									actors = act,
-									youtubeid = yt,
 									partner = partner)
 						vid.save()
+						print "video saved"
+						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
+						for i in farmer_list:
+							vid.farmers_shown.add(i)
+							vid.save()
+							print "farmer shown saved"
 					except Exception as e:
 						print vdc, e
 					try:
-						video = Video.objects.filter(title = vn, village = village.Village.id).get()
-						video_added = list(JSLPS_Video.objects.values_list('video_code'))
+						video = Video.objects.filter(title = vn, village_id = village.Village.id).get()
+						video_added = list(JSLPS_Video.objects.values_list('vc'))
 						video_added = [i[0] for i in video_added]
 					except Exception as e:
 						print e
 					if vdc not in video_added:
 						try:
-							vj = JSLPS_Video(video_code = vdc,
+							vj = JSLPS_Video(vc = vdc,
 										video = video)
 							vj.save()
-							vid = JSLPS_Video.objects.get(video_code = vdc)
-							for i in farmer_list:
-								vid.video.farmers_shown.add(i)
-								vid.save()
 						except Exception as e:
 							print vdc, e
 
@@ -130,8 +130,8 @@ class Command(BaseCommand):
 				vr = True
 			error = 0
 			try:
-				video = JSLPS_Video.objects.get(video_code = vdc)
-			except Video.DoesNotExist as e:
+				video = JSLPS_Video.objects.get(vc = vdc)
+			except JSLPS_Video.DoesNotExist as e:
 				error = 1
 			if (error == 0):
 				try:

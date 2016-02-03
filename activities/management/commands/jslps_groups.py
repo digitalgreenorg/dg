@@ -35,9 +35,9 @@ class Command(BaseCommand):
 					gp.save()
 					print "Group saved in old"
 				group = PersonGroup.objects.filter(group_name = gn, village_id = village.Village.id).get()
-				group_added = list(JSLPS_Persongroup.objects.values_list('group_id'))
+				group_added = list(JSLPS_Persongroup.objects.values_list('group_code'))
 				group_added = [i[0] for i in group_added]
-				if group.id not in group_added:
+				if gc not in group_added:
 					jg = JSLPS_Persongroup(group_code = gc,
 										group = group)
 					jg.save()

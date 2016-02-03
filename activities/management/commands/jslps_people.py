@@ -8,11 +8,11 @@ from programs.models import *
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		'''url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("C:\Users\Abhishek\Desktop\person.xml", 'w')
 		xml_file.write(contents)
-		xml_file.close()'''
+		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\person.xml')
@@ -72,11 +72,11 @@ class Command(BaseCommand):
 						print pc, e
 					try:
 						person = Person.objects.filter(person_name = pn, father_name = pfn, group_id = group.group.id, village_id = village.Village.id).get()
-						person_added = list(JSLPS_Person.objects.values_list('person_id'))
+						person_added = list(JSLPS_Person.objects.values_list('person_code'))
 						person_added = [i[0] for i in person_added]
 					except Exception as e:
 						print e
-					if person.id not in person_added:
+					if pc not in person_added:
 						try:
 							jp = JSLPS_Person(person_code = pc,
 												person = person)

@@ -53,9 +53,51 @@ class Command(BaseCommand):
 
 			try:
 				animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()	
-				animator_added = list(JSLPS_Animator.objects.values_list('animator_id'))
+				animator_added = list(JSLPS_Animator.objects.values_list('animator_code'))
 				animator_added = [i[0] for i in animator_added]
-				if animator.id not in animator_added:
+				if ac not in animator_added:
+					ja = JSLPS_Animator(animator_code = ac,
+										animator = animator)
+					ja.save()
+					print an, "Animator saved in new"
+			except Exception as e:
+				print ac, "jslps", e
+
+		#add camera operator to mediator table
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
+		contents = url.read()
+		xml_file = open("C:\Users\Abhishek\Desktop\mediator_co.xml", 'w')
+		xml_file.write(contents)
+		xml_file.close()
+
+		partner = Partner.objects.get(id = 24)
+		#ADD MEDIATORS - UT(name, gender, district.id)
+		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator_co.xml')
+		root = tree.getroot()
+		for c in root.findall('CameraOperatorMasterData'):
+			ac = c.find('CameraOperatorID').text
+			an = unicode(c.find('CameraOperatorName').text)
+			gender = 'F'
+			dc = c.find('DistrictCode').text
+			
+			try:
+				district = JSLPS_District.objects.get(district_code = dc)
+				animator_set = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id)
+				if not animator_set.exists():
+					anim = Animator(name = an,
+									gender = gender,
+									partner = partner,
+									district = district.district
+									)
+					anim.save()
+			except Exception as e:
+				print ac, "Camera operator saved"
+
+			try:
+				animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()	
+				animator_added = list(JSLPS_Animator.objects.values_list('animator_code'))
+				animator_added = [i[0] for i in animator_added]
+				if ac not in animator_added:
 					ja = JSLPS_Animator(animator_code = ac,
 										animator = animator)
 					ja.save()

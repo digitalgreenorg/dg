@@ -1,5 +1,5 @@
 import urllib2
-from datetime import * 
+from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from geographies.models import *
@@ -12,9 +12,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		
 		partner = Partner.objects.get(id = 24)
-		
-		#saving videos
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
+		'''url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("C:\Users\Abhishek\Desktop\\screening.xml", 'w')
 		xml_file.write(contents)
@@ -22,50 +20,84 @@ class Command(BaseCommand):
 
 		tree = ET.parse('C:\Users\Abhishek\Desktop\\screening.xml')
 		root = tree.getroot()
-
 		for c in root.findall('VedioScreeingMasterData'):
 			sc = c.find('VDO_ID').text
 			vc = c.find('VillageCode').text
 			ac = c.find('AKMCode').text
-			sd = datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
-			st = datetime.strptime(c.find('start_time').text, '%H:%M:%S')
-			et = datetime.strptime(c.find('End_time').text, '%H:%M:%S')
+			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
+			st = datetime.datetime.strptime(c.find('start_time').text, '%H:%M:%S')
+			et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
 			vdc = map(int, c.find('Video').text.split(','))
 			gc = map(int, c.find('GroupCode').text.split(','))
-
 			error = 0
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 				animator = JSLPS_Animator.objects.get(animator_code = ac)
-				video = JSLSP_Video(vc = vc, null=True, blank=True)
+				groups = []
+				videos = []
+				for v in vdc:
+					try:
+						vid = JSLPS_Video.objects.get(vc = v)
+						videos.append(vid.video)
+					except JSLPS_Video.DoesNotExist as e:
+						print v, e
+				for g in gc:
+					try:
+						grp = JSLPS_Persongroup.objects.get(group_code = g)
+						groups.append(grp.group)
+					except JSLPS_Persongroup.DoesNotExist as e:
+						print g, e
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, JSLPS_Video.DoesNotExist) as e:
 				print e
 				error = 1
 
 			if (error==0):
-				sc_set = JSLPS_Screening.objects.values_list('screening_code')
-				sc_set = [i[0] for i in sc_set]
-				if sc not in sc_set:
+				sc_xml = str(sd)+str(st)
+				sc_set = dict(Screening.objects.filter(village_id = village.Village.id, animator_id = animator.animator.id).values_list('date','start_time'))
+				sc_db = []
+				for key, value in sc_set.iteritems():
+					scr = str(key)+str(value)
+					sc_db.append(scr)
+				if sc_xml not in sc_db:
 					try:
 						scr = Screening(date = sd,
 										start_time = st,
 										end_time = et,
-										village = village,
-										animator = animator,
+										village = village.Village,
+										animator = animator.animator,
 										partner = partner)
 						scr.save()
+						print "Screening saved in old"
 					except Exception as e:
 						print e
 					try:
-						screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village = village,animator = animator,partner = partner).get()
-						for i in gd:
+						screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id).get()
+						for i in groups:
 							screening.farmer_groups_targeted.add(i)
 							screening.save()
-						for i in vdc:
+							print "Groups saved in old"
+						for i in videos:
 							screening.videoes_screened.add(i)
 							screening.save()
+							print "Videos saved in old"
 					except Exception as e:
 						print e
+
+					try:
+						screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id).get()
+						sc_added = JSLPS_Screening.objects.values_list('screenig_code')
+						sc_added = [i[0] for i in sc_added]
+						if sc not in sc_added:
+							try:
+								sj = JSLPS_Screening(screenig_code = sc,
+											screening = screening)
+								sj.save()
+								print "Screening saved in new"
+							except Exception as e:
+								print sc, e
+					except Screening.DoesNotExist as e:
+						print e'''
+
 
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
@@ -79,7 +111,22 @@ class Command(BaseCommand):
 
 		for c in root.findall('VedioScreeingMemberData'):
 			sc = c.find('VDO_ID').text
-			mc = c.find('MemberId').text
+			pc = c.find('MemberId').text
+			error = 0
 			try:
-				screening = JSLSP_Screening
+				screening = JSLPS_Screening.objects.get(screenig_code = sc)
+				person = JSLPS_Person.objects.get(person_code = pc)
 
+			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
+				#print e
+				error = 1
+
+			if (error == 0):
+				try:
+					pma = PersonMeetingAttendance(screening = screening.screening,
+												person = person.person,
+												interested = True)
+					pma.save()
+					print "PMA saved in old"
+				except Exception as e:
+					print e
