@@ -37,7 +37,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict.get('online_id'):
         bundle.data[field_name] = "/training/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict.get('online_id')))
     else:
@@ -57,7 +57,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 
 def dict_to_foreign_uri_coco(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict.get('online_id'):
         bundle.data[field_name] = "/coco/api/v2/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict.get('online_id')))
     else:
@@ -223,6 +223,7 @@ class MediatorResource(ModelResource):
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
     hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
+    hydrate_partner = partial(dict_to_foreign_uri, field_name = 'partner')
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
