@@ -137,7 +137,7 @@ class CombinedTransaction(LoopModel):
     amount = models.FloatField()
 
     def __unicode__(self):
-        return "%s (%s) (%s)" % (self.farmer.name, self.crop.crop_name, self.mandi.mandi_name)
+        return "%s (%s) (%s) (%s)" % (self.farmer.name, self.crop.crop_name, self.mandi.mandi_name, LoopUser.objects.get(user= self.user_created).name)
 
 
 	class Meta:
