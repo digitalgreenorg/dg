@@ -5,9 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser
+from models import LoopUser, CombinedTransaction
 
 from loop_data_log import get_latest_timestamp
 
@@ -42,3 +43,22 @@ def home(request):
 
 def dashboard(request):
     return render(request, 'loop/loop_dashboard.html')
+
+def village_wise_data(request):
+    # start_date = request.POST['start_date']
+    # end_date = request.POST['end_date']
+    transactions = CombinedTransaction.objects.values('farmer__village__village_name').distinct().annotate(Count('farmer'), Sum('amount'), Sum('quantity'), Count('date'))
+    context = {'data' : transactions}
+    return render_to_response('loop_test.html', context)
+
+def init_village_dict(village):
+    village_dict = {}
+    village_dict['village_name'] = village.village_name
+    village_dict['volume'] = 0.0
+    village_dict['amount'] = 0.0
+    village_dict['farmers'] = []
+    village_dict['avg_farmers'] = 0
+
+
+def mediator_wise_data(request):
+
