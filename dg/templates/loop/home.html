@@ -1,0 +1,910 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Home {% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
+<style>
+li.not-hoverable:hover,
+li.not-hoverable:active {
+	background-color: transparent;
+}
+ul.collapsible > li.active {
+	background-color: transparent;
+}
+.no-margin {
+	margin: 0px;
+}
+</style>
+{% endblock %}
+
+
+{% block navbar %}
+<header>
+	<div id="progress_bar" class="progress no-margin purple lighten-4">
+		<div class="indeterminate purple"></div>
+	</div>
+	<nav class="top-nav">
+		<div class="nav-wrapper purple lighten-2">
+			<div class="container">
+				<a href="#" class="page-title">LOOP - Dashboard</a>
+				{# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
+					{# 	<li><a href="index.html">Sass</a></li> #}
+					{# 	<li><a href="badges.html">Components</a></li> #}
+					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
+					{# </ul> #}
+				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<ul id="nav-mobile" class="side-nav fixed">
+
+	<li class="no-padding not-hoverable">
+	<ul class="collapsible collapsible-accordion">
+
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-purple">Aggregators</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="purple" id="aggregator_all" checked="checked"/>
+							<label for="aggregator_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="aggregators">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-purple">Farmers</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="purple" id="farmer_all" checked="checked"/>
+							<label for="farmer_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="farmers">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Crops</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="purple" id="crop_all" checked="checked"/>
+							<label for="crop_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="crops">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Mandi</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="purple" id="mandi_all" checked="checked"/>
+							<label for="mandi_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="mandis">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Frequecy</a>
+		<div class="collapsible-body container" style="display: none;">
+		</div>
+		</li>
+		<li class="no-padding not-hoverable">
+			<div class="container">
+				<a id="apply_filter" class="waves-effect waves-light purple lighten-2 white-text btn">APPLY FILTERS</a>
+			</div>
+		</li>
+
+	</ul>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row valign-wrapper" >
+
+		<div class="input-field col s6">
+			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
+			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+			<label for="from_date">Start Date:</label>
+		
+		</div>
+		<div class="input-field col s6">
+			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
+			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+			<label for="to_date" class="active">End Date:</label>
+		</div>
+</div>
+<div class="center">
+	<a id="get_data" class="waves-effect waves-light purple lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
+
+	<div id="modal1" class="modal">
+		<div class="modal-content">
+			<p>Date range Invalid !!</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">OK</a>
+		</div>
+	</div>
+</div>
+<div>
+</div>
+<div class="row">
+	<div class="input-field col s6 offset-s3 ">
+		
+			<select id="table_option" class="initialized">
+				<!-- <option value="" disabled >Choose your option</option> -->
+				<option value="1" selected>Village</option>
+				<option value="2">Mediator</option>
+			</select>
+		
+		<label>Change the Table</label>
+	</div>
+
+</div>
+
+<div id="village_table">
+	<div id="village_label">
+		<h5  class="center-align">Village Wise Data</h5>
+	</div>
+	<table id="table1" class="highlight bordered centered responsive-table" >
+
+		<thead>
+			<tr>
+				<th data-field="name">Village</th>
+				<th data-field="float">Volume</th>
+				<th data-field="price">Pay Amount</th>
+				<th data-field="integer">Active Farmers</th>
+				<th data-field="float"><div>Average Farmers</div> Per Day</th>
+			</tr>
+		</thead>
+
+		<tbody id ="table1_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
+	<div class="row">
+		<div class="col s6" id="village_vol_label">
+			<h5 class="center-align">Volume Variation of Different Villages</h5>
+			<div id ="pie_vol"></div>
+		</div>
+		<div class="col s6" id="village_price_label">
+			<h5 class="center-align">Price Variation of Different Villages</h5>
+			<div id = "pie_amount"></div>
+		</div>
+	</div>
+</div>
+<div id="mediator_table">
+	<div id="mediator_label">
+		<h5  class="center-align">Mediator Wise Data</h5>
+	</div>
+	<table id="table2" class="highlight bordered centered responsive-table">
+
+		<thead>
+			<tr>
+				<th data-field="name">Mediator</th>
+				<th data-field="float">Volume</th>
+				<th data-field="price">Pay Amount</th>
+				<th data-field="integer">Assigned Farmers</th>
+				<th data-field="float"><div>Average Assigned</div> Farmers Per Day</th>
+			</tr>
+		</thead>
+
+		<tbody id ="table2_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
+	<div class="row">
+		<div class="col s6" id="mediator_vol_label">
+			<h5 class="center-align">Volume Variation of Different Mediators</h5>
+			<div id ="pie_vol2"></div>
+		</div>
+		<div class="col s6" id="mediator_price_label">
+			<h5 class="center-align">Price Variation of Different Mediators</h5>
+			<div id = "pie_amount2"></div>
+		</div>
+	</div>
+</div>
+<div class="container">	
+	<div class="divider"></div>
+	<br/>
+	<br/>
+	<div class="row">
+		<div class="input-field col s6 offset-s3 ">
+
+			<select id="chart_option" class="initialized">
+				<!-- <option value="" disabled selected>Choose your option</option> -->
+				<option value="1" >Day Wise Crop Prices</option>
+				<option value="2">Daywise and Aggregator wise Crop Prices</option>
+			</select>
+			<label>Change the Chart</label>
+		</div>
+	</div>
+	<div class="row">
+		<div id="crop_chart_div">
+			<h5 class="center-align">Daywise Crop Prices</h5>
+			<div id = "crops_price2" class="col s12"></div>
+		</div>
+		<div id="agg_crop_chart_div">
+			<h5 class="center-align">Daywise and Aggregator wise Crop Prices</h5>
+			<div id = "crop_aggregator_price" class="col s12"></div>
+		</div>
+	</div>
+	<div class="divider"></div>
+	<div class="row">
+		<h5 class="center-align">Daywise Total Volume Sold</h5>
+		<div id ="crops_volume"></div>
+	</div>
+	<div class="divider"></div>
+	<div class="row">
+		<h5 class="center-align">Daywise Total Income</h5>
+		<div id ="crops_price"></div>
+	</div>
+</div>
+<div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script src="{{ STATIC_URL }}js/dashboard.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script>
+
+
+/*to change the visibility of tables , charts on change in select*/
+function update_tables() {
+	var opt = $('#table_option :selected').val();
+	if(opt ==1 ){
+		$("#village_table").show();
+		$("#mediator_table").hide();
+	}
+	else{
+		$("#mediator_table").show();
+		$("#village_table").hide();
+	}
+}
+$( "#table_option" ).change(function() {
+	update_tables();
+});
+function show_charts() {
+	$("#crop_chart_div").show();
+	$("#agg_crop_chart_div").show();
+}
+function update_charts() {
+	var opt = $('#chart_option :selected').val();
+	if(opt ==1 ){
+		$("#crop_chart_div").show();
+		$("#agg_crop_chart_div").hide();
+	}
+	else{
+		$("#agg_crop_chart_div").show();
+		$("#crop_chart_div").hide();
+	}
+}
+$( "#chart_option" ).change(function() {
+	update_charts();
+});
+
+$('.datepicker').pickadate({
+	selectMonths: true, // Creates a dropdown to control month
+	selectYears: 15, // Creates a dropdown of 15 years to control year
+	format: 'yyyy-mm-dd'
+});
+/*to initialize material select*/
+$(document).ready(function() {
+	$('select').material_select();
+	
+});
+
+/* Initializing the side nav first */
+$(".button-collapse").sideNav();
+/* Progress Bar functions */
+function show_progress_bar() {
+	$('#progress_bar').show();
+}
+function hide_progress_bar() {
+	$('#progress_bar').hide()
+}
+/* Filters' functions */
+$(document).ready(function(){ 
+	$("#aggregator_all").change(function(){
+		$("#aggregators input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#aggregators input[type='checkbox']").each(function(index, obj) {
+			update_aggregator_checkbox(obj);
+		});
+	});
+	$("#farmer_all").change(function(){
+		$("#farmers input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#farmers input[type='checkbox']").each(function(index, obj) {
+			update_farmer_checkbox(obj);
+		});
+	});
+	$("#crop_all").change(function(){
+		$("#crops input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#crops input[type='checkbox']").each(function(index, obj) {
+			update_crop_checkbox(obj);
+		});
+	});
+	$("#mandi_all").change(function(){
+		$("#mandis input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#mandis input[type='checkbox']").each(function(index, obj) {
+			update_mandi_checkbox(obj);
+		});
+	});
+	function update_aggregator_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.aggregators[key] = $(e.target).prop('checked');
+		dashboard.aggregators[key] = obj.checked;
+	}
+	$('#aggregators').on('change','input[type="checkbox"]', function(e) {
+		update_aggregator_checkbox(this);
+	});
+	function update_farmer_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.farmers[key] = $(e.target).prop('checked');
+		dashboard.farmers[key] = obj.checked;
+	}
+	$('#farmers').on('change','input[type="checkbox"]', function(e) {
+		update_farmer_checkbox(this);
+	});
+	function update_crop_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.crops[key] = $(e.target).prop('checked');
+		dashboard.crops[key] = obj.checked;
+	}
+	$('#crops').on('change','input[type="checkbox"]', function(e) {
+		update_crop_checkbox(this);
+	});
+	function update_mandi_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.mandis[key] = $(e.target).prop('checked');
+		dashboard.mandis[key] = obj.checked;
+	}
+	$('#mandis').on('change','input[type="checkbox"]', function(e) {
+		update_mandi_checkbox(this);
+	});
+});
+/* Initialization */
+$(document).ajaxStart(function() {
+	$('#content').hide();
+	show_progress_bar();
+}).ajaxComplete(function() {
+	hide_progress_bar();
+});
+hide_progress_bar();
+/* Dashboard stuff starts from here */
+var dashboard = new Dashboard();
+dashboard.populate_data(dashboard.initialize_filter_data, initialize);
+
+/*on apply filters change the indexes corresponding to the fileters selected*/
+$( "#apply_filter" ).click(function() {
+
+  var start_date = $('#from_date').val();
+  var end_date = $('#to_date').val();
+  dashboard.start_date = start_date;
+  dashboard.end_date = end_date;
+  dashboard.indexes = [];
+  /*change the indexes array based on filters and date range*/
+  for (var i = 0; i < dashboard.transactions.length; i++){
+	if(dashboard.farmers[dashboard.transactions[i].farmer] && dashboard.aggregators[dashboard.transactions[i].mediator] && dashboard.crops[dashboard.transactions[i].crop] && dashboard.mandis[dashboard.transactions[i].mandi] && dashboard.transactions[i].day >= start_date && dashboard.transactions[i].day<=end_date){
+		dashboard.indexes.push(i);
+	}
+  }
+  initialize();
+
+});
+/*do the same thing when get date is clicked*/
+$( "#get_data" ).click(function() {
+
+	var start_date = $('#from_date').val();
+	var end_date = $('#to_date').val();
+	if(start_date>end_date){
+
+		//$('.modal-trigger').leanModal();
+		$('#modal1').openModal();
+		  
+
+	}
+	dashboard.start_date = start_date;
+	dashboard.end_date = end_date;
+	dashboard.indexes = [];
+	/*change the indexes array based on filters and date range*/
+	for (var i = 0; i < dashboard.transactions.length; i++){
+		if(dashboard.farmers[dashboard.transactions[i].farmer] && dashboard.aggregators[dashboard.transactions[i].mediator] && dashboard.crops[dashboard.transactions[i].crop] && dashboard.mandis[dashboard.transactions[i].mandi] && dashboard.transactions[i].day >= start_date && dashboard.transactions[i].day<=end_date){
+
+			dashboard.indexes.push(i);
+		}
+	}
+	initialize();
+
+});
+
+/*to get size of any javascript object*/
+Object.size = function(obj) {
+	var size = 0, key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
+};
+
+function parseDate(str) {
+	var mdy = str.split('/')
+	return new Date(mdy[2], mdy[0]-1, mdy[1]);
+}
+
+function daydiff(first, second) {
+	return Math.round((second-first)/(1000*60*60*24));
+}
+/*to print a float or integer*/
+function print_number(inputval){
+	if(Math.floor(inputval)===inputval){
+		return inputval;
+	}
+	else
+		return inputval.toFixed(1);
+}
+
+/* Table Generating UI Functions */
+/*to print aggregated village table (table 1)*/
+function getVillageTable(diffDays){
+
+	var table_ref = document.getElementById("table1");
+
+	/*proper alignment of table1*/
+	$('#table1 tr:gt(0)').remove();
+	var row = $('#table1_tbody');
+	var tr_name = $('<tr>');
+	row.append(tr_name);
+	
+	var unique_villages = dashboard.active_villages; /*list of unique villages active during date range*/
+	var village_info = dashboard.village_info; /*all the relevant information of active villages*/
+	var Total_Volume = 0;
+	var Total_Amount = 0;
+	var Total_Farmers = 0;
+	var Total_avg = 0;
+	var str1 = "₹ "
+	for (var i = 0; i < unique_villages.length; i++) {
+		
+		var row = table_ref.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+		var cell5 = row.insertCell(4);
+		
+		cell1.innerHTML = unique_villages[i];
+		cell2.innerHTML = print_number(village_info[i].total_volume).toString().concat(" Kg");
+		cell3.innerHTML =str1.concat(print_number(village_info[i].pay_amount).toString());
+		cell4.innerHTML =  Object.keys(village_info[i].active_farmers).length;
+		var avg = (Object.size(village_info[i].active_farmers)*1.0)/diffDays;
+		cell5.innerHTML = print_number(avg);
+
+		Total_Volume += village_info[i].total_volume;
+		Total_Amount += village_info[i].pay_amount;
+		Total_Farmers+=Object.keys(village_info[i].active_farmers).length;
+		Total_avg+=(Object.size(village_info[i].active_farmers)*1.0)/diffDays;
+	}
+	dashboard.total_volume = Total_Volume;
+	dashboard.total_amount = Total_Amount;
+	dashboard.total_farmers = Total_Farmers;
+	/*if there are entries in the table*/
+	if(unique_villages.length){
+		var row = table_ref.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+		var cell5 = row.insertCell(4);
+		cell1.innerHTML = "TOTAL";
+		cell1.style.fontWeight = "bold";
+		cell2.innerHTML = print_number(Total_Volume).toString().concat(" Kg");
+		cell2.style.fontWeight = "bold";
+		cell3.innerHTML = str1.concat(print_number(Total_Amount).toString());
+		cell3.style.fontWeight = "bold";
+		cell4.innerHTML = print_number(Total_Farmers);
+		cell4.style.fontWeight = "bold";
+		cell5.innerHTML = print_number(Total_avg);
+		cell5.style.fontWeight = "bold";
+	}
+	/*function call to make the pie charts */
+	plot_village_data(dashboard.village_info,dashboard.total_volume,dashboard.total_amount);
+
+}
+/*to print aggregated mediator table similar to village table*/
+function getMediatorTable(diffDays){
+	var table_ref = document.getElementById("table2");
+	$('#table2 tr:gt(0)').remove();
+	row = $('#table2_tbody');
+	tr_name = $('<tr>');
+	row.append(tr_name);
+	var mediator_info = dashboard.mediator_info; // mediator info from dashboard to populate table2
+	var mediators = dashboard.active_mediators; //unique active mediators
+	var Total_Volume = 0;
+	var Total_Amount = 0;
+	var Total_Farmers = 0;
+	var Total_avg = 0;
+	var str1 = "₹ "
+	for (var i = 0; i < mediators.length; i++) {
+		var row = table_ref.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+		var cell5 = row.insertCell(4);
+		
+		cell1.innerHTML = mediators[i];
+		cell2.innerHTML = print_number(mediator_info[i].total_volume).toString().concat(" Kg");
+		cell3.innerHTML =str1.concat(print_number(mediator_info[i].pay_amount).toString());
+		cell4.innerHTML =  Object.keys(mediator_info[i].active_farmers).length;
+		var avg = (Object.size(mediator_info[i].active_farmers)*1.0)/diffDays;
+		cell5.innerHTML = print_number(avg);
+
+		Total_Volume += mediator_info[i].total_volume;
+		Total_Amount += mediator_info[i].pay_amount;
+		Total_Farmers+=Object.keys(mediator_info[i].active_farmers).length;
+		Total_avg+=(Object.size(mediator_info[i].active_farmers)*1.0)/diffDays;
+	};
+	if(mediators.length){
+		var row = table_ref.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+		var cell5 = row.insertCell(4);
+		cell1.innerHTML = "TOTAL";
+		cell1.style.fontWeight = "bold";
+		cell2.innerHTML = print_number(Total_Volume).toString().concat(" Kg");
+		cell2.style.fontWeight = "bold";
+		cell3.innerHTML = str1.concat(print_number(Total_Amount).toString());
+		cell3.style.fontWeight = "bold";
+		cell4.innerHTML = print_number(Total_Farmers);
+		cell4.style.fontWeight = "bold";
+		cell5.innerHTML = print_number(Total_avg);
+		cell5.style.fontWeight = "bold";
+	}
+	/*function call to make mediator pie chart*/
+	plot_mediator_data(dashboard.mediator_info,dashboard.total_volume,dashboard.total_amount);
+}
+
+function initialize(){
+	/* Because of minor highcharts bug we have to first show all the divs of charts and then initialize the charts */
+	$('#content').show();
+	/* Get the data related to the tables */
+	dashboard.aggregate_mediator_village_data();
+
+	/* Initialize the date pickers */
+	var start_date = dashboard.start_date;
+	var end_date = dashboard.end_date;
+	$('#from_date').val(start_date);
+	$('#to_date').val (end_date);
+	/* calculate difference between two dates selected */
+
+	var oneDay = 24*60*60*1000;	// hours*minutes*seconds*milliseconds
+	var first_date = new Date(start_date);
+	var last_date = new Date(end_date);
+	var diffDays = Math.abs((first_date.getTime() - last_date.getTime())/(oneDay)) + 1;
+
+	/*function call to make village and mediator wise tables*/
+	getVillageTable(diffDays);
+	getMediatorTable(diffDays);
+	update_tables();
+
+	/* Initialize the charts data */
+	dashboard.aggregate_daywise_data();
+	/* Plot the charts */
+	plot_cropwise_data();
+}
+
+function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
+	/* from the given dict we need to create a list suitable for highcharts api */
+	multiline_data_list = [];
+	$.each(dict, function(key, value) {
+		var data_dict = {};
+		data_dict["name"] = key;
+		data_dict["data"] = value;
+		multiline_data_list.push(data_dict);
+	});
+	$(function () {
+		container_obj.highcharts({
+			title: {
+				text: ''
+			},
+			subtitle: {
+				text: '',
+				x: -20
+			},
+			xAxis: {
+				categories: x_axis,
+				labels: {
+					rotation: -90
+				}
+			},
+			yAxis: {
+				title: {
+					text: y_axis_text
+				},
+				plotLines: [{
+					value: 0,
+					width: 1,
+					color: '#808080'
+				}]
+			},
+			tooltip: {
+				valuePrefix: '₹ '
+			},
+			legend: {
+				layout: 'vertical',
+				align: 'right',
+				verticalAlign: 'middle',
+				borderWidth: 0
+			},
+			series: multiline_data_list
+		});
+	});
+}
+function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, prefix_or_suffix, farmer_counts) {
+	/* from the given dict we need to create a list suitable for highcharts api */
+	stack_data_list = [];
+	$.each(dict, function(key, value) {
+		var data_dict = {};
+		data_dict["name"] = key;
+		data_dict["type"] = "column";
+		/*data_dict["yAxis"] = 1;*/
+		data_dict["data"] = value;
+		data_dict["tooltip"] = {
+			valueSuffix: ((prefix_or_suffix)?'':unit),
+			valuePrefix: ((prefix_or_suffix)?unit:'')};
+		stack_data_list.push(data_dict);
+	});
+	if (farmer_counts) {
+		var data_dict = {};
+		data_dict["name"] = "Farmer Count";
+		data_dict["type"] = "line";
+		data_dict["yAxis"] = 1;
+		data_dict["data"] = farmer_counts;
+		stack_data_list.push(data_dict);
+	}
+	container_obj.highcharts({
+		chart: {
+			type: 'column'
+		},
+		xAxis: {
+			categories: x_axis,
+			labels: {
+				rotation: -90
+			}
+		},
+		yAxis: [{
+			min: 0,
+			title: {
+				text: y_axis_text
+			},
+			stackLabels: {
+				enabled: true,
+				format: '<b>' + ((prefix_or_suffix)?unit + ' ':'') + '{total:.0f}'+ ((prefix_or_suffix)?'':' ' + unit) + '</b>',
+				style: {
+					fontWeight: 'bold',
+					color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+				}
+			}
+		}, {
+			title: {
+				text: "Farmer Count",
+				style: {
+					color: Highcharts.getOptions().colors[0]
+				}
+			},
+			labels: {
+				format: '{value}',
+				style: {
+					color: Highcharts.getOptions().colors[0]
+				}
+			},
+			opposite: true
+		}],
+		legend: {
+			align: 'right',
+			x: 0,
+			verticalAlign: 'top',
+			y: 0,
+			floating: true,
+			backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+			borderColor: '#CCC',
+			borderWidth: 1,
+			shadow: false
+		},
+		tooltip: {
+			headerFormat: '<b>{point.x}</b><br/>',
+			/*pointFormat: '{series.name}: ' + ((prefix_or_suffix)?unit + ' ':'') + '{point.y:.1f}'+ ((prefix_or_suffix)?'':' ' + unit) + '<br/>Total: ' + ((prefix_or_suffix)?unit + ' ':'') + '{point.stackTotal:.1f}'+ ((prefix_or_suffix)?'':' ' + unit)*/
+			shared: true
+		},
+		plotOptions: {
+			column: {
+				showCheckbox: true,
+				stacking: 'normal',
+				dataLabels: {
+					enabled: true,
+					format: ' ',
+					color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+					style: {
+						textShadow: '0 0 3px black'
+					}
+				}
+			}
+		},
+		series: stack_data_list
+	});
+}
+function plot_cropwise_data() {
+	show_charts();
+	/* First plot cropwise prices stacked chart */
+	plot_stacked_chart($("#crops_price"), dashboard.days, dashboard.crops_purchase, "Total Amount Earned(₹)", "₹", true);
+	plot_multiline_chart($("#crops_price2"), dashboard.days, dashboard.crops_price, "Crop Price Per Day(₹)");
+	plot_multiline_chart($("#crop_aggregator_price"), dashboard.days, dashboard.crop_aggregator_price, "Crop Price Per Day(₹)");
+	plot_stacked_chart($("#crops_volume"), dashboard.days, dashboard.crops_volume, "Total Volume Dispatched(kg)", "kg", false, dashboard.farmers_count);
+	update_charts();
+}
+
+function plot_village_data(village_info,Total_Volume,Total_Amount){
+	var vol_data =[];
+	var amt_data = [];
+	for(var i=0 ; i<village_info.length; i++){
+		vol_data.push([village_info[i].name,  (village_info[i].total_volume*100.0)/Total_Volume ])
+	}
+	for(var i=0 ; i<village_info.length; i++){
+		amt_data.push([village_info[i].name,  (village_info[i].pay_amount*100.0)/Total_Amount ])
+	}
+	plot_piechart($('#pie_vol'),vol_data,'Villages');
+	plot_piechart($('#pie_amount'),amt_data,'Villages');
+
+}
+
+function plot_mediator_data(mediator_info,Total_Volume,Total_Amount){
+	var vol_data =[];
+	var amt_data = [];
+	for(var i=0 ; i<mediator_info.length; i++){
+		vol_data.push([mediator_info[i].name,  (mediator_info[i].total_volume*100.0)/Total_Volume ])
+	}
+	for(var i=0 ; i<mediator_info.length; i++){
+		amt_data.push([mediator_info[i].name,  (mediator_info[i].pay_amount*100.0)/Total_Amount ])
+	}
+	plot_piechart($('#pie_vol2'),vol_data,'VRP');
+	plot_piechart($('#pie_amount2'),amt_data,'VRP');
+
+}
+
+function plot_piechart(container_obj, _data, arg) {  
+	var chart = {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false
+	};
+
+	var tooltip = {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	};
+	var plotOptions = {
+		pie:{
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
+				style: {
+				color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	};
+
+	series= [{
+		type: 'pie',
+		name: arg,
+		data: _data
+	}]; 
+	
+	var json = {};   
+	json.chart = chart; 
+	json.title = null;
+	json.tooltip = tooltip;  
+	json.series = series;
+	json.plotOptions = plotOptions;
+	container_obj.highcharts(json); 
+}
+
+function create_filter(tbody_obj, type, name, checked) {
+	var row = $('<tr>');
+	var td_name = $('<td>').html(name);
+	row.append(td_name);
+	var checkbox_html = '<input type="checkbox" class="purple" id="' + type + '" checked="checked"/><label for="' + type + '"></label>';
+	var td_checkbox = $('<td>').html(checkbox_html);
+	row.append(td_checkbox);
+	tbody_obj.append(row);
+}
+
+function initialize_aggregators(aggregators) {
+	/* Recieives set of aggregators to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#aggregator").remove();
+	/* Populate with aggregators */
+	var i = 0;
+	$.each(aggregators, function(name, checked) {
+		create_filter($("#aggregators"), ('aggregator' + i), name, checked);
+		i++;
+	});
+}
+function initialize_farmers(farmers) {
+	/* Recieives set of farmers to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#farmer").remove();
+	/* Populate with farmers */
+	var i = 0;
+	$.each(farmers, function(name, checked) {
+		create_filter($("#farmers"), ('farmer' + i), name, checked);
+		i++;
+	});
+}
+function initialize_crops(crops) {
+	/* Recieives set of crops to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#crop").remove();
+	/* Populate with crops */
+	var i = 0;
+	$.each(crops, function(name, checked) {
+		create_filter($("#crops"), ('crop' + i), name, checked);
+		i++;
+	});
+}
+function initialize_mandis(mandis) {
+	/* Recieives set of mandis to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#mandi").remove();
+	/* Populate with mandis */
+	var i = 0;
+	$.each(mandis, function(name, checked) {
+		create_filter($("#mandis"), ('mandi' + i), name, checked);
+		i++;
+	});
+}
+// fill_table("tag");
+		
+
+</script>
+
+{% endblock %}
+

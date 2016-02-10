@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     (r'^api/', include(api.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
+    url(r'^dashboard/'), dashboard),
     )
