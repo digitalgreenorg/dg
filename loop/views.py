@@ -1,12 +1,15 @@
-from django.http import  HttpResponse
 import json
+
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
+from django.shortcuts import render
+
 from tastypie.models import ApiKey, create_api_key
-from loop_data_log import get_latest_timestamp
 from models import LoopUser
+
+from loop_data_log import get_latest_timestamp
 
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
@@ -35,4 +38,7 @@ def login(request):
 
 def home(request):
 	print request
-	return HttpResponse(request)
+	return render_to_response(request, 'loop_base.html')
+
+def dashboard(request):
+    return render(request, 'loop/loop_dashboard.html')

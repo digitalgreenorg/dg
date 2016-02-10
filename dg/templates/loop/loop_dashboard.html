@@ -1,10 +1,13 @@
-{% extends "base.html" %}
+{% extends "loop/loop_base.html" %}
 {% load static %}
 
 {% block title %}Dashboard | Home {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
+
+<link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}loop/css/loopdashboard.css"/>
+<link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}loop/css/materialize.min.css"/>
+
 <style>
 li.not-hoverable:hover,
 li.not-hoverable:active {
@@ -280,10 +283,11 @@ ul.collapsible > li.active {
 
 {% block extrajs %}
 
-<script src="{{ STATIC_URL }}js/dashboard.js"></script>
+<script src="{{ STATIC_URL }}loop/js/dashboard.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
-<script>
 
+
+<script>
 
 /*to change the visibility of tables , charts on change in select*/
 function update_tables() {
