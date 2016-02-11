@@ -65,3 +65,12 @@ def mediator_wise_data(request):
         i['user_name'] = user.name
     data = json.dumps(transactions)
     return HttpResponse(data)
+
+def crop_wise_data(request):
+    #start_date = request.POST['start_date']
+    #end_date = request.POST['end_date']
+    start_date = '2016-01-01'
+    end_date = '2016-01-31'
+    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
+    data = json.dumps(list(transactions))
+    return HttpResponse(data)

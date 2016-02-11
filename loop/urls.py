@@ -22,4 +22,5 @@ urlpatterns = patterns('',
     url(r'^dashboard/', dashboard),
     url(r'^village_wise_data/', village_wise_data),
     url(r'^mediator_wise_data/', mediator_wise_data),
+    url(r'^crop_wise_data/'), crop_wise_data),
     )

@@ -134,7 +134,6 @@ ul.collapsible > li.active {
 {% block content %}
 
 <div class="row valign-wrapper" >
-
 		<div class="input-field col s6">
 			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
 			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
@@ -172,7 +171,6 @@ ul.collapsible > li.active {
 
 		<label>Change the Table</label>
 	</div>
-
 </div>
 
 <div id="village_table">
@@ -208,6 +206,7 @@ ul.collapsible > li.active {
 		</div>
 	</div>
 </div>
+
 <div id="mediator_table">
 	<div id="mediator_label">
 		<h5  class="center-align">Mediator Wise Data</h5>
@@ -241,16 +240,16 @@ ul.collapsible > li.active {
 		</div>
 	</div>
 </div>
+
 <div class="container">
 	<div class="divider"></div>
 	<br/>
 	<br/>
 	<div class="row">
 		<div class="input-field col s6 offset-s3 ">
-
 			<select id="chart_option" class="initialized">
 				<!-- <option value="" disabled selected>Choose your option</option> -->
-				<option value="1" >Day Wise Crop Prices</option>
+				<option value="1">Day Wise Crop Prices</option>
 				<option value="2">Daywise and Aggregator wise Crop Prices</option>
 			</select>
 			<label>Change the Chart</label>
@@ -285,7 +284,6 @@ ul.collapsible > li.active {
 
 <script src="{{ STATIC_URL }}loop/js/dashboard.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
-
 
 <script>
 
@@ -774,6 +772,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
 		series: stack_data_list
 	});
 }
+
 function plot_cropwise_data() {
 	show_charts();
 	/* First plot cropwise prices stacked chart */
@@ -906,7 +905,6 @@ function initialize_mandis(mandis) {
 	});
 }
 // fill_table("tag");
-
 
 </script>
 
