@@ -12,6 +12,7 @@ function initialize() {
   getmediatordata();
   set_eventlistener();
   update_tables();
+  update_charts();
   getcropdata();
 }
 
@@ -45,6 +46,13 @@ function set_eventlistener(){
   });
 }
 
+/* show charts */
+
+function show_charts() {
+  $("#crop_chart_div").show();
+  $("#agg_crop_chart_div").show();
+}
+
 /*to change the visibility of tables , charts on change in select*/
 
 function update_tables() {
@@ -57,6 +65,18 @@ function update_tables() {
 		$("#mediator_table").show();
 		$("#village_table").hide();
 	}
+}
+
+function update_charts() {
+  var opt = $('#chart_option :selected').val();
+  if(opt ==1 ){
+    $("#crop_chart_div").show();
+    $("#agg_crop_chart_div").hide();
+  }
+  else{
+    $("#agg_crop_chart_div").show();
+    $("#crop_chart_div").hide();
+  }
 }
 
 /* ajax to get json */
@@ -274,27 +294,6 @@ function plot_cropwise_data(data_json) {
   plot_stacked_chart($("#crops_volume"), x_axis, total_crop_volume, "Total Volume Dispatched(kg)", "kg", false, /*dashboard.farmers_count*/null);
    
   update_charts();
-}
-
-/* show charts */
-
-function show_charts() {
-  $("#crop_chart_div").show();
-  $("#agg_crop_chart_div").show();
-}
-
-/* update charts */
-
-function update_charts() {
-  var opt = $('#chart_option :selected').val();
-  if(opt ==1 ){
-    $("#crop_chart_div").show();
-    $("#agg_crop_chart_div").hide();
-  }
-  else{
-    $("#agg_crop_chart_div").show();
-    $("#crop_chart_div").hide();
-  }
 }
 
 /* plot highcharts data */
