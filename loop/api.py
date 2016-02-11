@@ -21,6 +21,13 @@ class CropNotSaved(Exception):
 class TransactionNotSaved(Exception):
     pass
 
+class TransporterNotSaved(Exception):
+    pass
+
+class TransportationVehicelNotSaved(Exception):
+    pass
+
+
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
@@ -191,6 +198,7 @@ class VillageResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+
 class FarmerResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village', full=True)
     image = fields.FileField(attribute='img', null=True, blank=True)
@@ -274,6 +282,76 @@ class MandiResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+
+class VehicleResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Vehicle.objects.all()
+        resource_name = 'vehicle'
+        authorization = Authorization()
+        always_return_data = True
+    def dehydrate(self,bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
+class TransporterResource(BaseResource):
+    district = fields.ForeignKey(DistrictResource, 'district')
+    class Meta:
+        queryset = Transporter.objects.all()
+        resource_name = 'transporter'
+        authorization = Authorization()
+    dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = Transporter.objects.filter(phone = bundle.data['transporter_phone'], name = bundle.data['transporter_name'])
+        if attempt.count() < 1:
+            bundle = super(TransporterResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise TransporterNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(TransporterResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Transporter.objects.filter(phone = bundle.data['transporter_phone'], name = bundle.data['transporter_name'])
+            raise TransporterNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
+class TransportationVehicleResource(BaseResource):
+    transporter = fields.ForeignKey(TransporterResource, 'transporter')
+    vehicle = fields.ForeignKey(VehicleResource, 'vehicle')
+    class Meta:
+        queryset = TransportationVehicle.objects.all()
+        resource_name = 'transportationvehicle'
+        authorization = Authorization()
+    dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name'])
+    dehydrate_vehicle = partial(foreign_key_to_id, field_name='vehicle', sub_field_names=['id','vehicle_name'])
+    def obj_create(self, bundle, request=None, **kwargs):
+        transporter = Transporter.objects.get(id = bundle.data["transporter"]["online_id"])
+        vehicle = Vehicle.objects.get(id=bundle.data["vehicle"]["online_id"])
+        attempt = TransportationVehicleResource.objects.filter(transporter = transporter, vehicle = vehicle)
+        if attempt.count() < 1:
+            bundle = super(TransportationVehicleResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise TransportationVehicleNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        transporter = Transporter.objects.get(id = bundle.data["transporter"]["online_id"])
+        vehicle = Vehicle.objects.get(id=bundle.data["vehicle"]["online_id"])
+        try:
+            bundle = super(TransportationVehicleResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = TransportationVehicleResource.objects.filter(transporter = transporter, vehicle = vehicle)
+            raise TransportationVehicleNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource,'crop')

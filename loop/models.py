@@ -124,6 +124,40 @@ class Mandi(LoopModel):
 	class Meta:
 		unique_together = ("mandi_name","district",)
 
+
+class Transporter(LoopModel):
+	id = models.AutoField(primary_key=True)
+	transporter_name = models.CharField(max_length=90)
+	transporter_phone = models.CharField(max_length=13)
+	district = models.ForeignKey(District)
+
+	def __unicode__(self):
+		return self.transporter_name
+	class Meta:
+		unique_together = ("transporter_name","transporter_phone",)
+post_save.connect(save_log, sender=Transporter)
+pre_delete.connect(delete_log, sender=Transporter)
+
+class Vehicle(LoopModel):
+	id = models.AutoField(primary_key=True)
+	vehicle_name = models.CharField(max_length=30, blank=False, null=False)
+
+	def __unicode__(self):
+		return self.vehicle_name
+	class Meta:
+		unique_together = ("vehicle_name")
+
+class TransportationVehicle(LoopModel):
+	id = models.AutoField(primary_key=True)
+	transporter = models.ForeignKey(Transporter)
+	vehicle = models.ForeignKey(Vehicle)
+	vehicle_number = models.CharField(max_length=11)
+
+	class Meta:
+		unique_together = ("transporter", "vehicle", "vehicle_number")
+post_save.connect(save_log, sender=TransportationVehicle)
+pre_delete.connect(delete_log, sender=TransportationVehicle)
+
 class CombinedTransaction(LoopModel):
 	id = models.AutoField(primary_key=True)
 	date = models.DateField(auto_now=False)
