@@ -5,12 +5,40 @@ function initialize() {
   $('select').material_select();
   show_charts();
   getvillagedata();
+  getmediatordata();
+  set_eventlistener();
+  update_tables();
+  getcropdata();
 }
 function hide_progress_bar() {
   $('#progress_bar').hide()
 }
 function show_progress_bar() {
 	$('#progress_bar').show();
+}
+
+// event listeners
+function set_eventlistener(){
+  $( "#table_option" ).change(function() {
+  	update_tables();
+  });
+  $('.datepicker').pickadate({
+  	selectMonths: true, // Creates a dropdown to control month
+  	selectYears: 15, // Creates a dropdown of 15 years to control year
+  	format: 'yyyy-mm-dd'
+  });
+}
+/*to change the visibility of tables , charts on change in select*/
+function update_tables() {
+	var opt = $('#table_option :selected').val();
+	if(opt ==1 ){
+		$("#village_table").show();
+		$("#mediator_table").hide();
+	}
+	else{
+		$("#mediator_table").show();
+		$("#village_table").hide();
+	}
 }
 // ajax to get json
 function getvillagedata() {
@@ -51,8 +79,7 @@ function fillvillagetable(data_json) {
   var total_farmers = 0;
   var total_avg = 0;
   var str1 = "₹ "
-  for ( i =0; i< data_json.length; i++)
-  {
+  for ( i =0; i< data_json.length; i++){
      var row = table_ref.insertRow(-1);
      var cell1 = row.insertCell(0);
      var cell2 = row.insertCell(1);
@@ -90,7 +117,7 @@ function fillvillagetable(data_json) {
    cell4.style.fontWeight = "bold";
    cell5.innerHTML = total_avg/data_json.length;
    cell5.style.fontWeight = "bold";
-   /*function call to make mediator pie chart*/
+   /*function call to make village pie chart*/
    plot_village_data(data_json,total_volume,total_amount);
  }
 }
@@ -101,14 +128,12 @@ function fillmediatortable(data_json) {
   tr_name = $('<tr>');
   row.append(tr_name);
 
-  var mediator_info = dashboard.mediator_info; // mediator info from dashboard to populate table2
-  var mediators = dashboard.active_mediators; //unique active mediators
-  var Total_Volume = 0;
-  var Total_Amount = 0;
-  var Total_Farmers = 0;
-  var Total_avg = 0;
+  var total_volume = 0;
+  var total_amount = 0;
+  var total_farmers = 0;
+  var total_avg = 0;
   var str1 = "₹ "
-  for (var i = 0; i < mediators.length; i++) {
+  for (var i = 0; i < data_json.length; i++) {
     var row = table_ref.insertRow(-1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
@@ -116,19 +141,19 @@ function fillmediatortable(data_json) {
     var cell4 = row.insertCell(3);
     var cell5 = row.insertCell(4);
 
-    cell1.innerHTML = mediators[i];
-    cell2.innerHTML = print_number(mediator_info[i].total_volume).toString().concat(" Kg");
-    cell3.innerHTML =str1.concat(print_number(mediator_info[i].pay_amount).toString());
-    cell4.innerHTML =  Object.keys(mediator_info[i].active_farmers).length;
-    var avg = (Object.size(mediator_info[i].active_farmers)*1.0)/diffDays;
-    cell5.innerHTML = print_number(avg);
+    cell1.innerHTML = data_json[i]['user_name'];
+    cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
+    cell3.innerHTML = data_json[i]['amount__sum'].toString();
+    cell4.innerHTML = data_json[i]['farmer__count'].toString();
+    var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']).toFixed(1);
+    cell5.innerHTML = avg;
 
-    Total_Volume += mediator_info[i].total_volume;
-    Total_Amount += mediator_info[i].pay_amount;
-    Total_Farmers+=Object.keys(mediator_info[i].active_farmers).length;
-    Total_avg+=(Object.size(mediator_info[i].active_farmers)*1.0)/diffDays;
+    total_volume += data_json[i]['quantity__sum'];
+    total_amount += data_json[i]['amount__sum'];
+    total_farmers+= data_json[i]['farmer__count'];
+    total_avg+= avg;
   };
-  if(mediators.length){
+  if(data_json.length){
     var row = table_ref.insertRow(-1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
@@ -137,17 +162,17 @@ function fillmediatortable(data_json) {
     var cell5 = row.insertCell(4);
     cell1.innerHTML = "TOTAL";
     cell1.style.fontWeight = "bold";
-    cell2.innerHTML = print_number(Total_Volume).toString().concat(" Kg");
+    cell2.innerHTML = total_volume.toString().concat(" Kg");
     cell2.style.fontWeight = "bold";
-    cell3.innerHTML = str1.concat(print_number(Total_Amount).toString());
+    cell3.innerHTML = str1.concat(total_amount).toString();
     cell3.style.fontWeight = "bold";
-    cell4.innerHTML = print_number(Total_Farmers);
+    cell4.innerHTML = total_farmers;
     cell4.style.fontWeight = "bold";
-    cell5.innerHTML = print_number(Total_avg);
+    cell5.innerHTML = total_avg/data_json.length;
     cell5.style.fontWeight = "bold";
+    /*call to make mediator pie chart*/
+    plot_mediator_data(data_json,total_volume,total_amount);
   }
-  /*function call to make mediator pie chart*/
-  plot_mediator_data(dashboard.mediator_info,dashboard.total_volume,dashboard.total_amount);
 }
 // fill data for highcharts
 function plot_village_data(data_json,total_volume,total_amount) {
@@ -162,26 +187,39 @@ function plot_village_data(data_json,total_volume,total_amount) {
 	plot_piechart($('#pie_vol'),vol_data,'Villages');
 	plot_piechart($('#pie_amount'),amt_data,'Villages');
 }
-function plot_mediator_data(mediator_info,Total_Volume,Total_Amount){
+function plot_mediator_data(data_json,total_volume,total_amount){
   var vol_data =[];
   var amt_data = [];
-  for(var i=0 ; i<mediator_info.length; i++){
-    vol_data.push([mediator_info[i].name,  (mediator_info[i].total_volume*100.0)/Total_Volume ])
+  for(var i=0 ; i<data_json.length; i++){
+    vol_data.push([data_json[i]['user_name'],  (data_json[i]['quantity__sum']*100.0)/total_volume ])
   }
-  for(var i=0 ; i<mediator_info.length; i++){
-    amt_data.push([mediator_info[i].name,  (mediator_info[i].pay_amount*100.0)/Total_Amount ])
+  for(var i=0 ; i<data_json.length; i++){
+    amt_data.push([data_json[i]['user_name'],  (data_json[i]['amount__sum']*100.0)/total_amount ])
   }
   plot_piechart($('#pie_vol2'),vol_data,'VRP');
   plot_piechart($('#pie_amount2'),amt_data,'VRP');
 
 }
 function plot_cropwise_data(data_json) {
-  //show_charts();
+  var x_axis = data_json['dates'];
+  var total_crop_price = [];
+  for(i=0; i<data_json['crops'].length; i++){
+    var temp_dict = {};
+    temp_dict['name'] = data_json['crops'][i];
+    temp_dict['data'] = new Array(x_axis.length).fill(0);
+    for (j=0; j<data_json['transactions'].length; j++){
+      if (data_json['transactions'][j]['crop__crop_name'] == temp_dict['name']){
+          var index_date = x_axis.indexOf(data_json['transactions'][j]['date']);
+          temp_dict['data'][index_date] = data_json['transactions'][j]['amount__sum'];
+      }
+    }
+    total_crop_price.push(temp_dict);
+  }
   /* First plot cropwise prices stacked chart */
-  plot_stacked_chart($("#crops_price"), data_json.length, dashboard.crops_purchase, "Total Amount Earned(₹)", "₹", true);
-  plot_multiline_chart($("#crops_price2"), data_json.length, dashboard.crops_price, "Crop Price Per Day(₹)");
-  plot_multiline_chart($("#crop_aggregator_price"), data_json.length, dashboard.crop_aggregator_price, "Crop Price Per Day(₹)");
-  plot_stacked_chart($("#crops_volume"), data_json.length, dashboard.crops_volume, "Total Volume Dispatched(kg)", "kg", false, dashboard.farmers_count);
+  plot_multiline_chart($("#crops_price"), x_axis, total_crop_price, "Total Amount Earned(₹)", "₹", true);
+  // plot_multiline_chart($("#crops_price2"), x_axis, dashboard.crops_price, "Crop Price Per Day(₹)");
+  // plot_multiline_chart($("#crop_aggregator_price"), x_axis, dashboard.crop_aggregator_price, "Crop Price Per Day(₹)");
+  // plot_stacked_chart($("#crops_volume"), x_axis, dashboard.crops_volume, "Total Volume Dispatched(kg)", "kg", false, dashboard.farmers_count);
   //update_charts();
 }
 // show charts
@@ -229,15 +267,6 @@ function plot_piechart(container_obj, _data, arg) {
 	container_obj.highcharts(json);
 }
 function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
-  /* from the given dict we need to create a list suitable for highcharts api */
-  multiline_data_list = [];
-  $.each(dict, function(key, value) {
-    var data_dict = {};
-    data_dict["name"] = key;
-    data_dict["data"] = value;
-    multiline_data_list.push(data_dict);
-  });
-  $(function () {
     container_obj.highcharts({
       title: {
         text: ''
@@ -271,9 +300,8 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
         verticalAlign: 'middle',
         borderWidth: 0
       },
-      series: multiline_data_list
+      series: dict
     });
-  });
 }
 function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, prefix_or_suffix, farmer_counts) {
   /* from the given dict we need to create a list suitable for highcharts api */

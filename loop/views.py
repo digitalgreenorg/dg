@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
@@ -58,10 +59,9 @@ def mediator_wise_data(request):
     #end_date = request.POST['end_date']
     start_date = '2016-01-01'
     end_date = '2016-01-31'
-    #get mediator wise data
     transactions = list(CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('user_created__id').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True)))
     for i in transactions:
-        user = LoopUser.objects.get(user_id = user_created__id)
+        user = LoopUser.objects.get(user_id = i['user_created__id'])
         i['user_name'] = user.name
     data = json.dumps(transactions)
     return HttpResponse(data)
@@ -71,6 +71,10 @@ def crop_wise_data(request):
     #end_date = request.POST['end_date']
     start_date = '2016-01-01'
     end_date = '2016-01-31'
+    dates = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values_list('date', flat=True).distinct().order_by('date')
+    crops = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values_list('crop__crop_name', flat=True).distinct()
     transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
-    data = json.dumps(list(transactions))
+    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions)}
+    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+
     return HttpResponse(data)
