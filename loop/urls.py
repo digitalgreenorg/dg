@@ -19,5 +19,6 @@ urlpatterns = patterns('',
     url(r'^api/', include(api.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
-    url(r'^dashboard/', village_wise_data),
+    url(r'^dashboard/', dashboard),
+    url(r'^village_wise_data/', village_wise_data)
     )

@@ -49,10 +49,6 @@ def village_wise_data(request):
     #end_date = request.POST['end_date']
     start_date = '2016-01-01'
     end_date = '2016-01-31'
-    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('farmer__village__village_name').distinct().annotate(Count('farmer'), Sum('amount'), Sum('quantity'), Count('date'))
+    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('farmer__village__village_name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
     data = json.dumps(list(transactions))
-    context = {'data' : data}
-    return render_to_response('loop/loop_dashboard.html', context)
-
-
-
+    return HttpResponse(data)

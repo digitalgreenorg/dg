@@ -1,12 +1,12 @@
-{% extends "loop/loop_base.html" %}
+{% extends "loop/loop_test.html" %}
 {% load static %}
 
 {% block title %}Dashboard | Home {% endblock %}
 
 {% block extracss %}
 
-<link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}loop/css/loopdashboard.css"/>
-<link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}loop/css/materialize.min.css"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'loop/css/materialize.min.css'%}"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'loop/css/loopdashboard.css'%}"/>
 
 <style>
 li.not-hoverable:hover,
@@ -139,7 +139,7 @@ ul.collapsible > li.active {
 			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
 			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
 			<label for="from_date">Start Date:</label>
-		
+
 		</div>
 		<div class="input-field col s6">
 			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
@@ -163,13 +163,13 @@ ul.collapsible > li.active {
 </div>
 <div class="row">
 	<div class="input-field col s6 offset-s3 ">
-		
+
 			<select id="table_option" class="initialized">
 				<!-- <option value="" disabled >Choose your option</option> -->
 				<option value="1" selected>Village</option>
 				<option value="2">Mediator</option>
 			</select>
-		
+
 		<label>Change the Table</label>
 	</div>
 
@@ -241,7 +241,7 @@ ul.collapsible > li.active {
 		</div>
 	</div>
 </div>
-<div class="container">	
+<div class="container">
 	<div class="divider"></div>
 	<br/>
 	<br/>
@@ -331,7 +331,7 @@ $('.datepicker').pickadate({
 /*to initialize material select*/
 $(document).ready(function() {
 	$('select').material_select();
-	
+
 });
 
 /* Initializing the side nav first */
@@ -344,7 +344,7 @@ function hide_progress_bar() {
 	$('#progress_bar').hide()
 }
 /* Filters' functions */
-$(document).ready(function(){ 
+$(document).ready(function(){
 	$("#aggregator_all").change(function(){
 		$("#aggregators input[type='checkbox']").prop('checked', $(this).prop("checked"));
 		$("#aggregators input[type='checkbox']").each(function(index, obj) {
@@ -440,7 +440,7 @@ $( "#get_data" ).click(function() {
 
 		//$('.modal-trigger').leanModal();
 		$('#modal1').openModal();
-		  
+
 
 	}
 	dashboard.start_date = start_date;
@@ -494,7 +494,7 @@ function getVillageTable(diffDays){
 	var row = $('#table1_tbody');
 	var tr_name = $('<tr>');
 	row.append(tr_name);
-	
+
 	var unique_villages = dashboard.active_villages; /*list of unique villages active during date range*/
 	var village_info = dashboard.village_info; /*all the relevant information of active villages*/
 	var Total_Volume = 0;
@@ -503,14 +503,14 @@ function getVillageTable(diffDays){
 	var Total_avg = 0;
 	var str1 = "₹ "
 	for (var i = 0; i < unique_villages.length; i++) {
-		
+
 		var row = table_ref.insertRow(-1);
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
 		var cell4 = row.insertCell(3);
 		var cell5 = row.insertCell(4);
-		
+
 		cell1.innerHTML = unique_villages[i];
 		cell2.innerHTML = print_number(village_info[i].total_volume).toString().concat(" Kg");
 		cell3.innerHTML =str1.concat(print_number(village_info[i].pay_amount).toString());
@@ -570,7 +570,7 @@ function getMediatorTable(diffDays){
 		var cell3 = row.insertCell(2);
 		var cell4 = row.insertCell(3);
 		var cell5 = row.insertCell(4);
-		
+
 		cell1.innerHTML = mediators[i];
 		cell2.innerHTML = print_number(mediator_info[i].total_volume).toString().concat(" Kg");
 		cell3.innerHTML =str1.concat(print_number(mediator_info[i].pay_amount).toString());
@@ -812,7 +812,7 @@ function plot_mediator_data(mediator_info,Total_Volume,Total_Amount){
 
 }
 
-function plot_piechart(container_obj, _data, arg) {  
+function plot_piechart(container_obj, _data, arg) {
 	var chart = {
 		plotBackgroundColor: null,
 		plotBorderWidth: null,
@@ -840,15 +840,15 @@ function plot_piechart(container_obj, _data, arg) {
 		type: 'pie',
 		name: arg,
 		data: _data
-	}]; 
-	
-	var json = {};   
-	json.chart = chart; 
+	}];
+
+	var json = {};
+	json.chart = chart;
 	json.title = null;
-	json.tooltip = tooltip;  
+	json.tooltip = tooltip;
 	json.series = series;
 	json.plotOptions = plotOptions;
-	container_obj.highcharts(json); 
+	container_obj.highcharts(json);
 }
 
 function create_filter(tbody_obj, type, name, checked) {
@@ -906,9 +906,8 @@ function initialize_mandis(mandis) {
 	});
 }
 // fill_table("tag");
-		
+
 
 </script>
 
 {% endblock %}
-
