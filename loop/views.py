@@ -52,3 +52,13 @@ def village_wise_data(request):
     transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('farmer__village__village_name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
     data = json.dumps(list(transactions))
     return HttpResponse(data)
+
+def mediator_wise_data(request):
+    #start_date = request.POST['start_date']
+    #end_date = request.POST['end_date']
+    start_date = '2016-01-01'
+    end_date = '2016-01-31'
+    #get mediator wise data
+    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('user_created__name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
+    data = json.dumps(list(transactions))
+    return HttpResponse(data)

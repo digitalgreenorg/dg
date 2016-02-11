@@ -20,5 +20,6 @@ urlpatterns = patterns('',
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
     url(r'^dashboard/', dashboard),
-    url(r'^village_wise_data/', village_wise_data)
+    url(r'^village_wise_data/', village_wise_data),
+    url(r'^mediator_wise_data/', village_wise_data),
     )
