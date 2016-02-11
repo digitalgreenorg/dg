@@ -125,7 +125,6 @@ class Mandi(LoopModel):
 	class Meta:
 		unique_together = ("mandi_name","district",)
 
-
 class Transporter(LoopModel):
 	id = models.AutoField(primary_key=True)
 	transporter_name = models.CharField(max_length=90)
@@ -182,6 +181,10 @@ class CombinedTransaction(LoopModel):
 	status = models.IntegerField()
 	amount = models.FloatField()
 	day_transportation = models.ForeignKey(DayTransportation, default=None, null=True)
+
+    def __unicode__(self):
+        return "%s (%s) (%s) (%s)" % (self.farmer.name, self.crop.crop_name, self.mandi.mandi_name, LoopUser.objects.get(user= self.user_created).name)
+
 	class Meta:
 		unique_together = ("date","farmer","crop","mandi","price",)
 post_save.connect(save_log, sender=CombinedTransaction)
