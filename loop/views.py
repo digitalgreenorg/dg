@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
@@ -45,20 +45,14 @@ def dashboard(request):
     return render(request, 'loop/loop_dashboard.html')
 
 def village_wise_data(request):
-    # start_date = request.POST['start_date']
-    # end_date = request.POST['end_date']
-    transactions = CombinedTransaction.objects.values('farmer__village__village_name').distinct().annotate(Count('farmer'), Sum('amount'), Sum('quantity'), Count('date'))
-    context = {'data' : transactions}
-    return render_to_response('loop_test.html', context)
-
-def init_village_dict(village):
-    village_dict = {}
-    village_dict['village_name'] = village.village_name
-    village_dict['volume'] = 0.0
-    village_dict['amount'] = 0.0
-    village_dict['farmers'] = []
-    village_dict['avg_farmers'] = 0
+    #start_date = request.POST['start_date']
+    #end_date = request.POST['end_date']
+    start_date = '2016-01-01'
+    end_date = '2016-01-31'
+    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('farmer__village__village_name').distinct().annotate(Count('farmer'), Sum('amount'), Sum('quantity'), Count('date'))
+    data = json.dumps(list(transactions))
+    context = {'data' : data}
+    return render_to_response('loop/loop_dashboard.html', context)
 
 
-def mediator_wise_data(request):
 
