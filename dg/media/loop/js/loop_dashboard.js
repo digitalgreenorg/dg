@@ -6,6 +6,7 @@ function initialize() {
   // Init highcharts
   // fill data in highcharts
   $('select').material_select();
+  show_charts();
   getvillagedata();
 }
 function hide_progress_bar() {
@@ -76,5 +77,60 @@ function fillvillagetable(data_json)
    cell4.style.fontWeight = "bold";
    cell5.innerHTML = total_avg/data_json.length;
    cell5.style.fontWeight = "bold";
+   plot_village_data(data_json,total_volume,total_amount);
  }
+}
+function plot_village_data(data_json,total_volume,total_amount){
+	var vol_data = [];
+	var amt_data = [];
+	for(var i=0 ; i<data_json.length; i++){
+		vol_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['quantity__sum']*100.0)/total_volume ])
+	}
+	for(var i=0 ; i<data_json.length; i++){
+		amt_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['amount__sum']*100.0)/total_amount ])
+	}
+	plot_piechart($('#pie_vol'),vol_data,'Villages');
+	plot_piechart($('#pie_amount'),amt_data,'Villages');
+}
+function plot_piechart(container_obj, _data, arg) {
+	var chart = {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false
+	};
+
+	var tooltip = {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	};
+	var plotOptions = {
+		pie:{
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
+				style: {
+				color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	};
+
+	series= [{
+		type: 'pie',
+		name: arg,
+		data: _data
+	}];
+
+	var json = {};
+	json.chart = chart;
+	json.title = null;
+	json.tooltip = tooltip;
+	json.series = series;
+	json.plotOptions = plotOptions;
+	container_obj.highcharts(json);
+}
+function show_charts() {
+	$("#crop_chart_div").show();
+	$("#agg_crop_chart_div").show();
 }
