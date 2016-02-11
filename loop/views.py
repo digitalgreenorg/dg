@@ -8,7 +8,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction
+from models import LoopUser, CombinedTransaction, LoopUser
 
 from loop_data_log import get_latest_timestamp
 
@@ -59,6 +59,9 @@ def mediator_wise_data(request):
     start_date = '2016-01-01'
     end_date = '2016-01-31'
     #get mediator wise data
-    transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('user_created__name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
-    data = json.dumps(list(transactions))
+    transactions = list(CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('user_created__id').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True)))
+    for i in transactions:
+        user = LoopUser.objects.get(user_id = user_created__id)
+        i['user_name'] = user.name
+    data = json.dumps(transactions)
     return HttpResponse(data)
