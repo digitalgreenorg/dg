@@ -45,6 +45,18 @@ def save_log(sender, **kwargs ):
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
+    elif sender == "Transporter":
+        village_id=None
+        user = instance.user_created
+    elif sender == "Vehicle":
+        village_id = None
+        user = None
+    elif sender == "TransportationVehicle":
+        village_id = None
+        user = instance.user_created
+    elif sender == "DayTransportation":
+        village_id = None
+        user = instance.user_created
     else:
         village_id = instance.village.id # farmer add
     Log = get_model('loop', 'Log')
@@ -71,6 +83,18 @@ def delete_log(sender, **kwargs ):
         user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
+        user = instance.user_created
+    elif sender == "Transporter":
+        village_id=None
+        user = instance.user_created
+    elif sender == "Vehicle":
+        village_id = None
+        user = None
+    elif sender == "TransportationVehicle":
+        village_id = None
+        user = instance.user_created
+    elif sender == "DayTransportation":
+        village_id = None
         user = instance.user_created
     else:
         village_id = instance.village.id # farmer add

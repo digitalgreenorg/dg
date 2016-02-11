@@ -27,6 +27,9 @@ class TransporterNotSaved(Exception):
 class TransportationVehicelNotSaved(Exception):
     pass
 
+class DayTransportationNotSaved(Exception):
+    pass
+
 
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
@@ -116,6 +119,19 @@ class CombinedTransactionAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download Transaction" )
+
+
+class DayTransportationAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(user_created_id = bundle.request.user.id).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        obj = object_list.filter(user_created_id = bundle.request.user.id).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Transportations" )
 
 class BaseResource(ModelResource):
 
@@ -234,15 +250,18 @@ class FarmerResource(BaseResource):
         return bundle
 
 class LoopUserResource(BaseResource):
-	user = fields.ForeignKey(UserResource, 'user')
-	assigned_villages = fields.ListField()
-	class Meta:
+    user = fields.ForeignKey(UserResource, 'user')
+    village = fields.ForeignKey(VillageResource, 'village')
+    assigned_villages = fields.ListField()
+    class Meta:
 		queryset = LoopUser.objects.prefetch_related('assigned_villages','user')
 		resource_name = 'loopuser'
 		authorization = Authorization()
-	hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
-	hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
-	dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
+    hydrate_user = partial(dict_to_foreign_uri, field_name = 'user')
+    hyderate_village = partial(dict_to_foreign_uri, field_name = 'village')
+    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+    dehydrate_user = partial(foreign_key_to_id, field_name='user', sub_field_names=['id','username'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
 class CropResource(BaseResource):
     class Meta:
@@ -347,6 +366,43 @@ class TransportationVehicleResource(BaseResource):
         except Exception, e:
             attempt = TransportationVehicleResource.objects.filter(transporter = transporter, vehicle = vehicle)
             raise TransportationVehicleNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
+class DayTransportationResource(BaseResource):
+    transportation_vehicle = fields.ForeignKey(TransportationVehicleResource, 'transportation_vehicle')
+    class Meta:
+        limit=0
+        max_limit=0
+        queryset = DayTransportation.objects.all();
+        resource_name = 'daytransportation'
+        authorization = DayTransportationAuthorization()
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+    dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
+    hyderate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle')
+    def obj_create(self, bundle, request=None, **kwargs):
+    #    farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+    #    crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+        transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
+        # attempt = DayTransportation.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+        # if attempt.count() < 1:
+        bundle = super(DayTransportationResource, self).obj_create(bundle, **kwargs)
+        # else:
+        #     raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        # farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+        # crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+        # mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
+        transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
+        # try:
+        bundle = super(DayTransportationResource, self).obj_update(bundle, **kwargs)
+        # except Exception, e:
+        #     attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+        #     raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']

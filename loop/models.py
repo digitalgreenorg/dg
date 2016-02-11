@@ -78,6 +78,7 @@ class LoopUser(LoopModel):
     assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
     mode = models.IntegerField(choices = ModelChoice, default = 1)
     phone_number = models.CharField(max_length = 14, null = False, blank = False, default = "0")
+    village = models.ForeignKey(Village, default=None, null=True)
 
     def __unicode__(self):
         return self.user.username
@@ -145,7 +146,7 @@ class Vehicle(LoopModel):
 	def __unicode__(self):
 		return self.vehicle_name
 	class Meta:
-		unique_together = ("vehicle_name")
+		unique_together = ("vehicle_name",)
 
 class TransportationVehicle(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -154,9 +155,21 @@ class TransportationVehicle(LoopModel):
 	vehicle_number = models.CharField(max_length=11)
 
 	class Meta:
-		unique_together = ("transporter", "vehicle", "vehicle_number")
+		unique_together = ("transporter", "vehicle", "vehicle_number",)
 post_save.connect(save_log, sender=TransportationVehicle)
 pre_delete.connect(delete_log, sender=TransportationVehicle)
+
+class DayTransportation(LoopModel):
+	id = models.AutoField(primary_key=True)
+	date = models.DateField(auto_now=False)
+	transportation_vehicle = models.ForeignKey(TransportationVehicle)
+	transportation_cost = models.FloatField()
+	other_cost = models.FloatField()
+	vrp_fees = models.FloatField()
+	comment = models.CharField(max_length = 200)
+	mandi_list = models.CharField(max_length=20)
+post_save.connect(save_log, sender=DayTransportation)
+pre_delete.connect(delete_log, sender=DayTransportation)
 
 class CombinedTransaction(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -168,7 +181,7 @@ class CombinedTransaction(LoopModel):
 	price = models.FloatField()
 	status = models.IntegerField()
 	amount = models.FloatField()
-
+	day_transportation = models.ForeignKey(DayTransportation, default=None, null=True)
 	class Meta:
 		unique_together = ("date","farmer","crop","mandi","price",)
 post_save.connect(save_log, sender=CombinedTransaction)
