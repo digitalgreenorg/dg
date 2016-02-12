@@ -6,18 +6,27 @@ function initialize() {
 
   // to initialize material select
   $('select').material_select();
-
-  show_charts();
-  getvillagedata();
-  getmediatordata();
+  get_data();
   set_eventlistener();
   update_tables();
   update_charts();
-  getcropdata();
+}
+
+function get_data(){
+  var start_date = $('#from_date').val();
+	var end_date = $('#to_date').val();
+	if(start_date > end_date){
+		//$('.modal-trigger').leanModal();
+		$('#modal1').openModal();
+  }
+  else{
+    getvillagedata(start_date, end_date);
+    getmediatordata(start_date, end_date);
+    getcropdata(start_date, end_date);
+  }
 }
 
 /* Progress Bar functions */
-
 function hide_progress_bar() {
   $('#progress_bar').hide()
 }
@@ -43,6 +52,19 @@ function set_eventlistener(){
   	selectMonths: true, // Creates a dropdown to control month
   	selectYears: 15, // Creates a dropdown of 15 years to control year
   	format: 'yyyy-mm-dd'
+  });
+
+  //get data button click
+  $( "#get_data" ).click(function() {
+  	var start_date = $('#from_date').val();
+  	var end_date = $('#to_date').val();
+  	if(start_date>end_date){
+  		//$('.modal-trigger').leanModal();
+  		$('#modal1').openModal();
+  	}
+    else{
+      get_data();
+    }
   });
 }
 
@@ -81,9 +103,9 @@ function update_charts() {
 
 /* ajax to get json */
 
-function getvillagedata() {
+function getvillagedata(start_date, end_date) {
   show_progress_bar();
-  $.get( "/loop/village_wise_data/", {})
+  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -91,9 +113,9 @@ function getvillagedata() {
            });
 }
 
-function getmediatordata() {
+function getmediatordata(start_date, end_date) {
   show_progress_bar();
-  $.get( "/loop/mediator_wise_data/", {})
+  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -101,9 +123,9 @@ function getmediatordata() {
            });
 }
 
-function getcropdata() {
+function getcropdata(start_date, end_date) {
   show_progress_bar();
-  $.get( "/loop/crop_wise_data/", {})
+  $.get( "/loop/crop_wise_data/", {'start_date':start_date, 'end_date':end_date})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -167,8 +189,9 @@ function fillvillagetable(data_json) {
    cell5.innerHTML = total_avg/data_json.length;
     cell5.setAttribute('style','text-align:center; font-weight:bold;');
    // function call to make village pie chart
-   plot_village_data(data_json,total_volume,total_amount);
  }
+plot_village_data(data_json,total_volume,total_amount);
+
 }
 
 function fillmediatortable(data_json) {
@@ -221,12 +244,11 @@ function fillmediatortable(data_json) {
     cell5.innerHTML = total_avg/data_json.length;
     cell5.style.fontWeight = "bold";
     // call to make mediator pie chart
-    plot_mediator_data(data_json,total_volume,total_amount);
   }
+  plot_mediator_data(data_json,total_volume,total_amount);
 }
 
 /* Fill data for highcharts */
-
 function plot_village_data(data_json,total_volume,total_amount) {
 	var vol_data = [];
 	var amt_data = [];
