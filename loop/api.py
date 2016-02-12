@@ -323,7 +323,7 @@ class TransporterResource(BaseResource):
     dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = Transporter.objects.filter(phone = bundle.data['transporter_phone'], name = bundle.data['transporter_name'])
+        attempt = Transporter.objects.filter(transporter_phone = bundle.data['transporter_phone'], transporter_name = bundle.data['transporter_name'])
         if attempt.count() < 1:
             bundle = super(TransporterResource, self).obj_create(bundle, **kwargs)
         else:
@@ -333,7 +333,7 @@ class TransporterResource(BaseResource):
         try:
             bundle = super(TransporterResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = Transporter.objects.filter(phone = bundle.data['transporter_phone'], name = bundle.data['transporter_name'])
+            attempt = Transporter.objects.filter(transporter_phone = bundle.data['transporter_phone'], transporter_name = bundle.data['transporter_name'])
             raise TransporterNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
