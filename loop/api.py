@@ -329,6 +329,7 @@ class TransporterResource(BaseResource):
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = Authorization()
+        always_return_data = True
     dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
     hydrate_district = partial(id_to_foreign_uri, field_name='district')
     def obj_create(self, bundle, request=None, **kwargs):
@@ -356,6 +357,7 @@ class TransportationVehicleResource(BaseResource):
         queryset = TransportationVehicle.objects.all()
         resource_name = 'transportationvehicle'
         authorization = Authorization()
+        always_return_data = True
     dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name'])
     dehydrate_vehicle = partial(foreign_key_to_id, field_name='vehicle', sub_field_names=['id','vehicle_name'])
     def obj_create(self, bundle, request=None, **kwargs):
