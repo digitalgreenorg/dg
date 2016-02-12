@@ -69,12 +69,20 @@ def mediator_wise_data(request):
 def crop_wise_data(request):
     #start_date = request.POST['start_date']
     #end_date = request.POST['end_date']
-    start_date = '2016-01-01'
-    end_date = '2016-01-31'
-    dates = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values_list('date', flat=True).distinct().order_by('date')
+    start_date = '2015-01-01'
+    end_date = '2017-01-31'
+    # crop wise data here
     crops = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values_list('crop__crop_name', flat=True).distinct()
     transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
-    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions)}
+    # crop and mediator wise data
+    crops_mediators = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('crop__crop_name','user_created__id').distinct().annotate(amount = Sum('amount'), quantity = Sum('quantity'))
+    crops_mediators_transactions = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('crop__crop_name','user_created__id','date').distinct().annotate(amount = Sum('amount'), quantity = Sum('quantity'))
+    for crop_mediator in crops_mediators:
+        user = LoopUser.objects.get(user_id = crop_mediator['user_created__id'])
+        crop_mediator['user_name'] = user.name
+    dates = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values_list('date', flat=True).distinct().order_by('date').annotate(Count('farmer',distinct = True))
+    dates_farmer_count = CombinedTransaction.objects.filter(date__range = [start_date, end_date]).values('date').distinct().order_by('date').annotate(Count('farmer',distinct = True))
+    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions), 'farmer_count' : list(dates_farmer_count), 'crops_mediators' : list(crops_mediators), 'crops_mediators_transactions' : list(crops_mediators_transactions)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
