@@ -15,7 +15,7 @@ function initialize() {
 function get_data(){
   var start_date = $('#from_date').val();
 	var end_date = $('#to_date').val();
-	if(start_date > end_date){
+	if(Date.parse(start_date) > Date.parse(end_date)){
 		//$('.modal-trigger').leanModal();
 		$('#modal1').openModal();
   }
@@ -56,15 +56,7 @@ function set_eventlistener(){
 
   //get data button click
   $( "#get_data" ).click(function() {
-  	var start_date = $('#from_date').val();
-  	var end_date = $('#to_date').val();
-  	if(start_date>end_date){
-  		//$('.modal-trigger').leanModal();
-  		$('#modal1').openModal();
-  	}
-    else{
-      get_data();
-    }
+    get_data();
   });
 }
 
