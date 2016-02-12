@@ -51,6 +51,15 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
         bundle.data[field_name] = None
     return bundle
 
+def id_to_foreign_uri(bundle, field_name, resource_name=None):
+    field_dict = bundle.data.get(field_name)
+    if field_dict:
+        bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name,
+                                                    str(field_dict))
+    else:
+        bundle.data[field_name] = None
+    return bundle
+
 def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     m2m_list = bundle.data.get(field_name)
     resource_uri_list = []
@@ -321,7 +330,7 @@ class TransporterResource(BaseResource):
         resource_name = 'transporter'
         authorization = Authorization()
     dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
-    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    hydrate_district = partial(id_to_foreign_uri, field_name='district')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Transporter.objects.filter(transporter_phone = bundle.data['transporter_phone'], transporter_name = bundle.data['transporter_name'])
         if attempt.count() < 1:
