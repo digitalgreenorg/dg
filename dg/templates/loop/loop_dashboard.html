@@ -25,11 +25,11 @@ ul.collapsible > li.active {
 
 {% block navbar %}
 <header>
-	<div id="progress_bar" class="progress no-margin purple lighten-4">
-		<div class="indeterminate purple"></div>
+	<div id="progress_bar" class="progress no-margin black lighten-4">
+		<div class="indeterminate black"></div>
 	</div>
 	<nav class="top-nav">
-		<div class="nav-wrapper purple lighten-2">
+		<div class="nav-wrapper black lighten-2">
 			<div class="container">
 				<a href="#" class="page-title">LOOP - Dashboard</a>
 				{# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
@@ -48,14 +48,14 @@ ul.collapsible > li.active {
 	<li class="no-padding not-hoverable">
 	<ul class="collapsible collapsible-accordion">
 
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-purple">Aggregators</a>
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
 				<thead>
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="purple" id="aggregator_all" checked="checked"/>
+							<input type="checkbox" class="black" id="aggregator_all" checked="checked"/>
 							<label for="aggregator_all"></label>
 						</th>
 					</tr>
@@ -65,14 +65,14 @@ ul.collapsible > li.active {
 			</table>
 		</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-purple">Farmers</a>
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Farmers</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
 				<thead>
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="purple" id="farmer_all" checked="checked"/>
+							<input type="checkbox" class="black" id="farmer_all" checked="checked"/>
 							<label for="farmer_all"></label>
 						</th>
 					</tr>
@@ -82,14 +82,14 @@ ul.collapsible > li.active {
 			</table>
 		</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Crops</a>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
 				<thead>
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="purple" id="crop_all" checked="checked"/>
+							<input type="checkbox" class="black" id="crop_all" checked="checked"/>
 							<label for="crop_all"></label>
 						</th>
 					</tr>
@@ -99,14 +99,14 @@ ul.collapsible > li.active {
 			</table>
 		</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Mandi</a>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
 				<thead>
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="purple" id="mandi_all" checked="checked"/>
+							<input type="checkbox" class="black" id="mandi_all" checked="checked"/>
 							<label for="mandi_all"></label>
 						</th>
 					</tr>
@@ -116,13 +116,13 @@ ul.collapsible > li.active {
 			</table>
 		</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-purple">Frequecy</a>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Frequecy</a>
 		<div class="collapsible-body container" style="display: none;">
 		</div>
 		</li>
 		<li class="no-padding not-hoverable">
 			<div class="container">
-				<a id="apply_filter" class="waves-effect waves-light purple lighten-2 white-text btn">APPLY FILTERS</a>
+				<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
 			</div>
 		</li>
 
@@ -135,26 +135,26 @@ ul.collapsible > li.active {
 
 <div class="row valign-wrapper" >
 		<div class="input-field col s6">
-			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
+			<i class="material-icons black-text text-lighten-2 prefix">today</i>
 			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
 			<label for="from_date">Start Date:</label>
 
 		</div>
 		<div class="input-field col s6">
-			<i class="material-icons purple-text text-lighten-2 prefix">today</i>
+			<i class="material-icons black-text text-lighten-2 prefix">today</i>
 			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
 			<label for="to_date" class="active">End Date:</label>
 		</div>
 </div>
 <div class="center">
-	<a id="get_data" class="waves-effect waves-light purple lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
+	<a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
 
 	<div id="modal1" class="modal">
 		<div class="modal-content">
 			<p>Date range Invalid !!</p>
 		</div>
 		<div class="modal-footer">
-			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">OK</a>
+			<a href="#!" class=" modal-action modal-close waves-effect waves-black btn-flat">OK</a>
 		</div>
 	</div>
 </div>
@@ -378,7 +378,7 @@ function create_filter(tbody_obj, type, name, checked) {
 	var row = $('<tr>');
 	var td_name = $('<td>').html(name);
 	row.append(td_name);
-	var checkbox_html = '<input type="checkbox" class="purple" id="' + type + '" checked="checked"/><label for="' + type + '"></label>';
+	var checkbox_html = '<input type="checkbox" class="black" id="' + type + '" checked="checked"/><label for="' + type + '"></label>';
 	var td_checkbox = $('<td>').html(checkbox_html);
 	row.append(td_checkbox);
 	tbody_obj.append(row);
