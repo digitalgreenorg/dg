@@ -153,8 +153,8 @@ function fillvillagetable(data_json) {
      cell3.setAttribute('style','text-align:center;');
      cell4.innerHTML = data_json[i]['farmer__count'].toString();
      cell4.setAttribute('style','text-align:center;');
-     var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']).toFixed(1);
-     cell5.innerHTML = avg;
+     var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count'])
+     cell5.innerHTML = avg.toFixed(2);
      cell5.setAttribute('style','text-align:center;');
 
      total_volume += data_json[i]['quantity__sum'];
@@ -178,8 +178,8 @@ function fillvillagetable(data_json) {
    cell3.setAttribute('style','text-align:center; font-weight:bold;');
    cell4.innerHTML = total_farmers;
    cell4.setAttribute('style','text-align:center; font-weight:bold;');
-   cell5.innerHTML = total_avg/data_json.length;
-    cell5.setAttribute('style','text-align:center; font-weight:bold;');
+   cell5.innerHTML = (total_avg/data_json.length).toFixed(2);
+   cell5.setAttribute('style','text-align:center; font-weight:bold;');
    // function call to make village pie chart
  }
 plot_village_data(data_json,total_volume,total_amount);
@@ -210,8 +210,8 @@ function fillmediatortable(data_json) {
     cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
     cell3.innerHTML = data_json[i]['amount__sum'].toString();
     cell4.innerHTML = data_json[i]['farmer__count'].toString();
-    var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']).toFixed(1);
-    cell5.innerHTML = avg;
+    var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']);
+    cell5.innerHTML = avg.toFixed(2);
 
     total_volume += data_json[i]['quantity__sum'];
     total_amount += data_json[i]['amount__sum'];
@@ -233,7 +233,7 @@ function fillmediatortable(data_json) {
     cell3.style.fontWeight = "bold";
     cell4.innerHTML = total_farmers;
     cell4.style.fontWeight = "bold";
-    cell5.innerHTML = total_avg/data_json.length;
+    cell5.innerHTML = (total_avg/data_json.length).toFixed(2);
     cell5.style.fontWeight = "bold";
     // call to make mediator pie chart
   }
