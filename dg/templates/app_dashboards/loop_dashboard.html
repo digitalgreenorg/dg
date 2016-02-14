@@ -1,12 +1,12 @@
-{% extends "loop/loop_test.html" %}
+{% extends "app_dashboards/loop_test.html" %}
 {% load static %}
 
 {% block title %}Dashboard | Home {% endblock %}
 
 {% block extracss %}
 
-<link rel="stylesheet" media="screen, projection" href="{% static 'loop/css/materialize.min.css'%}"/>
-<link rel="stylesheet" media="screen, projection" href="{% static 'loop/css/loopdashboard.css'%}"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}"/>
 
 <style>
 li.not-hoverable:hover,
@@ -286,7 +286,7 @@ ul.collapsible > li.active {
 
 {% block extrajs %}
 
-<script src="{{ STATIC_URL }}loop/js/dashboard.js"></script>
+<script src="{{STATIC_URL}}app_dashboards/js/dashboard.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 
 <script>

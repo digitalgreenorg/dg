@@ -43,7 +43,7 @@ def home(request):
 	return render_to_response(request, 'loop_base.html')
 
 def dashboard(request):
-    return render(request, 'loop/loop_dashboard.html')
+    return render(request, 'app_dashboards/loop_dashboard.html')
 
 def village_wise_data(request):
     start_date = request.GET['start_date']
