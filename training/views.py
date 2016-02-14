@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -6,6 +8,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
+from models import Training
 
 # Create your views here.
 @csrf_exempt
@@ -30,3 +33,52 @@ def login(request):
 
 def dashboard(request):
     return render(request, 'app_dashboards/training_dashboard.html')
+
+def training_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["date__lte"] = end_date
+    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
+    data = json.dumps(list(training_list))
+    return HttpResponse(data)
+
+def trainer_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["date__lte"] = end_date
+    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
+    data = json.dumps(list(training_list))
+    return HttpResponse(data)
+
+def question_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["date__lte"] = end_date
+    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
+    data = json.dumps(list(training_list))
+    return HttpResponse(data)
+
+def mediator_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["date__lte"] = end_date
+    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
+    data = json.dumps(list(training_list))
+    return HttpResponse(data)
+
