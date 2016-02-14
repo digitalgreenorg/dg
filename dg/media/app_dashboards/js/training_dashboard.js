@@ -163,16 +163,29 @@ function filltrainingtable(data_json) {
 
 /* Fill data for highcharts */
 function plot_trainerwise_data(data_json) {
-	var vol_data = [];
-	var amt_data = [];
-	for(var i=0 ; i<data_json.length; i++){
-		vol_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['quantity__sum']*100.0)/total_volume ])
-	}
-	for(var i=0 ; i<data_json.length; i++){
-		amt_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['amount__sum']*100.0)/total_amount ])
-	}
-	plot_piechart($('#pie_vol'),vol_data,'Villages');
-	plot_piechart($('#pie_amount'),amt_data,'Villages');
+  var x_axis = [];
+  trainer_scores_dict = [];
+  var total_score_dict = {};
+  var avg_score_dict = {};
+  var perc_score_dict = {};
+  total_score_dict['name'] = 'Total Scores';
+  avg_score_dict['name'] = 'Scores per Participant';
+  perc_score_dict['name'] = 'Percent Answered Correctly';
+  total_score_dict['data'] = new Array(data_json.length).fill(0.0);
+  avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
+  perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
+  for (i=0; i<data_json.length; i++) {
+    x_axis.push(data_json[i]['training__trainer__name']);
+    total_score_dict['data'][i] = data_json[i]['score__sum'];
+    var avg = (data_json[i]['score__sum']/data_json[i]['participant__count']);
+    var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
+    avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
+    perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
+  }    
+  //question_scores_dict.push(total_score_dict);
+  trainer_scores_dict.push(avg_score_dict);
+  trainer_scores_dict.push(perc_score_dict);
+  plot_multiline_chart($("#trainer_mediator_score"), x_axis, trainer_scores_dict, "Score", "%");
 }
 
 function plot_questionwise_data(data_json){
@@ -339,9 +352,6 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
           width: 1,
           color: '#808080'
         }]
-      },
-      tooltip: {
-        valueSuffix: ' %'
       },
       legend: {
         layout: 'vertical',

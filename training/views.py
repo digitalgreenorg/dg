@@ -51,11 +51,11 @@ def trainer_wise_data(request):
     end_date = request.GET['end_date']
     filter_args = {}
     if(start_date !=""):
-        filter_args["date__gte"] = start_date
+        filter_args["training__date__gte"] = start_date
     if(end_date != ""):
-        filter_args["date__lte"] = end_date
-    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
-    data = json.dumps(list(training_list))
+        filter_args["training__date__lte"] = end_date
+    trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'))
+    data = json.dumps(list(trainer_list))
     return HttpResponse(data)
 
 def question_wise_data(request):
