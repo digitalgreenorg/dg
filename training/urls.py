@@ -2,9 +2,11 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
+
 from tastypie.api import Api
 from training.api import TrainerResource, LanguageResource, AssessmentResource, QuestionResource, MediatorResource, DistrictResource, VillageResource, PartnerResource, TrainingResource, StateResource, ScoreResource
-from views import login
+
+from views import login, dashboard
 
 api = Api(api_name = "v1")
 api.register(TrainerResource())
@@ -20,6 +22,7 @@ api.register(StateResource())
 api.register(ScoreResource())
 
 urlpatterns = patterns('',
-	(r'^login/', login),
-	(r'^api/', include(api.urls)),
+	url(r'^login/', login),
+	url(r'^api/', include(api.urls)),
+    url(r'^dashboard/', dashboard),
 	)

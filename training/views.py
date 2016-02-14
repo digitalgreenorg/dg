@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.db.models import Count, Min, Sum, Avg, Max
+
 from tastypie.models import ApiKey, create_api_key
 
 # Create your views here.
@@ -25,4 +28,5 @@ def login(request):
         return HttpResponse("0")
     return HttpResponse("0")
 
-
+def dashboard(request):
+    return render(request, 'app_dashboards/training_dashboard.html')

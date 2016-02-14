@@ -1,0 +1,435 @@
+{% extends "app_dashboards/training_base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Home {% endblock %}
+
+{% block extracss %}
+
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/trainingdashboard.css'%}"/>
+
+<style>
+li.not-hoverable:hover,
+li.not-hoverable:active {
+	background-color: transparent;
+}
+ul.collapsible > li.active {
+	background-color: transparent;
+}
+.no-margin {
+	margin: 0px;
+}
+</style>
+{% endblock %}
+
+
+{% block navbar %}
+<header>
+	<div id="progress_bar" class="progress no-margin teal lighten-4">
+		<div class="indeterminate teal"></div>
+	</div>
+	<nav class="top-nav">
+		<div class="nav-wrapper teal lighten-2">
+			<div class="container">
+				<a href="#" class="page-title">Training Dashboard</a>
+				{# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
+					{# 	<li><a href="index.html">Sass</a></li> #}
+					{# 	<li><a href="badges.html">Components</a></li> #}
+					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
+					{# </ul> #}
+				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<ul id="nav-mobile" class="side-nav fixed">
+
+	<li class="no-padding not-hoverable">
+	<ul class="collapsible collapsible-accordion">
+
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-teal">Aggregators</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="teal" id="aggregator_all" checked="checked"/>
+							<label for="aggregator_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="aggregators">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-teal">Farmers</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="teal" id="farmer_all" checked="checked"/>
+							<label for="farmer_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="farmers">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-teal">Crops</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="teal" id="crop_all" checked="checked"/>
+							<label for="crop_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="crops">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-teal">Mandi</a>
+		<div class="collapsible-body container" style="display: none;">
+			<table class="filter-table centered">
+				<thead>
+					<tr>
+						<th class="center grey-text text-lighten-1">Select/Unselect</th>
+						<th>
+							<input type="checkbox" class="teal" id="mandi_all" checked="checked"/>
+							<label for="mandi_all"></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody id="mandis">
+				</tbody>
+			</table>
+		</div>
+		</li>
+		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-teal">Frequecy</a>
+		<div class="collapsible-body container" style="display: none;">
+		</div>
+		</li>
+		<li class="no-padding not-hoverable">
+			<div class="container">
+				<a id="apply_filter" class="waves-effect waves-light teal lighten-2 white-text btn">APPLY FILTERS</a>
+			</div>
+		</li>
+
+	</ul>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row valign-wrapper" >
+		<div class="input-field col s6">
+			<i class="material-icons teal-text text-lighten-2 prefix">today</i>
+			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+			<label for="from_date">Start Date:</label>
+
+		</div>
+		<div class="input-field col s6">
+			<i class="material-icons teal-text text-lighten-2 prefix">today</i>
+			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+			<label for="to_date" class="active">End Date:</label>
+		</div>
+</div>
+<div class="center">
+	<a id="get_data" class="waves-effect waves-light teal lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
+
+	<div id="modal1" class="modal">
+		<div class="modal-content">
+			<p>Date range Invalid !!</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class=" modal-action modal-close waves-effect waves-teal btn-flat">OK</a>
+		</div>
+	</div>
+</div>
+<div>
+</div>
+<div class="row">
+	<div class="input-field col s6 offset-s3 ">
+
+			<select id="table_option" class="initialized">
+				<!-- <option value="" disabled >Choose your option</option> -->
+				<option value="1" selected>Village</option>
+				<option value="2">Mediator</option>
+			</select>
+
+		<label>Change the Table</label>
+	</div>
+</div>
+
+<div id="village_table">
+	<div id="village_label">
+		<h5  class="center-align">Village Wise Data</h5>
+	</div>
+	<table id="table1" class="highlight bordered centered responsive-table" >
+
+		<thead>
+			<tr>
+				<th data-field="name">Village</th>
+				<th data-field="float">Volume</th>
+				<th data-field="price">Pay Amount</th>
+				<th data-field="integer">Total Farmers</th>
+				<th data-field="float"><div>Average Farmers</div> Per Day</th>
+			</tr>
+		</thead>
+
+		<tbody id ="table1_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<div class="row">
+		<div class="col s6" id="village_vol_label">
+			<h5 class="center-align">Volume Variation of Different Villages</h5>
+			<div id ="pie_vol"></div>
+		</div>
+		<div class="col s6" id="village_price_label">
+			<h5 class="center-align">Price Variation of Different Villages</h5>
+			<div id = "pie_amount"></div>
+		</div>
+	</div>
+</div>
+
+<div id="mediator_table">
+	<div id="mediator_label">
+		<h5  class="center-align">Mediator Wise Data</h5>
+	</div>
+	<table id="table2" class="highlight bordered centered responsive-table">
+
+		<thead>
+			<tr>
+				<th data-field="name">Mediator</th>
+				<th data-field="float">Volume</th>
+				<th data-field="price">Pay Amount</th>
+				<th data-field="integer">Total Farmers</th>
+				<th data-field="float"><div>Average </div> Farmers Per Day</th>
+			</tr>
+		</thead>
+
+		<tbody id ="table2_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<div class="row">
+		<div class="col s6" id="mediator_vol_label">
+			<h5 class="center-align">Volume Variation of Different Mediators</h5>
+			<div id ="pie_vol2"></div>
+		</div>
+		<div class="col s6" id="mediator_price_label">
+			<h5 class="center-align">Price Variation of Different Mediators</h5>
+			<div id = "pie_amount2"></div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="divider"></div>
+	<br/>
+	<br/>
+	<div class="row">
+		<div class="input-field col s6 offset-s3 ">
+			<select id="chart_option" class="initialized">
+				<!-- <option value="" disabled selected>Choose your option</option> -->
+				<option value="1">Day Wise Crop Prices</option>
+				<option value="2">Daywise and Aggregator wise Crop Prices</option>
+			</select>
+			<label>Change the Chart</label>
+		</div>
+	</div>
+	<div class="row">
+		<div id="crop_chart_div">
+			<h5 class="center-align">Daywise Crop Prices</h5>
+			<div id = "crops_price2" class="col s12"></div>
+		</div>
+		<div id="agg_crop_chart_div">
+			<h5 class="center-align">Daywise and Aggregator wise Crop Prices</h5>
+			<div id = "crop_aggregator_price" class="col s12"></div>
+		</div>
+	</div>
+	<div class="divider"></div>
+	<br>
+	<div class="row">
+		<h5 class="center-align">Daywise Total Volume Sold</h5>
+		<div id ="crops_volume"></div>
+	</div>
+	<div class="divider"></div>
+	<br>
+	<div class="row">
+		<h5 class="center-align">Daywise Total Income</h5>
+		<div id ="crops_price"></div>
+	</div>
+</div>
+<div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script src="{{STATIC_URL}}app_dashboards/js/dashboard.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<script>
+/* Initializing the side nav first */
+$(".button-collapse").sideNav();
+
+/* Filters' functions */
+$(document).ready(function(){
+	$("#aggregator_all").change(function(){
+		$("#aggregators input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#aggregators input[type='checkbox']").each(function(index, obj) {
+			update_aggregator_checkbox(obj);
+		});
+	});
+	$("#farmer_all").change(function(){
+		$("#farmers input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#farmers input[type='checkbox']").each(function(index, obj) {
+			update_farmer_checkbox(obj);
+		});
+	});
+	$("#crop_all").change(function(){
+		$("#crops input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#crops input[type='checkbox']").each(function(index, obj) {
+			update_crop_checkbox(obj);
+		});
+	});
+	$("#mandi_all").change(function(){
+		$("#mandis input[type='checkbox']").prop('checked', $(this).prop("checked"));
+		$("#mandis input[type='checkbox']").each(function(index, obj) {
+			update_mandi_checkbox(obj);
+		});
+	});
+	function update_aggregator_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.aggregators[key] = $(e.target).prop('checked');
+		dashboard.aggregators[key] = obj.checked;
+	}
+	$('#aggregators').on('change','input[type="checkbox"]', function(e) {
+		update_aggregator_checkbox(this);
+	});
+	function update_farmer_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.farmers[key] = $(e.target).prop('checked');
+		dashboard.farmers[key] = obj.checked;
+	}
+	$('#farmers').on('change','input[type="checkbox"]', function(e) {
+		update_farmer_checkbox(this);
+	});
+	function update_crop_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.crops[key] = $(e.target).prop('checked');
+		dashboard.crops[key] = obj.checked;
+	}
+	$('#crops').on('change','input[type="checkbox"]', function(e) {
+		update_crop_checkbox(this);
+	});
+	function update_mandi_checkbox(obj) {
+		var key = $(obj).parent().prev().text();
+		//dashboard.mandis[key] = $(e.target).prop('checked');
+		dashboard.mandis[key] = obj.checked;
+	}
+	$('#mandis').on('change','input[type="checkbox"]', function(e) {
+		update_mandi_checkbox(this);
+	});
+});
+
+/*on apply filters change the indexes corresponding to the fileters selected*/
+$( "#apply_filter" ).click(function() {
+
+  var start_date = $('#from_date').val();
+  var end_date = $('#to_date').val();
+  dashboard.start_date = start_date;
+  dashboard.end_date = end_date;
+  dashboard.indexes = [];
+  /*change the indexes array based on filters and date range*/
+  for (var i = 0; i < dashboard.transactions.length; i++){
+	if(dashboard.farmers[dashboard.transactions[i].farmer] && dashboard.aggregators[dashboard.transactions[i].mediator] && dashboard.crops[dashboard.transactions[i].crop] && dashboard.mandis[dashboard.transactions[i].mandi] && dashboard.transactions[i].day >= start_date && dashboard.transactions[i].day<=end_date){
+		dashboard.indexes.push(i);
+	}
+  }
+  initialize();
+
+});
+initialize();
+
+});
+
+function create_filter(tbody_obj, type, name, checked) {
+	var row = $('<tr>');
+	var td_name = $('<td>').html(name);
+	row.append(td_name);
+	var checkbox_html = '<input type="checkbox" class="teal" id="' + type + '" checked="checked"/><label for="' + type + '"></label>';
+	var td_checkbox = $('<td>').html(checkbox_html);
+	row.append(td_checkbox);
+	tbody_obj.append(row);
+}
+
+function initialize_aggregators(aggregators) {
+	/* Recieives set of aggregators to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#aggregator").remove();
+	/* Populate with aggregators */
+	var i = 0;
+	$.each(aggregators, function(name, checked) {
+		create_filter($("#aggregators"), ('aggregator' + i), name, checked);
+		i++;
+	});
+}
+function initialize_farmers(farmers) {
+	/* Recieives set of farmers to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#farmer").remove();
+	/* Populate with farmers */
+	var i = 0;
+	$.each(farmers, function(name, checked) {
+		create_filter($("#farmers"), ('farmer' + i), name, checked);
+		i++;
+	});
+}
+function initialize_crops(crops) {
+	/* Recieives set of crops to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#crop").remove();
+	/* Populate with crops */
+	var i = 0;
+	$.each(crops, function(name, checked) {
+		create_filter($("#crops"), ('crop' + i), name, checked);
+		i++;
+	});
+}
+function initialize_mandis(mandis) {
+	/* Recieives set of mandis to be kept as filters */
+	/* First clear all the existing rows from the table */
+	$("#mandi").remove();
+	/* Populate with mandis */
+	var i = 0;
+	$.each(mandis, function(name, checked) {
+		create_filter($("#mandis"), ('mandi' + i), name, checked);
+		i++;
+	});
+}
+// fill_table("tag");
+
+</script>
+
+{% endblock %}
