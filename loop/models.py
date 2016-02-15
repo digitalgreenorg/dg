@@ -84,7 +84,7 @@ class LoopUser(LoopModel):
         return self.user.username
     def get_villages(self):
         return self.assigned_villages.all()
-    def get_districts_villages():
+    def get_districts_villages(self):
     	district = self.village.block.district
     	return Village.objects.filter(block__district_id= district.id).values_list('id', flat=True)
 
