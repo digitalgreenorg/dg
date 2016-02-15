@@ -145,7 +145,7 @@ def send_updated_log(request):
             rows = Log.objects.filter(timestamp__gt = timestamp, entry_table__in = ['Crop', 'Vehicle'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = ['Farmer','Village'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
-            rows = rows | Log.objects.filter(timestamp__gt = timestamp, village_in = district_villages, entry_table__in = ['Transporter', 'TransportationVehicle'])
+            rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = district_villages, entry_table__in = ['Transporter', 'TransportationVehicle'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, user = user, entry_table__in = ['DayTransportation'])
             data_list=[]
             for row in rows:
