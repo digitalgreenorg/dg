@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+
 from tastypie.api import Api
 from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource, TransportationVehicleResource, DayTransportationResource
 from loop.views import *
@@ -20,7 +21,12 @@ api.register(DayTransportationResource())
 
 urlpatterns = patterns('',
     url(r'^$', home, name='loop'),
-    (r'^api/', include(api.urls)),
+    url(r'^api/', include(api.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
+    url(r'^dashboard/', dashboard),
+    url(r'^village_wise_data/', village_wise_data),
+    url(r'^mediator_wise_data/', mediator_wise_data),
+    url(r'^crop_wise_data/', crop_wise_data),
+    url(r'^filter_data/', filter_data),
     )
