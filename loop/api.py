@@ -385,7 +385,7 @@ class TransportationVehicleResource(BaseResource):
         return bundle
 
 class DayTransportationResource(BaseResource):
-    transportation_vehicle = fields.ForeignKey(TransportationVehicleResource, 'transportation_vehicle')
+    transportation_vehicle = fields.ForeignKey(TransportationVehicleResource)
     class Meta:
         limit=0
         max_limit=0
