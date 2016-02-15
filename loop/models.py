@@ -183,7 +183,6 @@ class CombinedTransaction(LoopModel):
 	price = models.FloatField()
 	status = models.IntegerField()
 	amount = models.FloatField()
-	day_transportation = models.ForeignKey(DayTransportation, default=None, null=True)
 	def __unicode__(self):
 		return "%s (%s) (%s) (%s)" % (self.farmer.name, self.crop.crop_name, self.mandi.mandi_name, LoopUser.objects.get(user= self.user_created).name)
 
