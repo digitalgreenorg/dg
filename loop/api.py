@@ -24,7 +24,7 @@ class TransactionNotSaved(Exception):
 class TransporterNotSaved(Exception):
     pass
 
-class TransportationVehicelNotSaved(Exception):
+class TransportationVehicleNotSaved(Exception):
     pass
 
 class DayTransportationNotSaved(Exception):
@@ -360,10 +360,12 @@ class TransportationVehicleResource(BaseResource):
         always_return_data = True
     dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name'])
     dehydrate_vehicle = partial(foreign_key_to_id, field_name='vehicle', sub_field_names=['id','vehicle_name'])
+    hydrate_transporter = partial(dict_to_foreign_uri, field_name='transporter')
+    hydrate_vehicle = partial(dict_to_foreign_uri, field_name='vehicle')
     def obj_create(self, bundle, request=None, **kwargs):
         transporter = Transporter.objects.get(id = bundle.data["transporter"]["online_id"])
         vehicle = Vehicle.objects.get(id=bundle.data["vehicle"]["online_id"])
-        attempt = TransportationVehicleResource.objects.filter(transporter = transporter, vehicle = vehicle)
+        attempt = TransportationVehicle.objects.filter(transporter = transporter, vehicle = vehicle, vehicle_number=bundle.data["vehicle_number"])
         if attempt.count() < 1:
             bundle = super(TransportationVehicleResource, self).obj_create(bundle, **kwargs)
         else:
@@ -375,7 +377,7 @@ class TransportationVehicleResource(BaseResource):
         try:
             bundle = super(TransportationVehicleResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = TransportationVehicleResource.objects.filter(transporter = transporter, vehicle = vehicle)
+            attempt = TransportationVehicle.objects.filter(transporter = transporter, vehicle = vehicle, vehicle_number=bundle.data["vehicle_number"])
             raise TransportationVehicleNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
     def dehydrate(self, bundle):
