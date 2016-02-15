@@ -45,8 +45,10 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('online_id'):
+        print field_name
         bundle.data[field_name] = "/loop/api/v1/%s/%s/"%(resource_name if resource_name else field_name,
                                                     str(field_dict.get('online_id')))
+        print bundle.data    
     else:
         bundle.data[field_name] = None
     return bundle
@@ -358,7 +360,7 @@ class TransportationVehicleResource(BaseResource):
         resource_name = 'transportationvehicle'
         authorization = Authorization()
         always_return_data = True
-    dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name'])
+    dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name', 'transporter_phone'])
     dehydrate_vehicle = partial(foreign_key_to_id, field_name='vehicle', sub_field_names=['id','vehicle_name'])
     hydrate_transporter = partial(dict_to_foreign_uri, field_name='transporter')
     hydrate_vehicle = partial(dict_to_foreign_uri, field_name='vehicle')
@@ -385,7 +387,7 @@ class TransportationVehicleResource(BaseResource):
         return bundle
 
 class DayTransportationResource(BaseResource):
-    transportation_vehicle = fields.ForeignKey(TransportationVehicleResource)
+    transportation_vehicle = fields.ForeignKey(TransportationVehicleResource, 'transportation_vehicle')
     class Meta:
         limit=0
         max_limit=0
@@ -395,28 +397,7 @@ class DayTransportationResource(BaseResource):
         authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
-    hyderate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
-    # def obj_create(self, bundle, request=None, **kwargs):
-    # #    farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
-    # #    crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
-    #     transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
-    #     # attempt = DayTransportation.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
-    #     # if attempt.count() < 1:
-    #     bundle = super(DayTransportationResource, self).obj_create(bundle, **kwargs)
-    #     # else:
-    #     #     raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
-    #     return bundle
-    # def obj_update(self, bundle, request=None, **kwargs):
-    #     # farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
-    #     # crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
-    #     # mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
-    #     transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
-    #     # try:
-    #     bundle = super(DayTransportationResource, self).obj_update(bundle, **kwargs)
-    #     # except Exception, e:
-    #     #     attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
-    #     #     raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
-    #     return bundle
+    hydrate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
