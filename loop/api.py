@@ -359,7 +359,8 @@ class TransportationVehicleResource(BaseResource):
     class Meta:
         queryset = TransportationVehicle.objects.all()
         resource_name = 'transportationvehicle'
-        authorization = Authorization()
+        authorization = VillageAuthorization('transporter__village_id__in')
+        authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter', sub_field_names=['id','transporter_name', 'transporter_phone'])
     dehydrate_vehicle = partial(foreign_key_to_id, field_name='vehicle', sub_field_names=['id','vehicle_name'])
