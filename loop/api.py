@@ -395,7 +395,7 @@ class DayTransportationResource(BaseResource):
         authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
-    hyderate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle')
+    hyderate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
     # def obj_create(self, bundle, request=None, **kwargs):
     # #    farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
     # #    crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
