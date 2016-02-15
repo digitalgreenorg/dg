@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, LoopUser
+from models import LoopUser, CombinedTransaction
 
 from loop_data_log import get_latest_timestamp
 
@@ -45,14 +45,21 @@ def home(request):
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
 
+def get_aggregator_list(request):
+    aggregators = LoopUser.objects.values('user__id', 'name')
+    data = json.dumps(list(aggregators), cls = DjangoJSONEncoder)
+    return HttpResponse(data)
+
 def village_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    aggregator_ids = request.GET.getlist('aggregator_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["date__gte"] = start_date
     if(end_date != ""):
         filter_args["date__lte"] = end_date
+    filter_args["user_created__id__in"] = aggregator_ids
     transactions = CombinedTransaction.objects.filter(**filter_args).values('farmer__village__village_name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
     data = json.dumps(list(transactions))
     return HttpResponse(data)

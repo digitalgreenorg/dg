@@ -5,7 +5,7 @@ from django.conf.urls import patterns, include, url
 from tastypie.api import Api
 from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource
 
-from loop.views import dashboard, login, home, village_wise_data, mediator_wise_data, crop_wise_data
+from loop.views import dashboard, login, home, village_wise_data, mediator_wise_data, crop_wise_data, get_aggregator_list
 from loop_data_log import send_updated_log
 
 api = Api(api_name = "v1")
@@ -25,4 +25,7 @@ urlpatterns = patterns('',
     url(r'^village_wise_data/', village_wise_data),
     url(r'^mediator_wise_data/', mediator_wise_data),
     url(r'^crop_wise_data/', crop_wise_data),
+    url(r'^aggregator/', get_aggregator_list),
+
+
     )

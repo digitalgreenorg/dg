@@ -6,7 +6,8 @@ function initialize() {
 
   // to initialize material select
   $('select').material_select();
-  get_data();
+  get_filter_data();
+  //get_data();
   set_eventlistener();
   update_tables();
   update_charts();
@@ -15,12 +16,19 @@ function initialize() {
 function get_data(){
   var start_date = $('#from_date').val();
 	var end_date = $('#to_date').val();
+  // Get rest of the filters
+  var aggregator_ids = [];
+  $('#aggregators').children().each(function(){
+    var aggregator_div = $(this).children()[1].firstChild;
+    if(aggregator_div.hasAttribute('checked'))
+      aggregator_ids.push(aggregator_div.getAttribute('id'));
+  });
 	if(Date.parse(start_date) > Date.parse(end_date)){
 		//$('.modal-trigger').leanModal();
 		$('#modal1').openModal();
   }
   else{
-    getvillagedata(start_date, end_date);
+    getvillagedata(start_date, end_date, aggregator_ids);
     getmediatordata(start_date, end_date);
     getcropdata(start_date, end_date);
   }
@@ -52,6 +60,15 @@ function set_eventlistener(){
   	selectMonths: true, // Creates a dropdown to control month
   	selectYears: 15, // Creates a dropdown of 15 years to control year
   	format: 'yyyy-mm-dd'
+  });
+
+  //filters
+  $('#aggregators').on('change','input[type="checkbox"]', function(e) {
+    if(this.hasAttribute('checked'))
+      this.removeAttribute('checked');
+    else {
+      this.setAttribute('checked',"checked");
+    }
   });
 
   //get data button click
@@ -93,11 +110,43 @@ function update_charts() {
   }
 }
 
+/* Initializing filters */
+
+function create_filter(tbody_obj, id, name, checked) {
+	var row = $('<tr>');
+	var td_name = $('<td>').html(name);
+	row.append(td_name);
+	var checkbox_html = '<input type="checkbox" class="black" id="' + id + '" checked="checked" /><label for="' + id + '"></label>';
+	var td_checkbox = $('<td>').html(checkbox_html);
+	row.append(td_checkbox);
+	tbody_obj.append(row);
+}
+
+function get_filter_data() {
+  get_aggregator_data();
+}
+
+function fill_aggregator_filter(data_json) {
+  $("#aggregator").remove();
+  $.each(data_json, function (index, data) {
+    create_filter($('#aggregators'), data.user__id, data.name , true);
+  });
+}
+function get_aggregator_data() {
+  $.get( "/loop/aggregator/", {})
+           .done(function( data ) {
+               data_json = JSON.parse(data);
+               fill_aggregator_filter(data_json);
+              //  fillvillagetable(data_json);
+              get_data();
+           });
+}
+
 /* ajax to get json */
 
-function getvillagedata(start_date, end_date) {
+function getvillagedata(start_date, end_date, aggregator_ids) {
   show_progress_bar();
-  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date})
+  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
