@@ -326,11 +326,12 @@ class VehicleResource(BaseResource):
         return bundle
 
 class TransporterResource(BaseResource):
-    village = fields.ForeignKey(VillageResource, 'village')
+    village = fields.ForeignKey(VillageResource, 'village', full=True)
     class Meta:
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
-        authorization = Authorization()
+        authorization = VillageAuthorization('village_id__in')
+        authentication = ApiKeyAuthentication()
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
