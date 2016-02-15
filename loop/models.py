@@ -86,7 +86,7 @@ class LoopUser(LoopModel):
         return self.assigned_villages.all()
     def get_districts_village(self):
     	district = self.village.block.district
-    	return Village.objects.filter(block__district_id= district.id).values_list('id', flat=True)
+    	return Village.objects.filter(block__district_id= district.id)
 
 class Farmer(LoopModel):
 	id = models.AutoField(primary_key=True)

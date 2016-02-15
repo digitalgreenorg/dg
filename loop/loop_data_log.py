@@ -141,6 +141,7 @@ def send_updated_log(request):
                 raise UserDoesNotExist('User with id: '+str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
             district_villages = loop_user.get_districts_village()
+            print district_villages
             Log = get_model('loop', 'Log')
             rows = Log.objects.filter(timestamp__gt = timestamp, entry_table__in = ['Crop', 'Vehicle'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = ['Farmer','Village'])
