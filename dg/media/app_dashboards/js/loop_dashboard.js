@@ -286,7 +286,7 @@ function fillvillagetable(data_json) {
   var total_amount = 0;
   var total_farmers = 0;
   var total_avg = 0;
-  var str1 = "₹ "
+  var str1 = 'Rs. ';
   for ( i =0; i< data_json.length; i++){
      var row = table_ref.insertRow(-1);
      var cell1 = row.insertCell(0);
@@ -299,7 +299,7 @@ function fillvillagetable(data_json) {
      cell1.setAttribute('style','text-align:center;');
      cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
      cell2.setAttribute('style','text-align:center;');
-     cell3.innerHTML = data_json[i]['amount__sum'].toString();
+     cell3.innerHTML = data_json[i]['amount__sum'].toFixed(2);
      cell3.setAttribute('style','text-align:center;');
      cell4.innerHTML = data_json[i]['farmer__count'].toString();
      cell4.setAttribute('style','text-align:center;');
@@ -324,7 +324,7 @@ function fillvillagetable(data_json) {
    cell1.setAttribute('style','text-align:center; font-weight:bold;');
    cell2.innerHTML = total_volume.toString().concat(" Kg");
    cell2.setAttribute('style','text-align:center; font-weight:bold;');
-   cell3.innerHTML = str1.concat(total_amount).toString();
+   cell3.innerHTML = str1.concat((total_amount).toFixed(2));
    cell3.setAttribute('style','text-align:center; font-weight:bold;');
    cell4.innerHTML = total_farmers;
    cell4.setAttribute('style','text-align:center; font-weight:bold;');
@@ -347,7 +347,7 @@ function fillmediatortable(data_json) {
   var total_amount = 0;
   var total_farmers = 0;
   var total_avg = 0;
-  var str1 = "₹ "
+  var str1 = "Rs. "
   for (var i = 0; i < data_json.length; i++) {
     var row = table_ref.insertRow(-1);
     var cell1 = row.insertCell(0);
@@ -358,7 +358,7 @@ function fillmediatortable(data_json) {
 
     cell1.innerHTML = data_json[i]['user_name'];
     cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
-    cell3.innerHTML = data_json[i]['amount__sum'].toString();
+    cell3.innerHTML = data_json[i]['amount__sum'].toFixed(2);
     cell4.innerHTML = data_json[i]['farmer__count'].toString();
     var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']);
     cell5.innerHTML = avg.toFixed(2);
@@ -379,7 +379,7 @@ function fillmediatortable(data_json) {
     cell1.style.fontWeight = "bold";
     cell2.innerHTML = total_volume.toString().concat(" Kg");
     cell2.style.fontWeight = "bold";
-    cell3.innerHTML = str1.concat(total_amount).toString();
+    cell3.innerHTML = str1.concat((total_amount).toFixed(2));
     cell3.style.fontWeight = "bold";
     cell4.innerHTML = total_farmers;
     cell4.style.fontWeight = "bold";
@@ -558,7 +558,7 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
         }]
       },
       tooltip: {
-        valuePrefix: '₹ '
+        valuePrefix: 'Rs. '
       },
       legend: {
         layout: 'vertical',
