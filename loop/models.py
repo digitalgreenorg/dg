@@ -134,7 +134,7 @@ class Transporter(LoopModel):
 	id = models.AutoField(primary_key=True)
 	transporter_name = models.CharField(max_length=90)
 	transporter_phone = models.CharField(max_length=13)
-	district = models.ForeignKey(District)
+	village = models.ForeignKey(Village)
 
 	def __unicode__(self):
 		return self.transporter_name

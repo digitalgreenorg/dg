@@ -46,13 +46,13 @@ def save_log(sender, **kwargs ):
         village_id = instance.farmer.village.id
         user = instance.user_created
     elif sender == "Transporter":
-        village_id=None
+        village_id=instance.village.id
         user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
         user = None
     elif sender == "TransportationVehicle":
-        village_id = None
+        village_id = instance.transporter.village.id
         user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None
@@ -85,13 +85,13 @@ def delete_log(sender, **kwargs ):
         village_id = instance.farmer.village.id
         user = instance.user_created
     elif sender == "Transporter":
-        village_id=None
+        village_id=instance.village.id
         user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
         user = None
     elif sender == "TransportationVehicle":
-        village_id = None
+        village_id = instance.transporter.village.id
         user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None

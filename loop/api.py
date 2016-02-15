@@ -326,14 +326,14 @@ class VehicleResource(BaseResource):
         return bundle
 
 class TransporterResource(BaseResource):
-    district = fields.ForeignKey(DistrictResource, 'district')
+    village = fields.ForeignKey(VillageResource, 'village')
     class Meta:
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = Authorization()
         always_return_data = True
-    dehydrate_district = partial(foreign_key_to_id, field_name='district', sub_field_names=['id','district_name'])
-    hydrate_district = partial(id_to_foreign_uri, field_name='district')
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Transporter.objects.filter(transporter_phone = bundle.data['transporter_phone'], transporter_name = bundle.data['transporter_name'])
         if attempt.count() < 1:
