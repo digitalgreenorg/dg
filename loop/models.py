@@ -127,6 +127,8 @@ class Mandi(LoopModel):
 		return self.mandi_name
 	class Meta:
 		unique_together = ("mandi_name","district",)
+post_save.connect(save_log, sender=Mandi)
+pre_delete.connect(delete_log, sender=Mandi)
 
 class Transporter(LoopModel):
 	id = models.AutoField(primary_key=True)
@@ -149,6 +151,8 @@ class Vehicle(LoopModel):
 		return self.vehicle_name
 	class Meta:
 		unique_together = ("vehicle_name",)
+post_save.connect(save_log, sender=Vehicle)
+pre_delete.connect(delete_log, sender=Vehicle)
 
 class TransportationVehicle(LoopModel):
 	id = models.AutoField(primary_key=True)
