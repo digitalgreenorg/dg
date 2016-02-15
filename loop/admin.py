@@ -17,6 +17,9 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
    search_fields = ['farmer__name','farmer__village__village_name', 'user_created__username', 'crop__crop_name','mandi__mandi_name','status']
    list_filter = ('status', 'farmer__village__village_name','crop__crop_name')
 
+class DayTransportationAdmin(admin.ModelAdmin):
+	list_display = ('id', 'date')
+
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village)
@@ -32,4 +35,4 @@ loop_admin.register(Mandi)
 loop_admin.register(Transporter)
 loop_admin.register(Vehicle)
 loop_admin.register(TransportationVehicle)
-loop_admin.register(DayTransportation)
+loop_admin.register(DayTransportation, DayTransportationAdmin)

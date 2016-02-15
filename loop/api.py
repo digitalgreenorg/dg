@@ -396,27 +396,27 @@ class DayTransportationResource(BaseResource):
         always_return_data = True
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
     hyderate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle')
-    def obj_create(self, bundle, request=None, **kwargs):
-    #    farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
-    #    crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
-        transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
-        # attempt = DayTransportation.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
-        # if attempt.count() < 1:
-        bundle = super(DayTransportationResource, self).obj_create(bundle, **kwargs)
-        # else:
-        #     raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
-        return bundle
-    def obj_update(self, bundle, request=None, **kwargs):
-        # farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
-        # crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
-        # mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
-        transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
-        # try:
-        bundle = super(DayTransportationResource, self).obj_update(bundle, **kwargs)
-        # except Exception, e:
-        #     attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
-        #     raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
-        return bundle
+    # def obj_create(self, bundle, request=None, **kwargs):
+    # #    farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+    # #    crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+    #     transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
+    #     # attempt = DayTransportation.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+    #     # if attempt.count() < 1:
+    #     bundle = super(DayTransportationResource, self).obj_create(bundle, **kwargs)
+    #     # else:
+    #     #     raise TransactionNotSaved({"id" :int(attempt[0].id), "error" : "Duplicate"})
+    #     return bundle
+    # def obj_update(self, bundle, request=None, **kwargs):
+    #     # farmer = Farmer.objects.get(id = bundle.data["farmer"]["online_id"])
+    #     # crop = Crop.objects.get(id = bundle.data["crop"]["online_id"])
+    #     # mandi = Mandi.objects.get(id = bundle.data["mandi"]["online_id"])
+    #     transportation_vehicle = TransportationVehicle.objects.get(id = bundle.data["transportation_vehicle"]["online_id"])
+    #     # try:
+    #     bundle = super(DayTransportationResource, self).obj_update(bundle, **kwargs)
+    #     # except Exception, e:
+    #     #     attempt = CombinedTransaction.objects.filter(date = bundle.data["date"], price = bundle.data["price"], farmer = farmer, crop = crop, mandi = mandi)
+    #     #     raise TransactionNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+    #     return bundle
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
