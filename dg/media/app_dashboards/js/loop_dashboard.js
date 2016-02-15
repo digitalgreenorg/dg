@@ -59,32 +59,96 @@ function set_filterlistener() {
   $('#aggregators').on('change','input[type="checkbox"]', function(e) {
     if(this.hasAttribute('checked'))
       this.removeAttribute('checked');
-    else {
+    else 
       this.setAttribute('checked',"checked");
-    }
   });
 
   $('#villages').on('change','input[type="checkbox"]', function(e) {
     if(this.hasAttribute('checked'))
       this.removeAttribute('checked');
-    else {
+    else 
       this.setAttribute('checked',"checked");
-    }
   });
 
   $('#crops').on('change','input[type="checkbox"]', function(e) {
     if(this.hasAttribute('checked'))
       this.removeAttribute('checked');
-    else {
+    else 
       this.setAttribute('checked',"checked");
-    }
   });
 
   $('#mandis').on('change','input[type="checkbox"]', function(e) {
     if(this.hasAttribute('checked'))
       this.removeAttribute('checked');
+    else 
+      this.setAttribute('checked',"checked");
+  });
+
+  $('#aggregator_all').on('change', function(e) {
+    if (this.hasAttribute('checked')) {
+      this.removeAttribute('checked');
+      $('#aggregators').children().each(function() {
+          var aggregators_all = $(this).children()[1].firstChild;
+          aggregators_all.removeAttribute('checked');
+         });
+    }
     else {
       this.setAttribute('checked',"checked");
+      $('#aggregators').children().each(function() {
+          var aggregators_all = $(this).children()[1].firstChild;
+          aggregators_all.setAttribute('checked',"checked");
+         });
+    }
+  });
+
+  $('#village_all').on('change', function(e) {
+    if (this.hasAttribute('checked')) {
+      this.removeAttribute('checked');
+      $('#villages').children().each(function() {
+          var villages_all = $(this).children()[1].firstChild;
+          villages_all.removeAttribute('checked');
+         });
+    }
+    else {
+      this.setAttribute('checked',"checked");
+      $('#villages').children().each(function() {
+          var villages_all = $(this).children()[1].firstChild;
+          villages_all.setAttribute('checked',"checked");
+         });
+    }
+  });
+
+  $('#crop_all').on('change', function(e) {
+    if (this.hasAttribute('checked')) {
+      this.removeAttribute('checked');
+      $('#crops').children().each(function() {
+          var crops_all = $(this).children()[1].firstChild;
+          crops_all.removeAttribute('checked');
+         });
+    }
+    else {
+      this.setAttribute('checked',"checked");
+      $('#crops').children().each(function() {
+          var crops_all = $(this).children()[1].firstChild;
+          crops_all.setAttribute('checked',"checked");
+         });
+    }
+  });
+
+  $('#mandi_all').on('change', function(e) {
+    if (this.hasAttribute('checked')) {
+      this.removeAttribute('checked');
+      $('#mandis').children().each(function() {
+          var mandis_all = $(this).children()[1].firstChild;
+          mandis_all.removeAttribute('checked');
+         });
+    }
+    else {
+      this.setAttribute('checked',"checked");
+      $('#mandis').children().each(function() {
+          var mandis_all = $(this).children()[1].firstChild;
+          mandis_all.setAttribute('checked',"checked");
+         });
     }
   });
 
