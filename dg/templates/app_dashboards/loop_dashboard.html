@@ -65,7 +65,7 @@ ul.collapsible > li.active {
 			</table>
 		</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Village</a>
+		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
 				<thead>
@@ -73,11 +73,11 @@ ul.collapsible > li.active {
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
 							<input type="checkbox" class="black" id="farmer_all" checked="checked"/>
-							<label for="farmer_all"></label>
+							<label for="village_all"></label>
 						</th>
 					</tr>
 				</thead>
-				<tbody id="farmers">
+				<tbody id="villages">
 				</tbody>
 			</table>
 		</div>
@@ -123,6 +123,7 @@ ul.collapsible > li.active {
 		</li>
 	</ul>
 </ul>
+
 {% endblock %}
 
 
@@ -146,7 +147,7 @@ ul.collapsible > li.active {
 
 	<div id="modal1" class="modal">
 		<div class="modal-content">
-			<p>Date range Invalid !!</p>
+			<p>Invalid Date Range</p>
 		</div>
 		<div class="modal-footer">
 			<a href="#!" class=" modal-action modal-close waves-effect waves-black btn-flat">OK</a>

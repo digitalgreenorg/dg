@@ -7,31 +7,9 @@ function initialize() {
   // to initialize material select
   $('select').material_select();
   get_filter_data();
-  //get_data();
   set_eventlistener();
   update_tables();
   update_charts();
-}
-
-function get_data(){
-  var start_date = $('#from_date').val();
-	var end_date = $('#to_date').val();
-  // Get rest of the filters
-  var aggregator_ids = [];
-  $('#aggregators').children().each(function(){
-    var aggregator_div = $(this).children()[1].firstChild;
-    if(aggregator_div.hasAttribute('checked'))
-      aggregator_ids.push(aggregator_div.getAttribute('id'));
-  });
-	if(Date.parse(start_date) > Date.parse(end_date)){
-		//$('.modal-trigger').leanModal();
-		$('#modal1').openModal();
-  }
-  else{
-    getvillagedata(start_date, end_date, aggregator_ids);
-    getmediatordata(start_date, end_date);
-    getcropdata(start_date, end_date);
-  }
 }
 
 /* Progress Bar functions */
@@ -62,7 +40,22 @@ function set_eventlistener(){
   	format: 'yyyy-mm-dd'
   });
 
-  //filters
+  set_filterlistener();
+
+  //get data button click
+  $('#get_data').click(function() {
+    get_data();
+  });
+
+  // apply filter button click
+  $('#apply_filter').click(function() {
+    get_data();
+  });
+}
+
+/* event listeners for filters */
+
+function set_filterlistener() {
   $('#aggregators').on('change','input[type="checkbox"]', function(e) {
     if(this.hasAttribute('checked'))
       this.removeAttribute('checked');
@@ -71,10 +64,30 @@ function set_eventlistener(){
     }
   });
 
-  //get data button click
-  $( "#get_data" ).click(function() {
-    get_data();
+  $('#villages').on('change','input[type="checkbox"]', function(e) {
+    if(this.hasAttribute('checked'))
+      this.removeAttribute('checked');
+    else {
+      this.setAttribute('checked',"checked");
+    }
   });
+
+  $('#crops').on('change','input[type="checkbox"]', function(e) {
+    if(this.hasAttribute('checked'))
+      this.removeAttribute('checked');
+    else {
+      this.setAttribute('checked',"checked");
+    }
+  });
+
+  $('#mandis').on('change','input[type="checkbox"]', function(e) {
+    if(this.hasAttribute('checked'))
+      this.removeAttribute('checked');
+    else {
+      this.setAttribute('checked',"checked");
+    }
+  });
+
 }
 
 /* show charts */
@@ -110,64 +123,124 @@ function update_charts() {
   }
 }
 
-/* Initializing filters */
+function get_data(){
+  var start_date = $('#from_date').val();
+  var end_date = $('#to_date').val();
+  // Get rest of the filters
+  var aggregator_ids = [];
+  var village_ids = [];
+  var crop_ids = [];
+  var mandi_ids = [];
 
-function create_filter(tbody_obj, id, name, checked) {
-	var row = $('<tr>');
-	var td_name = $('<td>').html(name);
-	row.append(td_name);
-	var checkbox_html = '<input type="checkbox" class="black" id="' + id + '" checked="checked" /><label for="' + id + '"></label>';
-	var td_checkbox = $('<td>').html(checkbox_html);
-	row.append(td_checkbox);
-	tbody_obj.append(row);
+  $('#aggregators').children().each(function(){
+    var aggregator_div = $(this).children()[1].firstChild;
+    if(aggregator_div.hasAttribute('checked'))
+      aggregator_ids.push(aggregator_div.getAttribute('data'));
+  });
+
+  $('#villages').children().each(function(){
+    var village_div = $(this).children()[1].firstChild;
+    if(village_div.hasAttribute('checked'))
+      village_ids.push(village_div.getAttribute('data'));
+  });
+
+  $('#crops').children().each(function(){
+    var crop_div = $(this).children()[1].firstChild;
+    if(crop_div.hasAttribute('checked'))
+      crop_ids.push(crop_div.getAttribute('data'));
+  });
+
+  $('#mandis').children().each(function(){
+    var mandi_div = $(this).children()[1].firstChild;
+    if(mandi_div.hasAttribute('checked'))
+      mandi_ids.push(mandi_div.getAttribute('data'));
+  });
+
+  if(Date.parse(start_date) > Date.parse(end_date)){
+    //$('.modal-trigger').leanModal();
+    $('#modal1').openModal();
+  }
+  else{
+    getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+  }
 }
 
+/* Initializing filters */
+
 function get_filter_data() {
-  get_aggregator_data();
+  $.get( "/loop/filter_data/", {})
+           .done(function( data ) {
+               data_json = JSON.parse(data);
+               fill_aggregator_filter(data_json.aggregators);
+               fill_village_filter(data_json.villages);
+               fill_crop_filter(data_json.crops);
+               fill_mandi_filter(data_json.mandis);
+               get_data();
+           });
 }
 
 function fill_aggregator_filter(data_json) {
-  $("#aggregator").remove();
   $.each(data_json, function (index, data) {
     create_filter($('#aggregators'), data.user__id, data.name , true);
   });
 }
-function get_aggregator_data() {
-  $.get( "/loop/aggregator/", {})
-           .done(function( data ) {
-               data_json = JSON.parse(data);
-               fill_aggregator_filter(data_json);
-              //  fillvillagetable(data_json);
-              get_data();
-           });
+
+function fill_village_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#villages'), data.id, data.village_name, true);
+  });
+}
+
+function fill_crop_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#crops'), data.id, data.crop_name, true);
+  });
+}
+
+function fill_mandi_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#mandis'), data.id, data.mandi_name, true);
+  });
+}
+
+function create_filter(tbody_obj, id, name, checked) {
+  var row = $('<tr>');
+  var td_name = $('<td>').html(name);
+  row.append(td_name);
+  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+  var td_checkbox = $('<td>').html(checkbox_html);
+  row.append(td_checkbox);
+  tbody_obj.append(row);
 }
 
 /* ajax to get json */
 
-function getvillagedata(start_date, end_date, aggregator_ids) {
+function getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids})
-           .done(function( data ) {
+  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]':aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                fillvillagetable(data_json);
            });
 }
 
-function getmediatordata(start_date, end_date) {
+function getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date})
-           .done(function( data ) {
+  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                fillmediatortable(data_json);
            });
 }
 
-function getcropdata(start_date, end_date) {
+function getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/crop_wise_data/", {'start_date':start_date, 'end_date':end_date})
-           .done(function( data ) {
+  $.get( "/loop/crop_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_cropwise_data(data_json);
