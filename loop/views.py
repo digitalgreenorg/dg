@@ -70,7 +70,7 @@ def village_wise_data(request):
     filter_args["farmer__village__id__in"] = village_ids
     filter_args["crop__id__in"] = crop_ids
     filter_args["mandi__id__in"] = mandi_ids
-    transactions = CombinedTransaction.objects.filter(**filter_args).values('farmer__village__village_name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True))
+    transactions = CombinedTransaction.objects.filter(**filter_args).values('farmer__village__village_name').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True), total_farmers = Count('farmer'))
     data = json.dumps(list(transactions))
     return HttpResponse(data)
 
@@ -90,7 +90,7 @@ def mediator_wise_data(request):
     filter_args["farmer__village__id__in"] = village_ids
     filter_args["crop__id__in"] = crop_ids
     filter_args["mandi__id__in"] = mandi_ids
-    transactions = list(CombinedTransaction.objects.filter(**filter_args).values('user_created__id').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True)))
+    transactions = list(CombinedTransaction.objects.filter(**filter_args).values('user_created__id').distinct().annotate(Count('farmer', distinct = True), Sum('amount'), Sum('quantity'), Count('date', distinct = True), total_farmers = Count('farmer')))
     for i in transactions:
         user = LoopUser.objects.get(user_id = i['user_created__id'])
         i['user_name'] = user.name
