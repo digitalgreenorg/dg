@@ -10,6 +10,7 @@ function initialize() {
   set_eventlistener();
   update_tables();
   update_charts();
+  $(".button-collapse").sideNav();
 }
 
 /* Progress Bar functions */
