@@ -53,12 +53,12 @@ ul.collapsible > li.active {
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="teal" id="aggregator_all" checked="checked"/>
-							<label for="aggregator_all"></label>
+							<input type="checkbox" class="teal" id="place_all" checked="checked"/>
+							<label for="place_all"></label>
 						</th>
 					</tr>
 				</thead>
-				<tbody id="aggregators">
+				<tbody id="places">
 				</tbody>
 			</table>
 		</div>
@@ -70,29 +70,12 @@ ul.collapsible > li.active {
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="teal" id="farmer_all" checked="checked"/>
-							<label for="farmer_all"></label>
+							<input type="checkbox" class="teal" id="trainer_all" checked="checked"/>
+							<label for="trainer_all"></label>
 						</th>
 					</tr>
 				</thead>
-				<tbody id="farmers">
-				</tbody>
-			</table>
-		</div>
-		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-teal">Mediators</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="teal" id="crop_all" checked="checked"/>
-							<label for="crop_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="crops">
+				<tbody id="trainers">
 				</tbody>
 			</table>
 		</div>
@@ -104,12 +87,12 @@ ul.collapsible > li.active {
 					<tr>
 						<th class="center grey-text text-lighten-1">Select/Unselect</th>
 						<th>
-							<input type="checkbox" class="teal" id="mandi_all" checked="checked"/>
-							<label for="mandi_all"></label>
+							<input type="checkbox" class="teal" id="question_all" checked="checked"/>
+							<label for="question_all"></label>
 						</th>
 					</tr>
 				</thead>
-				<tbody id="mandis">
+				<tbody id="questions">
 				</tbody>
 			</table>
 		</div>
@@ -166,26 +149,6 @@ ul.collapsible > li.active {
 	</div>
 </div>
 
-<div id="training_table">
-	<div id="training_label">
-		<h5 class="center-align">Training Data</h5>
-	</div>
-	<table id="table1" class="highlight bordered centered responsive-table" >
-		<thead>
-			<tr>
-				<th data-field="name">Place</th>
-				<th data-field="name">Trainer</th>
-				<th data-field="name">Language</th>
-				<th data-field="integer">Total Participants</th>
-			</tr>
-		</thead>
-		<tbody id ="table1_tbody">
-			<tr>
-
-			</tr>
-		</tbody>
-	</table>
-	<br>
 </div>
 
 <div class="container">
@@ -206,6 +169,29 @@ ul.collapsible > li.active {
 		<h5 class="center-align">Mediator-Wise Disseminations and Adoptions</h5>
 		<div id ="mediator_activity"></div>
 	</div>
+	<div class="divider"></div>
+</div>
+
+<div id="training_table">
+	<div id="training_label">
+		<h5 class="center-align">Training Data</h5>
+	</div>
+	<table id="table1" class="highlight bordered centered" >
+		<thead>
+			<tr>
+				<th data-field="name">Place</th>
+				<th data-field="name">Trainer</th>
+				<th data-field="name">Language</th>
+				<th data-field="integer">Total Participants</th>
+			</tr>
+		</thead>
+		<tbody id ="table1_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
+	<br>
 </div>
 <div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
 

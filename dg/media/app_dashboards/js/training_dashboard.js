@@ -39,12 +39,12 @@ function show_progress_bar() {
 // event listeners
 function set_eventlistener(){
 
-  // to change the visibility of tables , charts on change in select
-  $( "#table_option" ).change(function() {
+  // to change the visibility of tables, charts on change in select
+  $("#table_option").change(function() {
     update_tables();
   });
 
-  $( "#chart_option" ).change(function() {
+  $("#chart_option").change(function() {
     update_charts();
   });
 
@@ -68,7 +68,7 @@ function show_charts() {
   $("#agg_crop_chart_div").show();
 }
 
-/*to change the visibility of tables , charts on change in select*/
+/*to change the visibility of tables, charts on change in select*/
 
 function update_tables() {
 	var opt = $('#table_option :selected').val();

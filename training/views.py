@@ -6,9 +6,11 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
+from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
 from models import Training, Score
+from activities.models import Screening, PersonAdoptPractice
 
 # Create your views here.
 @csrf_exempt
@@ -75,10 +77,16 @@ def mediator_wise_data(request):
     end_date = request.GET['end_date']
     filter_args = {}
     if(start_date !=""):
-        filter_args["date__gte"] = start_date
+        filter_args["training__date__gte"] = start_date
     if(end_date != ""):
-        filter_args["date__lte"] = end_date
-    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
-    data = json.dumps(list(training_list))
+        filter_args["training__date__lte"] = end_date
+    mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
+    mediator_data = {}
+    for i in mediator_list:
+        screening_list = Screening.objects.filter(animator__id = i['participant'])
+        #adoption_list = PersonAdoptPractice.objects.filter()
+        mediator_data[i['participant']] = list(screening_list)
+    print mediator_data
+    data = json.dumps(mediator_data, cls= DjangoJSONEncoder)
     return HttpResponse(data)
 
