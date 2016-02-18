@@ -10,6 +10,7 @@ function initialize() {
   set_eventlistener();
   update_tables();
   update_charts();
+  $(".button-collapse").sideNav();
 }
 
 /* Progress Bar functions */
@@ -303,7 +304,7 @@ function fillvillagetable(data_json) {
      cell3.setAttribute('style','text-align:center;');
      cell4.innerHTML = data_json[i]['farmer__count'].toString();
      cell4.setAttribute('style','text-align:center;');
-     var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count'])
+     var avg = (data_json[i]['total_farmers'])/(data_json[i]['date__count'])
      cell5.innerHTML = avg.toFixed(2);
      cell5.setAttribute('style','text-align:center;');
 
@@ -360,7 +361,7 @@ function fillmediatortable(data_json) {
     cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
     cell3.innerHTML = data_json[i]['amount__sum'].toFixed(2);
     cell4.innerHTML = data_json[i]['farmer__count'].toString();
-    var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']);
+    var avg = (data_json[i]['total_farmers'])/(data_json[i]['date__count']);
     cell5.innerHTML = avg.toFixed(2);
 
     total_volume += data_json[i]['quantity__sum'];
