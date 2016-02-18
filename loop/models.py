@@ -124,16 +124,21 @@ class Mandi(LoopModel):
 	class Meta:
 		unique_together = ("mandi_name","district",)
 
+
 class CombinedTransaction(LoopModel):
-	id = models.AutoField(primary_key=True)
-	date = models.DateField(auto_now=False)
-	farmer = models.ForeignKey(Farmer)
-	crop = models.ForeignKey(Crop)
-	mandi = models.ForeignKey(Mandi)
-	quantity = models.FloatField()
-	price = models.FloatField()
-	status = models.IntegerField()
-	amount = models.FloatField()
+    id = models.AutoField(primary_key=True)
+    date = models.DateField(auto_now=False)
+    farmer = models.ForeignKey(Farmer)
+    crop = models.ForeignKey(Crop)
+    mandi = models.ForeignKey(Mandi)
+    quantity = models.FloatField()
+    price = models.FloatField()
+    status = models.IntegerField()
+    amount = models.FloatField()
+
+    def __unicode__(self):
+        return "%s (%s) (%s) (%s)" % (self.farmer.name, self.crop.crop_name, self.mandi.mandi_name, LoopUser.objects.get(user= self.user_created).name)
+
 
 	class Meta:
 		unique_together = ("date","farmer","crop","mandi","price",)

@@ -6,24 +6,11 @@ function initialize() {
 
   // to initialize material select
   $('select').material_select();
-  get_data();
+  get_filter_data();
   set_eventlistener();
   update_tables();
   update_charts();
-}
-
-function get_data(){
-  var start_date = $('#from_date').val();
-	var end_date = $('#to_date').val();
-	if(Date.parse(start_date) > Date.parse(end_date)){
-		//$('.modal-trigger').leanModal();
-		$('#modal1').openModal();
-  }
-  else{
-    getvillagedata(start_date, end_date);
-    getmediatordata(start_date, end_date);
-    getcropdata(start_date, end_date);
-  }
+  $(".button-collapse").sideNav();
 }
 
 /* Progress Bar functions */
@@ -54,10 +41,82 @@ function set_eventlistener(){
   	format: 'yyyy-mm-dd'
   });
 
+  set_filterlistener();
+
   //get data button click
-  $( "#get_data" ).click(function() {
+  $('#get_data').click(function() {
     get_data();
   });
+
+  // apply filter button click
+  $('#apply_filter').click(function() {
+    get_data();
+  });
+}
+
+/* event listeners for filters */
+
+function set_filterlistener() {
+  $('#aggregator_all').on('change', function(e) {
+    if (this.checked) {
+      $('#aggregators').children().each(function() {
+          var aggregators_all = $(this).children()[1].firstChild;
+          aggregators_all.checked = true;
+         });
+    }
+    else {
+      $('#aggregators').children().each(function() {
+          var aggregators_all = $(this).children()[1].firstChild;
+          aggregators_all.checked = false;
+         });
+    }
+  });
+
+  $('#village_all').on('change', function(e) {
+    if (this.checked) {
+      $('#villages').children().each(function() {
+          var villages_all = $(this).children()[1].firstChild;
+          villages_all.checked = true;
+         });
+    }
+    else {
+      $('#villages').children().each(function() {
+          var villages_all = $(this).children()[1].firstChild;
+          villages_all.checked = false;
+         });
+    }
+  });
+
+  $('#crop_all').on('change', function(e) {
+    if (this.checked) {
+      $('#crops').children().each(function() {
+          var crops_all = $(this).children()[1].firstChild;
+          crops_all.checked = true;
+         });
+    }
+    else {
+      $('#crops').children().each(function() {
+          var crops_all = $(this).children()[1].firstChild;
+          crops_all.checked = false;
+         });
+    }
+  });
+
+  $('#mandi_all').on('change', function(e) {
+    if (this.checked) {
+      $('#mandis').children().each(function() {
+          var mandis_all = $(this).children()[1].firstChild;
+          mandis_all.checked = true;
+         });
+    }
+    else {
+      $('#mandis').children().each(function() {
+          var mandis_all = $(this).children()[1].firstChild;
+          mandis_all.checked = false;
+         });
+    }
+  });
+
 }
 
 /* show charts */
@@ -93,32 +152,124 @@ function update_charts() {
   }
 }
 
+function get_data(){
+  var start_date = $('#from_date').val();
+  var end_date = $('#to_date').val();
+  // Get rest of the filters
+  var aggregator_ids = [];
+  var village_ids = [];
+  var crop_ids = [];
+  var mandi_ids = [];
+
+  $('#aggregators').children().each(function(){
+    var aggregator_div = $(this).children()[1].firstChild;
+    if(aggregator_div.checked)
+      aggregator_ids.push(aggregator_div.getAttribute('data'));
+  });
+
+  $('#villages').children().each(function(){
+    var village_div = $(this).children()[1].firstChild;
+    if(village_div.checked)
+      village_ids.push(village_div.getAttribute('data'));
+  });
+
+  $('#crops').children().each(function(){
+    var crop_div = $(this).children()[1].firstChild;
+    if(crop_div.checked)
+      crop_ids.push(crop_div.getAttribute('data'));
+  });
+
+  $('#mandis').children().each(function(){
+    var mandi_div = $(this).children()[1].firstChild;
+    if(mandi_div.checked)
+      mandi_ids.push(mandi_div.getAttribute('data'));
+  });
+
+  if(Date.parse(start_date) > Date.parse(end_date)){
+    //$('.modal-trigger').leanModal();
+    $('#modal1').openModal();
+  }
+  else{
+    getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+  }
+}
+
+/* Initializing filters */
+
+function get_filter_data() {
+  $.get( "/loop/filter_data/", {})
+           .done(function( data ) {
+               data_json = JSON.parse(data);
+               fill_aggregator_filter(data_json.aggregators);
+               fill_village_filter(data_json.villages);
+               fill_crop_filter(data_json.crops);
+               fill_mandi_filter(data_json.mandis);
+               get_data();
+           });
+}
+
+function fill_aggregator_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#aggregators'), data.user__id, data.name , true);
+  });
+}
+
+function fill_village_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#villages'), data.id, data.village_name, true);
+  });
+}
+
+function fill_crop_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#crops'), data.id, data.crop_name, true);
+  });
+}
+
+function fill_mandi_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#mandis'), data.id, data.mandi_name, true);
+  });
+}
+
+function create_filter(tbody_obj, id, name, checked) {
+  var row = $('<tr>');
+  var td_name = $('<td>').html(name);
+  row.append(td_name);
+  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+  var td_checkbox = $('<td>').html(checkbox_html);
+  row.append(td_checkbox);
+  tbody_obj.append(row);
+}
+
 /* ajax to get json */
 
-function getvillagedata(start_date, end_date) {
+function getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date})
-           .done(function( data ) {
+  $.get( "/loop/village_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]':aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                fillvillagetable(data_json);
            });
 }
 
-function getmediatordata(start_date, end_date) {
+function getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date})
-           .done(function( data ) {
+  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                fillmediatortable(data_json);
            });
 }
 
-function getcropdata(start_date, end_date) {
+function getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/crop_wise_data/", {'start_date':start_date, 'end_date':end_date})
-           .done(function( data ) {
+  $.get( "/loop/crop_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_cropwise_data(data_json);
@@ -136,7 +287,7 @@ function fillvillagetable(data_json) {
   var total_amount = 0;
   var total_farmers = 0;
   var total_avg = 0;
-  var str1 = "₹ "
+  var str1 = 'Rs. ';
   for ( i =0; i< data_json.length; i++){
      var row = table_ref.insertRow(-1);
      var cell1 = row.insertCell(0);
@@ -149,11 +300,11 @@ function fillvillagetable(data_json) {
      cell1.setAttribute('style','text-align:center;');
      cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
      cell2.setAttribute('style','text-align:center;');
-     cell3.innerHTML = data_json[i]['amount__sum'].toString();
+     cell3.innerHTML = data_json[i]['amount__sum'].toFixed(2);
      cell3.setAttribute('style','text-align:center;');
      cell4.innerHTML = data_json[i]['farmer__count'].toString();
      cell4.setAttribute('style','text-align:center;');
-     var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count'])
+     var avg = (data_json[i]['total_farmers'])/(data_json[i]['date__count'])
      cell5.innerHTML = avg.toFixed(2);
      cell5.setAttribute('style','text-align:center;');
 
@@ -174,7 +325,7 @@ function fillvillagetable(data_json) {
    cell1.setAttribute('style','text-align:center; font-weight:bold;');
    cell2.innerHTML = total_volume.toString().concat(" Kg");
    cell2.setAttribute('style','text-align:center; font-weight:bold;');
-   cell3.innerHTML = str1.concat(total_amount).toString();
+   cell3.innerHTML = str1.concat((total_amount).toFixed(2));
    cell3.setAttribute('style','text-align:center; font-weight:bold;');
    cell4.innerHTML = total_farmers;
    cell4.setAttribute('style','text-align:center; font-weight:bold;');
@@ -197,7 +348,7 @@ function fillmediatortable(data_json) {
   var total_amount = 0;
   var total_farmers = 0;
   var total_avg = 0;
-  var str1 = "₹ "
+  var str1 = "Rs. "
   for (var i = 0; i < data_json.length; i++) {
     var row = table_ref.insertRow(-1);
     var cell1 = row.insertCell(0);
@@ -208,9 +359,9 @@ function fillmediatortable(data_json) {
 
     cell1.innerHTML = data_json[i]['user_name'];
     cell2.innerHTML = data_json[i]['quantity__sum'].toString().concat(" Kg");
-    cell3.innerHTML = data_json[i]['amount__sum'].toString();
+    cell3.innerHTML = data_json[i]['amount__sum'].toFixed(2);
     cell4.innerHTML = data_json[i]['farmer__count'].toString();
-    var avg = (data_json[i]['farmer__count'])/(data_json[i]['date__count']);
+    var avg = (data_json[i]['total_farmers'])/(data_json[i]['date__count']);
     cell5.innerHTML = avg.toFixed(2);
 
     total_volume += data_json[i]['quantity__sum'];
@@ -229,7 +380,7 @@ function fillmediatortable(data_json) {
     cell1.style.fontWeight = "bold";
     cell2.innerHTML = total_volume.toString().concat(" Kg");
     cell2.style.fontWeight = "bold";
-    cell3.innerHTML = str1.concat(total_amount).toString();
+    cell3.innerHTML = str1.concat((total_amount).toFixed(2));
     cell3.style.fontWeight = "bold";
     cell4.innerHTML = total_farmers;
     cell4.style.fontWeight = "bold";
@@ -408,7 +559,7 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
         }]
       },
       tooltip: {
-        valuePrefix: '₹ '
+        valuePrefix: 'Rs. '
       },
       legend: {
         layout: 'vertical',
