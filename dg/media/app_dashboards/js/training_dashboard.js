@@ -6,37 +6,25 @@ function initialize() {
 
   // to initialize material select
   $('select').material_select();
-  get_data();
+  get_filter_data();
   set_eventlistener();
-  update_tables();
-  update_charts();
-}
-
-function get_data(){
-  var start_date = $('#from_date').val();
-	var end_date = $('#to_date').val();
-	if(Date.parse(start_date) > Date.parse(end_date)){
-		//$('.modal-trigger').leanModal();
-		$('#modal1').openModal();
-  }
-  else{
-    gettrainingdata(start_date, end_date);
-    gettrainerdata(start_date, end_date);
-    getquestiondata(start_date, end_date);
-    getmediatordata(start_date, end_date);
-  }
+  // update_tables();
+  // update_charts();
+  $(".button-collapse").sideNav();
 }
 
 /* Progress Bar functions */
+
 function hide_progress_bar() {
   $('#progress_bar').hide()
 }
 
 function show_progress_bar() {
-	$('#progress_bar').show();
+  $('#progress_bar').show();
 }
 
-// event listeners
+/* set event listeners here */
+
 function set_eventlistener(){
 
   // to change the visibility of tables, charts on change in select
@@ -50,14 +38,55 @@ function set_eventlistener(){
 
   //datepicker
   $('.datepicker').pickadate({
-  	selectMonths: true, // Creates a dropdown to control month
-  	selectYears: 15, // Creates a dropdown of 15 years to control year
-  	format: 'yyyy-mm-dd'
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year
+    format: 'yyyy-mm-dd'
   });
 
+  set_filterlistener();
+
   //get data button click
-  $( "#get_data" ).click(function() {
+  $("#get_data").click(function() {
     get_data();
+  });
+
+    // apply filter button click
+  $('#apply_filter').click(function() {
+    get_data();
+  });
+}
+
+/* event listeners for filters */
+
+function set_filterlistener() {
+  $('#trainer_all').on('change', function(e) {
+    if (this.checked) {
+      $('#trainers').children().each(function() {
+          var trainers_all = $(this).children()[1].firstChild;
+          trainers_all.checked = true;
+         });
+    }
+    else {
+      $('#trainers').children().each(function() {
+          var trainers_all = $(this).children()[1].firstChild;
+          trainers_all.checked = false;
+         });
+    }
+  });
+
+  $('#question_all').on('change', function(e) {
+    if (this.checked) {
+      $('#questions').children().each(function() {
+          var questions_all = $(this).children()[1].firstChild;
+          questions_all.checked = true;
+         });
+    }
+    else {
+      $('#questions').children().each(function() {
+          var questions_all = $(this).children()[1].firstChild;
+          questions_all.checked = false;
+         });
+    }
   });
 }
 
@@ -68,18 +97,18 @@ function show_charts() {
   $("#agg_crop_chart_div").show();
 }
 
-/*to change the visibility of tables, charts on change in select*/
+/* to change the visibility of tables, charts on change in select */
 
 function update_tables() {
-	var opt = $('#table_option :selected').val();
-	if(opt ==1 ){
-		$("#village_table").show();
-		$("#mediator_table").hide();
-	}
-	else{
-		$("#mediator_table").show();
-		$("#village_table").hide();
-	}
+  var opt = $('#table_option :selected').val();
+  if(opt ==1 ){
+    $("#village_table").show();
+    $("#mediator_table").hide();
+  }
+  else{
+    $("#mediator_table").show();
+    $("#village_table").hide();
+  }
 }
 
 function update_charts() {
@@ -94,11 +123,78 @@ function update_charts() {
   }
 }
 
+/* get data according to filters */
+
+function get_data(){
+  var start_date = $('#from_date').val();
+	var end_date = $('#to_date').val();
+
+  var trainer_ids = [];
+  var question_ids = [];
+
+  $('#trainers').children().each(function(){
+    var trainer_div = $(this).children()[1].firstChild;
+    if(trainer_div.checked)
+      trainer_ids.push(trainer_div.getAttribute('data'));
+  });
+
+  $('#questions').children().each(function(){
+    var question_div = $(this).children()[1].firstChild;
+    if(question_div.checked)
+      question_ids.push(question_div.getAttribute('data'));
+  });
+
+	if(Date.parse(start_date) > Date.parse(end_date)){
+		//$('.modal-trigger').leanModal();
+		$('#modal1').openModal();
+  }
+  else{
+    gettrainingdata(start_date, end_date, trainer_ids, question_ids);
+    gettrainerdata(start_date, end_date, trainer_ids, question_ids);
+    getquestiondata(start_date, end_date, trainer_ids, question_ids);
+    //getmediatordata(start_date, end_date, trainer_ids, question_ids);
+  }
+}
+
+/* Initializing filters */
+
+function get_filter_data() {
+  $.get( "/training/filter_data/", {})
+       .done(function( data ) {
+           data_json = JSON.parse(data);
+           fill_trainer_filter(data_json.trainers);
+           fill_question_filter(data_json.questions);
+           get_data();
+       });
+}
+
+function fill_trainer_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#trainers'), data.id, data.name , true);
+  });
+}
+
+function fill_question_filter(data_json) {
+  $.each(data_json, function (index, data) {
+    create_filter($('#questions'), data.id, data.text, true);
+  });
+}
+
+function create_filter(tbody_obj, id, name, checked) {
+  var row = $('<tr>');
+  var td_name = $('<td>').html(name);
+  row.append(td_name);
+  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+  var td_checkbox = $('<td>').html(checkbox_html);
+  row.append(td_checkbox);
+  tbody_obj.append(row);
+}
+
 /* ajax to get json */
 
-function gettrainingdata(start_date, end_date) {
+function gettrainingdata(start_date, end_date, trainer_ids, question_ids) {
   show_progress_bar();
-  $.get( "/training/training_wise_data/", {'start_date':start_date, 'end_date':end_date})
+  $.get( "/training/training_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -106,9 +202,9 @@ function gettrainingdata(start_date, end_date) {
            });  
 }
 
-function gettrainerdata(start_date, end_date) {
+function gettrainerdata(start_date, end_date, trainer_ids, question_ids) {
   show_progress_bar();
-  $.get( "/training/trainer_wise_data/", {'start_date':start_date, 'end_date':end_date})
+  $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -116,9 +212,9 @@ function gettrainerdata(start_date, end_date) {
            });
 }
 
-function getquestiondata(start_date, end_date) {
+function getquestiondata(start_date, end_date, trainer_ids, question_ids) {
   show_progress_bar();
-  $.get( "/training/question_wise_data/", {'start_date':start_date, 'end_date':end_date})
+  $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -126,9 +222,9 @@ function getquestiondata(start_date, end_date) {
            });
 }
 
-function getmediatordata(start_date, end_date) {
+function getmediatordata(start_date, end_date, trainer_ids, question_ids) {
   show_progress_bar();
-  $.get( "/training/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date})
+  $.get( "/training/mediator_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -162,6 +258,7 @@ function filltrainingtable(data_json) {
 }
 
 /* Fill data for highcharts */
+
 function plot_trainerwise_data(data_json) {
   var x_axis = [];
   trainer_scores_dict = [];
@@ -215,76 +312,6 @@ function plot_questionwise_data(data_json){
 }
 
 function plot_mediatorwise_data(data_json) {
-  var x_axis = data_json['dates'];
-  var total_crop_price = [];
-  var total_crop_volume = [];
-  var total_crop_income = [];
-  // crop wise data calculation - amount , volume and price
-  for(i=0; i<data_json['crops'].length; i++) {
-    var temp_price_dict = {};
-    var temp_vol_dict = {};
-    var temp_amt_dict = {};
-    temp_price_dict['name'] = data_json['crops'][i];
-    temp_price_dict['data'] = new Array(x_axis.length).fill(0.0);
-    temp_vol_dict['name'] = data_json['crops'][i];
-    temp_vol_dict['type'] = "column";
-    temp_vol_dict['data'] = new Array(x_axis.length).fill(0.0);
-    temp_amt_dict['name'] = data_json['crops'][i];
-    temp_amt_dict['type'] = "column";
-    temp_amt_dict['data'] = new Array(x_axis.length).fill(0.0);
-    for (j=0; j<data_json['transactions'].length; j++) {
-      if (data_json['transactions'][j]['crop__crop_name'] == temp_price_dict['name']) {
-          var index_date = x_axis.indexOf(data_json['transactions'][j]['date']);
-          temp_amt_dict['data'][index_date] = data_json['transactions'][j]['amount__sum'];
-          temp_vol_dict['data'][index_date] = data_json['transactions'][j]['quantity__sum'];
-          if(temp_vol_dict['data'][index_date] != 0){
-            temp_price_dict['data'][index_date] = temp_amt_dict['data'][index_date]/temp_vol_dict['data'][index_date];}
-      }
-    }
-    total_crop_price.push(temp_price_dict);
-    total_crop_volume.push(temp_vol_dict);
-    total_crop_income.push(temp_amt_dict);
-  }
-
-  // assigning farmer counts to volume stacked chart
-  var data_dict = {};
-  data_dict["name"] = "Farmer Count";
-  data_dict["type"] = "line";
-  data_dict["yAxis"] = 1;
-  data_dict["data"] = new Array(x_axis.length).fill(0);
-  for (k=0; k<data_json['farmer_count'].length; k++){
-    data_dict["data"][k] = data_json['farmer_count'][k]['farmer__count'];
-  }
-  total_crop_volume.push(data_dict);
-
-  // crop and mediator wise price calculation
-  var total_crop_mediator_price = [];
-  for(l=0; l<data_json['crops_mediators'].length; l++){
-    var temp_price_dict = {};
-    var temp_crop = data_json['crops_mediators'][l]['crop__crop_name'];
-    var temp_mediator =  data_json['crops_mediators'][l]['user_name'];
-    var temp_mediator_id = data_json['crops_mediators'][l]['user_created__id']
-    temp_price_dict['name'] = temp_crop +'-'+ temp_mediator;
-    temp_price_dict['data'] = new Array(x_axis.length).fill(0.0);
-      for (j=0; j<data_json['crops_mediators_transactions'].length; j++) {
-        if (data_json['crops_mediators_transactions'][j]['crop__crop_name'] == temp_crop && data_json['crops_mediators_transactions'][j]['user_created__id'] == temp_mediator_id ){
-           var index_date = x_axis.indexOf(data_json['crops_mediators_transactions'][j]['date']);
-           var temp_amt_dict = data_json['crops_mediators_transactions'][j]['amount'];
-           var temp_vol_dict = data_json['crops_mediators_transactions'][j]['quantity'];
-           if(temp_vol_dict != 0){
-             temp_price_dict['data'][index_date] = temp_amt_dict/temp_vol_dict;
-           }
-        }
-      }
-   total_crop_mediator_price.push(temp_price_dict);
-  }
-  show_charts();
-  // Plot charts
-  plot_stacked_chart($("#crops_price"), x_axis, total_crop_income, "Total Amount Earned(₹)", "₹", true);
-  plot_multiline_chart($("#crops_price2"), x_axis, total_crop_price, "Crop Price Per Day(₹)", "₹");
-  plot_multiline_chart($("#crop_aggregator_price"), x_axis, total_crop_mediator_price, "Crop Price Per Day(₹)");
-  plot_stacked_chart($("#crops_volume"), x_axis, total_crop_volume, "Total Volume Dispatched(kg)", "kg", false, /*dashboard.farmers_count*/null);
-  update_charts();
 }
 
 /* plot highcharts data */

@@ -14,6 +14,7 @@ function initialize() {
 }
 
 /* Progress Bar functions */
+
 function hide_progress_bar() {
   $('#progress_bar').hide()
 }
@@ -22,15 +23,16 @@ function show_progress_bar() {
 	$('#progress_bar').show();
 }
 
-// event listeners
+/* set event listeners here */
+
 function set_eventlistener(){
 
-  // to change the visibility of tables , charts on change in select
-  $( "#table_option" ).change(function() {
+  // to change the visibility of tables, charts on change in select
+  $("#table_option").change(function() {
     update_tables();
   });
 
-  $( "#chart_option" ).change(function() {
+  $("#chart_option").change(function() {
     update_charts();
   });
 
@@ -126,7 +128,7 @@ function show_charts() {
   $("#agg_crop_chart_div").show();
 }
 
-/*to change the visibility of tables , charts on change in select*/
+/* to change the visibility of tables, charts on change in select */
 
 function update_tables() {
 	var opt = $('#table_option :selected').val();
@@ -152,10 +154,12 @@ function update_charts() {
   }
 }
 
+/* get data according to filters */
+
 function get_data(){
   var start_date = $('#from_date').val();
   var end_date = $('#to_date').val();
-  // Get rest of the filters
+
   var aggregator_ids = [];
   var village_ids = [];
   var crop_ids = [];
@@ -392,6 +396,7 @@ function fillmediatortable(data_json) {
 }
 
 /* Fill data for highcharts */
+
 function plot_village_data(data_json,total_volume,total_amount) {
 	var vol_data = [];
 	var amt_data = [];
