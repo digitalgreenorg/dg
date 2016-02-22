@@ -12,13 +12,13 @@ class Command(BaseCommand):
 		#saving videos
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\\video.xml", 'w')
+		xml_file = open("C:\Users\Server-Tech\Desktop\\video.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\\video.xml')
+		tree = ET.parse('C:\Users\Server-Tech\Desktop\\video.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioMasterData'):
 			vdc = c.find('VideoID').text
@@ -31,10 +31,6 @@ class Command(BaseCommand):
 				ln = 18
 			elif (ln ==3):
 				ln =10
-			if unicode(c.find('Summary').text) is not None:
-				sm = unicode(c.find('Summary').text)
-			else:
-				sm = ''
 			dc = c.find('DistrictCode').text
 			bc = c.find('BlockCode').text
 			vc = c.find('VillageCode').text
@@ -64,18 +60,17 @@ class Command(BaseCommand):
 				error = 1
 
 			if(error == 0):
-				video_xml = vn+' '+str(village.Village.village_name)
 				video_set = dict(Video.objects.filter(village_id = village.Village.id).values_list('title','village'))
 				video_db = []
+				video_xml = str(vn)+str(village.Village.id)
 				for key, value in video_set.iteritems():
-					name = key+ ' ' +str(value)
+					name = str(key)+str(value)
 					video_db.append(name)
 				if video_xml not in video_db:
 					try:
 						vid = Video(title = vn,
 									video_type = vt,
 									language = language,
-									summary = sm,
 									video_production_start_date = sd,
 									video_production_end_date = ed,
 									village = village.Village,
@@ -99,24 +94,24 @@ class Command(BaseCommand):
 						video_added = [i[0] for i in video_added]
 					except Exception as e:
 						print e
-					if vdc not in video_added:
-						try:
+					try:	
+						if vdc not in video_added:
 							vj = JSLPS_Video(vc = vdc,
 										video = video)
 							vj.save()
-						except Exception as e:
-							print vdc, e
+					except Exception as e:
+						print vdc, e
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\\nn.xml", 'w')
+		xml_file = open("C:\Users\Server-Tech\Desktop\\nn.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\\nn.xml')
+		tree = ET.parse('C:\Users\Server-Tech\Desktop\\nn.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioNon_NegotiableMasterData'):
