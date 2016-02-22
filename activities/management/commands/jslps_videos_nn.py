@@ -31,6 +31,10 @@ class Command(BaseCommand):
 				ln = 18
 			elif (ln ==3):
 				ln =10
+			if unicode(c.find('Summary').text) is not None:
+				sm = unicode(c.find('Summary').text)
+			else:
+				sm = ''
 			dc = c.find('DistrictCode').text
 			bc = c.find('BlockCode').text
 			vc = c.find('VillageCode').text
@@ -52,7 +56,7 @@ class Command(BaseCommand):
 						fr = JSLPS_Person.objects.get(person_code = str(i))
 						farmer_list.append(fr.person)
 					except JSLPS_Person.DoesNotExist as e:
-						fr = JSLPS_Person.objects.get(person_code = str(82435))
+						fr = JSLPS_Person.objects.get(person_code = str(630))
 						farmer_list.append(fr.person)
 
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
@@ -71,6 +75,7 @@ class Command(BaseCommand):
 						vid = Video(title = vn,
 									video_type = vt,
 									language = language,
+									summary = sm,
 									video_production_start_date = sd,
 									video_production_end_date = ed,
 									village = village.Village,
