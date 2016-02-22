@@ -16,6 +16,7 @@ from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPra
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from videos.models import  NonNegotiable
+from ivr.models import Call
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())

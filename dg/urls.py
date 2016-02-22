@@ -13,6 +13,7 @@ import loop.urls
 import social_website.api_urls
 import social_website.urls
 import videokheti.urls
+import ivr.urls
 import training.urls
 
 from django.contrib import admin
@@ -27,8 +28,10 @@ from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
 from mcoco_admin import mcoco_admin
+from ivr_admin import ivr_admin
 import website_archive_urls
 import deoanalytics.urls
+import ivr_data_collection.urls
 
 coco_admin.index_template = 'social_website/index.html'
 coco_admin.login_template = 'social_website/login.html'
@@ -45,6 +48,9 @@ website_admin.logout_template = 'social_website/home.html'
 mcoco_admin.index_template = 'social_website/index.html'
 mcoco_admin.login_template = 'social_website/login.html'
 mcoco_admin.logout_template = 'social_website/home.html'
+ivr_admin.index_template = 'social_website/index.html'
+ivr_admin.login_template = 'social_website/login.html'
+ivr_admin.logout_template = 'social_website/home.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
@@ -71,6 +77,7 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     (r'^analytics/', include('output.urls')),
     (r'^video/?$',video_analytics.video),
+    (r'^ivrsadmin/', include(ivr_admin.urls)),
     (r'^training/', include(training.urls)),
     (r'^loop/', include(loop.urls)),
     (r'^raw_data_analytics/', include(raw_data_analytics.urls)),
@@ -96,6 +103,7 @@ urlpatterns = patterns('',
     (r'^analytics/vrptool/',include('vrppayment.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     (r'^agri/', include(videokheti.urls)),
+    (r'^ivrs/',include('ivr.urls')),
     (r"^", include("mezzanine.urls")),
 
     #AJAX for Feedback
