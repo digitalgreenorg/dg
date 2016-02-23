@@ -164,6 +164,7 @@ INSTALLED_APPS = (
     'ivr_data_collection',
     'ivr',
     'training',
+    'loop',
 )
 
 # Store these package names here as they may change in the future since
