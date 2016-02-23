@@ -161,7 +161,6 @@ INSTALLED_APPS = (
     'filebrowser_safe',
     'grappelli_safe',
     'videokheti',
-    'ivr_data_collection',
     'ivr',
     'training',
     'loop',
