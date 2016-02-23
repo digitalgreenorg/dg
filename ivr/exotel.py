@@ -64,7 +64,8 @@ class ExotelService(object):
         call.state = json.dumps(self.init_state())
         call.props = json.dumps(self.init_props())
         call.save()
-        return {"id": call.id, "exotel_id": call_sid}
+        #return {"id": call.id, "exotel_id": call_sid}
+        return {"exotel_id": call_sid}
     
     def urlpatterns(self):
         endurl = url(r'^end/$', self.ServiceCallEndView.as_view(), name=self.ServiceCallEndView.get_name())
