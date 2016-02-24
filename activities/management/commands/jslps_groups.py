@@ -41,7 +41,7 @@ class Command(BaseCommand):
 					try:
 						gp = PersonGroup(group_name = gn,
 									village = village.Village,
-									partner = partner)						)
+									partner = partner)
 						gp.save()
 						print "Group saved in old"
 					except Exception as e:
