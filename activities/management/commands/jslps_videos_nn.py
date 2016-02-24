@@ -65,7 +65,7 @@ class Command(BaseCommand):
 
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
 				print e
-				wtr(['village',vc,'facililator', fc, 'cameraoperator', co, e])
+				wtr.writerow(['village',vc,'facililator', fc, 'cameraoperator', co, e])
 				error = 1
 
 			if(error == 0):
@@ -93,7 +93,7 @@ class Command(BaseCommand):
 						print "video saved"
 					except Exception as e:
 						print vdc, e
-						wtr(['video', vdc, e])
+						wtr.writerow(['video', vdc, e])
 					try:
 						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
 						for i in farmer_list:
@@ -101,7 +101,7 @@ class Command(BaseCommand):
 							vid.save()
 							print "farmer shown saved"
 					except Exception as e:
-						wtr(['farmers shown', e])
+						wtr.writerow(['farmers shown', e])
 
 					try:
 						video = Video.objects.filter(title = vn, village_id = village.Village.id).get()
