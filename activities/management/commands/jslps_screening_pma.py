@@ -19,7 +19,7 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_test/dg/activities/management/screening_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_test/activities/management/screening_error.csv', 'wb')
 		#csv_file = open('C:\Users\Abhishek\Desktop\screening_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\\screening.xml')

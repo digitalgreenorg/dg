@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/dg/activities/management/mediator_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_test/activities/management/mediator_error.csv', 'wb')
 		#csv_file = open('C:\Users\Abhishek\Desktop\mediator_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator.xml')
@@ -92,7 +92,7 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/dg/activities/management/mediator_co_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_test/activities/management/mediator_co_error.csv', 'wb')
 		#csv_file = open('C:\Users\Abhishek\Desktop\mediator_co_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator_co.xml')
