@@ -1,5 +1,5 @@
 import urllib2
-inport unicodecsv as csv
+import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from geographies.models import *
