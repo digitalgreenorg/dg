@@ -1,4 +1,5 @@
 import urllib2
+import unicodecsv as csv
 from datetime import * 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
@@ -18,6 +19,9 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/videos_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\\videos_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Server-Tech\Desktop\\video.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioMasterData'):
@@ -38,7 +42,7 @@ class Command(BaseCommand):
 			dc = c.find('DistrictCode').text
 			bc = c.find('BlockCode').text
 			vc = c.find('VillageCode').text
-			fc = 1623
+			fc = int(c.find('Facililator').text)
 			co = int(c.find('Camera_Operator').text)
 			fr = map(int, c.find('MemberIDList').text.split(','))
 			act= c.find('Actors').text
@@ -61,6 +65,7 @@ class Command(BaseCommand):
 
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
 				print e
+				wtr(['village',vc,'facililator', ac, 'cameraoperator', co, e])
 				error = 1
 
 			if(error == 0):
@@ -86,13 +91,18 @@ class Command(BaseCommand):
 									partner = partner)
 						vid.save()
 						print "video saved"
+					except Exception as e:
+						print vdc, e
+						wtr(['video' vdc, e])
+					try:
 						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
 						for i in farmer_list:
 							vid.farmers_shown.add(i)
 							vid.save()
 							print "farmer shown saved"
 					except Exception as e:
-						print vdc, e
+						wtr(['farmers shown', e])
+
 					try:
 						video = Video.objects.filter(title = vn, village_id = village.Village.id).get()
 						video_added = list(JSLPS_Video.objects.values_list('vc'))

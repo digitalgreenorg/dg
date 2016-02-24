@@ -1,4 +1,5 @@
 import urllib2
+import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from geographies.models import *
@@ -15,6 +16,9 @@ class Command(BaseCommand):
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/people_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\people_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\person.xml')
 		root = tree.getroot()
 		for c in root.findall('SRIRegistrationData'):
@@ -43,17 +47,21 @@ class Command(BaseCommand):
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 			except JSLPS_Village.DoesNotExist:
+				wtr.writerow(['village', gc, e])
 				error = 1
+			
 			try:
 				group = JSLPS_Persongroup.objects.get(group_code = gc)
 			except JSLPS_Persongroup.DoesNotExist:
+				wtr.writerow(['group', gc, e])
 				error = 1
+			
 			if (error == 0):
 				full_name_xml = pn+' '+pfn
 				person_set = dict(Person.objects.filter(village_id = village.Village.id, group_id = group.group.id).values_list('person_name','father_name'))
 				full_name = []
 				for key, value in person_set.iteritems():
-					name = key+ ' ' +value
+					name = key+' '+value
 					full_name.append(name)
 				
 				if full_name_xml not in full_name:
@@ -70,6 +78,7 @@ class Command(BaseCommand):
 						print pc,"person saved in old"
 					except Exception as e:
 						print pc, e
+						wtr.writerow(['person', pc, e])
 					try:
 						person = Person.objects.filter(person_name = pn, father_name = pfn, group_id = group.group.id, village_id = village.Village.id).get()
 						person_added = list(JSLPS_Person.objects.values_list('person_code'))

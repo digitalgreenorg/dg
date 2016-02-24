@@ -1,4 +1,5 @@
 import urllib2
+import unicodecsv as csv
 from django.core.management.base import BaseCommand
 from geographies.models import *
 import xml.etree.ElementTree as ET
@@ -14,6 +15,9 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/geo_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\geo_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\geo.xml')
 		root = tree.getroot()
 		state = State.objects.get(id = 2)
@@ -34,7 +38,8 @@ class Command(BaseCommand):
 					dist.save()
 					print dc, " District saved in old"
 				except Exception as e:
-					print dc, e			
+					print dc, e
+					wtr.writerow(['district',dc, e])
 			try:
 				district = District.objects.filter(state_id = 2).get(district_name = dn)
 				'''d_n = JSLPS_District.objects.get(district_code = dc)
@@ -52,6 +57,7 @@ class Command(BaseCommand):
 					print dc, "District Saved in new"
 			except Exception as e:
 				print dc, e
+				wtr.writerow(['district',dc, e])
 
 			#Block
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
@@ -63,6 +69,7 @@ class Command(BaseCommand):
 					print bc, "block saved in old"
 				except Exception as e:
 					print bc, e
+					wtr.writerow(['block',bc, e])
 			
 			try:
 				block = Block.objects.get(block_name = bn)
@@ -88,6 +95,7 @@ class Command(BaseCommand):
 					print vc, "village saved in old"
 				except Exception as e:
 					print vc, e
+					wtr.writerow(['village',vc, e])
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
@@ -106,4 +114,3 @@ class Command(BaseCommand):
 					print vc, "village saved in new"
 			except Exception as e:
 				print vc, e
-

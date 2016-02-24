@@ -1,4 +1,5 @@
 import urllib2
+import unicodecsv as csv
 from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
@@ -17,6 +18,9 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/adoption_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\\adoption_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\\adoption.xml')
 		root = tree.getroot()
 		for c in root.findall('AdoptionData'):
@@ -28,9 +32,13 @@ class Command(BaseCommand):
 			error = 0
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
+			except JSLPS_Video>DoesNotExist as e:
+				wtr.writerow(['video', vc, e])
+				error = 1
+			try:
 				person = JSLPS_Person.objects.get(person_code = pc)
 			except (JSLPS_Video.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				print vc, pc, e
+				wtr.writerow(['person', pc, e])
 				error = 1
 
 			if(error==0):
@@ -44,3 +52,4 @@ class Command(BaseCommand):
 					print "pap saved"
 				except Exception as e:
 					print vc, pc, e
+					wtr.writerow(['Adoption', 'Person', pc, 'Video', vc])

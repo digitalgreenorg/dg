@@ -1,4 +1,5 @@
 import urllib2
+inport unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from geographies.models import *
@@ -16,6 +17,9 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/mediator_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\mediator_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator.xml')
 		root = tree.getroot()
 		for c in root.findall('AKMData'):
@@ -28,40 +32,56 @@ class Command(BaseCommand):
 				phone = c.find('PhoneNo').text
 			else:
 				phone = '0'
+			error = 0
 			try:
 				district = JSLPS_District.objects.get(district_code = dc)
-				village = JSLPS_Village.objects.get(village_code = vc)
-				animator_set = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id)
-				if not animator_set.exists():
-					anim = Animator(name = an,
-									gender = gender,
-									partner = partner,
-									district = district.district,
-									phone_no = phone)
-					anim.save()
-					print an, "Animator saved in old"
-				animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()
-				village_list = list(AnimatorAssignedVillage.objects.values_list('village_id'))
-				village_list = [i[0] for i in village_list]
-				if village.Village.id not in village_list:
-					anim_assigned = AnimatorAssignedVillage(animator = animator,
-															village = village.Village)
-					anim_assigned.save()
-					print an, "Animator village saved"
-			except Exception as e:
-				print ac, an, e
-
+			except JSLPS_District.DoesNotExist as e:
+				error = 1
+				wtr.writerow(['district', dc, e])
+			
 			try:
-				animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()	
-				animator_added = list(JSLPS_Animator.objects.values_list('animator_code'))
-				animator_added = [i[0] for i in animator_added]
-				if ac not in animator_added:
-					ja = JSLPS_Animator(animator_code = ac,
-										animator = animator)
-					ja.save()
-					print an, "Animator saved in new"
-			except Exception as e:
-				print ac, "jslps", e
+				village = JSLPS_Village.objects.get(village_code = vc)
+			except (JSLPS_District.DoesNotExist, JSLPS_Village.DoesNotExist) as e:
+				error = 1
+				wtr.writerow(['village', vc, e])
+
+			if(error == 0):
+				try:
+					animator_set = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id)
+					if not animator_set.exists():
+						anim = Animator(name = an,
+										gender = gender,
+										partner = partner,
+										district = district.district,
+										phone_no = phone)
+						anim.save()
+						print an, "Animator saved in old"
+				except Exception as e:
+					wtr.writerow(['AKM', ac, e])
+				try:
+					animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()
+					village_list = list(AnimatorAssignedVillage.objects.values_list('village_id'))
+					village_list = [i[0] for i in village_list]
+					if village.Village.id not in village_list:
+						anim_assigned = AnimatorAssignedVillage(animator = animator,
+																village = village.Village)
+						anim_assigned.save()
+						print an, "Animator village saved"
+				except Exception as e:
+					print ac, an, e
+					wtr.writerow(['Assigned Village', ac, vc, e])
+
+				try:
+					animator = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id).get()	
+					animator_added = list(JSLPS_Animator.objects.values_list('animator_code'))
+					animator_added = [i[0] for i in animator_added]
+					if ac not in animator_added:
+						ja = JSLPS_Animator(animator_code = ac,
+											animator = animator)
+						ja.save()
+						print an, "Animator saved in new"
+				except Exception as e:
+					print ac, "jslps", e
 
 		#add camera operator to mediator table
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
@@ -72,6 +92,9 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
+		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/mediator_co_error.csv', 'wb')
+		csv_file = open('C:\Users\Abhishek\Desktop\mediator_co_error.csv', 'wb')
+		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator_co.xml')
 		root = tree.getroot()
 		for c in root.findall('CameraOperatorMasterData'):
@@ -91,6 +114,7 @@ class Command(BaseCommand):
 									)
 					anim.save()
 			except Exception as e:
+				wtrr.writerow(['camer operaor',ac, e])
 				print ac, "Camera operator saved"
 
 			try:
