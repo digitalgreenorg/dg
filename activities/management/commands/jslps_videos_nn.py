@@ -19,8 +19,8 @@ class Command(BaseCommand):
 
 		partner = Partner.objects.get(id = 24)
 		#ADD MEDIATORS - UT(name, gender, district.id)
-		#csv_file = open('/home/ubuntu/code/dg_coco_test/dg/activities/management/videos_error.csv', 'wb')
-		csv_file = open('C:\Users\Abhishek\Desktop\\videos_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_test/dg/activities/management/videos_error.csv', 'wb')
+		#csv_file = open('C:\Users\Abhishek\Desktop\\videos_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('C:\Users\Server-Tech\Desktop\\video.xml')
 		root = tree.getroot()
