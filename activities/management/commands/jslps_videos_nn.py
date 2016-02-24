@@ -93,7 +93,7 @@ class Command(BaseCommand):
 						print "video saved"
 					except Exception as e:
 						print vdc, e
-						wtr(['video' vdc, e])
+						wtr(['video', vdc, e])
 					try:
 						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
 						for i in farmer_list:
