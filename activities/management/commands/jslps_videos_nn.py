@@ -65,7 +65,7 @@ class Command(BaseCommand):
 
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
 				print e
-				wtr(['village',vc,'facililator', ac, 'cameraoperator', co, e])
+				wtr(['village',vc,'facililator', fc, 'cameraoperator', co, e])
 				error = 1
 
 			if(error == 0):
