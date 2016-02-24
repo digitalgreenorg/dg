@@ -49,13 +49,16 @@ class Command(BaseCommand):
 				try:
 					animator_set = Animator.objects.filter(name = an, gender = gender, partner_id = partner.id)
 					if not animator_set.exists():
-						anim = Animator(name = an,
-										gender = gender,
-										partner = partner,
-										district = district.district,
-										phone_no = phone)
-						anim.save()
-						print an, "Animator saved in old"
+						try:
+							anim = Animator(name = an,
+											gender = gender,
+											partner = partner,
+											district = district.district,
+											phone_no = phone)
+							anim.save()
+							print an, "Animator saved in old"
+						except Exception as e:
+							wtr.writerow(['AKM', ac, e])
 				except Exception as e:
 					wtr.writerow(['AKM', ac, e])
 				try:
