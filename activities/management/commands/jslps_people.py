@@ -46,13 +46,13 @@ class Command(BaseCommand):
 			error = 0
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
-			except JSLPS_Village.DoesNotExist:
+			except JSLPS_Village.DoesNotExist as e:
 				wtr.writerow(['village', gc, e])
 				error = 1
 			
 			try:
 				group = JSLPS_Persongroup.objects.get(group_code = gc)
-			except JSLPS_Persongroup.DoesNotExist:
+			except JSLPS_Persongroup.DoesNotExist as e:
 				wtr.writerow(['group', gc, e])
 				error = 1
 			
