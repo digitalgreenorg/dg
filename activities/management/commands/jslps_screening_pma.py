@@ -1,5 +1,5 @@
 import urllib2
-from unicodecsv as csv
+import unicodecsv as csv
 from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
