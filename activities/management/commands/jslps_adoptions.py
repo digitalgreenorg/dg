@@ -32,7 +32,7 @@ class Command(BaseCommand):
 			error = 0
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
-			except JSLPS_Video>DoesNotExist as e:
+			except JSLPS_Video.DoesNotExist as e:
 				wtr.writerow(['video', vc, e])
 				error = 1
 			try:
