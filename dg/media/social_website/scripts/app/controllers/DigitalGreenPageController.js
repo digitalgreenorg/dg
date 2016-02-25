@@ -119,6 +119,7 @@ define(function(require) {
             var csrf_token = $("#csrftoken").val();
             var a = $(".icon-selected");
             var rating = a.attr("data");
+            location.href="#close";
             $.ajax({
                 url : "/feedbacksubmit_json", 
                 type : "POST",
@@ -129,11 +130,9 @@ define(function(require) {
                     rating: rating
                     },
                 success : function(json) {
-                    location.href="#close";
                 },
                 error : function(xhr,errmsg,err) {
                     alert(xhr.status + ": " + xhr.responseText);
-                    location.href="#close";
                 }
             });
             return false;
