@@ -213,12 +213,6 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
-        'ivr_logfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/ivr_logfile'),
-            'formatter': 'standard',
-        },
 
     },
     'loggers': {
@@ -228,10 +222,6 @@ LOGGING = {
         },
         'dashboard': {
             'handlers': ['logfile'],
-            'level': 'DEBUG',
-        },
-        'ivr_log': {
-            'handlers': ['ivr_logfile'],
             'level': 'DEBUG',
         },
     }

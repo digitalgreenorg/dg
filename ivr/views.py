@@ -86,8 +86,7 @@ class AudioView(ExotelView):
         response = cls.exotel_response(request, audio_url)
         return response
 
-class PassthruView(ExotelView):
-      
+class PassthruView(ExotelView):    
     @classmethod
     def get(cls, request):
         call_id = request.GET["CallSid"]
@@ -101,7 +100,6 @@ class PassthruView(ExotelView):
         return response
 
 class MissedCallView(ExotelView):
-
     @classmethod
     def get(cls, request):
         call_id = request.GET["CallSid"]
