@@ -83,7 +83,7 @@ class Command(BaseCommand):
 					ws.write(i, j, cell)
 		wb.save(file)
 
-		email_list=['lokesh@digitalgreen.org','aditya@digitalgreen.org','tanmaygoel@digitalgreen.org','divish@digitalgreen.org','abhisheklodha@digitalgreen.org','smriti@digitalgreen.org']
+		email_list=['loop@digitalgreen.org', 'jahnavi@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
 		subject = 'LOOP: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
