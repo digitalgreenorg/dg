@@ -50,11 +50,36 @@ class Command(BaseCommand):
 				wtr.writerow(['village', gc, e])
 				error = 1
 			
+			#TODO: Code clean up
 			try:
 				group = JSLPS_Persongroup.objects.get(group_code = gc)
 			except JSLPS_Persongroup.DoesNotExist as e:
-				wtr.writerow(['group', gc, e])
 				error = 1
+				try:
+					person = Person(person_name = pn,
+									father_name = pfn,
+									age = age,
+									phone_no = phone,
+									gender = gender,
+									village = village.Village,
+									partner = partner)
+					person.save()
+				except Exception as e:
+					wtr.writerow(['village', gc, e])
+				try:
+					person = Person.objects.filter(person_name = pn, father_name = pfn, village_id = village.Village.id).get()
+					person_added = list(JSLPS_Person.objects.values_list('person_code'))
+					person_added = [i[0] for i in person_added]
+				except Exception as e:
+					print e
+				if pc not in person_added:
+					try:
+						jp = JSLPS_Person(person_code = pc,
+											person = person)
+						jp.save()
+						print pc, "saved in new"
+					except Exception as e:
+						print pc, e
 			
 			if (error == 0):
 				full_name_xml = pn+' '+pfn

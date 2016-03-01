@@ -48,12 +48,13 @@ class Command(BaseCommand):
 						wtr.writerow(['video',vc, e])
 				for g in gc:
 					try:
-						grp = JSLPS_Persongroup.objects.get(group_code = g)
-						groups.append(grp.group)
+						if(gc != 99999):
+							grp = JSLPS_Persongroup.objects.get(group_code = g)
+							groups.append(grp.group)
 					except JSLPS_Persongroup.DoesNotExist as e:
 						print g, e
 						wtr.writerow(['group',gc, e])
-			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, JSLPS_Video.DoesNotExist) as e:
+			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist) as e:
 				print e
 				wtr.writerow(['village',vc,'akm',ac,'video',vc, e])
 				error = 1
@@ -73,10 +74,11 @@ class Command(BaseCommand):
 					wtr.writerow(['Screening',sc,e])
 				try:
 					screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id).get()
-					for i in groups:
-						screening.farmer_groups_targeted.add(i)
-						screening.save()
-						print "Groups saved in old"
+					if not groups:
+						for i in groups:
+							screening.farmer_groups_targeted.add(i)
+							screening.save()
+							print "Groups saved in old"
 					for i in videos:
 						screening.videoes_screened.add(i)
 						screening.save()
