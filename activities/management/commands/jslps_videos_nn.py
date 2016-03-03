@@ -52,8 +52,12 @@ class Command(BaseCommand):
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 				language = Language.objects.get(id = ln)
-				facililator = JSLPS_Animator.objects.get(animator_code = fc)
-				camera_operator = JSLPS_Animator.objects.get(animator_code = co)
+				try:
+					facililator = JSLPS_Animator.objects.get(animator_code = fc)
+					camera_operator = JSLPS_Animator.objects.get(animator_code = co)
+				except JSLPS_Animator.DoesNotExist as e:
+					facililator = JSLPS_Animator.objects.get(animator_code = str(4))
+					camera_operator = JSLPS_Animator.objects.get(animator_code = str(4))
 				farmer_list = []
 				for i in fr:
 					try:
@@ -63,7 +67,7 @@ class Command(BaseCommand):
 						fr = JSLPS_Person.objects.get(person_code = str(630))
 						farmer_list.append(fr.person)
 
-			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist, Language.DoesNotExist) as e:
+			except (JSLPS_Village.DoesNotExist, Language.DoesNotExist) as e:
 				print e
 				wtr.writerow(['village',vc,'facililator', fc, 'cameraoperator', co, e])
 				error = 1
