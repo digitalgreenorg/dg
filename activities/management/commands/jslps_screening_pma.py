@@ -48,7 +48,7 @@ class Command(BaseCommand):
 						wtr.writerow(['video',vc, e])
 				for g in gc:
 					try:
-						if(gc != 99999):
+						if(g != 99999):
 							grp = JSLPS_Persongroup.objects.get(group_code = g)
 							groups.append(grp.group)
 					except JSLPS_Persongroup.DoesNotExist as e:
