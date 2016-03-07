@@ -4,7 +4,7 @@ from django.db.models.signals import pre_delete, post_save
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES
 from farmerbook.managers import FarmerbookManager
-from geographies.models import District, Village
+from geographies.models import *
 from programs.models import Partner
 
 class Animator(CocoModel):
@@ -83,3 +83,24 @@ class Person(CocoModel):
         return  display
 post_save.connect(save_log, sender=Person)
 pre_delete.connect(delete_log, sender=Person)
+
+class JSLPS_Animator(CocoModel):
+    id = models.AutoField(primary_key=True)
+    animator_code = models.CharField(max_length=100)
+    animator = models.ForeignKey(Animator, null=True, blank=True)
+    assigned_villages = models.ManyToManyField(JSLPS_Village, related_name='jslps_assigned_villages', through='JSLPS_AnimatorAssignedVillage', null=True, blank=True)
+
+class JSLPS_AnimatorAssignedVillage(CocoModel):
+    id = models.AutoField(primary_key=True)
+    animator = models.ForeignKey(JSLPS_Animator)
+    village = models.ForeignKey(JSLPS_Village)
+    
+class JSLPS_Persongroup(CocoModel):
+    id = models.AutoField(primary_key=True)
+    group_code = models.CharField(max_length=100) 
+    group = models.ForeignKey(PersonGroup, null=True, blank=True)
+
+class JSLPS_Person(CocoModel):
+    id = models.AutoField(primary_key=True)
+    person_code = models.CharField(max_length=100)
+    person = models.ForeignKey(Person, null=True, blank=True)
