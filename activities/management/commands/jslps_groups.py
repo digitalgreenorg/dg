@@ -11,16 +11,14 @@ class Command(BaseCommand):
 		#read xml from url
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\group.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/group.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/group_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\group_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/group_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\group.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/group.xml')
 		root = tree.getroot()
 
 		for c in root.findall('GroupData'):

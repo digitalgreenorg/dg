@@ -15,14 +15,13 @@ class Command(BaseCommand):
 		partner = Partner.objects.get(id = 24)
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\\screening.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/screening.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/screening_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\screening_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/screening_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\\screening.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/screening.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioScreeingMasterData'):
 			sc = c.find('VDO_ID').text
@@ -104,14 +103,13 @@ class Command(BaseCommand):
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\\pma.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/pma.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/pma_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\pma_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/pma_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\\pma.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/pma.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioScreeingMemberData'):
@@ -124,7 +122,7 @@ class Command(BaseCommand):
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
 				#print e
-				wtrr.writerow(['Screening', sc, 'Person', pc])
+				wtrr.writerow(['Screening', sc, 'Person', pc, e])
 				error = 1
 
 			if (error == 0):

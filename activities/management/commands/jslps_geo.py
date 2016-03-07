@@ -11,14 +11,13 @@ class Command(BaseCommand):
 
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\\geo.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/geo.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/geo_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\geo_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/geo_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\geo.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/geo.xml')
 		root = tree.getroot()
 		state = State.objects.get(id = 2)
 		for c in root.findall('MasterData'):
@@ -42,10 +41,6 @@ class Command(BaseCommand):
 					wtr.writerow(['district',dc, e])
 			try:
 				district = District.objects.filter(state_id = 2).get(district_name = dn)
-				'''d_n = JSLPS_District.objects.get(district_code = dc)
-				d_n.district = district
-				d_n.save()
-				print dc, "distict-foreign key saved in new"'''
 				district_added = list(JSLPS_District.objects.values_list('district_code'))
 				district_added = [i[0] for i in district_added]
 				
@@ -99,10 +94,6 @@ class Command(BaseCommand):
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
-				'''v_n = JSLPS_Village.objects.get(village_code = vc)
-				v_n.Village = village
-				v_n.save()
-				print vc, "village-foreign key saved in new"'''
 				village_added = list(JSLPS_Village.objects.values_list('village_code'))
 				village_added = [i[0] for i in village_added]
 
