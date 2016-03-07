@@ -49,23 +49,23 @@ class BroadcastAdmin(admin.ModelAdmin):
         return "\n".join([p.district_name for p in obj.district.all()])
 
     def save_model(self, request, obj, form, change):
-    	obj.save()
-        ivr_service = obj.service
+      obj.save()
+      ivr_service = obj.service
 
-    	#ivr_obj = eval(ivr_service)()
-    	if ivr_service == 'hello':
-    		ivr_obj = hello
-    		#update audio URL accordingly
-    	elif ivr_service == 'greeting':
-    		ivr_obj = greeting
-    	elif ivr_service == 'jharkhand_pilot':
-    		ivr_obj = jharkhand_pilot
-    	else:
-    		print "Too Bad!"
+      #ivr_obj = eval(ivr_service)()
+      if ivr_service == 'hello':
+        ivr_obj = hello
+        #update audio URL accordingly
+      elif ivr_service == 'greeting':
+        ivr_obj = greeting
+      elif ivr_service == 'jharkhand_pilot':
+        ivr_obj = jharkhand_pilot
+      else:
+        print "Too Bad!"
 
         animator_list = Animator.objects.filter(district__in=obj.district.all())
         for person in animator_list:
-        	if person.phone_no:
-				pass
-        		#print type(person.phone_no)
-    			#ivr_obj.init_call(person.phone_no)
+          if person.phone_no:
+            pass
+            #print type(person.phone_no)
+            #ivr_obj.init_call(person.phone_no)

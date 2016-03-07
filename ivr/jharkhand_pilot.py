@@ -4,11 +4,13 @@ from models import Broadcast, IvrSubscriber
 import time
 import json
 
+from dg.settings import EXOTEL_TOKEN
+
 class JharkhandPilot(ExotelService):
     name = "jharkhand_pilot"
     #TODO some of these must come from settings
     sid = "digitalgreen2"
-    token = "421c11b1235067ca30ca87590c80c31eadc46af0"
+    token = EXOTEL_TOKEN
     caller_id="01139595020"
     flow_id = "51319"
     views = {}

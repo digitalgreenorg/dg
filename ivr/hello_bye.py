@@ -1,13 +1,15 @@
 from exotel import ExotelService
 from views import CallEndView
 
+from dg.settings import EXOTEL_TOKEN
+
 import json
 
 class HelloBye(ExotelService):
     name = "hello_bye"
     #TODO some of these must come from settings
     sid = "digitalgreen2"
-    token = "421c11b1235067ca30ca87590c80c31eadc46af0"
+    token = EXOTEL_TOKEN
     caller_id="01139595953"
     flow_id = "58687"
     views = {}

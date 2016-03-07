@@ -31,7 +31,6 @@ from mcoco_admin import mcoco_admin
 from ivr_admin import ivr_admin
 import website_archive_urls
 import deoanalytics.urls
-import ivr_data_collection.urls
 
 coco_admin.index_template = 'social_website/index.html'
 coco_admin.login_template = 'social_website/login.html'

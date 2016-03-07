@@ -40,6 +40,9 @@ class Geography(models.Model):
     def __unicode__(self):
         return '%s - %f' % (self.name, self.hierarchy_number)
 
+    class Meta:
+        verbose_name_plural = "Geographies"
+
 class Job(models.Model):
     title = models.CharField(max_length = 300)
     description = models.TextField()
