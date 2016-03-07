@@ -11,15 +11,14 @@ class Command(BaseCommand):
 		#read xml from url
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\person.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/person.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/people_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\people_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/people_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\person.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/person.xml')
 		root = tree.getroot()
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text

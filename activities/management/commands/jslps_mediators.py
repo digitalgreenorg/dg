@@ -11,16 +11,14 @@ class Command(BaseCommand):
 		#read xml from url
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAKMData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\mediator.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/mediator.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/mediator_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\mediator_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/mediator_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/mediator.xml')
 		root = tree.getroot()
 		for c in root.findall('AKMData'):
 			ac = c.find('AKM_ID').text
@@ -89,16 +87,14 @@ class Command(BaseCommand):
 		#add camera operator to mediator table
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Abhishek\Desktop\mediator_co.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/mediator_co.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/mediator_co_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\mediator_co_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/mediator_co_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Abhishek\Desktop\mediator_co.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/mediator_co.xml')
 		root = tree.getroot()
 		for c in root.findall('CameraOperatorMasterData'):
 			ac = c.find('CameraOperatorID').text
@@ -128,6 +124,6 @@ class Command(BaseCommand):
 					ja = JSLPS_Animator(animator_code = ac,
 										animator = animator)
 					ja.save()
-					print an, "Animator saved in new"
+					print an, "Camera operator saved in new"
 			except Exception as e:
 				print ac, "jslps", e
