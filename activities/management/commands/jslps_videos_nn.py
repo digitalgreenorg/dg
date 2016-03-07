@@ -13,16 +13,14 @@ class Command(BaseCommand):
 		#saving videos
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Server-Tech\Desktop\\video.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/video.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		#ADD MEDIATORS - UT(name, gender, district.id)
-		csv_file = open('/home/ubuntu/code/dg_test/activities/management/videos_error.csv', 'wb')
-		#csv_file = open('C:\Users\Abhishek\Desktop\\videos_error.csv', 'wb')
+		csv_file = open('/home/ubuntu/code/dg_git/activities/management/videos_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('C:\Users\Server-Tech\Desktop\\video.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/video.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioMasterData'):
 			vdc = c.find('VideoID').text
@@ -124,13 +122,12 @@ class Command(BaseCommand):
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C:\Users\Server-Tech\Desktop\\nn.xml", 'w')
+		xml_file = open("C/home/ubuntu/code/dg_git/activities/management/nn.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		#ADD MEDIATORS - UT(name, gender, district.id)
-		tree = ET.parse('C:\Users\Server-Tech\Desktop\\nn.xml')
+		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/nn.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioNon_NegotiableMasterData'):
