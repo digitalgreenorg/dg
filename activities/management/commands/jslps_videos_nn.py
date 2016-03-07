@@ -122,7 +122,7 @@ class Command(BaseCommand):
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("C/home/ubuntu/code/dg_git/activities/management/nn.xml", 'w')
+		xml_file = open("/home/ubuntu/code/dg_git/activities/management/nn.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
