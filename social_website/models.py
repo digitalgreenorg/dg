@@ -27,10 +27,13 @@ class Partner(models.Model):
     views = models.BigIntegerField(default=0)
     likes = models.BigIntegerField(default=0)
     adoptions = models.BigIntegerField(default=0)
+    
     def __unicode__(self):
         return self.name
+    
     def get_absolute_url(self):
         return reverse('partner', args=[str(self.name)])
+    
     def increase_likes(self):
         self.likes += 1
         self.save()
@@ -106,17 +109,22 @@ class Collection(models.Model):
     adoptions = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
+    
     def __unicode__(self):
         return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.state, self.language))
+    
     def get_absolute_url(self):
         return reverse('collection_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
+    
     def get_absolute_url_for_video(self, video_index = 1):
         return reverse('collection_video_page', 
                        args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
+    
     def increase_likes(self):
         self.likes += 1
         self.save()
+    
     class Meta:
         unique_together = ("title", "partner", 'state', 'language')
 post_save.connect(collection_add_activity, sender=Collection)
@@ -172,6 +180,9 @@ class Activity(models.Model):
     newsFeed = models.BooleanField()
     type = models.PositiveSmallIntegerField()
     titleURL = models.URLField(max_length=400)
+
+    class Meta:
+        verbose_name_plural = "Activities"
 
 class Milestone(models.Model):
     uid = models.AutoField(primary_key=True)

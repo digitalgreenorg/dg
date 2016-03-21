@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'filebrowser_safe',
     'grappelli_safe',
     'videokheti',
+    'ivr',
     'training',
     'loop',
 )
@@ -212,6 +213,7 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+
     },
     'loggers': {
         'social_website': {

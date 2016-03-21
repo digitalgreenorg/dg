@@ -114,7 +114,8 @@ def picoseekho_view(request, uid=1):
 
 def disseminationprep_view(request, uid=1):
     video_list = [
-    {'uid':1, 'title':"Preparation for Digital Green Video Dissemination", 'description':"Preparing for the video dissemination beforehand can ensure that the dissemination goes smoothly. They can prepare by watching the video, noting down non-negotiables, charging the equipment and reminding SHG members a day before the dissemination. Abha, an experienced VRP, invites two other new VRPs to learn the process from her.", 'youtubeID':'fHWiTB5zs1Y'},
+    {'uid':1, 'title':"Pre-video dissemination preparation", 'description':"Preparing for the video dissemination beforehand can ensure that the dissemination goes smoothly. They can prepare by watching the video, noting down non-negotiables, charging the equipment and reminding SHG members a day before the dissemination. Abha, an experienced mediator, invites two other new mediators to learn the process from her.", 'youtubeID':'gIKNVu4XTw4'}, 
+    {'uid':2, 'title':"Understanding non-negotiables", 'description':"One of the essential aspects while preparing for dissemination is to understand the non-negotiables. Non-negotiable's are those points that make a practice successful. If a community member does not adopt all the non-negotiables, they may not get the desired results.", 'youtubeID':'EPcb7dbKReM'}
     ]
 
     try:
@@ -138,7 +139,10 @@ def disseminationprep_view(request, uid=1):
 
 def disseminationform_view(request, uid=1):
     video_list = [
-    {'uid':1, 'title':"Filling of the Digital Green Dissemination Form", 'description':"Disseminations conducted by VRPs follow a standard procedure, where the VRP discusses about the video, shows the video, pauses the video in critical places, takes questions from the audience and summarizes the video with the non-negotiables adoption points. The VRP also fills a form to document which video was shown and who came. The new VRPs observe how Abha fills her form and conducts her dissemination.",'youtubeID':'cLx1-3KmF7w'},
+    {'uid':1, 'title':"Filling the upper-left hand part of the form", 'description':"The mediator fills a form to document which video was shown and who came. The new mediators observe how Abha fills her form and conducts her dissemination. This part explains the upper left hand of the form. This part contains information about the video being shown, the date and time and the groups attending.", 'youtubeID':'rytq0SLzJdw'},
+    {'uid':2, 'title':"Filling the upper-right hand part of the form", 'description':"The upper-right hand of the form consists of basic information about the place where the screening is to be conducted, including the village, block and district name.", 'youtubeID':'kAyrh7mj-ig'},
+    {'uid':3, 'title':"Filling  member's information", 'description':"One of the more important parts of the form is filling information about the group members who are attending the screening. This part explains how to easily fill this information in the form, specially when there are multiple groups attending the training.", 'youtubeID':'zbB9xzzOcgQ'},
+    {'uid':4, 'title':"Conducting dissemination", 'description':"Disseminations conducted by mediators follow a standard procedure, where the mediator welcomes the group members, introduces the video, shows the video, pauses the video in critical places, takes questions from the audience and summarizes the video with the non-negotiables adoption points. At the end of the dissemination, the mediator has to take signature/thumb-print of all the group members who attended the training. This also helps them to later on follow up with those who adopted the practice.", 'youtubeID':'7OG6npRQbiM'}
     ]
 
     try:
@@ -162,7 +166,9 @@ def disseminationform_view(request, uid=1):
 
 def adoptionverification_view(request, uid=1):
     video_list = [
-    {'uid':1, 'title':"Filling of the Digital Green Adoption Form and Adoption Verification", 'description':"After the dissemination, the VRP conducts adoption verification at each individual farmer's field to verify whether they have adopted the new practice that was shown to them and how well they have adopted it. Abha takes the two VRPs on the adoption verification visit and demonstrates how to check all the non-negotiables points, by asking both open and close-ended questions. She uses both recollection and physical verification to determine whether a non-negotiable point has been adopted. She documents this information in the adoption verification form.",'youtubeID':'6gVg7OS0pEs'},
+    {'uid':1, 'title':"Understanding the adoption verification form", 'description':"Adoption verification part of the form contains information about group members who adopted the practice, when thy adopted the practice and which all non-negotiable points they adopted. Abha explains the two new mediators what each field means.", 'youtubeID':'1LT9xdLFagc'},
+    {'uid':2, 'title':"Conducting an adoption verification", 'description':"The filling of the form in a real scenario is demonstrated through Abha and the other two mediators by visiting one of the group members in her field and verifying all the non-negotiable points.", 'youtubeID':'Z5LVB8qTKtc'}, 
+    {'uid':3, 'title':"Adoption verification assessment", 'description':"You can assess your own knowledge of filling the adoption verification form by following the case that is being shown in this part of the video.", 'youtubeID':'55hru37cOuk'}
     ]
 
     try:
