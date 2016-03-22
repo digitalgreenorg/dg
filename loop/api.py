@@ -105,6 +105,26 @@ class VillageAuthorization(Authorization):
             raise NotFound("Not allowed to download Village")
 
 
+class BlockAuthorization(Authorization):
+    def __init__(self,field):
+        self.block_field = field
+
+    def read_list(self, object_list, bundle):
+        block = LoopUser.objects.get(user_id= bundle.request.user.id).village.block
+        kwargs = {}
+        kwargs[self.block_field] = block
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.block_field] = LoopUser.objects.get(user_id= bundle.request.user.id).village.block
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Block" )
+
 class MandiAuthorization(Authorization):
 
     def __init__(self, field):
@@ -388,18 +408,15 @@ class VehicleResource(BaseResource):
 
 
 class TransporterResource(BaseResource):
-    village = fields.ForeignKey(VillageResource, 'village', full=True)
-
+    block = fields.ForeignKey(BlockResource, 'block', full=True)
     class Meta:
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
-        authorization = VillageAuthorization('village_id__in')
+        authorization = BlockAuthorization('block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-
-    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
-    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
-
+    dehydrate_block = partial(foreign_key_to_id, field_name='block', sub_field_names=['id','block_name'])
+    # hydrate_block = partial(dict_to_foreign_uri, field_name='village')
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Transporter.objects.filter(transporter_phone=bundle.data['transporter_phone'],
                                              transporter_name=bundle.data['transporter_name'])
@@ -421,6 +438,9 @@ class TransporterResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+    def hydrate_block(self, bundle):
+        bundle.data['block'] = LoopUser.objects.get(id = bundle.request.user.id).village.block
+        return bundle
 
 
 class TransportationVehicleResource(BaseResource):
@@ -430,7 +450,7 @@ class TransportationVehicleResource(BaseResource):
     class Meta:
         queryset = TransportationVehicle.objects.all()
         resource_name = 'transportationvehicle'
-        authorization = VillageAuthorization('transporter__village_id__in')
+        authorization = BlockAuthorization('transporter__block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
 
@@ -469,7 +489,7 @@ class TransportationVehicleResource(BaseResource):
 
 class DayTransportationResource(BaseResource):
     transportation_vehicle = fields.ForeignKey(TransportationVehicleResource, 'transportation_vehicle')
-
+    mandi = fields.ForeignKey(MandiResource, 'mandi')
     class Meta:
         limit = 0
         max_limit = 0
@@ -478,12 +498,10 @@ class DayTransportationResource(BaseResource):
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
-
-    dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle',
-                                               sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
-    hydrate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle',
-                                             resource_name='transportationvehicle')
-
+    dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=['id', 'transporter', 'vehicle', 'vehicle_number'])
+    hydrate_transportation_vehicle = partial(dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
+    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id','mandi_name'])
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle

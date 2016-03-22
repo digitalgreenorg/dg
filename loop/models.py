@@ -175,14 +175,13 @@ class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
     transporter_name = models.CharField(max_length=90)
     transporter_phone = models.CharField(max_length=13)
-    village = models.ForeignKey(Village)
+    block = models.ForeignKey(Block)
 
     def __unicode__(self):
         return self.transporter_name
 
     class Meta:
-        unique_together = ("transporter_name", "transporter_phone",)
-
+        unique_together = ("transporter_name","transporter_phone",)
 
 post_save.connect(save_log, sender=Transporter)
 pre_delete.connect(delete_log, sender=Transporter)
@@ -218,16 +217,14 @@ pre_delete.connect(delete_log, sender=TransportationVehicle)
 
 
 class DayTransportation(LoopModel):
-    id = models.AutoField(primary_key=True)
-    date = models.DateField(auto_now=False)
-    transportation_vehicle = models.ForeignKey(TransportationVehicle)
-    transportation_cost = models.FloatField()
-    other_cost = models.FloatField()
-    vrp_fees = models.FloatField()
-    comment = models.CharField(max_length=200)
-    mandi_list = models.CharField(max_length=20)
-
-
+	id = models.AutoField(primary_key=True)
+	date = models.DateField(auto_now=False)
+	transportation_vehicle = models.ForeignKey(TransportationVehicle)
+	transportation_cost = models.FloatField()
+	other_cost = models.FloatField()
+	vrp_fees = models.FloatField()
+	comment = models.CharField(max_length = 200)
+	mandi = models.ForeignKey(Mandi)
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
 
