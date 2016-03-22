@@ -134,7 +134,7 @@ class Transporter(LoopModel):
 	id = models.AutoField(primary_key=True)
 	transporter_name = models.CharField(max_length=90)
 	transporter_phone = models.CharField(max_length=13)
-	village = models.ForeignKey(Village)
+    block = models.ForeignKey(Block)
 
 	def __unicode__(self):
 		return self.transporter_name
@@ -173,7 +173,7 @@ class DayTransportation(LoopModel):
 	other_cost = models.FloatField()
 	vrp_fees = models.FloatField()
 	comment = models.CharField(max_length = 200)
-	mandi_list = models.CharField(max_length=20)
+	mandi = models.ForeignKey(Mandi)
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
 
