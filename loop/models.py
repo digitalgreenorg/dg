@@ -86,6 +86,22 @@ post_save.connect(save_log, sender=Village)
 pre_delete.connect(delete_log, sender=Village)
 
 
+class Mandi(LoopModel):
+    id = models.AutoField(primary_key=True)
+    mandi_name = models.CharField(max_length=90)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+    district = models.ForeignKey(District)
+
+    def __unicode__(self):
+        return self.mandi_name
+
+    class Meta:
+        unique_together = ("mandi_name", "district",)
+
+post_save.connect(save_log, sender=Mandi)
+pre_delete.connect(delete_log, sender=Mandi)
+
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="loop_user")
@@ -151,25 +167,6 @@ class Crop(LoopModel):
 
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
-
-
-class Mandi(LoopModel):
-    id = models.AutoField(primary_key=True)
-    mandi_name = models.CharField(max_length=90)
-    latitude = models.FloatField(null=True)
-    longitude = models.FloatField(null=True)
-    district = models.ForeignKey(District)
-
-    def __unicode__(self):
-        return self.mandi_name
-
-    class Meta:
-        unique_together = ("mandi_name", "district",)
-
-
-post_save.connect(save_log, sender=Mandi)
-pre_delete.connect(delete_log, sender=Mandi)
-
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
