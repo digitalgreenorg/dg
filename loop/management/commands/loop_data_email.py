@@ -23,6 +23,7 @@ class Command(BaseCommand):
 		mysql = con.cursor()
 		mysql.execute("""
             SELECT
+                LCT.date as \'Date\',
                 LP.name as \'Aggregator Name\',
                 AU.username as \'Aggregator Phone Number\',
                 LF.name as \'Farmer Name\',
@@ -31,7 +32,6 @@ class Command(BaseCommand):
                 LD.district_name as \'District Name\',
                 LM.mandi_name as \'Mandi Name\',
                 LC.crop_name as \'Crop Name\',
-                LCT.date as \'Date\',
                 LCT.quantity as \'Quantity\',
                 LCT.price as \'Price\',
                 LCT.amount as \'Amount\',
@@ -83,7 +83,7 @@ class Command(BaseCommand):
 					ws.write(i, j, cell)
 		wb.save(file)
 
-		email_list=['lokesh@digitalgreen.org','aditya@digitalgreen.org','tanmaygoel@digitalgreen.org','divish@digitalgreen.org','abhisheklodha@digitalgreen.org','smriti@digitalgreen.org']
+		email_list=['loop@digitalgreen.org', 'jahnavi@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
 		subject = 'LOOP: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,

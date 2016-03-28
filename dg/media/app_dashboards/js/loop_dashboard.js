@@ -323,7 +323,7 @@ function fillvillagetable(data_json) {
    var cell5 = row.insertCell(4);
    cell1.innerHTML = "TOTAL";
    cell1.setAttribute('style','text-align:center; font-weight:bold;');
-   cell2.innerHTML = total_volume.toString().concat(" Kg");
+   cell2.innerHTML = total_volume.toFixed(1).toString().concat(" Kg");
    cell2.setAttribute('style','text-align:center; font-weight:bold;');
    cell3.innerHTML = str1.concat((total_amount).toFixed(2));
    cell3.setAttribute('style','text-align:center; font-weight:bold;');

@@ -18,3 +18,6 @@ class Feedback(models.Model):
     email = models.EmailField(max_length=254)
     date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
     time = models.DateTimeField(default=datetime.datetime.utcnow)
+
+    class Meta:
+        verbose_name_plural = "Feedback"
