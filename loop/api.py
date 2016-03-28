@@ -439,7 +439,7 @@ class TransporterResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
     def hydrate_block(self, bundle):
-        bundle.data['block'] = LoopUser.objects.get(id = bundle.request.user.id).village.block
+        bundle.data['block'] = LoopUser.objects.get(user__id = bundle.request.user.id).village.block
         return bundle
 
 
