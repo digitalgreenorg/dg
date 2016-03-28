@@ -52,7 +52,7 @@ def save_log(sender, **kwargs ):
         village_id = None
         user = None
     elif sender == "TransportationVehicle":
-        village_id = instance.transporter.village.id
+        village_id = None
         user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None
