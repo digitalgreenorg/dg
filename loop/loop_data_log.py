@@ -46,7 +46,7 @@ def save_log(sender, **kwargs ):
         village_id = instance.farmer.village.id
         user = instance.user_created
     elif sender == "Transporter":
-        village_id=instance.village.id
+        village_id = None
         user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
@@ -91,7 +91,7 @@ def delete_log(sender, **kwargs ):
         village_id = None
         user = None
     elif sender == "TransportationVehicle":
-        village_id = instance.transporter.village.id
+        village_id = None
         user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None
@@ -146,7 +146,8 @@ def send_updated_log(request):
             rows = Log.objects.filter(timestamp__gt = timestamp, entry_table__in = ['Crop', 'Vehicle'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = ['Farmer','Village'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, user = user, entry_table__in = ['CombinedTransaction'])
-            rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = ['Transporter', 'TransportationVehicle'])
+#            rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in = villages, entry_table__in = [TransportationVehicle'])
+            rows = rows | Log.objects.filter(timestamp__gt = timestamp, user__village__block_id=user.village.block.id, entry_table__in = ['Transporter','TransportationVehicle'])
             rows = rows | Log.objects.filter(timestamp__gt = timestamp, user = user, entry_table__in = ['DayTransportation'])
             data_list=[]
             for row in rows:

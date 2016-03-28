@@ -10,11 +10,12 @@ ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
 
 
 class LoopModel(models.Model):
-    user_created = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True,
-                                     blank=True)
-    time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    user_modified = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_related_modified", editable=False,
-                                      null=True, blank=True)
+    user_created = models.ForeignKey(
+        User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True, blank=True)
+    time_created = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True)
+    user_modified = models.ForeignKey(
+        User, related_name="%(app_label)s_%(class)s_related_modified", editable=False, null=True, blank=True)
     time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
@@ -102,35 +103,33 @@ class Mandi(LoopModel):
 post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(delete_log, sender=Mandi)
 
+
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="loop_user")
-    name = models.CharField(max_length=100, default="default");
+    name = models.CharField(max_length=100, default="default")
     role = models.IntegerField(choices=RoleChoice)
-    assigned_villages = models.ManyToManyField(Village, related_name="assigned_villages")
-    assigned_mandis = models.ManyToManyField(Mandi, related_name="assigned_mandis")
+    assigned_villages = models.ManyToManyField(
+        Village, related_name="assigned_villages")
+    assigned_mandis = models.ManyToManyField(
+        Mandi, related_name="assigned_mandis")
+    mode = models.IntegerField(choices=ModelChoice, default=1)
+    phone_number = models.CharField(
+        max_length=14, null=False, blank=False, default="0")
+    village = models.ForeignKey(Village, default=None, null=True)
 
+    def __unicode__(self):
+        return self.user.username
 
-mode = models.IntegerField(choices=ModelChoice, default=1)
-phone_number = models.CharField(max_length=14, null=False, blank=False, default="0")
-village = models.ForeignKey(Village, default=None, null=True)
+    def get_villages(self):
+        return self.assigned_villages.all()
 
+    def get_mandis(self):
+        return self.assigned_mandis.all()
 
-def __unicode__(self):
-    return self.user.username
-
-
-def get_villages(self):
-    return self.assigned_villages.all()
-
-
-def get_mandis(self):
-    return self.assigned_mandis.all()
-
-
-def get_districts_village(self):
-    district = self.village.block.district
-    return Village.objects.filter(block__district_id=district.id)
+    def get_districts_village(self):
+        district = self.village.block.district
+        return Village.objects.filter(block__district_id=district.id)
 
 
 class Farmer(LoopModel):
@@ -138,11 +137,12 @@ class Farmer(LoopModel):
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1)  # M/F
     phone = models.CharField(max_length=13)
-    image_path = models.CharField(max_length=500, default=None, null=True, blank=True)
+    image_path = models.CharField(
+        max_length=500, default=None, null=True, blank=True)
     village = models.ForeignKey(Village)
 
     def __unicode__(self):
-        return self.name;
+        return self.name
 
     class Meta:
         unique_together = ("phone", "name")
@@ -154,7 +154,8 @@ pre_delete.connect(delete_log, sender=Farmer)
 
 class Crop(LoopModel):
     id = models.AutoField(primary_key=True)
-    image_path = models.CharField(max_length=500, default=None, null=True, blank=True)
+    image_path = models.CharField(
+        max_length=500, default=None, null=True, blank=True)
     crop_name = models.CharField(max_length=30, null=False, blank=False)
     measuring_unit = models.CharField(max_length=20, default="kg")
 
@@ -168,6 +169,7 @@ class Crop(LoopModel):
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
 
+
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
     transporter_name = models.CharField(max_length=90)
@@ -178,7 +180,7 @@ class Transporter(LoopModel):
         return self.transporter_name
 
     class Meta:
-        unique_together = ("transporter_name","transporter_phone",)
+        unique_together = ("transporter_name", "transporter_phone",)
 
 post_save.connect(save_log, sender=Transporter)
 pre_delete.connect(delete_log, sender=Transporter)
@@ -214,14 +216,15 @@ pre_delete.connect(delete_log, sender=TransportationVehicle)
 
 
 class DayTransportation(LoopModel):
-	id = models.AutoField(primary_key=True)
-	date = models.DateField(auto_now=False)
-	transportation_vehicle = models.ForeignKey(TransportationVehicle)
-	transportation_cost = models.FloatField()
-	other_cost = models.FloatField()
-	vrp_fees = models.FloatField()
-	comment = models.CharField(max_length = 200)
-	mandi = models.ForeignKey(Mandi)
+    id = models.AutoField(primary_key=True)
+    date = models.DateField(auto_now=False)
+    transportation_vehicle = models.ForeignKey(TransportationVehicle)
+    transportation_cost = models.FloatField()
+    farmer_share = models.FloatField(default=0.0)
+    other_cost = models.FloatField(default=0.0)
+    vrp_fees = models.FloatField(default=0.0)
+    comment = models.CharField(max_length=200, null=True,blank=True)
+    mandi = models.ForeignKey(Mandi)
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
 
@@ -252,7 +255,8 @@ pre_delete.connect(delete_log, sender=CombinedTransaction)
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.utcnow)
+    timestamp = models.DateTimeField(
+        auto_now_add=False, default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null=True)
     village = models.IntegerField(null=True)
     action = models.IntegerField()
