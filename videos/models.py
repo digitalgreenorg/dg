@@ -134,8 +134,12 @@ class NonNegotiable(CocoModel):
     non_negotiable = models.CharField(max_length=500)
     physically_verifiable = models.BooleanField(db_index=True, default=False)
     
-
     def __unicode__(self):
         return  u'%s' % self.non_negotiable
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
+
+class JSLPS_Video(CocoModel):
+    id = models.AutoField(primary_key=True)
+    vc = models.CharField(max_length=100)
+    video = models.ForeignKey(Video, null=True, blank=True)
