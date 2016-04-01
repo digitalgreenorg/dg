@@ -1,12 +1,15 @@
-from tastypie.exceptions import ImmediateHttpResponse
+from tastypie.exceptions import ImmediateHttpResponse, NotFound
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
 from django.forms.models import model_to_dict
 from tastypie import fields, utils
+from tastypie import bundle
 from functools import partial
-from django.http import HttpResponse
-from django.core.exceptions import ValidationError
+from django import http
+from tastypie.bundle import Bundle
+from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 import json
 
@@ -506,6 +509,27 @@ class DayTransportationResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+    def obj_delete(self, bundle, **kwargs):
+        try:
+            # get an instance of the bundle.obj that will be deleted
+            deleted_obj = self.obj_get(bundle=bundle, **kwargs)
+            super(DayTransportationResource, self).obj_delete(bundle, user=bundle.request.user)
+        except ObjectDoesNotExist:
+            raise NotFound("A model instance matching the provided arguments could not be found.")
+        # call the delete, deleting the obj from the database
+        return deleted_obj
+
+
+    def delete_detail(self, request, **kwargs):
+        bundle = Bundle(request=request)
+
+        try:
+            deleted_obj = self.obj_delete(bundle=bundle, **self.remove_api_resource_names(kwargs))
+            deleted_bundle = self.build_bundle(obj=deleted_obj, request=request)
+            return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
+        except NotFound:
+            return http.Http404()
+
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
@@ -515,6 +539,7 @@ class CombinedTransactionResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        detail_allowed_methods = ["get", "post", "put", "delete"]
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
         authorization = CombinedTransactionAuthorization()
@@ -555,3 +580,32 @@ class CombinedTransactionResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+
+    def obj_delete(self, bundle, **kwargs):
+        try:
+            # get an instance of the bundle.obj that will be deleted
+            deleted_obj = self.obj_get(bundle=bundle, **kwargs)
+            super(CombinedTransactionResource, self).obj_delete(bundle, user=bundle.request.user)
+        except ObjectDoesNotExist:
+            raise NotFound("A model instance matching the provided arguments could not be found.")
+        # call the delete, deleting the obj from the database
+        return deleted_obj
+
+
+    def delete_detail(self, request, **kwargs):
+        bundle = Bundle(request=request)
+
+        try:
+            # call our obj_delete, storing the deleted_obj we returned
+            # del_obj = CombinedTransaction.objects.get(id=kwargs['pk'])
+            deleted_obj = self.obj_delete(bundle=bundle, **self.remove_api_resource_names(kwargs))
+            # build a new bundle with the deleted obj and return it in a response
+            # print del_obj.id, del_obj.amount
+            # print type(del_obj)
+            deleted_bundle = self.build_bundle(obj=deleted_obj, request=request)
+            # print deleted_bundle
+            # deleted_bundle = self.full_dehydrate()
+            # deleted_bundle = self.alter_detail_data_to_serialize(request, deleted_bundle)
+            return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
+        except NotFound:
+            return http.Http404()
