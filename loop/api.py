@@ -489,6 +489,33 @@ class TransportationVehicleResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+    def obj_delete(self, bundle, **kwargs):
+        try:
+            # get an instance of the bundle.obj that will be deleted
+            deleted_obj = self.obj_get(bundle=bundle, **kwargs)
+            super(TransportationVehicleResource, self).obj_delete(bundle, user=bundle.request.user)
+        except ObjectDoesNotExist:
+            raise NotFound("A model instance matching the provided arguments could not be found.")
+        # call the delete, deleting the obj from the database
+        return deleted_obj
+
+    def delete_detail(self, request, **kwargs):
+        bundle = Bundle(request=request)
+
+        try:
+            # call our obj_delete, storing the deleted_obj we returned
+            # del_obj = CombinedTransaction.objects.get(id=kwargs['pk'])
+            deleted_obj = self.obj_delete(bundle=bundle, **self.remove_api_resource_names(kwargs))
+            # build a new bundle with the deleted obj and return it in a response
+            # print del_obj.id, del_obj.amount
+            # print type(del_obj)
+            deleted_bundle = self.build_bundle(obj=deleted_obj, request=request)
+            # print deleted_bundle
+            # deleted_bundle = self.full_dehydrate()
+            # deleted_bundle = self.alter_detail_data_to_serialize(request, deleted_bundle)
+            return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
+        except NotFound:
+            return http.Http404()
 
 class DayTransportationResource(BaseResource):
     transportation_vehicle = fields.ForeignKey(TransportationVehicleResource, 'transportation_vehicle')
@@ -497,6 +524,7 @@ class DayTransportationResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = DayTransportation.objects.all();
+        detail_allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'daytransportation'
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
