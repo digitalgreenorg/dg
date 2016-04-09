@@ -85,7 +85,7 @@ def delete_log(sender, **kwargs ):
         village_id = instance.farmer.village.id
         user = instance.user_created
     elif sender == "Transporter":
-        village_id=instance.village.id
+        village_id=None
         user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
