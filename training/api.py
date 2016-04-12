@@ -233,7 +233,7 @@ class MediatorResource(ModelResource):
 
     def dehydrate_mediator_label(self,bundle):
         #for sending out label incase of dropdowns
-        return ','.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
+        return ', '.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
             
     def obj_create(self, bundle, **kwargs):
         bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
