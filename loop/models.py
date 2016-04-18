@@ -144,6 +144,7 @@ class Gaddidar(LoopModel):
 
     class Meta:
         unique_together = ("phone", "name")
+
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(delete_log, sender=Gaddidar)
 
