@@ -132,6 +132,22 @@ class LoopUser(LoopModel):
         return Village.objects.filter(block__district_id=district.id)
 
 
+class Gaddidar(LoopModel):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=13)
+    commission = models.FloatField(default=1.0)
+    mandi = models.ForeignKey(Mandi)
+
+    def __unicode__(self):
+        return self.mandi.mandi_name
+
+    class Meta:
+        unique_together = ("phone", "name")
+post_save.connect(save_log, sender=Gaddidar)
+pre_delete.connect(delete_log, sender=Gaddidar)
+
+
 class Farmer(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -207,6 +223,9 @@ class TransportationVehicle(LoopModel):
     vehicle = models.ForeignKey(Vehicle)
     vehicle_number = models.CharField(max_length=11)
 
+    def __unicode__(self):
+        return "%s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name)
+
     class Meta:
         unique_together = ("transporter", "vehicle", "vehicle_number",)
 
@@ -223,8 +242,12 @@ class DayTransportation(LoopModel):
     farmer_share = models.FloatField(default=0.0)
     other_cost = models.FloatField(default=0.0)
     vrp_fees = models.FloatField(default=0.0)
-    comment = models.CharField(max_length=200, null=True,blank=True)
+    comment = models.CharField(max_length=200, null=True, blank=True)
     mandi = models.ForeignKey(Mandi)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
 
