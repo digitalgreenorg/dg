@@ -35,8 +35,8 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'phone', '__unicode__', 'commission')
-    search_fields = ['name', 'mandi__mandi_name']
+    list_display = ('id', 'gaddidar_name', 'gaddidar_phone', '__unicode__', 'commission')
+    search_fields = ['gaddidar_name', 'mandi__mandi_name']
 
 
 class TransportationVehicleAdmin(admin.ModelAdmin):
