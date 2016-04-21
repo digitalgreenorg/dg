@@ -134,8 +134,8 @@ class LoopUser(LoopModel):
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=13)
+    gaddidar_name = models.CharField(max_length=100)
+    gaddidar_phone = models.CharField(max_length=13)
     commission = models.FloatField(default=1.0)
     mandi = models.ForeignKey(Mandi)
 
@@ -143,7 +143,7 @@ class Gaddidar(LoopModel):
         return self.mandi.mandi_name
 
     class Meta:
-        unique_together = ("phone", "name")
+        unique_together = ("gaddidar_phone", "gaddidar_name")
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(delete_log, sender=Gaddidar)
