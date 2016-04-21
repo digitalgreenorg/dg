@@ -66,6 +66,10 @@ def save_log(sender, **kwargs):
         user = instance.user_created
     elif sender == "Gaddidar":
         village_id = None
+        user = None
+    elif sender == "Mandi":
+        village_id = None
+        user = None
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
@@ -111,6 +115,10 @@ def delete_log(sender, **kwargs):
         user = instance.user_created
     elif sender == "Gaddidar":
         village_id = None
+        user = None
+    elif sender == "Mandi":
+        village_id = None
+        user = None
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
@@ -164,8 +172,6 @@ def send_updated_log(request):
                 raise UserDoesNotExist(
                     'User with id: ' + str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
-            # district_villages = loop_user.get_districts_village()
-            # print district_villages
             Log = get_model('loop', 'Log')
             rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle'])
