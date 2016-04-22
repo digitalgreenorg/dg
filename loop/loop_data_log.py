@@ -7,9 +7,7 @@ from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-
 from tastypie.models import ApiKey
-
 
 class TimestampException(Exception):
     pass
@@ -172,21 +170,39 @@ def send_updated_log(request):
                 raise UserDoesNotExist(
                     'User with id: ' + str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
+            mandis = loop_user.get_mandis()
             Log = get_model('loop', 'Log')
+            Mandi = get_model('loop', 'Mandi')
+            Gaddidar = get_model('loop', 'Gaddidar')
+
             rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer', 'Village'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction'])
-# rows = rows | Log.objects.filter(timestamp__gt = timestamp, village__in
-# = villages, entry_table__in = [TransportationVehicle'])
             rows = rows | Log.objects.filter(timestamp__gt=timestamp, user__in=user_list, entry_table__in=[
                                              'Transporter', 'TransportationVehicle'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
+
+            mandi_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Mandi'])
+            # print "Mandi"
+            # print mandi_rows
+            for mrow in mandi_rows:
+                # print mrow
+                if Mandi.objects.filter(id=mrow.model_id) in mandis:
+                    rows = rows | mrow
+
+            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
+            for grow in gaddidar_rows:
+                if Gaddidar.objects.filter(id=grow.model_id).mandi in mandis:
+                    rows = rows | grow
+
             data_list = []
             for row in rows:
+                print row.entry_table
+                print row.model_id
                 data_list.append(get_log_object(row))
             if rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
