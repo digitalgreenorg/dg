@@ -138,12 +138,11 @@ class Gaddidar(LoopModel):
     gaddidar_phone = models.CharField(max_length=13,default=None,null=True)
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=13)
-
     commission = models.FloatField(default=1.0)
     mandi = models.ForeignKey(Mandi)
 
     def __unicode__(self):
-        return self.mandi.mandi_name
+        return self.gaddidar_name
 
     class Meta:
         unique_together = ("gaddidar_phone", "gaddidar_name")

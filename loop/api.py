@@ -425,6 +425,25 @@ class MandiResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+class GaddidarResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource, 'mandi', full=True)
+
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Gaddidar.objects.all()
+        resource_name = 'gaddidar'
+        authorization = MandiAuthorization('mandi_id__in')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+
+        dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
+        hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
 
 class VehicleResource(BaseResource):
 
@@ -643,7 +662,9 @@ class CombinedTransactionResource(BaseResource):
         foreign_key_to_id, field_name='crop', sub_field_names=['id', 'crop_name'])
     dehydrate_mandi = partial(
         foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
-    dehydrate_gaddidar = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'gaddidar_name'])
+    dehydrate_gaddidar = partial(
+        foreign_key_to_id, field_name='gaddidar', sub_field_names=['id', 'gaddidar_name'])
+
     hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
     hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
@@ -709,22 +730,3 @@ class CombinedTransactionResource(BaseResource):
         except NotFound:
             return http.Http404()
 
-
-class GaddidarResource(BaseResource):
-    mandi = fields.ForeignKey(MandiResource, 'mandi', full=True)
-
-    class Meta:
-        limit = 0
-        max_limit = 0
-        queryset = Gaddidar.objects.all()
-        resource_name = 'gaddidar'
-        authorization = MandiAuthorization('mandi_id__in')
-        authentication = ApiKeyAuthentication()
-        always_return_data = True
-
-        dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
-        hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
-
-    def dehydrate(self, bundle):
-        bundle.data['online_id'] = bundle.data['id']
-        return bundle
