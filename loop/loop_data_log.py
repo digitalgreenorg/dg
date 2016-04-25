@@ -171,6 +171,7 @@ def send_updated_log(request):
                     'User with id: ' + str(user.id) + 'does not exist')
             villages = loop_user.get_villages()
             mandis = loop_user.get_mandis()
+            print mandis
             Log = get_model('loop', 'Log')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')

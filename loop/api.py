@@ -56,10 +56,8 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('online_id'):
-        print field_name
         bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict.get('online_id')))
-        print bundle.data
     else:
         bundle.data[field_name] = None
     return bundle
@@ -142,8 +140,7 @@ class MandiAuthorization(Authorization):
         self.mandi_field = field
 
     def read_list(self, object_list, bundle):
-        mandis = LoopUser.objects.get(
-            user_id=bundle.request.user.id).get_mandis()
+        mandis = LoopUser.objects.get(user_id=bundle.request.user.id).get_mandis()
         mandis_list = {}
         mandis_list[self.mandi_field] = mandis
         return object_list.filter(**mandis_list).distinct()
@@ -413,9 +410,12 @@ class MandiResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district')
 
     class Meta:
+        allowed_methods = ['post', 'get']
+        always_return_data = True
         queryset = Mandi.objects.all()
         resource_name = 'mandi'
-        authorization = Authorization()
+        authorization = MandiAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
 
     dehydrate_district = partial(
         foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])

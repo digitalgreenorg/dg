@@ -127,9 +127,9 @@ class LoopUser(LoopModel):
     def get_mandis(self):
         return self.assigned_mandis.all()
 
-    def get_districts_village(self):
-        district = self.village.block.district
-        return Village.objects.filter(block__district_id=district.id)
+    # def get_districts_village(self):
+    #     district = self.village.block.district
+    #     return Village.objects.filter(block__district_id=district.id)
 
 
 class Gaddidar(LoopModel):
