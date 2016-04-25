@@ -625,6 +625,7 @@ class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
     farmer = fields.ForeignKey(FarmerResource, 'farmer')
     mandi = fields.ForeignKey(MandiResource, 'mandi')
+    gaddidar = fields.ForeignKey(GaddidarResource, 'gaddidar')
 
     class Meta:
         limit = 0
@@ -642,16 +643,19 @@ class CombinedTransactionResource(BaseResource):
         foreign_key_to_id, field_name='crop', sub_field_names=['id', 'crop_name'])
     dehydrate_mandi = partial(
         foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
+    dehydrate_gaddidar = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'gaddidar_name'])
     hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
     hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+    hydrate_gaddidar = partial(dict_to_foreign_uri, field_name='gaddidar')
 
     def obj_create(self, bundle, request=None, **kwargs):
         farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
         attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"],
-                                                     farmer=farmer, crop=crop, mandi=mandi)
+                                                     farmer=farmer, crop=crop, mandi=mandi, gaddidar = gaddidar)
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,
                            self).obj_create(bundle, **kwargs)
@@ -664,12 +668,13 @@ class CombinedTransactionResource(BaseResource):
         farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
         try:
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"],
-                                                         farmer=farmer, crop=crop, mandi=mandi)
+                                                         farmer=farmer, crop=crop, mandi=mandi, gaddidar=gaddidar)
             raise TransactionNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
@@ -695,17 +700,11 @@ class CombinedTransactionResource(BaseResource):
 
         try:
             # call our obj_delete, storing the deleted_obj we returned
-            # del_obj = CombinedTransaction.objects.get(id=kwargs['pk'])
             deleted_obj = self.obj_delete(
                 bundle=bundle, **self.remove_api_resource_names(kwargs))
             # build a new bundle with the deleted obj and return it in a response
-            # print del_obj.id, del_obj.amount
-            # print type(del_obj)
             deleted_bundle = self.build_bundle(
                 obj=deleted_obj, request=request)
-            # print deleted_bundle
-            # deleted_bundle = self.full_dehydrate()
-            # deleted_bundle = self.alter_detail_data_to_serialize(request, deleted_bundle)
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
         except NotFound:
             return http.Http404()

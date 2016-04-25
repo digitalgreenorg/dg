@@ -262,6 +262,7 @@ class CombinedTransaction(LoopModel):
     farmer = models.ForeignKey(Farmer)
     crop = models.ForeignKey(Crop)
     mandi = models.ForeignKey(Mandi)
+    gaddidar = models.ForeignKey(Gaddidar, null=True, default=True)
     quantity = models.FloatField()
     price = models.FloatField()
     status = models.IntegerField()
