@@ -32,13 +32,14 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
             dict[sub_field] = None 
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
+        dict["online_id"] = dict["id"]
     return dict
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict.get('online_id'):
         bundle.data[field_name] = "/training/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
-                                                    str(field_dict.get('id')))
+                                                    str(field_dict.get('online_id')))
     else:
         bundle.data[field_name] = None
     return bundle
@@ -48,7 +49,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/training/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+            resource_uri_list.append("/training/api/v1/%s/%s/"%(resource_name, str(item.get('online_id'))))
         except:
             return bundle
     bundle.data[field_name] = resource_uri_list
@@ -56,9 +57,9 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 
 def dict_to_foreign_uri_coco(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict.get('online_id'):
         bundle.data[field_name] = "/coco/api/v2/%s/%s/"%(resource_name if resource_name else field_name, 
-                                                    str(field_dict.get('id')))
+                                                    str(field_dict.get('online_id')))
     else:
         bundle.data[field_name] = None
     return bundle
@@ -68,7 +69,7 @@ def dict_to_foreign_uri_m2m_coco(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/coco/api/v2/%s/%s/"%(resource_name, str(item.get('id'))))
+            resource_uri_list.append("/coco/api/v2/%s/%s/"%(resource_name, str(item.get('online_id'))))
         except:
             return bundle
     bundle.data[field_name] = resource_uri_list
@@ -76,18 +77,24 @@ def dict_to_foreign_uri_m2m_coco(bundle, field_name, resource_name):
 #---------------------------------------------------------------------------------------------#
 
 class PartnerResource(ModelResource):
-	class Meta:
-		queryset = Partner.objects.all()
-		resource_name = 'partner'
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        queryset = Partner.objects.all()
+        resource_name = 'partner'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class VillageResource(ModelResource):
-	class Meta:
-		queryset = Village.objects.all()
-		resource_name = 'village'
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        queryset = Village.objects.all()
+        resource_name = 'village'
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 def get_user_districts(user_id):
 	coco_user = TrainingUser.objects.get(user_id = user_id)
@@ -113,6 +120,9 @@ class DistrictResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = DistrictAuthorization()
         max_limit = None
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 def get_user_mediators(user_id):
     coco_user = TrainingUser.objects.get(user_id = user_id)
@@ -173,22 +183,28 @@ class BaseResource(ModelResource):
 #---------------------------------------------------------------------------------#
 
 class TrainerResource(ModelResource):
-	language = fields.ForeignKey('training.api.LanguageResource', 'language')
-	class Meta:
-		resource_name = 'trainer'
-		queryset = Trainer.objects.prefetch_related('language').all()
-		authentication = ApiKeyAuthentication()
-		always_return_data = True
-		authorization = Authorization()
-	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
-	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    language = fields.ForeignKey('training.api.LanguageResource', 'language')
+    class Meta:
+        resource_name = 'trainer'
+        queryset = Trainer.objects.prefetch_related('language').all()
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        authorization = Authorization()
+    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
+    hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class LanguageResource(ModelResource):
-	class Meta:
-		resource_name = 'language'
-		queryset = Language.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        resource_name = 'language'
+        queryset = Language.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
@@ -207,13 +223,17 @@ class MediatorResource(ModelResource):
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
     hydrate_district = partial(dict_to_foreign_uri, field_name ='district')
+    hydrate_partner = partial(dict_to_foreign_uri, field_name = 'partner')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
     
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
+        return [{'id': vil.id, 'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
 
     def dehydrate_mediator_label(self,bundle):
         #for sending out label incase of dropdowns
-        return ','.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
+        return ', '.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
             
     def obj_create(self, bundle, **kwargs):
         bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
@@ -226,49 +246,59 @@ class MediatorResource(ModelResource):
         return bundle
 
 class AssessmentResource(ModelResource):
-	class Meta:
-		resource_name = 'assessment'
-		queryset = Assessment.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
+    class Meta:
+        resource_name = 'assessment'
+        queryset = Assessment.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class QuestionResource(ModelResource):
-	language = fields.ForeignKey('training.api.LanguageResource', 'language')
-	assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
-	class Meta:
-		resource_name = 'question'
-		queryset = Question.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
-	dehydrate_assessment = partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
-	hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
-	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
-	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    language = fields.ForeignKey('training.api.LanguageResource', 'language')
+    assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
+    class Meta:
+        resource_name = 'question'
+        queryset = Question.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+    dehydrate_assessment = partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
+    hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
+    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
+    hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 
 class TrainingResource(ModelResource):
-	language = fields.ForeignKey('training.api.LanguageResource', 'language')
-	assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
-	trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
-	participants = fields.ToManyField('training.api.MediatorResource', 'participants')
-	class Meta:
-		resource_name = 'training'
-		queryset = Training.objects.all()
-		authentication = ApiKeyAuthentication()
-		authorization = Authorization()
-		always_return_data = True
-	hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
-	hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
-	hydrate_trainer = partial(dict_to_foreign_uri_m2m, field_name = 'trainer', resource_name = 'trainer')
-	hydrate_participants = partial(dict_to_foreign_uri_m2m, field_name = 'participants', resource_name = 'mediator')
-	dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])	
-	dehydrate_assessment = 	partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
+    language = fields.ForeignKey('training.api.LanguageResource', 'language')
+    assessment = fields.ForeignKey('training.api.AssessmentResource', 'assessment')
+    trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
+    participants = fields.ToManyField('training.api.MediatorResource', 'participants')
+    class Meta:
+        resource_name = 'training'
+        queryset = Training.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = Authorization()
+        always_return_data = True
+    hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
+    hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
+    hydrate_trainer = partial(dict_to_foreign_uri_m2m, field_name = 'trainer', resource_name = 'trainer')
+    hydrate_participants = partial(dict_to_foreign_uri_m2m, field_name = 'participants', resource_name = 'mediator')
+    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])	
+    dehydrate_assessment = 	partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
 
-	def dehydrate_trainer(self, bundle):
-	        return [{'id': trainer.id, 'name':trainer.name} for trainer in bundle.obj.trainer.all() ]
+    def dehydrate_trainer(self, bundle):
+            return [{'id': trainer.id, 'name':trainer.name} for trainer in bundle.obj.trainer.all() ]
 
-	def dehydrate_participants(self, bundle):
-		return [{'id':mediator.id, 'name':mediator.name} for mediator in bundle.obj.participants.all()]
+    def dehydrate_participants(self, bundle):
+        return [{'id':mediator.id, 'name':mediator.name} for mediator in bundle.obj.participants.all()]
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 	
 
@@ -281,10 +311,14 @@ class StateResource(ModelResource):
     class Meta:
         max_limit = None
         queryset = State.objects.all()        
-	resource_name = 'state'
+        resource_name = 'state'
         authentication = ApiKeyAuthentication()
         authorization = StateAuthorization('id__in')
         always_return_data = True
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class ScoreResource(ModelResource):
     participant = fields.ForeignKey('training.api.MediatorResource', 'participant')
@@ -303,7 +337,10 @@ class ScoreResource(ModelResource):
     
     dehydrate_participant = partial(foreign_key_to_id, field_name='participant', sub_field_names=['id','name'])
     dehydrate_training = partial(foreign_key_to_id, field_name='training', sub_field_names=['id'])
-    dehydrate_question = partial(foreign_key_to_id, field_name='question', sub_field_names=['id','text'])	
+    dehydrate_question = partial(foreign_key_to_id, field_name='question', sub_field_names=['id','text'])
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle	
 
 
 
