@@ -134,10 +134,8 @@ class LoopUser(LoopModel):
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
-    gaddidar_name = models.CharField(max_length=100,default=None,null=True)
-    gaddidar_phone = models.CharField(max_length=13,default=None,null=True)
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=13)
+    gaddidar_name = models.CharField(max_length=100)
+    gaddidar_phone = models.CharField(max_length=13)
     commission = models.FloatField(default=1.0)
     mandi = models.ForeignKey(Mandi)
 
