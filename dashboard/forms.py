@@ -8,7 +8,7 @@ from coco.base_models import CocoModel
 from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
-from videos.models import Language, Practice, Video, NonNegotiable
+from videos.models import Language, Practice, Video, NonNegotiable, Category, SubCategory
 
 # function for saving formsets with user information
 def save_all(instances, user, id):
@@ -140,3 +140,11 @@ class ScreeningForm(CocoModelForm):
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
+
+class CategoryForm(CocoModelForm):
+    class Meta:
+        model = Category
+
+class SubCategoryForm(CocoModelForm):
+    class Meta:
+        model = SubCategory
