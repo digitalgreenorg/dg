@@ -238,7 +238,7 @@ class MediatorResource(ModelResource):
         return ', '.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
             
     def obj_create(self, bundle, **kwargs):
-        attempt = Animator.objects.filter(partner_id = bundle.data['partner']['id'], gender = bundle.data['gender'], district_id = bundle.data['district']['id'], name = bundle.data['name'])
+        attempt = Animator.objects.filter(partner_id = bundle.data['partner']['online_id'], gender = bundle.data['gender'], district_id = bundle.data['district']['online_id'], name = bundle.data['name'])
         if attempt.count() < 1:
             bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
             vil_list = bundle.data.get('assigned_villages')
@@ -247,15 +247,15 @@ class MediatorResource(ModelResource):
                 u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
                 u.save()
         else:
-            raise MediatorNotSaved({"id" : int(attempt[0].id), "error":"Duplicate"})
+            raise MediatorNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
             bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = Animator.objects.filter(partner_id = bundle.data['partner']['id'], gender = bundle.data['gender'], district_id = bundle.data['district']['id'], name = bundle.data['name'])
-            raise FarmerNotSaved({"id" : int(attempt[0].id), "error" : "Duplicate"})
+            attempt = Animator.objects.filter(partner_id = bundle.data['partner']['online_id'], gender = bundle.data['gender'], district_id = bundle.data['district']['online_id'], name = bundle.data['name'])
+            raise FarmerNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
 class AssessmentResource(ModelResource):
