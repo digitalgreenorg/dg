@@ -11,9 +11,8 @@ from tastypie.validation import FormValidation
 
 from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer
 from geographies.models import Block, Village, State
-from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm, NonNegotiableForm
-from videos.models import Video, Category, SubCategory, NonNegotiable
-from people.models import Animator, Person, PersonGroup
+from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
+from videos.models import Video, Category, SubCategory
 from qacoco.forms import VideoContentApprovalForm
 
 class ModelFormValidation(FormValidation):
@@ -153,15 +152,6 @@ class VideoAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download video")
 
-class NonNegotiableAuthorization(Authorization):
-    def read_list(self, object_list, bundle):        
-        return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
-    
-    def read_detail(self, object_list, bundle):
-        if bundle.obj.id in get_user_non_negotiable(bundle.request.user.id):
-            return True
-        else:
-            raise NotFound( "Not allowed to download Non-Negotiable")
 
 class BaseResource(ModelResource):
     
@@ -188,7 +178,7 @@ class QAReviewerResource(ModelResource):
     class Meta:
         max_limit = None
         queryset = QAReviewer.objects.all()
-        resource_name = 'QAReviewerResource'
+        resource_name = 'qareviewer'
         authentication = SessionAuthentication()
         authorization = Authorization()
 
@@ -200,10 +190,7 @@ class VideoResource(BaseResource):
         resource_name = 'video'
         authentication = SessionAuthentication()
         authorization = Authorization()
-    def dehydrate_non_negotiables(self, bundle):
-        return [{'non_negotiable': nn.non_negotiable,
-                 'non_negotiable_id': nn.id
-                 } for nn in NonNegotiable.objects.filter(video_id=bundle.obj.id)]
+
 
 class BlockResource(BaseResource):
     class Meta:
@@ -221,30 +208,6 @@ class VillageResource(BaseResource):
                 resource_name = 'village'
                 authentication = SessionAuthentication()
                 authorization = DistrictAuthorization('block__district_id__in')
-
-class MediatorResource(BaseResource):
-    class Meta:
-                max_limit = None
-                queryset = Animator.objects.all()
-                resource_name = 'mediator'
-                authentication = SessionAuthentication()
-                authorization = DistrictAuthorization('district_id__in')
-
-class PersonResource(BaseResource):
-    class Meta:
-                max_limit = None
-                queryset = Person.objects.all()
-                resource_name = 'person'
-                authentication = SessionAuthentication()
-                authorization = DistrictAuthorization('village__block__district_id__in')
-
-class PersonGroupResource(BaseResource):
-    class Meta:
-                max_limit = None
-                queryset = PersonGroup.objects.all()
-                resource_name = 'group'
-                authentication = SessionAuthentication()
-                authorization = DistrictAuthorization('village__block__district_id__in')
 
 class CategoryResource(BaseResource):
     class Meta:
@@ -267,24 +230,11 @@ class SubCategoryResource(BaseResource):
     hydrate_category = partial(dict_to_foreign_uri, field_name ='category', resource_name='category') 
 
 
-class NonNegotiableResource(BaseResource):
-    video = fields.ForeignKey(VideoResource, 'video')
-    class Meta:
-        max_limit = None
-        queryset = NonNegotiable.objects.prefetch_related('video').all()
-        resource_name = 'nonnegotiable'
-        authentication = SessionAuthentication()
-        authorization = Authorization()
-        validation = ModelFormValidation(form_class=NonNegotiableForm)
-        excludes = ['time_created', 'time_modified']
-        always_return_data = True
-    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
-    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
-
 class VideoContentApprovalResource(BaseResource):
         video = fields.ForeignKey(VideoResource, 'video')
         category = fields.ForeignKey(CategoryResource, 'category')
         sub_category = fields.ForeignKey(SubCategoryResource, 'sub_category')
+        qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
         class Meta:
                 queryset = VideoContentApproval.objects.all()
                 resource_name = 'VideoContentApproval'
@@ -297,4 +247,5 @@ class VideoContentApprovalResource(BaseResource):
         hydrate_category = partial(dict_to_foreign_uri, field_name ='category')
         dehydrate_sub_category = partial(foreign_key_to_id, field_name = 'sub_category', sub_field_names=['id','name'])
         hydrate_sub_category = partial(dict_to_foreign_uri, field_name ='sub_category', resource_name = 'sub_category')
-        
+        dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
+        hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')

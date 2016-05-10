@@ -8,6 +8,21 @@ from geographies.models import District
 from programs.models import Partner
 from videos.models import Category, SubCategory, Video
 
+class FullDownloadStats(models.Model):
+    user = models.ForeignKey(User, related_name="qacoco_user",)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+class ServerLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
+    user = models.ForeignKey(User, related_name="qacocoserverlog_user", null=True)
+    village = models.IntegerField(null=True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null=True)
+    partner = models.IntegerField(null=True)
+
 class QACocoUser(models.Model):
 	user = models.ForeignKey(User)
 	partner = models.ForeignKey(Partner)
@@ -26,7 +41,7 @@ class QAReviewer(models.Model):
 
 class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
-    reviewer = models.ForeignKey(QAReviewer)
+    qareviewer = models.ForeignKey(QAReviewer)
     suitable_for = models.IntegerField(max_length=1,choices=TYPE_CHOICES)
     category = models.ForeignKey(Category, default=None)
     sub_category = models.ForeignKey(SubCategory)

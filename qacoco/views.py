@@ -3,8 +3,7 @@ from django.contrib import auth
 from django.core import urlresolvers
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
-from coco.models import FullDownloadStats
-from coco.models import CocoUser
+from models import FullDownloadStats, QACocoUser
 
 def qacoco_v1(request):
     return render(request,'qa_dashboard.html')
@@ -36,7 +35,7 @@ def record_full_download_time(request):
 def reset_database_check(request):
     if not(request.user):
         return HttpResponse("0")
-    cocouser = CocoUser.objects.get(user = request.user)
+    cocouser = QACocoUser.objects.get(user = request.user)
     if not(cocouser and cocouser.time_modified):
         return HttpResponse("0")
     lastdownloadtime = request.GET["lastdownloadtimestamp"]
