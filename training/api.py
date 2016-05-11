@@ -19,6 +19,8 @@ from people.models import Animator, AnimatorAssignedVillage
 
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
 
+class MediatorNotSaved(Exception):
+    pass
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -236,13 +238,24 @@ class MediatorResource(ModelResource):
         return ', '.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
             
     def obj_create(self, bundle, **kwargs):
-        bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
-        vil_list = bundle.data.get('assigned_villages')
-        for vil in vil_list:
-            vil = Village.objects.get(id = int(vil.split('/')[-2]))
-            u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
-            u.save()
-    
+        attempt = Animator.objects.filter(partner_id = bundle.data['partner']['online_id'], gender = bundle.data['gender'], district_id = bundle.data['district']['online_id'], name = bundle.data['name'])
+        if attempt.count() < 1:
+            bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
+            vil_list = bundle.data.get('assigned_villages')
+            for vil in vil_list:
+                vil = Village.objects.get(id = int(vil.split('/')[-2]))
+                u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
+                u.save()
+        else:
+            raise MediatorNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Animator.objects.filter(partner_id = bundle.data['partner']['online_id'], gender = bundle.data['gender'], district_id = bundle.data['district']['online_id'], name = bundle.data['name'])
+            raise FarmerNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
 class AssessmentResource(ModelResource):
