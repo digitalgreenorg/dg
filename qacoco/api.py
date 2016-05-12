@@ -237,6 +237,7 @@ class VideoContentApprovalResource(BaseResource):
         qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
         class Meta:
                 queryset = VideoContentApproval.objects.all()
+                always_return_data = True
                 resource_name = 'VideoContentApproval'
                 authorization = Authorization()
                 authentication = SessionAuthentication()
