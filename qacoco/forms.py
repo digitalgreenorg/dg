@@ -3,10 +3,10 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 from base_models import QACocoModel
-from models import VideoContentApproval
+from models import VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
 
 from geographies.models import District
-from videos.models import Video, Category, SubCategory
+from videos.models import Video, Category, SubCategory, NonNegotiable
 
 
 def save_all(instances, user, id):
@@ -51,3 +51,19 @@ class QACocoModelForm(ModelForm):
 class VideoContentApprovalForm(QACocoModelForm):
     class Meta:
         model = VideoContentApproval
+
+class VideoQualityReviewForm(QACocoModelForm):
+    class Meta:
+        model = VideoQualityReview
+
+class DisseminationQualityForm(QACocoModelForm):
+    class Meta:
+        model = DisseminationQuality
+
+class NonNegotiableForm(QACocoModelForm):       
+    class Meta:
+        model = NonNegotiable
+
+class AdoptionVerificationForm(QACocoModelForm):
+    class Meta:
+        model = AdoptionVerification

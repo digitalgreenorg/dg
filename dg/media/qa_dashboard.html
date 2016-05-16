@@ -502,7 +502,525 @@
         
 </script>
 <!--//////////////////////////////////////////////////// VIDEO CONTENT APPROVAL ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+<script language= "javascript">
+    
+    function cal_score(name)
+    {   
+        var score = 0;
+        var grade;
+        var m = document.getElementById("scores").children.length;
+        var methods = document.getElementById("scores").children;
+        for(j=0;j<m;j++) {
+            var n = methods[j].children[1].children.length;
+            for(var i=0;i<n;i++) {
+                if(methods[j].children[1].children[i].checked==true)
+                {
+                    score+=parseInt(methods[j].children[1].children[i].value);
+                }
+            }
+        }
+        document.getElementsByName('total_score')[0].value=score;
+        
+        if(score>=21){
+            grade='A';
+        }
+        else if (score>=15 && score<=20) {
+            grade='B';
+        }
+        else if(score<15){
+        grade='C';
+        }
+        
+        document.getElementsByName('video_grade')[0].value=grade;
+    }
+    function approval1()
+    {
+        var a;
+        var choice=document.getElementsByName('approval').value;
+        for(i=0;i<choice;i++)
+        {
+            if(choice[i].checked==true)
+                a='Yes';
+            else
+                a='No';
+        }
+    }
+</script>
 
+<script type="text/template" id="Video_Quality_Review_add_edit_template">
+    <fieldset class="form-horizontal">
+        <legend>Video Quality Review</legend>
+        <p class="bold-helptext"> All fields in bold are required</p>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Video</b></label>
+            <div class="col-sm-4">
+                <select id = "id_video" name="video" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+         <div class="form-group">
+                <label class="col-sm-2 control-label">Youtube Id</label>
+                <div class="col-sm-4">
+                    <input type="text" name="youtubeid" class="form-control">
+                </div>
+                <div class="help-block col-sm-4"><b>Link</b></div>
+            </div>
+        <fieldset class="form-horizontal">
+            <legend> </legend>
+
+    <div id="scores">
+                
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Story Structure</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="storystructure" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('storystructure')">0
+                    <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('storystructure')">1
+                    <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('storystructure')">2
+                    <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('storystructure')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Framing</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="framing" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('framing')">0
+                    <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('framing')">1
+                    <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('framing')">2
+                    <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('framing')">3
+                    
+                </div>
+            </div>
+             <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Continuity</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="continuity" style="margin: 10px 10px 0 10px;" value=0 onchange ="cal_score('continuity')">0
+                    <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('continuity')">1
+                    <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('continuity')">2
+                    <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('continuity')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Camera Angles</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="camera_angles" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('camera_angles')">0
+                    <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('camera_angles')">1
+                    <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('camera_angles')">2
+                    <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('camera_angles')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Camera Movement</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="camera_movement" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('camera_movement')">0
+                    <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('camera_movement')">1
+                    <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('camera_movement')">2
+                    <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('camera_movement')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Light</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="light" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('light')">0
+                    <input type="radio" name="light" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('light')">1
+                    <input type="radio" name="light" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('light')">2
+                    <input type="radio" name="light" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('light')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Audio and Sound</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="audio_sound" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('audio_sound')">0
+                    <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('audio_sound')">1
+                    <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('audio_sound')">2
+                    <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('audio_sound')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Interview</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="interview" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('interview')">0
+                    <input type="radio" name="interview" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('interview')">1
+                    <input type="radio" name="interview" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('interview')">2
+                    <input type="radio" name="interview" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('interview')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Technical</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="technical" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('technical')">0
+                    <input type="radio" name="technical" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('technical')">1
+                    <input type="radio" name="technical" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('technical')">2
+                    <input type="radio" name="technical" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('technical')">3
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Style Guide</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="style_guide" style="margin: 10px 10px 0 10px;" value=0 onchange="cal_score('style_guide')">0
+                    <input type="radio" name="style_guide" style="margin: 0 10px 0 30px;" value=1 onchange="cal_score('style_guide')">1
+                    <input type="radio" name="style_guide" style="margin: 0 10px 0 30px;" value=2 onchange="cal_score('style_guide')">2
+                    <input type="radio" name="style_guide" style="margin: 0 10px 0 30px;" value=3 onchange="cal_score('style_guide')">3
+                    
+                </div>
+            </div>
+
+    </div>
+            <fieldset class="form-horizontal">
+            <legend> </legend>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Total Score</label>
+                <div class="col-sm-4">
+                    <input type="text" name="total_score" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Video Grade</label>
+                <div class="col-sm-4">
+                    <input type="text" name="video_grade" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Approve for Dissemination</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="approval" value=0 style="margin: 0 10px 0 10px;" onchange="approval1()">Yes
+                    <input type="radio" name="approval" value=1 style="margin: 0 10px 0 30px;" onchange="approval1()">No
+                    
+                </div>
+            </div>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2">Reviewed By</label>
+            <div class="col-sm-4">
+                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+                <label class="col-sm-2 control-label notbold">Remark</label>
+                <div class="col-sm-4">
+                    <textarea name="remarks" class="input-xlarge form-control" rows="4" placeholder="Remarks"></textarea>
+                </div>
+        </div>
+        
+    </fieldset>
+</script>
+
+<!--//////////////////////////////////////////////////// VIDEO QUALITY REVIEW ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// DISSEMINATION QUALITY ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
+
+<script language= "javascript">
+    
+    function cal_score1(name)
+    {   
+        var score = 0;
+        var m = document.getElementById("scores1").children.length;
+        var methods = document.getElementById("scores1").children;
+        for(j=0;j<m;j++) {
+            var n = methods[j].children[1].children.length;
+            for(var i=0;i<n;i++) {
+                if(methods[j].children[1].children[i].checked)
+                {
+                    score+=parseInt(methods[j].children[1].children[i].value);
+                }
+            }
+        }
+        document.getElementsByName('total_score')[0].value=score;
+        if(score>=7){
+            grade='A';
+        }
+        else if (score>=5 && score<7) {
+            grade='B';
+        }
+        else if(score<5){
+        grade='C';
+        }
+        
+        document.getElementsByName('video_grade')[0].value=grade;
+    }
+</script>
+
+<script type="text/template" id="Dissemination_Quality_add_edit_template">
+    <fieldset class="form-horizontal">
+        <legend>Dissemination Quality</legend>
+        <p class="bold-helptext"> All fields in bold are required</p>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Block</b></label>
+            <div class="col-sm-4">
+                <select id = "id_block" name="block" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Village</b></label>
+            <div class="col-sm-4">
+                <select id = "id_village" name="village" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Mediator</b></label>
+            <div class="col-sm-4">
+                <select id = "id_animator" name="mediator" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Video</b></label>
+            <div class="col-sm-4">
+                <select id = "id_video" name="video" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+                <label class="dis-block control-label col-sm-2 notbold"><b>Date</b></label>
+                <div class="col-sm-4">
+                    <input class="date-picker form-control" id="id_date" name="date" type="text" placeholder="YYYY-MM-DD">
+                </div>
+            </div>
+        <fieldset class="form-horizontal">
+            <legend> </legend>
+
+    <div id="scores1">
+
+        <div class="form-group">
+               <label class="control-label dis-block col-sm-2">Equipment Setup And Handling</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="equipments_setup_handling" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('equipments_setup_handling')">Bad(0)
+                    <input type="radio" name="equipments_setup_handling" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('equipments_setup_handling')">Fair(1)
+                    <input type="radio" name="equipments_setup_handling" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('equipments_setup_handling')">Very Good(2)
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Context Setting</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="context_setting" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('context_setting')">Bad(0)
+                    <input type="radio" name="context_setting" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('context_setting')">Fair(1)
+                    <input type="radio" name="context_setting" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('context_setting')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Facilitation</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="facilitation" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('facilitation')">Bad(0)
+                    <input type="radio" name="facilitation" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('facilitation')">Fair(1)
+                    <input type="radio" name="facilitation" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('facilitation')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Subject Knowledge</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="subject_knowledge" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('subject_knowledge')">Bad(0)
+                    <input type="radio" name="subject_knowledge" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('subject_knowledge')">Fair(1)
+                    <input type="radio" name="subject_knowledge" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('subject_knowledge')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Documentation</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="documentation" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('documentation')">Bad(0)
+                    <input type="radio" name="documentation" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('documentation')">Fair(1)
+                    <input type="radio" name="documentation" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('documentation')">Very Good(2)
+                </div>
+            </div>
+
+    </div>
+            <fieldset class="form-horizontal">
+            <legend> </legend>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Total Score</label>
+                <div class="col-sm-4">
+                    <input type="text" name="total_score" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Grade</label>
+                <div class="col-sm-4">
+                    <input type="text" name="video_grade" class="form-control">
+                </div>
+            </div>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2">Reviewed By</label>
+            <div class="col-sm-4">
+                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+                <label class="col-sm-2 control-label notbold">Remark</label>
+                <div class="col-sm-4">
+                    <textarea name="remark" class="input-xlarge form-control" rows="4" placeholder="Remark"></textarea>
+                </div>
+        </div>
+        
+    </fieldset>
+</script>
+
+
+<!--//////////////////////////////////////////////////// DISSEMINATION QUALITY ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// ADOPTION VERIFICATION ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
+
+
+<script type="text/template" id="Adoption_Verification_add_edit_template">
+    <fieldset class="form-horizontal">
+        <legend>Adoption Verification</legend>
+        <p class="bold-helptext"> All fields in bold are required</p>
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Block</b></label>
+            <div class="col-sm-4">
+                <select id = "id_block" name="block" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Mediator</b></label>
+            <div class="col-sm-4">
+                <select id = "id_mediator" name="mediator" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+        
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Village</b></label>
+            <div class="col-sm-4">
+                <select id = "id_village" name="village" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Group</b></label>
+            <div class="col-sm-4">
+                <select id = "id_group" name="group" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Person</b></label>
+            <div class="col-sm-4">
+                <select id = "id_person" name="person" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+                <label class="dis-block control-label col-sm-2 notbold"><b>Verification Date</b></label>
+                <div class="col-sm-4">
+                    <input class="date-picker form-control" id="id_date" name="verification_date" type="text" placeholder="YYYY-MM-DD">
+                </div>
+        </div>
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2"><b>Video</b></label>
+            <div class="col-sm-4">
+                <select id = "id_video" name="video" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <label class="control-label col-sm-2">Reviewed By</label>
+            <div class="col-sm-4">
+                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+               
+                </select>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class = "inline_table">
+                <h5>Non Negotiables</h5>
+                <table id="nn_table" class="table">
+                    <thead class="hide-header">
+                        <tr>
+                            <th class="notbold">
+                                Sr. No.
+                            </th>
+                            <th class="notbold">
+                                Non Negotiable
+                            </th>
+                            <th class="notbold">
+                                Physically Verifiable
+                            </th>
+                            <th class="notbold">
+                                Adopted?
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="nns_verification">
+                    </tbody>
+                </table>
+    </fieldset>
+</script>
+<script type="text/template" id="nn_verification_template">
+    <tr class="stack-table nnadd" id="row7" index = <%=index%> NonNegotiable_id = <%=id%> model_id = <%=id%>>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
+                <%=index+1%>
+                </div>
+            </div>
+        </td>
+        <td ><div class="form-group"><div class="controls">
+            <textarea name="non_negotiable<%=index%>" id="NonNegotiable_id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
+                
+            </div></div>
+        </td> 
+        <td>
+            <div class="form-group"><div class="controls">
+                <% if(physically_verifiable == true){ %>
+                    <input class="mrg-lt-auto" type="checkbox" id="physically_verifiable" name="physically_verifiable" checked disabled >
+                <% } else{ %>
+                    <input class="mrg-lt-auto" type="checkbox" id="physically_verifiable" name="physically_verifiable" disabled >
+                <% } %>
+            </div></div>
+        </td>
+        <td>
+            <div class="form-group"><div class="controls">
+                    <input class="mrg-lt-auto" type="radio" id="adopted" value=1 name="adopted">Yes
+                    <input class="mrg-lt-auto" type="radio" id="adopted" value=0 name="adopted">No
+            </div></div>
+        </td>
+    </tr>
+</script>
+
+</head>
 
 <body>
     

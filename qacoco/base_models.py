@@ -6,6 +6,24 @@ TYPE_CHOICES = (
 			(1, 'For Adoption'),
 	)
 
+SCORE_CHOICES = (
+	(0,0),
+	(1,1),
+	(2,2),
+	(3,3),
+	)
+
+VIDEO_GRADE = (
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+)
+
+APPROVAL = (
+	(0, 'No'),
+	(1, 'Yes'),
+	)
+
 class QACocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)

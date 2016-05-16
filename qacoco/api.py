@@ -3,18 +3,18 @@ from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
 from tastypie import fields
-from tastypie.authentication import SessionAuthentication
+from tastypie.authentication import SessionAuthentication, Authentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
 
-from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer
-from geographies.models import Block, Village, State
+from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer, VideoQualityReview, DisseminationQuality, AdoptionVerification
+from geographies.models import Block, Village, State,District
 from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
-from videos.models import Video, Category, SubCategory
-from qacoco.forms import VideoContentApprovalForm
-
+from videos.models import Video, Category, SubCategory, NonNegotiable
+from qacoco.forms import VideoContentApprovalForm, VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
+from people.models import Animator, Person, PersonGroup
 class ModelFormValidation(FormValidation):
     """
         Override tastypie's standard ``FormValidation`` since this does not care
@@ -152,6 +152,16 @@ class VideoAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download video")
 
+class NonNegotiableAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_non_negotiable(bundle.request.user.id):
+            return True
+        else:
+            raise NotFound( "Not allowed to download Non-Negotiable")
+
 
 class BaseResource(ModelResource):
     
@@ -191,6 +201,13 @@ class VideoResource(BaseResource):
         authentication = SessionAuthentication()
         authorization = Authorization()
 
+class MediatorResource(BaseResource):
+    class Meta:
+                max_limit = None
+                queryset = Animator.objects.all()
+                resource_name = 'mediator'
+                authentication = Authentication()
+                authorization = DistrictAuthorization('district_id__in')
 
 class BlockResource(BaseResource):
     class Meta:
@@ -209,6 +226,37 @@ class VillageResource(BaseResource):
                 authentication = SessionAuthentication()
                 authorization = DistrictAuthorization('block__district_id__in')
 
+class PersonResource(BaseResource):
+    class Meta:
+                max_limit = None
+                queryset = Person.objects.all()
+                resource_name = 'person'
+                authentication = Authentication()
+                authorization = DistrictAuthorization('village__block__district_id__in')
+
+class PersonGroupResource(BaseResource):
+    class Meta:
+                max_limit = None
+                queryset = PersonGroup.objects.all()
+                resource_name = 'group'
+                authentication = Authentication()
+                authorization = DistrictAuthorization('village__block__district_id__in')
+
+class NonNegotiableResource(BaseResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    class Meta:
+        max_limit = None
+        queryset = NonNegotiable.objects.prefetch_related('video').all()
+        resource_name = 'nonnegotiable'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+        validation = ModelFormValidation(form_class=NonNegotiableForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+
+
 
 class VideoContentApprovalResource(BaseResource):
         video = fields.ForeignKey(VideoResource, 'video')
@@ -224,3 +272,74 @@ class VideoContentApprovalResource(BaseResource):
         hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
         dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
         hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
+
+class VideoQualityReviewResource(BaseResource):
+        video = fields.ForeignKey(VideoResource, 'video')
+        qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
+        class Meta:
+                queryset = VideoQualityReview.objects.all()
+                always_return_data = True
+                resource_name = 'VideoQualityReview'
+                authorization = Authorization()
+                authentication = Authentication()
+                validation = ModelFormValidation(form_class=VideoQualityReviewForm)
+        dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
+        hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
+        dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
+        hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
+
+class DisseminationQualityResource(BaseResource):
+        block = fields.ForeignKey(BlockResource, 'block')
+        village = fields.ForeignKey(VillageResource, 'village')
+        mediator = fields.ForeignKey(MediatorResource, 'mediator')
+        video = fields.ForeignKey(VideoResource, 'video')
+        qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
+        
+        class Meta:
+                queryset = DisseminationQuality.objects.all()
+                always_return_data = True
+                resource_name = 'DisseminationQuality'
+                authorization = Authorization()
+                authentication = Authentication()
+                validation = ModelFormValidation(form_class=DisseminationQualityForm)
+        dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
+        hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
+        
+        dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
+        hydrate_block = partial(dict_to_foreign_uri, field_name ='block')
+        dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
+        hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
+        dehydrate_mediator = partial(foreign_key_to_id, field_name = 'mediator', sub_field_names=['id','name'])
+        hydrate_mediator = partial(dict_to_foreign_uri, field_name ='mediator')
+        dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
+        hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
+
+class AdoptionVerificationResource(BaseResource):
+        block = fields.ForeignKey(BlockResource, 'block')
+        village = fields.ForeignKey(VillageResource, 'village')
+        mediator = fields.ForeignKey(MediatorResource, 'mediator')
+        video = fields.ForeignKey(VideoResource, 'video')
+        person = fields.ForeignKey(PersonResource, 'person')
+        group = fields.ForeignKey(PersonGroupResource, 'group')
+        qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
+        class Meta:
+                queryset = AdoptionVerification.objects.all()
+                always_return_data = True
+                resource_name = 'AdoptionVerification'
+                authorization = Authorization()
+                authentication = Authentication()
+                validation = ModelFormValidation(form_class=AdoptionVerificationForm)
+        dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
+        hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
+        dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
+        hydrate_block = partial(dict_to_foreign_uri, field_name ='block')
+        dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
+        hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
+        dehydrate_mediator = partial(foreign_key_to_id, field_name = 'mediator', sub_field_names=['id','name'])
+        hydrate_mediator = partial(dict_to_foreign_uri, field_name ='mediator')
+        dehydrate_group = partial(foreign_key_to_id, field_name = 'group', sub_field_names=['id','group_name'])
+        hydrate_group = partial(dict_to_foreign_uri, field_name ='group')
+        dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
+        hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
+        dehydrate_person = partial(foreign_key_to_id, field_name = 'person', sub_field_names=['id','person_name'])
+        hydrate_person = partial(dict_to_foreign_uri, field_name ='person')
