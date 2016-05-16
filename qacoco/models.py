@@ -43,10 +43,9 @@ class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
     qareviewer = models.ForeignKey(QAReviewer)
     suitable_for = models.IntegerField(max_length=1,choices=TYPE_CHOICES)
-    category = models.ForeignKey(Category, default=None)
-    sub_category = models.ForeignKey(SubCategory)
     comment = models.CharField(max_length=200)
     
     def __unicode__(self):
-        display = "%s" % (self.video)
+        display = u'%s' % (self.video)
         return display
+        

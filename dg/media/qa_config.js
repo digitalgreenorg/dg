@@ -19,24 +19,6 @@ function() {
                     'name_field': 'title'
                 },
             },
-
-            'category':{
-                "category":{
-                    'placeholder': 'id_category',
-                    'name_field': 'name'
-                },
-            },
-
-            'sub_category':{
-                "sub_category":{
-                    'placeholder': 'id_sub_category',
-                    'name_field': 'name',
-                    'dependency': [{
-                        'source_form_element': 'category',
-                        'dep_attr': 'category'
-                    }]
-                },
-            },
             'qareviewer':{
             	"qareviewer":{
             		'placeholder': 'id_qareviewer',
@@ -110,26 +92,6 @@ function() {
         }
     };
 
-    var category_configs = {
-        'rest_api_url': '/qacoco/api/v1/category/',
-        'entity_name': 'category',
-        'sort_field': 'name',
-        'dashboard_display': {
-            listing: false,
-            add: false
-        }
-    };
-
-    var sub_category_configs = {
-        'rest_api_url': '/qacoco/api/v1/sub_category/',
-        'entity_name': 'sub_category',
-        'sort_field': 'name',
-        'dashboard_display': {
-            listing: false,
-            add: false
-        }
-    };
-
     var qareviewer_configs = {
         'rest_api_url': '/qacoco/api/v1/qareviewer/',
         'entity_name': 'qareviewer',
@@ -193,8 +155,6 @@ function() {
         video : video_configs,
         block : block_configs,
         village : village_configs,
-        category : category_configs,
-        sub_category : sub_category_configs,
         qareviewer: qareviewer_configs,
         misc: misc
     }

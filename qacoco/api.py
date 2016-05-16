@@ -209,31 +209,9 @@ class VillageResource(BaseResource):
                 authentication = SessionAuthentication()
                 authorization = DistrictAuthorization('block__district_id__in')
 
-class CategoryResource(BaseResource):
-    class Meta:
-                max_limit = None
-                queryset = Category.objects.all()
-                resource_name = 'category'
-                authentication = SessionAuthentication()
-                authorization = Authorization()
-
-class SubCategoryResource(BaseResource):
-    category = fields.ForeignKey(CategoryResource, 'category')
-    class Meta:
-                max_limit = None
-                queryset = SubCategory.objects.all()
-                resource_name = 'sub_category'
-                authentication = SessionAuthentication()
-                authorization = Authorization()
-                validation = ModelFormValidation(form_class = 'SubCategoryForm')
-    dehydrate_category = partial(foreign_key_to_id, field_name = 'category', sub_field_names=['id','name'])
-    hydrate_category = partial(dict_to_foreign_uri, field_name ='category', resource_name='category') 
-
 
 class VideoContentApprovalResource(BaseResource):
         video = fields.ForeignKey(VideoResource, 'video')
-        category = fields.ForeignKey(CategoryResource, 'category')
-        sub_category = fields.ForeignKey(SubCategoryResource, 'sub_category')
         qareviewer = fields.ForeignKey(QAReviewerResource, 'qareviewer')
         class Meta:
                 queryset = VideoContentApproval.objects.all()
@@ -244,9 +222,5 @@ class VideoContentApprovalResource(BaseResource):
                 validation = ModelFormValidation(form_class=VideoContentApprovalForm)
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
         hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
-        dehydrate_category = partial(foreign_key_to_id, field_name = 'category', sub_field_names=['id','name'])
-        hydrate_category = partial(dict_to_foreign_uri, field_name ='category')
-        dehydrate_sub_category = partial(foreign_key_to_id, field_name = 'sub_category', sub_field_names=['id','name'])
-        hydrate_sub_category = partial(dict_to_foreign_uri, field_name ='sub_category', resource_name = 'sub_category')
         dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
         hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
