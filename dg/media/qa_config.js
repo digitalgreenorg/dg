@@ -5,7 +5,7 @@ function() {
 		'add_template_name': 'video_content_approval_add_edit_template',
         'edit_template_name': 'video_content_approval_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoContentApproval/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'reviewer'}],
+        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewer.reviewer_name'}],
         'entity_name': 'VideoContentApproval',
         'dashboard_display': {
             listing: true,
