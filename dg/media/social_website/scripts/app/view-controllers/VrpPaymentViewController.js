@@ -233,9 +233,9 @@ define(function (require) {
 
         makeReport: function () {
             var paymentReportData = this._references.vrppaymentdataFeed.getReport();
-            if (paymentReportData == false) {
-                return false;
-            }
+            // if (paymentReportData == false) {
+            //     return false;
+            // }
             this._renderReport(paymentReportData);
         },
 
