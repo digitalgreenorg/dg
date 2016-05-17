@@ -26,19 +26,24 @@ class Command(BaseCommand):
 				S.training_id as \'Training ID\',
 				T.date as \'Date\',
 				T.place as \'Place\', 
+				TR.name as \'Trainer\',
 				L.language_name as \'Language\', 
 				A.name as \'Assessment\', 
 				count(distinct S.participant_id) as \'Participants Entered\'
 			FROM
 				training_score S
 			JOIN
-				training_training T on T.id = S.training_id
+				training_training T ON T.id = S.training_id
 			JOIN
-				videos_language L on L.id = T.language_id
+				videos_language L ON L.id = T.language_id
 			JOIN
-				training_assessment A on A.id = T.assessment_id
+				training_assessment A ON A.id = T.assessment_id
+			JOIN
+				training_training_trainer TTT ON TTT.training_id = T.id
+			JOIN
+				training_trainer TR ON TR.id = TTT.trainer_id
 			GROUP BY
-				training_id;
+				S.training_id;
 		""")
 
 		fields = mysql.fetchall()
@@ -50,7 +55,7 @@ class Command(BaseCommand):
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Training Data Summary')
 		style = xlwt.easyxf('font: bold 1')
-		col_widths = [15,15,15,15,15,15,15]
+		col_widths = [10,10,20,20,10,20,18]
 		date_xf = xlwt.easyxf(num_format_str='DD/MM/YYYY') # sets date format in Excel
 
 		for i,hdr in enumerate(field_hdrs):
@@ -72,9 +77,10 @@ class Command(BaseCommand):
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
 
-This is a daily automated email to monitor training data entry.
+This is a weekly automated email to monitor training data entry.
 
 This mail is to keep you updated on the progress in data entry and keep check on quality of entered data. 
+
 
 Thank you for your support!
 
