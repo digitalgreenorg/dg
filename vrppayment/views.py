@@ -1,5 +1,5 @@
 __author__ = 'HP'
-import json, datetime
+import json, datetime, time
 
 from django.http import HttpResponse
 
@@ -90,7 +90,14 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
     each_diss_vid_arr_detail = []
     #ppl_attending = custom_object.get_diss_attendees(diss_id)
     for video in dissemination.videoes_screened.all():
+
+        ts = time.time();
+        ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        print "bhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + ST
         custom_object.get_adoption_data(video.id, ppl_attending)
+        ts = time.time();
+        ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        print "NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + ST
         each_video_adopt_dict = {}
         video_adopted_ppl = custom_object.get_new_adoption_list(dissemination.date)
         video_already_adopted_ppl = custom_object.get_old_adoption_list(dissemination.date)
@@ -118,7 +125,16 @@ def makereport(request):
     selectedblock = request.GET.get('block', None)
     custom_object = VRPpayment(selectedpartner, selectedblock, start_date, end_date)
     list_of_vrps = custom_object.get_req_id_vrp()
+
+    #now lets do some debugging
+
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "############################################" + ST
     complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "<<<<<<<------------------------>>>>>>>" + ST
     output_array = []
     i = 0
     for each_vrp in complete_data:
@@ -142,4 +158,7 @@ def makereport(request):
     else:
         report_data = output_array
         resp = json.dumps({"vrppayment":report_data})
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" + ST
     return HttpResponse(resp)
