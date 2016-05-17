@@ -45,7 +45,7 @@ class Command(BaseCommand):
 		field_hdrs = [i[0] for i in mysql.description]
 
 		#file = '/Users/jahnavi/dg/dg/media/social_website/uploads/emails/training_data.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/loop_data.xls'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/training_data.xls'
 
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Training Data Summary')

@@ -61,8 +61,8 @@ class Command(BaseCommand):
 		fields = mysql.fetchall()
 		field_hdrs = [i[0] for i in mysql.description]
 
-		#file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/loop_data.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/loop_data.xls'
+		#file = '/Users/jahnavi/dg/dg/media/social_website/uploads/emails/loop_data.xls'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/emails/loop_data.xls'
 
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Sheet1')
