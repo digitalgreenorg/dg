@@ -87,7 +87,8 @@ def village_wise_data(request):
     return HttpResponse(data)
 
 
-def mediator_wise_data(request):
+def aggregator_wise_data(request):
+
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     aggregator_ids = request.GET.getlist('aggregator_ids[]')
@@ -132,27 +133,18 @@ def crop_wise_data(request):
     filter_args["mandi__id__in"] = mandi_ids
     # crop wise data here
     crops = CombinedTransaction.objects.filter(**filter_args).values_list('crop__crop_name', flat=True).distinct()
-    transactions = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name',
-                                                                            'date').distinct().annotate(Sum('amount'),
-                                                                                                        Sum('quantity'))
-    # crop and mediator wise data
-    crops_mediators = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name',
-                                                                               'user_created__id').distinct().annotate(
-        amount=Sum('amount'), quantity=Sum('quantity'))
-    crops_mediators_transactions = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name',
-                                                                                            'user_created__id',
-                                                                                            'date').distinct().annotate(
-        amount=Sum('amount'), quantity=Sum('quantity'))
-    for crop_mediator in crops_mediators:
-        user = LoopUser.objects.get(user_id=crop_mediator['user_created__id'])
-        crop_mediator['user_name'] = user.name
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list('date', flat=True).distinct().order_by(
-        'date').annotate(Count('farmer', distinct=True))
-    dates_farmer_count = CombinedTransaction.objects.filter(**filter_args).values('date').distinct().order_by(
-        'date').annotate(Count('farmer', distinct=True))
-    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions),
-                  'farmer_count': list(dates_farmer_count), 'crops_mediators': list(crops_mediators),
-                  'crops_mediators_transactions': list(crops_mediators_transactions)}
+
+    transactions = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
+    # crop and aggregator wise data
+    crops_aggregators = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name','user_created__id').distinct().annotate(amount = Sum('amount'), quantity = Sum('quantity'))
+    crops_aggregators_transactions = CombinedTransaction.objects.filter(**filter_args).values('crop__crop_name','user_created__id','date').distinct().annotate(amount = Sum('amount'), quantity = Sum('quantity'))
+    for crop_aggregator in crops_aggregators:
+        user = LoopUser.objects.get(user_id = crop_aggregator['user_created__id'])
+        crop_aggregator['user_name'] = user.name
+    dates = CombinedTransaction.objects.filter(**filter_args).values_list('date', flat=True).distinct().order_by('date').annotate(Count('farmer',distinct = True))
+    dates_farmer_count = CombinedTransaction.objects.filter(**filter_args).values('date').distinct().order_by('date').annotate(Count('farmer',distinct = True))
+    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions), 'farmer_count' : list(dates_farmer_count), 'crops_aggregators' : list(crops_aggregators), 'crops_aggregators_transactions' : list(crops_aggregators_transactions)}
+
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
