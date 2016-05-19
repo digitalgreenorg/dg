@@ -309,7 +309,7 @@ define([
                                     }
                                     // unauthorised server connection i.e. when user is logged out from website( when django session expires)
                                     else if(error.status == 401){
-                                        alert('Session time out. Login in again!');
+                                        alert('Session time out. Login in to Digital Green website again!');
                                         that.tear_down();
                                         that.server_connectivity_lost = true;
                                         dfd.reject(error);
