@@ -101,4 +101,4 @@ class AdoptionVerification(QACocoModel):
     verification_date = models.DateField()
     video = models.ForeignKey(Video)
     qareviewer = models.ForeignKey(QAReviewer)
-    adopted = models.ManyToManyField(NonNegotiable)
+    adopted = models.IntegerField(choices=APPROVAL)

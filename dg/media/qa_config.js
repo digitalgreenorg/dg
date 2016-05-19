@@ -147,7 +147,7 @@ function() {
             },
             'mediator':{
                 "mediator":{
-                    'placeholder': 'id_animator',
+                    'placeholder': 'id_mediator',
                     'name_field': 'name'
                 },
             },
@@ -224,28 +224,50 @@ function() {
                 },
             },
 
+            'block':{
+                "block":{
+                    'placeholder': 'id_block',
+                    'name_field': 'block_name'
+                },
+            },
             'village':{
                 "village":{
                     'placeholder': 'id_village',
-                    'name_field': 'village_name'
+                    'name_field': 'village_name',
+                    'dependency': [{
+                        'source_form_element': 'block',
+                        'dep_attr': 'block'
+                    }]
                 },
             },
             'mediator':{
                 "mediator":{
                     'placeholder': 'id_mediator',
-                    'name_field': 'name'
+                    'name_field': 'name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 },
             },
             'group':{
                 "group":{
                     'placeholder': 'id_group',
-                    'name_field': 'group_name'
+                    'name_field': 'group_name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 },
             },
             'person':{
                 "person":{
                     'placeholder': 'id_person',
-                    'name_field': 'person_name'
+                    'name_field': 'person_name',
+                    'dependency': [{
+                        'source_form_element': 'group',
+                        'dep_attr': 'group'
+                    }]
                 },
             },
             'qareviewer':{
@@ -254,12 +276,6 @@ function() {
                     'name_field': 'reviewer_name'
 
                 },
-            },
-            'block':{
-                "block":{
-                    'placeholder': 'id_block',
-                    'name_field': 'block_name'
-                }
             },
             'nonnegotiable': {
                 "nonnegotiable":{
@@ -362,6 +378,16 @@ function() {
             add: false
         }
     };
+
+    var mediator_configs = {
+        'rest_api_url': '/qacoco/api/v1/mediator/',
+        'entity_name': 'mediator',
+        'sort_field': 'name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
     
     var block_configs = {
         'rest_api_url': '/qacoco/api/v1/block/',
@@ -372,20 +398,11 @@ function() {
             add: false
         }
     };
+    
     var village_configs = {
         'rest_api_url': '/qacoco/api/v1/village/',
         'entity_name': 'village',
         'sort_field': 'village_name',
-        'dashboard_display': {
-            listing: false,
-            add: false
-        }
-    };
-
-    var mediator_configs = {
-        'rest_api_url': '/qacoco/api/v1/mediator/',
-        'entity_name': 'mediator',
-        'sort_field': 'name',
         'dashboard_display': {
             listing: false,
             add: false

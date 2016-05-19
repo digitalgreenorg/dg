@@ -217,5 +217,5 @@ class CocoUserAdmin(admin.ModelAdmin):
 
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
-    list_display = ('user','partner','get_villages')
+    list_display = ('user','partner','get_districts')
     search_fields = ['user__username']

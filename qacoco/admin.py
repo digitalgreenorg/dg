@@ -12,10 +12,27 @@ from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 
 from videos.models import Video
-from models import QACocoUser, QAReviewer
+from geographies.models import District, Block, State
+from models import QACocoUser, QAReviewer, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
 from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
     list_display = ('user', 'partner', 'get_districts')
     search_fields = ['user__username']
+
+class VideoContentApprovalAdmin(admin.ModelAdmin):
+    list_display = ('video', 'qareviewer')
+    search_fields = ['video']
+
+class VideoQualityReviewAdmin(admin.ModelAdmin):
+    list_display=('video','qareviewer', 'total_score', 'video_grade')
+
+class DisseminationQualityAdmin(admin.ModelAdmin):
+    list_display = ('date', 'mediator','village', 'total_score', 'video_grade')
+    search_fields = ['mediator']
+
+class AdoptionVerificationAdmin(admin.ModelAdmin):
+    list_display = ('verification_date','person','village', 'mediator', 'village')
+    search_fields = ['verification_date']
+    

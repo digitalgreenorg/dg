@@ -10,15 +10,15 @@ qa_api = Api(api_name = "v1")
 qa_api.register(VideoResource())
 qa_api.register(VillageResource())
 qa_api.register(BlockResource())
+qa_api.register(MediatorResource())
 qa_api.register(PersonGroupResource())
 qa_api.register(VideoContentApprovalResource())
 qa_api.register(VideoQualityReviewResource())
 qa_api.register(DisseminationQualityResource())
-qa_api.register(AdoptionVerificationResource())
 qa_api.register(PersonResource())
 qa_api.register(QAReviewerResource())
-qa_api.register(MediatorResource())
 qa_api.register(NonNegotiableResource())
+qa_api.register(AdoptionVerificationResource())
 urlpatterns = patterns('',
 	(r'^api/', include(qa_api.urls)),
 	(r'^$', qacoco_v1),
