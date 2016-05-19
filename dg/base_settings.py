@@ -161,7 +161,9 @@ INSTALLED_APPS = (
     'filebrowser_safe',
     'grappelli_safe',
     'videokheti',
+    'ivr',
     'training',
+    'loop',
 )
 
 # Store these package names here as they may change in the future since
@@ -211,6 +213,7 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+
     },
     'loggers': {
         'social_website': {

@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from communications.views import media_view
 from human_resources.views import job_view, member_view
 from events import event_registration
-from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view
+from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
 
 class DirectTemplateView(TemplateView):
     extra_context = None
@@ -26,8 +26,16 @@ urlpatterns = patterns('',
     url(r'^about/board/$', DirectTemplateView.as_view(template_name='board.html', extra_context={'header':{'jsController':'Team', 'currentPage':'Board'}}), name='board'),
     url(r'^about/ourwork/$', TemplateView.as_view(template_name='our_work.html'), name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
+    url(r'^about/training/$', TemplateView.as_view(template_name='training.html'), name='training'),
+    url(r'^about/technology/$', TemplateView.as_view(template_name='technology.html'), name='technology'),
     url(r'^about/training/picoseekho/(?P<uid>.+)/$', picoseekho_view, name='picoseekho'),
     url(r'^about/training/picoseekho/$', picoseekho_view, name='picoseekho'),
+    url(r'^about/training/dissemination_prep/(?P<uid>.+)/$', disseminationprep_view, name='disseminationprep'),
+    url(r'^about/training/dissemination_prep/$', disseminationprep_view, name='disseminationprep'),
+    url(r'^about/training/dissemination_form/(?P<uid>.+)/$', disseminationform_view, name='disseminationform'),
+    url(r'^about/training/dissemination_form/$', disseminationform_view, name='disseminationform'),
+    url(r'^about/training/adoption_verification/(?P<uid>.+)/$', adoptionverification_view, name='adoptionverification'),
+    url(r'^about/training/adoption_verification/$', adoptionverification_view, name='adoptionverification'),
     url(r'^about/reports/1/$', TemplateView.as_view(template_name='annualreport09.html'), name='annualreport09'),
     url(r'^about/reports/1/field/$', TemplateView.as_view(template_name='field-developments-09.html'), name='annualreport09fields'),
     url(r'^about/reports/1/learning/$', TemplateView.as_view(template_name='learnings-09.html'), name='annualreport09learnings'),
@@ -58,7 +66,6 @@ urlpatterns = patterns('',
     url(r'^resources/field_stories/$', TemplateView.as_view(template_name='field_stories.html'), name='field_stories'),
     url(r'^resources/sop/$', TemplateView.as_view(template_name='sop.html'), name='sop'),
     url(r'^resources/research/$', TemplateView.as_view(template_name='research.html'), name='research'),
-    url(r'^resources/training/$', TemplateView.as_view(template_name='training.html'), name='training'),
     url(r'^resources/posters/$', TemplateView.as_view(template_name='posters.html'), name='posters'),
     url(r'^resources/(?P<uid>.+)/$', resource_view, name='resources'),
     url(r'^resources/$', resource_view, name='resources'),

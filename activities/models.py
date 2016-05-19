@@ -128,3 +128,8 @@ class PersonAdoptPractice(CocoModel):
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+
+class JSLPS_Screening(CocoModel):
+    id = models.AutoField(primary_key=True)
+    screenig_code = models.CharField(max_length=100)
+    screening = models.ForeignKey(Screening, null=True, blank=True)
