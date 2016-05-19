@@ -675,7 +675,7 @@ class CombinedTransactionResource(BaseResource):
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
-        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"],
+        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], quantity=bundle.data["quantity"], price=bundle.data["price"],
                                                      farmer=farmer, crop=crop, mandi=mandi, gaddidar = gaddidar)
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,
@@ -694,7 +694,7 @@ class CombinedTransactionResource(BaseResource):
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"],
+            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"], quantity=bundle.data["quantity"],
                                                          farmer=farmer, crop=crop, mandi=mandi, gaddidar=gaddidar)
             raise TransactionNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
