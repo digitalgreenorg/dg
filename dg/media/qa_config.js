@@ -142,14 +142,18 @@ function() {
             'village':{
                 "village":{
                     'placeholder': 'id_village',
-                    'name_field': 'village_name'
-                },
+                    'name_field': 'village_name',
+                    'dependency': [{
+                        'source_form_element': 'block',
+                        'dep_attr': 'block'
+                    }]
+                }
             },
             'mediator':{
                 "mediator":{
                     'placeholder': 'id_mediator',
                     'name_field': 'name'
-                },
+                }
             },
             'block':{
                 "block":{
@@ -233,41 +237,25 @@ function() {
             'village':{
                 "village":{
                     'placeholder': 'id_village',
-                    'name_field': 'village_name',
-                    'dependency': [{
-                        'source_form_element': 'block',
-                        'dep_attr': 'block'
-                    }]
+                    'name_field': 'village_name'
                 },
             },
             'mediator':{
                 "mediator":{
                     'placeholder': 'id_mediator',
-                    'name_field': 'name',
-                    'dependency': [{
-                        'source_form_element': 'village',
-                        'dep_attr': 'village'
-                    }]
+                    'name_field': 'name'
                 },
             },
             'group':{
                 "group":{
                     'placeholder': 'id_group',
-                    'name_field': 'group_name',
-                    'dependency': [{
-                        'source_form_element': 'village',
-                        'dep_attr': 'village'
-                    }]
+                    'name_field': 'group_name'
                 },
             },
             'person':{
                 "person":{
                     'placeholder': 'id_person',
-                    'name_field': 'person_name',
-                    'dependency': [{
-                        'source_form_element': 'group',
-                        'dep_attr': 'group'
-                    }]
+                    'name_field': 'person_name'
                 },
             },
             'qareviewer':{

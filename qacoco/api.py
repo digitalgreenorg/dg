@@ -221,39 +221,34 @@ class VillageResource(BaseResource):
     dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
     hydrate_block = partial(dict_to_foreign_uri, field_name ='block', resource_name = 'block')
 
-
 class MediatorResource(BaseResource):
-    village = fields.ForeignKey(VillageResource, 'village')
     class Meta:
                 max_limit = None
                 queryset = Animator.objects.all()
                 resource_name = 'mediator'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('district_id__in')
-    dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
-    hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
+    
 
 class PersonGroupResource(BaseResource):
-    village = fields.ForeignKey(VillageResource, 'village')
+    
     class Meta:
                 max_limit = None
                 queryset = PersonGroup.objects.all()
                 resource_name = 'group'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('village__block__district_id__in')
-    dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
-    hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
+    
 
 class PersonResource(BaseResource):
-    group = fields.ForeignKey(PersonGroupResource, 'group')
+    
     class Meta:
                 max_limit = None
                 queryset = Person.objects.all()
                 resource_name = 'person'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('village__block__district_id__in')
-    dehydrate_group = partial(foreign_key_to_id, field_name = 'group', sub_field_names=['id','group_name'])
-    hydrate_group = partial(dict_to_foreign_uri, field_name ='group', resource_name = 'group')
+    
 
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
@@ -321,7 +316,7 @@ class DisseminationQualityResource(BaseResource):
         dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
         hydrate_block = partial(dict_to_foreign_uri, field_name ='block')
         dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
-        hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
+        hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name='village')
         dehydrate_mediator = partial(foreign_key_to_id, field_name = 'mediator', sub_field_names=['id','name'])
         hydrate_mediator = partial(dict_to_foreign_uri, field_name ='mediator')
         dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
