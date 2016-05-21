@@ -23,13 +23,13 @@ class Command(BaseCommand):
 		mysql = con.cursor()
 		mysql.execute("""
 			SELECT
-				S.training_id as \'Training ID\',
-				T.date as \'Date\',
-				T.place as \'Place\', 
-				TR.name as \'Trainer\',
-				L.language_name as \'Language\', 
-				A.name as \'Assessment\', 
-				count(distinct S.participant_id) as \'Participants Entered\'
+				S.training_id AS \'Training ID\',
+				T.date AS \'Date\',
+				T.place AS \'Place\', 
+				TR.name AS \'Trainer\',
+				L.language_name AS \'Language\', 
+				A.name AS \'Assessment\', 
+				COUNT(distinct S.participant_id) as \'Participants Entered\'
 			FROM
 				training_score S
 			JOIN
@@ -44,6 +44,33 @@ class Command(BaseCommand):
 				training_trainer TR ON TR.id = TTT.trainer_id
 			GROUP BY
 				S.training_id;
+		""")
+
+		mysql1 = con.cursor()
+		mysql1.execute("""
+			SELECT 
+   				S.training_id AS \'Training ID\',
+   				TR.name AS \'Trainer\', 
+   				A.name AS \'Participant\', 
+   				COUNT(S.score) AS \'Score\'
+			FROM
+    			training_score S
+        	LEFT JOIN
+    			training_training_trainer TT ON TT.training_id = S.training_id
+        	LEFT JOIN
+    			training_trainer TR ON TR.id = TT.trainer_id
+        	LEFT JOIN
+    			people_animator A ON S.participant_id = A.id
+			WHERE
+    			S.score > 0
+			GROUP BY 
+				A.id, 
+				TR.id, 
+				S.training_id
+			ORDER BY 
+				S.training_id DESC, 
+				TR.name, 
+				A.name;
 		""")
 
 		fields = mysql.fetchall()
@@ -69,6 +96,27 @@ class Command(BaseCommand):
 					ws.write(i, j, cell, date_xf)
 				else:
 					ws.write(i, j, cell)
+		wb.save(file)
+
+		fields = mysql1.fetchall()
+		field_hdrs = [i[0] for i in mysql1.description]
+
+		ws1 = wb.add_sheet('Participant Scores')
+		style = xlwt.easyxf('font: bold 1')
+		col_widths = [10,20,25,6]
+		date_xf = xlwt.easyxf(num_format_str='DD/MM/YYYY') # sets date format in Excel
+
+		for i,hdr in enumerate(field_hdrs):
+			ws1.write(0, i, hdr, style)
+			ws1.col(i).width = 256 * col_widths[i] #char_size*num_chars
+
+		for i, row in enumerate(fields):
+			i += 1
+			for j, cell in enumerate(row):
+				if isinstance(cell, datetime.date):
+					ws1.write(i, j, cell, date_xf)
+				else:
+					ws1.write(i, j, cell)
 		wb.save(file)
 
 		#email_list=['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org']
