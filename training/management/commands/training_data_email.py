@@ -119,15 +119,15 @@ class Command(BaseCommand):
 					ws1.write(i, j, cell)
 		wb.save(file)
 
-		#email_list=['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org']
-		email_list=['jahnavi@digitalgreen.org']
+		email_list = ['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org', 'tanmaygoel@digitalgreen.org', 'jahnavi@digitalgreen.org', 'smriti@digitalgreen.org']
+		#email_list=['jahnavi@digitalgreen.org']
 		subject = 'Training: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
 
 This is a weekly automated email to monitor training data entry.
 
-This mail is to keep you updated on the progress in data entry and keep check on quality of entered data. 
+This mail is to keep you updated on the progress in data entry. 
 
 
 Thank you for your support!
