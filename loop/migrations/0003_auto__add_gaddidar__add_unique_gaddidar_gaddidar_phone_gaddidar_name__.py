@@ -25,6 +25,20 @@ class Migration(SchemaMigration):
         # Adding unique constraint on 'Gaddidar', fields ['gaddidar_phone', 'gaddidar_name']
         db.create_unique(u'loop_gaddidar', ['gaddidar_phone', 'gaddidar_name'])
 
+        # Adding model 'Vehicle'
+        db.create_table(u'loop_vehicle', (
+            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_vehicle_created', null=True, to=orm['auth.User'])),
+            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
+            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_vehicle_related_modified', null=True, to=orm['auth.User'])),
+            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('vehicle_name', self.gf('django.db.models.fields.CharField')(max_length=30)),
+        ))
+        db.send_create_signal(u'loop', ['Vehicle'])
+
+        # Adding unique constraint on 'Vehicle', fields ['vehicle_name']
+        db.create_unique(u'loop_vehicle', ['vehicle_name'])
+
         # Adding model 'DayTransportation'
         db.create_table(u'loop_daytransportation', (
             ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_daytransportation_created', null=True, to=orm['auth.User'])),
@@ -75,23 +89,14 @@ class Migration(SchemaMigration):
         # Adding unique constraint on 'Transporter', fields ['transporter_name', 'transporter_phone']
         db.create_unique(u'loop_transporter', ['transporter_name', 'transporter_phone'])
 
-        # Adding model 'Vehicle'
-        db.create_table(u'loop_vehicle', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_vehicle_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_vehicle_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('vehicle_name', self.gf('django.db.models.fields.CharField')(max_length=30)),
-        ))
-        db.send_create_signal(u'loop', ['Vehicle'])
-
-        # Adding unique constraint on 'Vehicle', fields ['vehicle_name']
-        db.create_unique(u'loop_vehicle', ['vehicle_name'])
-
         # Adding field 'CombinedTransaction.gaddidar'
         db.add_column(u'loop_combinedtransaction', 'gaddidar',
                       self.gf('django.db.models.fields.related.ForeignKey')(default=True, to=orm['loop.Gaddidar'], null=True),
+                      keep_default=False)
+
+        # Adding field 'CombinedTransaction.timestamp'
+        db.add_column(u'loop_combinedtransaction', 'timestamp',
+                      self.gf('django.db.models.fields.CharField')(max_length=25, null=True, blank=True),
                       keep_default=False)
 
         # Adding field 'LoopUser.village'
@@ -110,20 +115,23 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Vehicle', fields ['vehicle_name']
-        db.delete_unique(u'loop_vehicle', ['vehicle_name'])
-
         # Removing unique constraint on 'Transporter', fields ['transporter_name', 'transporter_phone']
         db.delete_unique(u'loop_transporter', ['transporter_name', 'transporter_phone'])
 
         # Removing unique constraint on 'TransportationVehicle', fields ['transporter', 'vehicle', 'vehicle_number']
         db.delete_unique(u'loop_transportationvehicle', ['transporter_id', 'vehicle_id', 'vehicle_number'])
 
+        # Removing unique constraint on 'Vehicle', fields ['vehicle_name']
+        db.delete_unique(u'loop_vehicle', ['vehicle_name'])
+
         # Removing unique constraint on 'Gaddidar', fields ['gaddidar_phone', 'gaddidar_name']
         db.delete_unique(u'loop_gaddidar', ['gaddidar_phone', 'gaddidar_name'])
 
         # Deleting model 'Gaddidar'
         db.delete_table(u'loop_gaddidar')
+
+        # Deleting model 'Vehicle'
+        db.delete_table(u'loop_vehicle')
 
         # Deleting model 'DayTransportation'
         db.delete_table(u'loop_daytransportation')
@@ -134,11 +142,11 @@ class Migration(SchemaMigration):
         # Deleting model 'Transporter'
         db.delete_table(u'loop_transporter')
 
-        # Deleting model 'Vehicle'
-        db.delete_table(u'loop_vehicle')
-
         # Deleting field 'CombinedTransaction.gaddidar'
         db.delete_column(u'loop_combinedtransaction', 'gaddidar_id')
+
+        # Deleting field 'CombinedTransaction.timestamp'
+        db.delete_column(u'loop_combinedtransaction', 'timestamp')
 
         # Deleting field 'LoopUser.village'
         db.delete_column(u'loop_loopuser', 'village_id')
@@ -208,6 +216,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.IntegerField', [], {}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'timestamp': ('django.db.models.fields.CharField', [], {'max_length': '25', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_combinedtransaction_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_combinedtransaction_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },

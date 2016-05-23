@@ -264,6 +264,7 @@ class CombinedTransaction(LoopModel):
     price = models.FloatField()
     status = models.IntegerField()
     amount = models.FloatField()
+    timestamp = models.CharField(max_length=25,null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
