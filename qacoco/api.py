@@ -99,6 +99,17 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
         bundle.data[field_name] = None
     return bundle
 
+def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
+    m2m_list = bundle.data.get(field_name)
+    resource_uri_list = []
+    for item in m2m_list:
+        try:
+            resource_uri_list.append("/qa/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+        except:
+            return bundle
+    bundle.data[field_name] = resource_uri_list
+    return bundle
+
 def get_user_partner_id(user_id):
     if user_id:
         try:
@@ -222,32 +233,44 @@ class VillageResource(BaseResource):
     hydrate_block = partial(dict_to_foreign_uri, field_name ='block', resource_name = 'block')
 
 class MediatorResource(BaseResource):
+    assigned_villages= fields.ListField()
     class Meta:
                 max_limit = None
                 queryset = Animator.objects.all()
                 resource_name = 'mediator'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('district_id__in')
-    
+    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
+
+    def dehydrate_assigned_villages(self, bundle):
+        return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
+
+    def dehydrate_mediator_label(self,bundle):
+        #for sending out label incase of dropdowns
+        return ','.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
 
 class PersonGroupResource(BaseResource):
-    
+    village = fields.ForeignKey(VillageResource, 'village')
     class Meta:
                 max_limit = None
                 queryset = PersonGroup.objects.all()
                 resource_name = 'group'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('village__block__district_id__in')
+    dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
 
 class PersonResource(BaseResource):
-    
+    village = fields.ForeignKey(VillageResource, 'village')
     class Meta:
                 max_limit = None
                 queryset = Person.objects.all()
                 resource_name = 'person'
                 authentication = Authentication()
                 authorization = DistrictAuthorization('village__block__district_id__in')
+    dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
 
 class NonNegotiableResource(BaseResource):
@@ -318,7 +341,7 @@ class DisseminationQualityResource(BaseResource):
         dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
         hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name='village')
         dehydrate_mediator = partial(foreign_key_to_id, field_name = 'mediator', sub_field_names=['id','name'])
-        hydrate_mediator = partial(dict_to_foreign_uri, field_name ='mediator')
+        hydrate_mediator = partial(dict_to_foreign_uri, field_name ='mediator', resource_name='mediator')
         dehydrate_qareviewer = partial(foreign_key_to_id, field_name = 'qareviewer', sub_field_names=['id','reviewer_name'])
         hydrate_qareviewer = partial(dict_to_foreign_uri, field_name ='qareviewer')
 

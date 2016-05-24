@@ -534,18 +534,7 @@
         
         document.getElementsByName('video_grade')[0].value=grade;
     }
-    function approval1()
-    {
-        var a;
-        var choice=document.getElementsByName('approval').value;
-        for(i=0;i<choice;i++)
-        {
-            if(choice[i].checked==true)
-                a='Yes';
-            else
-                a='No';
-        }
-    }
+    
 </script>
 
 <script type="text/template" id="Video_Quality_Review_add_edit_template">
@@ -692,8 +681,8 @@
             <div class="form-group">
                 <label class="control-label dis-block col-sm-2">Approve for Dissemination</label>
                 <div class="col-sm-4">
-                    <input type="radio" name="approval" value=0 style="margin: 0 10px 0 10px;" onchange="approval1()">Yes
-                    <input type="radio" name="approval" value=1 style="margin: 0 10px 0 30px;" onchange="approval1()">No
+                    <input type="radio" name="approval" value=0 style="margin: 0 10px 0 10px;">Yes
+                    <input type="radio" name="approval" value=1 style="margin: 0 10px 0 30px;">No
                     
                 </div>
             </div>
