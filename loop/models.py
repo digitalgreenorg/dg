@@ -264,7 +264,7 @@ class CombinedTransaction(LoopModel):
     price = models.FloatField()
     status = models.IntegerField()
     amount = models.FloatField()
-    timestamp = models.CharField(max_length=25,null=True, blank=True)
+    # timestamp = models.CharField(max_length=25,null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
@@ -272,7 +272,7 @@ class CombinedTransaction(LoopModel):
             LoopUser.objects.get(user=self.user_created).name)
 
     class Meta:
-        unique_together = ("date", "farmer", "crop", "mandi", "price","gaddidar","quantity","timestamp",)
+        unique_together = ("date", "farmer", "crop", "mandi", "price","gaddidar","quantity",)
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
