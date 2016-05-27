@@ -487,7 +487,7 @@
             
             <label class="control-label col-sm-2">Reviewed By</label>
             <div class="col-sm-4">
-                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+                <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
                
                 </select>
             </div>
@@ -499,6 +499,53 @@
                 </div>
         </div>
         </fieldset>
+        <fieldset class = "inline_table">
+                <h5>Non Negotiables</h5>
+                <table id="nn_table" class="table">
+                    <thead class="hide-header">
+                        <tr>
+                            <th class="notbold">
+                                Sr. No.
+                            </th>
+                            <th class="notbold">
+                                Non Negotiable
+                            </th>
+                            <th class="notbold">
+                                Physically Verifiable
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="nns_verification">
+                    </tbody>
+                </table>
+    </fieldset>
+</script>
+<script type="text/template" id="nn_verification_template">
+    <tr class="stack-table nnadd" id="row7" index = <%=index%> NonNegotiable_id = <%=id%> model_id = <%=id%>>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
+                <%=index+1%>
+                </div>
+            </div>
+        </td>
+        <td ><div class="form-group"><div class="controls">
+            <textarea name="non_negotiable<%=index%>" id="NonNegotiable_id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
+                
+            </div></div>
+        </td> 
+        <td>
+            <div class="form-group"><div class="controls">
+                <% if(physically_verifiable == true){ %>
+                    <input class="mrg-lt-auto" type="checkbox" id="physically_verifiable" name="physically_verifiable" checked disabled >
+                <% } else{ %>
+                    <input class="mrg-lt-auto" type="checkbox" id="physically_verifiable" name="physically_verifiable" disabled >
+                <% } %>
+            </div></div>
+        </td>
+    </tr>
+</script>
         
 </script>
 <!--//////////////////////////////////////////////////// VIDEO CONTENT APPROVAL ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
@@ -690,7 +737,7 @@
             
             <label class="control-label col-sm-2">Reviewed By</label>
             <div class="col-sm-4">
-                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+                <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
                
                 </select>
             </div>
@@ -851,7 +898,7 @@
             
             <label class="control-label col-sm-2">Reviewed By</label>
             <div class="col-sm-4">
-                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+                <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
                
                 </select>
             </div>
@@ -946,7 +993,7 @@
             
             <label class="control-label col-sm-2">Reviewed By</label>
             <div class="col-sm-4">
-                <select id = "id_qareviewer" name="qareviewer" class = "chosen-select form-control">
+                <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
                
                 </select>
             </div>

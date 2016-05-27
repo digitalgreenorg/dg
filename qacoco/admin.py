@@ -13,7 +13,7 @@ from django.forms import TextInput, Textarea
 
 from videos.models import Video
 from geographies.models import District, Block, State
-from models import QACocoUser, QAReviewer, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
+from models import QACocoUser, QAReviewer, QAReviewerName, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
 from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
@@ -22,11 +22,11 @@ class QACocoUserAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
 
 class VideoContentApprovalAdmin(admin.ModelAdmin):
-    list_display = ('video', 'qareviewer')
+    list_display = ('video', 'qareviewername')
     search_fields = ['video']
 
 class VideoQualityReviewAdmin(admin.ModelAdmin):
-    list_display=('video','qareviewer', 'total_score', 'video_grade')
+    list_display=('video','qareviewername', 'total_score', 'video_grade')
 
 class DisseminationQualityAdmin(admin.ModelAdmin):
     list_display = ('date', 'mediator','village', 'total_score', 'video_grade')
@@ -36,3 +36,6 @@ class AdoptionVerificationAdmin(admin.ModelAdmin):
     list_display = ('verification_date','person','village', 'mediator', 'village')
     search_fields = ['verification_date']
     
+class QAReviewerNameAdmin(admin.ModelAdmin):
+    list_display = ('reviewer_category', 'name')
+    search_fields = ['name']

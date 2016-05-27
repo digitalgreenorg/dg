@@ -40,9 +40,16 @@ class QAReviewer(models.Model):
 	def __unicode__(self):
 		return u'%s' % (self.reviewer_name)
 
+class QAReviewerName(models.Model):
+    reviewer_category = models.ForeignKey(QAReviewer)
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
-    qareviewer = models.ForeignKey(QAReviewer)
+    qareviewername = models.ForeignKey(QAReviewerName)
     suitable_for = models.IntegerField(max_length=1,choices=TYPE_CHOICES)
     comment = models.CharField(max_length=200)
     
@@ -66,7 +73,7 @@ class VideoQualityReview(QACocoModel):
     total_score = models.IntegerField()
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE)
     approval = models.IntegerField(choices=APPROVAL)
-    qareviewer = models.ForeignKey(QAReviewer)
+    qareviewername = models.ForeignKey(QAReviewerName)
     remarks = models.CharField(max_length=200)
    
     def __unicode__(self):
@@ -86,7 +93,7 @@ class DisseminationQuality(QACocoModel):
     documentation = models.IntegerField(choices=SCORE_CHOICES,null=True,blank=True)
     total_score = models.IntegerField()
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
-    qareviewer = models.ForeignKey(QAReviewer)
+    qareviewername = models.ForeignKey(QAReviewerName)
     remark = models.CharField(max_length=200)
 
     class Meta:
@@ -100,4 +107,4 @@ class AdoptionVerification(QACocoModel):
     person = models.ForeignKey(Person)
     verification_date = models.DateField()
     video = models.ForeignKey(Video)
-    qareviewer = models.ForeignKey(QAReviewer)
+    qareviewername = models.ForeignKey(QAReviewerName)

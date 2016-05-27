@@ -5,7 +5,7 @@ function() {
 		'add_template_name': 'video_content_approval_add_edit_template',
         'edit_template_name': 'video_content_approval_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoContentApproval/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewer.reviewer_name'}],
+        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'}],
         'entity_name': 'VideoContentApproval',
         'dashboard_display': {
             listing: true,
@@ -19,24 +19,38 @@ function() {
                     'name_field': 'title'
                 },
             },
-            'qareviewer':{
-            	"qareviewer":{
-            		'placeholder': 'id_qareviewer',
-            		'name_field': 'reviewer_name',
+            'qareviewername':{
+            	"qareviewername":{
+            		'placeholder': 'id_qareviewername',
+            		'name_field': 'name'
 
-            		},
             	},
+            },
+            'nonnegotiable': {
+                "nonnegotiable":{
+                        dependency: [{
+                            'source_form_element': 'video',
+                            'dep_attr': 'video'
+                        }],
+                        id_field: "id",
+                        'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
+                            template: 'nn_verification_template',
+                            placeholder: 'nns_verification',
+                            extra_fields: ["physically_verifiable"]
+                        }
+                }
+            }     
         },
 
         'form_field_validation': {
             ignore: [],
             rules: {
-                qareviewer: "required",
+                qareviewername: "required",
                 video: "required"    
             },
             messages: {
                 video: "Video name is required",
-                qareviewer: "Reviewer name is required"      
+                qareviewername: "Reviewer name is required"      
             },
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -64,7 +78,7 @@ function() {
         'add_template_name': 'Video_Quality_Review_add_edit_template',
         'edit_template_name': 'Video_Quality_Review_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoQualityReview/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewer.reviewer_name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
+        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'VideoQualityReview',
         'dashboard_display': {
             listing: true,
@@ -79,24 +93,24 @@ function() {
                 },
             
             },
-            'qareviewer':{
-                "qareviewer":{
-                    'placeholder': 'id_qareviewer',
-                    'name_field': 'reviewer_name',
+            'qareviewername':{
+                "qareviewername":{
+                    'placeholder': 'id_qareviewername',
+                    'name_field': 'name'
 
-                    },
-                },
+                }
+            }
         },
         'form_field_validation': {
             ignore: [],
             rules: {
-                reviewer: "required",
+                qareviewername: "required",
                 video: "required",
                 approval: "required"   
             },
             messages: {
                 video: "Video name is required",
-                reviewer: "Reviewer name is required",
+                qareviewername: "Reviewer name is required",
                 approval: "Approval is required"      
             },
             highlight: function(element, errorClass, validClass) {
@@ -125,7 +139,7 @@ function() {
         'add_template_name': 'Dissemination_Quality_add_edit_template',
         'edit_template_name': 'Dissemination_Quality_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/DisseminationQuality/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}],
+        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'DisseminationQuality',
         'dashboard_display': {
             listing: true,
@@ -165,13 +179,13 @@ function() {
                 'name_field' : 'block_name'
                 },
             },
-            'qareviewer':{
-                "qareviewer":{
-                    'placeholder': 'id_qareviewer',
-                    'name_field': 'reviewer_name'
+            'qareviewername':{
+                "qareviewername":{
+                    'placeholder': 'id_qareviewername',
+                    'name_field': 'name'
 
-                    }
                 }
+            }
     },
     'form_field_validation': {
             ignore: [],
@@ -179,7 +193,7 @@ function() {
                 block: "required",
                 village: "required",
                 mediator: "required",
-                qareviewer: "required",
+                qareviewername: "required",
                 date: "required",
                 video: "required"    
             },
@@ -189,7 +203,7 @@ function() {
                 village: "Village name is required",
                 mediator: "Mediator name is required",
                 date: "Date is required",
-                qareviewer: "Reviewer name is required"      
+                qareviewername: "Reviewer name is required"      
             },
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -278,10 +292,10 @@ function() {
                     }]
                 },
             },
-            'qareviewer':{
-                "qareviewer":{
-                    'placeholder': 'id_qareviewer',
-                    'name_field': 'reviewer_name'
+            'qareviewername':{
+                "qareviewername":{
+                    'placeholder': 'id_qareviewername',
+                    'name_field': 'name'
 
                 },
             },
@@ -303,7 +317,7 @@ function() {
     'form_field_validation': {
             ignore: [],
             rules: {
-                qareviewer: "required",
+                qareviewername: "required",
                 block: "required",
                 village: "required",
                 mediator: "required",
@@ -314,7 +328,7 @@ function() {
             },
             messages: {
                 video: "Video name is required",
-                qareviewer: "Reviewer name is required",
+                qareviewername: "Reviewer name is required",
                 block: "Block name is required",
                 village: "Village name is required",
                 group: "Group name is required",
@@ -417,10 +431,10 @@ function() {
         }
     };
 
-    var qareviewer_configs = {
-        'rest_api_url': '/qacoco/api/v1/qareviewer/',
-        'entity_name': 'qareviewer',
-        'sort_field': 'reviewer_name',
+    var qareviewername_configs = {
+        'rest_api_url': '/qacoco/api/v1/qareviewername/',
+        'entity_name': 'qareviewername',
+        'sort_field': 'name',
         'dashboard_display': {
             listing: false,
             add: false
@@ -486,7 +500,7 @@ function() {
         mediator: mediator_configs,
         group : group_configs,
         person : person_configs,
-        qareviewer: qareviewer_configs,
+        qareviewername: qareviewername_configs,
         nonnegotiable: nonnegotiable_configs,
         misc: misc
     }
