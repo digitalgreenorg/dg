@@ -307,7 +307,7 @@ class TrainingResource(ModelResource):
             return [{'id': trainer.id, 'name':trainer.name} for trainer in bundle.obj.trainer.all() ]
 
     def dehydrate_participants(self, bundle):
-        return [{'id':mediator.id, 'name':mediator.name} for mediator in bundle.obj.participants.all()]
+        return [{'online_id':mediator.id, 'name':mediator.name} for mediator in bundle.obj.participants.all()]
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
