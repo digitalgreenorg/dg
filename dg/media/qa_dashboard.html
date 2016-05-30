@@ -520,7 +520,7 @@
                 </table>
     </fieldset>
 </script>
-<script type="text/template" id="nn_verification_template">
+<script type="text/template" id="nn_template">
     <tr class="stack-table nnadd" id="row7" index = <%=index%> NonNegotiable_id = <%=id%> model_id = <%=id%>>
         <td>
             <div class="form-group">
@@ -1013,6 +1013,9 @@
                             <th class="notbold">
                                 Physically Verifiable
                             </th>
+                            <th class="notbold">
+                                Adopted?
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="nns_verification">
@@ -1043,6 +1046,14 @@
                     <input class="mrg-lt-auto" type="checkbox" id="physically_verifiable" name="physically_verifiable" disabled >
                 <% } %>
             </div></div>
+        </td>
+        <td>
+            <div class="form-group">
+                <div class="checkbox">
+                        <input class="mrg-lt-auto" type="checkbox" name="adopted">
+                        <input class="mrg-lt-auto" type="checkbox" name="adopted">
+                </div>
+            </div>
         </td>
     </tr>
 </script>

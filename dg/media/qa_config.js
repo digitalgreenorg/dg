@@ -34,7 +34,7 @@ function() {
                         }],
                         id_field: "id",
                         'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
-                            template: 'nn_verification_template',
+                            template: 'nn_template',
                             placeholder: 'nns_verification',
                             extra_fields: ["physically_verifiable"]
                         }

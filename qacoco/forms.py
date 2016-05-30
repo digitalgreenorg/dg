@@ -67,3 +67,4 @@ class NonNegotiableForm(QACocoModelForm):
 class AdoptionVerificationForm(QACocoModelForm):
     class Meta:
         model = AdoptionVerification
+        exclude = ('adopted',)

@@ -24,6 +24,10 @@ APPROVAL = (
 	(1, 'Yes'),
 	)
 
+ADOPTED = (
+	(0, 'No'),
+	(1, 'Yes'),
+	)
 class QACocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)

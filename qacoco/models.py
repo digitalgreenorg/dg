@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL
+from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED
 
 from geographies.models import District,Block,Village
 from programs.models import Partner
@@ -108,3 +108,4 @@ class AdoptionVerification(QACocoModel):
     verification_date = models.DateField()
     video = models.ForeignKey(Video)
     qareviewername = models.ForeignKey(QAReviewerName)
+    adopted = models.IntegerField(choices=ADOPTED, null=True)

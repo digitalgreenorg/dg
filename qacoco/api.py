@@ -218,7 +218,7 @@ class VideoResource(BaseResource):
         queryset = Video.objects.all()
         resource_name = 'video'
         authentication = SessionAuthentication()
-        authorization = VideoAuthorization()
+        authorization = Authorization()
 
 class BlockResource(BaseResource):
     class Meta:
@@ -288,7 +288,7 @@ class NonNegotiableResource(BaseResource):
         queryset = NonNegotiable.objects.prefetch_related('video').all()
         resource_name = 'nonnegotiable'
         authentication = SessionAuthentication()
-        authorization = NonNegotiableAuthorization()
+        authorization = Authorization()
         validation = ModelFormValidation(form_class=NonNegotiableForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
