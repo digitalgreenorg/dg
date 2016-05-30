@@ -33,7 +33,7 @@ class DisseminationQualityAdmin(admin.ModelAdmin):
     search_fields = ['mediator']
 
 class AdoptionVerificationAdmin(admin.ModelAdmin):
-    list_display = ('verification_date','person','village', 'mediator', 'village')
+    list_display = ('verification_date','person','village', 'mediator')
     search_fields = ['verification_date']
     
 class QAReviewerNameAdmin(admin.ModelAdmin):
