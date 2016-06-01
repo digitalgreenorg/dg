@@ -43,13 +43,16 @@ class Command(BaseCommand):
 			JOIN
 				training_trainer TR ON TR.id = TTT.trainer_id
 			GROUP BY
-				S.training_id;
+				S.training_id
+			ORDER BY
+				T.date DESC;
 		""")
 
 		mysql1 = con.cursor()
 		mysql1.execute("""
 			SELECT 
    				S.training_id AS \'Training ID\',
+   				T.date AS \'Date\',
    				TR.name AS \'Trainer\', 
    				A.name AS \'Participant\', 
    				COUNT(S.score) AS \'Score\'
@@ -57,6 +60,8 @@ class Command(BaseCommand):
     			training_score S
         	LEFT JOIN
     			training_training_trainer TT ON TT.training_id = S.training_id
+        	LEFT JOIN
+        		training_training T ON T.id = S.training_id
         	LEFT JOIN
     			training_trainer TR ON TR.id = TT.trainer_id
         	LEFT JOIN
@@ -68,7 +73,7 @@ class Command(BaseCommand):
 				TR.id, 
 				S.training_id
 			ORDER BY 
-				S.training_id DESC, 
+				T.date DESC, 
 				TR.name, 
 				A.name;
 		""")
