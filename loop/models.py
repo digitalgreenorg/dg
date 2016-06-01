@@ -222,7 +222,7 @@ class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     transporter = models.ForeignKey(Transporter)
     vehicle = models.ForeignKey(Vehicle)
-    vehicle_number = models.CharField(max_length=11)
+    vehicle_number = models.CharField(max_length=20)
 
     def __unicode__(self):
         return "%s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name)
