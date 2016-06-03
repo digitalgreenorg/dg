@@ -214,29 +214,15 @@ function() {
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
-        'list_elements': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Start Date','element':'video_production_start_date'},{'header':'End Date','element':'video_production_end_date'}],
+        'list_elements': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
         'entity_name': 'video',
-        'unique_together_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
             'mediator': {
-                "facilitator": {
-                    'placeholder': 'id_facilitator',
+                "production_team": {
+                    'placeholder': 'id_production_team',
                     'name_field': 'name'
-                },
-                "cameraoperator": {
-                    'placeholder': 'id_cameraoperator',
-                    'name_field': 'name'
-                },
-            },
-            'person': {
-                "farmers_shown": {
-                    'placeholder': 'id_farmers_shown',
-                    'name_field': 'person_name',
-                    'dependency': [{
-                        'source_form_element': 'village',
-                        'dep_attr': 'village'
-                    }]
                 },
             },
             'village': {
@@ -250,9 +236,23 @@ function() {
                     'placeholder': 'id_language',
                     'name_field': 'language_name'
                 }
+            },
+            'category': {
+                "category": {
+                    'placeholder': 'id_category',
+                    'name_field': 'category_name'
+                }
+            },
+            'subcategory': {
+                "subcategory": {
+                    'placeholder': "id_subcategory",
+                    'name_field': "subcategory_name",
+                    'dependency': [{
+                        'source_form_element': 'category',
+                        'dep_attr': 'category'
+                    }]
+                }
             }
-
-
         },
         'inline': {
             'entity': 'nonnegotiable',
@@ -289,30 +289,22 @@ function() {
                     // allowedChar: true
                 },
                 video_type: "required",
-                video_production_start_date: {
+                production_date: {
                     required: true,
-                    // validateDate: true
-                },
-                video_production_end_date: {
-                    required: true,
-					dateOrder: {video_production_start_date : "video_production_start_date"}
                     // validateDate: true
                 },
                 language: "required",
-                summary: {
+                benefit: {
                     minlength: 2,
                     maxlength: 500,
                     // allowedChar: true
                 },
                 village: "required",
-                facilitator: "required",
-                cameraoperator: "required",
-                farmers_shown: "required",
-                actors: "required",
-                video_suitable_for: "required",
-
-				approval_date: {
-					dateOrder: {video_production_start_date : "video_production_end_date"}
+                production_team: "required",
+                category: "required",
+                subcategory: "required",
+                approval_date: {
+					dateOrder: {production_date : "production_date"}
                     // validateDate: true
                 },
                 youtubeid: {
@@ -327,27 +319,18 @@ function() {
                     // allowedChar: 'Video title should only contain alphabets and local language characters'
                 },
                 video_type: "Video type is required",
-                video_production_start_date: {
-                    required: 'Video production start date is required',
-                    validateDate: "Enter video production start date in the form of YYYY-MM-DD"
-                },
-                video_production_end_date: {
-                    required: 'Video production end date is required',
-                    validateDate: "Enter video production end date in the form of YYYY-MM-DD",
-					dateOrder: "End date should be later than start date"
+                production_date: {
+                    required: 'Video production date is required',
+                    validateDate: "Enter video production date in the form of YYYY-MM-DD"
                 },
                 language: "Language is required",
-                summary: {
-                    minlength: "Summary should contain at least 2 characters",
-                    maxlength: "Summary should contain at most 500 characters",
+                benefit: {
+                    minlength: "Benefit should contain at least 2 characters",
+                    maxlength: "Benefit should contain at most 500 characters",
                     // allowedChar: "summary should not contain special characters"
                 },
                 village: "Village is required",
-                facilitator: "Facilitator is required",
-                cameraoperator: "Camera operator is required",
-                farmers_shown: "Persons shown are required",
-                actors: "Actors are required",
-                video_suitable_for: "Video suitable for is required",
+                production_team: "Production team is required",
                 approval_date: {
                     validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
 					dateOrder: "Approval date should be later than end date"
@@ -383,6 +366,34 @@ function() {
         'rest_api_url': '/coco/api/v2/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var category_configs = {
+        'rest_api_url': '/coco/api/v2/category/',
+        'entity_name': 'category',
+        'sort_field': 'category_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var subcategory_configs = {
+        'rest_api_url': '/coco/api/v2/subcategory/',
+        'entity_name': 'subcategory',
+        'sort_field': 'subcategory_name',
+        'foreign_entities': {
+            'category': {
+                'category': {
+                    'placeholder': 'id_category',
+                    'name_field': 'category_name'
+                }
+            }
+        },
         'dashboard_display': {
             listing: false,
             add: false
@@ -517,7 +528,7 @@ function() {
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         download_chunk_size: 1000,
-        'unique_together_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;
@@ -659,16 +670,12 @@ function() {
             rules: {
                 date: {
                     required: true,
-                    validateDate: true
+                    validateDate: true,
+                    invalidDate : true
                 },
                 start_time: {
                     required: true,
                     validateTime: true
-                },
-                end_time: {
-                    required: true,
-                    validateTime: true,
-					timeOrder: {start_time : "start_time"}
                 },
                 animator: "required",
                 village: "required",
@@ -680,15 +687,11 @@ function() {
 				date: {
 					required: 'Screening date is required',
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
+                    invalidDate: 'Future date can\'t be added',
 				},
 				start_time: {
 					required: 'Screening start time is required',
 					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
-				},
-				end_time: {
-					required: 'Screening end time is required',
-					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
-					timeOrder: 'End time should be later than start time',
 				},
 				animator: "Mediator is required",
 				village:"Village is required",
@@ -739,7 +742,8 @@ function() {
                 },                
                 date_of_adoption: {
                     required: true,
-					validateDate: true
+					validateDate: true,
+                    invalidDate : true,
                 }
             },
             messages: {
@@ -750,7 +754,8 @@ function() {
 					required: "video is required"
 				},
 				date_of_adoption: {
-					required: "Date of Adoption is required"
+					required: "Date of Adoption is required",
+                    invalidDate: 'Future date can\'t be added',
 				}
 			},
             highlight: function(element, errorClass, validClass) {
@@ -1040,6 +1045,8 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        category: category_configs,
+        subcategory: subcategory_configs,
         district: district_configs,
         nonnegotiable: nonnegotiable_configs,
         misc: misc

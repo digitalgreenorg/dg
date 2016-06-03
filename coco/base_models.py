@@ -19,11 +19,8 @@ GENDER_CHOICES = (
 )
 
 VIDEO_TYPE = (
-        (1, 'Demonstration'),
-        (2, 'Success story/ Testimonial'),
-        (3, 'Activity Introduction'),
-        (4, 'Discussion'),
-        (5, 'General Awareness'),
+        (1, 'Eligible for Adoption'),
+        (2, 'Not Eligible for adoption')
 )
 
 STORYBASE = (
@@ -36,14 +33,6 @@ ACTORS = (
         ('I', 'Individual'),
         ('F', 'Family'),
         ('G', 'Group'),
-)
-
-SUITABLE_FOR = (
-        (1, 'Dissemination'),
-        (2, 'Video Production Training'),
-        (3, 'Dissemination Training'),
-        (4, 'Nothing'),
-        (5, 'Pending for Approval'),
 )
 
 ADOPTION_VERIFICATION = (
@@ -92,6 +81,12 @@ NONNEGOTIABLE_OPTION = (
     (3,3),
     (4,4),
     (5,5),
+)
+
+SCREENING_TIME = (
+    ('M', 'Morning'),
+    ('A', 'Afternoon'),
+    ('E', 'Evening'),
 )
 
 class CocoModel(models.Model):
