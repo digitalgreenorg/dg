@@ -136,15 +136,13 @@ class Video(CocoModel):
     duration = models.TimeField(null=True, blank=True)
     language = models.ForeignKey(Language)
     benefit = models.TextField(blank=True)
-    video_production_start_date = models.DateField()
+    production_date = models.DateField()
     video_production_end_date = models.DateField()
     village = models.ForeignKey(Village)
-    facilitator = models.ForeignKey(Animator, related_name='facilitator')
-    cameraoperator = models.ForeignKey(Animator, related_name='cameraoperator')
+    production_team = models.ManyToManyField(Animator)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
-    farmers_shown = models.ManyToManyField(Person)
-    actors = models.CharField(max_length=1, choices=ACTORS)
+    farmers_shown = models.ManyToManyField(Person, null=True, blank=True)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
     review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)
@@ -152,7 +150,7 @@ class Video(CocoModel):
     reviewer = models.IntegerField(max_length=1, choices=REVIEW_BY, null=True, blank=True)
 
     class Meta:
-        unique_together = ("title", "video_production_start_date", "video_production_end_date", "village")
+        unique_together = ("title", "production_date", "language", "village")
 
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
