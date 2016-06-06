@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
+from coco.base_models import ACTORS, CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -106,7 +106,6 @@ class Video(CocoModel):
     facilitator = models.ForeignKey(Animator, related_name='facilitator')
     cameraoperator = models.ForeignKey(Animator, related_name='cameraoperator')
     approval_date = models.DateField(null=True, blank=True)
-    video_suitable_for = models.IntegerField(choices=SUITABLE_FOR)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     farmers_shown = models.ManyToManyField(Person)
     actors = models.CharField(max_length=1, choices=ACTORS)
