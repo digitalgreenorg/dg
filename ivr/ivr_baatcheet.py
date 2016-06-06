@@ -6,7 +6,7 @@ from dg.settings import EXOTEL_TOKEN
 import json
 
 class IvrBaatcheet(ExotelService):
-    name = "hello_bye"
+    name = "ivr_baatcheet"
     #TODO some of these must come from settings
     sid = "digitalgreen2"
     token = EXOTEL_TOKEN
