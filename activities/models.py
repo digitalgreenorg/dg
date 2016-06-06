@@ -73,6 +73,7 @@ class Screening(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     date = models.DateField()
     start_time = models.TimeField()
+    end_time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
     village = models.ForeignKey(Village)
     animator = models.ForeignKey(Animator)
@@ -86,7 +87,7 @@ class Screening(CocoModel):
     observer = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     class Meta:
-        unique_together = ("date", "start_time", "animator", "village")
+        unique_together = ("date", "start_time", "end_time", "animator", "village")
 
     def __unicode__(self):
         return u'%s' % (self.village.village_name)

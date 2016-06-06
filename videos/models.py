@@ -74,6 +74,42 @@ class Practice(CocoModel):
         practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
         return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
+class Category(CocoModel):
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=100, unique='True')
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    class Meta:
+        verbose_name_plural = "categories"
+
+    def __unicode__(self):
+        return self.category_name
+post_save.connect(save_log, sender=Category)
+pre_delete.connect(delete_log, sender=Category)
+
+class SubCategory(CocoModel):
+    id = models.AutoField(primary_key=True)
+    category = models.ForeignKey(Category)
+    subcategory_name = models.CharField(max_length = 100)
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    class Meta:
+        verbose_name_plural = "sub categories"
+
+    def __unicode__(self):
+        return self.subcategory_name
+post_save.connect(save_log, sender=SubCategory)
+pre_delete.connect(delete_log, sender=SubCategory)
 
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -99,7 +135,7 @@ class Video(CocoModel):
     video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE)
     duration = models.TimeField(null=True, blank=True)
     language = models.ForeignKey(Language)
-    summary = models.TextField(blank=True)
+    benefit = models.TextField(blank=True)
     video_production_start_date = models.DateField()
     video_production_end_date = models.DateField()
     village = models.ForeignKey(Village)

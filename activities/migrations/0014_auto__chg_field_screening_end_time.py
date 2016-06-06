@@ -8,27 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Removing unique constraint on 'Screening', fields ['date', 'start_time', 'end_time', 'animator', 'village']
-        db.delete_unique(u'activities_screening', ['date', 'start_time', 'end_time', 'animator_id', 'village_id'])
 
-        # Deleting field 'Screening.end_time'
-        db.delete_column(u'activities_screening', 'end_time')
-
-        # Adding unique constraint on 'Screening', fields ['date', 'start_time', 'animator', 'village']
-        db.create_unique(u'activities_screening', ['date', 'start_time', 'animator_id', 'village_id'])
+        # Changing field 'Screening.end_time'
+        db.alter_column(u'activities_screening', 'end_time', self.gf('django.db.models.fields.TimeField')(null=True))
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Screening', fields ['date', 'start_time', 'animator', 'village']
-        db.delete_unique(u'activities_screening', ['date', 'start_time', 'animator_id', 'village_id'])
 
-        # Adding field 'Screening.end_time'
-        db.add_column(u'activities_screening', 'end_time',
-                      self.gf('django.db.models.fields.TimeField')(default=None),
-                      keep_default=False)
-
-        # Adding unique constraint on 'Screening', fields ['date', 'start_time', 'end_time', 'animator', 'village']
-        db.create_unique(u'activities_screening', ['date', 'start_time', 'end_time', 'animator_id', 'village_id'])
-
+        # Changing field 'Screening.end_time'
+        db.alter_column(u'activities_screening', 'end_time', self.gf('django.db.models.fields.TimeField')(default=None))
 
     models = {
         u'activities.jslps_screening': {
@@ -72,9 +59,10 @@ class Migration(SchemaMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'activities_personmeetingattendance_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
         u'activities.screening': {
-            'Meta': {'unique_together': "(('date', 'start_time', 'animator', 'village'),)", 'object_name': 'Screening'},
+            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'animator', 'village'),)", 'object_name': 'Screening'},
             'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {}),
+            'end_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
             'farmer_groups_targeted': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.PersonGroup']", 'symmetrical': 'False'}),
             'farmers_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['people.Person']", 'null': "'False'", 'through': u"orm['activities.PersonMeetingAttendance']", 'blank': "'False'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
