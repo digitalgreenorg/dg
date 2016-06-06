@@ -137,9 +137,10 @@ class Video(CocoModel):
     language = models.ForeignKey(Language)
     benefit = models.TextField(blank=True)
     production_date = models.DateField()
-    video_production_end_date = models.DateField()
     village = models.ForeignKey(Village)
     production_team = models.ManyToManyField(Animator)
+    category = models.ForeignKey(Category, null=True, blank=True)
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     farmers_shown = models.ManyToManyField(Person, null=True, blank=True)
@@ -157,7 +158,6 @@ class Video(CocoModel):
 
     def location(self):
         return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
-
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
 
