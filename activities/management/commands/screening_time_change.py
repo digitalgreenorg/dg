@@ -6,7 +6,8 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
-		csvfile = open('C:\Users\Abhishek\Desktop\\time_change.csv', 'rb')
+		#csvfile = open('C:\Users\Abhishek\Desktop\\time_change.csv', 'rb')
+		csvfile = open('/home/ubuntu/code/dg_test/activities/management/time_change.csv', 'rb')
 		rows = csv.DictReader(csvfile)
 		for row in rows:
 			list_screening = row['group_concat(S.id)']
