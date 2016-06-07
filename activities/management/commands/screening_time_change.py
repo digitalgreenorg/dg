@@ -11,7 +11,7 @@ class Command(BaseCommand):
 		for row in rows:
 			list_screening = row['group_concat(S.id)']
 			screenings = map(int,list_screening.split(","))
-			seconds = 367
+			seconds = 363
 			for i in range(len(screenings)-1):
 				try:
 					scr = Screening.objects.get(id = screenings[i])
