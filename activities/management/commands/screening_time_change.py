@@ -1,6 +1,5 @@
 import csv
 import datetime
-import nptime
 from activities.models import Screening
 from django.core.management.base import BaseCommand
 
