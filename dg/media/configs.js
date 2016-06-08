@@ -787,6 +787,12 @@ function() {
                         'name_field': 'village_name'
                     },
                 },
+                'video':{
+                    'video':{
+                        'placeholder': 'id_video',
+                        'name_field': 'title'
+                    },
+                },
                 'group': {
                     'group': {
                         'placeholder': 'id_group',
@@ -818,11 +824,15 @@ function() {
                             'source_form_element': 'float_person',
                             'dep_attr': 'id'
                         }],
+                        filter_dependency: {
+                            'source_form_element':'video',
+                            'dep_attr':'videos_seen'
+                        },
                         id_field: "person_id", // for convert_namespace conversion      
                         'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template: 'adoption_inline',
                             placeholder: 'bulk'
-                        }
+                        },
                     }
                 }
             },
