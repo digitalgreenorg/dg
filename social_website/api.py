@@ -253,8 +253,6 @@ class ActivityResource(BaseResource):
                    }
 
 
-
-
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()

@@ -203,16 +203,17 @@ def populate_farmers(person):
                                 thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
         website_farmer.save()
 
-def update_questions_asked(pma):
-    if pma.expressed_question != '':
-        videos = [video for video in pma.screening.videoes_screened.all()]
+def update_questions_asked(scr):
+    if scr.questions_asked != '':
+        videos = [video for video in scr.videoes_screened.all()]
         for dashboard_video in videos:
             try:
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
-                if Comment.objects.filter(video = video, text = pma.expressed_question):
+                if Comment.objects.filter(video = video, text = scr.questions_asked):
                     return 
+                # replace person with animator
                 person = Person.objects.get(coco_id = str(pma.person_id))
-                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
+                comment = Comment(date = scr.date, text = scr.questions_asked, isOnline=False, person = person, video = video) 
                 comment.save()
             except Exception as ex:
                 # this means either person or video does not exist on website DB
