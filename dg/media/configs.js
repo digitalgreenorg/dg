@@ -739,6 +739,9 @@ function() {
                 },
                 video: {
                     required: true,                    
+                },
+                animator: {
+                    required: true,
                 },                
                 date_of_adoption: {
                     required: true,
@@ -753,6 +756,9 @@ function() {
 				video: {
 					required: "video is required"
 				},
+                animator: {
+                    required: "Mediator is required"
+                },
 				date_of_adoption: {
 					required: "Date of Adoption is required",
                     invalidDate: 'Future date can\'t be added',
