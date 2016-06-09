@@ -22,9 +22,8 @@ def process_log(objects, logger):
         if object.entry_table == 'Screening':
             try:
                 screening_object = Screening.objects.get(id = object.model_id)
-                for pma in screening_object.personmeetingattendance_set.all():
-                    update_questions_asked(pma)
-                    logger.info(' Added Pma ')
+                update_questions_asked(screening_object)
+                logger.info(' Added Questions Asked ')
             except Screening.DoesNotExist:
                 continue
 #        elif object.entry_table == "PersonAdoptPractice":

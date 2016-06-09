@@ -77,6 +77,13 @@ class Person(models.Model):
     thumbnailURL = models.URLField(max_length=100)
     partner = models.ForeignKey(Partner)
 
+class Animator(models.Model):
+    uid = models.AutoField(primary_key=True)
+    coco_id = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
+    thumbnailURL = models.URLField(max_length=100)
+    partner = models.ForeignKey(Partner)
+
 #===============================================================================
 # Updated from COCO
 #===============================================================================
@@ -199,7 +206,7 @@ class Comment(models.Model):
     text = models.TextField()
     isOnline = models.BooleanField()
     video = models.ForeignKey(Video)
-    person = models.ForeignKey(Person, null=True, blank=True)
+    animator = models.ForeignKey(Animator, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
 
 class VideoLike(models.Model):
