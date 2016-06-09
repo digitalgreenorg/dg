@@ -118,6 +118,7 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     animator = models.ForeignKey(Animator, null=True, blank=True)
     date_of_adoption = models.DateField()
+    date_of_verification = models.DateField(null=True, blank=True)
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
