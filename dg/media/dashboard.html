@@ -739,9 +739,6 @@
                             Person
                         </th>
                         <th>
-                            Video
-                        </th>
-                        <th>
                             Date of Adoption
                         </th>
                     </tr>
@@ -753,7 +750,7 @@
 </script>
 
 <script type="text/template" id="adoption_inline_header">
-    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th>Video</th><th> Date Of Adoption</th></tr>
+    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th> Date Of Adoption</th></tr>
 </script>
 
 <script type="text/template" id="adoption_inline">
@@ -793,22 +790,6 @@
                         }
                     %>
                     <input type="text" class="form-control" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_label%>" disabled>
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="form-group">
-                <div class="controls">
-                    <select id = "video<%=index%>" name="video<%=index%>" class="chosen-select form-control" required>
-                        <option value>--------</option>
-                        <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
-                            if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
-                             %> 
- 							<option selected="selected" value= "<%= vid.id%>"><%= vid.title %></option> 
-                            <%}else{%>
-							<option value= "<%= vid.id%>"><%= vid.title %></option> 
-                        <%}});}%>    
-                    </select>
                 </div>
             </div>
         </td>

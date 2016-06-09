@@ -624,8 +624,10 @@ define([
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
-                model_array = this.filter_dependent_model_array(model_array, f_entity_desc.filter_dependency);
-
+                for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
+                   model_array = this.filter_dependent_model_array(model_array, f_entity_desc.filter_dependency[i]);
+                }
+    
             if (f_entity_desc.expanded) {
                 // get the expanded template
                 var expanded_template = _.template($('#' + f_entity_desc.expanded.template).html());
