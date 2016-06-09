@@ -7,7 +7,7 @@ from django.db.models import Count, Sum
 
 import gdata.youtube.service
 from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_stats
-from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
+from social_website.models import Collection, Comment, Partner, Person, Animator, PersonVideoRecord, Video
 
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/'
@@ -211,9 +211,8 @@ def update_questions_asked(scr):
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
                 if Comment.objects.filter(video = video, text = scr.questions_asked):
                     return 
-                # replace person with animator
-                person = Person.objects.get(coco_id = str(pma.person_id))
-                comment = Comment(date = scr.date, text = scr.questions_asked, isOnline=False, person = person, video = video) 
+                animator = Animator.objects.get(coco_id = str(scr.animator))
+                comment = Comment(date = scr.date, text = scr.questions_asked, isOnline=False, animator = animator, video = video) 
                 comment.save()
             except Exception as ex:
                 # this means either person or video does not exist on website DB
