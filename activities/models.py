@@ -116,6 +116,7 @@ class PersonAdoptPractice(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person)
     video = models.ForeignKey(Video)
+    animator = models.ForeignKey(Animator, null=True, blank=True)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)

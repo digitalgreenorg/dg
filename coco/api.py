@@ -549,11 +549,12 @@ class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     partner = fields.ForeignKey(PartnerResource, 'partner')
+    animator = fields.ForeignKey(MediatorResource, 'mediator', null=True)
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video','animator','person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('person__village__in')
@@ -562,6 +563,8 @@ class PersonAdoptVideoResource(BaseResource):
         excludes = ['time_created', 'time_modified', 'verification_status', 'non_negotiable_check', 'verified_by']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
+    hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)

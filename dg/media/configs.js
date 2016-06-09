@@ -803,6 +803,16 @@ function() {
                         }]
                     }
                 },
+                'mediator': {
+                    'animator': {
+                        'placeholder': 'id_animator',
+                        'name_field': 'name',
+                        'dependency': [{
+                            'source_form_element': 'village',
+                            'dep_attr': 'assigned_villages'
+                        }]
+                    }
+                },
                 'person': {
                     float_person: {
                         'placeholder': 'id_person',
@@ -857,9 +867,14 @@ function() {
                         group:{
                             'name_field': 'group_name'
                         }
-                    }
+                    },
+                    mediator: {
+                        animator: {
+                            'name_field': 'name'
+                        }
+                    },
                 },
-                borrow_fields: ['village', 'group']
+                borrow_fields: ['village', 'group','video','animator']
             }
         },
         edit: {
