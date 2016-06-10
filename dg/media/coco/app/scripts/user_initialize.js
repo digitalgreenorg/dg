@@ -11,8 +11,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
         validateTime, 'Enter the time in the form of HH:MM. Use 24 hour format');
         $.validator.addMethod('dateOrder',
         dateOrder, 'End date should be later than start date');
-        $.validator.addMethod('invalidDate',
-        invalidDate,'Future date can\'t be added');
 
         //onLogin callback ... used to check for reset database trigger
         //this thing belongs somewhere else...in app initialize probably...its a framework's thing
@@ -112,30 +110,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
                 check = true;
             } else {
                 check = false;
-            }
-            return check;
-        }
-
-        function invalidDate(value){
-            var check = false;
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1; //January is 0!
-            var yyyy = today.getFullYear();
-            if(dd<10){
-                dd='0'+dd
-            } 
-            if(mm<10){
-                mm='0'+mm
-            } 
-            var today = yyyy+'/'+mm+'/'+dd;
-            var current_date = Date.parse(today);
-            var selected_date = Date.parse(value);
-            if( selected_date > current_date){
-                check = false;
-            }
-            else{
-                check = true;
             }
             return check;
         }
