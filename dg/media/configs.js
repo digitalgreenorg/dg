@@ -333,7 +333,7 @@ function() {
                 production_team: "Production team is required",
                 approval_date: {
                     validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
-					dateOrder: "Approval date should be later than end date"
+					dateOrder: "Approval date should be later than production date"
                 },
                 youtubeid: {
                     maxlength: "YoutubeID should contain at most 20 characters"
@@ -662,7 +662,6 @@ function() {
                 date: {
                     required: true,
                     validateDate: true,
-                    invalidDate : true
                 },
                 start_time: {
                     required: true,
@@ -678,7 +677,6 @@ function() {
 				date: {
 					required: 'Screening date is required',
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
-                    invalidDate: 'Future date can\'t be added',
 				},
 				start_time: {
 					required: 'Screening start time is required',
