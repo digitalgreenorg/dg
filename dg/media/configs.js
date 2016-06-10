@@ -652,6 +652,15 @@ function() {
                                 name_field: 'title'
                             }
                         },
+                        foreign_entities: { // any more field in expanded template for offline to online conv
+                            video:{
+                                "expressed_adoption_video": {
+                                    entity_name: "video",
+                                    name_field: 'title'
+                                }
+                            }
+                        },
+                        extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
                     }
                 }
             }
