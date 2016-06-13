@@ -6,14 +6,14 @@ from coco.models import ServerLog
 from people.models import Person
 from videos.models import Video
 from social_website.models import CronTimestamp, PersonVideoRecord
-from social_website.migration_functions import delete_person, delete_video, initial_personvideorecord, populate_farmers, update_questions_asked, update_website_video
+from social_website.migration_functions import delete_person, delete_video, delete_animator, initial_personvideorecord, populate_farmers, populate_animators, update_questions_asked, update_website_video
 
 
 def process_log(objects, logger):
     '''
     Server Log is used to
     - update questions asked (via dashboard.models.Screening)
-    - update person details (via dashboard.models.Person)
+    - update person, animator details (via dashboard.models.Person)
     - create a new entry for newly linked video (via dashboard.models.Video)
     '''
     
@@ -23,7 +23,7 @@ def process_log(objects, logger):
             try:
                 screening_object = Screening.objects.get(id = object.model_id)
                 update_questions_asked(screening_object)
-                logger.info(' Added Questions Asked ')
+                logger.info(' Added Screening Questions Asked ')
             except Screening.DoesNotExist:
                 continue
 #        elif object.entry_table == "PersonAdoptPractice":
@@ -51,6 +51,17 @@ def process_log(objects, logger):
                     populate_farmers(person_object)
                     logger.info(' Added Person ')
             except Person.DoesNotExist:
+                continue
+        elif object.entry_table == 'Animator':
+            try:
+                animator_object = Animator.objects.get(id = object.model_id)
+                if object.action == -1:
+                    delete_animator(animator_object)
+                    logger.info(' Deleted Animator ')
+                else:
+                    populate_animators(animator_object)
+                    logger.info(' Added Animator ')
+            except Animator.DoesNotExist:
                 continue
         logger.info('\n')
 
