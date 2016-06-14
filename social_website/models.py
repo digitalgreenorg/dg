@@ -76,6 +76,9 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     thumbnailURL = models.URLField(max_length=100)
     partner = models.ForeignKey(Partner)
+    
+    def __unicode__(self):
+        return  u'%s' % (self.name)
 
 class Animator(models.Model):
     uid = models.AutoField(primary_key=True)
@@ -83,6 +86,9 @@ class Animator(models.Model):
     name = models.CharField(max_length=100)
     thumbnailURL = models.URLField(max_length=100)
     partner = models.ForeignKey(Partner)
+
+    def __unicode__(self):
+        return  u'%s' % (self.name)
 
 #===============================================================================
 # Updated from COCO
