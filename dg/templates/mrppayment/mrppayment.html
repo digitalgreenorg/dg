@@ -1,0 +1,82 @@
+ {% include "includes/header.html" %}
+ 
+ <section id="main" role="main" class="wrapper">
+ 
+ 	<div class="inner-wrapper">
+ 	
+ 	   <div class="featured layout-vr-xlg layoutclass">
+
+ 	   		<!-- <div id = 'just_random_id'>
+ 	   			<input type = 'button' name = 'just_random_button' value = 'just_random_button' onclick = "just_random()">
+ 	   			<p id = 'just_random_para'> hello  </p>
+ 	   		</div> -->
+ 	   		<div class="layout-vr-xlg">
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">FROM</label>
+                    <input class="search search-input-wrapper input-block-level js-startperiod " id="sdate" type="date" value = '2015-11-01'/>
+                </div>
+                
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">TO</label>
+                    <input class="search search-input-wrapper input-block-level js-endperiod" id="edate" type="date" name="edate" value = '2016-02-29'/>
+                </div>
+            </div>
+
+            <br></br>
+            
+ 	   		<div class="my-select leftrelative">
+
+                <div class="my-select-container" onclick="partnersetter();">
+                    <div class="my-icon"></div>
+                    <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
+	                             
+                    <ul id="partnerlist" class="options js-options nodisplay yscroll listheight">
+                        
+                    </ul>
+                </div>
+
+            </div>
+            
+ 	   		<div class="my-select leftrelative">
+
+                <div class="my-select-container" onclick="districtsetter();">
+                    <div class="my-icon"></div>
+                    <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
+	                             
+                    <ul id="districtlist" class="options js-options nodisplay yscroll listheight">
+                    
+                    </ul>                  
+                </div>
+            </div>
+            
+ 	   		<div class="my-select leftrelative">
+
+                <div class="my-select-container" onclick="blocksetter();" >
+                    <div class="my-icon"></div>
+                    <div id="blockname" class="selected-item-label js-selected-item-label">Choose Block
+                    </div>
+	                             
+                    <ul id="blocklist" class="options js-options nodisplay yscroll listheight">
+                    
+                    </ul>
+                </div>
+            </div>
+
+        <div class="fright">
+	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
+        </div>  
+        
+        <!-- <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright listpadding">
+           <li><a href="#" class="js-most-filter" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
+           <li><a href="#" class="js-most-filter active" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
+           <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
+		</ul> -->
+        
+		<div id="maindiv">
+				<p id='test'>Here </p> <table id = 'example'>yoo</table>
+		</div>
+     </div>
+	</div>
+</section>   
+ 
+ {% include "includes/footer.html"%}

@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES
+from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES, TYPE_OF_ROLE
 from farmerbook.managers import FarmerbookManager
 from geographies.models import *
 from programs.models import Partner
@@ -16,7 +16,8 @@ class Animator(CocoModel):
     partner = models.ForeignKey(Partner)
     district = models.ForeignKey(District, null=True, blank=True)
     assigned_villages = models.ManyToManyField(Village, related_name='assigned_villages', through='AnimatorAssignedVillage', null=True, blank=True)
-    total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
+    total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False)
+    role = models.IntegerField(default = 0, choices = TYPE_OF_ROLE)
 
     class Meta:
         unique_together = ("name", "gender", "partner", "district")
