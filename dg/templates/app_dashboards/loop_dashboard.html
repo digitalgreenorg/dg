@@ -31,19 +31,26 @@ ul.collapsible > li.active {
 	<nav class="top-nav">
 		<div class="nav-wrapper black lighten-2">
 			<div class="container">
-				<a href="#" class="page-title">LOOP Dashboard</a>
+				<div class="row">
+					<div class="col s1">
+						<i id="menu_button" class="mdi-navigation-menu page-title"></i>
+					</div>
+					<div class= "col s11">
+						<a href="#" class="page-title">LOOP Dashboard</a>
+			</div>
 				{# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
 					{# 	<li><a href="index.html">Sass</a></li> #}
 					{# 	<li><a href="badges.html">Components</a></li> #}
 					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
 					{# </ul> #}
-				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+				<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 			</div>
+		</div>
 		</div>
 	</nav>
 </header>
 
-<ul id="nav-mobile" class="side-nav fixed">
+<ul id="nav-mobile" class="side-nav fixed hide">
 
 	<li class="no-padding not-hoverable">
 	<ul class="collapsible collapsible-accordion">
@@ -154,7 +161,78 @@ ul.collapsible > li.active {
 		</div>
 	</div>
 </div>
-<div>
+
+<div class="row card white darken-1">
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Total Volume</span>
+			<h4 id="total_volume_card"></h4>
+			<span id="total_volume_bullet" ></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Total Farmers</span>
+			<h4 id="total_farmers_card"></h4>
+			<span id="total_farmers_bullet"></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Total Expense</span>
+			<h4 id="total_expenditure_card" ></h4>
+			<span id="total_expenditure_bullet"></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Sustainability</span>
+			<h4 id="sustainability_card" ></h4>
+			<span id="sustainability_bullet"></span>
+		</div>
+	</div>
+
+</div>
+
+<div class="card">
+<h5>Recent</h5>
+<hr/>
+<div class="row">
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Volume</span>
+			<h4 id="recent_volume_card"></h4>
+			<span id="recent_volume_sparkline" ></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Active Farmers</span>
+			<h4 id="recent_active_farmers_card"></h4>
+			<span id="recent_active_farmers_sparkline"></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Cost/kg (INR)</span>
+			<h4 id="cpk_card"></h4>
+			<span id="cpk_sparkline"></span>
+		</div>
+	</div>
+
+	<div class="col s12 m6 l3">
+		<div class="card-content white darken-1">
+			<span class="card-title">Sustainability</span>
+			<h4 id="recent_sustainability_card"></h4>
+			<span id="recent_sustainability_sparkline"></span>
+		</div>
+	</div>
+</div>
 </div>
 <div class="row">
 	<div class="input-field col s6 offset-s3 ">

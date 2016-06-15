@@ -18,7 +18,7 @@ nav.top-nav {
     height: 122px;
     box-shadow: none;
 }
-nav.top-nav a.page-title {
+nav.top-nav a.page-title i.page-title {
     line-height: 122px;
     font-size: 48px;
 }
@@ -130,9 +130,9 @@ ul.side-nav.fixed:hover {
     background-color: #eee;
     outline: none;
 }
-header, main, footer {
+/*header, main, footer {
     padding-left: 240px;
-}
+}*/
 @media only screen and (max-width: 992px) {
     header, main, footer {
     padding-left: 0;

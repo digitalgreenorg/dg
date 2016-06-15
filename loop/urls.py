@@ -32,4 +32,7 @@ urlpatterns = patterns('',
     url(r'^aggregator_wise_data/', aggregator_wise_data),
     url(r'^crop_wise_data/', crop_wise_data),
     url(r'^filter_data/', filter_data),
+    url(r'^total_static_data/',total_static_data),
+    url(r'^recent_graphs_data/',recent_graphs_data),
+
     )
