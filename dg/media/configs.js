@@ -259,8 +259,7 @@ function() {
             'validation_chk': '#non_negotiable0',
             'default_num_rows': 5,
             'add_row' : 1,
-            'req_nonnegotiable' : 1,
-            'exemption_video_type': '2', 
+            'req_nonnegotiable' : 1, 
             'error_message' : 'Add Non-negotiable',
             'template': 'nonnegotiable_inline',
             'joining_attribute': {
