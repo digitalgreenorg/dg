@@ -673,6 +673,13 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
         series: dict
     });
 }
+bullet_options = {
+    type: "bullet",
+    width: "150",
+    height: "30",
+    performanceColor: '#00bfbf',
+    rangeColors: ['#a2d6d6']
+}
 
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
@@ -688,37 +695,13 @@ function total_static_data() {
         document.getElementById('total_expenditure_card').innerHTML = parseFloat(total_transportation_cost).toFixed(2) - parseFloat(total_farmer_share).toFixed(2);
         document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
 
-        $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], {
-            type: "bullet",
-            width: "150",
-            height: "30",
-            performanceColor: '#00bfbf',
-            rangeColors: ['#a2d6d6']
-        });
+        $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);
 
-        $('#total_farmers_bullet').sparkline([2000, total_farmers_reached, 5000], {
-            type: "bullet",
-            width: "150",
-            height: "30",
-            performanceColor: '#00bfbf',
-            rangeColors: ['#a2d6d6']
-        });
+        $('#total_farmers_bullet').sparkline([1500, total_farmers_reached, 5000], bullet_options);
 
-        $('#total_expenditure_bullet').sparkline([1000000, total_expenditure, 5000000], {
-            type: "bullet",
-            width: "150",
-            height: "30",
-            performanceColor: '#00bfbf',
-            rangeColors: ['#a2d6d6']
-        });
+        $('#total_expenditure_bullet').sparkline([1000000, total_expenditure, 5000000], bullet_options);
 
-        $('#sustainability_bullet').sparkline([60, sustainability, 100], {
-            type: "bullet",
-            width: "150",
-            height: "30",
-            performanceColor: '#00bfbf',
-            rangeColors: ['#a2d6d6']
-        });
+        $('#sustainability_bullet').sparkline([60, sustainability, 100], bullet_options);
     })
 }
 
@@ -756,9 +739,15 @@ function plot_cards_data() {
     document.getElementById('recent_active_farmers_card').innerHTML = active_farmers[0];
     $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
 
-    var cpk = get_cpk(avg_vol);
+    var data = get_cpk(avg_vol);
+    var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = parseFloat(cpk[0]).toFixed(2);
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
+
+    var sustainability = data[1];
+    document.getElementById('recent_sustainability_card').innerHTML = parseFloat(sustainability[0]).toFixed(2);
+    $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
+
 }
 
 function get_average() {
@@ -806,34 +795,44 @@ function get_cpk(avg_vol) {
     var today = new Date('2016-05-31');
     today.setDate(today.getDate() - days_to_average);
     var cpk = [];
+    var sustainability_per_kg = [];
     var j = 0,
         temp = 0,
-        k = 0;
+        k = 0,
+        f_share = 0;
     //If no data is present for a period of days_to_average initially
     while (today >= new Date(transportation[j]['date'])) {
         cpk.push(0);
+        sustainability_per_kg.push(0);
         today.setDate(today.getDate() - days_to_average);
         k++;
     }
     while (j < transportation.length && today < new Date(transportation[j]['date'])) {
         temp += transportation[j]['transportation_cost__sum'] - transportation[j]['farmer_share__sum'];
+        f_share += transportation[j]['farmer_share__sum'];
         j++;
         if (j < transportation.length && today >= new Date(transportation[j]['date'])) {
-            cpk.push((temp / days_to_average) / avg_vol[k++]);
+            cpk.push((temp / days_to_average) / avg_vol[k]);
+            sustainability_per_kg.push(f_share / avg_vol[k]);
+            k++;
             today.setDate(today.getDate() - days_to_average);
             temp = 0;
+            f_share = 0;
             //If no data is present for a period of days_to_average
             while (today >= new Date(transportation[j]['date'])) {
                 cpk.push(0);
+                sustainability_per_kg.push(0);
                 today.setDate(today.getDate() - days_to_average);
                 k++;
             }
         }
     }
     cpk.push((temp / days_to_average) / avg_vol[k]);
+    sustainability_per_kg.push(f_share / avg_vol[k]);
     //Adding 0 cost for previous data making length of both arrays same
     for (var i = cpk.length; i < avg_vol.length; i++) {
         cpk.push(0);
+        sustainability_per_kg.push(0);
     }
-    return cpk;
+    return [cpk, sustainability_per_kg];
 }

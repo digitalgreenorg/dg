@@ -83,6 +83,7 @@ ul.side-nav.fixed ul.collapsible-accordion {
 ul.side-nav.fixed:hover {
     overflow-y: auto;
 }
+
 #nav-mobile li.search {
     position: absolute;
     left: 0;
@@ -134,6 +135,8 @@ ul.side-nav.fixed:hover {
     background-color: #eee;
     outline: none;
 }
+
+
 
 /*header, main, footer {
     padding-left: 240px;
