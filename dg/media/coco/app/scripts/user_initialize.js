@@ -9,8 +9,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
         validateDate, 'Enter the date in the form of YYYY-MM-DD.');
         $.validator.addMethod('validateTime',
         validateTime, 'Enter the time in the form of HH:MM. Use 24 hour format');
-        $.validator.addMethod('timeOrder',
-        timeOrder, 'End time should be later than start time');
         $.validator.addMethod('dateOrder',
         dateOrder, 'End date should be later than start date');
 
@@ -81,7 +79,7 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
 
         function dateOrder(value, element, options) {
             var check = false;
-            var start = $('#' + options.video_production_start_date)
+            var start = $('#' + options.production_date)
                 .val();
             //console.log("START DATE = " + start + ' END = ' + value);
 
@@ -103,7 +101,6 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
             return check;
         }
 
-
         function timeOrder(value, element, options) {
             var check = false;
             var start = $('#' + options.start_time)
@@ -119,6 +116,4 @@ define(['auth', 'offline_utils', 'configs', 'jquery', 'form_field_validator', ],
     return {
         run: run
     };
-
-
 });

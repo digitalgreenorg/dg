@@ -19,7 +19,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -89,6 +89,34 @@
                 </div>
                 <div class="modal-footer">
                     <button id="stop_upload" type="button" class="btn">Stop It!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="upload_status_template">
+    <div id="upload_status_modal" class="modal" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upload Error</h3>
+                    <h4>Internet connectivity lost. Please try after sometime!</h4>
+                </div>
+                <div class="modal-body">
+                    <br>
+                    <table class="table">
+                        <tr><td>Total data to be uploaded:</td> 
+                            <td id="upl_total"> </td>
+                        </tr>
+                        <tr><td>Data uploaded:</td>
+                            <td id="upl_done"> </td>
+                        </tr><td>Data pending to be uploaded:</td>
+                            <td id="upl_pending"> </td>                           
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="Ok" type="button" class="btn">Ok</button>
                 </div>
             </div>
         </div>
@@ -516,20 +544,13 @@
                 <div class="form-group"> 
                     <label class="control-label col-sm-2">Date</label>
                 	<div class="col-sm-4">
-                        <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
+                        <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date" onkeydown="return false;">  
                  	</div>
                 </div>
                 <div class="form-group ">
                     <label class="control-label col-sm-2">Start Time</label>
                  	<div class="controls bootstrap-timepicker col-sm-4">
                         <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
-                 	</div>
-                 	<div class="help-block col-sm-4">Use 24 hour format</div>
-                </div>
-                <div class="form-group "> 
-                    <label class="control-label col-sm-2">End Time</label>
-                 	<div class="controls bootstrap-timepicker col-sm-4"> 
-                 		<input class="time-picker form-control" id="end_time_picker" type="text" placeholder="HH:MM" name="end_time">
                  	</div>
                  	<div class="help-block col-sm-4">Use 24 hour format</div>
                 </div>
@@ -568,6 +589,12 @@
                         <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label notbold">Questions asked</label>
+                    <div class="col-sm-4">
+                        <textarea name="questions_asked" class="input-xlarge form-control" rows="4" placeholder="questions_asked"></textarea>
+                    </div>
+                </div>
                     <br>
             </fieldset>
             <fieldset class = "inline_table">
@@ -583,16 +610,6 @@
                             </th>
                             <th class="notbold">
                                 Person
-                            </th>
-                            <th class="notbold">
-                                Expressed Adopted Video
-                            </th>
-                            <th class="notbold">
-                                Question Asked
-                            </th>
-                            <th class="notbold">
-                                <input type="checkbox" id="select_all_interested" name="select_all_interested" onclick="select_unselect_all(this)">
-                                Interested?
                             </th>
                         </tr>
                     </thead>
@@ -642,44 +659,6 @@
                 </div>
             </div>
         </td>
-        <td>
-            <div class="form-group">
-                <div class="controls">
-                    <select  name="expressed_adoption_video" class="chosen-select pma_select form-control">
-                        <option value>--------</option>
-                        <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
-                            if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
-                             %> 
- 							<option selected="selected" value= "<%= vid.id%>"><%= vid.title %></option> 
-                            <%}else{%>
-							<option value= "<%= vid.id%>"><%= vid.title %></option> 
-                        <%}});}%>    
-                    </select>
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="form-group">
-                <div class="controls">
-                <%if(typeof(expressed_question)!="undefined"){%>
-                    <input type="text"  name="expressed_question" value ="<%=expressed_question%>" class="form-control input-sm">
-                <%} else{%>
-                    <input type="text"  name="expressed_question" class="form-control input-sm">
-                <%}%>    
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="form-group">
-                <div class="checkbox">
-                    <%if(typeof(interested)!="undefined"&&interested){%>
-                        <input class="mrg-lt-auto" type="checkbox" name="interested" checked>
-                    <%} else{%>
-                        <input class="mrg-lt-auto" type="checkbox" name="interested">
-                    <%}%>
-                </div>
-            </div>
-        </td>
     </tr>
 </script>
 <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
@@ -724,6 +703,22 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label col-sm-2">Mediator</label>
+                <div class="col-sm-4"> 
+                <select name="animator" id="id_animator" class="chosen-select form-control">
+                <option value="">---------- </option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Video</label>
+                <div class="col-sm-4"> 
+                <select name="video" id="id_video" class="chosen-select form-control">
+                <option value="">---------- </option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label col-sm-2">Groups Attended</label>
                 <div class="col-sm-4">
                     <select name="group" id="id_group" multiple="multiple" class="chosen-select form-control"></select>
@@ -752,10 +747,10 @@
                             Person
                         </th>
                         <th>
-                            Video
-                        </th>
-                        <th>
                             Date of Adoption
+                        </th>
+                        <th class = "notbold">
+                            Date of verification
                         </th>
                     </tr>
                 </thead>
@@ -766,7 +761,7 @@
 </script>
 
 <script type="text/template" id="adoption_inline_header">
-    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th>Video</th><th> Date Of Adoption</th></tr>
+    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th> Date Of Adoption</th></tr>
 </script>
 
 <script type="text/template" id="adoption_inline">
@@ -812,23 +807,14 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <select id = "video<%=index%>" name="video<%=index%>" class="chosen-select form-control" required>
-                        <option value>--------</option>
-                        <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
-                            if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
-                             %> 
- 							<option selected="selected" value= "<%= vid.id%>"><%= vid.title %></option> 
-                            <%}else{%>
-							<option value= "<%= vid.id%>"><%= vid.title %></option> 
-                        <%}});}%>    
-                    </select>
+                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required validateDate onkeydown="return false;">
                 </div>
             </div>
         </td>
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required validateDate>
+                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_verification<%=index%>" name="date_of_verification<%=index%>" onkeydown="return false;">
                 </div>
             </div>
         </td>
@@ -914,34 +900,19 @@
                         <option value="" selected="selected">
                             ------------
                         </option>
-                        <option value="3">
-                            Activity Introduction
-                        </option>
                         <option value="1">
-                            Demonstration
-                        </option>
-                        <option value="4">
-                            Discussion
-                        </option>
-                        <option value="5">
-                            General Awareness
+                            Eligible for Adoption
                         </option>
                         <option value="2">
-                            Success Story/Testimonial
+                            Not Eligible for Adoption
                         </option>
                     </select>
                 </div>
             </div> 
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Production Start Date</label>
+                <label class="control-label dis-block col-sm-2">Production Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker form-control" id="video_production_start_date" name="video_production_start_date" type="text" class="form-control" placeholder="YYYY-MM-DD">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="dis-block control-label col-sm-2">Production End Date</label>
-                <div class="col-sm-4">
-                    <input class="date-picker form-control" id="video_production_end_date" name="video_production_end_date" type="text" class="form-control"  placeholder="YYYY-MM-DD">
+                    <input class="date-picker form-control" id="production_date" name="production_date" type="text" class="form-control" placeholder="YYYY-MM-DD" onkeydown="return false;">
                 </div>
             </div>
             <div class="form-group">
@@ -955,9 +926,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label notbold">Summary</label>
+                <label class="col-sm-2 control-label notbold">Benefit</label>
                 <div class="col-sm-4">
-                    <textarea name="summary" class="input-xlarge form-control" rows="4" placeholder="Summary"></textarea>
+                    <textarea name="benefit" class="input-xlarge form-control" rows="4" placeholder="benefit"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -968,73 +939,30 @@
                     </select>
                 </div>
             </div>
+            
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Facilitator</label>
+                <label class="control-label dis-block col-sm-2"><b>Production Team</b></label>
                 <div class="col-sm-4">
-                    <select id = "id_facilitator" name="facilitator" class="chosen-select form-control">
+                    <select size="20" class="chosen-select form-control" id = "id_production_team" name="production_team" multiple>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Category</label>
+                <div class="col-sm-4">
+                    <select id = "id_category" name="category" class="chosen-select form-control">
                         <option selected="selected" value="">
-                            ---------
+                            Category
                         </option>
                     </select>
                 </div>
-            </div>                     
+            </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Camera Operator</label>
+                <label class="col-sm-2 control-label">Sub Category</label>
                 <div class="col-sm-4">
-                    <select id = "id_cameraoperator" name="cameraoperator" class="chosen-select form-control">
+                    <select id = "id_subcategory" name="subcategory" class="chosen-select form-control">
                         <option selected="selected" value="">
-                            ---------
-                        </option>                    
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label dis-block col-sm-2"><b>Persons Shown</b></label>
-                <div class="col-sm-4">
-                    <select size="20" class="chosen-select form-control" id = "id_farmers_shown" name="farmers_shown" multiple>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Actors</label>
-                <div class="col-sm-4">
-                    <select class="input-medium form-control" name="actors">
-                        <option value="" selected="selected">
-                            ---------
-                        </option>
-                        <option value="F">
-                            Family
-                        </option>
-                        <option value="G">
-                            Group
-                        </option>
-                        <option value="I">
-                            Individual
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Video Suitable For</label>
-                <div class="col-sm-4">
-                    <select name="video_suitable_for" class="form-control">
-                        <option value="" selected="selected">
-                            ---------
-                        </option>
-                        <option value="1">
-                            Dissemination
-                        </option>
-                        <option value="3">
-                            Dissemination Training
-                        </option>
-                        <option value="4">
-                            Nothing
-                        </option>
-                        <option value="5">
-                            Pending For Approval
-                        </option>
-                        <option value="2">
-                            Video Production Training
+                            Sub Category
                         </option>
                     </select>
                 </div>
@@ -1042,7 +970,7 @@
             <div class="form-group">
                 <label class="dis-block control-label col-sm-2 notbold">Approval Date</label>
                 <div class="col-sm-4">
-                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
+                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD" onkeydown="return false;">
                 </div>
             </div>
             <div class="form-group">
@@ -1060,7 +988,7 @@
                 <%=index+1%>.</td>
 
     <td ><div class="form-group"><div class="controls">
-            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" ></textarea>
+            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500"rows="1" style="resize:vertical; width:82%;" ></textarea>
                 
             </div></div>
         </td>

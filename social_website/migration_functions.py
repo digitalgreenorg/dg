@@ -7,12 +7,13 @@ from django.db.models import Count, Sum
 
 import gdata.youtube.service
 from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_stats
-from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
+from social_website.models import Collection, Comment, Partner, Person, Animator, PersonVideoRecord, Video
 
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg-farmerbook/2/"
+S3_FARMERBOOK_URL_ANIMATOR = "https://s3.amazonaws.com/dg-farmerbook/csp/"
 
 def initial_personvideorecord():
     from activities.models import PersonAdoptPractice, PersonMeetingAttendance
@@ -197,22 +198,38 @@ def populate_farmers(person):
         # There is just one result for a filter, but we want to use update here.
         website_farmer = Person.objects.filter(coco_id = str(person.id))
         website_farmer.update(coco_id = str(person.id), name = person.person_name, 
-                                                                                partner = partner,thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
+                                                                                partner = partner, thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
     except Person.DoesNotExist:
         website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                                 thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
         website_farmer.save()
 
-def update_questions_asked(pma):
-    if pma.expressed_question != '':
-        videos = [video for video in pma.screening.videoes_screened.all()]
+def populate_animators(animator):
+    try:
+        partner = Partner.objects.get(coco_id = str(animator.partner.id))
+        website_animator = Animator.objects.get(coco_id = str(animator.id))
+        # There is just one result for a filter, but we want to use update here.
+        website_animator = Animator.objects.filter(coco_id = str(animator.id))
+        website_animator.update(coco_id = str(animator.id), name = animator.name, 
+                                                                                partner = partner, thumbnailURL = S3_FARMERBOOK_URL_ANIMATOR + str(animator.id) + '.jpg')
+    except Animator.DoesNotExist:
+        website_animator = Animator(coco_id = str(animator.id), name = animator.name, partner = partner,
+                                thumbnailURL = S3_FARMERBOOK_URL_ANIMATOR + str(animator.id) + '.jpg')
+        website_animator.save()
+
+    except Partner.DoesNotExist:
+        pass
+
+def update_questions_asked(scr):
+    if scr.questions_asked != '':
+        videos = [video for video in scr.videoes_screened.all()]
         for dashboard_video in videos:
             try:
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
-                if Comment.objects.filter(video = video, text = pma.expressed_question):
+                if Comment.objects.filter(video = video, text = scr.questions_asked):
                     return 
-                person = Person.objects.get(coco_id = str(pma.person_id))
-                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
+                animator = Animator.objects.get(coco_id = str(scr.animator.id))
+                comment = Comment(date = scr.date, text = scr.questions_asked, isOnline=False, animator = animator, video = video) 
                 comment.save()
             except Exception as ex:
                 # this means either person or video does not exist on website DB
@@ -220,9 +237,13 @@ def update_questions_asked(pma):
             
 def delete_person(person):
     website_person = Person.objects.get(coco_id = str(person.id))
-    comments = Comment.objects.filter(person = website_person)
-    comments.delete()
     website_person.delete()
+
+def delete_animator(animator):
+    website_animator = Animator.objects.get(coco_id = str(animator.id))
+    comments = Comment.objects.filter(animator = website_animator)
+    comments.delete()
+    website_animator.delete()
     
 def delete_video(video):
     website_video = Video.objects.get(coco_id = str(video.id))

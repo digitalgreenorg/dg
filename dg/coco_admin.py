@@ -8,7 +8,7 @@ from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
-from videos.models import Language, Practice, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic,  Video
+from videos.models import Language, Practice, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic, Video, Category, SubCategory
 
 
 class CocoAdmin(AdminSite):
@@ -33,6 +33,8 @@ coco_admin.register(Person, PersonAdmin)
 coco_admin.register(PersonGroup, PersonGroupAdmin)
 coco_admin.register(Animator, AnimatorAdmin)
 coco_admin.register(Language)
+coco_admin.register(Category)
+coco_admin.register(SubCategory)
 coco_admin.register(Practice, PracticesAdmin)
 coco_admin.register(Screening, ScreeningAdmin)
 coco_admin.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)

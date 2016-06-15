@@ -19,11 +19,8 @@ GENDER_CHOICES = (
 )
 
 VIDEO_TYPE = (
-        (1, 'Demonstration'),
-        (2, 'Success story/ Testimonial'),
-        (3, 'Activity Introduction'),
-        (4, 'Discussion'),
-        (5, 'General Awareness'),
+        (1, 'Eligible for Adoption'),
+        (2, 'Not Eligible for adoption')
 )
 
 STORYBASE = (
