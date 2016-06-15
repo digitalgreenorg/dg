@@ -60,8 +60,7 @@ define([
         if (!internet_connected())
             dfd.resolve();
             
-        // the logout endpoint should be made configurable
-        $.post("/coco/logout/")
+        $.post(all_configs.misc.logout_url)
             .done(function(resp) {
                 return dfd.resolve();
             })
@@ -126,8 +125,7 @@ define([
         var dfd = new $.Deferred();
         if (!internet_connected())
             return dfd.resolve();
-        //the endpoint should be made configurable     
-        $.post("/coco/login/", {
+        $.post(all_configs.misc.login_url, {
             "username": username,
             "password": password
         })

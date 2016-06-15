@@ -42,8 +42,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 var enable_months;
                 // check entity's config for whether to show list/add links for this entity
                 if (configs[member].dashboard_display) {
-                    listing = configs[member].dashboard_display.listing;
-                    add = configs[member].dashboard_display.add;
+                    if ('listing' in configs[member].dashboard_display) 
+                        listing = configs[member].dashboard_display.listing;
+                    if ('add' in configs[member].dashboard_display)
+                        add = configs[member].dashboard_display.add;
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){

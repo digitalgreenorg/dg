@@ -49,7 +49,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                 }
                 return {sTitle: header};
             });
-            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+            if (!('dashboard_display' in this.entity_config) || (!('edit' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['edit'] != false) {
                 header_row.push({sTitle: "Edit"});
             }
             return header_row;
@@ -90,7 +90,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                 }
                 return cell;
             });
-            if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
+            if (!('dashboard_display' in this.entity_config) || (!('edit' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['edit'] != false) {
                 row.push('<a href="#' + this.entity_config.entity_name + '/edit/' + model_object['id'] + '" class="edit" title="Edit this entry"><i class="glyphicon glyphicon-pencil"></i></a>');
 
             }

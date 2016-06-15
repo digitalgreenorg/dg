@@ -205,8 +205,12 @@ function() {
             errorPlacement: function(label, element) {
                 element.parent().append(label);
             }
+        },
+        'dashboard_display': {
+            listing: true,
+            add: true,
+            edit:true
         }
-
     };
 
     var video_configs = {
@@ -683,11 +687,11 @@ function() {
 				},
 				start_time: {
 					required: 'Screening start time is required',
-					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
+					validateTime: 'Enter the start time in the form of HH:MM:SS. Use 24 hour format',
 				},
 				end_time: {
 					required: 'Screening end time is required',
-					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
+					validateTime: 'Enter the end time in the form of HH:MM:SS. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
 				animator: "Mediator is required",
@@ -986,6 +990,8 @@ function() {
         download_chunk_size: 2000,
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
+        login_url: "/coco/login/",
+        logout_url: "/coco/logout/",
         afterFullDownload: function(start_time, download_status){
             return saveTimeTaken();
             function saveTimeTaken(){
