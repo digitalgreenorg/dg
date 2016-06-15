@@ -769,6 +769,12 @@ function get_average() {
     var active_farmers_id = [];
     var j = 0,
         temp = 0;
+    //If no data is present for a period of days_to_average initially
+    while (today >= new Date(stats[j]['date'])) {
+        avg_vol.push(0);
+        active_farmers.push(0);
+        today.setDate(today.getDate() - days_to_average);
+    }
     while (j < stats.length && today < new Date(stats[j]['date'])) {
         temp += stats[j]['quantity__sum'];
         var farmer_id = stats[j]['farmer__id'];
@@ -782,6 +788,12 @@ function get_average() {
             today.setDate(today.getDate() - days_to_average);
             active_farmers.push(active_farmers_id.length);
             active_farmers_id = [];
+            //If no data is present for a period of days_to_average
+            while (today >= new Date(stats[j]['date'])) {
+                avg_vol.push(0);
+                active_farmers.push(0);
+                today.setDate(today.getDate() - days_to_average);
+            }
         }
     }
     avg_vol.push(temp / days_to_average);
@@ -797,11 +809,12 @@ function get_cpk(avg_vol) {
     var j = 0,
         temp = 0,
         k = 0;
-    while (today>=new Date(transportation[j]['date']) ){
+    //If no data is present for a period of days_to_average initially
+    while (today >= new Date(transportation[j]['date'])) {
         cpk.push(0);
         today.setDate(today.getDate() - days_to_average);
         k++;
-      }
+    }
     while (j < transportation.length && today < new Date(transportation[j]['date'])) {
         temp += transportation[j]['transportation_cost__sum'] - transportation[j]['farmer_share__sum'];
         j++;
@@ -809,20 +822,18 @@ function get_cpk(avg_vol) {
             cpk.push((temp / days_to_average) / avg_vol[k++]);
             today.setDate(today.getDate() - days_to_average);
             temp = 0;
-            console.log("CPK : ", cpk);
-            while (today>=new Date(transportation[j]['date']) ){
-              cpk.push(0);
-              today.setDate(today.getDate() - days_to_average);
-              k++;
+            //If no data is present for a period of days_to_average
+            while (today >= new Date(transportation[j]['date'])) {
+                cpk.push(0);
+                today.setDate(today.getDate() - days_to_average);
+                k++;
             }
         }
     }
     cpk.push((temp / days_to_average) / avg_vol[k]);
-
     //Adding 0 cost for previous data making length of both arrays same
     for (var i = cpk.length; i < avg_vol.length; i++) {
         cpk.push(0);
     }
-    console.log(cpk);
     return cpk;
 }
