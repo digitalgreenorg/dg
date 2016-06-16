@@ -8,6 +8,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for video in orm['videos.Video'].objects.all():
+            video.video_type = 1
             video.production_date = video.video_production_end_date
             video.production_team.add(video.cameraoperator, video.facilitator)
             video.save()
