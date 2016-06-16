@@ -128,9 +128,9 @@ class DistrictResource(ModelResource):
 
 def get_user_mediators(user_id):
     coco_user = TrainingUser.objects.get(user_id = user_id)
-    user_states = coco_user.get_states()
-    mediators_from_same_state = Animator.objects.filter(district__state__id__in = user_states).distinct().values_list('id', flat = True)      
-    return mediators_from_same_state
+    user_districts = coco_user.get_districts()
+    mediators_from_same_districts = Animator.objects.filter(district__id__in = user_districts).distinct().values_list('id', flat = True)
+    return mediators_from_same_districts
 
 class StateAuthorization(Authorization):
     def __init__(self,field):
