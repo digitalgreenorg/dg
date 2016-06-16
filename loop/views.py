@@ -164,7 +164,15 @@ def recent_graphs_data(request):
     mandis=Mandi.objects.all().values('id','mandi_name');
     transportation_cost=DayTransportation.objects.all().values('user_created__id','mandi__id','date').order_by('-date').annotate(Sum('transportation_cost'),Sum('farmer_share'));
     dates=CombinedTransaction.objects.values_list('date',flat=True).distinct().order_by('-date');
+    crops=Crop.objects.all().values('id','crop_name')
 
-    chart_dict={'stats':list(stats),'aggregators':list(aggregators),'mandis':list(mandis),'transportation_cost':list(transportation_cost),'dates':list(dates)};
+    chart_dict={'stats':list(stats),'aggregators':list(aggregators),'mandis':list(mandis),'transportation_cost':list(transportation_cost),'dates':list(dates),'crops':list(crops)};
+    data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
+    return HttpResponse(data)
+
+def farmer_count_aggregator_wise(request):
+    farmers_count=CombinedTransaction.objects.values('user_created__id').annotate(Count('farmer',distinct=True))
+    
+    chart_dict={'farmers_count':list(farmers_count)}
     data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
     return HttpResponse(data)

@@ -711,12 +711,15 @@ function recent_graphs_data() {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         json_data = JSON.parse(data);
         dates = json_data['dates'];
-        aggregators = json_data.aggregators;
+        aggregators_details = json_data.aggregators;
         mandis = json_data['mandis'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
+        crops = json_data['crops'];
+
+        plot_main_graphs();
         plot_cards_data();
-        // plot_graphs();
+
     });
 }
 
@@ -835,4 +838,123 @@ function get_cpk(avg_vol) {
         sustainability_per_kg.push(0);
     }
     return [cpk, sustainability_per_kg];
+}
+
+function plot_main_graphs() {
+    temp_aggregator_volume = new Array(aggregators_details.length).fill(0.0);
+    temp_mandi_volume = new Array(mandis.length).fill(0.0);
+    temp_crop_volume = new Array(crops.length).fill(0.0);
+
+    // var temp_aggregator_farmer = new Array(aggregators.length);
+    //
+    // for(var i=0;i<temp_aggregator_farmer.length;i++){
+    //   temp_aggregator_farmer[i]=[];
+    // }
+    // console.log(temp_aggregator_farmer.length);
+    // aggregator_farmers = [];
+
+    for (var i = 0; i < stats.length; i++) {
+        agg_index = aggregators_details.map(function(e) {
+            return e.user_id
+        }).indexOf(stats[i]['user_created__id']);
+        mandi_index = mandis.map(function(e) {
+            return e.id
+        }).indexOf(stats[i]['mandi__id']);
+        crop_index = crops.map(function(e) {
+            return e.crop_name
+        }).indexOf(stats[i]['crop__crop_name']);
+
+        var quantity = stats[i]['quantity__sum'];
+        temp_aggregator_volume[agg_index] += quantity;
+        temp_mandi_volume[mandi_index] += quantity;
+        temp_crop_volume[crop_index] += quantity;
+
+        // var farmer_id = stats[i]['farmer__id'];
+        // if (temp_aggregator_farmer[agg_index].indexOf(farmer_id) == -1) {
+        //     temp_aggregator_farmer[agg_index].push(farmer_id);
+        //   }
+    }
+    // for (var i = 0; i < temp_aggregator_farmer.length; i++) {
+    //     aggregator_farmers.push(temp_aggregator_farmer[i].length);
+    // }
+    // aggregator_wise_total_data();
+
+    temp_aggregator_cost = new Array(aggregators_details.length).fill(0.0);
+    for (var i = 0; i < transportation.length; i++) {
+        var agg_index = aggregators_details.map(function(e) {
+            return e.user_id
+        }).indexOf(transportation[i]['user_created__id']);
+        temp_aggregator_cost[agg_index] += (transportation[i]['transportation_cost__sum'] - transportation[i]['farmer_share__sum']);
+    }
+
+    for (var i = 0; i < temp_aggregator_cost.length; i++) {
+        if (temp_aggregator_volume[i] != 0)
+            temp_aggregator_cost[i] /= temp_aggregator_volume[i];
+    }
+    farmer_count_aggregator_wise();
+
+}
+
+function aggregator_wise_total_data() {
+    sort_data(aggregators_details, temp_aggregator_volume, "name", $('#total_volume_graph'));
+    sort_data(aggregators_details, aggregator_farmers, "name", $("#total_farmers_graph"));
+    sort_data(aggregators_details, temp_aggregator_cost, 'name', $('#cpk_graph'));
+}
+
+function mandi_wise_total_data() {
+    sort_data(mandis, temp_mandi_volume, "mandi_name", $('#total_volume_graph'));
+}
+
+function crop_wise_total_data() {
+    sort_data(crops, temp_crop_volume, "crop_name", $('#total_volume_graph'));
+}
+
+
+function sort_data(axis, data, name, container) {
+    var sorted_axis_data = [];
+    for (var i = 0; i < data.length; i++) {
+        sorted_axis_data.push({
+            'name': axis[i][name],
+            'sort_by': data[i]
+        });
+    }
+    sorted_axis_data.sort(function(a, b) {
+        return a['sort_by'] - b['sort_by'];
+    });
+
+    var sorted_data = [];
+    var sorted_axis = [];
+    for (var i = 0; i < sorted_axis_data.length; i++) {
+        sorted_axis.push(sorted_axis_data[i]['name']);
+        sorted_data.push(sorted_axis_data[i]['sort_by']);
+    }
+    plot(container, sorted_axis, sorted_data);
+
+    // return [sorted_axis, sorted_data];
+}
+
+function plot(id, x_axis, data) {
+    var series = [];
+    var temp_series = {};
+    temp_series['name'] = "Volume";
+    temp_series['type'] = "bar";
+    temp_series['showInLegend'] = false;
+    temp_series['data'] = data;
+    series.push(temp_series);
+    plot_stacked_chart(id, x_axis, series);
+}
+
+function farmer_count_aggregator_wise() {
+    $.get("/loop/farmer_count_aggregator_wise/").done(function(data) {
+        var json_data = JSON.parse(data);
+
+        aggregator_farmers = new Array(aggregators_details.length).fill(0);
+        for (var i = 0; i < json_data['farmers_count'].length; i++) {
+            var agg_index = aggregators_details.map(function(e) {
+                return e.user_id
+            }).indexOf(json_data['farmers_count'][i]['user_created__id']);
+            aggregator_farmers[agg_index] = json_data['farmers_count'][i]['farmer__count'];
+        }
+        aggregator_wise_total_data();
+    });
 }
