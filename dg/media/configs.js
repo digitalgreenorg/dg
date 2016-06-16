@@ -743,7 +743,6 @@ function() {
                 date_of_adoption: {
                     required: true,
 					validateDate: true,
-                    invalidDate : true,
                 }
             },
             messages: {
@@ -757,8 +756,7 @@ function() {
                     required: "Mediator is required"
                 },
 				date_of_adoption: {
-					required: "Date of Adoption is required",
-                    invalidDate: 'Future date can\'t be added',
+					required: "Date of Adoption is required"
 				}
 			},
             highlight: function(element, errorClass, validClass) {
