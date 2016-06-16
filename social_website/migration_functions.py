@@ -27,10 +27,10 @@ def initial_personvideorecord():
     del paps
     
     person_screening_dict = defaultdict(list)        
-    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened', 'interested')
+    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened')
     for pma_row in pmas:
         if pma_row['screening__videoes_screened']:
-            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened'], 'interested' : pma_row['interested']})
+            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened']})
     del pmas
     gc.collect()
     record_list = []
@@ -41,15 +41,12 @@ def initial_personvideorecord():
         for row in videos_info:
             if row['vid'] in vid_dict:
                 vid_dict[row['vid']]['views'] += 1
-                if row['interested']:
-                    vid_dict[row['vid']]['interested'] = 1
             else:
                 vid_dict[row['vid']]['views'] = 1
-                vid_dict[row['vid']]['interested'] = 1 if row['interested'] else 0
             
         for vid_id, vals in vid_dict.iteritems():
             adopted = person_video_adoption_dict[person_id][vid_id] if vid_id in person_video_adoption_dict[person_id] else 0 
-            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], like =  vals['interested'], adopted = adopted))
+            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], adopted = adopted))
             i += 1
             if i%chunk == 0:
                 PersonVideoRecord.objects.bulk_create(record_list)
@@ -76,10 +73,8 @@ def update_person_video_record(pma, videos):
         try:
             person_video_obj = PersonVideoRecord.objects.get(personID = pma.person_id, videoID = video.id)
             person_video_obj.views += 1
-            if pma.interested:
-                person_video_obj.like = 1
         except ObjectDoesNotExist:
-            person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, like = pma.interested, views = 1)
+            person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, views = 1)
         person_video_obj.save()
 
 def populate_adoptions(pap):
@@ -123,7 +118,7 @@ def update_website_video(vid):
             website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
@@ -131,7 +126,7 @@ def update_website_video(vid):
             website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
@@ -175,17 +170,17 @@ def create_collections():
         
 def populate_collection_stats(collection):
     if collection.videos.all().count() != 0:
-        stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
-        collection.likes = stats['offlineLikes__sum'] + stats['onlineLikes__sum']
+        stats = collection.videos.all().aggregate(Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
+        collection.likes = stats['onlineLikes__sum']
         collection.views = stats['offlineViews__sum'] + stats['onlineViews__sum']
         collection.adoptions = stats['adoptions__sum']
         collection.save()    
     
 def populate_partner_stats(partner):
-    stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('offlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
+    stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
     if stats['uid__count'] > 0:                 #check if partner has at least one video
         partner.video_count = stats['uid__count']
-        partner.likes = stats['onlineLikes__sum'] + stats['offlineLikes__sum']
+        partner.likes = stats['onlineLikes__sum']
         partner.views = stats['onlineViews__sum'] + stats['offlineViews__sum']
         partner.adoptions = stats['adoptions__sum']
     partner.collection_count = Collection.objects.filter(partner = partner).count()
