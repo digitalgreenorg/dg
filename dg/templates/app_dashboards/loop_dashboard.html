@@ -236,44 +236,67 @@ ul.collapsible > li.active {
 </div>
 
 <div class="row card white darken-1">
+<div class="row">
+<div class="col s3">
 <h5>Graphs</h5>
+</div>
+<div class="col s9 right-align" style="padding-top:10px;">
+	<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
+	<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
+	<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
+</div>
+</div>
 <hr/>
 <div class="row">
 	<div class="col s12 m6">
 		<div class="card-content white darken-1">
 			<span class="card-title">Total Volume</span>
 			<!-- <h4 id="avg_volume_graph"></h4> -->
-			<div class="col s2 m2"></div>
+			<div class="col s2 m2" style="padding-top:150px;">
+				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('volume')">
+				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('volume')">
+			</div>
 			<div class="col s10 m10" id="total_volume_graph" ></div>
 		</div>
 	</div>
 
 	<div class="col s12 m6">
 		<div class="card-content white darken-1">
-			<span class="card-title">Total Farmers</span>
-			<!-- <h4 id="total_farmers_graph"></h4> -->
-			<div class="col s2 m2"></div>
-			<div class="col s10 m10" id="total_farmers_graph"></div>
-		</div>
-	</div>
-
-	<div class="col s12 m6">
-		<div class="card-content white darken-1">
-			<span class="card-title">Cost/kg (INR)</span>
+			<span id="cpk_title" class="card-title">Cost/kg (INR)</span>
 			<!-- <h4 id="cpk_card"></h4> -->
-			<div class="col s2 m2"></div>
+			<div class="col s2 m2" style="padding-top:150px;">
+				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('cpk')">
+				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('cpk')">
+			</div>
 			<div class="col s10 m10" id="cpk_graph"></div>
 		</div>
 	</div>
 
-	<div class="col s12 m6">
+	<div id="farmer_div" class="col s12 m6">
+		<div class="card-content white darken-1">
+			<span class="card-title">Total Farmers</span>
+			<!-- <h4 id="total_farmers_graph"></h4> -->
+			<div class="col s2 m2" style="padding-top:150px;">
+				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('farmer')">
+				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('farmer')">
+			</div>
+			<div class="col s10 m10" id="total_farmers_graph"></div>
+		</div>
+	</div>
+
+	<div id="sustainability_div" class="col s12 m6">
 		<div class="card-content white darken-1">
 			<span class="card-title">Sustainability/kg</span>
 			<!-- <h4 id="recent_sustainability_card"></h4> -->
-			<div class="col s2 m2"></div>
-			<div class="col s10 m10" id="sustainability_graph"></div>
+			<div class="col s2 m2" style="padding-top:150px;">
+				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('spk')">
+				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('spk')">
+			</div>
+			<div class="col s10 m10" id="sustainability_graph">Coming Soon</div>
 		</div>
 	</div>
+
+
 </div>
 </div>
 

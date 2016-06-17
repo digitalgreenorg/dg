@@ -16,6 +16,7 @@ function initialize() {
     recent_graphs_data();
     days_to_average = 15;
     days_to_go_back = 5;
+    counter_volume = 0;
 }
 
 /* Progress Bar functions */
@@ -604,7 +605,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
 
     container_obj.highcharts({
         chart: {
-            type: 'column'
+            type: 'column',
         },
         xAxis: {
             categories: x_axis,
@@ -627,7 +628,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
             }
         }, {
             title: {
-                text: "Farmer Count",
+                text: null,
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
@@ -640,6 +641,9 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
             },
             opposite: true
         }],
+        title: {
+            text: null
+        },
         legend: {
             align: 'right',
             x: 0,
@@ -844,6 +848,7 @@ function plot_main_graphs() {
     temp_aggregator_volume = new Array(aggregators_details.length).fill(0.0);
     temp_mandi_volume = new Array(mandis.length).fill(0.0);
     temp_crop_volume = new Array(crops.length).fill(0.0);
+    temp_crop_amount = new Array(crops.length).fill(0.0);
 
     // var temp_aggregator_farmer = new Array(aggregators.length);
     //
@@ -869,6 +874,8 @@ function plot_main_graphs() {
         temp_mandi_volume[mandi_index] += quantity;
         temp_crop_volume[crop_index] += quantity;
 
+        temp_crop_amount[crop_index] += stats[i]['amount__sum'];
+
         // var farmer_id = stats[i]['farmer__id'];
         // if (temp_aggregator_farmer[agg_index].indexOf(farmer_id) == -1) {
         //     temp_aggregator_farmer[agg_index].push(farmer_id);
@@ -880,37 +887,84 @@ function plot_main_graphs() {
     // aggregator_wise_total_data();
 
     temp_aggregator_cost = new Array(aggregators_details.length).fill(0.0);
+    temp_mandi_cost = new Array(mandis.length).fill(0.0);
     for (var i = 0; i < transportation.length; i++) {
         var agg_index = aggregators_details.map(function(e) {
             return e.user_id
         }).indexOf(transportation[i]['user_created__id']);
+        var mandi_index = mandis.map(function(e) {
+            return e.id
+        }).indexOf(transportation[i]['mandi__id']);
         temp_aggregator_cost[agg_index] += (transportation[i]['transportation_cost__sum'] - transportation[i]['farmer_share__sum']);
+        temp_mandi_cost[mandi_index] += (transportation[i]['transportation_cost__sum'] - transportation[i]['farmer_share__sum']);
     }
 
     for (var i = 0; i < temp_aggregator_cost.length; i++) {
         if (temp_aggregator_volume[i] != 0)
             temp_aggregator_cost[i] /= temp_aggregator_volume[i];
     }
+    for (var i = 0; i < temp_mandi_cost.length; i++) {
+        if (temp_mandi_volume[i] != 0)
+            temp_mandi_cost[i] /= temp_mandi_volume[i];
+    }
+
     farmer_count_aggregator_wise();
 
 }
 
 function aggregator_wise_total_data() {
-    sort_data(aggregators_details, temp_aggregator_volume, "name", $('#total_volume_graph'));
-    sort_data(aggregators_details, aggregator_farmers, "name", $("#total_farmers_graph"));
-    sort_data(aggregators_details, temp_aggregator_cost, 'name', $('#cpk_graph'));
+    counter_check_length = aggregators_details.length;
+    counter_volume = 0;
+    counter_farmer = 0;
+    counter_cost = 0;
+    sorted_vol = sort_data(aggregators_details, temp_aggregator_volume, "name");
+    sorted_farmer = sort_data(aggregators_details, aggregator_farmers, "name");
+    sorted_cpk = sort_data(aggregators_details, temp_aggregator_cost, 'name');
+
+    $('#cpk_title').text("Cost/kg (INR)");
+    plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
+    plot($('#total_farmers_graph'), sorted_farmer[0], sorted_farmer[1], counter_farmer);
+    plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
+
+    $('#farmer_div').show();
+    $('#sustainability_div').hide();
 }
 
 function mandi_wise_total_data() {
-    sort_data(mandis, temp_mandi_volume, "mandi_name", $('#total_volume_graph'));
+    counter_check_length = mandis.length;
+    counter_volume = 0;
+    counter_farmer = 0;
+    counter_cost = 0;
+
+    sorted_vol = sort_data(mandis, temp_mandi_volume, "mandi_name");
+    sorted_cpk = sort_data(mandis, temp_mandi_cost, "mandi_name");
+
+    $('#cpk_title').text("Cost/kg (INR)");
+    plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
+    plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
+
+    $('#farmer_div').hide();
+    $('#sustainability_div').hide();
 }
 
 function crop_wise_total_data() {
-    sort_data(crops, temp_crop_volume, "crop_name", $('#total_volume_graph'));
+    counter_check_length = crops.length;
+    counter_volume = 0;
+    counter_farmer = 0;
+    counter_cost = 0;
+    sorted_vol = sort_data(crops, temp_crop_volume, "crop_name");
+    sorted_cpk = sort_data(crops, temp_crop_amount, "crop_name");
+
+    $('#cpk_title').text("Total Amount");
+    plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
+    plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
+
+    $('#farmer_div').hide();
+    $('#sustainability_div').hide();
 }
 
 
-function sort_data(axis, data, name, container) {
+function sort_data(axis, data, name) {
     var sorted_axis_data = [];
     for (var i = 0; i < data.length; i++) {
         sorted_axis_data.push({
@@ -919,7 +973,7 @@ function sort_data(axis, data, name, container) {
         });
     }
     sorted_axis_data.sort(function(a, b) {
-        return a['sort_by'] - b['sort_by'];
+        return b['sort_by'] - a['sort_by'];
     });
 
     var sorted_data = [];
@@ -928,20 +982,20 @@ function sort_data(axis, data, name, container) {
         sorted_axis.push(sorted_axis_data[i]['name']);
         sorted_data.push(sorted_axis_data[i]['sort_by']);
     }
-    plot(container, sorted_axis, sorted_data);
+    // plot(container, sorted_axis, sorted_data, counter);
 
-    // return [sorted_axis, sorted_data];
+    return [sorted_axis, sorted_data];
 }
 
-function plot(id, x_axis, data) {
+function plot(id, x_axis, data, counter) {
     var series = [];
     var temp_series = {};
     temp_series['name'] = "Volume";
     temp_series['type'] = "bar";
     temp_series['showInLegend'] = false;
-    temp_series['data'] = data;
+    temp_series['data'] = data.slice(counter, counter + 5);
     series.push(temp_series);
-    plot_stacked_chart(id, x_axis, series);
+    plot_stacked_chart(id, x_axis.slice(counter, counter + 5), series);
 }
 
 function farmer_count_aggregator_wise() {
@@ -957,4 +1011,55 @@ function farmer_count_aggregator_wise() {
         }
         aggregator_wise_total_data();
     });
+}
+
+function add_counter(chart) {
+    if (chart == "volume") {
+        counter_volume += 5;
+        if (counter_volume > counter_check_length) {
+            counter_volume = 0;
+        }
+        plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
+    }
+    if (chart == "farmer") {
+        counter_farmer += 5;
+        if (counter_farmer > counter_check_length) {
+            counter_farmer = 0;
+        }
+        plot($('#total_farmers_graph'), sorted_farmer[0], sorted_farmer[1], counter_farmer);
+    }
+    if (chart == "cpk") {
+        counter_cost += 5;
+        if (counter_cost > counter_check_length) {
+            counter_cost = 0;
+        }
+        plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
+    }
+}
+
+function subtract_counter(chart) {
+    if (chart == "volume") {
+        counter_volume -= 5;
+        if (counter_volume <= 0) {
+            counter_volume = 0;
+        }
+        // $('#up_volume').addClass('show');
+
+        plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
+    }
+
+    if (chart == "farmer") {
+        counter_farmer -= 5;
+        if (counter_farmer <= 0) {
+            counter_farmer = 0;
+        }
+        plot($('#total_farmers_graph'), sorted_farmer[0], sorted_farmer[1], counter_farmer);
+    }
+    if (chart == "cpk") {
+        counter_cost -= 5;
+        if (counter_cost <= 0) {
+            counter_cost = 0;
+        }
+        plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
+    }
 }
