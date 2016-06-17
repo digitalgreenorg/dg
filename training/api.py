@@ -16,8 +16,9 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse, NotFound
 from tastypie.resources import ModelResource
 from people.models import Animator, AnimatorAssignedVillage
+from django.db.models import Q
 
-from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
+from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication, Authentication
 
 class MediatorNotSaved(Exception):
     pass
@@ -129,7 +130,11 @@ class DistrictResource(ModelResource):
 def get_user_mediators(user_id):
     coco_user = TrainingUser.objects.get(user_id = user_id)
     user_districts = coco_user.get_districts()
-    mediators_from_same_districts = Animator.objects.filter(district__id__in = user_districts).distinct().values_list('id', flat = True)
+    # district__id__in for match distirct of animator with district of trainer and assigned_villages__block__district__id__in
+    # for case when district of villages assigned to
+    # animator is different from district of animator
+    mediators_from_same_districts = Animator.objects.filter(Q(district__id__in=user_districts) | Q(
+        assigned_villages__block__district__id__in=user_districts)).distinct().values_list('id', flat=True)
     return mediators_from_same_districts
 
 class StateAuthorization(Authorization):
@@ -153,7 +158,7 @@ class StateAuthorization(Authorization):
             raise NotFound( "Not allowed to download State" )
 
 class MediatorAuthorization(Authorization):
-    def read_list(self, object_list, bundle):        
+    def read_list(self, object_list, bundle):
         return object_list.filter(id__in= get_user_mediators(bundle.request.user.id))
     
     def read_detail(self, object_list, bundle):
