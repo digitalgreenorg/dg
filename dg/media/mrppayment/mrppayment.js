@@ -220,10 +220,9 @@ function mrp_payment_goclicked() {
             // console.log('data is ', data['output'].length)
             // console.log("print bella");
 
-            // document.getElementById("test").innerHTML = data['output'];
+//            document.getElementById("test").innerHTML = data['output'];
 
-            $("#test").html(data['output']);
-            $("#example").DataTable({
+            $("#example").dataTable({
 
                 "sDom": 'T<"clear">lfrtip',
                 "bDeferRender": true,
@@ -231,7 +230,6 @@ function mrp_payment_goclicked() {
                 "aoColumns": [
                     {sTitle: "S.no"},
                     {sTitle: "Name"},
-                    {sTitle: "Village"},
                     {sTitle: "Total Screening"},
                     {sTitle: "Successful Screening"},
                     {sTitle: "Screening amount"},
@@ -241,8 +239,19 @@ function mrp_payment_goclicked() {
                 ],
 
                 "aaData": data['output'] ,      //aaData takes array_table_values and push data in the table.
-                "oTableTools": {
-                        "sSwfPath": "{{STATIC_URL}}coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf"
+        "oTableTools":{
+
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+			"aButtons": [
+	                           {
+	                               "sExtends": "copy",
+	                               "sButtonText": "Copy to Clipboard"
+	                           },
+	                           {
+	                               "sExtends": "xls",
+	                               "sButtonText": "Download in Excel"
+	                           }
+	                       ]
                     }
             })
 
