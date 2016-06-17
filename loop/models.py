@@ -112,7 +112,7 @@ class LoopUser(LoopModel):
     assigned_villages = models.ManyToManyField(
         Village, related_name="assigned_villages")
     assigned_mandis = models.ManyToManyField(
-        Mandi, related_name="assigned_mandis")
+        Mandi, through='LoopUserAssignedMandi', blank=False, null=False)
     mode = models.IntegerField(choices=ModelChoice, default=1)
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
@@ -126,6 +126,15 @@ class LoopUser(LoopModel):
 
     def get_mandis(self):
         return self.assigned_mandis.all()
+
+class LoopUserAssignedMandi(LoopModel):
+    id = models.AutoField(primary_key=True)
+    loop_user = models.ForeignKey(LoopUser)
+    mandi = models.ForeignKey(Mandi)
+
+post_save.connect(save_log, sender=Mandi)
+pre_delete.connect(delete_log, sender=Mandi)
+
 
     # def get_districts_village(self):
     #     district = self.village.block.district
@@ -284,6 +293,7 @@ class Log(models.Model):
     timestamp = models.DateTimeField(
         auto_now_add=False, default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null=True)
+    loop_user = models.ForeignKey(LoopUser, null=True)
     village = models.IntegerField(null=True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)

@@ -350,26 +350,41 @@ class FarmerResource(BaseResource):
         bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
+class LoopUserAssignedMandiResource(BaseResource):
+
+
+
+
 
 class LoopUserResource(BaseResource):
     user = fields.ForeignKey(UserResource, 'user')
     village = fields.ForeignKey(VillageResource, 'village')
     assigned_villages = fields.ListField()
+    assigned_mandis = fields.ListField()
 
     class Meta:
         queryset = LoopUser.objects.prefetch_related(
-            'assigned_villages', 'user')
+            'assigned_villages', 'assigned_mandis' 'user')
         resource_name = 'loopuser'
         authorization = Authorization()
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
-    hyderate_village = partial(dict_to_foreign_uri, field_name='village')
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
                                         resource_name='village')
     dehydrate_user = partial(
         foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+
+    def dehydrate_farmers_attendance(self, bundle):
+        return [{'person_id':pma.person.id,
+                 'person_name': pma.person.person_name,
+                 'interested': pma.interested,
+                 'expressed_question': pma.expressed_question,
+                 'expressed_adoption_video': {'id': pma.expressed_adoption_video.id,
+                                              'title': pma.expressed_adoption_video.title } if pma.expressed_adoption_video else {}
+                 }  for pma in bundle.obj.personmeetingattendance_set.all()]
 
 
 class CropResource(BaseResource):

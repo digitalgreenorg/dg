@@ -44,30 +44,44 @@ def save_log(sender, **kwargs):
     if sender == "Village":
         village_id = instance.id
         user = None
+        loop_user = None
     elif sender == "Crop":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Gaddidar":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "Mandi":
         village_id = None
-        user = None
+        user = instance.user_created
+        loop_user = instance.user_created
+    elif sender == "LoopUserAssignedMandi":
+        village_id = None
+        user = instance.user_created
+        loop_user = instance.user
+        entry_table = "Mandi"
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
@@ -93,30 +107,44 @@ def delete_log(sender, **kwargs):
     if sender == "Village":
         village_id = instance.id
         user = None
+        loop_user = None
     elif sender == "Crop":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Vehicle":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
+        loop_user = instance.user_created
     elif sender == "Gaddidar":
         village_id = None
         user = None
+        loop_user = None
     elif sender == "Mandi":
         village_id = None
         user = None
+        loop_user = None
+    elif sender == "LoopUserAssignedMandi":
+        village_id = None
+        user = None
+        loop_user = None
+        sender = instance.user
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
