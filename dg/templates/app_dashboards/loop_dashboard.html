@@ -241,6 +241,13 @@ ul.collapsible > li.active {
 <h5>Graphs</h5>
 </div>
 <div class="col s9 right-align" style="padding-top:10px;">
+	<select id="date_option" class="initialized">
+		<!-- <option value="" disabled >Choose your option</option> -->
+		<option value="7" selected>7</option>
+		<option value="15">15</option>
+		<option value="30">30</option>
+		<option value="60">60</option>
+	</select>
 	<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
 	<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
 	<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
