@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation
 
 from loop_data_log import get_latest_timestamp
 
@@ -147,4 +147,32 @@ def crop_wise_data(request):
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
+    return HttpResponse(data)
+
+def total_static_data(request):
+    total_volume=CombinedTransaction.objects.all().aggregate(Sum('quantity'))
+    total_farmers_reached=len(Farmer.objects.all())
+    total_transportation_cost=DayTransportation.objects.all().aggregate(Sum('transportation_cost'),Sum('farmer_share'))
+
+    chart_dict={'total_volume':total_volume,'total_farmers_reached':total_farmers_reached,'total_transportation_cost':total_transportation_cost}
+    data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
+    return HttpResponse(data)
+
+def recent_graphs_data(request):
+    stats=CombinedTransaction.objects.values('user_created__id','farmer__id','mandi__id','crop__crop_name','date').order_by('-date').annotate(Sum('quantity'),Sum('amount'));
+    aggregators=LoopUser.objects.all().values('name','user_id');
+    mandis=Mandi.objects.all().values('id','mandi_name');
+    transportation_cost=DayTransportation.objects.all().values('user_created__id','mandi__id','date').order_by('-date').annotate(Sum('transportation_cost'),Sum('farmer_share'));
+    dates=CombinedTransaction.objects.values_list('date',flat=True).distinct().order_by('-date');
+    crops=Crop.objects.all().values('id','crop_name')
+
+    chart_dict={'stats':list(stats),'aggregators':list(aggregators),'mandis':list(mandis),'transportation_cost':list(transportation_cost),'dates':list(dates),'crops':list(crops)};
+    data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
+    return HttpResponse(data)
+
+def farmer_count_aggregator_wise(request):
+    farmers_count=CombinedTransaction.objects.values('user_created__id').annotate(Count('farmer',distinct=True))
+    
+    chart_dict={'farmers_count':list(farmers_count)}
+    data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
     return HttpResponse(data)

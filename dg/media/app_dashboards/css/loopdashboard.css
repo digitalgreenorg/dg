@@ -1,12 +1,11 @@
-.filter-table th, .filter-table td {
-	padding: 0px;
-	margin-top: 0px;
-	padding-left: 5px;
+    .filter-table th, .filter-table td {
+    padding: 0px;
+    margin-top: 0px;
+    padding-left: 5px;
 }
 .filter-table td label, .filter-table th label {
-	margin-top:7px;
+    margin-top: 7px;
 }
-
 .bold>a {
     font-weight: bold;
 }
@@ -18,7 +17,7 @@ nav.top-nav {
     height: 122px;
     box-shadow: none;
 }
-nav.top-nav a.page-title {
+nav.top-nav a.page-title i.page-title {
     line-height: 122px;
     font-size: 48px;
 }
@@ -40,18 +39,23 @@ a.button-collapse.top-nav.full {
 }
 @media only screen and (max-width: 600px) {
     a.button-collapse.top-nav {
-    left: 5%}
-}@media only screen and (max-width: 992px) {
+        left: 5%
+    }
+}
+@media only screen and (max-width: 992px) {
     nav .nav-wrapper {
-    text-align: center;
+        text-align: center;
+    }
+    nav .nav-wrapper a.page-title {
+        font-size: 36px;
+    }
 }
-nav .nav-wrapper a.page-title {
-    font-size: 36px;
-}
-}@media only screen and (min-width: 993px) {
+@media only screen and (min-width: 993px) {
     .container {
-    width: 85%}
-}ul.side-nav.fixed li.logo {
+        width: 85%
+    }
+}
+ul.side-nav.fixed li.logo {
     text-align: center;
     margin-top: 32px;
     margin-bottom: 80px;
@@ -79,6 +83,7 @@ ul.side-nav.fixed ul.collapsible-accordion {
 ul.side-nav.fixed:hover {
     overflow-y: auto;
 }
+
 #nav-mobile li.search {
     position: absolute;
     left: 0;
@@ -130,10 +135,30 @@ ul.side-nav.fixed:hover {
     background-color: #eee;
     outline: none;
 }
-header, main, footer {
+
+
+
+/*header, main, footer {
     padding-left: 240px;
+}*/
+h5 {
+    font-size: 18px;
+    font-weight: 400;
+    padding-left: 10px;
+    padding-top: 10px;
 }
+h4 {
+    font-size: 26px;
+    font-weight: 400;
+}
+hr{
+  border: 0;
+   height: 0;
+   border-top: 1px solid rgba(0, 0, 0, 0.1);
+   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 @media only screen and (max-width: 992px) {
     header, main, footer {
-    padding-left: 0;
-}
+        padding-left: 0;
+    }
