@@ -32,6 +32,10 @@ def save_screening_data(xml_tree):
                 screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
                 if  screening_data['selected_video'] == '0' :
                     screening_data['selected_video'] = record.getElementsByTagName('additional_selected_video')[0].firstChild.data
+                if record.getElementsByTagName('Feedback')[0].firstChild:
+                    screening_data['question_asked'] = record.getElementsByTagName('Feedback')[0].firstChild.data
+                else:
+                    screening_data['question_asked'] = ""
                 
                 #Check if 'attendance_record' or 'attended' tag
                 pma_record =[]
@@ -41,14 +45,6 @@ def save_screening_data(xml_tree):
                         if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
                             pma = {}
                             pma['person_id'] = person.getElementsByTagName('attendee_id')[0].firstChild.data
-                            if person.getElementsByTagName('interested')[0].firstChild:
-                                pma['interested'] = person.getElementsByTagName('interested')[0].firstChild.data
-                            else:
-                                pma['interested'] = 0
-                            if person.getElementsByTagName('question_asked')[0].firstChild:
-                                pma['question'] = person.getElementsByTagName('question_asked')[0].firstChild.data
-                            else:
-                                pma['question'] = ""
                             pma_record.append(pma)
                     error_msg = 'Successful'
                 else:
@@ -58,19 +54,8 @@ def save_screening_data(xml_tree):
                     for person in screening_data['attendance_record']:
                         pma = {}
                         pma['person_id'] = person
-                        pma['interested'] = 0
-                        pma['question'] = ""
                         pma_record.append(pma)
                     error_msg = 'Successful'
-                    
-                    #Adding question asked to first farmer 
-                    try:
-                        if pma_record:
-                            if record.getElementsByTagName('Feedback')[0].firstChild:
-                                pma_record[0]['question'] = str(record.getElementsByTagName('Feedback')[0].firstChild.data)
-                    except Exception as e:
-                        error = "Error in saving Feedback: " + str(e)
-                        sendmail("Exception in Mobile COCO. Error in feedback (Line 68)", error)
 
                 # time is returned as string, doing funky things to retrieve it in time format  
                 temp_time = screening_data['time'].split('.')
@@ -108,6 +93,7 @@ def save_screening_data(xml_tree):
                                           location='Mobile',
                                           village_id=screening_data['selected_village'],
                                           animator_id=screening_data['selected_mediator'],
+                                          questions_asked=screening_data['question_asked'],
                                           partner=cocouser.partner,
                                           user_created=cocouser.user)
 
@@ -159,9 +145,7 @@ def save_pma(pma_record, Sid, status):
             PersonExisting = PersonMeetingAttendance.objects.filter(screening_id=Sid, person_id=person['person_id'])
             if not(len(PersonExisting)):
                 pma = PersonMeetingAttendance(screening_id=Sid,
-                                              person_id=person['person_id'],
-                                              interested=person['interested'],
-                                              expressed_question=person['question'])
+                                              person_id=person['person_id'])
                 pma.full_clean()
                 pma.save()
                 status = 1
