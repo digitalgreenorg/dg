@@ -5,18 +5,24 @@ function initialize() {
     // initialize any library here
 
     // to initialize material select
-    $('select').material_select();
-    get_filter_data();
-    set_eventlistener();
-    update_tables();
-    update_charts();
-    $(".button-collapse").sideNav();
-    total_static_data();
-    show_side_bar();
-    recent_graphs_data();
-    days_to_average = 15;
-    days_to_go_back = 5;
-    counter_volume = 0;
+    if (document.title == "Home") {
+        $('select').material_select();
+        get_filter_data();
+        set_eventlistener();
+        update_tables();
+        update_charts();
+        $(".button-collapse").sideNav();
+        total_static_data();
+        show_side_bar();
+        recent_graphs_data();
+        days_to_average = 15;
+        days_to_go_back = 5;
+        counter_volume = 0;
+    }
+    else if(document.title=="Second Page"){
+      $(".button-collapse").sideNav();
+    }
+
 }
 
 /* Progress Bar functions */
