@@ -51,6 +51,8 @@ def home(request):
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
 
+def second_loop_page(request):
+    return render(request, 'app_dashboards/second_loop_page.html')
 
 def filter_data(request):
     aggregators = LoopUser.objects.values('user__id', 'name')
@@ -172,7 +174,7 @@ def recent_graphs_data(request):
 
 def farmer_count_aggregator_wise(request):
     farmers_count=CombinedTransaction.objects.values('user_created__id').annotate(Count('farmer',distinct=True))
-    
+
     chart_dict={'farmers_count':list(farmers_count)}
     data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
     return HttpResponse(data)

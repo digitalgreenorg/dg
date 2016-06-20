@@ -606,11 +606,12 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
     container_obj.highcharts({
         chart: {
             type: 'column',
+            height: 300,
         },
         xAxis: {
             categories: x_axis,
             labels: {
-                rotation: -90
+                rotation: 0
             }
         },
         yAxis: [{
@@ -994,6 +995,9 @@ function plot(id, x_axis, data, counter) {
     temp_series['type'] = "bar";
     temp_series['showInLegend'] = false;
     temp_series['data'] = data.slice(counter, counter + 5);
+    // temp_series['pointPadding']=0;
+    // temp_series['groupPadding']=0.1;
+
     series.push(temp_series);
     plot_stacked_chart(id, x_axis.slice(counter, counter + 5), series);
 }
@@ -1016,21 +1020,21 @@ function farmer_count_aggregator_wise() {
 function add_counter(chart) {
     if (chart == "volume") {
         counter_volume += 5;
-        if (counter_volume > counter_check_length) {
+        if (counter_volume >= counter_check_length) {
             counter_volume = 0;
         }
         plot($('#total_volume_graph'), sorted_vol[0], sorted_vol[1], counter_volume);
     }
     if (chart == "farmer") {
         counter_farmer += 5;
-        if (counter_farmer > counter_check_length) {
+        if (counter_farmer >= counter_check_length) {
             counter_farmer = 0;
         }
         plot($('#total_farmers_graph'), sorted_farmer[0], sorted_farmer[1], counter_farmer);
     }
     if (chart == "cpk") {
         counter_cost += 5;
-        if (counter_cost > counter_check_length) {
+        if (counter_cost >= counter_check_length) {
             counter_cost = 0;
         }
         plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);

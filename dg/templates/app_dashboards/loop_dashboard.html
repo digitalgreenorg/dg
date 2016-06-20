@@ -1,29 +1,23 @@
-{% extends "app_dashboards/loop_base.html" %}
-{% load static %}
+{% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Dashboard | Home {% endblock %} {% block extracss %}
 
-{% block title %}Dashboard | Home {% endblock %}
-
-{% block extracss %}
-
-<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}"/>
-<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}"/>
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}" />
+<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}" />
 
 <style>
-li.not-hoverable:hover,
-li.not-hoverable:active {
-	background-color: transparent;
-}
-ul.collapsible > li.active {
-	background-color: transparent;
-}
-.no-margin {
-	margin: 0px;
-}
+	li.not-hoverable:hover,
+	li.not-hoverable:active {
+		background-color: transparent;
+	}
+
+	ul.collapsible> li.active {
+		background-color: transparent;
+	}
+
+	.no-margin {
+		margin: 0px;
+	}
 </style>
-{% endblock %}
-
-
-{% block navbar %}
+{% endblock %} {% block navbar %}
 <header>
 	<div id="progress_bar" class="progress no-margin black lighten-4">
 		<div class="indeterminate black"></div>
@@ -32,20 +26,33 @@ ul.collapsible > li.active {
 		<div class="nav-wrapper black lighten-2">
 			<div class="container">
 				<div class="row">
-					<div class="col s1">
+					<!-- <div class="col s1">
 						<i id="menu_button" class="mdi-navigation-menu page-title button-collapse" data-activates="nav-mobile"></i>
-					</div>
-					<div class= "col s11">
-						<a href="#" class="page-title">LOOP Dashboard</a>
-			</div>
-				{# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
+					</div> -->
+					<!-- <div class= "col s11"> -->
+					<a href="#" class="page-title">LOOP Dashboard</a>
+					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+					<ul class="right hide-on-med-and-down">
+						<li><a href="/loop/second_loop_page/">Aggregator</a></li>
+						<li><a href="second_loop_page.html">Market</a></li>
+						<li><a href="second_loop_page.html">Gaddidar</a></li>
+						<li><a href="second_loop_page.html">Crop</a></li>
+					</ul>
+					<ul class="side-nav" id="mobile-demo">
+						<li><a href="second_loop_page.html">Aggregator</a></li>
+						<li><a href="second_loop_page.html">Market</a></li>
+						<li><a href="second_loop_page.html">Gaddidar</a></li>
+						<li><a href="second_loop_page.html">Crop</a></li>
+					</ul>
+					<!-- </div> -->
+					<!-- {# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
 					{# 	<li><a href="index.html">Sass</a></li> #}
 					{# 	<li><a href="badges.html">Components</a></li> #}
 					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
-					{# </ul> #}
-				<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
+					{# </ul> #} -->
+					<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
+				</div>
 			</div>
-		</div>
 		</div>
 	</nav>
 </header>
@@ -53,101 +60,98 @@ ul.collapsible > li.active {
 <ul id="nav-mobile" class="side-nav fixed hide">
 
 	<li class="no-padding not-hoverable">
-	<ul class="collapsible collapsible-accordion">
+		<ul class="collapsible collapsible-accordion">
 
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="black" id="aggregator_all" checked="checked"/>
-							<label for="aggregator_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="aggregators">
-				</tbody>
-			</table>
-		</div>
-		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="black" id="village_all" checked="checked"/>
-							<label for="village_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="villages">
-				</tbody>
-			</table>
-		</div>
-		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="black" id="crop_all" checked="checked"/>
-							<label for="crop_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="crops">
-				</tbody>
-			</table>
-		</div>
-		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="black" id="mandi_all" checked="checked"/>
-							<label for="mandi_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="mandis">
-				</tbody>
-			</table>
-		</div>
-		</li>
-		<li class="no-padding not-hoverable">
-			<div class="container">
-				<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
-			</div>
-		</li>
-	</ul>
+			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
+									<label for="aggregator_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="aggregators">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="village_all" checked="checked" />
+									<label for="village_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="villages">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="crop_all" checked="checked" />
+									<label for="crop_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="crops">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
+									<label for="mandi_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="mandis">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="no-padding not-hoverable">
+				<div class="container">
+					<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
+				</div>
+			</li>
+		</ul>
 </ul>
 
-{% endblock %}
+{% endblock %} {% block content %}
 
+<div class="row valign-wrapper">
+	<div class="input-field col s6">
+		<i class="material-icons black-text text-lighten-2 prefix">today</i>
+		<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+		<label for="from_date">Start Date:</label>
 
-{% block content %}
-
-<div class="row valign-wrapper" >
-		<div class="input-field col s6">
-			<i class="material-icons black-text text-lighten-2 prefix">today</i>
-			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
-			<label for="from_date">Start Date:</label>
-
-		</div>
-		<div class="input-field col s6">
-			<i class="material-icons black-text text-lighten-2 prefix">today</i>
-			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
-			<label for="to_date" class="active">End Date:</label>
-		</div>
+	</div>
+	<div class="input-field col s6">
+		<i class="material-icons black-text text-lighten-2 prefix">today</i>
+		<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+		<label for="to_date" class="active">End Date:</label>
+	</div>
 </div>
 <div class="center">
 	<a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
@@ -167,7 +171,7 @@ ul.collapsible > li.active {
 		<div class="card-content white darken-1">
 			<span class="card-title">Total Volume</span>
 			<h4 id="total_volume_card"></h4>
-			<span id="total_volume_bullet" ></span>
+			<span id="total_volume_bullet"></span>
 		</div>
 	</div>
 
@@ -182,7 +186,7 @@ ul.collapsible > li.active {
 	<div class="col s12 m6 l3">
 		<div class="card-content white darken-1">
 			<span class="card-title">Total Expense</span>
-			<h4 id="total_expenditure_card" ></h4>
+			<h4 id="total_expenditure_card"></h4>
 			<span id="total_expenditure_bullet"></span>
 		</div>
 	</div>
@@ -190,7 +194,7 @@ ul.collapsible > li.active {
 	<div class="col s12 m6 l3">
 		<div class="card-content white darken-1">
 			<span class="card-title">Sustainability</span>
-			<h4 id="sustainability_card" ></h4>
+			<h4 id="sustainability_card"></h4>
 			<span id="sustainability_bullet"></span>
 		</div>
 	</div>
@@ -198,113 +202,113 @@ ul.collapsible > li.active {
 </div>
 
 <div class="row card white darken-1">
-<h5>Recent</h5>
-<hr/>
-<div class="row">
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Volume</span>
-			<h4 id="recent_volume_card"></h4>
-			<span id="recent_volume_sparkline" ></span>
+	<h5>Recent</h5>
+	<hr/>
+	<div class="row">
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Volume</span>
+				<h4 id="recent_volume_card"></h4>
+				<span id="recent_volume_sparkline"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Active Farmers</span>
-			<h4 id="recent_active_farmers_card"></h4>
-			<span id="recent_active_farmers_sparkline"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Active Farmers</span>
+				<h4 id="recent_active_farmers_card"></h4>
+				<span id="recent_active_farmers_sparkline"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Cost/kg (INR)</span>
-			<h4 id="cpk_card"></h4>
-			<span id="cpk_sparkline"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Cost/kg (INR)</span>
+				<h4 id="cpk_card"></h4>
+				<span id="cpk_sparkline"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Sustainability/kg</span>
-			<h4 id="recent_sustainability_card"></h4>
-			<span id="recent_sustainability_sparkline"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Sustainability/kg</span>
+				<h4 id="recent_sustainability_card"></h4>
+				<span id="recent_sustainability_sparkline"></span>
+			</div>
 		</div>
 	</div>
-</div>
 </div>
 
 <div class="row card white darken-1">
-<div class="row">
-<div class="col s3">
-<h5>Graphs</h5>
-</div>
-<div class="col s9 right-align" style="padding-top:10px;">
-	<select id="date_option" class="initialized">
-		<!-- <option value="" disabled >Choose your option</option> -->
-		<option value="7" selected>7</option>
-		<option value="15">15</option>
-		<option value="30">30</option>
-		<option value="60">60</option>
-	</select>
-	<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
-	<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
-	<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
-</div>
-</div>
-<hr/>
-<div class="row">
-	<div class="col s12 m6">
-		<div class="card-content white darken-1">
-			<span class="card-title">Total Volume</span>
-			<!-- <h4 id="avg_volume_graph"></h4> -->
-			<div class="col s2 m2" style="padding-top:150px;">
-				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('volume')">
-				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('volume')">
-			</div>
-			<div class="col s10 m10" id="total_volume_graph" ></div>
+	<div class="row">
+		<div class="col s3">
+			<h5>Graphs</h5>
+		</div>
+		<div class="col s9 right-align" style="padding-top:10px;">
+			<!-- <select id="date_option" class="initialized"> -->
+			<!-- <option value="" disabled >Choose your option</option> -->
+			<!-- <option value="7" selected>7</option> -->
+			<!-- <option value="15">15</option> -->
+			<!-- <option value="30">30</option> -->
+			<!-- <option value="60">60</option> -->
+			<!-- </select> -->
+			<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
+			<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
+			<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
 		</div>
 	</div>
-
-	<div class="col s12 m6">
-		<div class="card-content white darken-1">
-			<span id="cpk_title" class="card-title">Cost/kg (INR)</span>
-			<!-- <h4 id="cpk_card"></h4> -->
-			<div class="col s2 m2" style="padding-top:150px;">
-				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('cpk')">
-				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('cpk')">
+	<hr/>
+	<div class="row">
+		<div class="col s12 m6">
+			<div class="card-content white darken-1">
+				<span class="card-title">Total Volume</span>
+				<!-- <h4 id="avg_volume_graph"></h4> -->
+				<div class="col s2 m2" style="padding-top:150px;">
+					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('volume')">
+					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('volume')">
+				</div>
+				<div class="col s10 m10" id="total_volume_graph"></div>
 			</div>
-			<div class="col s10 m10" id="cpk_graph"></div>
 		</div>
-	</div>
 
-	<div id="farmer_div" class="col s12 m6">
-		<div class="card-content white darken-1">
-			<span class="card-title">Total Farmers</span>
-			<!-- <h4 id="total_farmers_graph"></h4> -->
-			<div class="col s2 m2" style="padding-top:150px;">
-				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('farmer')">
-				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('farmer')">
+		<div class="col s12 m6">
+			<div class="card-content white darken-1">
+				<span id="cpk_title" class="card-title">Cost/kg (INR)</span>
+				<!-- <h4 id="cpk_card"></h4> -->
+				<div class="col s2 m2" style="padding-top:150px;">
+					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('cpk')">
+					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('cpk')">
+				</div>
+				<div class="col s10 m10" id="cpk_graph"></div>
 			</div>
-			<div class="col s10 m10" id="total_farmers_graph"></div>
 		</div>
-	</div>
 
-	<div id="sustainability_div" class="col s12 m6">
-		<div class="card-content white darken-1">
-			<span class="card-title">Sustainability/kg</span>
-			<!-- <h4 id="recent_sustainability_card"></h4> -->
-			<div class="col s2 m2" style="padding-top:150px;">
-				<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('spk')">
-				<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('spk')">
+		<div id="farmer_div" class="col s12 m6">
+			<div class="card-content white darken-1">
+				<span class="card-title">Total Farmers</span>
+				<!-- <h4 id="total_farmers_graph"></h4> -->
+				<div class="col s2 m2" style="padding-top:150px;">
+					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('farmer')">
+					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('farmer')">
+				</div>
+				<div class="col s10 m10" id="total_farmers_graph"></div>
 			</div>
-			<div class="col s10 m10" id="sustainability_graph">Coming Soon</div>
 		</div>
+
+		<div id="sustainability_div" class="col s12 m6">
+			<div class="card-content white darken-1">
+				<span class="card-title">Sustainability/kg</span>
+				<!-- <h4 id="recent_sustainability_card"></h4> -->
+				<div class="col s2 m2" style="padding-top:150px;">
+					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('spk')">
+					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('spk')">
+				</div>
+				<div class="col s10 m10" id="sustainability_graph">Coming Soon</div>
+			</div>
+		</div>
+
+
 	</div>
-
-
-</div>
 </div>
 
 
@@ -312,11 +316,11 @@ ul.collapsible > li.active {
 <div class="row">
 	<div class="input-field col s6 offset-s3 ">
 
-			<select id="table_option" class="initialized">
-				<!-- <option value="" disabled >Choose your option</option> -->
-				<option value="1" selected>Village</option>
-				<option value="2">Aggregator</option>
-			</select>
+		<select id="table_option" class="initialized">
+			<!-- <option value="" disabled >Choose your option</option> -->
+			<option value="1" selected>Village</option>
+			<option value="2">Aggregator</option>
+		</select>
 
 		<label>Change the Table</label>
 	</div>
@@ -324,9 +328,9 @@ ul.collapsible > li.active {
 
 <div id="village_table">
 	<div id="village_label">
-		<h5  class="center-align">Village Wise Data</h5>
+		<h5 class="center-align">Village Wise Data</h5>
 	</div>
-	<table id="table1" class="highlight bordered centered " >
+	<table id="table1" class="highlight bordered centered ">
 
 		<thead>
 			<tr>
@@ -334,11 +338,12 @@ ul.collapsible > li.active {
 				<th data-field="float">Volume</th>
 				<th data-field="price">Pay Amount</th>
 				<th data-field="integer">Total Farmers</th>
-				<th data-field="float"><div>Average Farmers</div> Per Day</th>
+				<th data-field="float">
+					<div>Average Farmers</div> Per Day</th>
 			</tr>
 		</thead>
 
-		<tbody id ="table1_tbody">
+		<tbody id="table1_tbody">
 			<tr>
 
 			</tr>
@@ -348,18 +353,18 @@ ul.collapsible > li.active {
 	<div class="row">
 		<div class="col s6" id="village_vol_label">
 			<h5 class="center-align">Volume Variation of Different Villages</h5>
-			<div id ="pie_vol"></div>
+			<div id="pie_vol"></div>
 		</div>
 		<div class="col s6" id="village_price_label">
 			<h5 class="center-align">Price Variation of Different Villages</h5>
-			<div id = "pie_amount"></div>
+			<div id="pie_amount"></div>
 		</div>
 	</div>
 </div>
 
 <div id="aggregator_table">
 	<div id="aggregator_label">
-		<h5  class="center-align">Aggregator Wise Data</h5>
+		<h5 class="center-align">Aggregator Wise Data</h5>
 	</div>
 	<table id="table2" class="highlight bordered centered">
 
@@ -369,11 +374,12 @@ ul.collapsible > li.active {
 				<th data-field="float">Volume</th>
 				<th data-field="price">Pay Amount</th>
 				<th data-field="integer">Total Farmers</th>
-				<th data-field="float"><div>Average </div> Farmers Per Day</th>
+				<th data-field="float">
+					<div>Average </div> Farmers Per Day</th>
 			</tr>
 		</thead>
 
-		<tbody id ="table2_tbody">
+		<tbody id="table2_tbody">
 			<tr>
 
 			</tr>
@@ -383,11 +389,11 @@ ul.collapsible > li.active {
 	<div class="row">
 		<div class="col s6" id="aggregator_vol_label">
 			<h5 class="center-align">Volume Variation of Different Aggregators</h5>
-			<div id ="pie_vol2"></div>
+			<div id="pie_vol2"></div>
 		</div>
 		<div class="col s6" id="aggregator_price_label">
 			<h5 class="center-align">Price Variation of Different Aggregators</h5>
-			<div id = "pie_amount2"></div>
+			<div id="pie_amount2"></div>
 		</div>
 	</div>
 </div>
@@ -409,24 +415,24 @@ ul.collapsible > li.active {
 	<div class="row">
 		<div id="crop_chart_div">
 			<h5 class="center-align">Daywise Crop Prices</h5>
-			<div id = "crops_price2" class="col s12"></div>
+			<div id="crops_price2" class="col s12"></div>
 		</div>
 		<div id="agg_crop_chart_div">
 			<h5 class="center-align">Daywise and Aggregator wise Crop Prices</h5>
-			<div id = "crop_aggregator_price" class="col s12"></div>
+			<div id="crop_aggregator_price" class="col s12"></div>
 		</div>
 	</div>
 	<div class="divider"></div>
 	<br>
 	<div class="row">
 		<h5 class="center-align">Daywise Total Volume Sold</h5>
-		<div id ="crops_volume"></div>
+		<div id="crops_volume"></div>
 	</div>
 	<div class="divider"></div>
 	<br>
 	<div class="row">
 		<h5 class="center-align">Daywise Total Income</h5>
-		<div id ="crops_price"></div>
+		<div id="crops_price"></div>
 	</div>
 </div>
 <div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
