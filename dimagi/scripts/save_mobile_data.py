@@ -62,8 +62,6 @@ def save_screening_data(xml_tree):
                 temp_time = time.strptime(temp_time[0], "%H:%M:%S")
                 temp_time = datetime(*temp_time[:6])
                 screening_data['start_time'] = temp_time.time()
-                screening_data['end_time'] = temp_time + timedelta(minutes=45)
-                screening_data['end_time'] = screening_data['end_time'].time()
 
                 try:
                     ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
