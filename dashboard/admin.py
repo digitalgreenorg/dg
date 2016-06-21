@@ -25,11 +25,9 @@ from django.contrib.contenttypes.models import ContentType
 def merge(modeladmin,request,queryset):
     a=queryset[0]
     queryset=queryset.exclude(id = queryset[0].id)
-    print queryset
-    #print foreign_keys.FOREIGN_KEYS  
-    for fkeys in foreign_keys.FOREIGN_KEYS['animator']:
+    for fkeys,values in foreign_keys.FOREIGN_KEYS['animator'].iteritems():
         for queryobject in queryset:
-            print fkeys.objects.filter(animator_id=queryobject.id).update(animator_id=a.id)
+            print fkeys.objects.filter(**{values:queryobject.id}).update(value=a.id)
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())

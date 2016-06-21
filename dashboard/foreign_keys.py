@@ -7,5 +7,8 @@ from dashboard.forms import CocoUserForm
 from videos.models import  NonNegotiable,Video
 
 FOREIGN_KEYS={
-	'animator':[Screening,AnimatorAssignedVillage,Video]
+	'animator': {
+			Screening: 'animator' ,
+			AnimatorAssignedVillage : 'animator'
+			}
 }
