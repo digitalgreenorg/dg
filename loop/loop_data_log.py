@@ -78,6 +78,7 @@ def save_log(sender, **kwargs):
         user = instance.user_created
         loop_user = instance.user_created
     elif sender == "LoopUserAssignedMandi":
+        model_id=instance.mandi.id
         village_id = None
         user = instance.user_created
         loop_user = instance.loop_user
@@ -143,14 +144,15 @@ def delete_log(sender, **kwargs):
     elif sender == "LoopUserAssignedMandi":
         village_id = None
         user = None
-        loop_user = None
+        loop_user = instance.loop_user
         sender = "Mandi"
+        model_id=instance.mandi.id
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
     try:
         log = Log(village=village_id, user=user, action=-1,
-                  entry_table=sender, model_id=instance.id)
+                  entry_table=sender, model_id=instance.id, loop_user=loop_user)
         log.save()
     except Exception as ex:
         pass
@@ -209,18 +211,17 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer', 'Village'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction'])
-            rows = rows | Log.objects.filter(timestamp__gt=timestamp, user__in=user_list, entry_table__in=[
+            rows = rows | Log.objects.filter(timestamp__gt=timestamp, loop_user__in=user_list, entry_table__in=[
                                              'Transporter', 'TransportationVehicle'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
 
-            mandi_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Mandi'])
+            rows = rows | Log.objects.filter(timestamp__gt=timestamp,loop_user__user=user, entry_table__in=['Mandi'])
+            # for mrow in mandi_rows:
+            #     if Mandi.objects.get(id=mrow.model_id) in mandis:
+            #         rows = rows | Log.objects.filter(id=mrow.id)
 
-            for mrow in mandi_rows:
-                if Mandi.objects.get(id=mrow.model_id) in mandis:
-                    rows = rows | Log.objects.filter(id=mrow.id)
-
-            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
+            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp,loop_user=user, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                     rows = rows | Log.objects.filter(id=grow.id)
