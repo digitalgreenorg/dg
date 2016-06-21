@@ -138,9 +138,9 @@ ul.side-nav.fixed:hover {
 
 
 
-header, main, footer {
+/*header, main, footer {
     padding-left: 240px;
-}
+}*/
 h5 {
     font-size: 18px;
     font-weight: 400;
@@ -160,5 +160,5 @@ hr{
 
 @media only screen and (max-width: 992px) {
     header, main, footer {
-        padding-left: 240px;
+        padding-left: 0;
     }

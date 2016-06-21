@@ -121,6 +121,19 @@ function set_filterlistener() {
             });
         }
     });
+    $('#gaddidar_all').on('change', function(e) {
+        if (this.checked) {
+            $('#gaddidars').children().each(function() {
+                var gaddidar_all = $(this).children()[1].firstChild;
+                gaddidar_all.checked = true;
+            });
+        } else {
+            $('#gaddidars').children().each(function() {
+                var gaddidar_all = $(this).children()[1].firstChild;
+                gaddidar_all.checked = false;
+            });
+        }
+    });
 
 }
 
@@ -160,14 +173,18 @@ function get_data() {
     var end_date = $('#to_date').val();
     // Get rest of the filters
     var aggregator_ids = [];
+    aggregator_names = [];
     var village_ids = [];
     var crop_ids = [];
     var mandi_ids = [];
+    mandi_names = [];
+    var gaddidar_ids = [];
 
     $('#aggregators').children().each(function() {
         var aggregator_div = $(this).children()[1].firstChild;
         if (aggregator_div.checked)
             aggregator_ids.push(aggregator_div.getAttribute('data'));
+            aggregator_names.push(aggregator_div.getAttribute('value'));
     });
 
     $('#villages').children().each(function() {
@@ -186,15 +203,22 @@ function get_data() {
         var mandi_div = $(this).children()[1].firstChild;
         if (mandi_div.checked)
             mandi_ids.push(mandi_div.getAttribute('data'));
+            mandi_names.push(mandi_div.getAttribute('value'))
+    });
+    $('#gaddidars').children().each(function() {
+        var gaddidar_div = $(this).children()[1].firstChild;
+        if (gaddidar_div.checked)
+            gaddidar_ids.push(gaddidar_div.getAttribute('data'));
     });
 
     if (Date.parse(start_date) > Date.parse(end_date)) {
         //$('.modal-trigger').leanModal();
         $('#modal1').openModal();
     } else {
-        // getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
-        // getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+        getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+        getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
         // getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+        get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
     }
 }
 
@@ -204,10 +228,14 @@ function get_filter_data() {
     $.get("/loop/filter_data/", {})
         .done(function(data) {
             data_json = JSON.parse(data);
-            fill_aggregator_filter(data_json.aggregators);
+            aggregators_for_filter = data_json.aggregators;
+            mandis_for_filter = data_json.mandis;
+            gaddidars_for_filter = data_json.gaddidars;
+            fill_aggregator_filter(aggregators_for_filter);
             fill_village_filter(data_json.villages);
             fill_crop_filter(data_json.crops);
-            fill_mandi_filter(data_json.mandis);
+            fill_mandi_filter(mandis_for_filter);
+            fill_gaddidar_filter(gaddidars_for_filter);
             get_data();
         });
 }
@@ -236,11 +264,17 @@ function fill_mandi_filter(data_json) {
     });
 }
 
+function fill_gaddidar_filter(data_json) {
+    $.each(data_json, function(index, data) {
+        create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
+    });
+}
+
 function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
     row.append(td_name);
-    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = '+ name +' /><label for="' + name + id + '"></label>';
     var td_checkbox = $('<td>').html(checkbox_html);
     row.append(td_checkbox);
     tbody_obj.append(row);
@@ -609,7 +643,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
     container_obj.highcharts({
         chart: {
             type: 'column',
-            height: 300,
+            // height: 400,
         },
         xAxis: {
             categories: x_axis,
@@ -1069,4 +1103,103 @@ function subtract_counter(chart) {
         }
         plot($('#cpk_graph'), sorted_cpk[0], sorted_cpk[1], counter_cost);
     }
+}
+
+function get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids) {
+    $.get("/loop/new_aggregator_wise_data/", {
+            'start_date': start_date,
+            'end_date': end_date,
+            'aggregator_ids[]': aggregator_ids,
+            'village_ids[]': village_ids,
+            'crop_ids[]': crop_ids,
+            'mandi_ids[]': mandi_ids,
+            'gaddidar_ids[]': gaddidar_ids
+        })
+        .done(function(data) {
+            var data_json = JSON.parse(data);
+            aggregator_mandi_graph(data_json.aggregator_mandi);
+            // mandi_aggregator_graph(data_json.aggregator_mandi);
+        });
+}
+
+function aggregator_mandi_graph(json_data) {
+    var aggregators_array = new Array(aggregators_for_filter.length);
+
+    var mandis_array_vol = [];
+    var mandis_array_amount = [];
+    var gaddidars_array = [];
+
+    for (var i = 0; i < aggregators_for_filter.length; i++) {
+        aggregators_array[i] = aggregators_for_filter[i].name;
+    }
+
+    for (var i = 0; i < mandis_for_filter.length; i++) {
+        var temp_mandi_vol = {};
+        var temp_mandi_amount = {};
+        temp_mandi_vol['name'] = mandis_for_filter[i].mandi_name;
+        temp_mandi_vol['type'] = "bar";
+        temp_mandi_vol['stacking'] = "normal";
+        temp_mandi_vol['data'] = new Array(aggregators_for_filter.length).fill(0.0);
+        temp_mandi_vol['showInLegend'] = false;
+
+        temp_mandi_amount['name'] = mandis_for_filter[i].mandi_name;
+        temp_mandi_amount['type'] = "bar";
+        temp_mandi_amount['stacking'] = "normal";
+        temp_mandi_amount['data'] = new Array(aggregators_for_filter.length).fill(0.0);
+        temp_mandi_amount['showInLegend'] = false;
+
+
+        mandis_array_vol.push(temp_mandi_vol);
+        mandis_array_amount.push(temp_mandi_amount);
+    }
+
+    for (var i = 0; i < json_data.length; i++) {
+        var agg_index = aggregators_for_filter.map(function(e) {
+            return e.user__id
+        }).indexOf(json_data[i]['user_created__id']);
+        var mandi_index = mandis_for_filter.map(function(e) {
+            return e.id
+        }).indexOf(json_data[i]['mandi__id']);
+
+        mandis_array_vol[mandi_index]['data'][agg_index] = json_data[i]['quantity__sum'];
+        mandis_array_amount[mandi_index]['data'][agg_index] = json_data[i]['amount__sum'];
+    }
+
+    plot_stacked_chart($('#aggregator_mandi_vol'), aggregators_array, mandis_array_vol, '', 'kg');
+    plot_stacked_chart($('#aggregator_mandi_amount'), aggregators_array, mandis_array_amount, '', 'Rs');
+
+}
+
+function mandi_aggregator_graph(json_data) {
+    var series = [];
+    var x_axis = new Array(mandis_for_filter.length);;
+    var gaddidars_array = [];
+
+    for (var i = 0; i < mandis_for_filter.length; i++) {
+        mandis_array[i] = mandis_for_filter[i].mandi_name;
+    }
+
+    for (var i = 0; i < aggregators_for_filter.length; i++) {
+        var temp_vol = {};
+        temp_vol['name'] = aggregators_for_filter[i].name;
+        temp_vol['type'] = "bar";
+        temp_vol['stacking'] = "normal";
+        temp_vol['data'] = new Array(mandis_for_filter.length).fill(0.0);
+        temp_vol['showInLegend'] = false;
+
+        series.push(temp_vol);
+    }
+
+    for (var i = 0; i < json_data.length; i++) {
+        var agg_index = aggregators_for_filter.map(function(e) {
+            return e.user__id
+        }).indexOf(json_data[i]['user_created__id']);
+        var mandi_index = mandis_for_filter.map(function(e) {
+            return e.id
+        }).indexOf(json_data[i]['mandi__id']);
+
+        series[agg_index]['data'][mandi_index] = json_data[i]['quantity__sum'];
+    }
+
+    plot_stacked_chart($('#aggregator_mandi_vol2'), x_axis, series, '', 'kg');
 }
