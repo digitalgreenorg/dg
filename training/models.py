@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 
 from django.db import models
-from geographies.models import State,District
+from geographies.models import State, District
 from videos.models import Language
 from people.models import Animator
 
@@ -12,6 +12,7 @@ class TrainingUser(models.Model):
     user = models.OneToOneField(User, related_name="training_user")
     states = models.ManyToManyField(State)
     districts = models.ManyToManyField(District)
+
     def __unicode__(self):
         return self.user.username
 
