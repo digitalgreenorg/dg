@@ -15,7 +15,19 @@ from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-from videos.models import  NonNegotiable
+from videos.models import  NonNegotiable,Video
+
+import foreign_keys 
+from django.db.models.loading import get_model
+from django.contrib.contenttypes.models import ContentType
+
+
+def merge(modeladmin,request,queryset):
+    a=queryset[0]
+    queryset=queryset.exclude(id = queryset[0].id)
+    for fkeys,values in foreign_keys.FOREIGN_KEYS['animator'].iteritems():
+        for queryobject in queryset:
+            fkeys.objects.filter(**{values:queryobject.id}).update(**{values:a.id})
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -95,7 +107,7 @@ class AnimatorAdmin(admin.ModelAdmin):
     inlines = [AnimatorAssignedVillages]
     list_display = ('name', 'partner', 'district',)
     search_fields = ['name', 'partner__partner_name']
-
+    actions = [merge]
 class PersonGroupInline(admin.TabularInline):
     model = PersonGroup
     extra = 5
