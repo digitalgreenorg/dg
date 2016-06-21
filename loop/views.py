@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar
 
 from loop_data_log import get_latest_timestamp
 
@@ -59,8 +59,9 @@ def filter_data(request):
     villages = Village.objects.values('id', 'village_name')
     crops = Crop.objects.values('id', 'crop_name')
     mandis = Mandi.objects.values('id', 'mandi_name')
+    gaddidars = Gaddidar.objects.values('id', 'gaddidar_name')
     data_dict = {'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
-                 'mandis': list(mandis)}
+                 'mandis': list(mandis), 'gaddidars': list(gaddidars)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -176,5 +177,29 @@ def farmer_count_aggregator_wise(request):
     farmers_count=CombinedTransaction.objects.values('user_created__id').annotate(Count('farmer',distinct=True))
 
     chart_dict={'farmers_count':list(farmers_count)}
+    data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
+    return HttpResponse(data)
+
+def new_aggregator_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    aggregator_ids = request.GET.getlist('aggregator_ids[]')
+    village_ids = request.GET.getlist('village_ids[]')
+    crop_ids = request.GET.getlist('crop_ids[]')
+    mandi_ids = request.GET.getlist('mandi_ids[]')
+    gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
+    filter_args = {}
+    if (start_date != ""):
+        filter_args["date__gte"] = start_date
+    if (end_date != ""):
+        filter_args["date__lte"] = end_date
+    filter_args["user_created__id__in"] = aggregator_ids
+    filter_args["farmer__village__id__in"] = village_ids
+    filter_args["crop__id__in"] = crop_ids
+    filter_args["mandi__id__in"] = mandi_ids
+    filter_args["gaddidar__id__in"] = gaddidar_ids
+
+    stats = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'mandi__id', 'crop__crop_name', 'date', 'farmer__id', 'quantity', 'amount', 'gaddidar__id').order_by('-date')
+    chart_dict={'stats':list(stats)}
     data=json.dumps(chart_dict,cls=DjangoJSONEncoder)
     return HttpResponse(data)
