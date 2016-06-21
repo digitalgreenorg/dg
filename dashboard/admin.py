@@ -27,7 +27,7 @@ def merge(modeladmin,request,queryset):
     queryset=queryset.exclude(id = queryset[0].id)
     for fkeys,values in foreign_keys.FOREIGN_KEYS['animator'].iteritems():
         for queryobject in queryset:
-            print fkeys.objects.filter(**{values:queryobject.id}).update(value=a.id)
+            fkeys.objects.filter(**{values:queryobject.id}).update(**{values:a.id})
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())

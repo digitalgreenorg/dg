@@ -9,6 +9,7 @@ from videos.models import  NonNegotiable,Video
 FOREIGN_KEYS={
 	'animator': {
 			Screening: 'animator' ,
-			AnimatorAssignedVillage : 'animator'
+			AnimatorAssignedVillage : 'animator',
+			Video:'production_team'
 			}
 }
