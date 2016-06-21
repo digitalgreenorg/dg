@@ -9,11 +9,26 @@ class LoopAdmin(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
+class LoopUserAssignedMandis(admin.StackedInline):
+    model = LoopUserAssignedMandi
+
+class LoopUserAdmin(admin.ModelAdmin):
+    inlines = [LoopUserAssignedMandis]
+    list_display = ('name', 'role', 'phone_number','village',)
+    search_fields = ['name', 'village__village_name']
+
+class LoopUserInline(admin.TabularInline):
+    model = LoopUser
+    extra = 5
+    exclude = ('assigned_mandis',)
 
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone')
     search_fields = ['name', 'phone']
 
+class LoopUserAssignedMandiAdmin(admin.ModelAdmin):
+    list_display = ('loop_user','mandi')
+    search_fields = ['loop_user__name','mandi__mandi_name']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__unicode__', 'price',
@@ -49,7 +64,8 @@ loop_admin.register(Block)
 loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
-loop_admin.register(LoopUser)
+loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
+loop_admin.register(LoopUser, LoopUserAdmin)
 loop_admin.register(Crop)
 loop_admin.register(Farmer, FarmerAdmin)
 loop_admin.register(CombinedTransaction, CombinedTransactionAdmin)

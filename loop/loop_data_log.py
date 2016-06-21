@@ -80,13 +80,13 @@ def save_log(sender, **kwargs):
     elif sender == "LoopUserAssignedMandi":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user
-        entry_table = "Mandi"
+        loop_user = instance.loop_user
+        sender = "Mandi"
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
     log = Log(village=village_id, user=user, action=action, entry_table=sender,
-              model_id=model_id)
+              model_id=model_id, loop_user=loop_user)
     log.save()
     # Raise an exception if timestamp of latest entry is less than the
     # previously saved data timestamp
@@ -144,7 +144,7 @@ def delete_log(sender, **kwargs):
         village_id = None
         user = None
         loop_user = None
-        sender = instance.user
+        sender = "Mandi"
     else:
         village_id = instance.village.id  # farmer add
     Log = get_model('loop', 'Log')
