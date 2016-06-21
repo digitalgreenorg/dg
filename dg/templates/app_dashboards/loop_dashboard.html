@@ -1,4 +1,4 @@
-{% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Dashboard | Home {% endblock %} {% block extracss %}
+{% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Home{% endblock %} {% block extracss %}
 
 <link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}" />
 <link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}" />
@@ -34,15 +34,15 @@
 					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 					<ul class="right hide-on-med-and-down">
 						<li><a href="/loop/second_loop_page/">Aggregator</a></li>
-						<li><a href="second_loop_page.html">Market</a></li>
-						<li><a href="second_loop_page.html">Gaddidar</a></li>
-						<li><a href="second_loop_page.html">Crop</a></li>
+						<li><a href="/loop/second_loop_page/">Market</a></li>
+						<li><a href="/loop/second_loop_page/">Gaddidar</a></li>
+						<li><a href="/loop/second_loop_page/">Crop</a></li>
 					</ul>
 					<ul class="side-nav" id="mobile-demo">
-						<li><a href="second_loop_page.html">Aggregator</a></li>
-						<li><a href="second_loop_page.html">Market</a></li>
-						<li><a href="second_loop_page.html">Gaddidar</a></li>
-						<li><a href="second_loop_page.html">Crop</a></li>
+						<li><a href="/loop/second_loop_page/">Aggregator</a></li>
+						<li><a href="/loop/second_loop_page/">Market</a></li>
+						<li><a href="/loop/second_loop_page/">Gaddidar</a></li>
+						<li><a href="/loop/second_loop_page/">Crop</a></li>
 					</ul>
 					<!-- </div> -->
 					<!-- {# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
@@ -140,31 +140,7 @@
 
 {% endblock %} {% block content %}
 
-<div class="row valign-wrapper">
-	<div class="input-field col s6">
-		<i class="material-icons black-text text-lighten-2 prefix">today</i>
-		<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
-		<label for="from_date">Start Date:</label>
 
-	</div>
-	<div class="input-field col s6">
-		<i class="material-icons black-text text-lighten-2 prefix">today</i>
-		<input id="to_date" placeholder="End Date" type="text" class="datepicker">
-		<label for="to_date" class="active">End Date:</label>
-	</div>
-</div>
-<div class="center">
-	<a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
-
-	<div id="modal1" class="modal">
-		<div class="modal-content">
-			<p>Invalid Date Range</p>
-		</div>
-		<div class="modal-footer">
-			<a href="#!" class=" modal-action modal-close waves-effect waves-black btn-flat">OK</a>
-		</div>
-	</div>
-</div>
 
 <div class="row card white darken-1">
 	<div class="col s12 m6 l3">
@@ -313,128 +289,7 @@
 
 
 
-<div class="row">
-	<div class="input-field col s6 offset-s3 ">
 
-		<select id="table_option" class="initialized">
-			<!-- <option value="" disabled >Choose your option</option> -->
-			<option value="1" selected>Village</option>
-			<option value="2">Aggregator</option>
-		</select>
-
-		<label>Change the Table</label>
-	</div>
-</div>
-
-<div id="village_table">
-	<div id="village_label">
-		<h5 class="center-align">Village Wise Data</h5>
-	</div>
-	<table id="table1" class="highlight bordered centered ">
-
-		<thead>
-			<tr>
-				<th data-field="name">Village</th>
-				<th data-field="float">Volume</th>
-				<th data-field="price">Pay Amount</th>
-				<th data-field="integer">Total Farmers</th>
-				<th data-field="float">
-					<div>Average Farmers</div> Per Day</th>
-			</tr>
-		</thead>
-
-		<tbody id="table1_tbody">
-			<tr>
-
-			</tr>
-		</tbody>
-	</table>
-	<br>
-	<div class="row">
-		<div class="col s6" id="village_vol_label">
-			<h5 class="center-align">Volume Variation of Different Villages</h5>
-			<div id="pie_vol"></div>
-		</div>
-		<div class="col s6" id="village_price_label">
-			<h5 class="center-align">Price Variation of Different Villages</h5>
-			<div id="pie_amount"></div>
-		</div>
-	</div>
-</div>
-
-<div id="aggregator_table">
-	<div id="aggregator_label">
-		<h5 class="center-align">Aggregator Wise Data</h5>
-	</div>
-	<table id="table2" class="highlight bordered centered">
-
-		<thead>
-			<tr>
-				<th data-field="name">Aggregator</th>
-				<th data-field="float">Volume</th>
-				<th data-field="price">Pay Amount</th>
-				<th data-field="integer">Total Farmers</th>
-				<th data-field="float">
-					<div>Average </div> Farmers Per Day</th>
-			</tr>
-		</thead>
-
-		<tbody id="table2_tbody">
-			<tr>
-
-			</tr>
-		</tbody>
-	</table>
-	<br>
-	<div class="row">
-		<div class="col s6" id="aggregator_vol_label">
-			<h5 class="center-align">Volume Variation of Different Aggregators</h5>
-			<div id="pie_vol2"></div>
-		</div>
-		<div class="col s6" id="aggregator_price_label">
-			<h5 class="center-align">Price Variation of Different Aggregators</h5>
-			<div id="pie_amount2"></div>
-		</div>
-	</div>
-</div>
-
-<div class="container">
-	<div class="divider"></div>
-	<br/>
-	<br/>
-	<div class="row">
-		<div class="input-field col s6 offset-s3 ">
-			<select id="chart_option" class="initialized">
-				<!-- <option value="" disabled selected>Choose your option</option> -->
-				<option value="1">Day Wise Crop Prices</option>
-				<option value="2">Daywise and Aggregator wise Crop Prices</option>
-			</select>
-			<label>Change the Chart</label>
-		</div>
-	</div>
-	<div class="row">
-		<div id="crop_chart_div">
-			<h5 class="center-align">Daywise Crop Prices</h5>
-			<div id="crops_price2" class="col s12"></div>
-		</div>
-		<div id="agg_crop_chart_div">
-			<h5 class="center-align">Daywise and Aggregator wise Crop Prices</h5>
-			<div id="crop_aggregator_price" class="col s12"></div>
-		</div>
-	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row">
-		<h5 class="center-align">Daywise Total Volume Sold</h5>
-		<div id="crops_volume"></div>
-	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row">
-		<h5 class="center-align">Daywise Total Income</h5>
-		<div id="crops_price"></div>
-	</div>
-</div>
 <div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
 
 {% endblock %}

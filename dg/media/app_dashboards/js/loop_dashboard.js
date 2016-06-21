@@ -6,17 +6,21 @@ function initialize() {
 
     // to initialize material select
     $('select').material_select();
-    get_filter_data();
-    set_eventlistener();
-    update_tables();
-    update_charts();
-    $(".button-collapse").sideNav();
-    total_static_data();
     show_side_bar();
-    recent_graphs_data();
-    days_to_average = 15;
-    days_to_go_back = 5;
-    counter_volume = 0;
+    if (document.title == "Home"){
+        total_static_data();
+        recent_graphs_data();
+        days_to_average = 15;
+        days_to_go_back = 5;
+        counter_volume = 0;
+    }else{
+        get_filter_data();
+        set_eventlistener();
+        update_tables();
+        update_charts();
+        $(".button-collapse").sideNav();
+        
+    }
 }
 
 /* Progress Bar functions */
@@ -118,6 +122,19 @@ function set_filterlistener() {
             });
         }
     });
+    $('#gaddidar_all').on('change', function(e) {
+        if (this.checked) {
+            $('#gaddidars').children().each(function() {
+                var gaddidar_all = $(this).children()[1].firstChild;
+                gaddidar_all.checked = true;
+            });
+        } else {
+            $('#gaddidars').children().each(function() {
+                var gaddidar_all = $(this).children()[1].firstChild;
+                gaddidar_all.checked = false;
+            });
+        }
+    });
 
 }
 
@@ -160,6 +177,7 @@ function get_data() {
     var village_ids = [];
     var crop_ids = [];
     var mandi_ids = [];
+    var gaddidar_ids = [];
 
     $('#aggregators').children().each(function() {
         var aggregator_div = $(this).children()[1].firstChild;
@@ -185,12 +203,18 @@ function get_data() {
             mandi_ids.push(mandi_div.getAttribute('data'));
     });
 
+    $('#gaddidars').children().each(function() {
+        var gaddidar_div = $(this).children()[1].firstChild;
+        if (gaddidar_div.checked)
+            gaddidar_ids.push(gaddidar_div.getAttribute('data'));
+    });
+
     if (Date.parse(start_date) > Date.parse(end_date)) {
         //$('.modal-trigger').leanModal();
         $('#modal1').openModal();
     } else {
-        // getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
-        // getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+        getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
+        getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
         // getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
     }
 }
@@ -205,6 +229,7 @@ function get_filter_data() {
             fill_village_filter(data_json.villages);
             fill_crop_filter(data_json.crops);
             fill_mandi_filter(data_json.mandis);
+            fill_gaddidar_filter(data_json.gaddidars);
             get_data();
         });
 }
@@ -233,6 +258,12 @@ function fill_mandi_filter(data_json) {
     });
 }
 
+function fill_gaddidar_filter(data_json) {
+    $.each(data_json, function(index, data) {
+        create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
+    });
+}
+
 function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
@@ -245,15 +276,16 @@ function create_filter(tbody_obj, id, name, checked) {
 
 /* ajax to get json */
 
-function getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
+function getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids) {
     show_progress_bar();
-    $.get("/loop/village_wise_data/", {
+    $.get("/loop/new_aggregator_wise_data/", {
             'start_date': start_date,
             'end_date': end_date,
             'aggregator_ids[]': aggregator_ids,
             'village_ids[]': village_ids,
             'crop_ids[]': crop_ids,
-            'mandi_ids[]': mandi_ids
+            'mandi_ids[]': mandi_ids,
+            'gaddidar_ids[]': gaddidar_ids
         })
         .done(function(data) {
             data_json = JSON.parse(data);
