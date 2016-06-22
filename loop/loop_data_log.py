@@ -199,14 +199,14 @@ def send_updated_log(request):
                 return HttpResponse("-1", status=401)
             LoopUser = get_model('loop', 'LoopUser')
             try:
-                loop_user = LoopUser.objects.get(user_id=user.id)
+                requesting_loop_user = LoopUser.objects.get(user_id=user.id)
                 user_list = LoopUser.objects.filter(
-                    village__block_id=loop_user.village.block.id).values_list('user__id', flat=True)
+                    village__block_id=requesting_loop_user.village.block.id).values_list('user__id', flat=True)
             except Exception as e:
                 raise UserDoesNotExist(
                     'User with id: ' + str(user.id) + 'does not exist')
-            villages = loop_user.get_villages()
-            mandis = loop_user.get_mandis()
+            villages = requesting_loop_user.get_villages()
+            mandis = requesting_loop_user.get_mandis()
             Log = get_model('loop', 'Log')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
@@ -217,7 +217,7 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer', 'Village'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction'])
-            rows = rows | Log.objects.filter(timestamp__gt=timestamp, loop_user__in=user_list, entry_table__in=[
+            rows = rows | Log.objects.filter(timestamp__gt=timestamp, loop_user__village__block_id = requesting_loop_user.village.block.id , entry_table__in=[
                                              'Transporter', 'TransportationVehicle'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
