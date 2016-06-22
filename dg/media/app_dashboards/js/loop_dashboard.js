@@ -696,7 +696,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
             /*pointFormat: '{series.name}: ' + ((prefix_or_suffix)?unit + ' ':'') + '{point.y:.1f}'+ ((prefix_or_suffix)?'':' ' + unit) + '<br/>Total: ' + ((prefix_or_suffix)?unit + ' ':'') + '{point.stackTotal:.1f}'+ ((prefix_or_suffix)?'':' ' + unit)*/
-            shared: true
+            shared: false
         },
         plotOptions: {
             column: {
@@ -1117,89 +1117,85 @@ function get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_
         })
         .done(function(data) {
             var data_json = JSON.parse(data);
-            aggregator_mandi_graph(data_json.aggregator_mandi);
-            // mandi_aggregator_graph(data_json.aggregator_mandi);
+            // aggregator_mandi_graph(data_json.aggregator_mandi);
+            aggregator_graph($('#aggregator_mandi_vol'), mandi_ids, mandi_names, aggregator_ids, aggregator_names, data_json.aggregator_mandi, "quantity__sum");
+            aggregator_graph($('#aggregator_mandi_amount'), mandi_ids, mandi_names, aggregator_ids, aggregator_names, data_json.aggregator_mandi, "amount__sum");
         });
 }
 
-function aggregator_mandi_graph(json_data) {
-    var aggregators_array = new Array(aggregators_for_filter.length);
+// function aggregator_mandi_graph(json_data) {
+//     var aggregators_array = new Array(aggregators_for_filter.length);
 
-    var mandis_array_vol = [];
-    var mandis_array_amount = [];
-    var gaddidars_array = [];
+//     var mandis_array_vol = [];
+//     var mandis_array_amount = [];
+//     var gaddidars_array = [];
 
-    for (var i = 0; i < aggregators_for_filter.length; i++) {
-        aggregators_array[i] = aggregators_for_filter[i].name;
-    }
+//     for (var i = 0; i < aggregators_for_filter.length; i++) {
+//         aggregators_array[i] = aggregators_for_filter[i].name;
+//     }
 
-    for (var i = 0; i < mandis_for_filter.length; i++) {
-        var temp_mandi_vol = {};
-        var temp_mandi_amount = {};
-        temp_mandi_vol['name'] = mandis_for_filter[i].mandi_name;
-        temp_mandi_vol['type'] = "bar";
-        temp_mandi_vol['stacking'] = "normal";
-        temp_mandi_vol['data'] = new Array(aggregators_for_filter.length).fill(0.0);
-        temp_mandi_vol['showInLegend'] = false;
+//     for (var i = 0; i < mandis_for_filter.length; i++) {
+//         var temp_mandi_vol = {};
+//         var temp_mandi_amount = {};
+//         temp_mandi_vol['name'] = mandis_for_filter[i].mandi_name;
+//         temp_mandi_vol['type'] = "bar";
+//         temp_mandi_vol['stacking'] = "normal";
+//         temp_mandi_vol['data'] = new Array(aggregators_for_filter.length).fill(0.0);
+//         temp_mandi_vol['showInLegend'] = false;
 
-        temp_mandi_amount['name'] = mandis_for_filter[i].mandi_name;
-        temp_mandi_amount['type'] = "bar";
-        temp_mandi_amount['stacking'] = "normal";
-        temp_mandi_amount['data'] = new Array(aggregators_for_filter.length).fill(0.0);
-        temp_mandi_amount['showInLegend'] = false;
+//         temp_mandi_amount['name'] = mandis_for_filter[i].mandi_name;
+//         temp_mandi_amount['type'] = "bar";
+//         temp_mandi_amount['stacking'] = "normal";
+//         temp_mandi_amount['data'] = new Array(aggregators_for_filter.length).fill(0.0);
+//         temp_mandi_amount['showInLegend'] = false;
 
 
-        mandis_array_vol.push(temp_mandi_vol);
-        mandis_array_amount.push(temp_mandi_amount);
-    }
+//         mandis_array_vol.push(temp_mandi_vol);
+//         mandis_array_amount.push(temp_mandi_amount);
+//     }
 
-    for (var i = 0; i < json_data.length; i++) {
-        var agg_index = aggregators_for_filter.map(function(e) {
-            return e.user__id
-        }).indexOf(json_data[i]['user_created__id']);
-        var mandi_index = mandis_for_filter.map(function(e) {
-            return e.id
-        }).indexOf(json_data[i]['mandi__id']);
+//     for (var i = 0; i < json_data.length; i++) {
+//         var agg_index = aggregators_for_filter.map(function(e) {
+//             return e.user__id
+//         }).indexOf(json_data[i]['user_created__id']);
+//         var mandi_index = mandis_for_filter.map(function(e) {
+//             return e.id
+//         }).indexOf(json_data[i]['mandi__id']);
 
-        mandis_array_vol[mandi_index]['data'][agg_index] = json_data[i]['quantity__sum'];
-        mandis_array_amount[mandi_index]['data'][agg_index] = json_data[i]['amount__sum'];
-    }
+//         mandis_array_vol[mandi_index]['data'][agg_index] = json_data[i]['quantity__sum'];
+//         mandis_array_amount[mandi_index]['data'][agg_index] = json_data[i]['amount__sum'];
+//     }
 
-    plot_stacked_chart($('#aggregator_mandi_vol'), aggregators_array, mandis_array_vol, '', 'kg');
-    plot_stacked_chart($('#aggregator_mandi_amount'), aggregators_array, mandis_array_amount, '', 'Rs');
+//     plot_stacked_chart($('#aggregator_mandi_vol'), aggregators_array, mandis_array_vol, '', 'kg');
+//     //plot_stacked_chart($('#aggregator_mandi_amount'), aggregators_array, mandis_array_amount, '', 'Rs');
 
-}
+// }
 
-function mandi_aggregator_graph(json_data) {
+function aggregator_graph(container, axis, axis_names, values, values_names, json_data, parameter) {
     var series = [];
-    var x_axis = new Array(mandis_for_filter.length);;
+    var x_axis = new Array(axis.length);;
     var gaddidars_array = [];
 
-    for (var i = 0; i < mandis_for_filter.length; i++) {
-        mandis_array[i] = mandis_for_filter[i].mandi_name;
+    for (var i = 0; i < axis.length; i++) {
+        x_axis[i] = axis_names[i];
     }
 
-    for (var i = 0; i < aggregators_for_filter.length; i++) {
+    for (var i = 0; i < values.length; i++) {
         var temp_vol = {};
-        temp_vol['name'] = aggregators_for_filter[i].name;
+        temp_vol['name'] = values_names[i];
         temp_vol['type'] = "bar";
         temp_vol['stacking'] = "normal";
-        temp_vol['data'] = new Array(mandis_for_filter.length).fill(0.0);
+        temp_vol['data'] = new Array(axis.length).fill(0.0);
         temp_vol['showInLegend'] = false;
 
         series.push(temp_vol);
     }
-
     for (var i = 0; i < json_data.length; i++) {
-        var agg_index = aggregators_for_filter.map(function(e) {
-            return e.user__id
-        }).indexOf(json_data[i]['user_created__id']);
-        var mandi_index = mandis_for_filter.map(function(e) {
-            return e.id
-        }).indexOf(json_data[i]['mandi__id']);
+        var agg_index = values.indexOf(json_data[i]['user_created__id'].toString());
+        var mandi_index = axis.indexOf(json_data[i]['mandi__id'].toString());
 
-        series[agg_index]['data'][mandi_index] = json_data[i]['quantity__sum'];
+        series[agg_index]['data'][mandi_index] = json_data[i][parameter];
     }
 
-    plot_stacked_chart($('#aggregator_mandi_vol2'), x_axis, series, '', 'kg');
+    plot_stacked_chart(container, x_axis, series, '', 'kg');
 }
