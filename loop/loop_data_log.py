@@ -29,6 +29,7 @@ class DatetimeEncoder(json.JSONEncoder):
 
 
 def save_log(sender, **kwargs):
+    LoopUser = get_model('loop', 'LoopUser')
     instance = kwargs["instance"]
     action = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
@@ -52,11 +53,11 @@ def save_log(sender, **kwargs):
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Vehicle":
         village_id = None
         user = None
@@ -64,18 +65,20 @@ def save_log(sender, **kwargs):
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Gaddidar":
         village_id = None
         user = None
+        # Loop user not required
         loop_user = None
     elif sender == "Mandi":
         village_id = None
         user = instance.user_created
+        #loop user not required
         loop_user = instance.user_created
     elif sender == "LoopUserAssignedMandi":
         model_id=instance.mandi.id
@@ -98,6 +101,7 @@ def save_log(sender, **kwargs):
 
 
 def delete_log(sender, **kwargs):
+    LoopUser = get_model('loop', 'LoopUser')
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request
     try:
@@ -116,11 +120,11 @@ def delete_log(sender, **kwargs):
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Vehicle":
         village_id = None
         user = None
@@ -128,18 +132,20 @@ def delete_log(sender, **kwargs):
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
-        loop_user = instance.user_created
+        loop_user = LoopUser.objects.get(user = instance.user_created)
     elif sender == "Gaddidar":
         village_id = None
         user = None
+        # Loop user not required
         loop_user = None
     elif sender == "Mandi":
         village_id = None
         user = None
+        # Loop user not required
         loop_user = None
     elif sender == "LoopUserAssignedMandi":
         village_id = None
@@ -221,7 +227,8 @@ def send_updated_log(request):
             #     if Mandi.objects.get(id=mrow.model_id) in mandis:
             #         rows = rows | Log.objects.filter(id=mrow.id)
 
-            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp,loop_user=user, entry_table__in=['Gaddidar'])
+
+            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                     rows = rows | Log.objects.filter(id=grow.id)
