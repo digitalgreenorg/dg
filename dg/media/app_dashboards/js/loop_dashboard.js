@@ -61,6 +61,10 @@ function set_eventlistener() {
     $('#apply_filter').click(function() {
         get_data();
     });
+
+    $('#v_a').change(function() {
+        update_graphs();
+    });
 }
 
 /* event listeners for filters */
@@ -168,23 +172,40 @@ function update_charts() {
     }
 }
 
+function update_graphs() {
+
+    var option = $('#v_a :selected').val();
+    if (option == 1) {
+        aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_gaddidar, "quantity__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_crop, "quantity__sum");
+    } else if (option == 2) {
+        aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_mandi, "amount__sum");
+        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_gaddidar, "amount__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', aggregator_ids, aggregator_names, aggregator_graphs_json_data.aggregator_crop, "amount__sum");
+    }
+}
+
 function get_data() {
     var start_date = $('#from_date').val();
     var end_date = $('#to_date').val();
     // Get rest of the filters
-    var aggregator_ids = [];
+    aggregator_ids = [];
     aggregator_names = [];
     var village_ids = [];
-    var crop_ids = [];
-    var mandi_ids = [];
+    crop_ids = [];
+    crop_names = [];
+    mandi_ids = [];
     mandi_names = [];
-    var gaddidar_ids = [];
+    gaddidar_ids = [];
+    gaddidar_names = [];
 
     $('#aggregators').children().each(function() {
         var aggregator_div = $(this).children()[1].firstChild;
-        if (aggregator_div.checked)
+        if (aggregator_div.checked) {
             aggregator_ids.push(aggregator_div.getAttribute('data'));
             aggregator_names.push(aggregator_div.getAttribute('value'));
+        }
     });
 
     $('#villages').children().each(function() {
@@ -195,20 +216,25 @@ function get_data() {
 
     $('#crops').children().each(function() {
         var crop_div = $(this).children()[1].firstChild;
-        if (crop_div.checked)
+        if (crop_div.checked) {
             crop_ids.push(crop_div.getAttribute('data'));
+            crop_names.push(crop_div.getAttribute('value'));
+        }
     });
 
     $('#mandis').children().each(function() {
         var mandi_div = $(this).children()[1].firstChild;
-        if (mandi_div.checked)
+        if (mandi_div.checked) {
             mandi_ids.push(mandi_div.getAttribute('data'));
-            mandi_names.push(mandi_div.getAttribute('value'))
+            mandi_names.push(mandi_div.getAttribute('value'));
+        }
     });
     $('#gaddidars').children().each(function() {
         var gaddidar_div = $(this).children()[1].firstChild;
-        if (gaddidar_div.checked)
+        if (gaddidar_div.checked) {
             gaddidar_ids.push(gaddidar_div.getAttribute('data'));
+            gaddidar_names.push(gaddidar_div.getAttribute('value'));
+        }
     });
 
     if (Date.parse(start_date) > Date.parse(end_date)) {
@@ -274,7 +300,7 @@ function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
     row.append(td_name);
-    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = '+ name +' /><label for="' + name + id + '"></label>';
+    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = ' + name + ' /><label for="' + name + id + '"></label>';
     var td_checkbox = $('<td>').html(checkbox_html);
     row.append(td_checkbox);
     tbody_obj.append(row);
@@ -643,7 +669,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
     container_obj.highcharts({
         chart: {
             type: 'column',
-            // height: 400,
+            height: 500,
         },
         xAxis: {
             categories: x_axis,
@@ -1116,65 +1142,16 @@ function get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_
             'gaddidar_ids[]': gaddidar_ids
         })
         .done(function(data) {
-            var data_json = JSON.parse(data);
-            // aggregator_mandi_graph(data_json.aggregator_mandi);
-            aggregator_graph($('#aggregator_mandi_vol'), mandi_ids, mandi_names, aggregator_ids, aggregator_names, data_json.aggregator_mandi, "quantity__sum");
-            aggregator_graph($('#aggregator_mandi_amount'), mandi_ids, mandi_names, aggregator_ids, aggregator_names, data_json.aggregator_mandi, "amount__sum");
+            aggregator_graphs_json_data = JSON.parse(data);
+            update_graphs();
+            transport_cost_graph($('#mandi_cost'), mandi_ids, mandi_names, aggregator_ids, aggregator_names, aggregator_graphs_json_data.transportation_cost_mandi);
+            cpk_spk_graph(mandi_ids, mandi_names, aggregator_ids, aggregator_names, aggregator_graphs_json_data);
         });
 }
 
-// function aggregator_mandi_graph(json_data) {
-//     var aggregators_array = new Array(aggregators_for_filter.length);
-
-//     var mandis_array_vol = [];
-//     var mandis_array_amount = [];
-//     var gaddidars_array = [];
-
-//     for (var i = 0; i < aggregators_for_filter.length; i++) {
-//         aggregators_array[i] = aggregators_for_filter[i].name;
-//     }
-
-//     for (var i = 0; i < mandis_for_filter.length; i++) {
-//         var temp_mandi_vol = {};
-//         var temp_mandi_amount = {};
-//         temp_mandi_vol['name'] = mandis_for_filter[i].mandi_name;
-//         temp_mandi_vol['type'] = "bar";
-//         temp_mandi_vol['stacking'] = "normal";
-//         temp_mandi_vol['data'] = new Array(aggregators_for_filter.length).fill(0.0);
-//         temp_mandi_vol['showInLegend'] = false;
-
-//         temp_mandi_amount['name'] = mandis_for_filter[i].mandi_name;
-//         temp_mandi_amount['type'] = "bar";
-//         temp_mandi_amount['stacking'] = "normal";
-//         temp_mandi_amount['data'] = new Array(aggregators_for_filter.length).fill(0.0);
-//         temp_mandi_amount['showInLegend'] = false;
-
-
-//         mandis_array_vol.push(temp_mandi_vol);
-//         mandis_array_amount.push(temp_mandi_amount);
-//     }
-
-//     for (var i = 0; i < json_data.length; i++) {
-//         var agg_index = aggregators_for_filter.map(function(e) {
-//             return e.user__id
-//         }).indexOf(json_data[i]['user_created__id']);
-//         var mandi_index = mandis_for_filter.map(function(e) {
-//             return e.id
-//         }).indexOf(json_data[i]['mandi__id']);
-
-//         mandis_array_vol[mandi_index]['data'][agg_index] = json_data[i]['quantity__sum'];
-//         mandis_array_amount[mandi_index]['data'][agg_index] = json_data[i]['amount__sum'];
-//     }
-
-//     plot_stacked_chart($('#aggregator_mandi_vol'), aggregators_array, mandis_array_vol, '', 'kg');
-//     //plot_stacked_chart($('#aggregator_mandi_amount'), aggregators_array, mandis_array_amount, '', 'Rs');
-
-// }
-
-function aggregator_graph(container, axis, axis_names, values, values_names, json_data, parameter) {
+function aggregator_graph(container, axis, axis_names, axis_parameter, values, values_names, json_data, parameter) {
     var series = [];
-    var x_axis = new Array(axis.length);;
-    var gaddidars_array = [];
+    var x_axis = new Array(axis.length);
 
     for (var i = 0; i < axis.length; i++) {
         x_axis[i] = axis_names[i];
@@ -1192,10 +1169,98 @@ function aggregator_graph(container, axis, axis_names, values, values_names, jso
     }
     for (var i = 0; i < json_data.length; i++) {
         var agg_index = values.indexOf(json_data[i]['user_created__id'].toString());
-        var mandi_index = axis.indexOf(json_data[i]['mandi__id'].toString());
+        var index = axis.indexOf(json_data[i][axis_parameter].toString());
 
-        series[agg_index]['data'][mandi_index] = json_data[i][parameter];
+        series[agg_index]['data'][index] = json_data[i][parameter];
     }
 
     plot_stacked_chart(container, x_axis, series, '', 'kg');
+}
+
+function transport_cost_graph(container, mandi_ids, mandi_names, aggregator_ids, aggregator_names, json_data) {
+    var series = [];
+    var mandis = new Array(mandi_ids.length);
+    for (var i = 0; i < mandi_ids.length; i++) {
+        mandis[i] = mandi_names[i];
+    }
+
+    for (var i = 0; i < aggregator_names.length; i++) {
+        var temp_cost = {};
+        temp_cost['name'] = aggregator_names[i];
+        temp_cost['type'] = "bar";
+        temp_cost['stacking'] = "normal";
+        temp_cost['showInLegend'] = false;
+        temp_cost['data'] = new Array(mandi_ids.length).fill(0);
+        series.push(temp_cost);
+    }
+    for (var i = 0; i < json_data.length; i++) {
+        var agg_index = aggregator_ids.indexOf(json_data[i]['user_created__id'].toString());
+        var index = mandi_ids.indexOf(json_data[i]['mandi__id'].toString());
+
+        series[agg_index]['data'][index] = json_data[i]['transportation_cost__sum'] - json_data[i]['farmer_share__sum'];
+    }
+    plot_stacked_chart(container, mandis, series, '', 'Rs');
+}
+
+function cpk_spk_graph(mandi_ids, mandi_names, aggregator_ids, aggregator_names, json_data) {
+    var vol_stats = json_data.aggregator_mandi;
+    var cost_stats = json_data.transportation_cost_mandi;
+    var series_cpk = [];
+    var series_spk = [];
+    var mandis = new Array(mandi_ids.length);
+    for (var i = 0; i < mandi_ids.length; i++) {
+        mandis[i] = mandi_names[i];
+    }
+    mandi_vol = [];
+    mandi_cost_cpk = [];
+    mandi_cost_spk = [];
+    for (var i = 0; i < aggregator_names.length; i++) {
+        var temp = {};
+        var temp_spk = {};
+        temp['name'] = aggregator_names[i];
+        temp['type'] = "bar";
+        temp['stacking'] = "normal";
+        temp['showInLegend'] = false;
+        temp['data'] = new Array(mandi_ids.length).fill(0.0);
+
+        temp_spk['name'] = aggregator_names[i];
+        temp_spk['type'] = "bar";
+        temp_spk['stacking'] = "normal";
+        temp_spk['showInLegend'] = false;
+        temp_spk['data'] = new Array(mandi_ids.length).fill(0.0);
+
+        series_cpk.push(temp);
+        series_spk.push(temp_spk);
+        mandi_vol.push(new Array(mandi_ids.length).fill(0.0));
+        mandi_cost_cpk.push(new Array(mandi_ids.length).fill(0.0));
+        mandi_cost_spk.push(new Array(mandi_ids.length).fill(0.0));
+    }
+
+    for (var i = 0; i < vol_stats.length; i++) {
+        var agg_index = aggregator_ids.indexOf(vol_stats[i]['user_created__id'].toString());
+        var index = mandi_ids.indexOf(vol_stats[i]['mandi__id'].toString());
+        mandi_vol[agg_index][index] = vol_stats[i]['quantity__sum'];
+    }
+    console.log(mandi_vol);
+    for (var i = 0; i < cost_stats.length; i++) {
+        var agg_index = aggregator_ids.indexOf(cost_stats[i]['user_created__id'].toString());
+        var index = mandi_ids.indexOf(cost_stats[i]['mandi__id'].toString());
+        mandi_cost_cpk[agg_index][index] = cost_stats[i]['transportation_cost__sum'] - cost_stats[i]['farmer_share__sum'];
+        mandi_cost_spk[agg_index][index] = cost_stats[i]['farmer_share__sum'];
+          }
+          console.log(mandi_cost_cpk);
+
+
+    for (var i = 0; i < aggregator_names.length; i++) {
+        for (var j = 0; j < mandi_names.length; j++) {
+            // console.log("vol" + mandi_vol[i][j]);
+            // console.log("cost" + mandi_cost_cpk[i][j]);
+            series_cpk[i]['data'][j] = mandi_vol[i][j] > 0 ? mandi_cost_cpk[i][j] / mandi_vol[i][j] : 0.0;
+            series_spk[i]['data'][j] = mandi_vol[i][j] > 0 ? mandi_cost_spk[i][j] / mandi_vol[i][j] : 0.0;
+            //      series_spk[i]['data'][j]=(mandi_cost_spk[i][j]/mandi_vol[i][j]);
+        }
+    }
+    // console.log(series_cpk);
+     plot_stacked_chart($('#cpk'), mandis, series_cpk, '', 'Rs');
+     plot_stacked_chart($('#spk'), mandis, series_spk, '', 'Rs');
 }
