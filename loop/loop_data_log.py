@@ -57,8 +57,9 @@ def save_log(sender, **kwargs):
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
-        loop_user = LoopUser.objects.get(user = instance.user_created)
-        if loop_user is None:
+        if instance.user_created is not None:
+            loop_user = LoopUser.objects.get(user = instance.user_created)
+        else:
             loop_user = None
 
     elif sender == "Vehicle":
@@ -68,7 +69,10 @@ def save_log(sender, **kwargs):
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
-        loop_user = LoopUser.objects.get(user = instance.user_created)
+        if instance.user_created is not None:
+            loop_user = LoopUser.objects.get(user = instance.user_created)
+        else:
+            loop_user=None
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
@@ -127,7 +131,10 @@ def delete_log(sender, **kwargs):
     elif sender == "Transporter":
         village_id = None
         user = instance.user_created
-        loop_user = LoopUser.objects.get(user = instance.user_created)
+        if instance.user_created is not None:
+            loop_user = LoopUser.objects.get(user = instance.user_created)
+        else:
+            loop_user = None
     elif sender == "Vehicle":
         village_id = None
         user = None
@@ -135,7 +142,10 @@ def delete_log(sender, **kwargs):
     elif sender == "TransportationVehicle":
         village_id = None
         user = instance.user_created
-        loop_user = LoopUser.objects.get(user = instance.user_created)
+        if instance.user_created is not None:
+            loop_user = LoopUser.objects.get(user = instance.user_created)
+        else:
+            loop_user = None
     elif sender == "DayTransportation":
         village_id = None
         user = instance.user_created
@@ -230,12 +240,13 @@ def send_updated_log(request):
                                              'Transporter', 'TransportationVehicle'])
 
             for entry in transporter_trans_vehicle_rows:
-                if entry.entry_table is "Transporter" and entry.loop_user is None:
-                    if Transporter.objects.get(id=entry.model_id).block == requesting_loop_user.village.block:
-                        rows = rows | entry
-                elif entry.entry_table is "TransportationVehicle" and entry.loop_user is None:
-                    if TransportationVehicle.objects.get(id=entry.model_id).transporter.block == requesting_loop_user.village.block:
-                        rows = rows | entry
+                if entry.entry_table == "Transporter" and entry.loop_user == None:
+                    if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
+                        rows = rows | Log.objects.filter(id=entry.id)
+                elif entry.entry_table == "TransportationVehicle" and entry.loop_user == None:
+                    if TransportationVehicle.objects.get(id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
+                        rows = rows | Log.objects.filter(id=entry.id)
+
 
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
