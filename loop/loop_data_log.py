@@ -58,6 +58,9 @@ def save_log(sender, **kwargs):
         village_id = None
         user = instance.user_created
         loop_user = LoopUser.objects.get(user = instance.user_created)
+        if loop_user is None:
+            loop_user = None
+
     elif sender == "Vehicle":
         village_id = None
         user = None
@@ -210,6 +213,8 @@ def send_updated_log(request):
             Log = get_model('loop', 'Log')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
+            Transporter = get_model('loop', 'Transporter')
+            TransportationVehicle = get_model('loop','TransportationVehicle')
 
             rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle'])
@@ -217,8 +222,21 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer', 'Village'])
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction'])
+
             rows = rows | Log.objects.filter(timestamp__gt=timestamp, loop_user__village__block_id = requesting_loop_user.village.block.id , entry_table__in=[
                                              'Transporter', 'TransportationVehicle'])
+
+            transporter_trans_vehicle_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=[
+                                             'Transporter', 'TransportationVehicle'])
+
+            for entry in transporter_trans_vehicle_rows:
+                if entry.entry_table is "Transporter" and entry.loop_user is None:
+                    if Transporter.objects.get(id=entry.model_id).block == requesting_loop_user.village.block:
+                        rows = rows | entry
+                elif entry.entry_table is "TransportationVehicle" and entry.loop_user is None:
+                    if TransportationVehicle.objects.get(id=entry.model_id).transporter.block == requesting_loop_user.village.block:
+                        rows = rows | entry
+
             rows = rows | Log.objects.filter(
                 timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
 
