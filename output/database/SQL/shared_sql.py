@@ -288,7 +288,7 @@ def get_start_date(geog, id):
         
     return join_sql_ds(sql_ds)
     
-def caculate_start_date(geog, id):
+def calculate_start_date(geog, id):
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append("MIN(date) AS date")
     sql_ds['from'].append("village_precalculation_copy VPC")
