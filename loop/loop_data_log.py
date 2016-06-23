@@ -86,7 +86,7 @@ def save_log(sender, **kwargs):
         village_id = None
         user = instance.user_created
         # loop user not required
-        loop_user = instance.user_created
+        loop_user = None
     elif sender == "LoopUserAssignedMandi":
         model_id = instance.mandi.id
         village_id = None
@@ -259,7 +259,7 @@ def send_updated_log(request):
                         list_rows.append(Log.objects.filter(id=entry.id))
 
             list_rows.append(
-                Log.objects.filter(timestamp__gt=timestamp, loop_user__user=user, entry_table__in=['Mandi']))
+                Log.objects.filter(timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi']))
             # for mrow in mandi_rows:
             #     if Mandi.objects.get(id=mrow.model_id) in mandis:
             #         rows = rows | Log.objects.filter(id=mrow.id)
@@ -270,10 +270,10 @@ def send_updated_log(request):
                     list_rows.append(Log.objects.filter(id=grow.id))
 
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction']))
+                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['CombinedTransaction']))
 
             list_rows.append(
-                Log.objects.filter(timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation']))
+                Log.objects.filter(timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['DayTransportation']))
 
             # rows = Log.objects.filter(
             #     timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle'])
