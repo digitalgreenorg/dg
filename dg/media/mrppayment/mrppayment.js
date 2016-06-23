@@ -29,6 +29,8 @@ function partnersetter()
 
 }
 
+$('sdate').monthpicker();
+
 $(document).ready(function() {
   $.ajax(
         {
