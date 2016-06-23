@@ -12,19 +12,26 @@ class LoopAdmin(AdminSite):
 class LoopUserAssignedMandis(admin.StackedInline):
     model = LoopUserAssignedMandi
 
+class LoopUserAssignedVillages(admin.StackedInline):
+    model = LoopUserAssignedVillage
+
 class LoopUserAdmin(admin.ModelAdmin):
-    inlines = [LoopUserAssignedMandis]
+    inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     list_display = ('name', 'role', 'phone_number','village',)
     search_fields = ['name', 'village__village_name']
 
 class LoopUserInline(admin.TabularInline):
     model = LoopUser
     extra = 5
-    exclude = ('assigned_mandis',)
+    exclude = ('assigned_mandis','assigned_villages')
 
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone')
     search_fields = ['name', 'phone']
+
+class LoopUserAssignedVillageAdmin(admin.ModelAdmin):
+    list_display = ('loop_user','village')
+    search_fields = ['loop_user__name', 'village__village_name']
 
 class LoopUserAssignedMandiAdmin(admin.ModelAdmin):
     list_display = ('loop_user','mandi')
@@ -65,6 +72,7 @@ loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
 loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
+loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)
 loop_admin.register(Crop)
 loop_admin.register(Farmer, FarmerAdmin)

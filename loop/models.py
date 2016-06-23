@@ -115,7 +115,7 @@ class LoopUser(LoopModel):
     name = models.CharField(max_length=100, default="default")
     role = models.IntegerField(choices=RoleChoice)
     assigned_villages = models.ManyToManyField(
-        Village, related_name="assigned_villages")
+        Village, related_name="assigned_villages", through='LoopUserAssignedVillage', blank=True, null=True)
     assigned_mandis = models.ManyToManyField(
         Mandi, related_name="assigned_mandis", through='LoopUserAssignedMandi', blank=True, null=True)
     mode = models.IntegerField(choices=ModelChoice, default=1)
@@ -141,6 +141,15 @@ class LoopUserAssignedMandi(LoopModel):
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
 pre_delete.connect(delete_log, sender=LoopUserAssignedMandi)
+
+class LoopUserAssignedVillage(LoopModel):
+    id = models.AutoField(primary_key=True)
+    loop_user = models.ForeignKey(LoopUser)
+    village = models.ForeignKey(Village)
+    is_visible = models.BooleanField(default=True)
+
+post_save.connect(save_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(delete_log, sender=LoopUserAssignedVillage)
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)

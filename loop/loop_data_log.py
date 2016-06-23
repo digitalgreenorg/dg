@@ -93,6 +93,12 @@ def save_log(sender, **kwargs):
         user = instance.user_created
         loop_user = instance.loop_user
         sender = "Mandi"
+    elif sender == "LoopUserAssignedVillage":
+        model_id = instance.village.id
+        village_id = instance.village.id
+        user = instance.user_created
+        loop_user = instance.loop_user
+        sender = "Village"
     else:           # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -167,6 +173,12 @@ def delete_log(sender, **kwargs):
         loop_user = instance.loop_user
         sender = "Mandi"
         model_id = instance.mandi.id
+    elif sender == "LoopUserAssignedVillage":
+        village_id = instance.village.id
+        user = instance.user_created
+        loop_user = instance.loop_user
+        sender = "Village"
+        model_id = instance.village.id
     else:               # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -181,13 +193,17 @@ def delete_log(sender, **kwargs):
 
 def get_log_object(log_object):
     Obj_model = get_model('loop', log_object.entry_table)
+    # print "hello sexy"
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
+        # print "still sexy"
         data = {'log': model_to_dict(log_object), 'data': model_to_dict(
             obj), 'online_id': obj.id}
     except Exception, e:
+        # print "No more sexy"
         data = {'log': model_to_dict(
             log_object), 'data': None, 'online_id': log_object.model_id}
+        # print data
     return data
 
 
@@ -233,10 +249,14 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, village__in=villages, entry_table__in=['Village']))
+                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village']))
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer']))
+
+            print Log.objects.filter(
+                timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer'])
+
 
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,
                                                 loop_user__village__block_id=requesting_loop_user.village.block.id,
@@ -313,11 +333,14 @@ def send_updated_log(request):
             #         rows = rows | Log.objects.filter(id=grow.id)
 
             data_list = []
-            print list_rows
+            # print list_rows
+            # print len(list_rows)
             for row in list_rows:
+                # print row
                 if row:
-                    print get_log_object(row[0])
-                    data_list.append(get_log_object(row[0]))
+                    for i in row:
+                        # print get_log_object(i)
+                        data_list.append(get_log_object(i))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, mimetype="application/json")

@@ -44,6 +44,8 @@ class DayTransportationNotSaved(Exception):
 class AssignedMandiNotSaved(Exception):
     pass
 
+class AssignedVillageNotSaved(Exception):
+    pass
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
     field = getattr(bundle.obj, field_name)
@@ -372,9 +374,10 @@ class LoopUserResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
+        bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
         assigned_mandi_list = bundle.data.get('assigned_mandis')
-        if assigned_mandi_list:
-            bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
+        assigned_village_list = bundle.data.get('assigned_villages')
+        if assigned_mandi_list or assigned_village_list:
             user_id = None
             if bundle.request.user:
                 user_id = bundle.request.user.id
@@ -395,6 +398,17 @@ class LoopUserResource(BaseResource):
                 except Exception, e:
                     raise AssignedMandiNotSaved('For Loop User with id: ' + str(
                         loop_user_id) + ' mandi is not getting saved. Mandi details: ' + str(e))
+
+            for village in assigned_village_list:
+                try:
+                    print "Village 1"
+                    print village
+                    assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
+                                                               user_created_id=user_id)
+                    assigned_village_obj.save()
+                except Exception, e:
+                    raise AssignedVillageNotSaved('For Loop User with id: ' + str(
+                        loop_user_id) + ' village is not getting saved. Village details: ' + str(e))
             return bundle
         else:
             raise AssignedMandiNotSaved(
@@ -411,9 +425,11 @@ class LoopUserResource(BaseResource):
         loop_user_id = bundle.data.get('id')
         print "Update Loop User Id"
         print loop_user_id
-        del_objs = LoopUserAssignedMandi.objects.filter(loop_user_id=loop_user_id).delete()
+        del_mandi_objs = LoopUserAssignedMandi.objects.filter(loop_user_id=loop_user_id).delete()
+        del_village_objs = LoopUserAssignedVillage.objects.filter(loop_user_id=loop_user_id).delete()
         print "Delete objects"
-        print del_objs
+        print del_mandi_objs
+        print del_village_objs
         assigned_mandi_list = bundle.data.get('assigned_mandis')
         for mandi in assigned_mandi_list:
             print "Update Mandi"
@@ -421,12 +437,22 @@ class LoopUserResource(BaseResource):
             assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
                                                        user_created_id=user_id)
             assigned_mandi_obj.save()
+        assigned_village_list = bundle.data.get('assigned_villages')
+        for village in assigned_village_list:
+            print "Update Village"
+            print village
+            assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
+                                                       user_created_id=user_id)
+            assigned_village_obj.save()
         return bundle
 
     def dehydrate_assigned_mandis(self, bundle):
         return [{'id': assigned_mandi_obj.mandi_id, 'mandi_name':assigned_mandi_obj.mandi_name} for assigned_mandi_obj in
                 set(bundle.obj.assigned_mandis.all())]
 
+    def dehydrate_assigned_villages(self, bundle):
+        return [{'id': assigned_village_obj.village_id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
+                set(bundle.obj.assigned_villages.all())]
 
 class CropResource(BaseResource):
     class Meta:
