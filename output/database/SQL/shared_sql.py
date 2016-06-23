@@ -247,10 +247,6 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
         sql_ds['select'].append("SUM(VPC.total_male_attendance) as tot_male_att");
     if(values_to_fetch==None or 'tot_fem_att' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_female_attendance) as tot_fem_att");
-    if(values_to_fetch==None or 'tot_exp_ado' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_expressed_adoption) as tot_exp_ado");
-    if(values_to_fetch==None or 'tot_int' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_interested) as tot_int");
     if(values_to_fetch==None or 'tot_que' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_questions_asked) as tot_que");
         

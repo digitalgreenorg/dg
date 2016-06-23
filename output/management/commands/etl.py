@@ -12,6 +12,7 @@ from people.models import Person, Animator, AnimatorAssignedVillage
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from geographies.models import Village
 from videos.models import Video
+
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class AnalyticsSync():
@@ -122,7 +123,7 @@ class AnalyticsSync():
             # main_data_dst stores all the counts for every date , every village and every partner                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0, tot_male_act = 0,
                 tot_fem_act = 0, tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
-                tot_exp_att=0, tot_int=0, tot_exp_ado = 0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
+                tot_exp_att=0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
                 tot_active_vid_seen=0))))
             
             sixty_days = datetime.timedelta(days=60)
@@ -134,8 +135,8 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'interested', 'expressed_question', 
-            'expressed_adoption_video', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
+            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
@@ -167,12 +168,8 @@ class AnalyticsSync():
                     counts['tot_male_att'] = counts['tot_male_att'] + 1
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
-                if pma['interested']:
-                    counts['tot_int'] = counts['tot_int'] + 1
-                if pma['expressed_question']:
+                if pma['screening__questions_asked']:
                     counts['tot_ques'] = counts['tot_ques'] + 1
-                if pma['expressed_adoption_video']:
-                    counts['tot_exp_ado'] = counts['tot_exp_ado'] + 1
                      
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
@@ -225,7 +222,7 @@ class AnalyticsSync():
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_suitable_for=1).values_list('id','video_production_end_date', 'village', 'farmers_shown__gender', 'partner').order_by('id')
+            vids = Video.objects.filter(video_suitable_for=1).values_list('id','video_production_date', 'village', 'farmers_shown__gender', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, gender, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
@@ -251,7 +248,7 @@ class AnalyticsSync():
                         values_list.append(("('%s',"+','.join(["%d"] * 24)+ ")" )% 
                                            (str(dt),counts['tot_sc'],counts['tot_vid'],counts['tot_male_act'],counts['tot_fem_act'],
                                             counts['tot_ado'],counts['tot_male_ado'],counts['tot_fem_ado'],counts['tot_att'],counts['tot_male_att'],
-                                            counts['tot_fem_att'],counts['tot_exp_att'], counts['tot_exp_ado'],counts['tot_int'],counts['tot_ques'],
+                                            counts['tot_fem_att'],counts['tot_exp_att'],counts['tot_ques'],
                                             counts['tot_adopted_att'], counts['tot_active'],counts['tot_ado_by_act'],counts['tot_active_vid_seen'],
                                             vil_id,vil_dict[vil_id][1],vil_dict[vil_id][2],vil_dict[vil_id][3],vil_dict[vil_id][4],partner_id))
                     
@@ -259,7 +256,7 @@ class AnalyticsSync():
             for i in range(1, (len(values_list)/5000) + 2):
                 self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced, total_male_actors,\
                 total_female_actors, total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
-                total_female_attendance, total_expected_attendance, total_expressed_adoption, total_interested, total_questions_asked,\
+                total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
                 VALUES "+','.join(values_list[(i-1)*5000:i*5000]))

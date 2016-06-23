@@ -128,8 +128,6 @@ CREATE TABLE `village_precalculation_copy` (
   `total_male_attendance` int(10) unsigned NOT NULL DEFAULT '0',
   `total_female_attendance` int(10) unsigned NOT NULL DEFAULT '0',
   `total_expected_attendance` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_expressed_adoption` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_interested` int(10) unsigned NOT NULL DEFAULT '0',
   `total_questions_asked` int(10) unsigned NOT NULL DEFAULT '0',
   `total_adopted_attendees` int(10) unsigned NOT NULL DEFAULT '0',
   `total_active_attendees` int(10) unsigned NOT NULL DEFAULT '0',
