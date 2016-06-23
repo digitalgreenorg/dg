@@ -93,8 +93,9 @@ def save_log(sender, **kwargs):
         user = instance.user_created
         loop_user = instance.loop_user
         sender = "Mandi"
-    else:
-        village_id = instance.village.id  # farmer add
+    else:           # farmer add
+        village_id = instance.village.id
+        loop_user = None
     Log = get_model('loop', 'Log')
     log = Log(village=village_id, user=user, action=action, entry_table=sender,
               model_id=model_id, loop_user=loop_user)
@@ -166,8 +167,9 @@ def delete_log(sender, **kwargs):
         loop_user = instance.loop_user
         sender = "Mandi"
         model_id = instance.mandi.id
-    else:
-        village_id = instance.village.id  # farmer add
+    else:               # farmer add
+        village_id = instance.village.id
+        loop_user = None
     Log = get_model('loop', 'Log')
     try:
         log = Log(village=village_id, user=user, action=-1,
