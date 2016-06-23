@@ -151,7 +151,7 @@ def overview(geog, id, from_date, to_date, partners, type):
         sql_ds['select'].append('COUNT(DISTINCT VIDM.practice_id) as tot_pra')
         sql_ds['from'].append('video_myisam VIDM')
         main_tab_abb = 'VIDM'
-        date_field = "VIDM.video_production_end_date"
+        date_field = "VIDM.video_production_date"
     elif(type=='person'):
         sql_ds['select'].append('COUNT(DISTINCT PMAM.person_id) as tot_per')
         sql_ds['from'].append('person_meeting_attendance_myisam PMAM')
@@ -176,7 +176,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['select'].extend(["date", "COUNT(*)"])
         
         sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["VIDM.practice_id" , "MIN(video_production_end_date) AS date"])
+        sql_inn_ds['select'].extend(["VIDM.practice_id" , "MIN(video_production_date) AS date"])
         sql_inn_ds['from'].append("video_myisam VIDM");
         filter_partner_geog_date(sql_inn_ds,'VIDM','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("practice_id");

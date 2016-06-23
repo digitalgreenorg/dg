@@ -57,10 +57,10 @@ class AnalyticsSync():
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into Screening_myisam"
             #video_myisam
-            self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_end_date, prod_duration, practice_id, video_type,
+            self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, prod_duration, practice_id, video_type,
                                         language_id, actor_id, gender, actor_type, village_id, block_id, district_id, state_id, country_id, partner_id)
-                                        select vid.id, VIDEO_PRODUCTION_END_DATE, datediff(VIDEO_PRODUCTION_END_DATE, VIDEO_PRODUCTION_START_DATE) + 1,
-                                        related_practice_id, VIDEO_TYPE, language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
+                                        select vid.id, VIDEO_PRODUCTION_DATE, related_practice_id, VIDEO_TYPE, 
+                                        language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
                                         state_id, country_id, vid.partner_id
                                         FROM videos_video vid
                                         JOIN videos_video_farmers_shown vfs on vfs.video_id = vid.id
@@ -101,10 +101,10 @@ class AnalyticsSync():
 
             #activities_screeningwisedata
             self.db_cursor.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
-                                        screening_id, old_coco_id, screening_date, start_time, end_time, location, village_id, animator_id, 
+                                        screening_id, old_coco_id, screening_date, start_time, location, village_id, animator_id, 
                                         partner_id, video_id, video_title, persongroup_id) 
                                         SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
-                                        A.old_coco_id, A.date, A.start_time, A.end_time, A.location, A.village_id, A.animator_id, A.partner_id, B.video_id, D.title, C.PERSONGROUP_ID 
+                                        A.old_coco_id, A.date, A.start_time, A.location, A.village_id, A.animator_id, A.partner_id, B.video_id, D.title, C.PERSONGROUP_ID 
                                         from activities_screening A join activities_screening_videoes_screened B on B.screening_id=A.id join videos_video D on B.video_id=D.id 
                                         join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
             print "Finished insert into activities_screeningwisedata"
