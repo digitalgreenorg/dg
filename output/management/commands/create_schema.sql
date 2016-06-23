@@ -162,7 +162,6 @@ CREATE TABLE `activities_screeningwisedata` (
   `old_coco_id` BIGINT(20),
   `screening_date` DATE not null,
   `start_time` TIME not null,
-  `end_time` TIME not null,
   `location` VARCHAR(200) not null,
   `village_id` INT(11) not null,
   `animator_id` INT(11) not null,
