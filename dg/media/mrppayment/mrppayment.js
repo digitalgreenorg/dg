@@ -7,7 +7,7 @@ var pflag = 0;
 var diflag = 0;
 var chosendeos = [];
 var bflag = 0;
-
+var tflag = 0;
 
 $('sdate').monthpicker();
 
@@ -24,6 +24,7 @@ function partnersetter()
           document.getElementById('blocklist').classList.add('nodisplay');
           pflag = 1;
       }
+
       else if (pflag == 1)
       {
           document.getElementById('partnerlist').classList.remove('blockdisplay');
@@ -193,8 +194,6 @@ function setblocklistdiv(text, district_id) {
 }
 
 function mrp_payment_goclicked() {
-
-
     
     $(document).ready(function () {
         $.blockUI({ css: {
@@ -258,7 +257,11 @@ function mrp_payment_goclicked() {
             // console.log("print bella");
 
 //            document.getElementById("test").innerHTML = data['output'];
-
+            
+            if(tflag == 1) {
+              $('#example').dataTable().fnDestroy();
+              $('#example').empty();
+            }
             $("#example").dataTable({
 
                 "sDom": 'T<"clear">lfrtip',
@@ -291,7 +294,7 @@ function mrp_payment_goclicked() {
 	                       ]
                     }
             })
-            
+            tflag = 1;
          },
         error: function (data) {
             alert("Sorry there was an error !");
