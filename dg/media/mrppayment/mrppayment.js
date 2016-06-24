@@ -185,7 +185,6 @@ function blockfilter(district_id) {
 }
 
 function setblocklistdiv(text, district_id) {
-    console.log(text)
     var block_name = $(text).html();//text.innerText.trim();
     $("div#blockname").html(block_name);
     document.getElementById('blocklist').classList.remove('nodisplay');
@@ -196,6 +195,32 @@ function setblocklistdiv(text, district_id) {
 function mrp_payment_goclicked() {
 
 
+    
+    $(document).ready(function () {
+        $.blockUI({ css: {
+            border: 'none',
+            padding: '15px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px',
+            opacity: .5,
+            color: '#ffffff'
+        } });
+    });
+
+    
+
+    // $.blockUI({ css: {
+    //     border: 'none',
+    //     padding: '15px',
+    //     backgroundColor: '#000',
+    //     '-webkit-border-radius': '10px',
+    //     '-moz-border-radius': '10px',
+    //     opacity: .5,
+    //     color: '#ffffff'
+    // } });
+               
+
     var sdate = document.getElementById("sdate").value;
     var edate = document.getElementById("edate").value;
     var partner = document.getElementById("partnername");
@@ -204,7 +229,6 @@ function mrp_payment_goclicked() {
     var district_name = $(district).html();
     var block = document.getElementById("blockname");
     var block_name = $(block).html();
-    alert(partner_name)
 
     $.ajax({
 
@@ -220,6 +244,7 @@ function mrp_payment_goclicked() {
         url: window.location.origin + "/analytics/mrptool/report",
 
         success: function (data) {
+            $.unblockUI();
             var listitems = data;
             // var listitems = '';
             // for (var i = 0; i < data['output'].length; i++) {
@@ -266,7 +291,7 @@ function mrp_payment_goclicked() {
 	                       ]
                     }
             })
-
+            
          },
         error: function (data) {
             alert("Sorry there was an error !");

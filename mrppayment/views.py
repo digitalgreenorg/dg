@@ -4,7 +4,7 @@ from geographies.models import District, Village, Block
 from programs.models import Partner
 from django.http import HttpResponse
 import json, datetime
-from activities.models import MRPpayment
+from activities.models import VRPpayment
 from people.models import Animator, Person, AnimatorAssignedVillage
 from collections import defaultdict
 from vrppayment.views import *
@@ -107,7 +107,7 @@ def getreport(request):
 
     print partner_id, block_id
 
-    custom_object = MRPpayment(partner_id, block_id, start_date, end_date)
+    custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
     # print custom_object
     list_of_vrps = list(custom_object.get_req_id_vrp())
 
