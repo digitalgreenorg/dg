@@ -147,7 +147,7 @@ function blocksetter() {
 }
 
 function blockfilter(district_id) {
-    console.log('selected district id is', district_id)
+  
     $.ajax(
         {
             type: 'GET',
@@ -207,10 +207,6 @@ function mrp_payment_goclicked() {
 
         success: function (data) {
             var listitems = data;
-            alert('hello sir');
-            console.log('data is ', data['output']);
-
-
             // var listitems = '';
             // for (var i = 0; i < data['output'].length; i++) {
             //     listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[output][i] + '>' + '</li>';
@@ -259,7 +255,7 @@ function mrp_payment_goclicked() {
 
          },
         error: function (data) {
-            alert("Sorry there was an f error !");
+            alert("Sorry there was an error !");
         }
     });
 }
