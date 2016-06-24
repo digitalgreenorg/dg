@@ -151,7 +151,7 @@ def overview(geog, id, from_date, to_date, partners, type):
         sql_ds['select'].append('COUNT(DISTINCT VIDM.practice_id) as tot_pra')
         sql_ds['from'].append('video_myisam VIDM')
         main_tab_abb = 'VIDM'
-        date_field = "VIDM.video_production_end_date"
+        date_field = "VIDM.video_production_date"
     elif(type=='person'):
         sql_ds['select'].append('COUNT(DISTINCT PMAM.person_id) as tot_per')
         sql_ds['from'].append('person_meeting_attendance_myisam PMAM')
@@ -176,7 +176,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['select'].extend(["date", "COUNT(*)"])
         
         sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["VIDM.practice_id" , "MIN(video_production_end_date) AS date"])
+        sql_inn_ds['select'].extend(["VIDM.practice_id" , "MIN(video_production_date) AS date"])
         sql_inn_ds['from'].append("video_myisam VIDM");
         filter_partner_geog_date(sql_inn_ds,'VIDM','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("practice_id");
@@ -247,10 +247,6 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
         sql_ds['select'].append("SUM(VPC.total_male_attendance) as tot_male_att");
     if(values_to_fetch==None or 'tot_fem_att' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_female_attendance) as tot_fem_att");
-    if(values_to_fetch==None or 'tot_exp_ado' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_expressed_adoption) as tot_exp_ado");
-    if(values_to_fetch==None or 'tot_int' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_interested) as tot_int");
     if(values_to_fetch==None or 'tot_que' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_questions_asked) as tot_que");
         
@@ -288,7 +284,7 @@ def get_start_date(geog, id):
         
     return join_sql_ds(sql_ds)
     
-def caculate_start_date(geog, id):
+def calculate_start_date(geog, id):
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append("MIN(date) AS date")
     sql_ds['from'].append("village_precalculation_copy VPC")

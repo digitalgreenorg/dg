@@ -128,8 +128,7 @@ class Command(BaseCommand):
 			if (error == 0):
 				try:
 					pma = PersonMeetingAttendance(screening = screening.screening,
-												person = person.person,
-												interested = True)
+												person = person.person)
 					pma.save()
 					print "PMA saved in old"
 				except Exception as e:

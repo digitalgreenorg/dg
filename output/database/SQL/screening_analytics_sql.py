@@ -53,8 +53,7 @@ def screening_practice_scatter(geog,id, from_date, to_date, partners):
 
 def screening_raw_attendance(geog,id,from_date,to_date,partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["date", "SUM(total_attendance) AS tot_per", "SUM(total_interested) AS tot_int", \
-                             "SUM(total_expressed_adoption) as tot_ado", "SUM(total_questions_asked) as tot_que", 
+    sql_ds['select'].extend(["date", "SUM(total_attendance) AS tot_per", "SUM(total_questions_asked) as tot_que", 
                              "SUM(total_screening) as tot_scr"])
     sql_ds['from'].append("village_precalculation_copy VPC")
     sql_ds['force index'].append("(village_precalculation_copy_village_id)")
@@ -66,8 +65,7 @@ def screening_raw_attendance(geog,id,from_date,to_date,partners):
 
 def screening_percent_attendance(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["date", "SUM(total_attendance) AS tot_per", "SUM(total_interested) AS tot_int", \
-                             "SUM(total_expressed_adoption) as tot_ado", "SUM(total_questions_asked) as tot_que", 
+    sql_ds['select'].extend(["date", "SUM(total_attendance) AS tot_per", "SUM(total_questions_asked) as tot_que", 
                              "SUM(total_expected_attendance) as tot_exp_att"])
     sql_ds['from'].append("village_precalculation_copy VPC")
     sql_ds['force index'].append("(village_precalculation_copy_village_id)")

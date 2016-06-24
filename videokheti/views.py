@@ -378,8 +378,6 @@ def play_video(request):
                 'language': svideo.language,
                 'state': svideo.state,
                 'date_pro': svideo.date,
-                'facillitator': video.coco_video.facilitator.name,
-                'cameraoperator': video.coco_video.cameraoperator.name,
                 'comments': comments,
                 'id': video_id,
                 'video_carousel': video_carousel,

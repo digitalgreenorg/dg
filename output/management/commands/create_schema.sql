@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS `video_myisam`;
 CREATE TABLE `video_myisam` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `video_id` int unsigned NOT NULL,
-  `video_production_end_date` date NOT NULL,
+  `video_production_date` date NOT NULL,
   `prod_duration` int(5) DEFAULT NULL,
   `practice_id` int unsigned DEFAULT NULL,
   `video_type` int(11) NOT NULL,
@@ -51,11 +51,11 @@ CREATE INDEX video_myisam_video_id ON video_myisam(video_id);
 CREATE INDEX video_myisam_practice_id ON video_myisam(practice_id);
 CREATE INDEX video_myisam_language_id ON video_myisam(language_id);
 CREATE INDEX video_myisam_actor_id ON video_myisam(actor_id);
-CREATE INDEX video_myisam_date ON video_myisam(video_production_end_date);
-CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_production_end_date);
-CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_end_date);
-CREATE INDEX video_myisam_district_id ON video_myisam(district_id, video_production_end_date);
-CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_production_end_date);
+CREATE INDEX video_myisam_date ON video_myisam(video_production_date);
+CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_production_date);
+CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_date);
+CREATE INDEX video_myisam_district_id ON video_myisam(district_id, video_production_date);
+CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_production_date);
 
 
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
@@ -128,8 +128,6 @@ CREATE TABLE `village_precalculation_copy` (
   `total_male_attendance` int(10) unsigned NOT NULL DEFAULT '0',
   `total_female_attendance` int(10) unsigned NOT NULL DEFAULT '0',
   `total_expected_attendance` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_expressed_adoption` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_interested` int(10) unsigned NOT NULL DEFAULT '0',
   `total_questions_asked` int(10) unsigned NOT NULL DEFAULT '0',
   `total_adopted_attendees` int(10) unsigned NOT NULL DEFAULT '0',
   `total_active_attendees` int(10) unsigned NOT NULL DEFAULT '0',
@@ -164,7 +162,6 @@ CREATE TABLE `activities_screeningwisedata` (
   `old_coco_id` BIGINT(20),
   `screening_date` DATE not null,
   `start_time` TIME not null,
-  `end_time` TIME not null,
   `location` VARCHAR(200) not null,
   `village_id` INT(11) not null,
   `animator_id` INT(11) not null,
