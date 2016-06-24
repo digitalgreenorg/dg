@@ -8,6 +8,10 @@ var diflag = 0;
 var chosendeos = [];
 var bflag = 0;
 
+
+$('sdate').monthpicker();
+
+
 function partnersetter()
     {
       if (pflag == 0)
@@ -29,34 +33,44 @@ function partnersetter()
 
 }
 
-$('sdate').monthpicker();
-
 $(document).ready(function() {
-  $.ajax(
-        {
-         type:'GET',
-         url: window.location.origin + "/analytics/mrptool/getpartner",
 
-         success: function(data) {
-             var listitems = '';
-             for (var j = 0; j < data.length; j++)
-             {
-               listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[j].id +  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
-             }
-             // $("ul#partnerlist")[0].innerHTML= listitems;
-             $("ul#partnerlist").html(listitems);
-         },
-         error: function(data){
-             alert("Sorry there was an error while partner!");
-        }
-        });
+  var stdate = document.getElementById('sdate');
+  $(stdate).monthpicker();
+  var etdate = document.getElementById('edate');
+  $(etdate).monthpicker();
+  var id = 11;
+  var name = 'BRLPS';
+  setpartnerlistdiv(id, name);
+
+  // $.ajax(
+  //       {
+  //         type:'GET',
+  //         url: window.location.origin + "/analytics/mrptool/getpartner",
+
+  //         success: function(data) {
+  //            var listitems = '';
+  //            for (var j = 0; j < data.length; j++)
+  //            {
+  //              listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[j].id +  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
+  //            }
+  //            // $("ul#partnerlist")[0].innerHTML= listitems;
+  //            $("ul#partnerlist").html(listitems);
+  //         },
+  //         error: function(data){
+  //            alert("Sorry there was an error while partner!");
+  //         }
+  //       });
 
 });
 
-function setpartnerlistdiv(text)
+// function setpartnerlistdiv(text)
+function setpartnerlistdiv(id, name)
     {
-      var partner_id = text.id;
-      var partner_name = $(text).html();//text.innerText.trim();
+      // var partner_id = text.id;
+      var partner_id = id;
+      // var partner_name = $(text).html();//text.innerText.trim();
+      var partner_name = name;
       $("div#partnername").html(partner_name);
       $("div#districtname").html("Choose District");
       document.getElementById('districtlist').classList.remove('nodisplay');

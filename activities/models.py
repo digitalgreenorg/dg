@@ -82,25 +82,18 @@ class MRPpayment(models.Manager):
     "Custom manager filters standard query set with given args."
     def __init__(self, partner_id, block_id, start_period, end_period):
 
-        super(MRPpayment, self).__init__()
-        print "hello"
-        # print start_period
-        # print end_period
-        self.start_yyyy = start_period[0:4]
-        # print self.start_yyyy
-        self.start_mm = start_period[5:7]
-        # print self.start_mm
+        super(VRPpayment, self).__init__()
+        self.start_yyyy = start_period[-4:]
+        self.start_mm = start_period[:2]
         self.start_dd = 01
-        self.end_yyyy = end_period[0:4]
-        # print self.end_yyyy
-        self.end_mm = end_period[5:7]
-        # print self.end_mm
-        # print "yellow"
+        self.end_yyyy = end_period[-4:]
+        self.end_mm = end_period[:2]
+        
         self.end_dd = calendar.monthrange(int(self.end_yyyy),int(self.end_mm))[1]
-        # print "hello 1"
+        
         self.partner_id = partner_id
         self.block_id = block_id
-        # print "hello 2"
+        
         self.Screening_all_object = Screening.objects.filter(village__block_id = self.block_id, partner_id=self.partner_id, date__gte=datetime.date(int(self.start_yyyy), int(self.start_mm), self.start_dd), date__lte=datetime.date(int(self.end_yyyy), int(self.end_mm), self.end_dd)).prefetch_related('animator', 'village', 'farmer_groups_targeted', 'videoes_screened', 'farmers_attendance', 'partner')
 
     # def get_req_id_mrp_vrp(self, mrp_vrp_instance):
