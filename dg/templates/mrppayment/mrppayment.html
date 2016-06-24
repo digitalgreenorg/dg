@@ -1,85 +1,83 @@
- {% include "includes/header.html" %}
+ {% include "includes/header_mrp.html" %}
 
  <section id="main" role="main" class="wrapper">
 
  	<div class="inner-wrapper">
 
- 	   <div class="js-analytics-outer-wrapper">
-            <div class=" layoutclass">
-                <div class="layout-vr-xlg">
+ 	   <div class="featured layout-vr-xlg layoutclass">
 
-                    <div class="my-select leftrelative">
-                        <label class="copy hdg-bold layout-vr-tiny hdg-green">FROM</label>
-                        <input class="search search-input-wrapper input-block-level js-startperiod " id="sdate" type="date" value = '2015-11-01'/>
-                    </div>
-
-                    <div class="my-select leftrelative">
-                        <label class="copy hdg-bold layout-vr-tiny hdg-green">TO</label>
-                        <input class="search search-input-wrapper input-block-level js-endperiod" id="edate" type="date" name="edate" value = '2016-02-29'/>
-                    </div>
-
+ 	   		<!-- <div id = 'just_random_id'>
+ 	   			<input type = 'button' name = 'just_random_button' value = 'just_random_button' onclick = "just_random()">
+ 	   			<p id = 'just_random_para'> hello  </p>
+ 	   		</div> -->
+ 	   		<div class="layout-vr-xlg">
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">FROM</label>
+                    <input class="search search-input-wrapper input-block-level js-startperiod " id="sdate" type="date" value = '2015-11-01'/>
                 </div>
 
-                <div class="layout-vr-xlg push-top-sm">
-
-         	   		<div class="my-select leftrelative" style = "padding-right:40px;">
-
-                        <div class="my-select-container" onclick="partnersetter();">
-                            <div class="my-icon"></div>
-                            <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
-
-                            <ul id="partnerlist" class="options js-options nodisplay yscroll listheight">
-
-                            </ul>
-                        </div>
-
-                    </div>
-
-         	   		<div class="my-select leftrelative" style = "padding-right:40px;">
-
-                        <div class="my-select-container" onclick="districtsetter();">
-                            <div class="my-icon"></div>
-                            <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
-
-                            <ul id="districtlist" class="options js-options nodisplay yscroll listheight">
-
-                            </ul>
-                        </div>
-                    </div>
-
-         	   		<div class="my-select leftrelative">
-
-                        <div class="my-select-container" onclick="blocksetter();" >
-                            <div class="my-icon"></div>
-                            <div id="blockname" class="selected-item-label js-selected-item-label">Choose Block
-                            </div>
-
-                            <ul id="blocklist" class="options js-options nodisplay yscroll listheight">
-
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="fright">
-            	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
-                    </div>
-
-            		<div id="maindiv">
-            				<p id='test'>Here </p>
-                            <table id="example" class="display" style="text-align:center;">
-            							    </table>
-            		</div>
-
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">TO</label>
+                    <input class="search search-input-wrapper input-block-level js-endperiod" id="edate" type="date" name="edate" value = '2016-02-29'/>
                 </div>
             </div>
+            <br/>
+ 	   		<div class="my-select leftrelative" style = "padding-right : 40px;">
+
+                <div class="my-select-container" onclick="partnersetter();">
+                    <div class="my-icon"></div>
+                    <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
+
+                    <ul id="partnerlist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+
+            </div>
+
+ 	   		<div class="my-select leftrelative" style = "padding-right : 40px;">
+
+                <div class="my-select-container" onclick="districtsetter();">
+                    <div class="my-icon"></div>
+                    <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
+
+                    <ul id="districtlist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+            </div>
+
+ 	   		<div class="my-select leftrelative">
+
+                <div class="my-select-container" onclick="blocksetter();" >
+                    <div class="my-icon"></div>
+                    <div id="blockname" class="selected-item-label js-selected-item-label">Choose Block
+                    </div>
+
+                    <ul id="blocklist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+            </div>
+
+        <div class="fright">
+	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
         </div>
+
+        <!-- <ul class="filterOptions hdg-upper copy clearfix js-most-filters fright listpadding">
+           <li><a href="#" class="js-most-filter" onclick="makeactive(1); settheday();" id="daily"><span><span class="icon"></span>Daily</span></a></li>
+           <li><a href="#" class="js-most-filter active" onclick="makeactive(2); settheweek();" id="weekly"><span><span class="icon"></span>Weekly</span></a></li>
+           <li><a href="#" class="js-most-filter" onclick="makeactive(3); setthemonth();" id="monthly"><span><span class="icon"></span>Monthly</span></a></li>
+		</ul> -->
+
+		<div id="maindiv">
+                <table id="example" class="display" style="text-align:center;">
+							    </table>
+		</div>
+     </div>
 	</div>
 </section>
 
 	<script  src="/media/mrppayment/mrppayment.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-    <script src="jquery.mtz.monthpicker.js"></script>
 
  {% include "includes/footer.html"%}
