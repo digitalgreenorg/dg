@@ -1329,6 +1329,7 @@ function line_graphs(start_date, end_date, aggregator_ids, village_ids, crop_ids
             plot_line_graph($('#container3'),dates, aggregator_ids, aggregator_names, 'user_created__id', data_for_line_graph['aggregator_data']);
             plot_line_graph($('#container4'),dates, crop_ids, crop_names, 'crop__id', data_for_line_graph['crop_data']);
             plot_line_graph($('#container5'),dates, gaddidar_ids, gaddidar_names, 'gaddidar__id', data_for_line_graph['gaddidar_data']);
+            
         });
 }
 
@@ -1341,7 +1342,7 @@ function plot_line_graph(container, axis, values, values_names, values_parameter
         temp['name'] = values_names[i];
         temp['data'] = new Array(x_axis.length).fill(0);
         temp['type'] = 'line';
-        temp['stacking'] = 'normal';
+        // temp['stacking'] = 'normal';
         temp['showInLegend'] = false;
         series.push(temp);
     }
@@ -1350,8 +1351,260 @@ function plot_line_graph(container, axis, values, values_names, values_parameter
         date_index = x_axis.indexOf(json_data[i]['date']);
         series[index]['data'][date_index] = json_data[i]['quantity__sum'];
     }
-    plot_stacked_chart(container, x_axis, series,"","kg");
+    // plot_stacked_chart(container, x_axis, series,"","")
+    // make the container smaller and add a second container for the master chart
+            // var $container = $('#container6')
+            //     .css('position', 'relative');
+
+            // $('<div id="detail-container">')
+            //     .appendTo($container);
+
+            // $('<div id="master-container">')
+            //     .css({
+            //         position: 'absolute',
+            //         top: 300,
+            //         height: 100,
+            //         width: '100%'
+            //     })
+            //         .appendTo($container);
+    // data =[];
+    // for (var i=0;i<x_axis.length;i++){
+    //     data.push([(new Date(x_axis[i])).getTime(), series[0]['data'][i]])
+    // }
+    // data.reverse();
+    // console.log(data);
+    // createMaster();
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function createDetail(masterChart) {
+
+//                 // prepare the detail chart
+//                 var detailData = [],
+//                     detailStart = data[0][0];
+
+//                 $.each(masterChart.series[0].data, function () {
+//                     if (this.x >= detailStart) {
+//                         detailData.push(this.y);
+//                     }
+//                 });
+
+//                 // create a detail chart referenced by a global variable
+//                 detailChart = $('#detail-container').highcharts({
+//                     chart: {
+//                         marginBottom: 120,
+//                         reflow: false,
+//                         marginLeft: 50,
+//                         marginRight: 20,
+//                         style: {
+//                             position: 'absolute'
+//                         }
+//                     },
+//                     credits: {
+//                         enabled: false
+//                     },
+//                     title: {
+//                         text: 'Historical USD to EUR Exchange Rate'
+//                     },
+//                     subtitle: {
+//                         text: 'Select an area by dragging across the lower chart'
+//                     },
+//                     xAxis: {
+//                         type: 'datetime'
+//                     },
+//                     yAxis: {
+//                         title: {
+//                             text: null
+//                         },
+//                         maxZoom: 0.1
+//                     },
+//                     tooltip: {
+//                         formatter: function () {
+//                             var point = this.points[0];
+//                             return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
+//                                 '1 USD = ' + Highcharts.numberFormat(point.y, 2) + ' EUR';
+//                         },
+//                         shared: true
+//                     },
+//                     legend: {
+//                         enabled: false
+//                     },
+//                     plotOptions: {
+//                         series: {
+//                             marker: {
+//                                 enabled: false,
+//                                 states: {
+//                                     hover: {
+//                                         enabled: true,
+//                                         radius: 3
+//                                     }
+//                                 }
+//                             }
+//                         }
+//                     },
+//                     series: [{
+//                         name: 'USD to EUR',
+//                         pointStart: detailStart,
+//                         pointInterval: 24 * 3600 * 1000,
+//                         data: detailData
+//                     }],
+
+//                     exporting: {
+//                         enabled: false
+//                     }
+
+//                 }).highcharts(); // return chart
+//             }
+
+//             // create the master chart
+//             function createMaster() {
+//                 $('#master-container').highcharts({
+//                     chart: {
+//                         reflow: false,
+//                         borderWidth: 0,
+//                         backgroundColor: null,
+//                         marginLeft: 50,
+//                         marginRight: 20,
+//                         zoomType: 'x',
+//                         events: {
+
+//                             // listen to the selection event on the master chart to update the
+//                             // extremes of the detail chart
+//                             selection: function (event) {
+//                                 var extremesObject = event.xAxis[0],
+//                                     min = extremesObject.min,
+//                                     max = extremesObject.max,
+//                                     detailData = [],
+//                                     xAxis = this.xAxis[0];
+
+//                                 // reverse engineer the last part of the data
+//                                 $.each(this.series[0].data, function () {
+//                                     if (this.x > min && this.x < max) {
+//                                         detailData.push([this.x, this.y]);
+//                                     }
+//                                 });
+
+//                                 // move the plot bands to reflect the new detail span
+//                                 xAxis.removePlotBand('mask-before');
+//                                 xAxis.addPlotBand({
+//                                     id: 'mask-before',
+//                                     from: data[0][0],
+//                                     to: min,
+//                                     color: 'rgba(0, 0, 0, 0.2)'
+//                                 });
+
+//                                 xAxis.removePlotBand('mask-after');
+//                                 xAxis.addPlotBand({
+//                                     id: 'mask-after',
+//                                     from: max,
+//                                     to: data[data.length - 1][0],
+//                                     color: 'rgba(0, 0, 0, 0.2)'
+//                                 });
+
+
+//                                 detailChart.series[0].setData(detailData);
+
+//                                 return false;
+//                             }
+//                         }
+//                     },
+//                     title: {
+//                         text: null
+//                     },
+//                     xAxis: {
+//                         type: 'datetime',
+//                         showLastTickLabel: true,
+//                         maxZoom: 14 * 24 * 3600000, // fourteen days
+//                         plotBands: [{
+//                             id: 'mask-before',
+//                             from: data[0][0],
+//                             to: data[data.length - 1][0],
+//                             color: 'rgba(0, 0, 0, 0.2)'
+//                         }],
+//                         title: {
+//                             text: null
+//                         }
+//                     },
+//                     yAxis: {
+//                         gridLineWidth: 0,
+//                         labels: {
+//                             enabled: false
+//                         },
+//                         title: {
+//                             text: null
+//                         },
+//                         min: 0.6,
+//                         showFirstLabel: false
+//                     },
+//                     tooltip: {
+//                         formatter: function () {
+//                             return false;
+//                         }
+//                     },
+//                     legend: {
+//                         enabled: false
+//                     },
+//                     credits: {
+//                         enabled: false
+//                     },
+//                     plotOptions: {
+//                         series: {
+//                             fillColor: {
+//                                 linearGradient: [0, 0, 0, 70],
+//                                 stops: [
+//                                     [0, Highcharts.getOptions().colors[0]],
+//                                     [1, 'rgba(255,255,255,0)']
+//                                 ]
+//                             },
+//                             lineWidth: 1,
+//                             marker: {
+//                                 enabled: false
+//                             },
+//                             shadow: false,
+//                             states: {
+//                                 hover: {
+//                                     lineWidth: 1
+//                                 }
+//                             },
+//                             enableMouseTracking: false
+//                         }
+//                     },
+
+//                     series: [{
+//                         type: 'area',
+//                         name: 'USD to EUR',
+//                         pointInterval: 24 * 3600 * 1000,
+
+//                         pointStart: data[0][0],
+//                         data: data
+//                     }],
+
+//                     exporting: {
+//                         enabled: false
+//                     }
+
+//                 }, function (masterChart) {
+//                     createDetail(masterChart);
+//                 })
+//                     .highcharts(); // return chart instance
+//             }
+
+            // make the container smaller and add a second container for the master chart
+
+            
+
 
 
