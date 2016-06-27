@@ -35,12 +35,12 @@
 					<ul class="right hide-on-med-and-down">
 						<li><a href="/loop/dashboard/">Home</a></li>
 						<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
-						
+
 					</ul>
 					<ul class="side-nav" id="mobile-demo">
 						<li><a href="/loop/dashboard/">Home</a></li>
 						<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
-					
+
 					</ul>
 					<!-- </div> -->
 					<!-- {# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
@@ -139,40 +139,43 @@
 {% endblock %} {% block content %}
 
 
-
 <div class="row card white darken-1">
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Total Volume</span>
-			<h4 id="total_volume_card"></h4>
-			<span id="total_volume_bullet"></span>
+	<h5>Overall</h5>
+	<hr/>
+	<div class="row">
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Total Volume</span>
+				<h4 id="total_volume_card"></h4>
+				<span id="total_volume_bullet"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Total Farmers</span>
-			<h4 id="total_farmers_card"></h4>
-			<span id="total_farmers_bullet"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Total Farmers</span>
+				<h4 id="total_farmers_card"></h4>
+				<span id="total_farmers_bullet"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Total Expense</span>
-			<h4 id="total_expenditure_card"></h4>
-			<span id="total_expenditure_bullet"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Total Expense</span>
+				<h4 id="total_expenditure_card"></h4>
+				<span id="total_expenditure_bullet"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="col s12 m6 l3">
-		<div class="card-content white darken-1">
-			<span class="card-title">Sustainability</span>
-			<h4 id="sustainability_card"></h4>
-			<span id="sustainability_bullet"></span>
+		<div class="col s12 m6 l3">
+			<div class="card-content white darken-1">
+				<span class="card-title">Sustainability</span>
+				<h4 id="sustainability_card"></h4>
+				<span id="sustainability_bullet"></span>
+			</div>
 		</div>
-	</div>
 
+	</div>
 </div>
 
 <div class="row card white darken-1">
@@ -226,6 +229,10 @@
 			<!-- <option value="30">30</option> -->
 			<!-- <option value="60">60</option> -->
 			<!-- </select> -->
+			<input id="start_date_main" placeholder="Start Date" type="text" class="datepicker" style="width:100px">
+			<input id="end_date_main" placeholder="End Date" type="text" class="datepicker" style="width:100px">
+			<button id="get_data_main" class="btn waves-effect waves-teal" onclick="recent_graphs_data()">Get Data</button>
+
 			<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
 			<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
 			<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
