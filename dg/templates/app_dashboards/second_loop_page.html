@@ -34,16 +34,16 @@
 						<a href="/loop/second_loop_page/" class="page-title">LOOP Dashboard</a>
 						<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 						<ul class="right hide-on-med-and-down">
-							<li><a href="/loop/second_loop_page/">Aggregator</a></li>
-							<li><a href="/loop/second_loop_page/">Market</a></li>
-							<li><a href="/loop/second_loop_page/">Gaddidar</a></li>
-							<li><a href="/loop/second_loop_page/">Crop</a></li>
+							<li><a onclick="update_graphs_aggregator_wise()">Aggregator</a></li>
+							<li><a onclick="update_graphs_mandi_wise()">Market</a></li>
+							<li><a onclick="update_graphs_gaddidar_wise()">Gaddidar</a></li>
+							<li><a onclick="update_graphs_crop_wise()">Crop</a></li>
 						</ul>
 						<ul class="side-nav" id="mobile-demo">
-							<li><a href="second_loop_page">Aggregator</a></li>
-							<li><a href="second_loop_page">Market</a></li>
-							<li><a href="second_loop_page">Gaddidar</a></li>
-							<li><a href="second_loop_page">Crop</a></li>
+							<li><a onclick="update_graphs_aggregator_wise()">Aggregator</a></li>
+							<li><a onclick="update_graphs_mandi_wise()">Market</a></li>
+							<li><a onclick="update_graphs_gaddidar_wise()">Gaddidar</a></li>
+							<li><a onclick="update_graphs_crop_wise()">Crop</a></li>
 						</ul>
 					</div>
 					<!-- </div> -->
@@ -59,9 +59,9 @@
 	</nav>
 </header>
 
-<ul id="nav-mobile" class="side-nav fixed">
+<!-- <ul id="nav-mobile" class="side-nav fixed"> -->
 
-	<li class="no-padding not-hoverable">
+	<!-- <li class="no-padding not-hoverable">
 		<ul class="collapsible collapsible-accordion">
 
 			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
@@ -155,9 +155,116 @@
 				</div>
 			</li>
 		</ul>
-</ul>
+</ul> -->
 
 {% endblock %} {% block content %}
+
+<div class="no-padding not-hoverable">
+
+		<div class="row collapsible collapsible-accordion">
+		
+			<li class="bold not-hoverable col s2"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
+									<label for="aggregator_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="aggregators">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			
+
+			
+			<li class="bold not-hoverable col s2"><a class="collapsible-header  waves-effect waves-black">Villages</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="village_all" checked="checked" />
+									<label for="village_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="villages">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			
+			 
+			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Crops</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="crop_all" checked="checked" />
+									<label for="crop_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="crops">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			
+			 
+			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Mandi</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
+									<label for="mandi_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="mandis">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			
+			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
+									<label for="gaddidar_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="gaddidars">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			
+			<li class="no-padding not-hoverable col s2">
+				<div class="container">
+					<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
+				</div>
+			</li>
+		</ul>
+
+</div>
 
 <div class="row valign-wrapper">
 	<div class="input-field col s6">
@@ -348,7 +455,10 @@
 	</div>
 </div> -->
 
-<div id="container2" style="width: 550px; height: 400px; margin: 0 auto"></div>
+<div id="container2"></div>
+<div id="container3" ></div>
+<div id="container4" ></div>
+<div id="container5" ></div>
 
 
 {% endblock %}

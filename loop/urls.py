@@ -37,5 +37,6 @@ urlpatterns = patterns('',
     url(r'^recent_graphs_data/',recent_graphs_data),
     url(r'^farmer_count_aggregator_wise/',farmer_count_aggregator_wise),
     url(r'^new_aggregator_wise_data/',new_aggregator_wise_data),
+    url(r'^data_for_line_graph/',data_for_line_graph),
 
     )
