@@ -340,7 +340,7 @@ define([
             // compile the template of inline
             var inline_t = _.template($('#' + this.inline.template).html());
             if (typeof(num_rows) != "number")
-                num_rows = 5;
+                num_rows = this.inline.add_row;
             var start_index = get_index_to_start_from();
             // append the new inlines
             for (var i = start_index; i < start_index + num_rows; i++) {
@@ -356,7 +356,7 @@ define([
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
                 if (!all_present_inlines.length)
-                    return 1
+                    return 0
                 var max_index = $(_.last(all_present_inlines)).attr("index");
                 return parseInt(max_index) + 1;
             }
@@ -632,13 +632,21 @@ define([
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info = "";
-                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
-                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        var extra_info_group_name = "";
+                        var extra_info_person_id = "";
+                        var extra_info_father_name = "";
+                        if(f_json[f_entity_desc.name_field_father_name] != null){
+                            extra_info_father_name = f_json[f_entity_desc.name_field_father_name]
+                        }
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name] != null) {
+                            extra_info_group_name = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name];
+                        }
+                        if (f_json[f_entity_desc.name_field_person_id] != null) {
+                            extra_info_person_id = f_json[f_entity_desc.name_field_person_id]
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info_father_name != "" ? ' (' + extra_info_father_name + ')' : "") + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
                         }));
                     }
                     else {

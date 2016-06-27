@@ -19,3 +19,15 @@ body {
 footer {
     margin: 50px 0;
 }
+
+.vid-img{
+	height:125px;
+	width:125px;
+	
+}
+
+.hr-custom{
+	margin-bottom: 40px;
+	border:none;
+	border-top: 1px solid #FFFFFF;
+}

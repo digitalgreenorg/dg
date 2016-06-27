@@ -5,27 +5,19 @@ class XMLSubmissionAdmin(admin.ModelAdmin):
     search_fields = ['username', 'xml_data', 'error_code', 'error_message']
 
 class CommCareProjectAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['name']
+    fieldsets = [(None,  {'fields': ['name', 'group_name', 'group_id']
                           }
                   )]
-    list_display = ('name',)
+    list_display = ('name', 'group_name')
     search_fields = ['name']
 
 
 class CommCareUserAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['username', 'guid', 'project', 'is_user', 'coco_user']
+    fieldsets = [(None,  {'fields': ['username', 'guid', 'coco_user', 'project', 'mediator']
                           }
                   )]
-    list_display = ('username', 'project', 'guid', 'is_user')
+    list_display = ('username', 'coco_user', 'project', 'mediator')
     search_fields = ['username']
-
-
-class CommCareUserVillageAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['user', 'village']
-                          }
-                  )]
-    list_display = ('user', 'village')
-    search_fields = ['user']
 
 
 class CommCareCaseAdmin(admin.ModelAdmin):
@@ -33,3 +25,4 @@ class CommCareCaseAdmin(admin.ModelAdmin):
                           }
                   )]
     list_display = ('person', 'guid', 'is_open')
+    search_fields = ['project__name']

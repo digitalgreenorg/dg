@@ -17,17 +17,23 @@ class SubmissionNotSaved(Exception):
 def save_submission(request):
     submission = XMLSubmission()
     ##For a test ping from Dimagi
-    if not request.body:
+    try:
+        if not request.body:
+            return HttpResponse(status=201)
+        submission.xml_data = request.body
+        submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        submission.save()
+        status, msg = save_in_db(submission)
+        submission.error_code = status
+        submission.error_message = msg
+        update_submission(submission)
+        submission.save()
         return HttpResponse(status=201)
-    submission.xml_data = request.body
-    submission.submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    submission.save()
-    status, msg = save_in_db(submission)
-    submission.error_code = status
-    submission.error_message = msg
-    update_submission(submission)
-    submission.save()
-    return HttpResponse(status=201)
+    except Exception as ex:
+        error = "Error in save_submission " + str(ex)
+        sendmail("Exception in Mobile COCO", error)
+        return HttpResponse(status=201)
+
 
 def save_in_db(submission):
     xml_string = submission.xml_data
@@ -57,7 +63,7 @@ def save_in_db(submission):
 
 
 def update_submission(obj):
-    if obj.xml_data== '':
+    if obj.xml_data == '':
         obj.type = "Error"
         obj.app_version = 0
     else:
@@ -78,12 +84,12 @@ def update_submission(obj):
             start = data.getElementsByTagName('n0:timeStart')[0].childNodes[0].nodeValue.split('T')
             start_date = str(start[0])
             start_time = str(start[1].split('.')[0])
-            obj.start_time = start_date+" "+start_time
+            obj.start_time = start_date + " " + start_time
 
             end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
             end_date = str(end[0])
             end_time = str(end[1].split('.')[0])
-            obj.end_time = end_date+" "+end_time
+            obj.end_time = end_date + " " + end_time
 
         elif data.getElementsByTagName('device_report'):
             obj.type = "Report"

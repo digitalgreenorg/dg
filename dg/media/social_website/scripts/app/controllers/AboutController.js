@@ -62,7 +62,7 @@ define(function(require) {
         
         _initVideoPlayer: function() {
 
-            var videoId = 'RjMTx1fzpMU';
+            var videoId = 'a4HXqhxkTjo';
 
             var params = { allowScriptAccess: "always" };
             var atts = { id: "player", 

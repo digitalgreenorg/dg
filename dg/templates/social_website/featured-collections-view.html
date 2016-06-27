@@ -4,7 +4,7 @@
 
 <section class="gradientBg">
     <div id="main" role="main" class="wrapper">
-        <div class="inner-wrapper" id="collection-view">
+        <div class="inner-wrapper layout-vr-md" id="collection-view">
             <div class="grid layout-vr-sm">
                 <div class="grid-col grid-size4of5">
                     <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
@@ -17,7 +17,15 @@
                     </ul>
                     {% endif %}
                     {% endfor %}
-            </div> 
+                </div> 
+            </div>
+            <div class="media">
+                <div id="player-section" class="img img-size-sq-small">
+                    <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
+                    <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                </div>
+                <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
+            </div> <!-- End .media -->
         </div>
     </div>
 </section>
@@ -28,7 +36,6 @@
             <div class="grid layout-vr-md">
                 <div class="grid-col grid-size1of4 layout-vr-lg">
                     <div class="featured-collection-ul grid-margin-rt-sm layout-vr-lg">
-
                         <div class="featured-ft-videoDetails" data-collection-count='{{ object.videos.all|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{object.uid}}'>
                             <ul class="h-list h-list-sm h-list-divided hdg-source-lt hdg-e">
                                 <li>{{ object.videos.all|length }} Videos</li>
@@ -38,7 +45,7 @@
                         <ul>
                             {% for carousel_video in video_list %}
                             <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
-                                <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}#player-section" >
                                     <div class="featured-collection-indicator"></div>
                                     <div class="featured-collection-title">
                                         {{ carousel_video.title }}
@@ -88,14 +95,7 @@
                     </ul>
                 </div>
                 <div class="grid-col grid-size3of4 layout-vr-sm">
-                    <div class="grid-pad-lt-md">
-                        <div class="media">
-                            <div class="img img-size-sq-small">
-                                <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                                <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
-                            </div>
-                            <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
-                        </div> <!-- End .media -->
+                    <div class="grid-pad-lt-md"> 
                         <div class="media">
                             <div class="featured-video-wrapper layout-vr-tiny" data-slide="{{video_index}}">
                                 <h2 class="hdg-c hdg-source-semibold layout-vr-tiny">{{video.title}}</h2>
@@ -106,9 +106,12 @@
                             </div>
                         </div>
                         <div class="grid layout-vr-md">
-                            <div class="grid-col hdg-f hdg-source-reg grid-size4of5 ">
+                            <div class="grid-col js-vid-desc featured-line-clamp hdg-f hdg-source-reg grid-size4of5">
                                 {{video.description|safe}}
+                                
+
                             </div>
+                            
                             <div class= "grid-col grid-size1of5">
                                 <div class="grid-rt">
                                     <div class="layout-vr-sm">
@@ -129,6 +132,10 @@
                                         </div>
                                     </a>
                                 </div>
+                            </div>
+                            <div class="grid-col hdg-f hdg-source-reg grid-size4of5">
+                               <a href="" class="js-show-more"> Show More</a>
+
                             </div>
                         </div>
                         <div class="grid layout-vr-sm push-top-md">

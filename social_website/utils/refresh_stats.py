@@ -12,6 +12,7 @@ def refresh_collection_partner_stats():
     for partner in Partner.objects.all():
         populate_partner_stats(partner)
 
+
 def refresh_offline_stats():
     stats = PersonVideoRecord.objects.all().values('videoID').annotate(views = Sum('views'), likes = Sum('like'), adoptions = Sum('adopted'))
     for row in stats:
@@ -25,9 +26,11 @@ def refresh_offline_stats():
             # Video not yet in website DB
             pass
 
+
 def refresh_online_stats():
+    url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id='
     for vid in Video.objects.all():
-        yt_entry = get_youtube_entry(vid.youtubeID)
+        yt_entry = get_youtube_entry(vid.youtubeID, url)
         if yt_entry:
             online_stats = get_online_stats(yt_entry)
             vid.onlineViews = online_stats['views']

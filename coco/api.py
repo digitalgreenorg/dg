@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
@@ -12,11 +13,11 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
-from videos.models import Video, Language
+from videos.models import Video, Language, NonNegotiable
 from models import CocoUser
 
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
 
 class PMANotSaved(Exception):
     pass
@@ -141,7 +142,11 @@ def get_user_videos(user_id):
     ###Get videos screened to allow inter partner sharing of videos
     videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(videos_seen) + list(user_videos))
-    
+
+def get_user_non_negotiable(user_id):
+    video_list = get_user_videos(user_id)
+    return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
@@ -223,6 +228,16 @@ class VideoAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download video")
+
+class NonNegotiableAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_non_negotiable(bundle.request.user.id):
+            return True
+        else:
+            raise NotFound( "Not allowed to download Non-Negotiable")
 
 class BaseResource(ModelResource):
     
@@ -361,16 +376,30 @@ class VideoResource(BaseResource):
     
     class Meta:
         max_limit = None
-        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown').all()
+        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown', 'partner').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
-        excludes = ['duration', 'related_practice', 'time_created', 'time_modified',]
+        excludes = ['duration', 'related_practice', 'time_created', 'time_modified', 'review_status', 'video_grade', 'reviewer']
     
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
+
+class NonNegotiableResource(BaseResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    class Meta:
+        max_limit = None
+        queryset = NonNegotiable.objects.prefetch_related('video').all()
+        resource_name = 'nonnegotiable'
+        authentication = SessionAuthentication()
+        authorization = NonNegotiableAuthorization()
+        validation = ModelFormValidation(form_class=NonNegotiableForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
 
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
@@ -378,7 +407,7 @@ class PersonGroupResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     class Meta:
         max_limit = None
-        queryset = PersonGroup.objects.prefetch_related('village').all()
+        queryset = PersonGroup.objects.prefetch_related('village', 'partner').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -421,16 +450,17 @@ class ScreeningResource(BaseResource):
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
     hydrate_partner = partial(assign_partner)
     
+    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
     class Meta:
         max_limit = None
         queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video').all()
+                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video', 'partner').filter(date__gte=datetime(2013,1,1))
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
-        excludes = ['location', 'time_created', 'time_modified']
+        excludes = ['location', 'time_created', 'time_modified','observation_status','screening_grade', 'observer']
     
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
@@ -496,7 +526,7 @@ class PersonResource(BaseResource):
     
     class Meta:
         max_limit = None
-        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
+        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened', 'partner').all()
         resource_name = 'person'
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
@@ -519,7 +549,8 @@ class PersonResource(BaseResource):
     def dehydrate_videos_seen(self, bundle):
         videos_seen = [{'id': video.id, 'title': video.title} for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
-        
+
+# For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
 class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
@@ -528,24 +559,27 @@ class PersonAdoptVideoResource(BaseResource):
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person').all()
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ['time_created', 'time_modified', 'verification_status', 'non_negotiable_check', 'verified_by']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
-    dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)
-    
+
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
 
     def dehydrate_village(self, bundle):
         return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
+
+    def dehydrate_person(self, bundle):
+        return {'id': bundle.obj.person.id, 'online_id': bundle.obj.person.id, 'person_name': bundle.obj.person.person_name}
 
 class LanguageResource(ModelResource):    
     class Meta:

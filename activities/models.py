@@ -9,6 +9,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
 from videos.models import Video
+from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY
 
 
 class VRPpayment(models.Manager):
@@ -80,12 +81,18 @@ class Screening(CocoModel):
     videoes_screened = models.ManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     partner = models.ForeignKey(Partner)
+    observation_status = models.IntegerField(max_length=1, choices=SCREENING_OBSERVATION, default=0)
+    screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
+    observer = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     class Meta:
-        unique_together = ("date", "start_time", "end_time","animator","village")
+        unique_together = ("date", "start_time", "end_time", "animator", "village")
 
     def __unicode__(self):
-        return u'%s %s' % (self.date, self.village)
+        return u'%s' % (self.village.village_name)
+
+    def screening_location(self):
+        return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
 
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)
@@ -110,17 +117,19 @@ class PersonAdoptPractice(CocoModel):
     video = models.ForeignKey(Video)
     date_of_adoption = models.DateField()
     partner = models.ForeignKey(Partner)
+    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
+    non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
+    verified_by = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
 
     def __unicode__(self):
-        return "%s (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.village.village_name, self.video.title)
-
-    def get_village(self):
-        return self.person.village.id
-
-    def get_partner(self):
-        return self.partner.id
+        return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
 
     class Meta:
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+
+class JSLPS_Screening(CocoModel):
+    id = models.AutoField(primary_key=True)
+    screenig_code = models.CharField(max_length=100)
+    screening = models.ForeignKey(Screening, null=True, blank=True)

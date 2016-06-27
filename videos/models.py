@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE
+from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -112,11 +112,34 @@ class Video(CocoModel):
     actors = models.CharField(max_length=1, choices=ACTORS)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
-    
+    review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)
+    video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
+    reviewer = models.IntegerField(max_length=1, choices=REVIEW_BY, null=True, blank=True)
+
     class Meta:
         unique_together = ("title", "video_production_start_date", "video_production_end_date", "village")
 
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
+
+    def location(self):
+        return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
+
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
+
+class NonNegotiable(CocoModel):
+    id = models.AutoField(primary_key=True)
+    video = models.ForeignKey(Video)
+    non_negotiable = models.CharField(max_length=500)
+    physically_verifiable = models.BooleanField(db_index=True, default=False)
+    
+    def __unicode__(self):
+        return  u'%s' % self.non_negotiable
+post_save.connect(save_log, sender=NonNegotiable)
+pre_delete.connect(delete_log, sender=NonNegotiable)
+
+class JSLPS_Video(CocoModel):
+    id = models.AutoField(primary_key=True)
+    vc = models.CharField(max_length=100)
+    video = models.ForeignKey(Video, null=True, blank=True)

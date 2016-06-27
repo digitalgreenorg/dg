@@ -316,3 +316,4 @@
 /gwt/DashboardGwt/war/dashboardgwt/*
 *.prefs
 .DS_Store
+/apache/*
