@@ -11,27 +11,13 @@ from vrppayment.views import *
 
 
 class mrppayment(generic.ListView):
-    # model = Animator
-
     template_name = 'mrppayment/mrppayment.html'
     context_object_name = 'mrppayment'
     queryset = Animator.objects.filter(role=1)
 
-    def get_context_data(self, **kwargs):
-        context = super(mrppayment, self).get_context_data(**kwargs)
-        context['partner_name'] = Animator.objects.filter(role=1)
-        context['district'] = District.objects.all()
-        context['village'] = Village.objects.all()
-        context['test'] = 'hello'
-        # And so on for more models
-        return context
-
-
 def partnersetter(request):
-    # return HttpResponseRedirect("www.digitalgreen.org")
     partners = Partner.objects.values('partner_name', 'id').order_by('partner_name')
     return HttpResponse(json.dumps(list(partners)), mimetype="application/json")
-
 
 def districtsetter(request):
     selectedpartner = request.GET.get('partner', None)
@@ -47,8 +33,8 @@ def blocksetter(request):
 
 
 def getreport(request):
-    per_dissemination_rate = 28  # Amount to be given to VRP for one successful dissemination
-    per_adoption_rate = 12  # Amount to be given to VRP for one successful adoption
+    per_dissemination_rate = 4  # Amount to be given to VRP for one successful dissemination
+    per_adoption_rate = 1  # Amount to be given to VRP for one successful adoption
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
     selectedpartner = request.GET.get('partner_name', None)
@@ -56,15 +42,6 @@ def getreport(request):
     selectedblock = request.GET.get('block_name', None)
     partner_id = get_partner_id(selectedpartner)
     block_id = get_block_id(selectedblock)
-    print selectedblock
-    # output_test = [0, 'Sujit', 'village', 4, 56, 23, 15, 23, 420]
-    # out = []
-    # out.append(output_test)
-    # return HttpResponse(json.dumps({"output": out}), content_type="application/json")
-
-
-    # code starts here mrp to vrp 
-
     v = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
                                                animator__role=1).values('animator__name',
                                                                         'village__village_name').distinct().order_by(
@@ -103,12 +80,9 @@ def getreport(request):
             mrp_vrp_detail[mrp_v_list[e]].append(vrp_v_list[e])
 
     # code ends here mrp to vrp
-
-
     print partner_id, block_id
 
     custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
-    # print custom_object
     list_of_vrps = list(custom_object.get_req_id_vrp())
 
     t = []
@@ -117,30 +91,11 @@ def getreport(request):
     mrp_output_array = []
     j = 0
     for mrp in mrp_vrp_detail:
-        # print 'for MRP', mrp
-
         common_vrps = [val for val in mrp_vrp_detail[mrp] if val in t]
         if len(common_vrps) > 0:
             j += 1
-            print 'common VRPs \n', common_vrps
-            # print 'Total VRPs as MRPs \n', mrp_vrp_detail[mrp]
-            # print 'Total VRPs as per SCreening \n', t
-            # print 'common_vrps -> ', common_vrps
-            # Removing extra vrps from list_of_vrps
-            print 'Total vrp for this MRP \n', mrp_vrp_detail[mrp]
-            print 'length before removing', len(list_of_vrps)
-            count = 0
-
             final_vrp_list = []
             for e in list_of_vrps:
-                # if e[0] not in common_vrps :
-                # # print 'removing ', e[0]
-                #     try :
-                #         list_of_vrps.remove(e)
-                #     except Exception as se :
-                #         print se
-                # else :
-                #     print e[0]
                 t_vrp = []
                 if e[0] in common_vrps:
                     # print 'removing ', e[0]
@@ -186,75 +141,14 @@ def getreport(request):
             tot_amount = mrp_screening_amount + mrp_adoption_amount
             t_arr = [j, mrp, tot_diss, succ_diss, mrp_screening_amount, succ_vid_adoption, mrp_adoption_amount,
                      tot_amount]
-
-            # print 'mrp_payment_list \n', t_arr
             mrp_output_array.append(t_arr)
 
-    # for mrp in mrp_vrp_detail:
-    # list_of_vrps = custom_object.get_req_id_mrp_vrp(mrp)
-    #     print mrp_vrp_detail[mrp] , list_of_vrps
-    #       complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
-
-
-    # # adding upper layer on VRPs
-
-    # output_array = []
-    # i = 0
-    # for each_vrp in complete_data:
-    #     i += 1
-    #     diss_count = 0
-    #     adoption_count = 0
-    #     for each_diss in each_vrp['dissem_detail']:
-    #         if (each_diss['result_success'] == True):
-    #             diss_count = diss_count + 1
-    #         for each_video in each_diss['videos_shown_detail']:
-    #             if (each_video['v_adoption_success_result'] == True):
-    #                 adoption_count = adoption_count + 1
-    #     final_amount = diss_count * per_dissemination_rate + adoption_count * per_adoption_rate
-    #     screening_amount = diss_count*per_dissemination_rate
-    #     adoption_amount  = adoption_count*per_adoption_rate
-    #     temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, screening_amount, adoption_count, adoption_amount, final_amount]
-    #     output_array.append(temp_arr)
-    # if not output_array:
-    #     report_data = [[0,'NaN', 'No Data Available', '', '','','', '', '']]
-    #     resp = json.dumps({"vrppayment":report_data})
-    # else:
-    #     print complete_data
-    #     report_data = output_array
-    #     resp = json.dumps({"vrppayment":report_data})
-
-    # return HttpResponse(resp)
-
     return HttpResponse(json.dumps({"output": mrp_output_array}), content_type="application/json")
-
-
-    # objec = VRPpayment(partner_id, block_id, "2014-01", "2014-04")
-    # list_of_vrps = objec.get_req_id_vrp()
-    # print list_of_vrps
-    # complete_data = make_vrp_detail_list(objec, list_of_vrps, "2014-01", "2014-04")
-    # output_array = []
-    # i = 0
-    # for each_vrp in complete_data:
-    #     i += 1
-    #     diss_count = 0
-    #     adoption_count = 0
-    #     for each_diss in each_vrp['dissem_detail']:
-    #         if (each_diss['result_success'] == True):
-    #             diss_count = diss_count + 1
-    #         for each_video in each_diss['videos_shown_detail']:
-    #             if (each_video['v_adoption_success_result'] == True):
-    #                 adoption_count = adoption_count + 1
-    #     final_amount = diss_count * 28 + adoption_count * 12
-    #     temp_arr = [i, each_vrp['name'], each_vrp['village'], diss_count, adoption_count, final_amount]
-    #     output_array.append(temp_arr)
-    # print output_array
-    # return HttpResponse(json.dumps({"output": output_array}), content_type="application/json")
 
 
 def get_block_id(block):
     b_id = Block.objects.filter(block_name=block).values('id')
     return b_id[0]['id']
-
 
 def get_partner_id(partner):
     p_id = Partner.objects.filter(partner_name=partner).values('id')

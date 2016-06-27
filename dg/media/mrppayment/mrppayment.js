@@ -9,9 +9,6 @@ var chosendeos = [];
 var bflag = 0;
 var tflag = 0;
 
-$('sdate').monthpicker();
-
-
 function partnersetter()
     {
       if (pflag == 0)
@@ -137,10 +134,9 @@ function setdistrictlistdiv(text, partner_id) {
       document.getElementById('blocklist').classList.add('blockdisplay');
       bflag = 1;
       blockfilter(district_id);
-
 }
 
-/* VRP payment code starts here */
+/* MRP payment code starts here */
 
 function blocksetter() {
     if (bflag == 0) {
@@ -207,19 +203,6 @@ function mrp_payment_goclicked() {
         } });
     });
 
-    
-
-    // $.blockUI({ css: {
-    //     border: 'none',
-    //     padding: '15px',
-    //     backgroundColor: '#000',
-    //     '-webkit-border-radius': '10px',
-    //     '-moz-border-radius': '10px',
-    //     opacity: .5,
-    //     color: '#ffffff'
-    // } });
-               
-
     var sdate = document.getElementById("sdate").value;
     var edate = document.getElementById("edate").value;
     var partner = document.getElementById("partnername");
@@ -245,19 +228,6 @@ function mrp_payment_goclicked() {
         success: function (data) {
             $.unblockUI();
             var listitems = data;
-            // var listitems = '';
-            // for (var i = 0; i < data['output'].length; i++) {
-            //     listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[output][i] + '>' + '</li>';
-            // }
-            // $("ul#blocklist").html(listitems);
-
-            // alert(data['output']);
-
-            // console.log('data is ', data['output'].length)
-            // console.log("print bella");
-
-//            document.getElementById("test").innerHTML = data['output'];
-            
             if(tflag == 1) {
               $('#example').dataTable().fnDestroy();
               $('#example').empty();
