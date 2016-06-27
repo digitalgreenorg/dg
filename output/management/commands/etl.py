@@ -57,7 +57,7 @@ class AnalyticsSync():
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into Screening_myisam"
             #video_myisam
-            self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, prod_duration, practice_id, video_type,
+            self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
                                         language_id, actor_id, gender, actor_type, village_id, block_id, district_id, state_id, country_id, partner_id)
                                         select vid.id, VIDEO_PRODUCTION_DATE, related_practice_id, VIDEO_TYPE, 
                                         language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
