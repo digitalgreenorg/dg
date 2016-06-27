@@ -270,10 +270,14 @@ class DayTransportation(LoopModel):
     vrp_fees = models.FloatField(default=0.0)
     comment = models.CharField(max_length=200, null=True, blank=True)
     mandi = models.ForeignKey(Mandi)
+    timestamp = models.CharField(max_length=25,null=True, blank=True)
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+
+    class Meta:
+        unique_together = ("date", "timestamp", "user_created")
 
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
@@ -299,7 +303,7 @@ class CombinedTransaction(LoopModel):
             LoopUser.objects.get(user=self.user_created).name)
 
     class Meta:
-        unique_together = ("date", "farmer", "crop", "mandi", "price","gaddidar","quantity","timestamp")
+        unique_together = ("date", "timestamp", "user_created")
 
 
 post_save.connect(save_log, sender=CombinedTransaction)

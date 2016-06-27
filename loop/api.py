@@ -758,10 +758,12 @@ class CombinedTransactionResource(BaseResource):
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
-        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], quantity=bundle.data["quantity"],
-                                                     price=bundle.data["price"],
-                                                     farmer=farmer, crop=crop, mandi=mandi, gaddidar=gaddidar,
-                                                     status=bundle.data["status"], timestamp=bundle.data["timestamp"])
+
+        instance = kwargs["instance"]
+        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
+            id=instance.user_created_id)
+        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], user_created = user, timestamp=bundle.data["timestamp"])
+
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,
                            self).obj_create(bundle, **kwargs)
@@ -775,15 +777,16 @@ class CombinedTransactionResource(BaseResource):
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
+
+        instance = kwargs["instance"]
+        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
+            id=instance.user_created_id)
+
         try:
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"],
-                                                         quantity=bundle.data["quantity"],
-                                                         farmer=farmer, crop=crop, mandi=mandi, gaddidar=gaddidar,
-                                                         status=bundle.data["status"],
-                                                         timestamp=bundle.data["timestamp"])
+            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], user_created = user, timestamp=bundle.data["timestamp"])
             raise TransactionNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
