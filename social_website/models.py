@@ -49,7 +49,6 @@ class Video(models.Model):
     duration = models.IntegerField(null=True, blank=True)
     date = models.DateField()
     onlineLikes = models.IntegerField(default=0)
-    offlineLikes = models.IntegerField(default=0)
     onlineViews = models.IntegerField(default=0)
     offlineViews = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
