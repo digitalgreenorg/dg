@@ -9,7 +9,6 @@ from people.models import Animator, Person, AnimatorAssignedVillage
 from collections import defaultdict
 from vrppayment.views import *
 
-
 class mrppayment(generic.ListView):
     template_name = 'mrppayment/mrppayment.html'
     context_object_name = 'mrppayment'
@@ -42,42 +41,41 @@ def getreport(request):
     selectedblock = request.GET.get('block_name', None)
     partner_id = get_partner_id(selectedpartner)
     block_id = get_block_id(selectedblock)
-    v = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
-                                               animator__role=1).values('animator__name',
+    mrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
+                                               animator__role=1).values('animator__id', 'animator__name',
                                                                         'village__village_name').distinct().order_by(
-        'animator__name')
-    t_v = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
-                                                 animator__role=0).values('animator__name',
+        'animator__id')
+    vrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
+                                                 animator__role=0).values('animator__id', 'animator__name',
                                                                           'village__village_name').distinct().order_by(
-        'animator__name')
+        'animator__id')
     mrp_detail = defaultdict(list)
     vrp_detail = defaultdict(list)
     mrp_vrp_detail = defaultdict(list)
-    vrp_v_list = {}
-    mrp_v_list = {}
+    vrp_village_list = {}
+    mrp_village_list = {}
 
-    for e in v:
+    for mrp in mrp_list:
         # if e['animator__name'] not in mrp_detail :
-        mrp_detail[e['animator__name']].append(e['village__village_name'])
+        mrp_detail[mrp['animator__name']].append(mrp['village__village_name'])
 
-    for e in t_v:
+    for vrp in vrp_list:
         # if e['animator__name'] not in mrp_detail :
-        vrp_detail[e['animator__name']].append(e['village__village_name'])
+        vrp_detail[vrp['animator__name']].append(vrp['village__village_name'])
 
-    for e in mrp_detail:
-        for t in mrp_detail[e]:
-            # list of 
-            mrp_v_list[t] = e
+    for mrp in mrp_detail:
+        for village in mrp_detail[mrp]:
+            mrp_village_list[village] = mrp
 
-    for e in vrp_detail:
-        for t in vrp_detail[e]:
-            vrp_v_list[t] = e
+    for vrp in vrp_detail:
+        for village in vrp_detail[vrp]:
+            vrp_village_list[village] = vrp
 
     # t = [val for val in mrp_v_list if val in vrp_v_list]
 
-    for e in vrp_v_list:
-        if e in mrp_v_list:
-            mrp_vrp_detail[mrp_v_list[e]].append(vrp_v_list[e])
+    for vrp in vrp_village_list:
+        if vrp in mrp_village_list:
+            mrp_vrp_detail[mrp_village_list[vrp]].append(vrp_village_list[vrp])
 
     # code ends here mrp to vrp
     print partner_id, block_id
@@ -86,8 +84,8 @@ def getreport(request):
     list_of_vrps = list(custom_object.get_req_id_vrp())
 
     t = []
-    for e in list_of_vrps:
-        t.append(e[0])
+    for vrp in list_of_vrps:
+        t.append(vrp[0])
     mrp_output_array = []
     j = 0
     for mrp in mrp_vrp_detail:
