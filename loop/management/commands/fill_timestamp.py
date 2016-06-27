@@ -21,11 +21,11 @@ class Command(BaseCommand):
                 tst = str(int(tst) + 1)
             ct.save()
 
-        dt_list = DayTransportation.objects.all()
-        tst2 = "1464448511500"
-        for dt in dt_list:
-            if dt.timestamp == None or dt.timestamp == "":
-                dt.timestamp = tst2
-                tst2 = str(int(tst2) + 1)
-            dt.save()
+        # dt_list = DayTransportation.objects.all()
+        # tst2 = "1464448511500"
+        # for dt in dt_list:
+        #     if dt.timestamp == None or dt.timestamp == "":
+        #         dt.timestamp = tst2
+        #         tst2 = str(int(tst2) + 1)
+        #     dt.save()
 
