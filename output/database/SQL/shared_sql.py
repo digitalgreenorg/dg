@@ -231,10 +231,6 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
         sql_ds['select'].append("SUM(VPC.total_screening) as tot_scr");
     if(values_to_fetch==None or 'tot_vid' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_videos_produced) as tot_vid");
-    if(values_to_fetch==None or 'tot_male_act' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_male_actors) as tot_male_act");
-    if(values_to_fetch==None or 'tot_fem_act' in values_to_fetch):
-        sql_ds['select'].append("SUM(VPC.total_female_actors) as tot_fem_act");
     if(values_to_fetch==None or 'tot_ado' in values_to_fetch):
         sql_ds['select'].append("SUM(VPC.total_adoption) as tot_ado");
     if(values_to_fetch==None or 'tot_male_ado' in values_to_fetch):

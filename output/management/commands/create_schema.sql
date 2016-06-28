@@ -35,9 +35,6 @@ CREATE TABLE `video_myisam` (
   `practice_id` int unsigned DEFAULT NULL,
   `video_type` int(11) NOT NULL,
   `language_id` int unsigned DEFAULT NULL,
-  `actor_id` int unsigned DEFAULT NULL,
-  `gender` varchar(1) NOT NULL,
-  `actor_type` varchar(1) NOT NULL,
   `village_id` int unsigned DEFAULT NULL,
   `block_id` int unsigned DEFAULT NULL,
   `district_id` int unsigned DEFAULT NULL,
@@ -49,7 +46,6 @@ CREATE TABLE `video_myisam` (
 CREATE INDEX video_myisam_video_id ON video_myisam(video_id);
 CREATE INDEX video_myisam_practice_id ON video_myisam(practice_id);
 CREATE INDEX video_myisam_language_id ON video_myisam(language_id);
-CREATE INDEX video_myisam_actor_id ON video_myisam(actor_id);
 CREATE INDEX video_myisam_date ON video_myisam(video_production_date);
 CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_production_date);
 CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_date);
@@ -118,8 +114,6 @@ CREATE TABLE `village_precalculation_copy` (
   `date` date NOT NULL,
   `total_screening` int(10) unsigned NOT NULL DEFAULT '0',
   `total_videos_produced` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_male_actors` int(10) unsigned NOT NULL DEFAULT '0',
-  `total_female_actors` int(10) unsigned NOT NULL DEFAULT '0',
   `total_adoption` int(10) unsigned NOT NULL DEFAULT '0',
   `total_male_adoptions` int(10) unsigned NOT NULL DEFAULT '0',
   `total_female_adoptions` int(10) unsigned NOT NULL DEFAULT '0',

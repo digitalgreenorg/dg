@@ -58,18 +58,16 @@ class AnalyticsSync():
             print "Finished insert into Screening_myisam"
             #video_myisam
             self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
-                                        language_id, actor_id, gender, actor_type, village_id, block_id, district_id, state_id, country_id, partner_id)
-                                        select vid.id, VIDEO_PRODUCTION_DATE, related_practice_id, VIDEO_TYPE, 
-                                        language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
+                                        language_id, village_id, block_id, district_id, state_id, country_id, partner_id)
+                                        select vid.id, production_date, related_practice_id, video_type, 
+                                        language_id, vid.village_id, block_id, district_id,
                                         state_id, country_id, vid.partner_id
                                         FROM videos_video vid
-                                        JOIN videos_video_farmers_shown vfs on vfs.video_id = vid.id
-                                        JOIN people_person p on p.id = vfs.person_id
                                         JOIN geographies_village v on v.id = vid.village_id
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id
-                                        WHERE vid.VIDEO_SUITABLE_FOR = 1""")
+                                        WHERE vid.video_type = 1""")
             print "Finished insert into Video_myisam"
                                           
             #person_meeting_attendance_myisam
@@ -111,7 +109,7 @@ class AnalyticsSync():
 
             #people_animatorwisedata
             self.db_cursor.execute("""INSERT INTO people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified, 
-                                        animator_id, old_coco_id, animator_name,gender, phone_no, partner_id, district_id, total_adoptions, 
+                                        animator_id, old_coco_id, animator_name, gender, phone_no, partner_id, district_id, total_adoptions, 
                                         assignedvillage_id, start_date )
                                         SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date 
@@ -121,8 +119,8 @@ class AnalyticsSync():
 
 
             # main_data_dst stores all the counts for every date , every village and every partner                                        
-            main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0, tot_male_act = 0,
-                tot_fem_act = 0, tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
+            main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0,
+                tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
                 tot_exp_att=0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
                 tot_active_vid_seen=0))))
             
@@ -168,13 +166,17 @@ class AnalyticsSync():
                     counts['tot_male_att'] = counts['tot_male_att'] + 1
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
-                if pma['screening__questions_asked']:
-                    counts['tot_ques'] = counts['tot_ques'] + 1
+
+            scr = Screening.objects.values('screening__questions_asked')
+            for s in scr:
+                counts['tot_ques'] = counts['tot_ques'] + 1
                      
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
                  
             del pmas #Free memory
+            del scr
+
             print "Finished date calculations"
  
              
@@ -222,19 +224,14 @@ class AnalyticsSync():
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_suitable_for=1).values_list('id','video_production_date', 'village', 'farmers_shown__gender', 'partner').order_by('id')
+            vids = Video.objects.filter(video_suitable_for=1).values_list('id','production_date', 'village', 'partner').order_by('id')
             cur_id = None
-            for id, dt, vil, gender, partner in vids:
+            for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
                 if cur_id is None or cur_id != id:
                     cur_id = id
                     counts['tot_vid'] = counts['tot_vid'] + 1
-                if gender == 'M':
-                    counts['tot_male_act'] = counts['tot_male_act'] + 1
-                else:
-                    counts['tot_fem_act'] = counts['tot_fem_act'] + 1
-            del vids        
-            
+            del vids
             
             vils = Village.objects.values_list('id', 'block', 'block__district' , 'block__district__state', 'block__district__state__country')
             vil_dict = dict()
@@ -246,7 +243,7 @@ class AnalyticsSync():
                 for vil_id, partner_dict in village_dict.iteritems():
                     for partner_id, counts in partner_dict.iteritems():
                         values_list.append(("('%s',"+','.join(["%d"] * 24)+ ")" )% 
-                                           (str(dt),counts['tot_sc'],counts['tot_vid'],counts['tot_male_act'],counts['tot_fem_act'],
+                                           (str(dt),counts['tot_sc'],counts['tot_vid'],
                                             counts['tot_ado'],counts['tot_male_ado'],counts['tot_fem_ado'],counts['tot_att'],counts['tot_male_att'],
                                             counts['tot_fem_att'],counts['tot_exp_att'],counts['tot_ques'],
                                             counts['tot_adopted_att'], counts['tot_active'],counts['tot_ado_by_act'],counts['tot_active_vid_seen'],
@@ -254,8 +251,8 @@ class AnalyticsSync():
                     
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list)/5000) + 2):
-                self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced, total_male_actors,\
-                total_female_actors, total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
+                self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
+                total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
