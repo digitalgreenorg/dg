@@ -46,7 +46,7 @@
 				</div>				
 				{% endif %}
 				<div id='videodatadiv0'>
-					<span class='smallfont'>{{vid.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_end_date|date:"d M Y" }} </span>
+					<span class='smallfont'>{{vid.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_date|date:"d M Y" }} </span>
 				</div>
 				
 				<table id='videodatadiv1' cellspacing='0px' cellpadding='0'>
@@ -122,8 +122,7 @@
 										var villagename = "{{vid.village.village_name}}";
 										var distname = "{{vid.village.block.district.district_name}}";
 										var statename = "{{vid.village.block.district.state.state_name}}";
-										var prodtime = "{{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}}";
-										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";
+										var proddate = "{{ vid.video_production_date|date:"d M Y" }}";
 										var farmerquant = "Farmer" + "{{actors.tot_actors|pluralize}}";
 										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}";	
 										var practiceshown = "{{vid.related_practice.practice_name|default:'NA'}}";
@@ -153,7 +152,7 @@
 
 										<td class='videoinfotd1'> Production Duration: {{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}} </td>
 
-										<td class='videoinfotd2'> Produced On: {{ vid.video_production_end_date|date:"d M Y" }} </td>
+										<td class='videoinfotd2'> Produced On: {{ vid.video_production_date|date:"d M Y" }} </td>
 									</tr>
 									<tr>
 

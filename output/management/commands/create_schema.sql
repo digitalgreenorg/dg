@@ -32,7 +32,6 @@ CREATE TABLE `video_myisam` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `video_id` int unsigned NOT NULL,
   `video_production_date` date NOT NULL,
-  `prod_duration` int(5) DEFAULT NULL,
   `practice_id` int unsigned DEFAULT NULL,
   `video_type` int(11) NOT NULL,
   `language_id` int unsigned DEFAULT NULL,

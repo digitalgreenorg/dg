@@ -2,14 +2,16 @@ from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
 
-from activities.models import PersonMeetingAttendance
+from activities.models import PersonMeetingAttendance, Screening
+from programs.models import Partner
+from videos.models import Language, Video
+
 from output import views
 from output.database.SQL import video_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, \
     run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
-from programs.models import Partner
-from videos.models import Language, Video
+
 import datetime
 import json
 import math
@@ -28,8 +30,8 @@ def video_module(request):
     tot_vid = run_query_raw(shared_sql.get_totals(geog, id, from_date, to_date, partners, "tot_vid"))[0][0];
     tot_vid = 0 if tot_vid is None else tot_vid 
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
-    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
+#    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
+#    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
@@ -38,7 +40,7 @@ def video_module(request):
     return render_to_response('video_module.html',dict(search_box_params = search_box_params,\
                                                           tot_video=tot_vid,\
                                                           tot_vids_screened=tot_vids_screened, \
-                                                          tot_average= tot_avg, \
+                                                          #tot_average= tot_avg, \
                                                           get_req_url = get_req_url
                                                           ))
 
@@ -148,7 +150,6 @@ def video(request):
         except Video.DoesNotExist:
             vid = Video.objects.select_related().get(old_coco_id=id)
             return HttpResponseRedirect("?id=" + str(vid.id))
-        vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
         
         tot_vid_scr = vid.screening_set.count()
         tot_vid_adopt = vid.personadoptpractice_set.count()
@@ -162,14 +163,15 @@ def video(request):
         #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
 
         views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
+        scr = Screening.objects.filter(videoes_screened = vid)
         tot_vid_views = views.count()
-        ques = views.exclude(expressed_question =  '')
-        ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
-                           'person__village__block__district__state__state_name','screening__date')
+        ques = scr.exclude(questions_asked =  '')
+        ques = ques.values('questions_asked','animator__name','animator__district__district_name',
+                           'animator__district__state__state_name','date')
         if(len(ques) > 0):
             ques_arr = []
             for x in ques:
-                ques_arr.append([x['expressed_question'].split(' '), x])
+                ques_arr.append([x['questions_asked'].split(' '), x])
                 
             scores = []
             for ques in ques_arr:
@@ -243,11 +245,11 @@ def video_search(request):
     if(from_date):
         search_box_params['from_date'] = from_date;
         from_date = datetime.date(*map(int,from_date.split('-')))
-        vids = vids.filter(video_production_end_date__gte = from_date)
+        vids = vids.filter(video_production_date__gte = from_date)
     if(to_date):
         search_box_params['to_date'] = to_date;
         to_date = datetime.date(*map(int,to_date.split('-')))
-        vids = vids.filter(video_production_end_date__lte = to_date)
+        vids = vids.filter(video_production_date__lte = to_date)
     if(video_uploaded == '1'):
         vids = vids.exclude(youtubeid = '')
         search_box_params['video_uploaded'] = video_uploaded
@@ -300,9 +302,9 @@ def video_search(request):
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order
-            vids = vids.order_by('video_production_end_date', 'id')
+            vids = vids.order_by('video_production_date', 'id')
         else:
-            vids = vids.order_by('-video_production_end_date', 'id')
+            vids = vids.order_by('-video_production_date', 'id')
     elif(sort == 'adoptions'):
         vids = vids.annotate(adoptions=Count('personadoptpractice'))
         search_box_params['sort'] = sort
