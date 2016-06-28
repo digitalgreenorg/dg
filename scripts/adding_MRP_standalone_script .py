@@ -2,7 +2,7 @@ import os, sys
 from os import path
 import csv
 
-proj_path = "/home/code/dg_coco_test/dg"
+proj_path = "/home/ubuntu/code/dg_coco_test/dg"
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
@@ -20,34 +20,34 @@ from geographies.models import District, Village, Block
 application = get_wsgi_application()
 
 
-file_path = '/home/code/dg_coco_test/dg/scripts/MRP Database - Master.csv'
-file_path1 = '/home/code/dg_coco_test/dg/scripts/MRP_DATA_error.csv'
+file_path = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP Database - Master.csv'
+file_path1 = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP_DATA_error.csv'
 
-# ___________________________Setting Header in Error File______________________________
+# # ___________________________Setting Header in Error File______________________________
 
-csvfile1 = open(file_path1, 'w')
+# csvfile1 = open(file_path1, 'w')
 
-a = csv.writer(csvfile1, delimiter = ',')
+# a = csv.writer(csvfile1, delimiter = ',')
 
-try :
-	# _______________________Setting Header for Error File______________________________
+# try :
+# 	# _______________________Setting Header for Error File______________________________
 
-	fieldnames = ['Mrp_name',
-				'Assigned_village_name',
-		 		'Assigned_village_id',
-		 		'Block_name',
-		 		'Block_id',
-		 		'District_name',
-		 		'District_id',
-		 		'gender',
-		 		'Phone_number',
-		 		'Partner_name'
-		 		]
+# 	fieldnames = ['Mrp_name',
+# 				'Assigned_village_name',
+# 		 		'Assigned_village_id',
+# 		 		'Block_name',
+# 		 		'Block_id',
+# 		 		'District_name',
+# 		 		'District_id',
+# 		 		'gender',
+# 		 		'Phone_number',
+# 		 		'Partner_name'
+# 		 		]
 
-	writer = csv.DictWriter(csvfile1, fieldnames = fieldnames)
-	writer.writeheader()
-except Exception as e :
-	print e
+# 	writer = csv.DictWriter(csvfile1, fieldnames = fieldnames)
+# 	writer.writeheader()
+# except Exception as e :
+# 	print e
 
 # ________________________________Reading MRP Database___________________________________
 
