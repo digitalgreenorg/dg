@@ -242,11 +242,11 @@ class AnalyticsSync():
             for dt, village_dict in main_data_dst.iteritems():
                 for vil_id, partner_dict in village_dict.iteritems():
                     for partner_id, counts in partner_dict.iteritems():
-                        values_list.append(("('%s',"+','.join(["%d"] * 22)+ ")" )% 
-                                           (str(dt),counts['tot_sc'],counts['tot_vid'],
-                                            counts['tot_ado'],counts['tot_male_ado'],counts['tot_fem_ado'],counts['tot_att'],counts['tot_male_att'],
-                                            counts['tot_fem_att'],counts['tot_exp_att'],counts['tot_ques'],
-                                            counts['tot_adopted_att'], counts['tot_active'],counts['tot_ado_by_act'],counts['tot_active_vid_seen'],
+                        values_list.append(("('%s',"+','.join(["%d"] * 20)+ ")" )% 
+                                           (str(dt), counts['tot_sc'], counts['tot_vid'],
+                                            counts['tot_ado'], counts['tot_male_ado'], counts['tot_fem_ado'], counts['tot_att'], counts['tot_male_att'],
+                                            counts['tot_fem_att'], counts['tot_exp_att'], counts['tot_ques'],
+                                            counts['tot_adopted_att'], counts['tot_active'], counts['tot_ado_by_act'], counts['tot_active_vid_seen'],
                                             vil_id, vil_dict[vil_id][1], vil_dict[vil_id][2], vil_dict[vil_id][3], vil_dict[vil_id][4], partner_id))
                     
             print "To insert", str(len(values_list)), "rows"
