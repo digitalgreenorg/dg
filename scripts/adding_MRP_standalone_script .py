@@ -59,19 +59,19 @@ with open(file_path, 'rb') as csvfile :
 	for row in csv_reader :
 		# _______________if No mrp assigned, put it in error file________________________
 
-		if(row['MRP Name'] == ''  or row['MRP Name'] == 'No MRP') :
-			writer.writerow({'Mrp_name' : row['MRP Name'],
-			 					'Assigned_village_name' : row['Assigned Village Name'],
-			 					'Assigned_village_id' : row['Assigned Village ID'],
-			 					'Block_name' : row['Block Name'],
-			 					'Block_id' : row['Block ID'],
-			 					'District_name' : row['District Name'],
-			 					'District_id' : row['District ID'],
-			 					'gender' : '',
-			 					'Phone_number' : '',
-			 					'Partner_name' : 'BRLPS'
-			 					})
-		else :
+		# if(row['MRP Name'] == ''  or row['MRP Name'] == 'No MRP') :
+		# 	writer.writerow({'Mrp_name' : row['MRP Name'],
+		# 	 					'Assigned_village_name' : row['Assigned Village Name'],
+		# 	 					'Assigned_village_id' : row['Assigned Village ID'],
+		# 	 					'Block_name' : row['Block Name'],
+		# 	 					'Block_id' : row['Block ID'],
+		# 	 					'District_name' : row['District Name'],
+		# 	 					'District_id' : row['District ID'],
+		# 	 					'gender' : '',
+		# 	 					'Phone_number' : '',
+		# 	 					'Partner_name' : 'BRLPS'
+		# 	 					})
+		# else :
 			# __________________________if MRP found,importing in DB______________________
 			try :
 
