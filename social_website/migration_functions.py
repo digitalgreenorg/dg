@@ -115,7 +115,7 @@ def update_website_video(vid):
             website_vid = Video.objects.get(coco_id = str(vid.id))
             # There is just one result for a filter, but we want to use update here.
             website_vid = Video.objects.filter(coco_id = str(vid.id))
-            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_date,
+            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
@@ -123,7 +123,7 @@ def update_website_video(vid):
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         except Video.DoesNotExist:
-            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_date,
+            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 

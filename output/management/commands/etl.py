@@ -35,7 +35,7 @@ class AnalyticsSync():
         import subprocess
         import MySQLdb
         #Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'dg_test', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'dg_26may', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not recreate schema")
         print "Recreated schema"
@@ -55,7 +55,7 @@ class AnalyticsSync():
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
-            print "Finished insert into Screening_myisam"
+            print "Finished insert into screening_myisam"
             #video_myisam
             self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
                                         language_id, village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -68,7 +68,7 @@ class AnalyticsSync():
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id
                                         WHERE vid.video_type = 1""")
-            print "Finished insert into Video_myisam"
+            print "Finished insert into video_myisam"
                                           
             #person_meeting_attendance_myisam
             self.db_cursor.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
@@ -167,7 +167,7 @@ class AnalyticsSync():
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
 
-            scr = Screening.objects.values('screening__questions_asked')
+            scr = Screening.objects.values('questions_asked')
             for s in scr:
                 counts['tot_ques'] = counts['tot_ques'] + 1
                      
@@ -224,7 +224,7 @@ class AnalyticsSync():
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_suitable_for=1).values_list('id','production_date', 'village', 'partner').order_by('id')
+            vids = Video.objects.filter(video_type=1).values_list('id','production_date', 'village', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
@@ -242,12 +242,12 @@ class AnalyticsSync():
             for dt, village_dict in main_data_dst.iteritems():
                 for vil_id, partner_dict in village_dict.iteritems():
                     for partner_id, counts in partner_dict.iteritems():
-                        values_list.append(("('%s',"+','.join(["%d"] * 24)+ ")" )% 
+                        values_list.append(("('%s',"+','.join(["%d"] * 22)+ ")" )% 
                                            (str(dt),counts['tot_sc'],counts['tot_vid'],
                                             counts['tot_ado'],counts['tot_male_ado'],counts['tot_fem_ado'],counts['tot_att'],counts['tot_male_att'],
                                             counts['tot_fem_att'],counts['tot_exp_att'],counts['tot_ques'],
                                             counts['tot_adopted_att'], counts['tot_active'],counts['tot_ado_by_act'],counts['tot_active_vid_seen'],
-                                            vil_id,vil_dict[vil_id][1],vil_dict[vil_id][2],vil_dict[vil_id][3],vil_dict[vil_id][4],partner_id))
+                                            vil_id, vil_dict[vil_id][1], vil_dict[vil_id][2], vil_dict[vil_id][3], vil_dict[vil_id][4], partner_id))
                     
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list)/5000) + 2):
