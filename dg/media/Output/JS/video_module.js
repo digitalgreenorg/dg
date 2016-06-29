@@ -6,8 +6,6 @@ var geog_pie_chart_data;
 var practice_bubble_chart;
 var practice_bubble_chart_data;
 var exp_geog_pie_chart;
-var exp_gender_pie_chart;
-var actor_pie_chart;
 var exp_type_pie_chart;
 var exp_total_line_chart;
 var exp_practice_bubble_chart;
@@ -28,8 +26,6 @@ var bubble_options={colors: ['00CC33','#7edc32','#26d52f','#909504','#f9c423','#
 function drawCharts() {
 
 	$.getJSON('/analytics/video_geog_pie_data/'+search_params, function(json){geog_pie(json)});
-	$.getJSON('/analytics/video_actor_wise_pie/'+search_params, function(json){actor_pie(json)});
-	$.getJSON('/analytics/video_pie_graph_mf_ratio/'+search_params, function(json){gender_pie(json)});
 	$.getJSON('/analytics/video_monthwise_bar_data/'+search_params, function(json){monthwise_column(json);});
 	$.getJSON('/analytics/video_type_wise_pie/'+search_params, function(json){type_pie(json)});
 	$.getJSON('/analytics/video_language_wise_scatter_data/'+search_params, function(json){language_bubble(json)});
@@ -363,41 +359,3 @@ function total_line(json) {
 			'dataTable':total_line_chart_data
 		});
 }
-function gender_pie(json) {
-	var gender_pie_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, pie_options);
-	options['legend']={position: 'bottom' };
-	var gender_pie_chart = new google.visualization.ChartWrapper({
-		'chartType':'PieChart',
-		'containerId':'javascript_gender_pie',
-		'options':options,
-		'dataTable':gender_pie_chart_data
-	});
-	remove_loader(gender_pie_chart.getContainerId());
-	gender_pie_chart.draw();
-	exp_gender_pie_chart=new google.visualization.ChartWrapper({
-		'chartType':'PieChart',
-		'options':options,
-		'dataTable':gender_pie_chart_data
-	});
-}
-
-function actor_pie(json) {
-
-	var actor_pie_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, pie_options);
-	options['legend']={position: 'bottom' };
-	var actor_pie_chart = new google.visualization.ChartWrapper({
-		'chartType':'PieChart',
-		'containerId':'javascript_actor_pie',
-		'options':options,
-		'dataTable':actor_pie_chart_data
-	});
-	remove_loader(actor_pie_chart.getContainerId());
-	actor_pie_chart.draw();
-	exp_actor_pie_chart=new google.visualization.ChartWrapper({
-		'chartType':'PieChart',
-		'options':options,
-		'dataTable':actor_pie_chart_data
-	});
-}	

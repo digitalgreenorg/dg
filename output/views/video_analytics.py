@@ -50,24 +50,6 @@ def video_module(request):
     ## PIE CHARTS ##
     ################
 
-
-# Pie chart for male-female ratio in video module
-def video_pie_graph_mf_ratio(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_malefemale_ratio, \
-                                      {"M":"Male","F":"Female"}, 'Ratio of videos featuring {{value}} actors', \
-                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
-
-#Data generator for Actor Wise Pie chart
-def video_actor_wise_pie(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_actor_wise_pie, \
-                                      {"I":"Individual","F":"Family","G":"Group"}, 'Ratio of videos featuring {{value}} actor',\
-                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
-
-
 #Data generator for Video-Type Wise Pie chart
 def video_type_wise_pie(request):
     geog, id = get_geog_id(request)

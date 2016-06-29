@@ -1,15 +1,5 @@
 from output.database.utility import *
 
-# query constructor for malefeamle ratio pie chaart
-def video_malefemale_ratio(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["gender as pie_key", "COUNT(DISTINCT actor_id) as count"])
-    sql_ds['from'].append('video_myisam VIDM')
-    filter_partner_geog_date(sql_ds,'VIDM','VIDM.video_production_date',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append("VIDM.gender")
-
-    return join_sql_ds(sql_ds);
-
 # query constructor for month wise production of videos bar graph.
 def video_month_bar(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
@@ -18,15 +8,6 @@ def video_month_bar(geog, id, from_date, to_date, partners):
     filter_partner_geog_date(sql_ds,'VIDM','VIDM.video_production_date',geog,id,from_date,to_date,partners)
     sql_ds['group by'].extend(["YEAR","MONTH"])
     sql_ds['order by'].extend(["YEAR","MONTH"])
-    return join_sql_ds(sql_ds)
-
-def video_actor_wise_pie(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["actor_type as pie_key", "COUNT(DISTINCT video_id) as count"])
-    sql_ds['from'].append("video_myisam VIDM");
-    filter_partner_geog_date(sql_ds,'VIDM','VIDM.video_production_date',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append("actor_type")
-
     return join_sql_ds(sql_ds)
 
 def video_language_wise_scatter(geog, id, from_date, to_date, partners):
