@@ -190,7 +190,7 @@ def video(request):
 
 
 def video_search(request):
-    video_suitable_for = request.GET.get('videosuitable')
+    video_type = request.GET.get('videotype')
     video_uploaded = request.GET.get('videouploaded')
     season = request.GET.getlist('season')
     lang = request.GET.get('lang')
@@ -212,26 +212,25 @@ def video_search(request):
     
     search_box_params = {}
     
-
     vids = Video.objects.all()
     
     if(query):
         vids = vids.filter(title__icontains = query)
         search_box_params['query'] = query
-    if(video_suitable_for):
-        if(int(video_suitable_for) != -1):
-            vids = vids.filter(video_suitable_for = int(video_suitable_for))
+    if(video_type):
+        if(int(video_type) != -1):
+            vids = vids.filter(video_type = int(video_type))
     else:
-        vids = vids.filter(video_suitable_for = 1)
-    search_box_params['video_suitable_for'] = video_suitable_for
+        vids = vids.filter(video_type = 1)
+    search_box_params['video_type'] = video_type
     if(from_date):
         search_box_params['from_date'] = from_date;
         from_date = datetime.date(*map(int,from_date.split('-')))
-        vids = vids.filter(video_production_date__gte = from_date)
+        vids = vids.filter(production_date__gte = from_date)
     if(to_date):
         search_box_params['to_date'] = to_date;
         to_date = datetime.date(*map(int,to_date.split('-')))
-        vids = vids.filter(video_production_date__lte = to_date)
+        vids = vids.filter(production_date__lte = to_date)
     if(video_uploaded == '1'):
         vids = vids.exclude(youtubeid = '')
         search_box_params['video_uploaded'] = video_uploaded

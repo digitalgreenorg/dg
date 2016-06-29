@@ -29,12 +29,6 @@ STORYBASE = (
         (3, 'Health'),
 )
 
-ACTORS = (
-        ('I', 'Individual'),
-        ('F', 'Family'),
-        ('G', 'Group'),
-)
-
 ADOPTION_VERIFICATION = (
     (0, 'Not Checked'),
     (1, 'Approved'),

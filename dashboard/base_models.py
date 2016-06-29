@@ -29,12 +29,6 @@ STORYBASE = (
         (3, 'Health'),
 )
 
-ACTORS = (
-        ('I', 'Individual'),
-        ('F', 'Family'),
-        ('G', 'Group'),
-)
-
 SUITABLE_FOR = (
         (1, 'Dissemination'),
         (2, 'Video Production Training'),
