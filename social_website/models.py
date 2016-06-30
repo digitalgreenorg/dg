@@ -204,7 +204,6 @@ class Milestone(models.Model):
     screeningNumber = models.IntegerField()
     viewerNumber = models.IntegerField()
 
-
 class Comment(models.Model):
     uid = models.AutoField(primary_key=True)
     date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
