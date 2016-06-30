@@ -37,13 +37,8 @@ class Migration(SchemaMigration):
         # Deleting field 'Video.video_suitable_for'
         db.delete_column(u'videos_video', 'video_suitable_for')
 
-        # Deleting field 'Video.summary'
-        db.delete_column(u'videos_video', 'summary')
-
-        # Adding field 'Video.benefit'
-        db.add_column(u'videos_video', 'benefit',
-                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
-                      keep_default=False)
+        # Renaming field 'Video.summary'
+        db.rename_column(u'videos_video', 'summary', 'benefit')
 
         # Adding field 'Video.production_date'
         db.add_column(u'videos_video', 'production_date',
@@ -78,12 +73,7 @@ class Migration(SchemaMigration):
                       keep_default=False)
 
         # Adding field 'Video.summary'
-        db.add_column(u'videos_video', 'summary',
-                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
-                      keep_default=False)
-
-        # Deleting field 'Video.benefit'
-        db.delete_column(u'videos_video', 'benefit')
+        db.rename_column(u'videos_video', 'benefit', 'summary')
 
         # Deleting field 'Video.production_date'
         db.delete_column(u'videos_video', 'production_date')
