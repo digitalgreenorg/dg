@@ -2,7 +2,8 @@ from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
 
-from activities.models import PersonMeetingAttendance, Screening
+from activities.models import PersonMeetingAttendance
+from social_website.models import Comment, Video as social_video
 from programs.models import Partner
 from videos.models import Language, Video
 
@@ -49,15 +50,6 @@ def video_module(request):
     ################
     ## PIE CHARTS ##
     ################
-
-#Data generator for Video-Type Wise Pie chart
-def video_type_wise_pie(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_type_wise_pie, \
-                                      {1:"Demonstration",2:"Success Story",3:"Activity Introduction",4:"Discussion",5:"General Awareness"}, \
-                                      'Ratio of videos featuring {{value}} type',\
-                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
@@ -135,25 +127,23 @@ def video(request):
         
         tot_vid_scr = vid.screening_set.count()
         tot_vid_adopt = vid.personadoptpractice_set.count()
-        
-        actors = vid.farmers_shown.values('person_name')
-        actor_data = dict(actors = actors, tot_actors = len(actors))
-        
+                
         #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
         #in title and question
         title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
         #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
 
         views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
-        scr = Screening.objects.filter(videoes_screened = vid)
         tot_vid_views = views.count()
-        ques = scr.exclude(questions_asked =  '')
-        ques = ques.values('questions_asked','animator__name','animator__district__district_name',
-                           'animator__district__state__state_name','date')
+
+        website_vid = social_video.objects.get(coco_id = str(vid.id))
+        comm = Comment.objects.filter(video = website_vid)
+        ques = comm.exclude(text = '')
+        ques = ques.values('text','animator__name','date')
         if(len(ques) > 0):
             ques_arr = []
             for x in ques:
-                ques_arr.append([x['questions_asked'].split(' '), x])
+                ques_arr.append([x['text'].split(' '), x])
                 
             scores = []
             for ques in ques_arr:
@@ -165,7 +155,6 @@ def video(request):
             scores.sort(key = (lambda x: x[0]), reverse = True)
             ques = scores
         #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
-        
         
         rel_vids_all = Video.objects.exclude(pk=vid.pk)
         rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
@@ -182,7 +171,6 @@ def video(request):
                                                          tot_vid_scr = tot_vid_scr, \
                                                          tot_vid_adopt = tot_vid_adopt, \
                                                          tot_vid_views = tot_vid_views, \
-                                                         actors = actor_data, \
                                                          ques = ques, \
                                                          rel_vids = rel_vids))
     else:
@@ -321,7 +309,6 @@ def video_search(request):
     
     return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
                                             
-
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     video_id = int(request.GET['id'])

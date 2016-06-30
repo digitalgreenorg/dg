@@ -21,33 +21,13 @@ def video_language_wise_scatter(geog, id, from_date, to_date, partners):
     return join_sql_ds(sql_ds)
 
 # Query constructor for generating total distinct videos screened.
-#arguments (geod, id) and (from_date, to_date) optional
+# arguments (geod, id) and (from_date, to_date) optional
 def video_tot_scr(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT SCM.video_id) AS count")
     sql_ds['from'].append("screening_myisam SCM");
     sql_ds['force index'].append('(screening_myisam_village_id)')
     filter_partner_geog_date(sql_ds,'SCM','SCM.date',geog,id,from_date,to_date,partners)
-
-    return join_sql_ds(sql_ds)
-
-# # Query constructor for generating average time taken to produce video
-# #arguments (geod, id) and (from_date, to_date) optional
-# def video_prod_duration(geog, id, from_date, to_date, partners):
-#     sql_ds = get_init_sql_ds();
-#     sql_ds['select'].append("prod_duration")
-#     sql_ds['from'].append("video_myisam VIDM");
-#     sql_ds['group by'].append("video_id")
-#     filter_partner_geog_date(sql_ds,'VIDM','VIDM.video_production_date',geog,id,from_date,to_date,partners)
-
-#     return join_sql_ds(sql_ds)
-
-def video_type_wise_pie(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["video_type as pie_key", "COUNT(DISTINCT video_id) as count"])
-    sql_ds['from'].append("video_myisam VIDM");
-    filter_partner_geog_date(sql_ds,'VIDM','VIDM.video_production_date',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append('video_type')
 
     return join_sql_ds(sql_ds)
 
