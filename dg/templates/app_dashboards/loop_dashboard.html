@@ -42,99 +42,12 @@
 						<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
 
 					</ul>
-					<!-- </div> -->
-					<!-- {# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
-					{# 	<li><a href="index.html">Sass</a></li> #}
-					{# 	<li><a href="badges.html">Components</a></li> #}
-					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
-					{# </ul> #} -->
-					<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
-				</div>
 			</div>
 		</div>
 	</nav>
 </header>
 
-<!-- <ul id="nav-mobile" class="side-nav fixed hide">
 
-	<li class="no-padding not-hoverable">
-		<ul class="collapsible collapsible-accordion">
-
-			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
-									<label for="aggregator_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="aggregators">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="village_all" checked="checked" />
-									<label for="village_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="villages">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="crop_all" checked="checked" />
-									<label for="crop_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="crops">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
-									<label for="mandi_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="mandis">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="no-padding not-hoverable">
-				<div class="container">
-					<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
-				</div>
-			</li>
-		</ul>
-</ul> -->
 
 {% endblock %} {% block content %}
 
@@ -143,154 +56,120 @@
 	<h5>Overall</h5>
 	<hr/>
 	<div class="row">
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Total Volume</span>
-				<h4 id="total_volume_card"></h4>
-				<span id="total_volume_bullet"></span>
+				<span class="card-title">Clusters</span>
+				<h5 id="cluster_card"></h5>
+				<span id="cluster_bullet"></span>
 			</div>
 		</div>
-
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Total Farmers</span>
-				<h4 id="total_farmers_card"></h4>
+				<span class="card-title">Farmers</span>
+				<h5 id="total_farmers_card"></h5>
 				<span id="total_farmers_bullet"></span>
 			</div>
 		</div>
-
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Total Expense</span>
-				<h4 id="total_expenditure_card"></h4>
+				<span class="card-title">Volume</span>
+				<h5 id="total_volume_card"></h5>
+				<span id="total_volume_bullet"></span>
+			</div>
+		</div>
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Revenue</span>
+				<h5 id="revenue_card"></h5>
+				<span id="revenue_bullet"></span>
+			</div>
+		</div>
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Expense</span>
+				<h5 id="total_expenditure_card"></h5>
 				<span id="total_expenditure_bullet"></span>
 			</div>
 		</div>
-
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
 				<span class="card-title">Sustainability</span>
-				<h4 id="sustainability_card"></h4>
+				<h5 id="sustainability_card"></h5>
 				<span id="sustainability_bullet"></span>
 			</div>
 		</div>
+		
+		
 
 	</div>
 </div>
 
 <div class="row card white darken-1">
-	<h5>Recent</h5>
+	<div class="row">
+		<div class="col s10">
+			<h5>Recent</h5>
+		</div>
+		<div class="col s2">
+			<select id="mFrequency" class="initialized">
+					<!-- <option value="" disabled >Choose your option</option> -->
+					<option value="7" selected>7</option>
+					<option value="15">15</option>
+					<option value="30">30</option>
+					<option value="60">60</option>
+			</select>
+		</div>
+	</div>
 	<hr/>
 	<div class="row">
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
 				<span class="card-title">Volume</span>
-				<h4 id="recent_volume_card"></h4>
+				<h5 id="recent_volume_card"></h5>
 				<span id="recent_volume_sparkline"></span>
 			</div>
 		</div>
 
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Active Farmers</span>
-				<h4 id="recent_active_farmers_card"></h4>
+				<span class="card-title">Farmers</span>
+				<h5 id="recent_active_farmers_card"></h5>
 				<span id="recent_active_farmers_sparkline"></span>
 			</div>
 		</div>
 
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Cost/kg (INR)</span>
-				<h4 id="cpk_card"></h4>
+				<span class="card-title">Cost/kg(INR)</span>
+				<h5 id="cpk_card"></h5>
 				<span id="cpk_sparkline"></span>
 			</div>
 		</div>
 
-		<div class="col s12 m6 l3">
+		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
 				<span class="card-title">Sustainability/kg</span>
-				<h4 id="recent_sustainability_card"></h4>
+				<h5 id="recent_sustainability_card"></h5>
 				<span id="recent_sustainability_sparkline"></span>
 			</div>
 		</div>
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Clusters</span>
+				<h5 id="recent_cluster_card"></h5>
+				<span id="recent_cluster_sparkline"></span>
+			</div>
+		</div>
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Revenue</span>
+				<h5 id="recent_revenue_card"></h5>
+				<span id="recent_revenue_sparkline"></span>
+			</div>
+		</div>
 	</div>
 </div>
 
-<div class="row card white darken-1">
-	<div class="row">
-		<div class="col s3">
-			<h5>Graphs</h5>
-		</div>
-		<div class="col s9 right-align" style="padding-top:10px;">
-			<!-- <select id="date_option" class="initialized"> -->
-			<!-- <option value="" disabled >Choose your option</option> -->
-			<!-- <option value="7" selected>7</option> -->
-			<!-- <option value="15">15</option> -->
-			<!-- <option value="30">30</option> -->
-			<!-- <option value="60">60</option> -->
-			<!-- </select> -->
-			<input id="start_date_main" placeholder="Start Date" type="text" class="datepicker" style="width:100px">
-			<input id="end_date_main" placeholder="End Date" type="text" class="datepicker" style="width:100px">
-			<button id="get_data_main" class="btn waves-effect waves-teal" onclick="recent_graphs_data()">Get Data</button>
 
-			<button class="btn waves-effect waves-teal" onclick="aggregator_wise_total_data()">Aggregators</button>
-			<button class="btn waves-effect waves-teal" onclick="mandi_wise_total_data()">Mandis</button>
-			<button class="btn waves-effect waves-teal" onclick="crop_wise_total_data()">Crops</button>
-		</div>
-	</div>
-	<hr/>
-	<div class="row">
-		<div class="col s12 m12 l6">
-			<div class="card-content white darken-1">
-				<span class="card-title">Total Volume</span>
-				<!-- <h4 id="avg_volume_graph"></h4> -->
-				<div class="col s2 m2" style="padding-top:150px;">
-					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('volume')">
-					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('volume')">
-				</div>
-				<div class="col s10 m10" id="total_volume_graph"></div>
-			</div>
-		</div>
-
-		<div class="col s12 m12 l6">
-			<div class="card-content white darken-1">
-				<span id="cpk_title" class="card-title">Cost/kg (INR)</span>
-				<!-- <h4 id="cpk_card"></h4> -->
-				<div class="col s2 m2" style="padding-top:150px;">
-					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('cpk')">
-					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('cpk')">
-				</div>
-				<div class="col s10 m10" id="cpk_graph"></div>
-			</div>
-		</div>
-
-		<div id="farmer_div" class="col s12 m12 l6">
-			<div class="card-content white darken-1">
-				<span class="card-title">Total Farmers</span>
-				<!-- <h4 id="total_farmers_graph"></h4> -->
-				<div class="col s2 m2" style="padding-top:150px;">
-					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('farmer')">
-					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('farmer')">
-				</div>
-				<div class="col s10 m10" id="total_farmers_graph"></div>
-			</div>
-		</div>
-
-		<div id="sustainability_div" class="col s12 m12 l6">
-			<div class="card-content white darken-1">
-				<span class="card-title">Sustainability/kg</span>
-				<!-- <h4 id="recent_sustainability_card"></h4> -->
-				<div class="col s2 m2" style="padding-top:150px;">
-					<img src="{% static 'app_dashboards/images/ic_arrow_up.png' %}" id="up_volume" onclick="add_counter('spk')">
-					<img src="{% static 'app_dashboards/images/ic_arrow_down.png' %}" id="down_volume" onclick="subtract_counter('spk')">
-				</div>
-				<div class="col s10 m10" id="sustainability_graph">Coming Soon</div>
-			</div>
-		</div>
-
-
-	</div>
-</div>
 
 
 
