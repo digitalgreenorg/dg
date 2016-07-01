@@ -28,13 +28,13 @@ def save_log(sender, **kwargs ):
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     if sender == "Village":
         village_id = instance.id
-    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable' or sender == 'Category' or sender == 'SubCategory':
+    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable' or sender == 'Category' or sender == 'SubCategory'or sender == 'VideoPractice':
         village_id = None
     elif sender == "PersonAdoptPractice":
         village_id = instance.person.village.id
     else:
         village_id = instance.village.id
-    partner_id = None if sender is "Village" or 'Language' or 'NonNegotiable' or 'Category' or 'SubCategory' else instance.partner.id
+    partner_id = None if sender is "Village" or 'Language' or 'NonNegotiable' or 'Category' or 'SubCategory' or 'VideoPractice' else instance.partner.id
     ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)

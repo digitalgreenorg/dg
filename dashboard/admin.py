@@ -185,6 +185,14 @@ class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
     search_fields = ['state_name', 'country__country_name']
 
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('subcategory_name', 'category')
+    search_fields = ['subcategory_name', 'category__category_name']
+
+class VideoPracticeAdmin(admin.ModelAdmin):
+    list_display = ('videopractice_name', 'subcategory')
+    search_fields = ['videopractice_name', 'subcategory__subcategory_name']
+
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
     search_fields = ['id', 'practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']

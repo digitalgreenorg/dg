@@ -111,6 +111,22 @@ class SubCategory(CocoModel):
 post_save.connect(save_log, sender=SubCategory)
 pre_delete.connect(delete_log, sender=SubCategory)
 
+class VideoPractice(CocoModel):
+    id = models.AutoField(primary_key=True)
+    subcategory = models.ForeignKey(SubCategory)
+    videopractice_name = models.CharField(max_length = 100)
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    def __unicode__(self):
+        return self.videopractice_name
+post_save.connect(save_log, sender=VideoPractice)
+pre_delete.connect(delete_log, sender=VideoPractice)
+
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -141,6 +157,7 @@ class Video(CocoModel):
     production_team = models.ManyToManyField(Animator)
     category = models.ForeignKey(Category, null=True, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     farmers_shown = models.ManyToManyField(Person, null=True, blank=True)
