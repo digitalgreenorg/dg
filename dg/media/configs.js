@@ -858,6 +858,10 @@ function() {
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }],
+                        'filter': {
+                            attr: 'group',
+                            value: null
+                        }
                     },
                     farmers_attendance: {
                         dependency: [{
