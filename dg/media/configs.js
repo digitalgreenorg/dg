@@ -252,6 +252,16 @@ function() {
                         'dep_attr': 'category'
                     }]
                 }
+            },
+            'videopractice': {
+                "videopractice": {
+                    'placeholder': "id_videopractice",
+                    'name_field': "videopractice_name",
+                    'dependency': [{
+                        'source_form_element': 'subcategory',
+                        'dep_attr': 'subcategory'
+                    }]
+                }
             }
         },
         'inline': {
@@ -302,6 +312,7 @@ function() {
                 production_team: "required",
                 category: "required",
                 subcategory: "required",
+                videopractice: "required",
                 approval_date: {
 					dateOrder: {production_date : "production_date"}
                     // validateDate: true
@@ -330,6 +341,9 @@ function() {
                 },
                 village: "Village is required",
                 production_team: "Production team is required",
+                category: "Category is required",
+                subcategory: "Subcategory is required",
+                videopractice: "Videopractice is required",
                 approval_date: {
                     validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
 					dateOrder: "Approval date should be later than production date"
@@ -390,6 +404,24 @@ function() {
                 'category': {
                     'placeholder': 'id_category',
                     'name_field': 'category_name'
+                }
+            }
+        },
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var videopractice_configs = {
+        'rest_api_url': '/coco/api/v2/videopractice/',
+        'entity_name': 'videopractice',
+        'sort_field': 'videopractice_name',
+        'foreign_entities': {
+            'subcategory': {
+                'subcategory': {
+                    'placeholder': 'id_subcategory',
+                    'name_field': 'subcategory_name'
                 }
             }
         },
@@ -1073,6 +1105,7 @@ function() {
         language: language_configs,
         category: category_configs,
         subcategory: subcategory_configs,
+        videopractice: videopractice_configs,
         district: district_configs,
         nonnegotiable: nonnegotiable_configs,
         misc: misc
