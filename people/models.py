@@ -20,7 +20,7 @@ class Animator(CocoModel):
     role = models.IntegerField(default = 0, choices = TYPE_OF_ROLE)
 
     class Meta:
-        unique_together = ("name", "gender", "partner", "district")
+        unique_together = ("name", "gender", "partner", "district", "role")
 
     def get_village(self):
         return None
