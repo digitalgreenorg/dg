@@ -3,6 +3,8 @@
  */
 // JavaScript Document
 
+
+var j$ = jQuery.noConflict();
 var pflag = 0;
 var diflag = 0;
 var chosendeos = [];
@@ -31,12 +33,12 @@ function partnersetter()
 
 }
 
-$(document).ready(function() {
+j$(document).ready(function() {
 
   var stdate = document.getElementById('sdate');
-  $(stdate).monthpicker();
+  j$(stdate).monthpicker();
   var etdate = document.getElementById('edate');
-  $(etdate).monthpicker();
+  j$(etdate).monthpicker();
   var id = 11;
   var name = 'BRLPS';
   setpartnerlistdiv(id, name);
@@ -69,8 +71,8 @@ function setpartnerlistdiv(id, name)
       var partner_id = id;
       // var partner_name = $(text).html();//text.innerText.trim();
       var partner_name = name;
-      $("div#partnername").html(partner_name);
-      $("div#districtname").html("Choose District");
+      j$("div#partnername").html(partner_name);
+      j$("div#districtname").html("Choose District");
       document.getElementById('districtlist').classList.remove('nodisplay');
       document.getElementById('districtlist').classList.add('blockdisplay');
       diflag = 1;
@@ -100,7 +102,7 @@ function districtsetter()
 
 function districtfilter(partner_id)
     {
-       $.ajax(
+       j$.ajax(
        {
         type:'GET',
         data:{
@@ -116,7 +118,7 @@ function districtfilter(partner_id)
 
               listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[i].village__block__district__id +  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i].village__block__district__district_name + '</li>';
             }
-            $("ul#districtlist").html(listitems);
+            j$("ul#districtlist").html(listitems);
         },
         error: function(data){
                 alert("Sorry there was an error!");
@@ -128,8 +130,8 @@ function setdistrictlistdiv(text, partner_id) {
       chosendeos = [];
       var district_name = $(text).html();//text.innerText.trim();
       var district_id = text.id
-      $("div#districtname").html(district_name);
-      $("div#blockname").html("Choose Block");
+      j$("div#districtname").html(district_name);
+      j$("div#blockname").html("Choose Block");
       document.getElementById('blocklist').classList.remove('nodisplay');
       document.getElementById('blocklist').classList.add('blockdisplay');
       bflag = 1;
@@ -159,7 +161,7 @@ function blocksetter() {
 
 function blockfilter(district_id) {
   
-    $.ajax(
+    j$.ajax(
         {
             type: 'GET',
             data: {
@@ -183,7 +185,7 @@ function blockfilter(district_id) {
 
 function setblocklistdiv(text, district_id) {
     var block_name = $(text).html();//text.innerText.trim();
-    $("div#blockname").html(block_name);
+    j$("div#blockname").html(block_name);
     document.getElementById('blocklist').classList.remove('nodisplay');
     document.getElementById('blocklist').classList.add('blockdisplay');
     bflag = 1;
@@ -195,18 +197,18 @@ function mrp_payment_goclicked() {
     var sdate = document.getElementById("sdate").value;
     var edate = document.getElementById("edate").value;
     var partner = document.getElementById("partnername");
-    var partner_name = $(partner).html();
+    var partner_name = j$(partner).html();
     var district = document.getElementById("districtname");
-    var district_name = $(district).html();
+    var district_name = j$(district).html();
     var block = document.getElementById("blockname");
-    var block_name = $(block).html();
+    var block_name = j$(block).html();
     
     if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" ) {
       alert("Information Incomplete! Please fill missing entries");
     } else {
 
-      $(document).ready(function () {
-          $.blockUI({ css: {
+      j$(document).ready(function () {
+          j$.blockUI({ css: {
               border: 'none',
               padding: '15px',
               backgroundColor: '#000',
@@ -217,7 +219,7 @@ function mrp_payment_goclicked() {
           } });
       });
       
-      $.ajax({
+      j$.ajax({
 
           type: 'GET',
           data: {
@@ -231,13 +233,13 @@ function mrp_payment_goclicked() {
           url: window.location.origin + "/analytics/mrptool/report",
 
           success: function (data) {
-              $.unblockUI();
+              j$.unblockUI();
               var listitems = data;
               if(tflag == 1) {
-                $('#example').dataTable().fnDestroy();
-                $('#example').empty();
+                j$('#example').dataTable().fnDestroy();
+                j$('#example').empty();
               }
-              $("#example").dataTable({
+              j$("#example").dataTable({
 
                   "sDom": 'T<"clear">lfrtip',
                   "bDeferRender": true,
@@ -257,21 +259,22 @@ function mrp_payment_goclicked() {
           "oTableTools":{
 
               "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
-  			"aButtons": [
-  	                           {
-  	                               "sExtends": "copy",
-  	                               "sButtonText": "Copy to Clipboard"
-  	                           },
-  	                           {
-  	                               "sExtends": "xls",
-  	                               "sButtonText": "Download in Excel"
-  	                           }
-  	                       ]
+        "aButtons": [
+                               {
+                                   "sExtends": "copy",
+                                   "sButtonText": "Copy to Clipboard"
+                               },
+                               {
+                                   "sExtends": "xls",
+                                   "sButtonText": "Download in Excel"
+                               }
+                           ]
                       }
               })
               tflag = 1;
            },
           error: function (data) {
+              j$.unblockUI();
               alert("Sorry there was an error !");
           }
       });
