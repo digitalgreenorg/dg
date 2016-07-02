@@ -2,8 +2,8 @@ import os, sys
 from os import path
 import csv
 
-proj_path = "/home/ubuntu/code/dg_coco_test/dg"
-
+# proj_path = "/home/ubuntu/code/dg_coco_test/dg"
+proj_path = "C:\Users\Server-Tech\Documents\dg_clone"
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
 
@@ -20,8 +20,8 @@ from geographies.models import District, Village, Block
 application = get_wsgi_application()
 
 
-file_path = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP Database - Master.csv'
-file_path1 = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP_DATA_error.csv'
+file_path = 'C:\Users\Server-Tech\Documents\dg_clone\scripts\MRP Database - Master.csv'
+file_path1 = 'C:\Users\Server-Tech\Documents\dg_clone\scripts\MRP_DATA_error.csv'
 
 # # ___________________________Setting Header in Error File______________________________
 
@@ -59,19 +59,20 @@ with open(file_path, 'rb') as csvfile :
 	for row in csv_reader :
 		# _______________if No mrp assigned, put it in error file________________________
 
-		# if(row['MRP Name'] == ''  or row['MRP Name'] == 'No MRP') :
-		# 	writer.writerow({'Mrp_name' : row['MRP Name'],
-		# 	 					'Assigned_village_name' : row['Assigned Village Name'],
-		# 	 					'Assigned_village_id' : row['Assigned Village ID'],
-		# 	 					'Block_name' : row['Block Name'],
-		# 	 					'Block_id' : row['Block ID'],
-		# 	 					'District_name' : row['District Name'],
-		# 	 					'District_id' : row['District ID'],
-		# 	 					'gender' : '',
-		# 	 					'Phone_number' : '',
-		# 	 					'Partner_name' : 'BRLPS'
-		# 	 					})
-		# else :
+		if(row['MRP Name'] == ''  or row['MRP Name'] == 'No MRP') :
+			pass
+			# writer.writerow({'Mrp_name' : row['MRP Name'],
+			#  					'Assigned_village_name' : row['Assigned Village Name'],
+			#  					'Assigned_village_id' : row['Assigned Village ID'],
+			#  					'Block_name' : row['Block Name'],
+			#  					'Block_id' : row['Block ID'],
+			#  					'District_name' : row['District Name'],
+			#  					'District_id' : row['District ID'],
+			#  					'gender' : '',
+			#  					'Phone_number' : '',
+			#  					'Partner_name' : 'BRLPS'
+			#  					})
+		else :
 			# __________________________if MRP found,importing in DB______________________
 			try :
 
@@ -101,3 +102,5 @@ with open(file_path, 'rb') as csvfile :
 					print e
 			except Village.DoesNotExist as e:
 				print e
+			except Animator.DoesNotExist as e:
+				print e, row['MRP Name']
