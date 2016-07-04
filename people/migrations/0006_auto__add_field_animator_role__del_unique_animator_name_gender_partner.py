@@ -8,15 +8,27 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Removing unique constraint on 'Animator', fields ['name', 'gender', 'partner', 'district']
+        db.delete_unique(u'people_animator', ['name', 'gender', 'partner_id', 'district_id'])
+
         # Adding field 'Animator.role'
         db.add_column(u'people_animator', 'role',
                       self.gf('django.db.models.fields.IntegerField')(default=0),
                       keep_default=False)
 
+        # Adding unique constraint on 'Animator', fields ['name', 'gender', 'partner', 'district', 'role']
+        db.create_unique(u'people_animator', ['name', 'gender', 'partner_id', 'district_id', 'role'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Animator', fields ['name', 'gender', 'partner', 'district', 'role']
+        db.delete_unique(u'people_animator', ['name', 'gender', 'partner_id', 'district_id', 'role'])
+
         # Deleting field 'Animator.role'
         db.delete_column(u'people_animator', 'role')
+
+        # Adding unique constraint on 'Animator', fields ['name', 'gender', 'partner', 'district']
+        db.create_unique(u'people_animator', ['name', 'gender', 'partner_id', 'district_id'])
 
 
     models = {
@@ -133,7 +145,7 @@ class Migration(SchemaMigration):
             'village_name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'people.animator': {
-            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'district'),)", 'object_name': 'Animator'},
+            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'district', 'role'),)", 'object_name': 'Animator'},
             'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_villages'", 'to': u"orm['geographies.Village']", 'through': u"orm['people.AnimatorAssignedVillage']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
             'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.District']", 'null': 'True', 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
