@@ -12,6 +12,9 @@ class Migration(DataMigration):
             pma_ques = '. '.join([unicode(ques[0]) for ques in pma_ques if ques[0]])
             screening.questions_asked = pma_ques
             screening.save()
+        for adoption in orm['activities.PersonAdoptPractice'].objects.all():
+            adoption.date_of_verification = adoption.date_of_adoption
+            adoption.save()
 
     def backwards(self, orm):
         "Write your backwards methods here."
