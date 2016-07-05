@@ -52,7 +52,7 @@ a.button-collapse.top-nav.full {
 }
 @media only screen and (min-width: 993px) {
     .container {
-        width: 85%
+        width: 100%
     }
 }
 ul.side-nav.fixed li.logo {
@@ -135,7 +135,6 @@ ul.side-nav.fixed:hover {
     background-color: #eee;
     outline: none;
 }
-
 
 
 /*header, main, footer {

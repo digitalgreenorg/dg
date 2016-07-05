@@ -110,10 +110,17 @@
 			<h5>Recent</h5>
 		</div>
 		<div class="col s2">
+		<!-- <a class="dropdown-button" href="#!" data-activates="dropdown1">Days to average<i class="material-icons right">arrow_drop_down</i></a>
+		<ul id="dropdown1" class="dropdown-content">
+		  <li><a href="#!">one</a></li>
+		  <li><a href="#!">two</a></li>
+		  <li class="divider"></li>
+		  <li><a href="#!">three</a></li>
+		</ul> -->
 			<select id="mFrequency" class="initialized">
 					<!-- <option value="" disabled >Choose your option</option> -->
-					<option value="7" selected>7</option>
-					<option value="15">15</option>
+					<option value="7">7</option>
+					<option value="15" selected>15</option>
 					<option value="30">30</option>
 					<option value="60">60</option>
 			</select>
@@ -123,9 +130,9 @@
 	<div class="row">
 		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
-				<span class="card-title">Volume</span>
-				<h5 id="recent_volume_card"></h5>
-				<span id="recent_volume_sparkline"></span>
+				<span class="card-title">Clusters</span>
+				<h5 id="recent_cluster_card"></h5>
+				<span id="recent_cluster_sparkline"></span>
 			</div>
 		</div>
 
@@ -136,7 +143,20 @@
 				<span id="recent_active_farmers_sparkline"></span>
 			</div>
 		</div>
-
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Volume</span>
+				<h5 id="recent_volume_card"></h5>
+				<span id="recent_volume_sparkline"></span>
+			</div>
+		</div>
+		<div class="col s6 m4 l2">
+			<div class="card-content white darken-1">
+				<span class="card-title">Revenue</span>
+				<h5 id="recent_revenue_card"></h5>
+				<span id="recent_revenue_sparkline"></span>
+			</div>
+		</div>
 		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">
 				<span class="card-title">Cost/kg(INR)</span>
@@ -152,20 +172,8 @@
 				<span id="recent_sustainability_sparkline"></span>
 			</div>
 		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Clusters</span>
-				<h5 id="recent_cluster_card"></h5>
-				<span id="recent_cluster_sparkline"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Revenue</span>
-				<h5 id="recent_revenue_card"></h5>
-				<span id="recent_revenue_sparkline"></span>
-			</div>
-		</div>
+		
+		
 	</div>
 </div>
 

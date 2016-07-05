@@ -5,6 +5,8 @@ function initialize() {
     // initialize any library here
     $('select').material_select();
     set_eventlistener();
+    // $(".dropdown-button").dropdown();
+    $(".button-collapse1").sideNav()
     $(".button-collapse").sideNav()
     // to initialize material select
     if (document.title == "Home") {
@@ -12,12 +14,11 @@ function initialize() {
         total_static_data();
         // recent_graphs_data();
         get_data_main();
-        days_to_average = 30;
+        days_to_average = 15;
         days_to_go_back = 5;
         counter_volume = 0;
     } else if (document.title == "Second Page") {
-        ;
-        
+        selected_tab="aggregator";
         get_filter_data();
         update_tables();
         update_charts();
@@ -25,6 +26,15 @@ function initialize() {
 
     }
 
+}
+
+function change_tab(tab){
+    selected_tab=tab;
+    update_graphs_aggregator_wise();
+}
+
+function filters_area(){
+    $(".side-nav").show();
 }
 
 function set_date_pickers() {
@@ -98,7 +108,12 @@ function set_eventlistener() {
     $('.datepicker').pickadate({
         selectMonths: true, // Creates a dropdown to control month
         selectYears: 15, // Creates a dropdown of 15 years to control year
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        onSet: function(element) {
+            if (element.select) {
+                this.close();
+            }
+        }
     });
 
     set_filterlistener();
@@ -116,6 +131,9 @@ function set_eventlistener() {
     $('#v_a').change(function() {
         update_graphs_aggregator_wise();
     });
+    // $('#m_g_c_a').change(function() {
+    //     update_graphs_aggregator_wise();
+    // });
 }
 
 /* event listeners for filters */
@@ -223,73 +241,6 @@ function update_charts() {
     }
 }
 
-function update_graphs_aggregator_wise() {
-
-    var option = $('#v_a :selected').val();
-    if (option == 1) {
-        var parameter = "quantity__sum";
-
-    } else if (option == 2) {
-        var parameter = "amount__sum";
-    }
-    aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_mandi, parameter);
-    aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_gaddidar, parameter);
-    aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_crop, parameter);
-    transport_cost_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.transportation_cost_mandi);
-    cpk_spk_graph(mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
-
-}
-
-function update_graphs_mandi_wise() {
-
-    var option = $('#v_a :selected').val();
-    if (option == 1) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
-        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_gaddidar, "quantity__sum");
-        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
-    } else if (option == 2) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.aggregator_mandi, "amount__sum");
-        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_gaddidar, "amount__sum");
-        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "amount__sum");
-    }
-    transport_cost_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
-    cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
-
-}
-
-function update_graphs_crop_wise() {
-
-    var option = $('#v_a :selected').val();
-    if (option == 1) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.aggregator_crop, "quantity__sum");
-        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
-        aggregator_graph($('#aggregator_crop'), gaddidar_ids, gaddidar_names, 'gaddidar__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.gaddidar_crop, "quantity__sum");
-    } else if (option == 2) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.aggregator_crop, "amount__sum");
-        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.mandi_crop, "amount__sum");
-        aggregator_graph($('#aggregator_crop'), gaddidar_ids, gaddidar_names, 'gaddidar__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.gaddidar_crop, "amount__sum");
-    }
-    // transport_cost_graph($('#mandi_cost'),aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
-    // cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
-
-}
-
-function update_graphs_gaddidar_wise() {
-
-    var option = $('#v_a :selected').val();
-    if (option == 1) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.aggregator_gaddidar, "quantity__sum");
-        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.mandi_gaddidar, "quantity__sum");
-        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.gaddidar_crop, "quantity__sum");
-    } else if (option == 2) {
-        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.aggregator_gaddidar, "amount__sum");
-        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.mandi_gaddidar, "amount__sum");
-        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.gaddidar_crop, "amount__sum");
-    }
-    // transport_cost_graph($('#mandi_cost'),aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
-    // cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
-
-}
 
 function get_data() {
     var start_date = $('#from_date').val();
@@ -350,7 +301,6 @@ function get_data() {
         getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
         // getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
         get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
-        fillaggregatormanditable(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
     }
 }
 
@@ -760,8 +710,7 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
         series: dict
     });
 }
-
-function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, prefix_or_suffix, farmer_counts) {
+function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit,prefix_or_suffix) {
 
     // if (farmer_counts) {
     //   var data_dict = {};
@@ -771,17 +720,26 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
     //   data_dict["data"] = farmer_counts;
     //   dict.push(data_dict);
     // }
-
+    if (x_axis.length>=6){
+        var max=5;
+    }else{
+        var max = x_axis.length-1;
+    }
     container_obj.highcharts({
         chart: {
-            type: 'column',
-            // height: 500,
+            // type: 'column',
+            height: 300,
         },
         xAxis: {
             categories: x_axis,
             labels: {
                 rotation: 0
-            }
+            },
+            min: 0,
+            max: max
+        },
+        scrollbar: {
+            enabled: true,
         },
         yAxis: [{
             min: 0,
@@ -790,7 +748,7 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
             },
             stackLabels: {
                 enabled: true,
-                format: '<b>' + ((prefix_or_suffix) ? unit + ' ' : '') + '{total:.0f}' + ((prefix_or_suffix) ? '' : ' ' + unit) + '</b>',
+                format: '<b>' + ((prefix_or_suffix) ? unit + ' ' : '') + '{total:.2f}' + ((prefix_or_suffix) ? '' : ' ' + unit) + '</b>',
                 style: {
                     fontWeight: 'bold',
                     color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
@@ -826,9 +784,9 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
             shared: false
         },
         plotOptions: {
-            column: {
+            bar: {
+                grouping: false,
                 showCheckbox: true,
-                stacking: 'normal',
                 dataLabels: {
                     enabled: true,
                     format: ' ',
@@ -840,6 +798,55 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
             }
         },
         series: dict
+        
+    });
+}
+function plot_stacked_chart1(container_obj, dict, drilldown) {
+
+    container_obj.highcharts({
+        chart: {
+            type: 'bar',
+            height: 300,
+            zoomType: 'x'
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        xAxis: {
+            type: 'category',
+            scrollbar:{
+                enabled: true
+            }
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.0f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> <br/>'
+        },
+        series: dict,
+        drilldown: drilldown
     });
 }
 bullet_options = {
@@ -867,11 +874,11 @@ function total_static_data() {
         var total_cpk = total_transportation_cost/total_volume_for_transport;
         var kg = "Kg";
         var rs = "₹";
-        document.getElementById('total_volume_card').innerHTML = parseFloat(total_volume).toFixed(2).concat(kg);
+        document.getElementById('total_volume_card').innerHTML = parseFloat(total_volume).toFixed(0).concat(kg);
         document.getElementById('total_farmers_card').innerHTML = total_farmers_reached +" <sub style='font-size: 12px'>"+parseFloat((total_repeat_farmers/total_farmers_reached)*100).toFixed(2)+"%"+"</sub>";   
         document.getElementById('total_expenditure_card').innerHTML =  parseFloat(total_cpk).toFixed(2); //rs.concat(parseFloat(total_transportation_cost).toFixed(2) - parseFloat(total_farmer_share).toFixed(2));
         document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
-        document.getElementById('revenue_card').innerHTML =rs.concat(parseFloat(total_amount).toFixed(2));
+        document.getElementById('revenue_card').innerHTML =rs.concat(parseFloat(total_amount).toFixed(0));
         document.getElementById('cluster_card').innerHTML = clusters;
 
         $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);
@@ -888,8 +895,8 @@ function total_static_data() {
 
 function recent_graphs_data() {
     $.get("/loop/recent_graphs_data/", {
-        'start_date': start_date_main,
-        'end_date': end_date_main
+        'start_date': "",
+        'end_date': ""
     }).done(function(data) {
         json_data = JSON.parse(data);
         dates = json_data['dates'];
@@ -916,7 +923,7 @@ sparkline_option = {
 
 function plot_cards_data() {
     var avg = get_average(); // Retunts [avg_volume, active_farmers, avg_amount]
-    var cumm = cummulative();
+    cummulative();
     var avg_vol = avg[0];
     var kg = "Kg";
     var rs = "₹";
@@ -932,13 +939,12 @@ function plot_cards_data() {
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
     var data = get_cpk(avg_vol.reverse());
-    console.log(avg_vol);
     var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = rs.concat(parseFloat(cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
 
     var sustainability = data[1];
-    document.getElementById('recent_sustainability_card').innerHTML = rs.concat(parseFloat(sustainability[0]).toFixed(2));
+    document.getElementById('recent_sustainability_card').innerHTML = parseFloat(sustainability[0]).toFixed(2) + "%";
     $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
 }
 
@@ -950,24 +956,52 @@ function cummulative(){
         first_date.setDate(first_date.getDate()+1)
     }
     var cumm = new Array(all_dates.length).fill(0.0);
+    var temp ={}
+    temp['name'] = "volume";
+    temp['data'] = [];
+    temp['type'] = 'spline';
+    temp['pointInterval'] = 24 * 3600 * 1000;
+    temp['pointStart'] = all_dates[all_dates.length-1];
+    temp['showInLegend'] = true;
+
     for (var i=0; i<stats.length;i++){
         var index = all_dates.indexOf(new Date(stats[i]['date']).getTime());
         cumm[index]+=stats[i]['quantity__sum'];
     }
-    for (var i=cumm.length-2; i>=0;i--){
-        cumm[i]+=cumm[i+1];
+    temp['data'].push([all_dates[0],cumm[0]]);
+    for (var i=1; i<cumm.length;i++){        
+        cumm[i]+=cumm[i-1];
+        temp['data'].push([all_dates[i], cumm[i]]);
     }
-    console.log(cumm);
-    return cumm;
+    var series =[];
+    series.push(temp);
+     var $container = $('#container2')
+                .css('position', 'relative');
+
+            $('<div id="detail-container">')
+                .appendTo($container);
+
+            $('<div id="master-container">')
+                .css({
+                    position: 'absolute',
+                    top: 300,
+                    height: 100,
+                    width: '100%'
+                })
+                    .appendTo($container);
+    console.log(series);
+    createMaster(series);
+    
 }
 
 function get_average() {
 
-    if (end_date_main.length > 0) {
-        var today = new Date(end_date_main);
-    } else {
-        var today = new Date();
-    }
+    // if (end_date_main.length > 0) {
+    //     var today = new Date(end_date_main);
+    // } else {
+    //     var today = new Date();
+    // }
+    var today = new Date();
 
     today.setDate(today.getDate() - days_to_average);
     var avg_vol = [];
@@ -1043,7 +1077,7 @@ function get_cpk(avg_vol) {
                 sustainability_per_kg.push(0);
             }else{
                 cpk.push((temp / days_to_average) / avg_vol[k]);
-                sustainability_per_kg.push(f_share/temp);
+                sustainability_per_kg.push(f_share/temp*100);
             }
             
             k++;
@@ -1065,7 +1099,7 @@ function get_cpk(avg_vol) {
         sustainability_per_kg.push(0);
     }else{
         cpk.push((temp / days_to_average) / avg_vol[k]);
-        sustainability_per_kg.push(f_share/temp);
+        sustainability_per_kg.push(f_share/temp*100);
     }
 
     //Adding 0 cost for previous data making length of both arrays same
@@ -1239,8 +1273,8 @@ function plot(id, x_axis, data, counter, legendName) {
 
 function farmer_count_aggregator_wise() {
     $.get("/loop/farmer_count_aggregator_wise/", {
-        'start_date': start_date_main,
-        'end_date': end_date_main
+        'start_date': "",
+        'end_date': ""
     }).done(function(data) {
         var json_data = JSON.parse(data);
 
@@ -1320,129 +1354,262 @@ function get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_
         })
         .done(function(data) {
             aggregator_graphs_json_data = JSON.parse(data);
-            update_graphs_aggregator_wise();
+            update_graphs_aggregator_wise(null);
             line_graphs(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
         });
+}
+function update_graphs_aggregator_wise(chart) {
+    if (selected_tab == "aggregator"){
+        if (chart==null){
+            $('#1stgraph').text("Aggregator Mandi Wise")
+            aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id',aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+            $('#2ndgraph').text("Cost per kg")
+            cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id',mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
+        }else{
+           
+            if (chart == "volume") {
+               aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id',aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+
+            } else if (chart=="amount") {
+                aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id',aggregator_graphs_json_data.aggregator_mandi, "amount__sum");
+
+            } else if (chart == "visits"){
+                aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id',aggregator_graphs_json_data.aggregator_mandi, "mandi__id__count");
+            }
+
+            if (chart=="cost_recovered"){
+                $('#2ndgraph').text("Total Cost")
+                transport_cost_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
+            }else if(chart == "cpk_spk"){
+                $('#2ndgraph').text("Cost per kg")
+                cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id',mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
+            }      
+        }
+    } else if (selected_tab == "mandi"){
+        if (chart==null){
+            $('#1stgraph').text("Mandi Aggregator Wise")
+            aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+            $('#2ndgraph').text("Cost per kg")
+            cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
+        }else{
+           
+            if (chart == "volume") {
+               aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id',aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+
+            } else if (chart=="amount") {
+                aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id',aggregator_graphs_json_data.aggregator_mandi, "amount__sum");
+
+            } else if (chart == "visits"){
+                aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id',aggregator_graphs_json_data.aggregator_mandi, "mandi__id__count");
+            }
+
+            if (chart=="cost_recovered"){
+                $('#2ndgraph').text("Total Cost")
+                transport_cost_graph($('#mandi_cost'),  mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.transportation_cost_mandi);
+            }else if(chart == "cpk_spk"){
+                $('#2ndgraph').text("Cost per kg")
+                cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
+            }      
+        }
+    }
+}
+
+function update_graphs_mandi_wise() {
+
+    var option = $('#v_a :selected').val();
+    if (option == 1) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
+        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_gaddidar, "quantity__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
+    } else if (option == 2) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.aggregator_mandi, "amount__sum");
+        aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_gaddidar, "amount__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "amount__sum");
+    }
+    transport_cost_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
+    cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
+
+}
+
+function update_graphs_crop_wise() {
+
+    var option = $('#v_a :selected').val();
+    var option2 = $('#m_g_c_a :selected').val();
+    if (option == 1) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.aggregator_crop, "quantity__sum");
+        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
+        aggregator_graph($('#aggregator_crop'), gaddidar_ids, gaddidar_names, 'gaddidar__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.gaddidar_crop, "quantity__sum");
+    } else if (option == 2) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.aggregator_crop, "amount__sum");
+        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.mandi_crop, "amount__sum");
+        aggregator_graph($('#aggregator_crop'), gaddidar_ids, gaddidar_names, 'gaddidar__id', crop_ids, crop_names, 'crop__id', aggregator_graphs_json_data.gaddidar_crop, "amount__sum");
+    }
+    // transport_cost_graph($('#mandi_cost'),aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
+    // cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
+
+}
+
+function update_graphs_gaddidar_wise() {
+
+    var option = $('#v_a :selected').val();
+    if (option == 1) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.aggregator_gaddidar, "quantity__sum");
+        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.mandi_gaddidar, "quantity__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.gaddidar_crop, "quantity__sum");
+    } else if (option == 2) {
+        aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.aggregator_gaddidar, "amount__sum");
+        aggregator_graph($('#aggregator_gaddidar'), mandi_ids, mandi_names, 'mandi__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.mandi_gaddidar, "amount__sum");
+        aggregator_graph($('#aggregator_crop'), crop_ids, crop_names, 'crop__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.gaddidar_crop, "amount__sum");
+    }
+    // transport_cost_graph($('#mandi_cost'),aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.transportation_cost_mandi);
+    // cpk_spk_graph(aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
+
 }
 
 function aggregator_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data, parameter) {
     var series = [];
     var x_axis = new Array(axis.length);
+    var drilldown ={};
+    drilldown['series']= [];
 
     var axis_length = axis.length;
     for (var i = 0; i < axis_length; i++) {
         x_axis[i] = axis_names[i];
     }
 
-    var values_length = values.length;
-    for (var i = 0; i < values_length; i++) {
-        var temp_vol = {};
-        temp_vol['name'] = values_names[i];
-        temp_vol['type'] = "bar";
-        temp_vol['stacking'] = "normal";
-        temp_vol['data'] = new Array(axis.length).fill(0.0);
-        temp_vol['showInLegend'] = false;
+    // These three values are to show at top
+    var total_volume = 0;
+    var total_amount = 0;
+    var total_visits = 0;
 
+
+    var temp_vol = {};
+        temp_vol['name'] = "Total";
+        temp_vol['type'] = "bar";
+        temp_vol['colorByPoint'] = true;
+        // temp_vol['stacking'] = "normal";
+        temp_vol['data'] = [];
+        for (var i=0;i<axis.length;i++){
+            temp_vol['data'].push({'name':axis_names[i],'y':0,'drilldown':axis_names[i]});
+            drilldown['series'].push({'name':axis_names[i],'id':axis_names[i],'data':[], 'type':'bar'});
+            for (var j = 0; j < values_names.length; j++) {
+                drilldown['series'][i]['data'].push([values_names[j],0]);
+            }
+        }
+        temp_vol['showInLegend'] = false;
+        console.log(temp_vol);
         series.push(temp_vol);
-    }
+        console.log(drilldown);
+    
     for (var i = 0; i < json_data.length; i++) {
         var agg_index = values.indexOf(json_data[i][values_parameter].toString());
         var index = axis.indexOf(json_data[i][axis_parameter].toString());
-
-        series[agg_index]['data'][index] = json_data[i][parameter];
+        drilldown['series'][index]['data'][agg_index][1]+=json_data[i][parameter]
+        series[0]['data'][index]['y'] += json_data[i][parameter];
+        total_volume+=json_data[i]["quantity__sum"];
+        total_amount+=json_data[i]["amount__sum"];
+        total_visits+=json_data[i]["mandi__id__count"];
     }
+    $("#aggregator_volume").text("Volume: "+total_volume)
+    $("#aggregator_amount").text("amount: "+parseFloat(total_amount).toFixed(2))
+    $("#aggregator_visits").text("visits: "+total_visits)
+    plot_stacked_chart1(container, series,drilldown);
 
-    plot_stacked_chart(container, x_axis, series, '', 'kg');
 }
-
 function transport_cost_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
     var series = [];
     var x_axis = new Array(axis.length);
+    console.log(axis.length);
     for (var i = 0; i < axis.length; i++) {
         x_axis[i] = axis_names[i];
     }
-
-    var values_names_length = values_names.length;
-    for (var i = 0; i < values_names_length; i++) {
-        var temp_cost = {};
-        temp_cost['name'] = values_names[i];
+    var temp_cost = {};
+        temp_cost['name'] = "Total Cost";
         temp_cost['type'] = "bar";
-        temp_cost['stacking'] = "normal";
+        // temp_cost['stacking'] = "normal"
         temp_cost['showInLegend'] = false;
         temp_cost['data'] = new Array(axis.length).fill(0);
+        temp_cost['pointPadding'] = 0.3;
+        temp_cost['pointPlacement'] = 0;
         series.push(temp_cost);
-    }
-
+    var temp_cost_recovered = {};
+        temp_cost_recovered['name'] = "Cost Recovered";
+        temp_cost_recovered['type'] = "bar";
+        // temp_cost_recovered['stacking'] = "normal"
+        temp_cost_recovered['showInLegend'] = false;
+        temp_cost_recovered['data'] = new Array(axis.length).fill(0);
+        temp_cost_recovered['pointPadding'] = 0.4;
+        temp_cost_recovered['pointPlacement'] = 0;
+        series.push(temp_cost_recovered);
     var json_data_length = json_data.length;
     for (var i = 0; i < json_data_length; i++) {
-        var agg_index = values.indexOf(json_data[i][values_parameter].toString());
         var index = axis.indexOf(json_data[i][axis_parameter].toString());
 
-        series[agg_index]['data'][index] = json_data[i]['transportation_cost__sum'] - json_data[i]['farmer_share__sum'];
+        series[0]['data'][index] += json_data[i]['transportation_cost__sum'] 
+        series[1]['data'][index] += json_data[i]['farmer_share__sum'];
     }
     plot_stacked_chart(container, x_axis, series, '', 'Rs');
 }
 
-function cpk_spk_graph(axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
+function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
     var vol_stats = json_data.aggregator_mandi;
     var cost_stats = json_data.transportation_cost_mandi;
+    var series = [];
     var series_cpk = [];
     var series_spk = [];
     var x_axis = new Array(axis.length);
     for (var i = 0; i < axis.length; i++) {
         x_axis[i] = axis_names[i];
     }
-    values_vol = [];
-    values_cost_cpk = [];
-    values_cost_spk = [];
+    values_vol = new Array(axis.length).fill(0.0);
+    values_cost_cpk = new Array(axis.length).fill(0.0);
+    values_cost_spk = new Array(axis.length).fill(0.0);
 
-    var values_names_length = values_names.length;
-    for (var i = 0; i < values_names_length; i++) {
-        var temp = {};
-        var temp_spk = {};
-        temp['name'] = values_names[i];
-        temp['type'] = "bar";
-        temp['stacking'] = "normal";
-        temp['showInLegend'] = false;
-        temp['data'] = new Array(axis.length).fill(0.0);
+    var temp = {};
+    var temp_spk = {};
+    temp['name'] = 'cpk';
+    temp['type'] = "bar";
+    // temp['stacking'] = "normal";
+    temp['showInLegend'] = false;
+    temp['data'] = new Array(axis.length).fill(0.0);
+    temp['pointPadding'] = 0.3;
+    temp['pointPlacement'] = 0;
 
 
-        temp_spk['name'] = values_names[i];
-        temp_spk['type'] = "bar";
-        temp_spk['stacking'] = "normal";
-        temp_spk['showInLegend'] = false;
-        temp_spk['data'] = new Array(axis.length).fill(0.0);
+    temp_spk['name'] = 'spk';
+    temp_spk['type'] = "bar";
+    // temp_spk['stacking'] = "normal";
+    temp_spk['showInLegend'] = false;
+    temp_spk['data'] = new Array(axis.length).fill(0.0);
+    temp_spk['pointPadding'] = 0.4;
+    temp_spk['pointPlacement'] = 0;
+    series.push(temp);
+    series.push(temp_spk);
 
-        series_cpk.push(temp);
-        series_spk.push(temp_spk);
-        values_vol.push(new Array(axis.length).fill(0.0));
-        values_cost_cpk.push(new Array(axis.length).fill(0.0));
-        values_cost_spk.push(new Array(axis.length).fill(0.0));
-    }
 
     for (var i = 0; i < vol_stats.length; i++) {
         var agg_index = values.indexOf(vol_stats[i][values_parameter].toString());
         var index = axis.indexOf(vol_stats[i][axis_parameter].toString());
-        values_vol[agg_index][index] = vol_stats[i]['quantity__sum'];
+        values_vol[index] += vol_stats[i]['quantity__sum'];
     }
     for (var i = 0; i < cost_stats.length; i++) {
         var agg_index = values.indexOf(cost_stats[i][values_parameter].toString());
         var index = axis.indexOf(cost_stats[i][axis_parameter].toString());
-        values_cost_cpk[agg_index][index] = cost_stats[i]['transportation_cost__sum'] - cost_stats[i]['farmer_share__sum'];
-        values_cost_spk[agg_index][index] = cost_stats[i]['farmer_share__sum'];
+        values_cost_cpk[index] += cost_stats[i]['transportation_cost__sum'] ;
+        values_cost_spk[index] += cost_stats[i]['farmer_share__sum'];
     }
 
 
-    var values_names_length = values_names.length;
-    for (var i = 0; i < values_names_length; i++) {
+    // var values_names_length = values_names.length;
+    // for (var i = 0; i < values_names_length; i++) {
         for (var j = 0; j < axis_names.length; j++) {
-            series_cpk[i]['data'][j] = values_vol[i][j] > 0 ? values_cost_cpk[i][j] / values_vol[i][j] : 0.0;
-            series_spk[i]['data'][j] = values_vol[i][j] > 0 ? values_cost_spk[i][j] / values_vol[i][j] : 0.0;
+            series[0]['data'][j] = values_vol[j] > 0 ? values_cost_cpk[j] / values_vol[j] : 0.0;
+            series[1]['data'][j] = values_vol[j] > 0 ? values_cost_spk[j] / values_vol[j] : 0.0;
         }
-    }
+    // }
     // console.log(series_cpk);
-    plot_stacked_chart($('#cpk'), x_axis, series_cpk, '', 'Rs');
-    plot_stacked_chart($('#spk'), x_axis, series_spk, '', 'Rs');
+    plot_stacked_chart(container, x_axis, series, '', 'Rs');
+    // plot_stacked_chart($('#spk'), x_axis, series_spk, '', 'Rs');
 }
 
 // function line_graphs(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids) {
@@ -1823,87 +1990,6 @@ function createDetail(masterChart, dict) {
                 })
                     .highcharts(); // return chart instance
             }
-
-            // make the container smaller and add a second container for the master chart
-
-            
-function fillaggregatormanditable(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids) {
-  $.get("/loop/visits_data/",
-            {'start_date': start_date,
-            'end_date': end_date,
-            'aggregator_ids[]': aggregator_ids,
-            'village_ids[]': village_ids,
-            'crop_ids[]': crop_ids,
-            'mandi_ids[]': mandi_ids,
-            'gaddidar_ids[]': gaddidar_ids
-        })
-        .done(function(data) {
-              var data_json = JSON.parse(data)  
-              var x_axis = [];
-              var x_axis_agg = [];
-              var total_visits = [];
-              var total_volume = [];
-              var total_visits_mandi = [];
-              var total_volume_mandi = [];
-
-              for (i=0; i< data_json['aggregators'].length; i++){
-                x_axis_agg.push(data_json['aggregators'][i]['name']);
-                // Making a dict for graph
-                total_visits[i] = {};
-                total_visits[i]["name"] = data_json['aggregators'][i]['name'];
-                total_visits[i]["data"] = new Array(data_json["mandis"].length).fill(0.0);
-                total_visits[i]["type"] = "bar";
-                total_visits[i]["stacking"] = "normal"; 
-                total_volume[i] = {};
-                total_volume[i]["name"] = data_json['aggregators'][i]['name'];
-                total_volume[i]["data"] = new Array(data_json["mandis"].length).fill(0.0);
-                total_volume[i]["type"] = "bar";
-                total_volume[i]["stacking"] = "normal";
-
-              }
-
-              for (var i = 0; i < data_json['mandis'].length; i++) {
-
-                x_axis.push(data_json['mandis'][i]['mandi_name']);
-                total_visits_mandi[i] = {};
-                total_visits_mandi[i]["name"] = data_json['mandis'][i]['mandi_name'];
-                total_visits_mandi[i]["data"] = new Array(data_json["aggregators"].length).fill(0.0);
-                total_visits_mandi[i]["type"] = "bar";
-                total_visits_mandi[i]["stacking"] = "normal";
-                total_volume_mandi[i] = {}
-                total_volume_mandi[i]["name"] = data_json['mandis'][i]['mandi_name'];
-                total_volume_mandi[i]["data"] = new Array(data_json["aggregators"].length).fill(0.0);
-                total_volume_mandi[i]["type"] = "bar";
-                total_volume_mandi[i]["stacking"] = "normal";
-
-
-                for (j=0; j< data_json['aggregators'].length; j++){
-
-
-
-                  for (k=0; k<data_json['aggregators_mandis'].length; k++){
-                    if (data_json['aggregators_mandis'][k]['user_created__id'] == data_json['aggregators'][j]['user__id'] && data_json['aggregators_mandis'][k]['mandi__id'] == data_json['mandis'][i]['id']){
-
-                      total_visits[j]["data"][i] = data_json['aggregators_mandis'][k]["mandi__id__count"];
-                      total_volume[j]["data"][i] = data_json['aggregators_mandis'][k]["quantity__sum"];
-                      total_visits_mandi[i]["data"][j] = data_json['aggregators_mandis'][k]["mandi__id__count"];
-                      total_volume_mandi[i]["data"][j] = data_json['aggregators_mandis'][k]["quantity__sum"];
-
-                    }
-                  }
-
-                }
-              }
-              plot_stacked_chart($("#visits"), x_axis, total_visits, "", "");
-              plot_stacked_chart($("#mandi_visits"), x_axis_agg, total_visits_mandi, "", "");
-              plot_stacked_chart($("#mvolume"), x_axis, total_volume, "", "");
-              plot_stacked_chart($("#mmandi_volume"), x_axis_agg, total_volume_mandi, "", "");
-          });
-    
-}
-
-
-
 
 function get_frequency_data(x_axis, series, frequency, averaged){
   var first_date = new Date(x_axis[0]);

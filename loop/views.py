@@ -260,9 +260,34 @@ def new_aggregator_wise_data(request):
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values(
         'mandi__id','user_created__id').annotate(Sum('transportation_cost'), Sum('farmer_share'))
 
+    
+
+
+    visits={}
+    
+    aggregators_mandis = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'date', 'mandi__id').distinct().annotate(Sum('quantity'))
+    
+    for aggregator in  aggregator_ids:
+        for mandi in mandi_ids:
+            visits[(int(aggregator),int(mandi))] = 0
+
+    for agg_man in aggregators_mandis:
+        for mandi in mandi_ids:
+            for aggregator in aggregator_ids:  
+                if agg_man['mandi__id'] == int(mandi) and agg_man['user_created__id'] == int(aggregator):
+                    visits[(int(aggregator), int(mandi))]+=1
+
+    for agg_man in aggregator_mandi:
+        for visit in visits:
+            if (agg_man['user_created__id'], agg_man['mandi__id']) == visit:
+                agg_man['mandi__id__count'] = visits[(agg_man['user_created__id'], agg_man['mandi__id'])]
+
+
     chart_dict = {'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'aggregator_crop': list(
         aggregator_crop), 'mandi_gaddidar':list(mandi_gaddidar), 'mandi_crop': list(mandi_crop), 'gaddidar_crop': list(gaddidar_crop), 'transportation_cost_mandi': list(transportation_cost_mandi)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+
+
     return HttpResponse(data)
 
 def data_for_line_graph(request):

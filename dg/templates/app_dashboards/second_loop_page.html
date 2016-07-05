@@ -18,269 +18,164 @@
 	}
 </style>
 {% endblock %} {% block navbar %}
-<header>
-	<div id="progress_bar" class="progress no-margin black lighten-4">
-		<div class="indeterminate black"></div>
-	</div>
-	<nav class="top-nav">
-		<div class="nav-wrapper black lighten-2">
-			<div class="container">
-				<div class="row">
-					<!-- <div class="col s1">
-						<i id="menu_button" class="mdi-navigation-menu page-title button-collapse" data-activates="nav-mobile"></i>
-					</div> -->
-					<!-- <div class= "col s11"> -->
-					<div class="container">
-						<a href="/loop/second_loop_page/" class="page-title">LOOP Dashboard</a>
-						<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-						<ul class="right hide-on-med-and-down">
-							<li><a onclick="update_graphs_aggregator_wise()">Aggregator</a></li>
-							<li><a onclick="update_graphs_mandi_wise()">Market</a></li>
-							<li><a onclick="update_graphs_gaddidar_wise()">Gaddidar</a></li>
-							<li><a onclick="update_graphs_crop_wise()">Crop</a></li>
-						</ul>
-						<ul class="side-nav" id="mobile-demo">
-							<li><a onclick="update_graphs_aggregator_wise()">Aggregator</a></li>
-							<li><a onclick="update_graphs_mandi_wise()">Market</a></li>
-							<li><a onclick="update_graphs_gaddidar_wise()">Gaddidar</a></li>
-							<li><a onclick="update_graphs_crop_wise()">Crop</a></li>
-						</ul>
+
+<div class="navbar-fixed" >
+	<nav>
+		<div class="nav-wrapper">
+			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="hide-on-med-and-down">
+				<ul class="left">
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+			        <li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
+			        <li><a onclick="change_tab('mandi')">Mandi</a></li>
+			        <li><a onclick="change_tab('crop')">Crop</a></li>
+			    </ul>
+		    
+			    <ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+			    <ul class="right">
+			    	<div class="row">
+						<div class="input-field col s6">
+							<i class="material-icons black-text text-lighten-2 prefix">today</i>
+							<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+						</div>
+						<div class="input-field col s6">
+							<i class="material-icons black-text text-lighten-2 prefix">today</i>
+							<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+						</div>
 					</div>
-					<!-- </div> -->
-					<!-- {# <ul id="nav-mobile" class="right hide-on-med-and-down"> #}
-					{# 	<li><a href="index.html">Sass</a></li> #}
-					{# 	<li><a href="badges.html">Components</a></li> #}
-					{# 	<li><a href="collapsible.html">JavaScript</a></li> #}
-					{# </ul> #} -->
-					<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
-				</div>
-			</div>
+			    </ul>
+			</ul>
+			<ul class="side-nav" id="mobile-demo1">
+				<ul class="left">
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+			        <li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
+			        <li><a onclick="change_tab('mandi')">Mandi</a></li>
+			        <li><a onclick="change_tab('crop')">Crop</a></li>
+			        <div class="input-field">
+						<i class="material-icons black-text text-lighten-2 prefix">today</i>
+						<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+					</div>
+					<div class="input-field">
+						<i class="material-icons black-text text-lighten-2 prefix">today</i>
+						<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+					</div>
+					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+			    </ul>
+			</ul>
 		</div>
 	</nav>
-</header>
+</div>
 
-<!-- <ul id="nav-mobile" class="side-nav fixed"> -->
 
-	<!-- <li class="no-padding not-hoverable">
-		<ul class="collapsible collapsible-accordion">
+<ul class="side-nav" id="mobile-demo">
+	<!-- <ul id="nav-mobile" class="side-nav fixed"> -->
+		<li class="no-padding not-hoverable">
+			<ul class="collapsible collapsible-accordion">
 
-			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
-									<label for="aggregator_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="aggregators">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="village_all" checked="checked" />
-									<label for="village_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="villages">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="crop_all" checked="checked" />
-									<label for="crop_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="crops">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
-									<label for="mandi_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="mandis">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
-									<label for="gaddidar_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="gaddidars">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="no-padding not-hoverable">
-				<div class="container">
-					<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
-				</div>
-			</li>
-		</ul>
-</ul> -->
+				<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
+					<div class="collapsible-body container" style="display: none;">
+						<table class="filter-table centered">
+							<thead>
+								<tr>
+									<th class="center grey-text text-lighten-1">Select/Unselect</th>
+									<th>
+										<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
+										<label for="aggregator_all"></label>
+									</th>
+								</tr>
+							</thead>
+							<tbody id="aggregators">
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
+					<div class="collapsible-body container" style="display: none;">
+						<table class="filter-table centered">
+							<thead>
+								<tr>
+									<th class="center grey-text text-lighten-1">Select/Unselect</th>
+									<th>
+										<input type="checkbox" class="black" id="village_all" checked="checked" />
+										<label for="village_all"></label>
+									</th>
+								</tr>
+							</thead>
+							<tbody id="villages">
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
+					<div class="collapsible-body container" style="display: none;">
+						<table class="filter-table centered">
+							<thead>
+								<tr>
+									<th class="center grey-text text-lighten-1">Select/Unselect</th>
+									<th>
+										<input type="checkbox" class="black" id="crop_all" checked="checked" />
+										<label for="crop_all"></label>
+									</th>
+								</tr>
+							</thead>
+							<tbody id="crops">
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
+					<div class="collapsible-body container" style="display: none;">
+						<table class="filter-table centered">
+							<thead>
+								<tr>
+									<th class="center grey-text text-lighten-1">Select/Unselect</th>
+									<th>
+										<input type="checkbox" class="black" id="mandi_all" checked="checked" />
+										<label for="mandi_all"></label>
+									</th>
+								</tr>
+							</thead>
+							<tbody id="mandis">
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
+					<div class="collapsible-body container" style="display: none;">
+						<table class="filter-table centered">
+							<thead>
+								<tr>
+									<th class="center grey-text text-lighten-1">Select/Unselect</th>
+									<th>
+										<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
+										<label for="gaddidar_all"></label>
+									</th>
+								</tr>
+							</thead>
+							<tbody id="gaddidars">
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li class="no-padding not-hoverable">
+					<div class="container">
+						<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
+					</div>
+				</li>
+			</ul>
+		</li>
+	</ul>
+
+
+
+
+
 
 {% endblock %} {% block content %}
 
-<div class="no-padding not-hoverable">
-
-		<div class="row collapsible collapsible-accordion">
-
-			<li class="bold not-hoverable col s2"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
-									<label for="aggregator_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="aggregators">
-						</tbody>
-					</table>
-				</div>
-			</li>
 
 
-
-			<li class="bold not-hoverable col s2"><a class="collapsible-header  waves-effect waves-black">Villages</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="village_all" checked="checked" />
-									<label for="village_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="villages">
-						</tbody>
-					</table>
-				</div>
-			</li>
-
-
-			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="crop_all" checked="checked" />
-									<label for="crop_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="crops">
-						</tbody>
-					</table>
-				</div>
-			</li>
-
-
-			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
-									<label for="mandi_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="mandis">
-						</tbody>
-					</table>
-				</div>
-			</li>
-
-			<li class="bold not-hoverable col s2"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
-									<label for="gaddidar_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="gaddidars">
-						</tbody>
-					</table>
-				</div>
-			</li>
-
-			<li class="no-padding not-hoverable col s2">
-				<div class="container">
-					<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
-				</div>
-			</li>
-		</ul>
-
-</div>
-
-<div class="row valign-wrapper">
-	<div class="input-field col s6">
-		<i class="material-icons black-text text-lighten-2 prefix">today</i>
-		<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
-		<label for="from_date">Start Date:</label>
-
-	</div>
-	<div class="input-field col s6">
-		<i class="material-icons black-text text-lighten-2 prefix">today</i>
-		<input id="to_date" placeholder="End Date" type="text" class="datepicker">
-		<label for="to_date" class="active">End Date:</label>
-	</div>
-</div>
 <div class="center">
-	<a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
 
 	<div id="modal1" class="modal">
 		<div class="modal-content">
@@ -292,16 +187,18 @@
 	</div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
 	<div class="input-field col s6 offset-s3 ">
 
 		<select id="table_option" class="initialized">
-			<!-- <option value="" disabled >Choose your option</option> -->
+			<option value="" disabled >Choose your option</option>
 			<option value="1" selected>Village</option>
 			<option value="2">Aggregator</option>
 		</select>
 
 		<label>Change the Table</label>
+	</div>
+	
 	</div>
 </div>
 
@@ -375,72 +272,70 @@
 			<div id="pie_amount2"></div>
 		</div>
 	</div>
-</div>
+</div> -->
 
 <div class="container">
-	<div class="row">
-		<select id="v_a" class="initialized">
-			<!-- <option value="" disabled >Choose your option</option> -->
-			<option value="1" selected>Volume</option>
-			<option value="2">Amount</option>
-		</select>
-		<div class="col s12 m6">
-			<h5 class="center-align">Aggregator Mandi wise</h5>
+	<div class="row ">
+		
+		<!-- <select id="m_g_c_a" class="initialized">
+			<option value="" disabled >Choose your option</option>
+			<option value="1" selected>mandi</option>
+			<option value="2">gaddidar</option>
+			<option value="3">crop</option>
+		</select> -->
+		<div class="row card white darken-1 col s12 m6">
+			
+			<div class="row">
+				<a class="col s4" id="aggregator_volume" onclick="update_graphs_aggregator_wise('volume')"> Volume</a>
+				<a class="col s4" id="aggregator_amount" onclick="update_graphs_aggregator_wise('amount')" > Amount</a>
+				<a class="col s4" id="aggregator_visits" onclick="update_graphs_aggregator_wise('visits')"> Visits</a>
+			</div>
+		    
+		    
+			<!-- <select id="v_a" class="initialized">
+				<option value="" disabled >Choose your option</option>
+				<option value="1" selected>Volume</option>
+				<option value="2">Amount</option>
+			</select> -->
+			<hr>
+			<h5 class="center-align" id="1stgraph"></h5>
 			<div id="aggregator_mandi" class="col s12"></div>
 		</div>
-		<div class="col s12 m6">
+		<!-- <div class="col s12 m6">
 			<h5 class="center-align">Aggregator Gaddidar wise</h5>
 			<div id="aggregator_gaddidar" class="col s12"></div>
 		</div>
-		<!-- </div>
-		<div class="row"> -->
+		</div>
+		<div class="row">
 		<div class="col s12 m6">
 			<h5 class="center-align">Aggregator Crop wise</h5>
 			<div id="aggregator_crop" class="col s12"></div>
-		</div>
+		</div> -->
+		<div class="row card white darken-1 col s12 m6">
+			<div class="row">
+				<a class="col s4" id="aggregator_volume" onclick="update_graphs_aggregator_wise('cpk_spk')">Cpk_Spk</a>
+				<a class="col s4" id="aggregator_amount" onclick="update_graphs_aggregator_wise('cost_recovered')" >Total Cost and Recoverd</a>
+			</div>
+			<hr>
 
-		<div class="col s12 m6">
-			<h5 class="center-align">Mandi Cost</h5>
+			<h5 class="center-align" id="2ndgraph"></h5>
 			<div id="mandi_cost" class="col s12"></div>
 		</div>
 
-		<div class="col s12 m6">
+		<!-- <div class="col s12 m6">
 			<h5 class="center-align">CPK</h5>
 			<div id="cpk" class="col s12"></div>
 		</div>
 		<div class="col s12 m6">
 			<h5 class="center-align">SPK</h5>
 			<div id="spk" class="col s12"></div>
-		</div>
+		</div> -->
 	</div>
-
-
 </div>
 
 
 
 <div id="container2">
-	<div class="row">
-		<div class="col s12 m6">
-			<h5 class="center-align">Visits</h5>
-			<div id="visits" class="col s12"></div>
-		</div>
-		<div class="col s12 m6">
-			<h5 class="center-align">Mandi visits</h5>
-			<div id="mandi_visits" class="col s12"></div>
-		</div>
-		<!-- </div>
-		<div class="row"> -->
-		<div class="col s12 m6">
-			<h5 class="center-align">volume</h5>
-			<div id="mvolume" class="col s12"></div>
-		</div>
-
-		<div class="col s12 m6">
-			<h5 class="center-align">Mandi Volume</h5>
-			<div id="mmandi_volume" class="col s12"></div>
-		</div>
-	</div>
 
 </div>
 <div id="container3" ></div>
