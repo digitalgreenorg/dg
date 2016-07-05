@@ -81,7 +81,7 @@ def send_updated_log(request):
             rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
         if rows:
             data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-            return HttpResponse(data, mimetype="application/json")
+            return HttpResponse(data, content_type="application/json")
     return HttpResponse("0")
 
 def get_latest_timestamp():

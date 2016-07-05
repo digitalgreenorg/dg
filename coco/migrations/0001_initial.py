@@ -1,72 +1,66 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+from django.conf import settings
 import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'FullDownloadStats'
-        db.create_table('coco_fulldownloadstats', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('start_time', self.gf('django.db.models.fields.DateTimeField')()),
-            ('end_time', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('coco', ['FullDownloadStats'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('videos', '0001_initial'),
+        ('programs', '0001_initial'),
+        ('geographies', '0001_initial'),
+    ]
 
-
-    def backwards(self, orm):
-        # Deleting model 'FullDownloadStats'
-        db.delete_table('coco_fulldownloadstats')
-
-
-    models = {
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'auth.permission': {
-            'Meta': {'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'coco.fulldownloadstats': {
-            'Meta': {'object_name': 'FullDownloadStats'},
-            'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        }
-    }
-
-    complete_apps = ['coco']
+    operations = [
+        migrations.CreateModel(
+            name='CocoUser',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('old_coco_id', models.IntegerField(null=True, editable=False)),
+                ('partner', models.ForeignKey(to='programs.Partner')),
+                ('user', models.OneToOneField(related_name='coco_user', to=settings.AUTH_USER_MODEL)),
+                ('user_created', models.ForeignKey(related_name='coco_cocouser_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='coco_cocouser_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('videos', models.ManyToManyField(to='videos.Video')),
+                ('villages', models.ManyToManyField(to='geographies.Village')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='FullDownloadStats',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('start_time', models.DateTimeField()),
+                ('end_time', models.DateTimeField()),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ServerLog',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('timestamp', models.DateTimeField(default=datetime.datetime.utcnow)),
+                ('village', models.IntegerField(null=True)),
+                ('action', models.IntegerField()),
+                ('entry_table', models.CharField(max_length=100)),
+                ('model_id', models.IntegerField(null=True)),
+                ('partner', models.IntegerField(null=True)),
+                ('user', models.ForeignKey(related_name='serverlog_user', to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

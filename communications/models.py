@@ -16,7 +16,7 @@ class Feedback(models.Model):
     rating = models.IntegerField(default=5)
     comments = models.CharField(max_length=1000)
     email = models.EmailField(max_length=254)
-    date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
+    date = models.DateField(default=datetime.datetime.today())
     time = models.DateTimeField(default=datetime.datetime.utcnow)
 
     class Meta:

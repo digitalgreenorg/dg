@@ -135,7 +135,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
-    'south',
+    #'south',
     'farmerbook',
     'fbconnect',
     'dimagi',

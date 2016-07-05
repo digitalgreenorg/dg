@@ -46,7 +46,7 @@ class Video(models.Model):
 
 
 class VideoComment(models.Model):
-    date = models.DateField(default=lambda: datetime.datetime.utcnow().date())
+    date = models.DateField(default=datetime.datetime.today())
     text = models.TextField()
     video = models.ForeignKey(Video)
     user = models.ForeignKey(User, null=True, blank=True)
