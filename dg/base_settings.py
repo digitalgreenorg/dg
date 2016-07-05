@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.admindocs',
-    'django.contrib.comments',
+    #'django.contrib.comments',
     'programs',
     'geographies',
     'people',
