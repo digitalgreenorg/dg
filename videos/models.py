@@ -160,7 +160,6 @@ class Video(CocoModel):
     videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
-    farmers_shown = models.ManyToManyField(Person, null=True, blank=True)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
     review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)

@@ -104,10 +104,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
-    interested = models.NullBooleanField(db_index=True, blank=True, null=True, default=None)
-    expressed_question = models.CharField(max_length=500, blank=True)
-    expressed_adoption_video = models.ForeignKey(Video, related_name='expressed_adoption_video', null=True, blank=True)
-
+    
     def __unicode__(self):
         return  u'%s' % (self.id)
 
