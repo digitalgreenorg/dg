@@ -6,14 +6,14 @@
                      <div class="grid-col grid-size2of4">
                         <a href="https://www.usaid.gov/" target="_blank">
                             <div class="img-usaid-left layout-vr-md">
-                                <img src="{{STATIC_URL}}social_website/content/investors/usaid.png" alt=""/>
+                                <img src="{{STATIC_URL}}social_website/content/usaid/usaid.png" alt=""/>
                             </div>
                         </a>
                     </div>
                     <div class="grid-col grid-size2of4">
                         <a href="{% url 'home' %}">
                             <div class="img-usaid-right">
-                                <img src="{{STATIC_URL}}social_website/content/investors/dg.png" alt=""/>
+                                <img src="{{STATIC_URL}}social_website/content/usaid/dg.png" alt=""/>
                             </div>
                         </a>
                     </div>
@@ -24,13 +24,37 @@
         <section id="india" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper media">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Intro</h2>
-                    <div class="grid centered">
-                        <div class="grid-col grid-size2of4 layout-vr-md">
+                    <div class="grid">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md">DIGITAL INTEGRATION TO SCALE GENDER-SENSITIVE NUTRITIONAL SOCIAL & BEHAVIOR CHANGE COMMUNICATION</h2>
+                            <p class="copy layout-vr-sm">Digital Green is applying its low-cost, community-based video approach for enhanced peer-to-peer learning to address Reproductive, Maternal, Newborn, Child, and Adolescent health (RMNCH+A) nutritional goals. This four-year, USAID-funded project Digital Integration to Scale Gender-Sensitive Nutrition Social and Behavior Change Communication (SBCC) promotes a participatory approach using locally relevant content created by, of and for the communities.</p>
+                            <p class="copy layout-vr-sm">As part of the project, Digital Green is collaborating with a variety of government, private and civil society organizations to explore complementary ICT platforms that can ensure the most effective way to reach the target populations with focused nutrition messaging.</p>
 	                    </div>
+                        <div class="grid-col grid-size2of4">
+                            <div class="imgExt img-marginLg-lt img-effects img-size-usaid grid-pad-rt-md">
+                                <img src="{{STATIC_URL}}social_website/content/usaid/impact.jpg" alt="" />
+                            </div>
+                        </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
         
+        <section id="aboutusaid" class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <div class="grid">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md">About USAID</h2>
+                            <p class="copy layout-vr-sm">The United States Agency for InternaOonal Development (USAID) works to end extreme poverty and promote resilient, democraOc socieOes. USAID partners with the Government of India and the private sector to eliminate preventable child and maternal deaths, create an AIDS- and tuberculosis (TB)-free generaOon, and achieve universal health coverage. For more informaOon, please contact www.USAID.gov/India.</p>
+                        </div>
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md">About DG</h2>
+                            <p class="copy layout-vr-sm">Digital Green (DG) is a not for profit interna,onal development organiza,on that uses an innova,ve digital plaAorm for community engagement to improve livelihoods, health and nutri,on of rural communi,es across South Asia and Sub-Saharan Africa.</p>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
 {% include "includes/footer.html" %}
