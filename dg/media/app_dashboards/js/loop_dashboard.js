@@ -849,13 +849,7 @@ function plot_stacked_chart1(container_obj, dict, drilldown) {
         drilldown: drilldown
     });
 }
-bullet_options = {
-    type: "bullet",
-    width: "100",
-    height: "30",
-    performanceColor: '#00bfbf',
-    rangeColors: ['#a2d6d6']
-}
+
 
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {

@@ -225,7 +225,6 @@ def new_aggregator_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
     crop_ids = request.GET.getlist('crop_ids[]')
     mandi_ids = request.GET.getlist('mandi_ids[]')
     gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
@@ -238,7 +237,6 @@ def new_aggregator_wise_data(request):
         filter_args["date__lte"] = end_date
         filter_transportation["date__lte"] = end_date
     filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
     filter_args["crop__id__in"] = crop_ids
     filter_args["mandi__id__in"] = mandi_ids
     filter_args["gaddidar__id__in"] = gaddidar_ids
@@ -260,8 +258,9 @@ def new_aggregator_wise_data(request):
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values(
         'mandi__id','user_created__id').annotate(Sum('transportation_cost'), Sum('farmer_share'))
 
+    crop_prices = CombinedTransaction.objects.filter(
+        **filter_args).values('crop__crop_name').annotate(Min('price'), Max('price'))
     
-
 
     visits={}
     
@@ -283,7 +282,7 @@ def new_aggregator_wise_data(request):
                 agg_man['mandi__id__count'] = visits[(agg_man['user_created__id'], agg_man['mandi__id'])]
 
 
-    chart_dict = {'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'aggregator_crop': list(
+    chart_dict = {"crop_prices": list(crop_prices),'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'aggregator_crop': list(
         aggregator_crop), 'mandi_gaddidar':list(mandi_gaddidar), 'mandi_crop': list(mandi_crop), 'gaddidar_crop': list(gaddidar_crop), 'transportation_cost_mandi': list(transportation_cost_mandi)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 

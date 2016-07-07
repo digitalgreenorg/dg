@@ -55,6 +55,10 @@ a.button-collapse.top-nav.full {
         width: 100%
     }
 }
+
+.container{
+    padding-top: 10px;
+}
 ul.side-nav.fixed li.logo {
     text-align: center;
     margin-top: 32px;

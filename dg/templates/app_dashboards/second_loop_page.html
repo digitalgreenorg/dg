@@ -283,12 +283,12 @@
 			<option value="2">gaddidar</option>
 			<option value="3">crop</option>
 		</select> -->
-		<div class="row card white darken-1 col s12 m6">
+		<div class=" col s12 m6">
 			
 			<div class="row">
-				<a class="col s4" id="aggregator_volume" onclick="update_graphs_aggregator_wise('volume')"> Volume</a>
-				<a class="col s4" id="aggregator_amount" onclick="update_graphs_aggregator_wise('amount')" > Amount</a>
-				<a class="col s4" id="aggregator_visits" onclick="update_graphs_aggregator_wise('visits')"> Visits</a>
+				<a class="center col s4" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a>
+				<a class="center col s4" id="aggregator_amount" onclick="change_graph('amount')" > Amount</a>
+				<a class="center col s4" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a>
 			</div>
 		    
 		    
@@ -311,10 +311,10 @@
 			<h5 class="center-align">Aggregator Crop wise</h5>
 			<div id="aggregator_crop" class="col s12"></div>
 		</div> -->
-		<div class="row card white darken-1 col s12 m6">
+		<div class="col s12 m6">
 			<div class="row">
-				<a class="col s4" id="aggregator_volume" onclick="update_graphs_aggregator_wise('cpk_spk')">Cpk_Spk</a>
-				<a class="col s4" id="aggregator_amount" onclick="update_graphs_aggregator_wise('cost_recovered')" >Total Cost and Recoverd</a>
+				<a class="center col s6" id="aggregator_volume" onclick="change_graph('cpk_spk')">Cpk_Spk</a>
+				<a class="center col s6" id="aggregator_amount" onclick="change_graph('cost_recovered')" >Total Cost and Recoverd</a>
 			</div>
 			<hr>
 
@@ -335,16 +335,14 @@
 
 
 
-<div id="container2">
-
-</div>
-<div id="container3" ></div>
-
-<div id="container4" ></div>
-<div id="container5" ></div>
-
-<div id="container6" ></div>
+<div id="container2"></div>
 
 
 
+
+{% endblock %}
+
+
+{% block script %}
+	<script src="{% static 'app_dashboards/js/loop_dashboard2.js' %}"></script>
 {% endblock %}
