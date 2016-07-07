@@ -1157,14 +1157,6 @@ a {
     height: 444px;  
 }
 
-.img-size-feedback :hover {
-    opacity: 0.5;
-}
-
-.img-size-feedback .icon-selected {
-    opacity: 0.5;
-}
-
 .media .img-size-logo img{
 	width: 177px;
 	height: 125px;
@@ -1191,7 +1183,24 @@ a {
 .profile-image {
 	width: 16px;
 }
-/* Modifications for News on home page */
+
+.img-size-feedback :hover {
+    opacity: 0.5;
+}
+
+.img-size-feedback .icon-selected {
+    opacity: 0.5;
+}
+
+.img-usaid-left {
+    float:left;
+    height: 50px;
+}
+
+.img-usaid-right {
+    float:right;
+    height: 50px;
+}
 
 /* About page img border and box shadow */
 

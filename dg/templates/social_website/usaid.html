@@ -1,0 +1,36 @@
+{% include "includes/header.html" %}
+
+        <section id="logos" class="about-bg">
+            <div class="inner-wrapper">
+                <div class="grid">
+                     <div class="grid-col grid-size2of4">
+                        <a href="https://www.usaid.gov/" target="_blank">
+                            <div class="img-usaid-left layout-vr-md">
+                                <img src="{{STATIC_URL}}social_website/content/investors/usaid.png" alt=""/>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="grid-col grid-size2of4">
+                        <a href="{% url 'home' %}">
+                            <div class="img-usaid-right">
+                                <img src="{{STATIC_URL}}social_website/content/investors/dg.png" alt=""/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="india" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Intro</h2>
+                    <div class="grid centered">
+                        <div class="grid-col grid-size2of4 layout-vr-md">
+	                    </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        
+{% include "includes/footer.html" %}
