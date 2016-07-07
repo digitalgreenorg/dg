@@ -1,23 +1,39 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        for screening in orm['activities.Screening'].objects.all():
-            pma_ques = orm['activities.PersonMeetingAttendance'].objects.filter(screening_id = screening.id).values_list('expressed_question')
-            pma_ques = '. '.join([unicode(ques[0]) for ques in pma_ques if ques[0]])
-            screening.questions_asked = pma_ques
-            screening.save()
-        for adoption in orm['activities.PersonAdoptPractice'].objects.all():
-            adoption.date_of_verification = adoption.date_of_adoption
-            adoption.save()
+        # Deleting field 'PersonMeetingAttendance.expressed_adoption_video'
+        db.delete_column(u'activities_personmeetingattendance', 'expressed_adoption_video_id')
+
+        # Deleting field 'PersonMeetingAttendance.expressed_question'
+        db.delete_column(u'activities_personmeetingattendance', 'expressed_question')
+
+        # Deleting field 'PersonMeetingAttendance.interested'
+        db.delete_column(u'activities_personmeetingattendance', 'interested')
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Adding field 'PersonMeetingAttendance.expressed_adoption_video'
+        db.add_column(u'activities_personmeetingattendance', 'expressed_adoption_video',
+                      self.gf('django.db.models.fields.related.ForeignKey')(related_name='expressed_adoption_video', null=True, to=orm['videos.Video'], blank=True),
+                      keep_default=False)
+
+        # Adding field 'PersonMeetingAttendance.expressed_question'
+        db.add_column(u'activities_personmeetingattendance', 'expressed_question',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=500, blank=True),
+                      keep_default=False)
+
+        # Adding field 'PersonMeetingAttendance.interested'
+        db.add_column(u'activities_personmeetingattendance', 'interested',
+                      self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True, db_index=True),
+                      keep_default=False)
+
 
     models = {
         u'activities.jslps_screening': {
@@ -32,7 +48,9 @@ class Migration(DataMigration):
         },
         u'activities.personadoptpractice': {
             'Meta': {'unique_together': "(('person', 'video', 'date_of_adoption'),)", 'object_name': 'PersonAdoptPractice'},
+            'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']", 'null': 'True', 'blank': 'True'}),
             'date_of_adoption': ('django.db.models.fields.DateField', [], {}),
+            'date_of_verification': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'non_negotiable_check': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
@@ -48,10 +66,7 @@ class Migration(DataMigration):
         },
         u'activities.personmeetingattendance': {
             'Meta': {'object_name': 'PersonMeetingAttendance'},
-            'expressed_adoption_video': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'to': u"orm['videos.Video']"}),
-            'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'interested': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Person']"}),
             'screening': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['activities.Screening']"}),
@@ -64,7 +79,7 @@ class Migration(DataMigration):
             'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'animator', 'village'),)", 'object_name': 'Screening'},
             'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {}),
-            'end_time': ('django.db.models.fields.TimeField', [], {}),
+            'end_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
             'farmer_groups_targeted': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.PersonGroup']", 'symmetrical': 'False'}),
             'farmers_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['people.Person']", 'null': "'False'", 'through': u"orm['activities.PersonMeetingAttendance']", 'blank': "'False'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -252,6 +267,15 @@ class Migration(DataMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'programs_partner_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
+        u'videos.category': {
+            'Meta': {'object_name': 'Category'},
+            'category_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_category_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_category_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
+        },
         u'videos.language': {
             'Meta': {'object_name': 'Language'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -327,35 +351,53 @@ class Migration(DataMigration):
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_practicetopic_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_practicetopic_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
+        u'videos.subcategory': {
+            'Meta': {'object_name': 'SubCategory'},
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Category']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'subcategory_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_subcategory_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_subcategory_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
+        },
         u'videos.video': {
-            'Meta': {'unique_together': "(('title', 'video_production_start_date', 'video_production_end_date', 'village'),)", 'object_name': 'Video'},
-            'actors': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
+            'Meta': {'unique_together': "(('title', 'production_date', 'language', 'village'),)", 'object_name': 'Video'},
             'approval_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'cameraoperator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cameraoperator'", 'to': u"orm['people.Animator']"}),
+            'benefit': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Category']", 'null': 'True', 'blank': 'True'}),
             'duration': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
-            'facilitator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'facilitator'", 'to': u"orm['people.Animator']"}),
-            'farmers_shown': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.Person']", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Language']"}),
             'old_coco_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['programs.Partner']"}),
+            'production_date': ('django.db.models.fields.DateField', [], {}),
+            'production_team': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['people.Animator']", 'symmetrical': 'False'}),
             'related_practice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Practice']", 'null': 'True', 'blank': 'True'}),
             'review_status': ('django.db.models.fields.IntegerField', [], {'default': '0', 'max_length': '1'}),
             'reviewer': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'subcategory': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.SubCategory']", 'null': 'True', 'blank': 'True'}),
             'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_video_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_video_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'video_grade': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            'video_production_end_date': ('django.db.models.fields.DateField', [], {}),
-            'video_production_start_date': ('django.db.models.fields.DateField', [], {}),
             'video_type': ('django.db.models.fields.IntegerField', [], {'max_length': '1'}),
+            'videopractice': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.VideoPractice']", 'null': 'True', 'blank': 'True'}),
             'village': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['geographies.Village']"}),
             'youtubeid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
+        },
+        u'videos.videopractice': {
+            'Meta': {'object_name': 'VideoPractice'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'subcategory': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.SubCategory']"}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_videopractice_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'videos_videopractice_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
+            'videopractice_name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         }
     }
 
     complete_apps = ['activities']
-    symmetrical = True
