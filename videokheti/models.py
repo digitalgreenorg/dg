@@ -1,5 +1,5 @@
 import datetime
-
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import models
 from videos.models import Video as coco_video
@@ -46,7 +46,7 @@ class Video(models.Model):
 
 
 class VideoComment(models.Model):
-    date = models.DateField(default=datetime.datetime.today())
+    date = models.DateField(default=timezone.now)
     text = models.TextField()
     video = models.ForeignKey(Video)
     user = models.ForeignKey(User, null=True, blank=True)

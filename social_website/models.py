@@ -1,5 +1,5 @@
 import datetime
-
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -162,7 +162,7 @@ class ResourceVideo(models.Model):
     uid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     youtubeID = models.CharField(max_length=50) 
-    date = models.DateField(default=datetime.datetime.today())
+    date = models.DateField(default=timezone.now)
     videoTag = models.CharField(max_length=2,choices=video_choice,default=FILM)
 
 class FeaturedCollection(models.Model):
@@ -184,7 +184,7 @@ class Activity(models.Model):
     textContent = models.TextField()
     facebookID = models.CharField(max_length=50, null=True, blank=True)
     avatarURL = models.URLField(max_length=200)
-    images = models.ManyToManyField(ImageSpec, null=True, blank=True)
+    images = models.ManyToManyField(ImageSpec, blank=True)
     partner = models.ForeignKey(Partner, null=True, blank=True)
     farmer = models.ForeignKey(Person, null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
@@ -198,7 +198,7 @@ class Activity(models.Model):
 
 class Milestone(models.Model):
     uid = models.AutoField(primary_key=True)
-    partner = models.ForeignKey(Partner, unique=True)
+    partner = models.ForeignKey(Partner)
     videoNumber = models.IntegerField()
     villageNumber = models.IntegerField()
     screeningNumber = models.IntegerField()
@@ -206,7 +206,7 @@ class Milestone(models.Model):
 
 class Comment(models.Model):
     uid = models.AutoField(primary_key=True)
-    date = models.DateField(default=datetime.datetime.today())
+    date = models.DateField(default=timezone.now)
     text = models.TextField()
     isOnline = models.BooleanField()
     video = models.ForeignKey(Video)
@@ -220,4 +220,4 @@ post_save.connect(increase_online_video_like, sender = VideoLike)
 
 class CronTimestamp(models.Model):
     name = models.CharField(max_length=30)
-    last_time = models.DateTimeField(default=datetime.datetime.today())
+    last_time = models.DateTimeField(default=timezone.now)

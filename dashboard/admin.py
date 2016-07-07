@@ -21,6 +21,7 @@ class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
     class Meta:
         model = PersonMeetingAttendance
+        exclude = ()
 
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
@@ -51,6 +52,7 @@ class ScreeningForm(forms.ModelForm):
 
     class Meta:
         model = Screening
+        exclude = ()
 
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
@@ -90,6 +92,7 @@ class VideoAdmin(admin.ModelAdmin):
 class AnimatorAssignedVillages(admin.StackedInline):
     model = AnimatorAssignedVillage
 
+
 class AnimatorAdmin(admin.ModelAdmin):
     fields = ('name','gender','phone_no','partner','district')
     inlines = [AnimatorAssignedVillages]
@@ -119,6 +122,7 @@ class PersonInline(admin.TabularInline):
 class PersonGroupForm(forms.ModelForm):
     class Meta:
         model = PersonGroup
+        exclude = ()
 
     class Media:
         js = (

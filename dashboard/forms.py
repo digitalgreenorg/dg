@@ -69,35 +69,43 @@ class CocoUserForm(forms.ModelForm):
 class LanguageForm(CocoModelForm):
     class Meta:
         model = Language
+        exclude = ()
 
 class CategoryForm(CocoModelForm):
     class Meta:
         model = Category
+        exclude = ()
 
 class SubCategoryForm(CocoModelForm):
     class Meta:
         model = SubCategory
+        exclude = ()
 
 class CountryForm(CocoModelForm):
     class Meta:
         model = Country
+        exclude = ()
         
 class StateForm(CocoModelForm):
     class Meta:
         model = State
+        exclude = ()
 
 class DistrictForm(CocoModelForm):
     class Meta:
         model = District
+        exclude = ()
 
 class BlockForm(CocoModelForm):
     class Meta:
         model = Block
+        exclude = ()
 
 class PersonGroupForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonGroup
+        exclude = ()
       
 class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
@@ -113,6 +121,7 @@ class PersonForm(CocoModelForm):
 class PartnerForm(CocoModelForm):
     class Meta:
         model = Partner
+        exclude = ()
 
 class AnimatorForm(CocoModelForm):
     class Meta:
@@ -122,14 +131,17 @@ class AnimatorForm(CocoModelForm):
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
         model = AnimatorAssignedVillage
+        exclude = ()
 
 class PracticeForm(CocoModelForm):
     class Meta:
         model = Practice
+        exclude = ()
 
 class VillageForm(CocoModelForm):
     class Meta:
         model = Village
+        exclude = ()
 
 class VideoForm(CocoModelForm):       
     class Meta:
@@ -139,12 +151,16 @@ class VideoForm(CocoModelForm):
 class NonNegotiableForm(CocoModelForm):       
     class Meta:
         model = NonNegotiable
+        exclude = ()
 
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
         exclude = ('farmers_attendance','observation_status','screening_grade')
+        exclude = ()
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
+        exclude = ()
+        
