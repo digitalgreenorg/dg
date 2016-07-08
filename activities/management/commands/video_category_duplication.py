@@ -11,7 +11,7 @@ from activities.models import *
 class Command(BaseCommand):
 
     def read_data(self,path):
-        sheet_index = 5
+        sheet_index = 0
         starting_row = 2
         data = {}
         open_file = xlrd.open_workbook(path)
@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        file_path = "test.xlsx"
+        file_path = "practice_mapping.xlsx"
         #read data from file
         data = self.read_data(file_path)
         #Write data in database

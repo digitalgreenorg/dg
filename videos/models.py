@@ -90,8 +90,6 @@ class Category(CocoModel):
 
     def __unicode__(self):
         return self.category_name
-post_save.connect(save_log, sender=Category)
-pre_delete.connect(delete_log, sender=Category)
 
 class SubCategory(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -109,8 +107,6 @@ class SubCategory(CocoModel):
 
     def __unicode__(self):
         return self.subcategory_name
-post_save.connect(save_log, sender=SubCategory)
-pre_delete.connect(delete_log, sender=SubCategory)
 
 class VideoPractice(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -125,8 +121,6 @@ class VideoPractice(CocoModel):
     
     def __unicode__(self):
         return self.videopractice_name
-post_save.connect(save_log, sender=VideoPractice)
-pre_delete.connect(delete_log, sender=VideoPractice)
 
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
