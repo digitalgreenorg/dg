@@ -61,7 +61,7 @@ class Person(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100, blank=True)
-    age = models.IntegerField(null=True, blank=True, validators=[MaxValueValidator(1)])
+    age = models.IntegerField(null=True, blank=True, validators=[MaxValueValidator(3)])
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone_no = models.CharField(max_length=100, blank=True)
     village = models.ForeignKey(Village)
