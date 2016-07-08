@@ -157,7 +157,6 @@ class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
         exclude = ('farmers_attendance','observation_status','screening_grade')
-        exclude = ()
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
