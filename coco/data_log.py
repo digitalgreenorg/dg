@@ -40,10 +40,10 @@ def save_log(sender, **kwargs ):
                     model_id=model_id, partner=partner_id)
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-    if previous_time_stamp:
-        if previous_time_stamp.timestamp > log.timestamp:
-            raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-#    
+#     if previous_time_stamp:
+#         if previous_time_stamp.timestamp > log.timestamp:
+#             raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
+# #    
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request
