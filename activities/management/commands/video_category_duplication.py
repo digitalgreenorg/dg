@@ -43,6 +43,12 @@ class Command(BaseCommand):
                         row += 1
             else:
                 row += 1
+        for category in data:
+            temp = []
+            for sub_category in data[category]:
+                temp += data[category][sub_category]
+            for sub_category in data[category]:
+                data[category][sub_category] = temp
         return data
 
 
