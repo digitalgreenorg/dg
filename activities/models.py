@@ -85,7 +85,7 @@ class Screening(CocoModel):
     partner = models.ForeignKey(Partner)
     observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
-    observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
+    observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -118,9 +118,9 @@ class PersonAdoptPractice(CocoModel):
     date_of_adoption = models.DateField()
     date_of_verification = models.DateField(null=True, blank=True)
     partner = models.ForeignKey(Partner)
-    verification_status = models.IntegerField(choices=ADOPTION_VERIFICATION, default=0, validators=[MaxValueValidator(1)])
+    verification_status = models.IntegerField(choices=ADOPTION_VERIFICATION, default=0, validators=[MaxValueValidator(2)])
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
-    verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
+    verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)

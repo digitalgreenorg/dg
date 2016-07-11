@@ -143,7 +143,7 @@ class Video(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     title = models.CharField(max_length=200)
-    video_type = models.IntegerField(choices=VIDEO_TYPE,validators=[MaxValueValidator(1)])
+    video_type = models.IntegerField(choices=VIDEO_TYPE,validators=[MaxValueValidator(2)])
     duration = models.TimeField(null=True, blank=True)
     language = models.ForeignKey(Language)
     benefit = models.TextField(blank=True)
