@@ -45,6 +45,7 @@ def getreport(request):
                                                animator__role=1).values('animator__id', 'animator__name',
                                                                         'village__village_name').distinct().order_by(
         'animator__id')
+#    print mrp_list
     vrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
                                                  animator__role=0).values('animator__id', 'animator__name',
                                                                           'village__village_name').distinct().order_by(
@@ -59,6 +60,7 @@ def getreport(request):
         # if e['animator__name'] not in mrp_detail :
         mrp_detail[mrp['animator__name']].append(mrp['village__village_name'])
 
+#    print mrp_detail
     for vrp in vrp_list:
         # if e['animator__name'] not in mrp_detail :
         vrp_detail[vrp['animator__name']].append(vrp['village__village_name'])
@@ -67,18 +69,18 @@ def getreport(request):
         for village in mrp_detail[mrp]:
             mrp_village_list[village] = mrp
 
+#    print mrp_village_list
     for vrp in vrp_detail:
         for village in vrp_detail[vrp]:
             vrp_village_list[village] = vrp
-
-    # t = [val for val in mrp_v_list if val in vrp_v_list]
 
     for vrp in vrp_village_list:
         if vrp in mrp_village_list:
             mrp_vrp_detail[mrp_village_list[vrp]].append(vrp_village_list[vrp])
 
-    # code ends here mrp to vrp
-    print partner_id, block_id
+#    print mrp_vrp_detail
+#  code ends here mrp to vrp
+#    print partner_id, block_id
 
     custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
     list_of_vrps = list(custom_object.get_req_id_vrp())
@@ -101,10 +103,10 @@ def getreport(request):
                     t_vrp.append(e[1])
                     final_vrp_list.append(t_vrp)
 
-            print 'final_vrp_list'
-            for e in final_vrp_list:
-                print e[0]
-            print 'length after removing', len(final_vrp_list)
+#           print 'final_vrp_list'
+#            for e in final_vrp_list:
+#               print e[0]
+#            print 'length after removing', len(final_vrp_list)
             complete_data = make_vrp_detail_list(custom_object, final_vrp_list)
             print 'complete data ', len(complete_data)
             # manipulation on complete_data(JSON format) to get output_array
