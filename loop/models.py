@@ -270,6 +270,8 @@ class DayTransportation(LoopModel):
     vrp_fees = models.FloatField(default=0.0)
     comment = models.CharField(max_length=200, null=True, blank=True)
     mandi = models.ForeignKey(Mandi)
+    is_visible = models.BooleanField(default=True)
+    timestamp = models.CharField(max_length=25)
 
     def __unicode__(self):
         return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
@@ -289,7 +291,9 @@ class CombinedTransaction(LoopModel):
     price = models.FloatField()
     status = models.IntegerField()
     amount = models.FloatField()
-    timestamp = models.CharField(max_length=25,null=True, blank=True)
+    timestamp = models.CharField(max_length=25)
+    is_visible = models.BooleanField(default=True)
+    payment_date = models.DateField(auto_now=False, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
