@@ -694,6 +694,39 @@ class DayTransportationResource(BaseResource):
         foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
+    def obj_create(self, bundle, request=None, **kwargs):
+        mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        transportationvehicle = TransportationVehicle.objects.get(
+            id=bundle.data["transportation_vehicle"]["online_id"])
+
+        user = LoopUser.objects.get(user__username=bundle.request.user)
+
+        attempt = DayTransportation.objects.filter(date=bundle.data[
+            "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+        if attempt.count() < 1:
+            bundle = super(DayTransportationResource,
+                           self).obj_create(bundle, **kwargs)
+        else:
+            raise DayTransportationNotSaved(
+                {"id": int(attempt[0].id), "error": "Duplicate"})
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        transportationvehicle = TransportationVehicle.objects.get(
+            id=bundle.data["transportation_vehicle"]["online_id"])
+
+        try:
+            bundle = super(DayTransportationResource,
+                           self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            user = LoopUser.objects.get(user__username=bundle.request.user)
+            attempt = DayTransportation.objects.filter(date=bundle.data[
+                "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+            raise DayTransportationNotSaved(
+                {"id": int(attempt[0].id), "error": "Duplicate"})
+        return bundle
+
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle

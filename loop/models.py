@@ -53,7 +53,7 @@ class District(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.district_name
+        return "%s (%s)" % (self.district_name, self.state.state_name)
 
     class Meta:
         unique_together = ("district_name", "state")
@@ -66,7 +66,7 @@ class Block(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.block_name
+        return "%s (%s)" % (self.block_name, self.district.district_name)
 
     class Meta:
         unique_together = ("block_name", "district")
@@ -81,7 +81,7 @@ class Village(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.village_name
+        return "%s (%s)" % (self.village_name, self.block.block_name)
 
     class Meta:
         unique_together = ("village_name", "block")
@@ -100,7 +100,7 @@ class Mandi(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.mandi_name
+        return "%s (%s)" % (self.mandi_name, self.district.district_name)
 
     class Meta:
         unique_together = ("mandi_name", "district",)
@@ -180,7 +180,7 @@ class Farmer(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.name
+        return "%s" % (self.village.village_name)
 
     class Meta:
         unique_together = ("phone", "name")
@@ -217,7 +217,7 @@ class Transporter(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.transporter_name
+        return "%s" % (self.block.block_name)
 
     class Meta:
         unique_together = ("transporter_name", "transporter_phone",)
@@ -274,7 +274,7 @@ class DayTransportation(LoopModel):
     timestamp = models.CharField(max_length=25)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
