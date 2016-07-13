@@ -276,6 +276,9 @@ class DayTransportation(LoopModel):
     def __unicode__(self):
         return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
 
+    class Meta:
+        unique_together = ("date", "user_created", "timestamp")
+
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
 
