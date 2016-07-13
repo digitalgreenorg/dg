@@ -55,7 +55,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
             dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
-        dict["online_id"] = dict['id']
+        # dict["online_id"] = dict['id']
     return dict
 
 
@@ -297,9 +297,10 @@ class VillageResource(BaseResource):
         resource_name = 'village'
         authorization = VillageAuthorization('id__in')
         authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_block = partial(
-        foreign_key_to_id, field_name='block', sub_field_names=['id', 'block_name'])
+        foreign_key_to_id, field_name='block', sub_field_names=['id'])
     hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
     def dehydrate(self, bundle):
@@ -319,9 +320,10 @@ class FarmerResource(BaseResource):
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_village = partial(
-        foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+        foreign_key_to_id, field_name='village', sub_field_names=['id'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -381,17 +383,11 @@ class LoopUserResource(BaseResource):
             user_id = None
             if bundle.request.user:
                 user_id = bundle.request.user.id
-                print "User Id 1"
-                print user_id
-            print "User id 2"
-            print user_id
+
             loop_user_id = getattr(bundle.obj, 'id')
-            print "Loop User Id 1"
-            print loop_user_id
+
             for mandi in assigned_mandi_list:
                 try:
-                    print "Mandi 1"
-                    print mandi
                     assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
                                                                user_created_id=user_id)
                     assigned_mandi_obj.save()
@@ -401,8 +397,6 @@ class LoopUserResource(BaseResource):
 
             for village in assigned_village_list:
                 try:
-                    print "Village 1"
-                    print village
                     assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
                                                                user_created_id=user_id)
                     assigned_village_obj.save()
@@ -420,27 +414,18 @@ class LoopUserResource(BaseResource):
         user_id = None
         if bundle.request.user:
             user_id = bundle.request.user.id
-        print "Update User Id"
-        print user_id
         loop_user_id = bundle.data.get('id')
-        print "Update Loop User Id"
-        print loop_user_id
-        del_mandi_objs = LoopUserAssignedMandi.objects.filter(loop_user_id=loop_user_id).delete()
-        del_village_objs = LoopUserAssignedVillage.objects.filter(loop_user_id=loop_user_id).delete()
-        print "Delete objects"
-        print del_mandi_objs
-        print del_village_objs
+        del_mandi_objs = LoopUserAssignedMandi.objects.filter(
+            loop_user_id=loop_user_id).delete()
+        del_village_objs = LoopUserAssignedVillage.objects.filter(
+            loop_user_id=loop_user_id).delete()
         assigned_mandi_list = bundle.data.get('assigned_mandis')
         for mandi in assigned_mandi_list:
-            print "Update Mandi"
-            print mandi
             assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
                                                        user_created_id=user_id)
             assigned_mandi_obj.save()
         assigned_village_list = bundle.data.get('assigned_villages')
         for village in assigned_village_list:
-            print "Update Village"
-            print village
             assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
                                                        user_created_id=user_id)
             assigned_village_obj.save()
@@ -462,6 +447,7 @@ class CropResource(BaseResource):
         resource_name = 'crop'
         authorization = Authorization()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
@@ -497,9 +483,10 @@ class MandiResource(BaseResource):
         resource_name = 'mandi'
         authorization = MandiAuthorization('id__in')
         authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_district = partial(
-        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+        foreign_key_to_id, field_name='district', sub_field_names=['id'])
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
     def dehydrate(self, bundle):
@@ -518,8 +505,10 @@ class GaddidarResource(BaseResource):
         authorization = MandiAuthorization('mandi_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
-        dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
+        dehydrate_mandi = partial(
+            foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
         hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def dehydrate(self, bundle):
@@ -535,6 +524,7 @@ class VehicleResource(BaseResource):
         resource_name = 'vehicle'
         authorization = Authorization()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -550,9 +540,10 @@ class TransporterResource(BaseResource):
         authorization = BlockAuthorization('block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_block = partial(
-        foreign_key_to_id, field_name='block', sub_field_names=['id', 'block_name'])
+        foreign_key_to_id, field_name='block', sub_field_names=['id'])
     # hydrate_block = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -579,6 +570,10 @@ class TransporterResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method=='POST':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     def hydrate_block(self, bundle):
@@ -597,11 +592,12 @@ class TransportationVehicleResource(BaseResource):
         authorization = BlockAuthorization('transporter__block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter',
-                                    sub_field_names=['id', 'transporter_name', 'transporter_phone'])
+                                    sub_field_names=['id'])
     dehydrate_vehicle = partial(
-        foreign_key_to_id, field_name='vehicle', sub_field_names=['id', 'vehicle_name'])
+        foreign_key_to_id, field_name='vehicle', sub_field_names=['id'])
     hydrate_transporter = partial(
         dict_to_foreign_uri, field_name='transporter')
     hydrate_vehicle = partial(dict_to_foreign_uri, field_name='vehicle')
@@ -636,6 +632,10 @@ class TransportationVehicleResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method=='POST':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     def obj_delete(self, bundle, **kwargs):
@@ -685,13 +685,14 @@ class DayTransportationResource(BaseResource):
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=[
-        'id', 'transporter', 'vehicle', 'vehicle_number'])
+        'id'])
     hydrate_transportation_vehicle = partial(
         dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
     dehydrate_mandi = partial(
-        foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
+        foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -729,6 +730,10 @@ class DayTransportationResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method=='POST':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     def obj_delete(self, bundle, **kwargs):
@@ -771,15 +776,16 @@ class CombinedTransactionResource(BaseResource):
         authorization = CombinedTransactionAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     dehydrate_farmer = partial(
-        foreign_key_to_id, field_name='farmer', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='farmer', sub_field_names=['id'])
     dehydrate_crop = partial(
-        foreign_key_to_id, field_name='crop', sub_field_names=['id', 'crop_name'])
+        foreign_key_to_id, field_name='crop', sub_field_names=['id'])
     dehydrate_mandi = partial(
-        foreign_key_to_id, field_name='mandi', sub_field_names=['id', 'mandi_name'])
+        foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
     dehydrate_gaddidar = partial(
-        foreign_key_to_id, field_name='gaddidar', sub_field_names=['id', 'gaddidar_name'])
+        foreign_key_to_id, field_name='gaddidar', sub_field_names=['id'])
 
     hydrate_farmer = partial(dict_to_foreign_uri, field_name='farmer')
     hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
@@ -822,6 +828,10 @@ class CombinedTransactionResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method=='POST':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     def obj_delete(self, bundle, **kwargs):
