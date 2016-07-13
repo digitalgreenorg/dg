@@ -297,7 +297,7 @@ class CombinedTransaction(LoopModel):
             LoopUser.objects.get(user=self.user_created).name)
 
     class Meta:
-        unique_together = ("date", "farmer", "crop", "mandi", "price","gaddidar","quantity","timestamp")
+        unique_together = ("date", "user_created","timestamp")
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
