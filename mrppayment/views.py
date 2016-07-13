@@ -43,64 +43,105 @@ def getreport(request):
     block_id = get_block_id(selectedblock)
     mrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
                                                animator__role=1).values('animator__id', 'animator__name',
-                                                                        'village__village_name').distinct().order_by(
+                                                                        'village__village_name', 'village__id').distinct().order_by(
         'animator__id')
 #    print mrp_list
     vrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
                                                  animator__role=0).values('animator__id', 'animator__name',
-                                                                          'village__village_name').distinct().order_by(
+                                                                          'village__village_name', 'village__id').distinct().order_by(
         'animator__id')
+
     mrp_detail = defaultdict(list)
     vrp_detail = defaultdict(list)
     mrp_vrp_detail = defaultdict(list)
-    vrp_village_list = {}
-    mrp_village_list = {}
+    vrp_village_list = defaultdict(list)
+    mrp_village_list = defaultdict(list)
 
+    temp_vill_list = []
+    counteer = 0
     for mrp in mrp_list:
         # if e['animator__name'] not in mrp_detail :
-        mrp_detail[mrp['animator__name']].append(mrp['village__village_name'])
+        if(mrp['village__id'] not in temp_vill_list):
+            temp_vill_list.append(mrp['village__id'])
+        else:
+            counteer += 1
+            print "fuck off"
+            print mrp['village__id']
+            print mrp['village__village_name']
+        mrp_detail[mrp['animator__name']].append(mrp['village__id'])
 
-#    print mrp_detail
+    print "COUNTER IS: " + str(counteer)
+
+    temp_vill_list2 = []
+    counteer2 =0
     for vrp in vrp_list:
         # if e['animator__name'] not in mrp_detail :
-        vrp_detail[vrp['animator__name']].append(vrp['village__village_name'])
+        if(vrp['village__id'] not in temp_vill_list2):
+            temp_vill_list2.append(vrp['village__id'])
+        else:
+            counteer2 += 1
+            print "fuck off"
+            print vrp['village__id']
+            print vrp['village__village_name']
+        vrp_detail[vrp['animator__name']].append(vrp['village__id'])
+
+    print counteer2
 
     for mrp in mrp_detail:
         for village in mrp_detail[mrp]:
-            mrp_village_list[village] = mrp
+            mrp_village_list[village].append(mrp)
 
 #    print mrp_village_list
     for vrp in vrp_detail:
         for village in vrp_detail[vrp]:
-            vrp_village_list[village] = vrp
+            vrp_village_list[village].append(vrp)
 
-    for vrp in vrp_village_list:
-        if vrp in mrp_village_list:
-            mrp_vrp_detail[mrp_village_list[vrp]].append(vrp_village_list[vrp])
+    for village in vrp_village_list:
+        if village in mrp_village_list:
+            for mrp in mrp_village_list[village]:
+                mrp_vrp_detail[mrp].extend(vrp_village_list[village])
 
-#    print mrp_vrp_detail
-#  code ends here mrp to vrp
-#    print partner_id, block_id
+
+
+#Delete this for loop ATAP
+    badacounter = 0
+    for mrp in mrp_vrp_detail:
+        temp_vps = []
+        counterVRP = 0
+        for vrp in mrp_vrp_detail[mrp]:
+            if vrp not in temp_vps:
+                temp_vps.append(vrp)
+            else:
+                counterVRP += 1
+                print "FUCK OFF AGAIN"
+                print vrp
+        badacounter += counterVRP
+        print counterVRP
+
+    print "BADA COUNTER IS:" + str(badacounter)
+
+
+
 
     custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
     list_of_vrps = list(custom_object.get_req_id_vrp())
 
-    t = []
+    vrp_list_for_given_input = []
     for vrp in list_of_vrps:
-        t.append(vrp[0])
+        vrp_list_for_given_input.append(vrp[0])
     mrp_output_array = []
     j = 0
     for mrp in mrp_vrp_detail:
-        common_vrps = [val for val in mrp_vrp_detail[mrp] if val in t]
+        common_vrps = [val for val in mrp_vrp_detail[mrp] if val in vrp_list_for_given_input]
         if len(common_vrps) > 0:
             j += 1
             final_vrp_list = []
-            for e in list_of_vrps:
+            for vrp in list_of_vrps:
                 t_vrp = []
-                if e[0] in common_vrps:
+                if vrp[0] in common_vrps:
                     # print 'removing ', e[0]
-                    t_vrp.append(e[0])
-                    t_vrp.append(e[1])
+                    t_vrp.append(vrp[0])
+                    t_vrp.append(vrp[1])
                     final_vrp_list.append(t_vrp)
 
 #           print 'final_vrp_list'
