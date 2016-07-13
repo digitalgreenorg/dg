@@ -265,6 +265,8 @@ class StateResource(BaseResource):
         resource_name = 'state'
         fields = ["state_name"]
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
 
 class DistrictResource(BaseResource):
@@ -275,6 +277,8 @@ class DistrictResource(BaseResource):
         resource_name = 'district'
         fields = ["district_name"]
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
 
 class BlockResource(BaseResource):
@@ -285,6 +289,8 @@ class BlockResource(BaseResource):
         resource_name = 'block'
         fields = ["block_name"]
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
 
 class VillageResource(BaseResource):
@@ -360,7 +366,7 @@ class LoopUserResource(BaseResource):
 
     class Meta:
         queryset = LoopUser.objects.prefetch_related(
-            'assigned_villages', 'assigned_mandis' 'user').all()
+            'assigned_villages', 'assigned_mandis','user').all()
         resource_name = 'loopuser'
         authorization = Authorization()
 
