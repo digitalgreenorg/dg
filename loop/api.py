@@ -759,10 +759,9 @@ class CombinedTransactionResource(BaseResource):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
 
-        instance = kwargs["instance"]
-        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
-            id=instance.user_created_id)
-        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], user_created = user, timestamp=bundle.data["timestamp"])
+        user = LoopUser.objects.get(user__username=bundle.request.user)
+        attempt = CombinedTransaction.objects.filter(date=bundle.data[
+                                                     "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
 
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,
@@ -778,17 +777,14 @@ class CombinedTransactionResource(BaseResource):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
 
-        instance = kwargs["instance"]
-        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
-            id=instance.user_created_id)
-
         try:
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], user_created = user, timestamp=bundle.data["timestamp"])
-            raise TransactionNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            user = LoopUser.objects.get(user__username=bundle.request.user)
+            attempt = CombinedTransaction.objects.filter(date=bundle.data[
+                                                         "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+            raise TransactionNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def dehydrate(self, bundle):

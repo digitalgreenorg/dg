@@ -19,6 +19,7 @@ class UserDoesNotExist(Exception):
 
 
 class DatetimeEncoder(json.JSONEncoder):
+
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
@@ -123,6 +124,8 @@ def delete_log(sender, **kwargs):
             id=instance.user_created_id)
     except Exception, ex:
         user = None
+
+    model_id = instance.id
     if sender == "Village":
         village_id = instance.id
         user = None
@@ -185,7 +188,7 @@ def delete_log(sender, **kwargs):
     Log = get_model('loop', 'Log')
     try:
         log = Log(village=village_id, user=user, action=-1,
-                  entry_table=sender, model_id=instance.id, loop_user=loop_user)
+                  entry_table=sender, model_id=model_id, loop_user=loop_user)
         log.save()
     except Exception as ex:
         pass
@@ -193,17 +196,13 @@ def delete_log(sender, **kwargs):
 
 def get_log_object(log_object):
     Obj_model = get_model('loop', log_object.entry_table)
-    # print "hello sexy"
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        # print "still sexy"
-        data = {'log': model_to_dict(log_object), 'data': model_to_dict(
+        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': model_to_dict(
             obj), 'online_id': obj.id}
     except Exception, e:
-        # print "No more sexy"
         data = {'log': model_to_dict(
-            log_object), 'data': None, 'online_id': log_object.model_id}
-        # print data
+            log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
 
 
@@ -211,7 +210,6 @@ def get_latest_timestamp():
     Log = get_model('loop', 'Log')
     try:
         timestamp = Log.objects.latest('id')
-        print timestamp
     except Exception as e:
         timestamp = None
     return timestamp
@@ -239,6 +237,7 @@ def send_updated_log(request):
             villages = requesting_loop_user.get_villages()
             mandis = requesting_loop_user.get_mandis()
             Log = get_model('loop', 'Log')
+            Farmer = get_model('loop', 'Farmer')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
             Transporter = get_model('loop', 'Transporter')
@@ -248,15 +247,12 @@ def send_updated_log(request):
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
-            list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village']))
+            village_list_queryset = Log.objects.filter(
+                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
+            list_rows.append(village_list_queryset)
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer']))
-
-            print Log.objects.filter(
-                timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer'])
-
 
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,
                                                 loop_user__village__block_id=requesting_loop_user.village.block.id,
@@ -280,13 +276,15 @@ def send_updated_log(request):
                             id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
                         list_rows.append(Log.objects.filter(id=entry.id))
 
-            list_rows.append(
-                Log.objects.filter(timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi']))
+            mandi_list_queryset = Log.objects.filter(
+                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi'])
+            list_rows.append(mandi_list_queryset)
             # for mrow in mandi_rows:
             #     if Mandi.objects.get(id=mrow.model_id) in mandis:
             #         rows = rows | Log.objects.filter(id=mrow.id)
 
-            gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
+            gaddidar_rows = Log.objects.filter(
+                timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                     list_rows.append(Log.objects.filter(id=grow.id))
@@ -332,14 +330,34 @@ def send_updated_log(request):
             #     if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
             #         rows = rows | Log.objects.filter(id=grow.id)
 
+            village_farmer_list = []
+            for village in village_list_queryset:
+                if village.action == 1:
+                    village_wise_farmer_list = Farmer.objects.filter(
+                        village__id=village.model_id)
+                    for farmer in village_wise_farmer_list:
+                        obj = Log(action=1,
+                                  entry_table="Farmer", model_id=farmer.id)
+                        village_farmer_list.append(obj)
+
+            list_rows.append(village_farmer_list)
+
+            mandi_gaddidar_list = []
+            for mandi in mandi_list_queryset:
+                if mandi.action == 1:
+                    mandi_wise_gaddidar_list = Gaddidar.objects.filter(
+                        mandi__id=mandi.model_id)
+                    for gaddidar in mandi_wise_gaddidar_list:
+                        obj = Log(action=1,
+                                  entry_table="Gaddidar", model_id=gaddidar.id)
+                        mandi_gaddidar_list.append(obj)
+
+            list_rows.append(mandi_gaddidar_list)
             data_list = []
-            # print list_rows
-            # print len(list_rows)
+
             for row in list_rows:
-                # print row
                 if row:
                     for i in row:
-                        # print get_log_object(i)
                         data_list.append(get_log_object(i))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
