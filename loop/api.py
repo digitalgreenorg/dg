@@ -41,6 +41,12 @@ class DayTransportationNotSaved(Exception):
     pass
 
 
+class AssignedMandiNotSaved(Exception):
+    pass
+
+class AssignedVillageNotSaved(Exception):
+    pass
+
 def foreign_key_to_id(bundle, field_name, sub_field_names):
     field = getattr(bundle.obj, field_name)
     if (field == None):
@@ -87,7 +93,6 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 
 
 class VillageAuthorization(Authorization):
-
     def __init__(self, field):
         self.village_field = field
 
@@ -111,7 +116,6 @@ class VillageAuthorization(Authorization):
 
 
 class BlockAuthorization(Authorization):
-
     def __init__(self, field):
         self.block_field = field
 
@@ -135,7 +139,6 @@ class BlockAuthorization(Authorization):
 
 
 class MandiAuthorization(Authorization):
-
     def __init__(self, field):
         self.mandi_field = field
 
@@ -156,7 +159,7 @@ class MandiAuthorization(Authorization):
             raise NotFound("Not allowed to download Mandi")
 
             # def read_list(self, object_list, bundle):
-            #     villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
+            # villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
             #     district_list = []
             #     for village in villages:
             #         if village.block.district_id not in district_list:
@@ -180,7 +183,6 @@ class MandiAuthorization(Authorization):
 
 
 class CombinedTransactionAuthorization(Authorization):
-
     def read_list(self, object_list, bundle):
         return object_list.filter(user_created_id=bundle.request.user.id).distinct()
 
@@ -195,7 +197,6 @@ class CombinedTransactionAuthorization(Authorization):
 
 
 class DayTransportationAuthorization(Authorization):
-
     def read_list(self, object_list, bundle):
         return object_list.filter(user_created_id=bundle.request.user.id).distinct()
 
@@ -210,7 +211,6 @@ class DayTransportationAuthorization(Authorization):
 
 
 class BaseResource(ModelResource):
-
     def full_hydrate(self, bundle):
         bundle = super(BaseResource, self).full_hydrate(bundle)
         bundle.obj.user_modified_id = bundle.request.user.id
@@ -245,11 +245,10 @@ class UserResource(ModelResource):
         excludes = ['is_active', 'is_staff', 'is_superuser', 'date_joined',
                     'last_login']
         # filtering = {'username':ALL,
-        #              }
+        # }
 
 
 class CountryResource(BaseResource):
-
     class Meta:
         queryset = Country.objects.all()
         resource_name = 'country'
@@ -355,25 +354,107 @@ class LoopUserResource(BaseResource):
     user = fields.ForeignKey(UserResource, 'user')
     village = fields.ForeignKey(VillageResource, 'village')
     assigned_villages = fields.ListField()
+    assigned_mandis = fields.ListField()
 
     class Meta:
         queryset = LoopUser.objects.prefetch_related(
-            'assigned_villages', 'user')
+            'assigned_villages', 'assigned_mandis' 'user').all()
         resource_name = 'loopuser'
         authorization = Authorization()
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
-    hyderate_village = partial(dict_to_foreign_uri, field_name='village')
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
                                         resource_name='village')
+    hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
+
     dehydrate_user = partial(
         foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
+    def obj_create(self, bundle, **kwargs):
+        bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
+        assigned_mandi_list = bundle.data.get('assigned_mandis')
+        assigned_village_list = bundle.data.get('assigned_villages')
+        if assigned_mandi_list or assigned_village_list:
+            user_id = None
+            if bundle.request.user:
+                user_id = bundle.request.user.id
+                print "User Id 1"
+                print user_id
+            print "User id 2"
+            print user_id
+            loop_user_id = getattr(bundle.obj, 'id')
+            print "Loop User Id 1"
+            print loop_user_id
+            for mandi in assigned_mandi_list:
+                try:
+                    print "Mandi 1"
+                    print mandi
+                    assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
+                                                               user_created_id=user_id)
+                    assigned_mandi_obj.save()
+                except Exception, e:
+                    raise AssignedMandiNotSaved('For Loop User with id: ' + str(
+                        loop_user_id) + ' mandi is not getting saved. Mandi details: ' + str(e))
+
+            for village in assigned_village_list:
+                try:
+                    print "Village 1"
+                    print village
+                    assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
+                                                               user_created_id=user_id)
+                    assigned_village_obj.save()
+                except Exception, e:
+                    raise AssignedVillageNotSaved('For Loop User with id: ' + str(
+                        loop_user_id) + ' village is not getting saved. Village details: ' + str(e))
+            return bundle
+        else:
+            raise AssignedMandiNotSaved(
+                'Loop User with details: ' + str(bundle.data) + ' can not be saved because mandi list is not available')
+
+    def obj_update(self, bundle, **kwargs):
+        # Edit case many to many handling. First clear out the previous related objects and create new objects
+        bundle = super(LoopUserResource, self).obj_update(bundle, **kwargs)
+        user_id = None
+        if bundle.request.user:
+            user_id = bundle.request.user.id
+        print "Update User Id"
+        print user_id
+        loop_user_id = bundle.data.get('id')
+        print "Update Loop User Id"
+        print loop_user_id
+        del_mandi_objs = LoopUserAssignedMandi.objects.filter(loop_user_id=loop_user_id).delete()
+        del_village_objs = LoopUserAssignedVillage.objects.filter(loop_user_id=loop_user_id).delete()
+        print "Delete objects"
+        print del_mandi_objs
+        print del_village_objs
+        assigned_mandi_list = bundle.data.get('assigned_mandis')
+        for mandi in assigned_mandi_list:
+            print "Update Mandi"
+            print mandi
+            assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
+                                                       user_created_id=user_id)
+            assigned_mandi_obj.save()
+        assigned_village_list = bundle.data.get('assigned_villages')
+        for village in assigned_village_list:
+            print "Update Village"
+            print village
+            assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
+                                                       user_created_id=user_id)
+            assigned_village_obj.save()
+        return bundle
+
+    def dehydrate_assigned_mandis(self, bundle):
+        return [{'id': assigned_mandi_obj.mandi_id, 'mandi_name':assigned_mandi_obj.mandi_name} for assigned_mandi_obj in
+                set(bundle.obj.assigned_mandis.all())]
+
+    def dehydrate_assigned_villages(self, bundle):
+        return [{'id': assigned_village_obj.village_id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
+                set(bundle.obj.assigned_villages.all())]
 
 class CropResource(BaseResource):
-
     class Meta:
         limit = 0
         max_limit = 0
@@ -425,6 +506,7 @@ class MandiResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+
 class GaddidarResource(BaseResource):
     mandi = fields.ForeignKey(MandiResource, 'mandi', full=True)
 
@@ -446,7 +528,6 @@ class GaddidarResource(BaseResource):
 
 
 class VehicleResource(BaseResource):
-
     class Meta:
         limit = 0
         max_limit = 0
@@ -469,6 +550,7 @@ class TransporterResource(BaseResource):
         authorization = BlockAuthorization('block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
+
     dehydrate_block = partial(
         foreign_key_to_id, field_name='block', sub_field_names=['id', 'block_name'])
     # hydrate_block = partial(dict_to_foreign_uri, field_name='village')
@@ -603,8 +685,9 @@ class DayTransportationResource(BaseResource):
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
+
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=[
-                                               'id', 'transporter', 'vehicle', 'vehicle_number'])
+        'id', 'transporter', 'vehicle', 'vehicle_number'])
     hydrate_transportation_vehicle = partial(
         dict_to_foreign_uri, field_name='transportation_vehicle', resource_name='transportationvehicle')
     dehydrate_mandi = partial(
@@ -675,8 +758,11 @@ class CombinedTransactionResource(BaseResource):
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
-        attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], quantity=bundle.data["quantity"], price=bundle.data["price"],
-                                                     farmer=farmer, crop=crop, mandi=mandi, gaddidar = gaddidar,status=bundle.data["status"], timestamp=bundle.data["timestamp"])
+
+        user = LoopUser.objects.get(user__username=bundle.request.user)
+        attempt = CombinedTransaction.objects.filter(date=bundle.data[
+                                                     "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,
                            self).obj_create(bundle, **kwargs)
@@ -690,14 +776,15 @@ class CombinedTransactionResource(BaseResource):
         crop = Crop.objects.get(id=bundle.data["crop"]["online_id"])
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
+
         try:
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = CombinedTransaction.objects.filter(date=bundle.data["date"], price=bundle.data["price"], quantity=bundle.data["quantity"],
-                                                         farmer=farmer, crop=crop, mandi=mandi, gaddidar=gaddidar, status=bundle.data["status"],timestamp=bundle.data["timestamp"])
-            raise TransactionNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            user = LoopUser.objects.get(user__username=bundle.request.user)
+            attempt = CombinedTransaction.objects.filter(date=bundle.data[
+                                                         "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+            raise TransactionNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def dehydrate(self, bundle):
