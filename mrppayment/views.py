@@ -45,7 +45,6 @@ def getreport(request):
                                                animator__role=1).values('animator__id', 'animator__name',
                                                                         'village__village_name', 'village__id').distinct().order_by(
         'animator__id')
-#    print mrp_list
     vrp_list = AnimatorAssignedVillage.objects.filter(animator__partner__partner_name=selectedpartner,
                                                  animator__role=0).values('animator__id', 'animator__name',
                                                                           'village__village_name', 'village__id').distinct().order_by(
@@ -57,41 +56,16 @@ def getreport(request):
     vrp_village_list = defaultdict(list)
     mrp_village_list = defaultdict(list)
 
-    temp_vill_list = []
-    counteer = 0
     for mrp in mrp_list:
-        # if e['animator__name'] not in mrp_detail :
-        if(mrp['village__id'] not in temp_vill_list):
-            temp_vill_list.append(mrp['village__id'])
-        else:
-            counteer += 1
-            print "fuck off"
-            print mrp['village__id']
-            print mrp['village__village_name']
-        mrp_detail[mrp['animator__name']].append(mrp['village__id'])
+        mrp_detail[(mrp['animator__name'],mrp['animator__id'])].append(mrp['village__id'])
 
-    print "COUNTER IS: " + str(counteer)
-
-    temp_vill_list2 = []
-    counteer2 =0
     for vrp in vrp_list:
-        # if e['animator__name'] not in mrp_detail :
-        if(vrp['village__id'] not in temp_vill_list2):
-            temp_vill_list2.append(vrp['village__id'])
-        else:
-            counteer2 += 1
-            print "fuck off"
-            print vrp['village__id']
-            print vrp['village__village_name']
-        vrp_detail[vrp['animator__name']].append(vrp['village__id'])
-
-    print counteer2
+        vrp_detail[(vrp['animator__name'],vrp['animator__id'])].append(vrp['village__id'])
 
     for mrp in mrp_detail:
         for village in mrp_detail[mrp]:
             mrp_village_list[village].append(mrp)
 
-#    print mrp_village_list
     for vrp in vrp_detail:
         for village in vrp_detail[vrp]:
             vrp_village_list[village].append(vrp)
@@ -101,55 +75,24 @@ def getreport(request):
             for mrp in mrp_village_list[village]:
                 mrp_vrp_detail[mrp].extend(vrp_village_list[village])
 
-
-
-#Delete this for loop ATAP
-    badacounter = 0
     for mrp in mrp_vrp_detail:
-        temp_vps = []
-        counterVRP = 0
-        for vrp in mrp_vrp_detail[mrp]:
-            if vrp not in temp_vps:
-                temp_vps.append(vrp)
-            else:
-                counterVRP += 1
-                print "FUCK OFF AGAIN"
-                print vrp
-        badacounter += counterVRP
-        print counterVRP
-
-    print "BADA COUNTER IS:" + str(badacounter)
-
-
-
+        mrp_vrp_detail[mrp] = list(set(mrp_vrp_detail[mrp]))
 
     custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
     list_of_vrps = list(custom_object.get_req_id_vrp())
 
     vrp_list_for_given_input = []
     for vrp in list_of_vrps:
-        vrp_list_for_given_input.append(vrp[0])
+        vrp_list_for_given_input.append(vrp)
+
     mrp_output_array = []
     j = 0
+
     for mrp in mrp_vrp_detail:
         common_vrps = [val for val in mrp_vrp_detail[mrp] if val in vrp_list_for_given_input]
         if len(common_vrps) > 0:
             j += 1
-            final_vrp_list = []
-            for vrp in list_of_vrps:
-                t_vrp = []
-                if vrp[0] in common_vrps:
-                    # print 'removing ', e[0]
-                    t_vrp.append(vrp[0])
-                    t_vrp.append(vrp[1])
-                    final_vrp_list.append(t_vrp)
-
-#           print 'final_vrp_list'
-#            for e in final_vrp_list:
-#               print e[0]
-#            print 'length after removing', len(final_vrp_list)
-            complete_data = make_vrp_detail_list(custom_object, final_vrp_list)
-            print 'complete data ', len(complete_data)
+            complete_data = make_vrp_detail_list(custom_object, common_vrps)
             # manipulation on complete_data(JSON format) to get output_array
             output_array = []
             i = 0
@@ -173,16 +116,17 @@ def getreport(request):
             tot_diss = 0
             succ_diss = 0
             succ_vid_adoption = 0
-            for e in output_array:
-                tot_diss += e[3]
-                succ_diss += e[4]
-                succ_vid_adoption += e[6]
-            mrp_screening_amount = 4 * succ_diss
-            mrp_adoption_amount = succ_vid_adoption
+
+            for single_vrp_result in output_array:
+                tot_diss += single_vrp_result[3]
+                succ_diss += single_vrp_result[4]
+                succ_vid_adoption += single_vrp_result[6]
+            mrp_screening_amount = per_dissemination_rate * succ_diss
+            mrp_adoption_amount = per_adoption_rate * succ_vid_adoption
             tot_amount = mrp_screening_amount + mrp_adoption_amount
-            t_arr = [j, mrp, tot_diss, succ_diss, mrp_screening_amount, succ_vid_adoption, mrp_adoption_amount,
+            mrp_final_result_arr = [j, mrp, tot_diss, succ_diss, mrp_screening_amount, succ_vid_adoption, mrp_adoption_amount,
                      tot_amount]
-            mrp_output_array.append(t_arr)
+            mrp_output_array.append(mrp_final_result_arr)
 
     return HttpResponse(json.dumps({"output": mrp_output_array}), content_type="application/json")
 
