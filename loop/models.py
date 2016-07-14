@@ -115,9 +115,9 @@ class LoopUser(LoopModel):
     name = models.CharField(max_length=100, default="default")
     role = models.IntegerField(choices=RoleChoice)
     assigned_villages = models.ManyToManyField(
-        Village, related_name="assigned_villages", through='LoopUserAssignedVillage', blank=True, null=True)
+        Village, related_name="assigned_villages", through='LoopUserAssignedVillage', blank=True)
     assigned_mandis = models.ManyToManyField(
-        Mandi, related_name="assigned_mandis", through='LoopUserAssignedMandi', blank=True, null=True)
+        Mandi, related_name="assigned_mandis", through='LoopUserAssignedMandi', blank=True)
     mode = models.IntegerField(choices=ModelChoice, default=1)
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
