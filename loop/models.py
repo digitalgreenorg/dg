@@ -25,7 +25,7 @@ class LoopModel(models.Model):
 class Country(LoopModel):
     id = models.AutoField(primary_key=True)
     country_name = models.CharField(max_length=50)
-
+    is_visible = models.BooleanField(default=True)
     def __unicode__(self):
         return self.country_name
 
@@ -37,6 +37,7 @@ class State(LoopModel):
     id = models.AutoField(primary_key=True)
     state_name = models.CharField(max_length=50)
     country = models.ForeignKey(Country)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.state_name
@@ -49,9 +50,10 @@ class District(LoopModel):
     id = models.AutoField(primary_key=True)
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.district_name
+        return "%s (%s)" % (self.district_name, self.state.state_name)
 
     class Meta:
         unique_together = ("district_name", "state")
@@ -61,9 +63,10 @@ class Block(LoopModel):
     id = models.AutoField(primary_key=True)
     block_name = models.CharField(max_length=50)
     district = models.ForeignKey(District)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.block_name
+        return "%s (%s)" % (self.block_name, self.district.district_name)
 
     class Meta:
         unique_together = ("block_name", "district")
@@ -75,9 +78,10 @@ class Village(LoopModel):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     block = models.ForeignKey(Block)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.village_name
+        return "%s (%s)" % (self.village_name, self.block.block_name)
 
     class Meta:
         unique_together = ("village_name", "block")
@@ -93,9 +97,10 @@ class Mandi(LoopModel):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     district = models.ForeignKey(District)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.mandi_name
+        return "%s (%s)" % (self.mandi_name, self.district.district_name)
 
     class Meta:
         unique_together = ("mandi_name", "district",)
@@ -110,13 +115,14 @@ class LoopUser(LoopModel):
     name = models.CharField(max_length=100, default="default")
     role = models.IntegerField(choices=RoleChoice)
     assigned_villages = models.ManyToManyField(
-        Village, related_name="assigned_villages")
+        Village, related_name="assigned_villages", through='LoopUserAssignedVillage', blank=True, null=True)
     assigned_mandis = models.ManyToManyField(
-        Mandi, related_name="assigned_mandis")
+        Mandi, related_name="assigned_mandis", through='LoopUserAssignedMandi', blank=True, null=True)
     mode = models.IntegerField(choices=ModelChoice, default=1)
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     village = models.ForeignKey(Village, default=None, null=True)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.user.username
@@ -127,10 +133,23 @@ class LoopUser(LoopModel):
     def get_mandis(self):
         return self.assigned_mandis.all()
 
-    # def get_districts_village(self):
-    #     district = self.village.block.district
-    #     return Village.objects.filter(block__district_id=district.id)
+class LoopUserAssignedMandi(LoopModel):
+    id = models.AutoField(primary_key=True)
+    loop_user = models.ForeignKey(LoopUser)
+    mandi = models.ForeignKey(Mandi)
+    is_visible = models.BooleanField(default=True)
 
+post_save.connect(save_log, sender=LoopUserAssignedMandi)
+pre_delete.connect(delete_log, sender=LoopUserAssignedMandi)
+
+class LoopUserAssignedVillage(LoopModel):
+    id = models.AutoField(primary_key=True)
+    loop_user = models.ForeignKey(LoopUser)
+    village = models.ForeignKey(Village)
+    is_visible = models.BooleanField(default=True)
+
+post_save.connect(save_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(delete_log, sender=LoopUserAssignedVillage)
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -138,6 +157,7 @@ class Gaddidar(LoopModel):
     gaddidar_phone = models.CharField(max_length=13)
     commission = models.FloatField(default=1.0)
     mandi = models.ForeignKey(Mandi)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.gaddidar_name
@@ -157,9 +177,10 @@ class Farmer(LoopModel):
     image_path = models.CharField(
         max_length=500, default=None, null=True, blank=True)
     village = models.ForeignKey(Village)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.name
+        return "%s" % (self.village.village_name)
 
     class Meta:
         unique_together = ("phone", "name")
@@ -175,6 +196,7 @@ class Crop(LoopModel):
         max_length=500, default=None, null=True, blank=True)
     crop_name = models.CharField(max_length=30, null=False, blank=False)
     measuring_unit = models.CharField(max_length=20, default="kg")
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.crop_name
@@ -192,9 +214,10 @@ class Transporter(LoopModel):
     transporter_name = models.CharField(max_length=90)
     transporter_phone = models.CharField(max_length=13)
     block = models.ForeignKey(Block)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.transporter_name
+        return "%s" % (self.block.block_name)
 
     class Meta:
         unique_together = ("transporter_name", "transporter_phone",)
@@ -206,6 +229,7 @@ pre_delete.connect(delete_log, sender=Transporter)
 class Vehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.vehicle_name
@@ -223,6 +247,7 @@ class TransportationVehicle(LoopModel):
     transporter = models.ForeignKey(Transporter)
     vehicle = models.ForeignKey(Vehicle)
     vehicle_number = models.CharField(max_length=20)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name)
@@ -245,9 +270,14 @@ class DayTransportation(LoopModel):
     vrp_fees = models.FloatField(default=0.0)
     comment = models.CharField(max_length=200, null=True, blank=True)
     mandi = models.ForeignKey(Mandi)
+    is_visible = models.BooleanField(default=True)
+    timestamp = models.CharField(max_length=25)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+
+    class Meta:
+        unique_together = ("date", "user_created", "timestamp")
 
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
@@ -264,7 +294,9 @@ class CombinedTransaction(LoopModel):
     price = models.FloatField()
     status = models.IntegerField()
     amount = models.FloatField()
-    timestamp = models.CharField(max_length=25,null=True, blank=True)
+    timestamp = models.CharField(max_length=25)
+    is_visible = models.BooleanField(default=True)
+    payment_date = models.DateField(auto_now=False, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
@@ -272,7 +304,7 @@ class CombinedTransaction(LoopModel):
             LoopUser.objects.get(user=self.user_created).name)
 
     class Meta:
-        unique_together = ("date", "farmer", "crop", "mandi", "price","gaddidar","quantity","timestamp")
+        unique_together = ("date", "user_created","timestamp")
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
@@ -284,6 +316,7 @@ class Log(models.Model):
     timestamp = models.DateTimeField(
         auto_now_add=False, default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null=True)
+    loop_user = models.ForeignKey(LoopUser, null=True)
     village = models.IntegerField(null=True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
