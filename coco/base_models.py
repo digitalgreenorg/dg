@@ -1,8 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
 # Variables
+TYPE_OF_ROLE = (
+	(1, 'MRP'),
+	(0, 'Animator'),
+)
+
 DAY_CHOICES = (
                 ('Monday', 'Monday'),
                 ('Tuesday', 'Tuesday'),
