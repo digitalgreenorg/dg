@@ -1,17 +1,20 @@
-import os, sys
+import site, os, sys
 from os import path
 import csv
 
 proj_path = "/home/ubuntu/code/dg_git/dg"
 # proj_path = "C:\Users\Lokesh\Documents\dg_code"
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
 
 sys.path.append(proj_path)
-os.chdir(proj_path)
+site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
+# os.chdir(proj_path)
+
+from django.core.management import setup_environ
+import dg.settings
+setup_environ(dg.settings)
 
 from django.core.wsgi import get_wsgi_application
-
 from people.models import *
 from programs.models import Partner
 from geographies.models import District, Village, Block
