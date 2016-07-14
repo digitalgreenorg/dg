@@ -263,10 +263,17 @@ class StateResource(BaseResource):
     class Meta:
         queryset = State.objects.all()
         resource_name = 'state'
-        fields = ["state_name"]
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
         excludes = ('resource_uri', 'time_created', 'time_modified')
+
+    dehydrate_country = partial(
+        foreign_key_to_id, field_name='country', sub_field_names=['id'])
+    hydrate_country = partial(dict_to_foreign_uri, field_name='country')
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 
 class DistrictResource(BaseResource):
@@ -275,11 +282,17 @@ class DistrictResource(BaseResource):
     class Meta:
         queryset = District.objects.all()
         resource_name = 'district'
-        fields = ["district_name"]
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
         excludes = ('resource_uri', 'time_created', 'time_modified')
 
+    dehydrate_state = partial(
+        foreign_key_to_id, field_name='state', sub_field_names=['id'])
+    hydrate_state = partial(dict_to_foreign_uri, field_name='state')
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class BlockResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district', full=True)
@@ -287,11 +300,17 @@ class BlockResource(BaseResource):
     class Meta:
         queryset = Block.objects.all()
         resource_name = 'block'
-        fields = ["block_name"]
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
         excludes = ('resource_uri', 'time_created', 'time_modified')
 
+    dehydrate_district = partial(
+        foreign_key_to_id, field_name='district', sub_field_names=['id'])
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class VillageResource(BaseResource):
     block = fields.ForeignKey(BlockResource, 'block', full=True)
