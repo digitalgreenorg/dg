@@ -89,23 +89,6 @@
 						</table>
 					</div>
 				</li>
-				<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Villages</a>
-					<div class="collapsible-body container" style="display: none;">
-						<table class="filter-table centered">
-							<thead>
-								<tr>
-									<th class="center grey-text text-lighten-1">Select/Unselect</th>
-									<th>
-										<input type="checkbox" class="black" id="village_all" checked="checked" />
-										<label for="village_all"></label>
-									</th>
-								</tr>
-							</thead>
-							<tbody id="villages">
-							</tbody>
-						</table>
-					</div>
-				</li>
 				<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
 					<div class="collapsible-body container" style="display: none;">
 						<table class="filter-table centered">
@@ -155,11 +138,6 @@
 							<tbody id="gaddidars">
 							</tbody>
 						</table>
-					</div>
-				</li>
-				<li class="no-padding not-hoverable">
-					<div class="container">
-						<a id="apply_filter" class="waves-effect waves-light black lighten-2 white-text btn">APPLY FILTERS</a>
 					</div>
 				</li>
 			</ul>
@@ -283,20 +261,12 @@
 			<option value="2">gaddidar</option>
 			<option value="3">crop</option>
 		</select> -->
-		<div class=" col s12 m6">
-			
+		<div class=" col s12 m6">			
 			<div class="row">
 				<a class="center col s4" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a>
 				<a class="center col s4" id="aggregator_amount" onclick="change_graph('amount')" > Amount</a>
 				<a class="center col s4" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a>
 			</div>
-		    
-		    
-			<!-- <select id="v_a" class="initialized">
-				<option value="" disabled >Choose your option</option>
-				<option value="1" selected>Volume</option>
-				<option value="2">Amount</option>
-			</select> -->
 			<hr>
 			<h5 class="center-align" id="1stgraph"></h5>
 			<div id="aggregator_mandi" class="col s12"></div>
@@ -317,10 +287,32 @@
 				<a class="center col s6" id="aggregator_amount" onclick="change_graph('cost_recovered')" >Total Cost and Recoverd</a>
 			</div>
 			<hr>
-
 			<h5 class="center-align" id="2ndgraph"></h5>
 			<div id="mandi_cost" class="col s12"></div>
 		</div>
+
+		<div class="col s12 m6" id="aggregator_farmer_count">
+			<h5 class="center-align" id="3rdgraph">Farmers Count</h5>
+			<div id="farmers_count" class="col s12"></div>
+		</div>
+
+		<!-- <div class="col s12 m6">
+			<h5 class="center-align" id="4thgraph"></h5>
+			<div id="mandi_cost" class="col s12"></div>
+		</div> -->
+
+
+		<!-- Graphs for gaddidar in market page -->
+		<div class="col s12 m6" id="gaddidar_aggregator_graph">
+			<div class="row">
+				<a class="center col s6" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')"> Volume</a>
+				<a class="center col s6" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')" > Amount</a>
+			</div>
+			<hr>
+			<h5 class="center-align" id="gaddidar_graph"></h5>
+			<div id="aggregator_gaddidar" class="col s12"></div>
+		</div>
+
 
 		<!-- <div class="col s12 m6">
 			<h5 class="center-align">CPK</h5>
@@ -335,13 +327,35 @@
 
 
 
-<div id="container2"></div>
-<div id="container3"></div>
+<div id="container2" style="height: 400px; margin: 0 auto"></div>
+<div id="container3" style="height: 400px; margin: 0 auto"></div>
 <div id="container4"></div>
 <div id="container5"></div>
 <div id="container6"></div>
 
 
+<div id="aggregator_label">
+		<h5 class="center-align">Aggregator Wise Data</h5>
+	</div>
+	<table id="table2" class="highlight bordered centered">
+
+		<thead>
+			<tr>
+				<th data-field="integer">S.No</th>
+				<th data-field="date">Date</th>
+				<th data-field="name">Mandi</th>
+				<th data-field="integer">Total Volume</th>
+				<th data-field="integer"> Total Farmers</th>
+				<th data-field="integer"> Net Payment</th>
+			</tr>
+		</thead>
+
+		<tbody id="table2_tbody">
+			<tr>
+
+			</tr>
+		</tbody>
+	</table>
 
 
 {% endblock %}

@@ -39,6 +39,6 @@ urlpatterns = patterns('',
     url(r'^new_aggregator_wise_data/',new_aggregator_wise_data),
     url(r'^data_for_line_graph/',data_for_line_graph),
     url(r'^data_for_time_chart/',data_for_time_chart),
-    url(r'^visits_data/',visits_data),
+    url(r'^payments/',payments),
 
     )

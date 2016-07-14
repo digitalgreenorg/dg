@@ -169,7 +169,7 @@ def total_static_data(request):
     total_volume = CombinedTransaction.objects.all().aggregate(Sum('quantity'), Sum('amount'))
     total_volume_for_transport = CombinedTransaction.objects.filter(date__gte="2016-06-01").aggregate(Sum('quantity'))
     total_repeat_farmers = len(CombinedTransaction.objects.values('farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1))
-    total_farmers_reached = len(Farmer.objects.all())
+    total_farmers_reached = len(CombinedTransaction.objects.values('farmer').distinct())
     total_cluster_reached = len(LoopUser.objects.all())
     total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").aggregate(
         Sum('transportation_cost'), Sum('farmer_share'))
@@ -248,7 +248,7 @@ def new_aggregator_wise_data(request):
     aggregator_mandi = CombinedTransaction.objects.filter(**filter_args).values(
         'user_created__id', 'mandi__id').annotate(Sum('quantity'), Sum('amount'))
     aggregator_gaddidar = CombinedTransaction.objects.filter(**filter_args).values(
-        'user_created__id', 'gaddidar__id').annotate(Sum('quantity'), Sum('amount'))
+        'user_created__id', 'gaddidar__id', 'date', 'gaddidar__mandi__id').annotate(Sum('quantity'), Sum('amount'))
     aggregator_crop = CombinedTransaction.objects.filter(**filter_args).values(
         'user_created__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
     mandi_gaddidar = CombinedTransaction.objects.filter(**filter_args).values('mandi__id', 'gaddidar__id').annotate(Sum('quantity'), Sum('amount'))
@@ -257,10 +257,12 @@ def new_aggregator_wise_data(request):
     gaddidar_crop = CombinedTransaction.objects.filter(
         **filter_args).values('gaddidar__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values(
-        'mandi__id','user_created__id').annotate(Sum('transportation_cost'), Sum('farmer_share'))
+        'date','mandi__id','user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).values('crop__crop_name').annotate(Min('price'), Max('price'))
+        **filter_args).values('crop__crop_name').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
+
+
     
 
     visits={}
@@ -307,14 +309,26 @@ def data_for_line_graph(request):
     filter_args["mandi__id__in"] = mandi_ids
     filter_args["gaddidar__id__in"] = gaddidar_ids
 
+    farmer = CombinedTransaction.objects.filter(**filter_args).values('date').annotate(Count('farmer'))
+
     mandi_data = CombinedTransaction.objects.filter(**filter_args).values('mandi__id','date').order_by('date').annotate(Sum('quantity'))
-    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values('user_created__id','date').order_by('date').annotate(Sum('quantity'))
+    
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values('user_created__id','date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
+    
     crop_data = CombinedTransaction.objects.filter(**filter_args).values('crop__id','date').order_by('date').annotate(Sum('quantity'))
+    
     gaddidar_data = CombinedTransaction.objects.filter(**filter_args).values('gaddidar__id','date').order_by('date').annotate(Sum('quantity'))
+    
     dates = CombinedTransaction.objects.filter(**filter_args).values_list(
         'date', flat=True).distinct().order_by('date')
-    chart_dict = {'mandi_data':list(mandi_data), 'dates':list(dates), 'aggregator_data':list(aggregator_data), 'crop_data':list(crop_data), 'gaddidar_data':list(gaddidar_data)}
+    
+    crop_prices = CombinedTransaction.objects.filter(
+        **filter_args).values('crop__id', 'date').annotate(Min('price'), Avg('price') ,Max('price'), Sum('quantity'), Sum('amount'))
+
+    chart_dict = {'crop_prices':list(crop_prices), 'farmer': list(farmer), 'mandi_data':list(mandi_data), 'dates':list(dates), 'aggregator_data':list(aggregator_data), 'crop_data':list(crop_data), 'gaddidar_data':list(gaddidar_data)}
+    
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    
     return HttpResponse(data)
 
 def data_for_time_chart(request):
@@ -343,48 +357,24 @@ def data_for_time_chart(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
-def visits_data(request):
+
+
+def payments(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
     filter_args = {}
     if (start_date != ""):
         filter_args["date__gte"] = start_date
     if (end_date != ""):
         filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    filter_args['gaddidar__id__in'] = gaddidar_ids
-    aggregators = LoopUser.objects.filter(user__id__in=aggregator_ids).values('user__id', 'name')    
-    mandis = Mandi.objects.filter(id__in=mandi_ids).values('id', 'mandi_name')
-    visits={}
-    aggregators_mandis1 = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', "mandi__id").distinct().annotate(Sum('quantity'))
-    aggregators_mandis = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'date', 'mandi__id').distinct().annotate(Sum('quantity'))
+
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer'))
+
+    transportation_data = DayTransportation.objects.filter(**filter_args).values('date', 'user_created__id', 'transportation_vehicle__vehicle_number', 'mandi__mandi_name').annotate(Sum('transportation_cost'))
+
+    gaddidar_data = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id', 'gaddidar__id', 'gaddidar__commission').annotate(Sum('quantity'))
     
-    for aggregator in  aggregators:
-        for mandi in mandis:
-            visits[(aggregator['user__id'],mandi['id'])] = 0
-
-    for aggregator_mandi in aggregators_mandis:
-        for mandi in mandis:
-            for aggregator in aggregators:  
-                if aggregator_mandi['mandi__id'] == mandi['id'] and aggregator_mandi['user_created__id'] == aggregator['user__id']:
-                    visits[(aggregator['user__id'], mandi['id'])]+=1
-
-    for aggregator_mandi in aggregators_mandis1:
-        for visit in visits:
-            if (aggregator_mandi['user_created__id'], aggregator_mandi['mandi__id']) == visit:
-                aggregator_mandi['mandi__id__count'] = visits[(aggregator_mandi['user_created__id'], aggregator_mandi['mandi__id'])]
-
-
-
-    chart_dict = {'aggregators_mandis':list(aggregators_mandis1),'aggregators':list(aggregators),'mandis':list(mandis)}
+    chart_dict = {'gaddidar_data':list(gaddidar_data) ,'aggregator_data':list(aggregator_data), 'transportation_data':list(transportation_data)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
       
     return HttpResponse(data)

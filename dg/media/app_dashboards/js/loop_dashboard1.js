@@ -163,8 +163,8 @@ function get_average() {
         }
         j++;
         if (j < stats.length && today >= new Date(stats[j]['date'])) {
-            avg_vol.push(temp_vol / days_to_average);
-            avg_amt.push(temp_amt / days_to_average);
+            avg_vol.push(temp_vol);
+            avg_amt.push(temp_amt);
             temp_vol = 0;
             temp_amt=0;
             
@@ -183,8 +183,8 @@ function get_average() {
         }
     }
 
-    avg_vol.push(temp_vol / days_to_average);
-    avg_amt.push(temp_amt / days_to_average);
+    avg_vol.push(temp_vol);
+    avg_amt.push(temp_amt);
     active_farmers.push(active_farmers_id.length);
 
     return [avg_vol, active_farmers, avg_amt];
@@ -219,7 +219,7 @@ function get_cpk(avg_vol) {
                 cpk.push(0);
                 sustainability_per_kg.push(0);
             }else{
-                cpk.push((temp / days_to_average) / avg_vol[k]);
+                cpk.push(temp / avg_vol[k]);
                 sustainability_per_kg.push(f_share/temp*100);
             }
             
@@ -241,7 +241,7 @@ function get_cpk(avg_vol) {
         cpk.push(0);
         sustainability_per_kg.push(0);
     }else{
-        cpk.push((temp / days_to_average) / avg_vol[k]);
+        cpk.push(temp / avg_vol[k]);
         sustainability_per_kg.push(f_share/temp*100);
     }
 
@@ -257,14 +257,16 @@ function get_cpk(avg_vol) {
 function cummulative(){
 
     var all_dates = [];
+    var farmer_ids = []
 
     var first_date = new Date(dates[dates.length-1]);
-    while (first_date < new Date(dates[0])){
+    while (first_date <= new Date(dates[0])){
         all_dates.push(first_date.getTime());
         first_date.setDate(first_date.getDate()+1)
     }
 
     var cumm = new Array(all_dates.length).fill(0.0);
+    var cumm_farmers = new Array(all_dates.length).fill(0.0);
     var temp ={}
     temp['name'] = "volume";
     temp['data'] = [];
@@ -272,21 +274,37 @@ function cummulative(){
     temp['pointInterval'] = 24 * 3600 * 1000;
     temp['pointStart'] = all_dates[all_dates.length-1]; // Pointing to the starting date
     temp['showInLegend'] = true;
+    var temp_farmers ={}
+    temp_farmers['name'] = "farmers";
+    temp_farmers['data'] = [];
+    temp_farmers['type'] = 'spline';
+    temp_farmers['pointInterval'] = 24 * 3600 * 1000;
+    temp_farmers['pointStart'] = all_dates[all_dates.length-1]; // Pointing to the starting date
+    temp_farmers['showInLegend'] = true;
 
     for (var i=0; i<stats.length;i++){
         var index = all_dates.indexOf(new Date(stats[i]['date']).getTime());
+        if (farmer_ids.indexOf(stats[i]['farmer__id'])== -1){
+            farmer_ids.push(stats[i]['farmer__id']);
+            cumm_farmers[index]+=1;
+
+        }
         cumm[index]+=stats[i]['quantity__sum'];
     }
 
     temp['data'].push([all_dates[0],cumm[0]]);
+    temp_farmers['data'].push([all_dates[0],cumm_farmers[0]]);
 
     for (var i=1; i<cumm.length;i++){        
         cumm[i]+=cumm[i-1];
+        cumm_farmers[i]+=cumm_farmers[i-1];
         temp['data'].push([all_dates[i], cumm[i]]);
+        temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
     }
 
     var series =[];
     series.push(temp);
+    series.push(temp_farmers);
      var $container = $('#container2')
                 .css('position', 'relative');
 
