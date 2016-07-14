@@ -2,8 +2,8 @@ import os, sys
 from os import path
 import csv
 
-# proj_path = "/home/ubuntu/code/dg_coco_test/dg"
-proj_path = "C:\Users\Lokesh\Documents\dg_code"
+proj_path = "/home/ubuntu/code/dg_coco_test/dg"
+# proj_path = "C:\Users\Lokesh\Documents\dg_code"
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
 
@@ -20,11 +20,11 @@ from geographies.models import District, Village, Block
 application = get_wsgi_application()
 
 
-file_path = 'C:\Users\Lokesh\Documents\dg_code\scripts\MRP Database - Master.csv'
-file_path1 = 'C:\Users\Lokesh\Documents\dg_code\scripts\MRP_DATA_error.csv'
+# file_path = 'C:\Users\Lokesh\Documents\dg_code\scripts\MRP Database - Master.csv'
+# file_path1 = 'C:\Users\Lokesh\Documents\dg_code\scripts\MRP_DATA_error.csv'
 
-# file_path = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP Database - Master.csv'
-# file_path1 = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP_DATA_error.csv'
+file_path = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP Database - Master.csv'
+file_path1 = '/home/ubuntu/code/dg_coco_test/dg/scripts/MRP_DATA_error.csv'
 
 # # ___________________________Setting Header in Error File______________________________
 
