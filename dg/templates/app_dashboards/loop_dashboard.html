@@ -19,30 +19,18 @@
 </style>
 {% endblock %} {% block navbar %}
 <header>
-	<div id="progress_bar" class="progress no-margin black lighten-4">
-		<div class="indeterminate black"></div>
-	</div>
 	<nav class="top-nav">
-		<div class="nav-wrapper black lighten-2">
-			<div class="container">
-				<div class="row">
-					<!-- <div class="col s1">
-						<i id="menu_button" class="mdi-navigation-menu page-title button-collapse" data-activates="nav-mobile"></i>
-					</div> -->
-					<!-- <div class= "col s11"> -->
-					<a href="#" class="page-title">LOOP Dashboard</a>
-					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-					<ul class="right hide-on-med-and-down">
-						<li><a href="/loop/dashboard/">Home</a></li>
-						<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
-
-					</ul>
-					<ul class="side-nav" id="mobile-demo">
-						<li><a href="/loop/dashboard/">Home</a></li>
-						<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
-
-					</ul>
-			</div>
+		<div class="nav-wrapper grey lighten-3">			
+			<a href="#" class="brand-logo center black-text">LOOP</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down">
+				<li class="active"><a class="blue-text" href="/loop/dashboard/">Home</a></li>
+				<li><a class="blue-text" href="/loop/second_loop_page/">Anaylitics</a></li>
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li class="active"><a href="/loop/dashboard/">Home</a></li>
+				<li><a href="/loop/second_loop_page/">Anaylitics</a></li>
+			</ul>
 		</div>
 	</nav>
 </header>
@@ -105,20 +93,12 @@
 </div>
 
 <div class="row card white darken-1">
-	<div class="row">
+	<div id="recent_main" class="row">
 		<div class="col s10">
 			<h5>Recent</h5>
 		</div>
 		<div class="col s2">
-		<!-- <a class="dropdown-button" href="#!" data-activates="dropdown1">Days to average<i class="material-icons right">arrow_drop_down</i></a>
-		<ul id="dropdown1" class="dropdown-content">
-		  <li><a href="#!">one</a></li>
-		  <li><a href="#!">two</a></li>
-		  <li class="divider"></li>
-		  <li><a href="#!">three</a></li>
-		</ul> -->
 			<select id="mFrequency" class="initialized">
-					<!-- <option value="" disabled >Choose your option</option> -->
 					<option value="7">7</option>
 					<option value="15" selected>15</option>
 					<option value="30">30</option>
@@ -126,7 +106,6 @@
 			</select>
 		</div>
 	</div>
-	<hr/>
 	<div class="row">
 		<div class="col s6 m4 l2">
 			<div class="card-content white darken-1">

@@ -4,14 +4,16 @@ window.onload = initialize;
 function initialize() {
     // initialize any library here
     $('select').material_select();
+    $('ul.tabs').tabs();
     $(".button-collapse1").sideNav()
     $(".button-collapse").sideNav()
     var today = new Date();
     $("#to_date").val(today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate());
     today.setMonth(today.getMonth()-3)
     $("#from_date").val(today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate());
-
+    gaddidar = false;
     selected_tab="aggregator";
+    parameter = "volume"
 
     set_filterlistener();
     get_filter_data();
@@ -33,10 +35,11 @@ $('.datepicker').pickadate({
 
 function change_tab(tab){
     selected_tab = tab;
-    change_graph();
+    change_graph(parameter);
 }
 
-function change_graph(parameter){
+function change_graph(param){
+    parameter = param;
     $("#aggregator_visits").show();
     $("#gaddidar_aggregator_graph").hide();
     $("#aggregator_farmer_count").show();
@@ -47,11 +50,16 @@ function change_graph(parameter){
         $("#gaddidar_aggregator_graph").show();
         $("#aggregator_farmer_count").hide();
         update_graphs_mandi_wise(parameter);
-        if (parameter==null){
+        if (gaddidar){
             update_graphs_gaddidar_wise(parameter);
+            gaddidar = true
         }
     }
     if (selected_tab == "crop"){
+        $("#aggregator_visits").removeClass("active");
+        $("#aggregator_volume").addClass("active");
+        $('ul.tabs').tabs();
+        parameter = "volume";
         $("#aggregator_visits").hide()
         update_graphs_crop_wise(parameter);
     }
@@ -429,13 +437,13 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
 
     var data_for_sorting = []
     for (var i = 0; i < axis.length; i++) {
-       data_for_sorting.push({'name':axis_names[i], 'cost':0, 'cost_recovered':0})
-       drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"cpk", 'data':[]})
-       drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"spk", 'data':[]})
-       for (var j=0; j<values.length; j++){
+        data_for_sorting.push({'name':axis_names[i], 'cost':0, 'cost_recovered':0})
+        drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"cpk", 'data':[]})
+        drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"spk", 'data':[]})
+        for (var j=0; j<values.length; j++){
             drilldown['series'][i*2]['data'].push([values_names[j], null]);
             drilldown['series'][i*2+1]['data'].push([values_names[j], null]);
-       }
+        }
     }
 
     var json_data_length = json_data.length;
@@ -453,8 +461,8 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     });
 
     for (var i = 0; i < axis.length; i++) {
-       series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cost'], 'drilldown':data_for_sorting[i]['name']+"cpk"});
-       series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cost_recovered'], 'drilldown':data_for_sorting[i]['name']+"spk" });
+        series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cost'], 'drilldown':data_for_sorting[i]['name']+"cpk"});
+        series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cost_recovered'], 'drilldown':data_for_sorting[i]['name']+"spk" });
     }
 
     for (var i=0; i<drilldown['series'].length; i++){
@@ -524,13 +532,13 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     }
     var data_for_sorting=[]
     for (var i = 0; i < axis.length; i++) {
-       data_for_sorting.push({'name':axis_names[i], 'cpk':values_vol[i] > 0 ? values_cost_cpk[i] / values_vol[i] : 0.0, 'spk':values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0});
-       drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"cpk", 'data':[]});
-       drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"spk", 'data':[]});
-       for (var j=0; j<values.length; j++){
+        data_for_sorting.push({'name':axis_names[i], 'cpk':values_vol[i] > 0 ? values_cost_cpk[i] / values_vol[i] : 0.0, 'spk':values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0});
+        drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"cpk", 'data':[]});
+        drilldown['series'].push({'name':axis_names[i], 'id': axis_names[i]+"spk", 'data':[]});
+        for (var j=0; j<values.length; j++){
             drilldown['series'][i*2]['data'].push([values_names[j], values_vol_drilldown[i][j] > 0 ? values_cost_cpk_drilldown[i][j] / values_vol_drilldown[i][j] : 0.0 ]);
             drilldown['series'][i*2+1]['data'].push([values_names[j], values_vol_drilldown[i][j] > 0 ? values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j] : 0.0 ]);
-       }
+        }
     }
 
     data_for_sorting.sort(function(a,b){

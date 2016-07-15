@@ -1,4 +1,4 @@
-    .filter-table th, .filter-table td {
+.filter-table th, .filter-table td {
     padding: 0px;
     margin-top: 0px;
     padding-left: 5px;
@@ -13,14 +13,14 @@
     height: 57px;
     margin-bottom: 32px;
 }
-nav.top-nav {
+/*nav.top-nav {
     height: 122px;
     box-shadow: none;
 }
 nav.top-nav a.page-title  {
     line-height: 122px;
     font-size: 48px;
-}
+}*/
 a.button-collapse.top-nav {
     position: absolute;
     text-align: center;
@@ -34,7 +34,7 @@ a.button-collapse.top-nav {
     font-size: 32px;
     z-index: 2;
 }
-a.button-collapse.top-nav.full {
+/*a.button-collapse.top-nav.full {
     line-height: 122px;
 }
 @media only screen and (max-width: 600px) {
@@ -49,10 +49,10 @@ a.button-collapse.top-nav.full {
     nav .nav-wrapper a.page-title {
         font-size: 36px;
     }
-}
+}*/
 @media only screen and (min-width: 993px) {
     .container {
-        width: 100%
+        width: 95%
     }
 }
 
@@ -140,15 +140,13 @@ ul.side-nav.fixed:hover {
     outline: none;
 }
 
+#recent_main {
+    height: 10px;
+}
 
-/*header, main, footer {
-    padding-left: 240px;
-}*/
 h5 {
     font-size: 18px;
     font-weight: 400;
-    /*padding-left: 10px;
-    padding-top: 10px;*/
 }
 h4 {
     font-size: 26px;

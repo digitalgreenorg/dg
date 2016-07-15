@@ -334,10 +334,17 @@ function createDetail(masterChart, dict) {
                     detailStart = dict[0]['data'][0][0];
 
                 $.each(masterChart.series, function () {
+                    if (this.name == "volume"){
+                        var axis=0;
+                    }
+                    else{
+                        var axis =1
+                    }
                     var temp ={};
                     temp['name'] = this.name;
                     temp['type'] = "spline"
                     temp['data'] = new Array();
+                    temp['yAxis'] = axis;
                     temp['pointStart']= detailStart;
                     temp['pointInterval']= 24 * 3600 * 1000;
                     temp['showInLegend'] = true;
@@ -367,12 +374,19 @@ function createDetail(masterChart, dict) {
                     xAxis: {
                         type: 'datetime'
                     },
-                    yAxis: {
+                    yAxis: [{
                         title: {
                             text: null
                         },
-                        maxZoom: 0.1
-                    },
+                        maxZoom: 0.1,
+                        
+                    },{
+                       title: {
+                            text: null
+                        },
+                        
+                        opposite: true 
+                    }],
                     tooltip: {
                         // formatter: function () {
                         //     var point = this.points[0];

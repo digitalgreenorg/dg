@@ -49,8 +49,8 @@
 				<ul class="left">
 					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
 			        <li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
-			        <li><a onclick="change_tab('mandi')">Mandi</a></li>
-			        <li><a onclick="change_tab('crop')">Crop</a></li>
+			        <li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
+			        <li><a class="" onclick="change_tab('crop')">Crop</a></li>
 			        <div class="input-field">
 						<i class="material-icons black-text text-lighten-2 prefix">today</i>
 						<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
@@ -261,11 +261,15 @@
 			<option value="2">gaddidar</option>
 			<option value="3">crop</option>
 		</select> -->
-		<div class=" col s12 m6">			
+
+
+		<div class=" col s12 m12 l6">			
 			<div class="row">
-				<a class="center col s4" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a>
-				<a class="center col s4" id="aggregator_amount" onclick="change_graph('amount')" > Amount</a>
-				<a class="center col s4" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a>
+				<ul class="tabs">
+				<li class="tab col s4" id="sof"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
+				<li class="tab col s4"><a class="center blue-text" id="aggregator_amount" onclick="change_graph('amount')" > Amount</a></li>
+				<li class="tab col s4"><a class="center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
+				</ul>
 			</div>
 			<hr>
 			<h5 class="center-align" id="1stgraph"></h5>
@@ -281,17 +285,18 @@
 			<h5 class="center-align">Aggregator Crop wise</h5>
 			<div id="aggregator_crop" class="col s12"></div>
 		</div> -->
-		<div class="col s12 m6">
+		<div class="col s12 m12 l6">
 			<div class="row">
-				<a class="center col s6" id="aggregator_volume" onclick="change_graph('cpk_spk')">Cpk_Spk</a>
-				<a class="center col s6" id="aggregator_amount" onclick="change_graph('cost_recovered')" >Total Cost and Recoverd</a>
+				<ul class="tabs">
+				<li class="tab col s6"><a class="center active" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
+				<li class="tab col s6"><a class="center" id="aggregator_cost" onclick="change_graph('cost_recovered')" >Total Cost and Recoverd</a></li>
 			</div>
 			<hr>
 			<h5 class="center-align" id="2ndgraph"></h5>
 			<div id="mandi_cost" class="col s12"></div>
 		</div>
 
-		<div class="col s12 m6" id="aggregator_farmer_count">
+		<div class="col s12 m12 l6" id="aggregator_farmer_count">
 			<h5 class="center-align" id="3rdgraph">Farmers Count</h5>
 			<div id="farmers_count" class="col s12"></div>
 		</div>
