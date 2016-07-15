@@ -104,6 +104,8 @@ define([
             this.f_index = []; 
             //stores the dependency mapping between form elements
             this.source_dependents_map = {}; 
+            //stores maping between filters and their dependent elements
+            this.source_filter_dependent_map = {};
             //stores the mapping between foreign element and their entity
             this.element_entity_map = {}; 
             //stores whether a foreign element has been rendered
@@ -126,6 +128,7 @@ define([
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
+                    var filter_dependency = this.foreign_entities[f_entity][element]["filter_dependency"];
                     if (dependency)
                         this.num_sources[element] = dependency.length;
                     else
@@ -143,6 +146,21 @@ define([
                             }
                         });
                         console.log("source_dependents_map = " + JSON.stringify(this.source_dependents_map));
+                    }
+
+                    if (filter_dependency) {
+                        var f_ens = this.foreign_entities;
+                        var that = this;
+                        $.each(filter_dependency, function(index, dep) {
+                            var source_elm = dep.source_form_element;
+                            if (source_elm in that.source_filter_dependent_map)
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            else {
+                                that.source_filter_dependent_map[source_elm] = [];
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            }
+                        });
+                        console.log("source_filter_dependent_map = " + JSON.stringify(this.source_filter_dependent_map)); 
                     }
 
                 }
@@ -402,6 +420,11 @@ define([
                 // put change-event listeners on source elements
                 this.$('[name=' + element + ']').change(this.render_dep_for_elements);
             }
+            for (element in this.source_filter_dependent_map) {
+                console.log("creating changeevent for - " + element);
+                // put change-event listeners on source elements
+                this.$('[name=' + element + ']').change(this.render_dep_for_elements);
+            }
         },
 
         // initiate the jquery validation plugin on the form
@@ -466,6 +489,11 @@ define([
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
+                var filtered_models = this.filter_dep_for_element(dep_el);
+                this.render_foreign_element(dep_el, filtered_models);
+            }, this);
+
+            _.each(this.source_filter_dependent_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
             }, this);
@@ -557,6 +585,61 @@ define([
             return filtered;
         },
 
+        filter_dependent_model_array: function(model_array, filter) {
+            if(model_array.length == 0) return model_array;
+            var that = this;
+            var source_form_element = filter['source_form_element'];
+            var source_curr_value = that.get_curr_value_of_element(source_form_element);
+            var dep_attr = filter['dep_attr'];
+            filtered = [];
+            if (!source_curr_value)
+                return;
+            else if (!(source_curr_value instanceof Array)) {
+                //if source is single select - convert its value to array -make it like a multiselect
+                var temp = source_curr_value;
+                source_curr_value = [];
+                source_curr_value.push(temp);
+            }
+            if(model_array[0].get(dep_attr) instanceof Array) {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                    $.each(model.get(filter.dep_attr), function(index, object) {
+                        if ($.inArray(String(object.id), source_curr_value) > -1)
+                            exists = true;
+                    });
+                    return exists;
+                });
+            } else {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    var compare = null;
+                    if (typeof model.get(filter.dep_attr) == "object")
+                        compare = model.get(filter.dep_attr).id;
+                    else
+                        compare = model.get(filter.dep_attr);
+
+                    if (filter.src_attr && filter.src_attr != "id") {
+                        var s_collection = that.get_collection_of_element(source_form_element);
+                        var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                        if (s_model.get(filter.src_attr) instanceof Array) {
+                            //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                            $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                if (compare == src_compare.id)
+                                    exists = true;
+                            });
+                        }
+                        return exists;
+                    } else {
+                        if ($.inArray(String(compare), source_curr_value) > -1)
+                            exists = true;
+                        return exists;
+                    }
+                });
+            }
+            return model_array;
+        },
+
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
@@ -567,7 +650,12 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-
+            //for filtering based on dependent fields
+            if (f_entity_desc.filter_dependency)
+                for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
+                   model_array = this.filter_dependent_model_array(model_array, f_entity_desc.filter_dependency[i]);
+                }
+    
             if (f_entity_desc.expanded) {
                 // get the expanded template
                 var expanded_template = _.template($('#' + f_entity_desc.expanded.template).html());

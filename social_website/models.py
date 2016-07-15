@@ -49,7 +49,6 @@ class Video(models.Model):
     duration = models.IntegerField(null=True, blank=True)
     date = models.DateField()
     onlineLikes = models.IntegerField(default=0)
-    offlineLikes = models.IntegerField(default=0)
     onlineViews = models.IntegerField(default=0)
     offlineViews = models.IntegerField(default=0)
     adoptions = models.IntegerField(default=0)
@@ -76,6 +75,19 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     thumbnailURL = models.URLField(max_length=100)
     partner = models.ForeignKey(Partner)
+    
+    def __unicode__(self):
+        return  u'%s' % (self.name)
+
+class Animator(models.Model):
+    uid = models.AutoField(primary_key=True)
+    coco_id = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
+    thumbnailURL = models.URLField(max_length=100)
+    partner = models.ForeignKey(Partner)
+
+    def __unicode__(self):
+        return  u'%s' % (self.name)
 
 #===============================================================================
 # Updated from COCO
@@ -192,14 +204,13 @@ class Milestone(models.Model):
     screeningNumber = models.IntegerField()
     viewerNumber = models.IntegerField()
 
-
 class Comment(models.Model):
     uid = models.AutoField(primary_key=True)
     date = models.DateField(default=lambda : datetime.datetime.utcnow().date())
     text = models.TextField()
     isOnline = models.BooleanField()
     video = models.ForeignKey(Video)
-    person = models.ForeignKey(Person, null=True, blank=True)
+    animator = models.ForeignKey(Animator, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
 
 class VideoLike(models.Model):

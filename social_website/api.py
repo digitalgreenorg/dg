@@ -13,7 +13,7 @@ from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
-from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Video, VideoinCollection, VideoLike
+from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Animator, Video, VideoinCollection, VideoLike
 from social_website.utils.api_functions import add_video_collection
 
 
@@ -152,6 +152,11 @@ class PersonResource(BaseResource):
         queryset = Person.objects.all()
         resource_name = 'person'
 
+class AnimatorResource(BaseResource):
+    class Meta:
+        queryset = Animator.objects.all()
+        resource_name = 'animator'
+
 class PartnerFarmerResource(BaseResource):
     farmer = fields.ToManyField('social_website.api.PersonResource', 'person_set', full=True)
     dehydrate_farmer = partial(many_to_many_to_subfield, field_name='person_set',sub_field_names=['uid','coco_id','name','thumbnailURL'])
@@ -253,8 +258,6 @@ class ActivityResource(BaseResource):
                    }
 
 
-
-
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -277,7 +280,7 @@ class VideoLikeResource(ModelResource):
                    }
 
 class CommentResource(BaseResource):
-    person = fields.ForeignKey(PersonResource, 'person',full=True, null=True)
+    animator = fields.ForeignKey(AnimatorResource, 'animator', full=True, null=True)
     video = fields.ForeignKey(VideoResource, 'video', full=True, null=True)
     user = fields.ForeignKey(UserResource, 'user', null=True, full=True)
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')

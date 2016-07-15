@@ -73,15 +73,15 @@ class NonNegotiablesInline(admin.TabularInline):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline,]
     fieldsets = [
-                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','summary', 'partner', 'related_practice']}),
-                (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
-                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid','review_status','video_grade','reviewer']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice']}),
+                (None,{'fields':['village','production_team']}),
+                ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
-    list_display = ('id', 'title', 'location', 'video_production_end_date', 'review_status', 'video_grade', 'reviewer')
+    list_display = ('id', 'title', 'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
     search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
     list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
     list_editable = ('review_status', 'video_grade', 'reviewer')
-    raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
+    raw_id_fields = ('village', 'production_team', 'related_practice')
     class Media:
         js = (
                 settings.STATIC_URL + "js/qa_video.js",
@@ -185,6 +185,14 @@ class DistrictAdmin(admin.ModelAdmin):
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
     search_fields = ['state_name', 'country__country_name']
+
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('subcategory_name', 'category')
+    search_fields = ['subcategory_name', 'category__category_name']
+
+class VideoPracticeAdmin(admin.ModelAdmin):
+    list_display = ('videopractice_name', 'subcategory')
+    search_fields = ['videopractice_name', 'subcategory__subcategory_name']
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')

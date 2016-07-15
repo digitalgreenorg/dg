@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import ACTORS, CocoModel, STORYBASE, SUITABLE_FOR, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
+from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -74,6 +74,58 @@ class Practice(CocoModel):
         practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
         return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
+class Category(CocoModel):
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=100, unique='True')
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    class Meta:
+        verbose_name_plural = "categories"
+
+    def __unicode__(self):
+        return self.category_name
+post_save.connect(save_log, sender=Category)
+pre_delete.connect(delete_log, sender=Category)
+
+class SubCategory(CocoModel):
+    id = models.AutoField(primary_key=True)
+    category = models.ForeignKey(Category)
+    subcategory_name = models.CharField(max_length = 100)
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    class Meta:
+        verbose_name_plural = "sub categories"
+
+    def __unicode__(self):
+        return self.subcategory_name
+post_save.connect(save_log, sender=SubCategory)
+pre_delete.connect(delete_log, sender=SubCategory)
+
+class VideoPractice(CocoModel):
+    id = models.AutoField(primary_key=True)
+    subcategory = models.ForeignKey(SubCategory)
+    videopractice_name = models.CharField(max_length = 100)
+
+    def get_village(self):
+        return None
+
+    def get_partner(self):
+        return None
+    
+    def __unicode__(self):
+        return self.videopractice_name
+post_save.connect(save_log, sender=VideoPractice)
+pre_delete.connect(delete_log, sender=VideoPractice)
 
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -99,17 +151,16 @@ class Video(CocoModel):
     video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE)
     duration = models.TimeField(null=True, blank=True)
     language = models.ForeignKey(Language)
-    summary = models.TextField(blank=True)
-    video_production_start_date = models.DateField()
-    video_production_end_date = models.DateField()
+    benefit = models.TextField(blank=True)
+    production_date = models.DateField()
     village = models.ForeignKey(Village)
-    facilitator = models.ForeignKey(Animator, related_name='facilitator')
-    cameraoperator = models.ForeignKey(Animator, related_name='cameraoperator')
-    approval_date = models.DateField(null=True, blank=True)
-    video_suitable_for = models.IntegerField(choices=SUITABLE_FOR)
-    related_practice = models.ForeignKey(Practice, blank=True, null=True)
+    production_team = models.ManyToManyField(Animator)
     farmers_shown = models.ManyToManyField(Person)
-    actors = models.CharField(max_length=1, choices=ACTORS)
+    category = models.ForeignKey(Category, null=True, blank=True)
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
+    approval_date = models.DateField(null=True, blank=True)
+    related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
     review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)
@@ -117,14 +168,13 @@ class Video(CocoModel):
     reviewer = models.IntegerField(max_length=1, choices=REVIEW_BY, null=True, blank=True)
 
     class Meta:
-        unique_together = ("title", "video_production_start_date", "video_production_end_date", "village")
+        unique_together = ("title", "production_date", "language", "village")
 
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
 
     def location(self):
         return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
-
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
 

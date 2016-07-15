@@ -150,30 +150,30 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 })
                     .always(function() {
                     //upload finished
-                    //start inc download - even if upload failed    
-                    that.inc_download({
-                        background: false
-                    })
-                        .done(function() {
-                        console.log("INC DOWNLOAD FINISHED");
-                        that.sync_in_progress = false;
-                        notifs_view.add_alert({
-                            notif_type: "success",
-                            message: "Incremental download successfully finished"
+                    //start inc download - even if upload failed and internet connectivity is available 
+                    if(!UploadView.server_connectivity_lost)  {
+                        that.inc_download({
+                            background: false
+                        })
+                            .done(function() {
+                            console.log("INC DOWNLOAD FINISHED");
+                            that.sync_in_progress = false;
+                            notifs_view.add_alert({
+                                notif_type: "success",
+                                message: "Incremental download successfully finished"
+                            });
+                        })
+                            .fail(function(error) {
+                            console.log("ERROR IN INC DOWNLOAD");
+                            console.log(error);
+                            that.sync_in_progress = false;
+                            notifs_view.add_alert({
+                                notif_type: "error",
+                                message: "Sync Incomplete. Failed to do Incremental Download: " + error
+                            });
                         });
-                    })
-                        .fail(function(error) {
-                        console.log("ERROR IN INC DOWNLOAD");
-                        console.log(error);
-                        that.sync_in_progress = false;
-                        notifs_view.add_alert({
-                            notif_type: "error",
-                            message: "Sync Incomplete. Failed to do Incremental Download: " + error
-                        });
-
-                    });
+                    }
                 });
-
             })
                 .fail(function(model, error) {
                 // if DB is not downloaded, start the full download    
@@ -185,7 +185,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     });
                 }
             });
-
         },
         
         //method to initiate full download
@@ -294,7 +293,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             return navigator.onLine;
         }
     });
-
 
     // Our module now returns our view
     return DashboardView;
