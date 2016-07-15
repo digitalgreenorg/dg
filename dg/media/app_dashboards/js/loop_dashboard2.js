@@ -137,8 +137,9 @@ function get_filter_data() {
             aggregators_for_filter = data_json.aggregators;
             mandis_for_filter = data_json.mandis;
             gaddidars_for_filter = data_json.gaddidars;
+            crops_for_filter=data_json.crops;
             fill_aggregator_filter(aggregators_for_filter);
-            fill_crop_filter(data_json.crops);
+            fill_crop_filter(crops_for_filter);
             fill_mandi_filter(mandis_for_filter);
             fill_gaddidar_filter(gaddidars_for_filter);
             get_data();
@@ -259,7 +260,7 @@ function update_graphs_aggregator_wise(chart) {
         cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id',mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
         repeat_farmers($('#farmers_count'), aggregator_ids, aggregator_names, 'user_created__id',mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.total_repeat_farmers);
     }else{
-       
+
         if (chart == "volume") {
            aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id',aggregator_graphs_json_data.aggregator_mandi, "quantity__sum");
 
@@ -276,7 +277,7 @@ function update_graphs_aggregator_wise(chart) {
         }else if(chart == "cpk_spk"){
             $('#2ndgraph').text("Cost per kg")
             cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id',mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data);
-        }      
+        }
     }
 }
 
@@ -287,7 +288,7 @@ function update_graphs_mandi_wise(chart){
         $('#2ndgraph').text("Cost per kg")
         cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
     }else{
-       
+
         if (chart == "volume") {
            aggregator_graph($('#aggregator_mandi'), mandi_ids, mandi_names, 'mandi__id', gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_graphs_json_data.mandi_gaddidar, "quantity__sum");
 
@@ -304,7 +305,7 @@ function update_graphs_mandi_wise(chart){
         }else if(chart == "cpk_spk"){
             $('#2ndgraph').text("Cost per kg")
             cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
-        }      
+        }
     }
 }
 function update_graphs_gaddidar_wise(chart){
@@ -312,7 +313,7 @@ function update_graphs_gaddidar_wise(chart){
         aggregator_graph($('#aggregator_gaddidar'),  gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_gaddidar, "quantity__sum");
         // cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
     }
-    else{     
+    else{
         if (chart == "volume") {
            aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data.aggregator_gaddidar, "quantity__sum");
 
@@ -327,12 +328,12 @@ function update_graphs_gaddidar_wise(chart){
         // }else if(chart == "cpk_spk"){
         //     $('#2ndgraph').text("Cost per kg")
         //     cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', aggregator_graphs_json_data);
-        // }      
+        // }
     }
 }
 
 function update_graphs_crop_wise(chart){
-    
+
     if (chart==null){
         $('#1stgraph').text("crop Wise")
         aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
@@ -341,7 +342,7 @@ function update_graphs_crop_wise(chart){
         farmer_crop_visits($("#farmers_count"), aggregator_graphs_json_data.crop_prices)
 
     }else{
-       
+
         if (chart == "volume") {
            aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', aggregator_graphs_json_data.mandi_crop, "quantity__sum");
 
@@ -355,7 +356,7 @@ function update_graphs_crop_wise(chart){
 function aggregator_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data, parameter) {
     var series = [];
     var drilldown ={};
-     
+
     drilldown['series']= [];
 
     // These three values are to show at top
@@ -379,7 +380,7 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
         }
         temp['showInLegend'] = false;
         series.push(temp);
-    
+
     for (var i = 0; i < json_data.length; i++) {
 
         var agg_index = values.indexOf(json_data[i][values_parameter].toString());
@@ -423,7 +424,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         temp_cost['data'] = [];
         temp_cost['pointPadding'] = 0.3;
         temp_cost['pointPlacement'] = 0;
-       
+
     var temp_cost_recovered = {};
         temp_cost_recovered['name'] = "Cost Recovered";
         temp_cost_recovered['type'] = "bar";
@@ -546,8 +547,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     });
 
     for (var i = 0; i < axis_names.length; i++) {
-        series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cpk'], 'drilldown':data_for_sorting[i]['name']+"cpk" }); 
-        series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['spk'], 'drilldown':data_for_sorting[i]['name']+"spk"}); 
+        series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cpk'], 'drilldown':data_for_sorting[i]['name']+"cpk" });
+        series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['spk'], 'drilldown':data_for_sorting[i]['name']+"spk"});
     }
 
     for (var i=0; i<drilldown['series'].length; i++){
@@ -632,8 +633,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
 //     });
 
 //     for (var i = 0; i < axis_names.length; i++) {
-//         series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cpk'], 'drilldown':data_for_sorting[i]['name']+"cpk" }); 
-//         series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['spk'], 'drilldown':data_for_sorting[i]['name']+"spk"}); 
+//         series[0]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['cpk'], 'drilldown':data_for_sorting[i]['name']+"cpk" });
+//         series[1]['data'].push({'name': data_for_sorting[i]['name'], 'y':data_for_sorting[i]['spk'], 'drilldown':data_for_sorting[i]['name']+"spk"});
 //     }
 
 //     for (var i=0; i<drilldown['series'].length; i++){
@@ -657,12 +658,12 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
         temp_total['data'] = [];
         temp_total['pointPadding'] = 0.3;
         temp_total['pointPlacement'] = 0;
-        
+
     var temp_repeat = {};
         temp_repeat['name'] = "Cost Recovered";
         temp_repeat['type'] = "bar";
         temp_repeat['showInLegend'] = false;
-        temp_repeat['data'] = [];      
+        temp_repeat['data'] = [];
         temp_repeat['pointPadding'] = 0.4;
         temp_repeat['pointPlacement'] = 0;
 
@@ -717,7 +718,7 @@ function farmer_crop_visits(container, json_data){
         temp_repeat['name'] = "Repeats";
         temp_repeat['type'] = "bar";
         temp_repeat['showInLegend'] = false;
-        temp_repeat['data'] = [];      
+        temp_repeat['data'] = [];
 
 
     json_data.sort(function(a,b){
@@ -747,8 +748,17 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
         .done(function(data) {
             line_json_data = JSON.parse(data);
             show_line_graphs();
-            crop_prices_graph(crop_ids[29]);
+            fill_crop_drop_down();
+            crop_prices_graph(crop_ids[0]);
         });
+}
+
+function fill_crop_drop_down(){
+  $.each(crops_for_filter, function(index, data) {
+      tbody_obj=$('#crop_max_min_avg');
+      var li_item = '<li class="black" data=' + data.id + '>'+data.crop_name+'</li>';
+      tbody_obj.append(li_item);
+  });
 }
 
 function show_line_graphs(){
@@ -771,29 +781,29 @@ function show_line_graphs(){
 
     for (var i=0; i<json_data.length; i++){
         var index = all_dates.indexOf(new Date(json_data[i]['date']).getTime());
-        series[0]['data'][index][1] += json_data[i]['quantity__sum']; 
-        series[1]['data'][index][1] += json_data[i]['amount__sum']; 
+        series[0]['data'][index][1] += json_data[i]['quantity__sum'];
+        series[1]['data'][index][1] += json_data[i]['amount__sum'];
     }
 
     for (var i=0; i<farmer_data.length; i++){
         var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
-        series[2]['data'][index][1] += farmer_data[i]['farmer__count']; 
+        series[2]['data'][index][1] += farmer_data[i]['farmer__count'];
     }
 
-    var $container = $('#container2')
-                .css('position', 'relative');
-
-            $('<div id="detail-container">')
-                .appendTo($container);
-
-            $('<div id="master-container">')
-                .css({
-                    position: 'absolute',
-                    top: 300,
-                    height: 100,
-                    width: '100%'
-                })
-                    .appendTo($container);
+    // var $container = $('#container2')
+    //             .css('position', 'relative');
+    //
+    //         $('<div id="detail-container">')
+    //             .appendTo($container);
+    //
+    //         $('<div id="master-container">')
+    //             .css({
+    //                 position: 'absolute',
+    //                 top: 300,
+    //                 height: 100,
+    //                 width: '100%'
+    //             })
+    //                 .appendTo($container);
 
     createMaster(series)
 }
@@ -823,12 +833,12 @@ function crop_prices_graph(crop_id){
     var series= [{
             'name': 'Average Price',
             'type': 'line',
-            
-            
+
+
         }, {
             'name': 'Range',
             'type': 'boxplot',
-            
+
         }];
 
     var ranges = [];
@@ -839,10 +849,10 @@ function crop_prices_graph(crop_id){
         avgs.push([all_dates[i],null])
     }
 
-    
+
     for (var i=0; i<json_data.length;i++){
         var index = all_dates.indexOf(new Date(json_data[i]['date']).getTime());
-        
+
         if (json_data[i]['crop__id'].toString() ==crop_id){
             ranges[index][1] = json_data[i]['price__min'];
             ranges[index][2] = json_data[i]['amount__sum']/json_data[i]['quantity__sum'];
@@ -854,7 +864,7 @@ function crop_prices_graph(crop_id){
 
     series[0]['data'] = avgs;
     series[1]['data'] = ranges;
- 
+
     plot_area_range_graph($("#container3"),series);
 
 }
@@ -866,7 +876,7 @@ function plot_stacked_chart(container_obj, dict){
         var max=5;
     }else{
         var max = dict[0]['data'].length-1;
-    } 
+    }
     container_obj.highcharts({
         chart: {
             height: 300,
@@ -902,7 +912,7 @@ function plot_stacked_chart(container_obj, dict){
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> <br/>'
         },
-    
+
         plotOptions: {
             bar: {
                 grouping: false,
@@ -918,7 +928,7 @@ function plot_stacked_chart(container_obj, dict){
             }
         },
         series: dict
-        
+
     });
 }
 function plot_drilldown(container_obj, dict, drilldown) {
@@ -927,7 +937,7 @@ function plot_drilldown(container_obj, dict, drilldown) {
         var max=5;
     }else{
         var max = dict[0]['data'].length-1;
-    } 
+    }
     container_obj.highcharts({
         chart: {
             type: 'bar',
@@ -948,7 +958,7 @@ function plot_drilldown(container_obj, dict, drilldown) {
             title: {
                 text: null
             },
-            
+
 
         },
         scrollbar:{
@@ -984,7 +994,7 @@ function plot_max_min (container,x_axis, dict) {
         var max=5;
     }else{
         var max = dict[0]['data'].length-1;
-    } 
+    }
 
     container.highcharts({
 
@@ -998,7 +1008,7 @@ function plot_max_min (container,x_axis, dict) {
             text: null
         },
 
-        
+
 
         xAxis: {
             categories: x_axis,
@@ -1015,7 +1025,7 @@ function plot_max_min (container,x_axis, dict) {
 
         scrollbar: {
             enabled: true,
-        }, 
+        },
 
         plotOptions: {
             columnrange: {
@@ -1071,18 +1081,13 @@ function createDetail(masterChart, dict) {
                 // create a detail chart referenced by a global variable
                 detailChart = $('#detail-container').highcharts({
                     chart: {
-                        marginBottom: 120,
                         reflow: false,
-                        marginLeft: 50,
-                        marginRight: 20,
-                        style: {
-                            position: 'absolute'
-                        }
+
                     },
                     credits: {
                         enabled: false
                     },
-                    
+
                     xAxis: {
                         type: 'datetime'
                     },
@@ -1091,13 +1096,13 @@ function createDetail(masterChart, dict) {
                             text: null
                         },
                         maxZoom: 0.1,
-                        
+
                     },{
                        title: {
                             text: null
                         },
-                        
-                        opposite: true 
+
+                        opposite: true
                     }],
                     tooltip: {
                         // formatter: function () {
@@ -1152,10 +1157,6 @@ function createDetail(masterChart, dict) {
                 $('#master-container').highcharts({
                     chart: {
                         reflow: false,
-                        borderWidth: 0,
-                        backgroundColor: null,
-                        marginLeft: 50,
-                        marginRight: 20,
                         zoomType: 'x',
                         events: {
 
@@ -1178,13 +1179,13 @@ function createDetail(masterChart, dict) {
                                     $.each(this.data, function(){
                                        if (this.x > min && this.x < max) {
                                             temp['data'].push([this.x, this.y]);
-                                        } 
+                                        }
                                     });
                                     myDict.push(temp);
                                 });
                                 console.log(myDict);
                                 // reverse engineer the last part of the data
-                              
+
                                 // move the plot bands to reflect the new detail span
                                 xAxis.removePlotBand('mask-before');
                                 xAxis.addPlotBand({
@@ -1206,9 +1207,9 @@ function createDetail(masterChart, dict) {
                                     detailChart.series[pos].setData(myDict[pos].data);
                                     pos++;
                                 });
-                                
-                                
-                                
+
+
+
 
                                 return false;
                             }
@@ -1324,7 +1325,7 @@ function plot_area_range_graph(container, dict){
             tooltip: {
                 crosshairs: true,
                 shared: true,
-                
+
             },
 
             legend: {
@@ -1368,7 +1369,7 @@ function aggregator_payment_sheet(data_json, aggregator){
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
-            
+
 
             cell1.innerHTML = sno;
             cell2.innerHTML = data_json[i]['date'];
@@ -1416,7 +1417,7 @@ function transporter_payment_sheet(data_json, aggregator){
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
-            
+
 
             cell1.innerHTML = sno;
             cell2.innerHTML = data_json[i]['date'];

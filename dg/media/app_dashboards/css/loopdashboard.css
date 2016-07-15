@@ -57,7 +57,10 @@ a.button-collapse.top-nav {
 }
 
 .container{
-    padding-top: 10px;
+    padding-top: 50px;
+}
+#container2{
+    padding: 50px;
 }
 ul.side-nav.fixed li.logo {
     text-align: center;
@@ -140,9 +143,9 @@ ul.side-nav.fixed:hover {
     outline: none;
 }
 
-#recent_main {
+/*#recent_main {
     height: 10px;
-}
+}*/
 
 h5 {
     font-size: 18px;

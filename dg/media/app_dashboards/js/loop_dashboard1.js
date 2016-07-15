@@ -39,35 +39,35 @@ function total_static_data() {
         var json_data = JSON.parse(data);
 
         var total_volume = json_data['total_volume']['quantity__sum'];
-        
+
         var total_amount = json_data['total_volume']['amount__sum'];
-        
+
         var total_farmers_reached = json_data['total_farmers_reached'];
         var total_repeat_farmers = json_data['total_repeat_farmers']
-        
+
         var total_transportation_cost = json_data['total_transportation_cost']['transportation_cost__sum'];
         var total_farmer_share = json_data['total_transportation_cost']['farmer_share__sum'];
         var total_expenditure = total_transportation_cost - total_farmer_share;
         var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
-        
+
         var sustainability = total_farmer_share / total_transportation_cost * 100;
-        
+
         var clusters = json_data['total_cluster_reached'];
-        
+
         var total_cpk = total_transportation_cost/total_volume_for_transport;
-        
+
         var kg = "Kg";
         var rs = "₹";
 
         document.getElementById('cluster_card').innerHTML = clusters;
         $('#cluster_bullet').sparkline([30, clusters, 50], bullet_options);
-        
+
         document.getElementById('total_farmers_card').innerHTML = total_farmers_reached +" <sub style='font-size: 12px'>"+parseFloat((total_repeat_farmers/total_farmers_reached)*100).toFixed(2)+"%"+"</sub>";
         $('#total_farmers_bullet').sparkline([1500, total_farmers_reached, 5000], bullet_options);
 
         document.getElementById('total_volume_card').innerHTML = parseFloat(total_volume).toFixed(0).concat(kg);
-        $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);   
-        
+        $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);
+
         document.getElementById('revenue_card').innerHTML =rs.concat(parseFloat(total_amount).toFixed(0));
         $('#revenue_bullet').sparkline([10000000, total_amount, 15000000], bullet_options);
 
@@ -75,7 +75,7 @@ function total_static_data() {
         $('#total_expenditure_bullet').sparkline([0.4, total_cpk, 0.5], bullet_options);
 
         document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
-        $('#sustainability_bullet').sparkline([60, sustainability, 100], bullet_options);     
+        $('#sustainability_bullet').sparkline([60, sustainability, 100], bullet_options);
     })
 }
 
@@ -112,7 +112,7 @@ function plot_cards_data() {
     var active_farmers = avg[1];
     document.getElementById('recent_active_farmers_card').innerHTML = active_farmers[0];
     $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
-    
+
     var avg_amt = avg[2];
     document.getElementById('recent_revenue_card').innerHTML = parseFloat(avg_amt[0]).toFixed(2);
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
@@ -167,7 +167,7 @@ function get_average() {
             avg_amt.push(temp_amt);
             temp_vol = 0;
             temp_amt=0;
-            
+
             active_farmers.push(active_farmers_id.length);
             active_farmers_id = [];
 
@@ -222,7 +222,7 @@ function get_cpk(avg_vol) {
                 cpk.push(temp / avg_vol[k]);
                 sustainability_per_kg.push(f_share/temp*100);
             }
-            
+
             k++;
             today.setDate(today.getDate() - days_to_average);
             temp = 0;
@@ -295,7 +295,7 @@ function cummulative(){
     temp['data'].push([all_dates[0],cumm[0]]);
     temp_farmers['data'].push([all_dates[0],cumm_farmers[0]]);
 
-    for (var i=1; i<cumm.length;i++){        
+    for (var i=1; i<cumm.length;i++){
         cumm[i]+=cumm[i-1];
         cumm_farmers[i]+=cumm_farmers[i-1];
         temp['data'].push([all_dates[i], cumm[i]]);
@@ -305,21 +305,21 @@ function cummulative(){
     var series =[];
     series.push(temp);
     series.push(temp_farmers);
-     var $container = $('#container2')
-                .css('position', 'relative');
-
-            $('<div id="detail-container">')
-                .appendTo($container);
-
-            $('<div id="master-container">')
-                .css({
-                    position: 'absolute',
-                    top: 300,
-                    height: 100,
-                    width: '100%'
-                })
-                    .appendTo($container);
-    createMaster(series);   
+    //  var $container = $('#container2')
+    //             .css('position', 'relative');
+     //
+    //         $('<div id="detail-container">')
+    //             .appendTo($container);
+     //
+    //         $('<div id="master-container">')
+    //             .css({
+    //                 position: 'absolute',
+    //                 top: 300,
+    //                 height: 100,
+    //                 width: '100%'
+    //             })
+    //                 .appendTo($container);
+    createMaster(series);
 }
 
 
@@ -370,7 +370,7 @@ function createDetail(masterChart, dict) {
                     credits: {
                         enabled: false
                     },
-                    
+
                     xAxis: {
                         type: 'datetime'
                     },
@@ -379,13 +379,13 @@ function createDetail(masterChart, dict) {
                             text: null
                         },
                         maxZoom: 0.1,
-                        
+
                     },{
                        title: {
                             text: null
                         },
-                        
-                        opposite: true 
+
+                        opposite: true
                     }],
                     tooltip: {
                         // formatter: function () {
@@ -462,13 +462,13 @@ function createDetail(masterChart, dict) {
                                     $.each(this.data, function(){
                                        if (this.x > min && this.x < max) {
                                             temp['data'].push([this.x, this.y]);
-                                        } 
+                                        }
                                     });
                                     myDict.push(temp);
                                 });
                                 console.log(myDict);
                                 // reverse engineer the last part of the data
-                              
+
                                 // move the plot bands to reflect the new detail span
                                 xAxis.removePlotBand('mask-before');
                                 xAxis.addPlotBand({
@@ -490,9 +490,9 @@ function createDetail(masterChart, dict) {
                                     detailChart.series[pos].setData(myDict[pos].data);
                                     pos++;
                                 });
-                                
-                                
-                                
+
+
+
 
                                 return false;
                             }
