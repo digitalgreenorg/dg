@@ -150,6 +150,7 @@ class Video(CocoModel):
     production_date = models.DateField()
     village = models.ForeignKey(Village)
     production_team = models.ManyToManyField(Animator)
+    farmers_shown = models.ManyToManyField(Person)
     category = models.ForeignKey(Category, null=True, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
