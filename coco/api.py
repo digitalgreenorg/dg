@@ -301,7 +301,7 @@ class MediatorResource(BaseResource):
             vil = Village.objects.get(id = int(vil.split('/')[-2]))
             u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
             u.save()
-    
+        bundle.obj.role = 0
         return bundle
 
     def obj_update(self, bundle, **kwargs):
@@ -322,7 +322,7 @@ class MediatorResource(BaseResource):
                 vil = Village.objects.get(id = int(vil.split('/')[-2]))
                 u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
                 u.save()
-    
+            bundle.obj.role = 0
         return bundle
         
     def hydrate_partner(self, bundle):
