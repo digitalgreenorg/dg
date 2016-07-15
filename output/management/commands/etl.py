@@ -267,7 +267,9 @@ class Command(BaseCommand):
     help = '''This command updates statistics displayed on Analytics dashboards.
     arguments: mysql_root_username mysql_root_password
     '''
-    
+    def add_arguments(self, parser):
+        parser.add_argument('args')
+
     def handle(self, *args, **options):
         print("Log")
         print(datetime.date.today())
