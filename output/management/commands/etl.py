@@ -268,12 +268,13 @@ class Command(BaseCommand):
     arguments: mysql_root_username mysql_root_password
     '''
     def add_arguments(self, parser):
-        parser.add_argument('args')
+        parser.add_argument('username')
+        parser.add_argument('password')
 
     def handle(self, *args, **options):
         print("Log")
         print(datetime.date.today())
-        mysql_root_username = args[0]
-        mysql_root_password = args[1]
+        mysql_root_username = options['username']
+        mysql_root_password = options['password']
         an_sync_obj = AnalyticsSync(mysql_root_username, mysql_root_password)
         an_sync_obj.refresh_build()
