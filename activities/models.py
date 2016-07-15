@@ -2,6 +2,7 @@ import json, datetime
 import calendar
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
+from django.core.validators import MaxValueValidator
 
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel
@@ -80,11 +81,11 @@ class Screening(CocoModel):
     farmer_groups_targeted = models.ManyToManyField(PersonGroup)
     videoes_screened = models.ManyToManyField(Video)
     questions_asked = models.TextField(null=True, blank=True)
-    farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
+    farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance')
     partner = models.ForeignKey(Partner)
-    observation_status = models.IntegerField(max_length=1, choices=SCREENING_OBSERVATION, default=0)
+    observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
-    observer = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
+    observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -120,9 +121,9 @@ class PersonAdoptPractice(CocoModel):
     date_of_adoption = models.DateField()
     date_of_verification = models.DateField(null=True, blank=True)
     partner = models.ForeignKey(Partner)
-    verification_status = models.IntegerField(max_length=1, choices=ADOPTION_VERIFICATION, default=0)
+    verification_status = models.IntegerField(choices=ADOPTION_VERIFICATION, default=0, validators=[MaxValueValidator(2)])
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
-    verified_by = models.IntegerField(max_length=1, choices=VERIFIED_BY, null=True, blank=True)
+    verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)

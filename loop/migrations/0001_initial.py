@@ -1,425 +1,491 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+from django.conf import settings
+import datetime
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Country'
-        db.create_table(u'loop_country', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_country_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_country_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('country_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal(u'loop', ['Country'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-        # Adding unique constraint on 'Country', fields ['country_name']
-        db.create_unique(u'loop_country', ['country_name'])
-
-        # Adding model 'State'
-        db.create_table(u'loop_state', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_state_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_state_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('state_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Country'])),
-        ))
-        db.send_create_signal(u'loop', ['State'])
-
-        # Adding unique constraint on 'State', fields ['state_name']
-        db.create_unique(u'loop_state', ['state_name'])
-
-        # Adding model 'District'
-        db.create_table(u'loop_district', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_district_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_district_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('district_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('state', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.State'])),
-        ))
-        db.send_create_signal(u'loop', ['District'])
-
-        # Adding unique constraint on 'District', fields ['district_name', 'state']
-        db.create_unique(u'loop_district', ['district_name', 'state_id'])
-
-        # Adding model 'Block'
-        db.create_table(u'loop_block', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_block_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_block_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('block_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('district', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.District'])),
-        ))
-        db.send_create_signal(u'loop', ['Block'])
-
-        # Adding unique constraint on 'Block', fields ['block_name', 'district']
-        db.create_unique(u'loop_block', ['block_name', 'district_id'])
-
-        # Adding model 'Village'
-        db.create_table(u'loop_village', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_village_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_village_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('village_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('longitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('block', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Block'])),
-        ))
-        db.send_create_signal(u'loop', ['Village'])
-
-        # Adding unique constraint on 'Village', fields ['village_name', 'block']
-        db.create_unique(u'loop_village', ['village_name', 'block_id'])
-
-        # Adding model 'LoopUser'
-        db.create_table(u'loop_loopuser', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_loopuser_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_loopuser_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='loop_user', unique=True, to=orm['auth.User'])),
-            ('role', self.gf('django.db.models.fields.IntegerField')()),
-            ('mode', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('phone_number', self.gf('django.db.models.fields.CharField')(default='0', max_length=14)),
-        ))
-        db.send_create_signal(u'loop', ['LoopUser'])
-
-        # Adding M2M table for field assigned_villages on 'LoopUser'
-        m2m_table_name = db.shorten_name(u'loop_loopuser_assigned_villages')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('loopuser', models.ForeignKey(orm[u'loop.loopuser'], null=False)),
-            ('village', models.ForeignKey(orm[u'loop.village'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['loopuser_id', 'village_id'])
-
-        # Adding model 'Farmer'
-        db.create_table(u'loop_farmer', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_farmer_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_farmer_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=13)),
-            ('image_path', self.gf('django.db.models.fields.CharField')(default=None, max_length=500, null=True, blank=True)),
-            ('village', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Village'])),
-        ))
-        db.send_create_signal(u'loop', ['Farmer'])
-
-        # Adding unique constraint on 'Farmer', fields ['phone', 'name']
-        db.create_unique(u'loop_farmer', ['phone', 'name'])
-
-        # Adding model 'Crop'
-        db.create_table(u'loop_crop', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_crop_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_crop_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('image_path', self.gf('django.db.models.fields.CharField')(default=None, max_length=500, null=True, blank=True)),
-            ('crop_name', self.gf('django.db.models.fields.CharField')(max_length=30)),
-            ('measuring_unit', self.gf('django.db.models.fields.CharField')(default='kg', max_length=20)),
-        ))
-        db.send_create_signal(u'loop', ['Crop'])
-
-        # Adding unique constraint on 'Crop', fields ['crop_name']
-        db.create_unique(u'loop_crop', ['crop_name'])
-
-        # Adding model 'Mandi'
-        db.create_table(u'loop_mandi', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_mandi_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_mandi_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('mandi_name', self.gf('django.db.models.fields.CharField')(max_length=90)),
-            ('latitude', self.gf('django.db.models.fields.FloatField')(null=True)),
-            ('longitude', self.gf('django.db.models.fields.FloatField')(null=True)),
-            ('district', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.District'])),
-        ))
-        db.send_create_signal(u'loop', ['Mandi'])
-
-        # Adding unique constraint on 'Mandi', fields ['mandi_name', 'district']
-        db.create_unique(u'loop_mandi', ['mandi_name', 'district_id'])
-
-        # Adding model 'CombinedTransaction'
-        db.create_table(u'loop_combinedtransaction', (
-            ('user_created', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_combinedtransaction_created', null=True, to=orm['auth.User'])),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('user_modified', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'loop_combinedtransaction_related_modified', null=True, to=orm['auth.User'])),
-            ('time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('farmer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Farmer'])),
-            ('crop', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Crop'])),
-            ('mandi', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['loop.Mandi'])),
-            ('quantity', self.gf('django.db.models.fields.FloatField')()),
-            ('price', self.gf('django.db.models.fields.FloatField')()),
-            ('status', self.gf('django.db.models.fields.IntegerField')()),
-            ('amount', self.gf('django.db.models.fields.FloatField')()),
-        ))
-        db.send_create_signal(u'loop', ['CombinedTransaction'])
-
-        # Adding unique constraint on 'CombinedTransaction', fields ['date', 'farmer', 'crop', 'mandi', 'price']
-        db.create_unique(u'loop_combinedtransaction', ['date', 'farmer_id', 'crop_id', 'mandi_id', 'price'])
-
-        # Adding model 'Log'
-        db.create_table(u'loop_log', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('timestamp', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.utcnow)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True)),
-            ('village', self.gf('django.db.models.fields.IntegerField')(null=True)),
-            ('action', self.gf('django.db.models.fields.IntegerField')()),
-            ('entry_table', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('model_id', self.gf('django.db.models.fields.IntegerField')(null=True)),
-        ))
-        db.send_create_signal(u'loop', ['Log'])
-
-
-    def backwards(self, orm):
-        # Removing unique constraint on 'CombinedTransaction', fields ['date', 'farmer', 'crop', 'mandi', 'price']
-        db.delete_unique(u'loop_combinedtransaction', ['date', 'farmer_id', 'crop_id', 'mandi_id', 'price'])
-
-        # Removing unique constraint on 'Mandi', fields ['mandi_name', 'district']
-        db.delete_unique(u'loop_mandi', ['mandi_name', 'district_id'])
-
-        # Removing unique constraint on 'Crop', fields ['crop_name']
-        db.delete_unique(u'loop_crop', ['crop_name'])
-
-        # Removing unique constraint on 'Farmer', fields ['phone', 'name']
-        db.delete_unique(u'loop_farmer', ['phone', 'name'])
-
-        # Removing unique constraint on 'Village', fields ['village_name', 'block']
-        db.delete_unique(u'loop_village', ['village_name', 'block_id'])
-
-        # Removing unique constraint on 'Block', fields ['block_name', 'district']
-        db.delete_unique(u'loop_block', ['block_name', 'district_id'])
-
-        # Removing unique constraint on 'District', fields ['district_name', 'state']
-        db.delete_unique(u'loop_district', ['district_name', 'state_id'])
-
-        # Removing unique constraint on 'State', fields ['state_name']
-        db.delete_unique(u'loop_state', ['state_name'])
-
-        # Removing unique constraint on 'Country', fields ['country_name']
-        db.delete_unique(u'loop_country', ['country_name'])
-
-        # Deleting model 'Country'
-        db.delete_table(u'loop_country')
-
-        # Deleting model 'State'
-        db.delete_table(u'loop_state')
-
-        # Deleting model 'District'
-        db.delete_table(u'loop_district')
-
-        # Deleting model 'Block'
-        db.delete_table(u'loop_block')
-
-        # Deleting model 'Village'
-        db.delete_table(u'loop_village')
-
-        # Deleting model 'LoopUser'
-        db.delete_table(u'loop_loopuser')
-
-        # Removing M2M table for field assigned_villages on 'LoopUser'
-        db.delete_table(db.shorten_name(u'loop_loopuser_assigned_villages'))
-
-        # Deleting model 'Farmer'
-        db.delete_table(u'loop_farmer')
-
-        # Deleting model 'Crop'
-        db.delete_table(u'loop_crop')
-
-        # Deleting model 'Mandi'
-        db.delete_table(u'loop_mandi')
-
-        # Deleting model 'CombinedTransaction'
-        db.delete_table(u'loop_combinedtransaction')
-
-        # Deleting model 'Log'
-        db.delete_table(u'loop_log')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'loop.block': {
-            'Meta': {'unique_together': "(('block_name', 'district'),)", 'object_name': 'Block'},
-            'block_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.District']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_block_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_block_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.combinedtransaction': {
-            'Meta': {'unique_together': "(('date', 'farmer', 'crop', 'mandi', 'price'),)", 'object_name': 'CombinedTransaction'},
-            'amount': ('django.db.models.fields.FloatField', [], {}),
-            'crop': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Crop']"}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'farmer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Farmer']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'mandi': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Mandi']"}),
-            'price': ('django.db.models.fields.FloatField', [], {}),
-            'quantity': ('django.db.models.fields.FloatField', [], {}),
-            'status': ('django.db.models.fields.IntegerField', [], {}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_combinedtransaction_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_combinedtransaction_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.country': {
-            'Meta': {'unique_together': "(('country_name',),)", 'object_name': 'Country'},
-            'country_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_country_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_country_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.crop': {
-            'Meta': {'unique_together': "(('crop_name',),)", 'object_name': 'Crop'},
-            'crop_name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image_path': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'measuring_unit': ('django.db.models.fields.CharField', [], {'default': "'kg'", 'max_length': '20'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_crop_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_crop_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.district': {
-            'Meta': {'unique_together': "(('district_name', 'state'),)", 'object_name': 'District'},
-            'district_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'state': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.State']"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_district_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_district_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.farmer': {
-            'Meta': {'unique_together': "(('phone', 'name'),)", 'object_name': 'Farmer'},
-            'gender': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image_path': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '13'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_farmer_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_farmer_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'village': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Village']"})
-        },
-        u'loop.log': {
-            'Meta': {'object_name': 'Log'},
-            'action': ('django.db.models.fields.IntegerField', [], {}),
-            'entry_table': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'timestamp': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.utcnow'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True'}),
-            'village': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
-        },
-        u'loop.loopuser': {
-            'Meta': {'object_name': 'LoopUser'},
-            'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_villages'", 'symmetrical': 'False', 'to': u"orm['loop.Village']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'mode': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'phone_number': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '14'}),
-            'role': ('django.db.models.fields.IntegerField', [], {}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'loop_user'", 'unique': 'True', 'to': u"orm['auth.User']"}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_loopuser_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_loopuser_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.mandi': {
-            'Meta': {'unique_together': "(('mandi_name', 'district'),)", 'object_name': 'Mandi'},
-            'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.District']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'latitude': ('django.db.models.fields.FloatField', [], {'null': 'True'}),
-            'longitude': ('django.db.models.fields.FloatField', [], {'null': 'True'}),
-            'mandi_name': ('django.db.models.fields.CharField', [], {'max_length': '90'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_mandi_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_mandi_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.state': {
-            'Meta': {'unique_together': "(('state_name',),)", 'object_name': 'State'},
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Country']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'state_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_state_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_state_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        u'loop.village': {
-            'Meta': {'unique_together': "(('village_name', 'block'),)", 'object_name': 'Village'},
-            'block': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['loop.Block']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'latitude': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'longitude': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_village_created'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'loop_village_related_modified'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'village_name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        }
-    }
-
-    complete_apps = ['loop']
+    operations = [
+        migrations.CreateModel(
+            name='Block',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('block_name', models.CharField(max_length=50)),
+                ('is_visible', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='CombinedTransaction',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('quantity', models.FloatField()),
+                ('price', models.FloatField()),
+                ('status', models.IntegerField()),
+                ('amount', models.FloatField()),
+                ('timestamp', models.CharField(max_length=25)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('payment_date', models.DateField(null=True, blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Country',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('country_name', models.CharField(max_length=50)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('user_created', models.ForeignKey(related_name='loop_country_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_country_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Crop',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('image_path', models.CharField(default=None, max_length=500, null=True, blank=True)),
+                ('crop_name', models.CharField(max_length=30)),
+                ('measuring_unit', models.CharField(default=b'kg', max_length=20)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('user_created', models.ForeignKey(related_name='loop_crop_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_crop_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='DayTransportation',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('transportation_cost', models.FloatField()),
+                ('farmer_share', models.FloatField(default=0.0)),
+                ('other_cost', models.FloatField(default=0.0)),
+                ('vrp_fees', models.FloatField(default=0.0)),
+                ('comment', models.CharField(max_length=200, null=True, blank=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('timestamp', models.CharField(max_length=25)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='District',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('district_name', models.CharField(max_length=50)),
+                ('is_visible', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Farmer',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=100)),
+                ('gender', models.CharField(max_length=1)),
+                ('phone', models.CharField(max_length=13)),
+                ('image_path', models.CharField(default=None, max_length=500, null=True, blank=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('user_created', models.ForeignKey(related_name='loop_farmer_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_farmer_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Gaddidar',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('gaddidar_name', models.CharField(max_length=100)),
+                ('gaddidar_phone', models.CharField(max_length=13)),
+                ('commission', models.FloatField(default=1.0)),
+                ('is_visible', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Log',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('timestamp', models.DateTimeField(default=datetime.datetime.utcnow)),
+                ('village', models.IntegerField(null=True)),
+                ('action', models.IntegerField()),
+                ('entry_table', models.CharField(max_length=100)),
+                ('model_id', models.IntegerField(null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='LoopUser',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(default=b'default', max_length=100)),
+                ('role', models.IntegerField(choices=[(1, b'Admin'), (2, b'Aggregator')])),
+                ('mode', models.IntegerField(default=1, choices=[(1, b'Direct Sell'), (2, b'Aggregate')])),
+                ('phone_number', models.CharField(default=b'0', max_length=14)),
+                ('is_visible', models.BooleanField(default=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='LoopUserAssignedMandi',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('loop_user', models.ForeignKey(to='loop.LoopUser')),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='LoopUserAssignedVillage',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('loop_user', models.ForeignKey(to='loop.LoopUser')),
+                ('user_created', models.ForeignKey(related_name='loop_loopuserassignedvillage_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_loopuserassignedvillage_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='Mandi',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('mandi_name', models.CharField(max_length=90)),
+                ('latitude', models.FloatField(null=True)),
+                ('longitude', models.FloatField(null=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('district', models.ForeignKey(to='loop.District')),
+                ('user_created', models.ForeignKey(related_name='loop_mandi_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_mandi_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='State',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('state_name', models.CharField(max_length=50)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('country', models.ForeignKey(to='loop.Country')),
+                ('user_created', models.ForeignKey(related_name='loop_state_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_state_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='TransportationVehicle',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('vehicle_number', models.CharField(max_length=20)),
+                ('is_visible', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Transporter',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('transporter_name', models.CharField(max_length=90)),
+                ('transporter_phone', models.CharField(max_length=13)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('block', models.ForeignKey(to='loop.Block')),
+                ('user_created', models.ForeignKey(related_name='loop_transporter_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_transporter_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Vehicle',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('vehicle_name', models.CharField(max_length=30)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('user_created', models.ForeignKey(related_name='loop_vehicle_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_vehicle_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Village',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('village_name', models.CharField(max_length=50)),
+                ('latitude', models.FloatField(null=True, blank=True)),
+                ('longitude', models.FloatField(null=True, blank=True)),
+                ('is_visible', models.BooleanField(default=True)),
+                ('block', models.ForeignKey(to='loop.Block')),
+                ('user_created', models.ForeignKey(related_name='loop_village_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_village_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='transportationvehicle',
+            name='transporter',
+            field=models.ForeignKey(to='loop.Transporter'),
+        ),
+        migrations.AddField(
+            model_name='transportationvehicle',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_transportationvehicle_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='transportationvehicle',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_transportationvehicle_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='transportationvehicle',
+            name='vehicle',
+            field=models.ForeignKey(to='loop.Vehicle'),
+        ),
+        migrations.AddField(
+            model_name='loopuserassignedvillage',
+            name='village',
+            field=models.ForeignKey(to='loop.Village'),
+        ),
+        migrations.AddField(
+            model_name='loopuserassignedmandi',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='loopuserassignedmandi',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_loopuserassignedmandi_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='loopuserassignedmandi',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_loopuserassignedmandi_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='assigned_mandis',
+            field=models.ManyToManyField(related_name='assigned_mandis', through='loop.LoopUserAssignedMandi', to='loop.Mandi', blank=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='assigned_villages',
+            field=models.ManyToManyField(related_name='assigned_villages', through='loop.LoopUserAssignedVillage', to='loop.Village', blank=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='user',
+            field=models.OneToOneField(related_name='loop_user', to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_loopuser_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_loopuser_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='village',
+            field=models.ForeignKey(default=None, to='loop.Village', null=True),
+        ),
+        migrations.AddField(
+            model_name='log',
+            name='loop_user',
+            field=models.ForeignKey(to='loop.LoopUser', null=True),
+        ),
+        migrations.AddField(
+            model_name='log',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='gaddidar',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='gaddidar',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_gaddidar_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='gaddidar',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_gaddidar_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='farmer',
+            name='village',
+            field=models.ForeignKey(to='loop.Village'),
+        ),
+        migrations.AddField(
+            model_name='district',
+            name='state',
+            field=models.ForeignKey(to='loop.State'),
+        ),
+        migrations.AddField(
+            model_name='district',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_district_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='district',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_district_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='daytransportation',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='daytransportation',
+            name='transportation_vehicle',
+            field=models.ForeignKey(to='loop.TransportationVehicle'),
+        ),
+        migrations.AddField(
+            model_name='daytransportation',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_daytransportation_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='daytransportation',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_daytransportation_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='crop',
+            field=models.ForeignKey(to='loop.Crop'),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='farmer',
+            field=models.ForeignKey(to='loop.Farmer'),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='gaddidar',
+            field=models.ForeignKey(default=True, to='loop.Gaddidar', null=True),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_combinedtransaction_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='combinedtransaction',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_combinedtransaction_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='block',
+            name='district',
+            field=models.ForeignKey(to='loop.District'),
+        ),
+        migrations.AddField(
+            model_name='block',
+            name='user_created',
+            field=models.ForeignKey(related_name='loop_block_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='block',
+            name='user_modified',
+            field=models.ForeignKey(related_name='loop_block_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AlterUniqueTogether(
+            name='village',
+            unique_together=set([('village_name', 'block')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='vehicle',
+            unique_together=set([('vehicle_name',)]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='transporter',
+            unique_together=set([('transporter_name', 'transporter_phone')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='transportationvehicle',
+            unique_together=set([('transporter', 'vehicle', 'vehicle_number')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='state',
+            unique_together=set([('state_name',)]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='mandi',
+            unique_together=set([('mandi_name', 'district')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='gaddidar',
+            unique_together=set([('gaddidar_phone', 'gaddidar_name')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='farmer',
+            unique_together=set([('phone', 'name')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='district',
+            unique_together=set([('district_name', 'state')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='daytransportation',
+            unique_together=set([('date', 'user_created', 'timestamp')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='crop',
+            unique_together=set([('crop_name',)]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='country',
+            unique_together=set([('country_name',)]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='combinedtransaction',
+            unique_together=set([('date', 'user_created', 'timestamp')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='block',
+            unique_together=set([('block_name', 'district')]),
+        ),
+    ]

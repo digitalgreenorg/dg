@@ -6,7 +6,7 @@ from tastypie import fields
 from tastypie.authentication import SessionAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
-from tastypie.resources import ModelResource, NOT_AVAILABLE
+from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance

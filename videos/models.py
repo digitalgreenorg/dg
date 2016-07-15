@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
+from django.core.validators import MaxValueValidator
 
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
@@ -89,8 +90,6 @@ class Category(CocoModel):
 
     def __unicode__(self):
         return self.category_name
-post_save.connect(save_log, sender=Category)
-pre_delete.connect(delete_log, sender=Category)
 
 class SubCategory(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -108,8 +107,6 @@ class SubCategory(CocoModel):
 
     def __unicode__(self):
         return self.subcategory_name
-post_save.connect(save_log, sender=SubCategory)
-pre_delete.connect(delete_log, sender=SubCategory)
 
 class VideoPractice(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -124,8 +121,6 @@ class VideoPractice(CocoModel):
     
     def __unicode__(self):
         return self.videopractice_name
-post_save.connect(save_log, sender=VideoPractice)
-pre_delete.connect(delete_log, sender=VideoPractice)
 
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -148,7 +143,7 @@ class Video(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     title = models.CharField(max_length=200)
-    video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE)
+    video_type = models.IntegerField(choices=VIDEO_TYPE,validators=[MaxValueValidator(2)])
     duration = models.TimeField(null=True, blank=True)
     language = models.ForeignKey(Language)
     benefit = models.TextField(blank=True)
@@ -163,9 +158,9 @@ class Video(CocoModel):
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
-    review_status = models.IntegerField(max_length=1,choices=VIDEO_REVIEW,default=0)
+    review_status = models.IntegerField(choices=VIDEO_REVIEW,default=0, validators=[MaxValueValidator(1)])
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
-    reviewer = models.IntegerField(max_length=1, choices=REVIEW_BY, null=True, blank=True)
+    reviewer = models.IntegerField(choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
 
     class Meta:
         unique_together = ("title", "production_date", "language", "village")

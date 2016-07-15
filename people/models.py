@@ -15,7 +15,7 @@ class Animator(CocoModel):
     phone_no = models.CharField(max_length=100, blank=True)
     partner = models.ForeignKey(Partner)
     district = models.ForeignKey(District, null=True, blank=True)
-    assigned_villages = models.ManyToManyField(Village, related_name='assigned_villages', through='AnimatorAssignedVillage', null=True, blank=True)
+    assigned_villages = models.ManyToManyField(Village, related_name='assigned_villages', through='AnimatorAssignedVillage', blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False)
     role = models.IntegerField(default = 0, choices = TYPE_OF_ROLE)
 
@@ -62,7 +62,7 @@ class Person(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100, blank=True)
-    age = models.IntegerField(max_length=3, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True, validators=[MaxValueValidator(999)])
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone_no = models.CharField(max_length=100, blank=True)
     village = models.ForeignKey(Village)
@@ -89,7 +89,7 @@ class JSLPS_Animator(CocoModel):
     id = models.AutoField(primary_key=True)
     animator_code = models.CharField(max_length=100)
     animator = models.ForeignKey(Animator, null=True, blank=True)
-    assigned_villages = models.ManyToManyField(JSLPS_Village, related_name='jslps_assigned_villages', through='JSLPS_AnimatorAssignedVillage', null=True, blank=True)
+    assigned_villages = models.ManyToManyField(JSLPS_Village, related_name='jslps_assigned_villages', through='JSLPS_AnimatorAssignedVillage', blank=True)
 
 class JSLPS_AnimatorAssignedVillage(CocoModel):
     id = models.AutoField(primary_key=True)
