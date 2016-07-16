@@ -282,7 +282,8 @@ function cummulative(){
     temp_farmers['pointStart'] = all_dates[all_dates.length-1]; // Pointing to the starting date
     temp_farmers['showInLegend'] = true;
 
-    for (var i=0; i<stats.length;i++){
+    var stats_length=stats.length;
+    for (var i=stats_length-1; i>=0;i--){
         var index = all_dates.indexOf(new Date(stats[i]['date']).getTime());
         if (farmer_ids.indexOf(stats[i]['farmer__id'])== -1){
             farmer_ids.push(stats[i]['farmer__id']);

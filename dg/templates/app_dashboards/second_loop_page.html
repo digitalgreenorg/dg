@@ -26,7 +26,7 @@
 			<a href="#" class="brand-logo center black-text">LOOP</a>
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="right hide-on-med-and-down tabs">
-				<li class="tab"><a class="blue-text" href="/loop/dashboard/">Home</a></li>
+				<li class="tab"><a class="blue-text" href="#home">Home</a></li>
 				<li class="tab"><a class="blue-text" href="#analytics">Analytics</a></li>
 				<li class="tab active"><a class="blue-text" href="#time_series">Time Series</a></li>
 			</ul>
@@ -169,6 +169,131 @@
 
 {% endblock %} {% block content %}
 
+<div id="home">
+	<div class="row card white darken-1">
+		<h5>Overall</h5>
+		<hr/>
+		<div class="row">
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Clusters</span>
+					<h5 id="cluster_card"></h5>
+					<span id="cluster_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Farmers</span>
+					<h5 id="total_farmers_card"></h5>
+					<span id="total_farmers_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Volume</span>
+					<h5 id="total_volume_card"></h5>
+					<span id="total_volume_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Revenue</span>
+					<h5 id="revenue_card"></h5>
+					<span id="revenue_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">CPK</span>
+					<h5 id="total_expenditure_card"></h5>
+					<span id="total_expenditure_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Sustainability</span>
+					<h5 id="sustainability_card"></h5>
+					<span id="sustainability_bullet"></span>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+
+	<div class="row card white darken-1">
+		<div id="recent_main" class="row">
+			<div class="col s10">
+				<h5>Recent</h5>
+			</div>
+			<div class="col s2">
+				<select id="mFrequency" class="initialized">
+						<option value="7">7</option>
+						<option value="15" selected>15</option>
+						<option value="30">30</option>
+						<option value="60">60</option>
+				</select>
+			</div>
+		</div>
+		<hr/>
+		<div class="row">
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Clusters</span>
+					<h5 id="recent_cluster_card"></h5>
+					<span id="recent_cluster_sparkline"></span>
+				</div>
+			</div>
+
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Farmers</span>
+					<h5 id="recent_active_farmers_card"></h5>
+					<span id="recent_active_farmers_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Volume</span>
+					<h5 id="recent_volume_card"></h5>
+					<span id="recent_volume_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Revenue</span>
+					<h5 id="recent_revenue_card"></h5>
+					<span id="recent_revenue_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">CPK</span>
+					<h5 id="cpk_card"></h5>
+					<span id="cpk_sparkline"></span>
+				</div>
+			</div>
+
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Sustainability</span>
+					<h5 id="recent_sustainability_card"></h5>
+					<span id="recent_sustainability_sparkline"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div id="container2" >
+		<div id="detail_container"></div>
+			<div id="master_container" style="height:100px;"></div>
+	</div>
+
+</div>
+
 
 <div id="analytics">
 	<div class="center">
@@ -257,16 +382,22 @@
 
 
 <div id="time_series">
-	<div id="container2" class="row">
-		<div id="detail-container" class="col s12"></div>
-		<div id="master-container" class="col s12" style="height:100px"></div>
+	<div id="container2">
+		<div id="detail_container_time_series"></div>
+		<div id="master_container_time_series" style="height:100px"></div>
 	</div>
 
-	<ul id="crop_max_min_avg" class="dropdown-content">
-	</ul>
+<div class="row">
+	<select id="crop_max_min_avg" class="initialized" >
+	</select>
+	<!-- <a class="btn dropdown-button" href="#" data-activates="crop_max_min_avg">Select Crop<i class="mdi-navigation-arrow-drop-down right"></i></a> -->
 	<div id="container3">
 	</div>
+</div>
 
+
+<select id="aggregator_payments" class="initialized" >
+</select>
 	<div id="aggregator_label">
 		<h5 class="center-align">Aggregator Wise Data</h5>
 	</div>
