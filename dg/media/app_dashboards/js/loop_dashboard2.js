@@ -692,9 +692,6 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
             'id': axis_names[i],
             'data': [],
             'type': 'bar',
-            'scrollbar': {
-                'enabled': true
-            }
         });
         for (var j = 0; j < values_names.length; j++) {
             drilldown['series'][i]['data'].push({
