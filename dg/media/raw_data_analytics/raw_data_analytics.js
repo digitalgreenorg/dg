@@ -17,7 +17,7 @@ function statechange(src, val)
                $('#blockID ').find('option:gt(0)').remove();
                $('#villageID ').find('option:gt(0)').remove();
                 for (i in data_json){
-                   	$('#stateId').append("<option>"+data_json[i]+"</option>");
+                   	$('#stateId').append("<option value='data_json[i]'>"+data_json[i]+"</option>");
                }
            });
 }
@@ -31,7 +31,7 @@ function districtchange(src, val)
                $('#blockID ').find('option:gt(0)').remove();
                $('#villageID ').find('option:gt(0)').remove();
                for (i in data_json){
-               		$('#districtId').append("<option>"+data_json[i]+"</option>");
+               		$('#districtId').append("<option value='data_json[i]'>"+data_json[i]+"</option>");
                }
            });
 }
@@ -44,7 +44,7 @@ function blockchange(src, val)
                $('#blockID ').find('option:gt(0)').remove();
                $('#villageID ').find('option:gt(0)').remove();                  
                for (i in data_json){
-               		$('#blockId').append("<option>"+data_json[i]+"</option>");
+               		$('#blockId').append("<option value='data_json[i]'>"+data_json[i]+"</option>");
         
                }
            });
@@ -57,7 +57,7 @@ function villagechange(src, val)
                data_json = JSON.parse(data);
                $('#villageID ').find('option:gt(0)').remove();
                for (i in data_json){
-            		$('#villageId').append("<option>"+data_json[i]+"</option>");
+            		$('#villageId').append("<option value='data_json[i]'>"+data_json[i]+"</option>");
                }
            });
 }
