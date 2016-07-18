@@ -361,5 +361,5 @@ def send_updated_log(request):
                         data_list.append(get_log_object(i))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
-                return HttpResponse(data, mimetype="application/json")
+                return HttpResponse(data, content_type="application/json")
     return HttpResponse("0")
