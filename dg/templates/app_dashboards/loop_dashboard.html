@@ -1,4 +1,4 @@
-{% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Home {% endblock %} {% block extracss %}
+{% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}DashBoard{% endblock %} {% block extracss %}
 
 <link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}" />
 <link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}" />
@@ -18,154 +18,424 @@
 	}
 </style>
 {% endblock %} {% block navbar %}
-<header>
-	<nav class="top-nav">
 
-		<div class="nav-wrapper grey lighten-3">
+<div class="navbar-fixed">
+	<nav class="top-nav" id="analytics_page_nav_bar">
+
+		<div class="nav-wrapper grey lighten-2">
 			<a href="#" class="brand-logo center black-text">LOOP</a>
-			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-			<ul class="right hide-on-med-and-down">
-				<li class="active"><a class="blue-text" href="/loop/dashboard/">Home</a></li>
-				<li><a class="blue-text" href="/loop/second_loop_page/">Analytics</a></li>
+			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
+			<div class="right col s5">
+			<ul class="hide-on-med-and-down grey lighten-2">
+				<li><a class="active blue-text" onclick="hide_nav('home')">Home</a></li>
+				<li><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
+				<li><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
 			</ul>
-			<ul class="side-nav" id="mobile-demo">
-				<li class="active"><a href="/loop/dashboard/">Home</a></li>
-				<li><a href="/loop/second_loop_page/">Analytics</a></li>
+			</div>
+			<ul class="side-nav" id="page-navigation">
+				<li><a onclick="hide_nav()">Home</a></li>
+				<li><a onclick="show_nav('analytics')">Analytics</a></li>
+				<li><a onclick="show_nav('time_series')">Time Series</a></li>
 			</ul>
+		</div>
+		<!-- </nav> -->
 
+		<!-- <nav> -->
+		<div class="nav-wrapper  grey lighten-3" id="filters_nav">
+			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="hide-on-small-and-down">
+				<ul class="left">
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text">Filters</a></li>
+					<li class="analytics_tabs"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
+					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
+					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
+					
+				</ul>
+
+
+				<ul class="right">
+					<div class="row">
+						<div class="input-field col s4">
+							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+							<input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
+						</div>
+						<div class="input-field col s4">
+							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
+						</div>
+						<li class="col s4"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
+					</div>
+				</ul>
+			</ul>
+			<ul class="side-nav" id="mobile-demo1">
+				<ul class="left">
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+					<li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
+					<li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
+					<li><a class="" onclick="change_tab('crop')">Crop</a></li>
+					<div class="input-field">
+						<i class="material-icons black-text text-lighten-2 prefix">today</i>
+						<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+					</div>
+					<div class="input-field">
+						<i class="material-icons black-text text-lighten-2 prefix">today</i>
+						<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+					</div>
+					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+				</ul>
+			</ul>
 		</div>
 	</nav>
-</header>
+</div>
+
+
+<ul class="side-nav" id="mobile-demo">
+	<!-- <ul id="nav-mobile" class="side-nav fixed"> -->
+	<li class="no-padding not-hoverable">
+		<ul class="collapsible collapsible-accordion">
+
+			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
+									<label for="aggregator_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="aggregators">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="crop_all" checked="checked" />
+									<label for="crop_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="crops">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
+									<label for="mandi_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="mandis">
+						</tbody>
+					</table>
+				</div>
+			</li>
+			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
+				<div class="collapsible-body container" style="display: none;">
+					<table class="filter-table centered">
+						<thead>
+							<tr>
+								<th class="center grey-text text-lighten-1">Select/Unselect</th>
+								<th>
+									<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
+									<label for="gaddidar_all"></label>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="gaddidars">
+						</tbody>
+					</table>
+				</div>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+
+
 
 
 
 {% endblock %} {% block content %}
 
+<div id="home">
+	<div class="row card white darken-1">
+		<h5>Overall</h5>
+		<hr/>
+		<div class="row">
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Clusters</span>
+					<h5 id="cluster_card"></h5>
+					<span id="cluster_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Farmers</span>
+					<h5 id="total_farmers_card"></h5>
+					<span id="total_farmers_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Volume</span>
+					<h5 id="total_volume_card"></h5>
+					<span id="total_volume_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Revenue</span>
+					<h5 id="revenue_card"></h5>
+					<span id="revenue_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">CPK</span>
+					<h5 id="total_expenditure_card"></h5>
+					<span id="total_expenditure_bullet"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Sustainability</span>
+					<h5 id="sustainability_card"></h5>
+					<span id="sustainability_bullet"></span>
+				</div>
+			</div>
 
-<div class="row card white darken-1">
-	<h5>Overall</h5>
-	<hr/>
-	<div class="row">
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Clusters</span>
-				<h5 id="cluster_card"></h5>
-				<span id="cluster_bullet"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Farmers</span>
-				<h5 id="total_farmers_card"></h5>
-				<span id="total_farmers_bullet"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Volume</span>
-				<h5 id="total_volume_card"></h5>
-				<span id="total_volume_bullet"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Revenue</span>
-				<h5 id="revenue_card"></h5>
-				<span id="revenue_bullet"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">CPK</span>
-				<h5 id="total_expenditure_card"></h5>
-				<span id="total_expenditure_bullet"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Sustainability</span>
-				<h5 id="sustainability_card"></h5>
-				<span id="sustainability_bullet"></span>
-			</div>
-		</div>
 
 
+		</div>
+	</div>
 
+	<div class="row card white darken-1">
+		<div id="recent_main" class="row">
+			<div class="col s10">
+				<h5>Recent</h5>
+			</div>
+			<div class="col s2">
+				<select id="mFrequency" class="initialized">
+						<option value="7">7</option>
+						<option value="15" selected>15</option>
+						<option value="30">30</option>
+						<option value="60">60</option>
+				</select>
+			</div>
+		</div>
+		<hr/>
+		<div class="row">
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Clusters</span>
+					<h5 id="recent_cluster_card"></h5>
+					<span id="recent_cluster_sparkline"></span>
+				</div>
+			</div>
+
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Farmers</span>
+					<h5 id="recent_active_farmers_card"></h5>
+					<span id="recent_active_farmers_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Volume</span>
+					<h5 id="recent_volume_card"></h5>
+					<span id="recent_volume_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Revenue</span>
+					<h5 id="recent_revenue_card"></h5>
+					<span id="recent_revenue_sparkline"></span>
+				</div>
+			</div>
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">CPK</span>
+					<h5 id="cpk_card"></h5>
+					<span id="cpk_sparkline"></span>
+				</div>
+			</div>
+
+			<div class="col s6 m4 l2">
+				<div class="card-content white darken-1">
+					<span class="card-title">Sustainability</span>
+					<h5 id="recent_sustainability_card"></h5>
+					<span id="recent_sustainability_sparkline"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div id="container2" >
+		<div id="detail_container"></div>
+			<div id="master_container" style="height:100px;"></div>
+	</div>
+
+</div>
+
+
+<div id="analytics">
+	<div class="center">
+
+		<div id="modal1" class="modal">
+			<div class="modal-content">
+				<p>Invalid Date Range</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class=" modal-action modal-close waves-effect waves-black btn-flat">OK</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row ">
+
+			<!-- <select id="m_g_c_a" class="initialized">
+			<option value="" disabled >Choose your option</option>
+			<option value="1" selected>mandi</option>
+			<option value="2">gaddidar</option>
+			<option value="3">crop</option>
+		</select> -->
+
+
+			<div class=" col s12 l6">
+				<div class="row">
+					<ul class="tabs">
+						<li class="tab col s4" id="sof"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
+						<li class="tab col s4"><a class="center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
+						<li class="tab col s4"><a class="center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
+					</ul>
+				</div>
+				<hr>
+				<h5 class="center-align" id="1stgraph"></h5>
+				<div id="aggregator_mandi" class="col s12"></div>
+			</div>
+
+			<div class="col s12 l6">
+				<div class="row">
+					<ul class="tabs">
+						<li class="tab col s6"><a class="center active" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
+						<li class="tab col s6"><a class="center" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
+					</ul>
+				</div>
+				<hr>
+				<h5 class="center-align" id="2ndgraph"></h5>
+				<div id="mandi_cost" class="col s12"></div>
+			</div>
+
+			<div class="col s12 l6" id="aggregator_farmer_count">
+				<h5 class="center-align" id="3rdgraph">Farmers Count</h5>
+				<div id="farmers_count" class="col s12"></div>
+			</div>
+
+			<!-- <div class="col s12 m6">
+			<h5 class="center-align" id="4thgraph"></h5>
+			<div id="mandi_cost" class="col s12"></div>
+		</div> -->
+
+
+			<!-- Graphs for gaddidar in market page -->
+			<div class="col s12 l6" id="gaddidar_aggregator_graph">
+				<div class="row">
+					<a class="center col s6" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')"> Volume</a>
+					<a class="center col s6" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')"> Amount</a>
+				</div>
+				<hr>
+				<h5 class="center-align" id="gaddidar_graph"></h5>
+				<div id="aggregator_gaddidar" class="col s12"></div>
+			</div>
+
+
+			<!-- <div class="col s12 m6">
+			<h5 class="center-align">CPK</h5>
+			<div id="cpk" class="col s12"></div>
+		</div>
+		<div class="col s12 m6">
+			<h5 class="center-align">SPK</h5>
+			<div id="spk" class="col s12"></div>
+		</div> -->
+		</div>
 	</div>
 </div>
 
-<div class="row card white darken-1">
-	<div id="recent_main" class="row">
-		<div class="col s10">
-			<h5>Recent</h5>
+
+<div id="time_series">
+	
+		<div id="detail_container_time_series"></div>
+		<div id="master_container_time_series" style="height:100px"></div>
+	
+		<div id="detail_container_cpk"></div>
+		<div id="master_container_cpk" style="height:100px"></div>
+	
+		<div class="row">
+			<p class="col s3"></p>
+			<div class="input-field col s6">
+			<select id="crop_max_min_avg" class="initialized"></select>
+			</div>
+			<p class="col s3"></p>
 		</div>
-		<div class="col s2">
-			<select id="mFrequency" class="initialized">
-					<option value="7">7</option>
-					<option value="15" selected>15</option>
-					<option value="30">30</option>
-					<option value="60">60</option>
-			</select>
+		<div id="container3" class="col s12">
 		</div>
+
+
+
+
+<select id="aggregator_payments" class="initialized" >
+</select>
+<label>Select Aggregator</label>
+	<div id="aggregator_label">
+		<h5 class="center-align">Aggregator Wise Data</h5>
 	</div>
-	<hr/>
-	<div class="row">
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Clusters</span>
-				<h5 id="recent_cluster_card"></h5>
-				<span id="recent_cluster_sparkline"></span>
-			</div>
-		</div>
+	<table id="table2" class="highlight bordered centered">
 
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Farmers</span>
-				<h5 id="recent_active_farmers_card"></h5>
-				<span id="recent_active_farmers_sparkline"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Volume</span>
-				<h5 id="recent_volume_card"></h5>
-				<span id="recent_volume_sparkline"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Revenue</span>
-				<h5 id="recent_revenue_card"></h5>
-				<span id="recent_revenue_sparkline"></span>
-			</div>
-		</div>
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">CPK</span>
-				<h5 id="cpk_card"></h5>
-				<span id="cpk_sparkline"></span>
-			</div>
-		</div>
+		<thead>
+			<tr>
+				<th data-field="integer">S.No</th>
+				<th data-field="date">Date</th>
+				<th data-field="name">Mandi</th>
+				<th data-field="integer">Total Volume</th>
+				<th data-field="integer"> Total Farmers</th>
+				<th data-field="integer"> Net Payment</th>
+			</tr>
+		</thead>
 
-		<div class="col s6 m4 l2">
-			<div class="card-content white darken-1">
-				<span class="card-title">Sustainability</span>
-				<h5 id="recent_sustainability_card"></h5>
-				<span id="recent_sustainability_sparkline"></span>
-			</div>
-		</div>
+		<tbody id="table2_tbody">
+			<tr>
 
-	</div>
+			</tr>
+		</tbody>
+	</table>
 </div>
 
 
-<div id="container2" style="position:relative;padding-top:30px">
-	<div id="detail-container"></div>
-		<div id="master-container" style="position:absolute;top:330px;height:100px;width:100%"></div>
-</div>
+<div id="outliers" class="row"></div>
 
-{% endblock %}
 
-{% block script %}
-	<script src="{% static 'app_dashboards/js/loop_dashboard1.js' %}"></script>
+{% endblock %} {% block script %}
+<script src="{% static 'app_dashboards/js/loop_dashboard2.js' %}"></script>
 {% endblock %}
