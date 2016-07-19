@@ -4,18 +4,28 @@ window.onload = initialize;
 function initialize() {
     // initialize any library here
     $("select").material_select();
-    $(".button-collapse1").sideNav();
     $(".button-collapse").sideNav();
+    
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     today.setMonth(today.getMonth() - 3);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-    gaddidar = true;
-    selected_tab = "aggregator";
+    
+    hide_nav();
+
     total_static_data();
     recent_graphs_data();
     days_to_average = 15;
-    hide_nav();
+
+    gaddidar = true;
+    selected_tab = "aggregator";
+    
+    
+
+    get_filter_data();
+    set_filterlistener();
+    outliers();
+    
 }
 
 function hide_nav(){
@@ -34,9 +44,7 @@ function show_nav(tab){
     $("#time_series_tab").removeClass('active');
     $("#filters_nav").show();
     $("#home").hide();
-    get_filter_data();
-    set_filterlistener();
-    outliers();
+    
     if (tab=="analytics"){
         $(".analytics_tabs").show();
         $("#analytics").show();
@@ -44,10 +52,10 @@ function show_nav(tab){
         $("#analytics_tab").addClass('active');
     }
     else if(tab=="time_series"){
-        $('.analytics_tabs').hide();
-        $('#analytics').hide();
-        $('#time_series').show();
-        $('#time_series_tab').addClass('active');
+        $(".analytics_tabs").hide();
+        $("#analytics").hide();
+        $("#time_series").show();
+        $("#time_series_tab").addClass('active');
     }
 }
 
@@ -57,7 +65,7 @@ bullet_options = {
     height: "30",
     performanceColor: '#00bfbf',
     rangeColors: ['#a2d6d6']
-}
+};
 
 sparkline_option = {
     type: 'line',
@@ -66,7 +74,7 @@ sparkline_option = {
     lineColor: '#00bfbf',
     fillColor: '#dde1df',
     lineWidth: 2
-}
+};
 
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
