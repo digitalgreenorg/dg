@@ -26,29 +26,30 @@
 			<a href="#" class="brand-logo center black-text">LOOP</a>
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
 			<div class="right col s5">
-			<ul class="hide-on-med-and-down grey lighten-2 tabs">
-				<li class="tab"><a class="active blue-text" href="#home">Home</a></li>
-				<li class="tab"><a class="blue-text" href="#analytics">Analytics</a></li>
-				<li class="tab"><a class="blue-text" href="#time_series">Time Series</a></li>
+			<ul class="hide-on-med-and-down grey lighten-2">
+				<li><a class="active blue-text" onclick="hide_nav('home')">Home</a></li>
+				<li><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
+				<li><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
 			</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
-				<li><a href="/loop/dashboard/">Home</a></li>
-				<li><a href="/loop/second_loop_page/">Analytics</a></li>
-				<li><a href="/loop/second_loop_page/">Time Series</a></li>
+				<li><a onclick="hide_nav()">Home</a></li>
+				<li><a onclick="show_nav('analytics')">Analytics</a></li>
+				<li><a onclick="show_nav('time_series')">Time Series</a></li>
 			</ul>
 		</div>
 		<!-- </nav> -->
 
 		<!-- <nav> -->
-		<div class="nav-wrapper  grey lighten-3">
+		<div class="nav-wrapper  grey lighten-3" id="filters_nav">
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="hide-on-small-and-down">
 				<ul class="left">
 					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text">Filters</a></li>
-					<li><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
-					<li><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
-					<li><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
+					<li class="analytics_tabs"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
+					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
+					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
+					
 				</ul>
 
 
@@ -384,14 +385,13 @@
 
 
 <div id="time_series">
-	<div class="row">
-		<div class="col s12" id="detail_container_time_series"></div>
-		<div class="col s12" id="master_container_time_series" style="height:100px"></div>
-	</div>
-	<div class="row">
-		<div class="col s12" id="detail_container_cpk"></div>
-		<div class="col s12" id="master_container_cpk" style="height:100px"></div>
-	</div>
+	
+		<div id="detail_container_time_series"></div>
+		<div id="master_container_time_series" style="height:100px"></div>
+	
+		<div id="detail_container_cpk"></div>
+		<div id="master_container_cpk" style="height:100px"></div>
+	
 	
 
 <div class="row">

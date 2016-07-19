@@ -36,7 +36,7 @@ a.button-collapse.top-nav {
 }
 /*a.button-collapse.top-nav.full {
     line-height: 122px;
-}
+}*/
 @media only screen and (max-width: 600px) {
     a.button-collapse.top-nav {
         left: 5%
@@ -49,7 +49,7 @@ a.button-collapse.top-nav {
     nav .nav-wrapper a.page-title {
         font-size: 36px;
     }
-}*/
+}
 @media only screen and (min-width: 993px) {
     .container {
         width: 95%
