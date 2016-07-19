@@ -103,7 +103,7 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
-                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable) && (this.form.final_json.video_type != this.form.inline.exemption_video_type))
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
                     {
                         if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
                             var err = {};

@@ -14,8 +14,8 @@ from programs.models import *
 from people.models import *
 from videos.models import *
 
-source_dir = r'C:\Users\Yash\Desktop\DG\scripts\to_be_uploaded'
-dst_dir = r'C:\Users\Yash\Desktop\DG\scripts\village_wise'
+source_dir = r'\dg\scripts\to_be_uploaded'
+dst_dir = r'\dg\scripts\village_wise'
 
 image_list=[]
 for root, dirs, files in os.walk(source_dir):
@@ -37,7 +37,6 @@ for name in image_list:
         dst = os.path.join(directory,name)
         shutil.copy2(src, dst)
         image_count += 1
-
 
 print str(folder_count) + " folders made"
 print str(image_count) + " images put in them"

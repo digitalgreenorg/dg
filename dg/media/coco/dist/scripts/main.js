@@ -5139,6 +5139,8 @@ define('views/form',[
             this.f_index = []; 
             //stores the dependency mapping between form elements
             this.source_dependents_map = {}; 
+            //stores maping between filters and their dependent elements
+            this.source_filter_dependent_map = {};
             //stores the mapping between foreign element and their entity
             this.element_entity_map = {}; 
             //stores whether a foreign element has been rendered
@@ -5161,6 +5163,7 @@ define('views/form',[
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
+                    var filter_dependency = this.foreign_entities[f_entity][element]["filter_dependency"];
                     if (dependency)
                         this.num_sources[element] = dependency.length;
                     else
@@ -5178,6 +5181,21 @@ define('views/form',[
                             }
                         });
                         console.log("source_dependents_map = " + JSON.stringify(this.source_dependents_map));
+                    }
+
+                    if (filter_dependency) {
+                        var f_ens = this.foreign_entities;
+                        var that = this;
+                        $.each(filter_dependency, function(index, dep) {
+                            var source_elm = dep.source_form_element;
+                            if (source_elm in that.source_filter_dependent_map)
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            else {
+                                that.source_filter_dependent_map[source_elm] = [];
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            }
+                        });
+                        console.log("source_filter_dependent_map = " + JSON.stringify(this.source_filter_dependent_map)); 
                     }
 
                 }
@@ -5437,6 +5455,11 @@ define('views/form',[
                 // put change-event listeners on source elements
                 this.$('[name=' + element + ']').change(this.render_dep_for_elements);
             }
+            for (element in this.source_filter_dependent_map) {
+                console.log("creating changeevent for - " + element);
+                // put change-event listeners on source elements
+                this.$('[name=' + element + ']').change(this.render_dep_for_elements);
+            }
         },
 
         // initiate the jquery validation plugin on the form
@@ -5501,6 +5524,11 @@ define('views/form',[
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
+                var filtered_models = this.filter_dep_for_element(dep_el);
+                this.render_foreign_element(dep_el, filtered_models);
+            }, this);
+
+            _.each(this.source_filter_dependent_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
             }, this);
@@ -5592,6 +5620,61 @@ define('views/form',[
             return filtered;
         },
 
+        filter_dependent_model_array: function(model_array, filter) {
+            if(model_array.length == 0) return model_array;
+            var that = this;
+            var source_form_element = filter['source_form_element'];
+            var source_curr_value = that.get_curr_value_of_element(source_form_element);
+            var dep_attr = filter['dep_attr'];
+            filtered = [];
+            if (!source_curr_value)
+                return;
+            else if (!(source_curr_value instanceof Array)) {
+                //if source is single select - convert its value to array -make it like a multiselect
+                var temp = source_curr_value;
+                source_curr_value = [];
+                source_curr_value.push(temp);
+            }
+            if(model_array[0].get(dep_attr) instanceof Array) {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                    $.each(model.get(filter.dep_attr), function(index, object) {
+                        if ($.inArray(String(object.id), source_curr_value) > -1)
+                            exists = true;
+                    });
+                    return exists;
+                });
+            } else {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    var compare = null;
+                    if (typeof model.get(filter.dep_attr) == "object")
+                        compare = model.get(filter.dep_attr).id;
+                    else
+                        compare = model.get(filter.dep_attr);
+
+                    if (filter.src_attr && filter.src_attr != "id") {
+                        var s_collection = that.get_collection_of_element(source_form_element);
+                        var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                        if (s_model.get(filter.src_attr) instanceof Array) {
+                            //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                            $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                if (compare == src_compare.id)
+                                    exists = true;
+                            });
+                        }
+                        return exists;
+                    } else {
+                        if ($.inArray(String(compare), source_curr_value) > -1)
+                            exists = true;
+                        return exists;
+                    }
+                });
+            }
+            return model_array;
+        },
+
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
@@ -5602,7 +5685,12 @@ define('views/form',[
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-
+            //for filtering based on dependent fields
+            if (f_entity_desc.filter_dependency)
+                for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
+                   model_array = this.filter_dependent_model_array(model_array, f_entity_desc.filter_dependency[i]);
+                }
+    
             if (f_entity_desc.expanded) {
                 // get the expanded template
                 var expanded_template = _.template($('#' + f_entity_desc.expanded.template).html());
@@ -6262,6 +6350,329 @@ function($, all_configs, pa, indexeddb) {
 
 });
 
+//this view displays upload status of collections in upload_q i.e. number of enteries uploaded and are pending to be uploaded, when connection with server is aborted
+define('views/upload_status',[
+    'jquery',
+    'underscore',
+    'layoutmanager',
+    'collections/upload_collection',
+    ], function(jquery, underscore, layoutmanager, upload_collection) {
+
+        var UploadStatusView = Backbone.Layout.extend({
+
+        initialize: function() {
+            console.log("UPLOAD: initializing new upload status view");
+             _(this).bindAll('tear_down');
+        },
+
+        template: "#upload_status_template",
+
+        events: {
+            "click #Ok": "tear_down"
+        },
+        
+        //removes the view
+        tear_down: function() {
+            $('#upload_status_modal').modal('hide');
+            $('.modal-backdrop').remove();
+        },
+
+        //update the status on the view 
+        update_total: function(total) {
+            $('#upl_total').html(total);
+        },
+
+        update_done: function(uploaded){
+            $('#upl_done').html(uploaded);
+        },
+
+        update_pending: function(pending){
+            $('#upl_pending').html(pending);
+        },
+
+        //feeds data to template
+        get_status: function(total, uploaded, pending) {
+            this.update_total(total);
+            this.update_done(uploaded);
+            this.update_pending(pending);
+        }
+
+    });
+
+    // Our module now returns our view
+    return UploadStatusView;
+});
+
+/*!
+ * jQuery Cookie Plugin v1.4.1
+ * https://github.com/carhartl/jquery-cookie
+ *
+ * Copyright 2013 Klaus Hartl
+ * Released under the MIT license
+ */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define('jquery_cookie',['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		// CommonJS
+		factory(require('jquery'));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function ($) {
+
+	var pluses = /\+/g;
+
+	function encode(s) {
+		return config.raw ? s : encodeURIComponent(s);
+	}
+
+	function decode(s) {
+		return config.raw ? s : decodeURIComponent(s);
+	}
+
+	function stringifyCookieValue(value) {
+		return encode(config.json ? JSON.stringify(value) : String(value));
+	}
+
+	function parseCookieValue(s) {
+		if (s.indexOf('"') === 0) {
+			// This is a quoted cookie as according to RFC2068, unescape...
+			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+		}
+
+		try {
+			// Replace server-side written pluses with spaces.
+			// If we can't decode the cookie, ignore it, it's unusable.
+			// If we can't parse the cookie, ignore it, it's unusable.
+			s = decodeURIComponent(s.replace(pluses, ' '));
+			return config.json ? JSON.parse(s) : s;
+		} catch(e) {}
+	}
+
+	function read(s, converter) {
+		var value = config.raw ? s : parseCookieValue(s);
+		return $.isFunction(converter) ? converter(value) : value;
+	}
+
+	var config = $.cookie = function (key, value, options) {
+
+		// Write
+
+		if (value !== undefined && !$.isFunction(value)) {
+			options = $.extend({}, config.defaults, options);
+
+			if (typeof options.expires === 'number') {
+				var days = options.expires, t = options.expires = new Date();
+				t.setTime(+t + days * 864e+5);
+			}
+
+			return (document.cookie = [
+				encode(key), '=', stringifyCookieValue(value),
+				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+				options.path    ? '; path=' + options.path : '',
+				options.domain  ? '; domain=' + options.domain : '',
+				options.secure  ? '; secure' : ''
+			].join(''));
+		}
+
+		// Read
+
+		var result = key ? undefined : {};
+
+		// To prevent the for loop in the first place assign an empty array
+		// in case there are no cookies at all. Also prevents odd result when
+		// calling $.cookie().
+		var cookies = document.cookie ? document.cookie.split('; ') : [];
+
+		for (var i = 0, l = cookies.length; i < l; i++) {
+			var parts = cookies[i].split('=');
+			var name = decode(parts.shift());
+			var cookie = parts.join('=');
+
+			if (key && key === name) {
+				// If second argument (value) is a function it's a converter...
+				result = read(cookie, value);
+				break;
+			}
+
+			// Prevent storing a cookie that we couldn't decode.
+			if (!key && (cookie = read(cookie)) !== undefined) {
+				result[name] = cookie;
+			}
+		}
+
+		return result;
+	};
+
+	config.defaults = {};
+
+	$.removeCookie = function (key, options) {
+		if ($.cookie(key) === undefined) {
+			return false;
+		}
+
+		// Must not alter options, thus extending a fresh object...
+		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
+		return !$.cookie(key);
+	};
+
+}));
+
+// The client agent to communicate with backends to process authentication requests
+// Exports an interface providng 3 methods - login, logout, check_login - for login view to use
+// Based on internet-connectivity, it runs the authentication requests against the - server and the offline backend
+define('auth',[
+    'models/user_model',
+    'auth_offline_backend',
+    'configs',
+    'offline_utils',
+    'jquery_cookie'
+], function(User, OfflineAuthBackend, all_configs, Offline) {
+
+    var internet_connected = function() {
+        return navigator.onLine;
+    }
+
+    // checks whether the user is logged in or not in both backends- based on internet connectivity 
+    var check_login = function() {
+        var dfd = new $.Deferred()
+        console.log("checking login");
+        if (check_online_login()) {
+            OfflineAuthBackend.check_login()
+                .done(function() {
+                    dfd.resolve();
+                })
+                .fail(function(error) {
+                    dfd.reject(error);
+                });
+        } else {
+            dfd.reject("Not logged in on server");
+        }
+        return dfd.promise();
+    }
+
+    
+    //ideally shd have been exacty same as the server uses. But approximating it to avoid network request.
+    var check_online_login = function() {
+        if (!internet_connected || $.cookie('sessionid'))
+            return true;
+        return false;
+    }
+    
+    // logs out of the offline backend, if internet accessible- logs out of the server backend
+    var logout = function() {
+        var dfd = new $.Deferred();
+        var that = this;
+        online_logout()
+            .always(function() {
+                OfflineAuthBackend.logout()
+                    .always(function() {
+                        dfd.resolve();
+                    })
+            });
+        return dfd;
+    }
+    
+    // logs out of the online backend if internet accessible
+    var online_logout = function() {
+        var dfd = new $.Deferred();
+
+        if (!internet_connected())
+            dfd.resolve();
+            
+        // the logout endpoint should be made configurable
+        $.post("/coco/logout/")
+            .done(function(resp) {
+                return dfd.resolve();
+            })
+            .fail(function(resp) {
+                return dfd.reject(resp);
+            });
+
+        return dfd.promise();
+    }
+    
+    // logs-in to the offline backend, if internet accessible - logs-in to the server backend
+    var login = function(username, password) {
+        var dfd = new $.Deferred();
+        console.log("Attemting login");
+        // internet accessible - login to server backend - when successfull - login to offline backend
+        if (internet_connected()) {
+            // try server backend login
+            online_login(username, password)
+                .fail(function(error) {
+                    console.log("Online login failed - " + error);
+                    dfd.reject(error);
+                })
+                .done(function() {
+                    // online login successful, try offline backend login
+                    OfflineAuthBackend.login(username, password)
+                        .done(function() {
+                            // login successful
+                            console.log("Login Successful");
+                            post_login_success();
+                            dfd.resolve();
+                        })
+                        .fail(function (error){
+                            console.log("Offline login failed - " + error);
+                            dfd.reject(error);
+                        });
+                });
+        } else {
+            // internet not accessible - only try logging into offline backend
+            OfflineAuthBackend.login(username, password)
+                .done(function() {
+                    console.log("Login Successful");
+                    post_login_success();
+                    dfd.resolve();
+                })
+                .fail(function (error) {
+                    console.log("Offline login failed - " + error);
+                    dfd.reject(error);
+                });
+        }
+        return dfd;
+    }
+    
+    // run any onLogin logic defined by user
+    var post_login_success = function (){
+        if (all_configs.misc.onLogin)
+            all_configs.misc.onLogin(Offline, this);
+            return;
+    }
+
+    // resolves if server returns 1 or internet is not connected otherwise rejects
+    var online_login = function(username, password) {
+        var dfd = new $.Deferred();
+        if (!internet_connected())
+            return dfd.resolve();
+        //the endpoint should be made configurable     
+        $.post("/coco/login/", {
+            "username": username,
+            "password": password
+        })
+            .done(function(resp) {
+                if (resp == "1")
+                    return dfd.resolve();
+                else
+                    return dfd.reject("Username or password is incorrect (Server)");
+            })
+            .fail(function(resp) {
+                return dfd.reject("Could not contact server. Try again in a minute.");
+            });
+        return dfd.promise();
+    }
+    
+    return {
+        check_login: check_login,
+        logout: logout,
+        login: login
+    };
+});
+
 /*!
  * Bootstrap v3.2.0 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
@@ -6287,9 +6698,11 @@ define('views/upload',[
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'views/upload_status',
+    'auth',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView, auth) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -6305,7 +6718,7 @@ define('views/upload',[
         },
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
-        stop_upload: function() {
+        stop_upload: function() {      
             console.log("stopping upload");
             this.user_interrupt = true;
         },
@@ -6331,6 +6744,7 @@ define('views/upload',[
         //initializes the global vars used, ui
         initialize_upload: function() {
             this.user_interrupt = false;
+            this.server_connectivity_lost = false;
             this.in_progress = true;
             this.$('#upload_modal').modal({
                 keyboard: false,
@@ -6345,7 +6759,6 @@ define('views/upload',[
             this.in_progress = false;
             var that = this;
             //modal takes time to hide. Needed to get the correct point of time when upload has finished.
-            
             $('#upload_modal').modal('hide');
             $('.modal-backdrop').remove();
         },
@@ -6464,23 +6877,39 @@ define('views/upload',[
                 //stop the process
                 return whole_upload_dfd.reject("User stopped Sync");
             }
+            else if (this.server_connectivity_lost){
+                 //put the upload object back
+                this.upload_collection.unshift(this.current_entry);
+                //stop the process
+                return whole_upload_dfd.reject("Internet Lost during Upload");
+            }
             // process the object
             else {
                 this.process_upload_entry(this.current_entry)
                     .fail(function(error) {
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
+                        //check for internet connectivity
+                        if (that.server_connectivity_lost) {
+                        //put the upload object back
+                        that.upload_collection.unshift(this.current_entry);
+                        //stop the process
+                        return whole_upload_dfd.reject("Server connection lost during Upload");
+                        }
                         //it would be reached in foll cases:
                         //object to be uploaded doesn't exists in offline anymore
                         //ConvertNamespace failed
                         //online_id couldn't be injected
                         //The object discarded in upload error form could not be deleted
+                        //Internet connectivity lost during upload
                     })
                     .done(function() {
                         console.log("SUCESSFULLY UPLOADED AN OBJECT");
                     })
                     .always(function() {
                         // delete the object..finished processing it
+                        //if internet connectivity exists
+                        if (!that.server_connectivity_lost) {
                         that.current_entry.destroy();
                         // continue processing the objects even if this object failed
                         //  increment progress bar
@@ -6488,7 +6917,7 @@ define('views/upload',[
                         // increment upload status
                         that.upload_status["uploaded"]++;
                         //recursively process the rest of the objects
-                        that.pick_next(whole_upload_dfd);
+                        that.pick_next(whole_upload_dfd);}
                     });
             }
 
@@ -6556,6 +6985,23 @@ define('views/upload',[
                                         });
                                 })
                                 .fail(function(error) {
+                                    // server connection not established with server/ internet connection lost 
+                                    if(error.status == 0) {
+                                        var uploaded = that.upload_status["uploaded"];
+                                        var total = that.upload_status["total"];
+                                        var pending = total - uploaded;
+                                        that.tear_down();  
+                                        that.server_connectivity_lost = true;
+                                        that.status_view(total, uploaded, pending);
+                                        dfd.reject(error);
+                                    }
+                                    // unauthorised server connection i.e. when user is logged out from website( when django session expires)
+                                    else if(error.status == 401){
+                                        alert('Session time out. Login in to Digital Green website again!');
+                                        that.tear_down();
+                                        that.server_connectivity_lost = true;
+                                        dfd.reject(error);
+                                    }
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
@@ -6576,6 +7022,19 @@ define('views/upload',[
                     } else
                         dfd.reject(error);
                 });
+        },
+        // show the status of upladed/yet to uploaded data from upload queue
+        status_view: function(total, uploaded, pending) {
+            console.log("Upload Status View Initialised");
+            this.UploadStatusView_v = new UploadStatusView();
+            //append div-modal to body of dashboard.html
+            $(this.UploadStatusView_v.el)
+                .appendTo('body');
+            this.UploadStatusView_v.render();
+            //display the modal
+            $('#upload_status_modal').modal('show');
+            this.UploadStatusView_v.get_status(total, uploaded, pending);
+                
         },
 
         // show the json in its form with the error returned by server - let user fix it
@@ -7228,276 +7687,6 @@ define('views/incremental_download',[
     });
 
     return IncrementalDownloadView;
-});
-
-/*!
- * jQuery Cookie Plugin v1.4.1
- * https://github.com/carhartl/jquery-cookie
- *
- * Copyright 2013 Klaus Hartl
- * Released under the MIT license
- */
-(function (factory) {
-	if (typeof define === 'function' && define.amd) {
-		// AMD
-		define('jquery_cookie',['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		// CommonJS
-		factory(require('jquery'));
-	} else {
-		// Browser globals
-		factory(jQuery);
-	}
-}(function ($) {
-
-	var pluses = /\+/g;
-
-	function encode(s) {
-		return config.raw ? s : encodeURIComponent(s);
-	}
-
-	function decode(s) {
-		return config.raw ? s : decodeURIComponent(s);
-	}
-
-	function stringifyCookieValue(value) {
-		return encode(config.json ? JSON.stringify(value) : String(value));
-	}
-
-	function parseCookieValue(s) {
-		if (s.indexOf('"') === 0) {
-			// This is a quoted cookie as according to RFC2068, unescape...
-			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-		}
-
-		try {
-			// Replace server-side written pluses with spaces.
-			// If we can't decode the cookie, ignore it, it's unusable.
-			// If we can't parse the cookie, ignore it, it's unusable.
-			s = decodeURIComponent(s.replace(pluses, ' '));
-			return config.json ? JSON.parse(s) : s;
-		} catch(e) {}
-	}
-
-	function read(s, converter) {
-		var value = config.raw ? s : parseCookieValue(s);
-		return $.isFunction(converter) ? converter(value) : value;
-	}
-
-	var config = $.cookie = function (key, value, options) {
-
-		// Write
-
-		if (value !== undefined && !$.isFunction(value)) {
-			options = $.extend({}, config.defaults, options);
-
-			if (typeof options.expires === 'number') {
-				var days = options.expires, t = options.expires = new Date();
-				t.setTime(+t + days * 864e+5);
-			}
-
-			return (document.cookie = [
-				encode(key), '=', stringifyCookieValue(value),
-				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-				options.path    ? '; path=' + options.path : '',
-				options.domain  ? '; domain=' + options.domain : '',
-				options.secure  ? '; secure' : ''
-			].join(''));
-		}
-
-		// Read
-
-		var result = key ? undefined : {};
-
-		// To prevent the for loop in the first place assign an empty array
-		// in case there are no cookies at all. Also prevents odd result when
-		// calling $.cookie().
-		var cookies = document.cookie ? document.cookie.split('; ') : [];
-
-		for (var i = 0, l = cookies.length; i < l; i++) {
-			var parts = cookies[i].split('=');
-			var name = decode(parts.shift());
-			var cookie = parts.join('=');
-
-			if (key && key === name) {
-				// If second argument (value) is a function it's a converter...
-				result = read(cookie, value);
-				break;
-			}
-
-			// Prevent storing a cookie that we couldn't decode.
-			if (!key && (cookie = read(cookie)) !== undefined) {
-				result[name] = cookie;
-			}
-		}
-
-		return result;
-	};
-
-	config.defaults = {};
-
-	$.removeCookie = function (key, options) {
-		if ($.cookie(key) === undefined) {
-			return false;
-		}
-
-		// Must not alter options, thus extending a fresh object...
-		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
-		return !$.cookie(key);
-	};
-
-}));
-
-// The client agent to communicate with backends to process authentication requests
-// Exports an interface providng 3 methods - login, logout, check_login - for login view to use
-// Based on internet-connectivity, it runs the authentication requests against the - server and the offline backend
-define('auth',[
-    'models/user_model',
-    'auth_offline_backend',
-    'configs',
-    'offline_utils',
-    'jquery_cookie'
-], function(User, OfflineAuthBackend, all_configs, Offline) {
-
-    var internet_connected = function() {
-        return navigator.onLine;
-    }
-
-    // checks whether the user is logged in or not in both backends- based on internet connectivity 
-    var check_login = function() {
-        var dfd = new $.Deferred()
-        console.log("checking login");
-        if (check_online_login()) {
-            OfflineAuthBackend.check_login()
-                .done(function() {
-                    dfd.resolve();
-                })
-                .fail(function(error) {
-                    dfd.reject(error);
-                });
-        } else {
-            dfd.reject("Not logged in on server");
-        }
-        return dfd.promise();
-    }
-
-    
-    //ideally shd have been exacty same as the server uses. But approximating it to avoid network request.
-    var check_online_login = function() {
-        if (!internet_connected || $.cookie('sessionid'))
-            return true;
-        return false;
-    }
-    
-    // logs out of the offline backend, if internet accessible- logs out of the server backend
-    var logout = function() {
-        var dfd = new $.Deferred();
-        var that = this;
-        online_logout()
-            .always(function() {
-                OfflineAuthBackend.logout()
-                    .always(function() {
-                        dfd.resolve();
-                    })
-            });
-        return dfd;
-    }
-    
-    // logs out of the online backend if internet accessible
-    var online_logout = function() {
-        var dfd = new $.Deferred();
-
-        if (!internet_connected())
-            dfd.resolve();
-            
-        // the logout endpoint should be made configurable
-        $.post("/coco/logout/")
-            .done(function(resp) {
-                return dfd.resolve();
-            })
-            .fail(function(resp) {
-                return dfd.reject(resp);
-            });
-
-        return dfd.promise();
-    }
-    
-    // logs-in to the offline backend, if internet accessible - logs-in to the server backend
-    var login = function(username, password) {
-        var dfd = new $.Deferred();
-        console.log("Attemting login");
-        // internet accessible - login to server backend - when successfull - login to offline backend
-        if (internet_connected()) {
-            // try server backend login
-            online_login(username, password)
-                .fail(function(error) {
-                    console.log("Online login failed - " + error);
-                    dfd.reject(error);
-                })
-                .done(function() {
-                    // online login successful, try offline backend login
-                    OfflineAuthBackend.login(username, password)
-                        .done(function() {
-                            // login successful
-                            console.log("Login Successful");
-                            post_login_success();
-                            dfd.resolve();
-                        })
-                        .fail(function (error){
-                            console.log("Offline login failed - " + error);
-                            dfd.reject(error);
-                        });
-                });
-        } else {
-            // internet not accessible - only try logging into offline backend
-            OfflineAuthBackend.login(username, password)
-                .done(function() {
-                    console.log("Login Successful");
-                    post_login_success();
-                    dfd.resolve();
-                })
-                .fail(function (error) {
-                    console.log("Offline login failed - " + error);
-                    dfd.reject(error);
-                });
-        }
-        return dfd;
-    }
-    
-    // run any onLogin logic defined by user
-    var post_login_success = function (){
-        if (all_configs.misc.onLogin)
-            all_configs.misc.onLogin(Offline, this);
-            return;
-    }
-
-    // resolves if server returns 1 or internet is not connected otherwise rejects
-    var online_login = function(username, password) {
-        var dfd = new $.Deferred();
-        if (!internet_connected())
-            return dfd.resolve();
-        //the endpoint should be made configurable     
-        $.post("/coco/login/", {
-            "username": username,
-            "password": password
-        })
-            .done(function(resp) {
-                if (resp == "1")
-                    return dfd.resolve();
-                else
-                    return dfd.reject("Username or password is incorrect (Server)");
-            })
-            .fail(function(resp) {
-                return dfd.reject("Could not contact server. Try again in a minute.");
-            });
-        return dfd.promise();
-    }
-    
-    return {
-        check_login: check_login,
-        logout: logout,
-        login: login
-    };
 });
 
 // Performs the full database download. For each entity defined in configs, creates chunked requests to fetch data 
@@ -8230,30 +8419,30 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 })
                     .always(function() {
                     //upload finished
-                    //start inc download - even if upload failed    
-                    that.inc_download({
-                        background: false
-                    })
-                        .done(function() {
-                        console.log("INC DOWNLOAD FINISHED");
-                        that.sync_in_progress = false;
-                        notifs_view.add_alert({
-                            notif_type: "success",
-                            message: "Incremental download successfully finished"
+                    //start inc download - even if upload failed and internet connectivity is available 
+                    if(!UploadView.server_connectivity_lost)  {
+                        that.inc_download({
+                            background: false
+                        })
+                            .done(function() {
+                            console.log("INC DOWNLOAD FINISHED");
+                            that.sync_in_progress = false;
+                            notifs_view.add_alert({
+                                notif_type: "success",
+                                message: "Incremental download successfully finished"
+                            });
+                        })
+                            .fail(function(error) {
+                            console.log("ERROR IN INC DOWNLOAD");
+                            console.log(error);
+                            that.sync_in_progress = false;
+                            notifs_view.add_alert({
+                                notif_type: "error",
+                                message: "Sync Incomplete. Failed to do Incremental Download: " + error
+                            });
                         });
-                    })
-                        .fail(function(error) {
-                        console.log("ERROR IN INC DOWNLOAD");
-                        console.log(error);
-                        that.sync_in_progress = false;
-                        notifs_view.add_alert({
-                            notif_type: "error",
-                            message: "Sync Incomplete. Failed to do Incremental Download: " + error
-                        });
-
-                    });
+                    }
                 });
-
             })
                 .fail(function(model, error) {
                 // if DB is not downloaded, start the full download    
@@ -8265,7 +8454,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     });
                 }
             });
-
         },
         
         //method to initiate full download
@@ -8374,7 +8562,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             return navigator.onLine;
         }
     });
-
 
     // Our module now returns our view
     return DashboardView;
@@ -12032,7 +12219,7 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
-                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable) && (this.form.final_json.video_type != this.form.inline.exemption_video_type))
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
                     {
                         if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
                             var err = {};
@@ -12534,13 +12721,20 @@ define('views/status',[
 
         // Resets the offline db
         reset: function() {
-            var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
-            if (val == true) {
-                Offline.reset_database();
+            // check if user has unsynced data in upload queue
+            if(upload_collection.length > 0){
+                var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+                if (val == true) {
+                    Offline.reset_database();
+                }    
+            }
+            else {
+                var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
+                if (val == true) {
+                    Offline.reset_database();
+                }
             }
         }
-
-
     });
 
     // Our module now returns our view
@@ -12555,8 +12749,9 @@ define('views/login',[
     'layoutmanager',
     'models/user_model',
     'auth',
-	'offline_utils'
-], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline){
+	  'offline_utils',
+    'collections/upload_collection'
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, upload_collection){
     
     var LoginView = Backbone.Layout.extend({
       template: "#login",
@@ -12640,13 +12835,22 @@ define('views/login',[
 	  
       // to login with different user - clear the offline db of existing user
 	  change_user: function(){
-		var val = confirm("Your current database will be deleted and a new database will be downloaded");
-		if (val==true){
-			Offline.reset_database();
-		}
-	  }
+      // check if user has unsynced data in upload queue
+      if(upload_collection.length > 0){
+        var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+        if (val == true) {
+            Offline.reset_database();
+        }    
+      }
+      else{
+    		var val = confirm("Your current database will be deleted and a new database will be downloaded");
+    		if (val==true){
+    			Offline.reset_database();
+    		}
+  	  }
+    }
       
-    });
+  });
     
   // Our module now returns our view
   return LoginView;
@@ -12856,8 +13060,6 @@ define('user_initialize',['auth', 'offline_utils', 'configs', 'jquery', 'form_fi
         validateDate, 'Enter the date in the form of YYYY-MM-DD.');
         $.validator.addMethod('validateTime',
         validateTime, 'Enter the time in the form of HH:MM. Use 24 hour format');
-        $.validator.addMethod('timeOrder',
-        timeOrder, 'End time should be later than start time');
         $.validator.addMethod('dateOrder',
         dateOrder, 'End date should be later than start date');
 
@@ -12928,7 +13130,7 @@ define('user_initialize',['auth', 'offline_utils', 'configs', 'jquery', 'form_fi
 
         function dateOrder(value, element, options) {
             var check = false;
-            var start = $('#' + options.video_production_start_date)
+            var start = $('#' + options.production_date)
                 .val();
             //console.log("START DATE = " + start + ' END = ' + value);
 
@@ -12950,7 +13152,6 @@ define('user_initialize',['auth', 'offline_utils', 'configs', 'jquery', 'form_fi
             return check;
         }
 
-
         function timeOrder(value, element, options) {
             var check = false;
             var start = $('#' + options.start_time)
@@ -12966,8 +13167,6 @@ define('user_initialize',['auth', 'offline_utils', 'configs', 'jquery', 'form_fi
     return {
         run: run
     };
-
-
 });
 
 //  Initializes application. 

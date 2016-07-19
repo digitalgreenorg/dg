@@ -10,9 +10,11 @@ define([
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'views/upload_status',
+    'auth',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView, auth) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -28,7 +30,7 @@ define([
         },
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
-        stop_upload: function() {
+        stop_upload: function() {      
             console.log("stopping upload");
             this.user_interrupt = true;
         },
@@ -54,6 +56,7 @@ define([
         //initializes the global vars used, ui
         initialize_upload: function() {
             this.user_interrupt = false;
+            this.server_connectivity_lost = false;
             this.in_progress = true;
             this.$('#upload_modal').modal({
                 keyboard: false,
@@ -68,7 +71,6 @@ define([
             this.in_progress = false;
             var that = this;
             //modal takes time to hide. Needed to get the correct point of time when upload has finished.
-            
             $('#upload_modal').modal('hide');
             $('.modal-backdrop').remove();
         },
@@ -187,23 +189,39 @@ define([
                 //stop the process
                 return whole_upload_dfd.reject("User stopped Sync");
             }
+            else if (this.server_connectivity_lost){
+                 //put the upload object back
+                this.upload_collection.unshift(this.current_entry);
+                //stop the process
+                return whole_upload_dfd.reject("Internet Lost during Upload");
+            }
             // process the object
             else {
                 this.process_upload_entry(this.current_entry)
                     .fail(function(error) {
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
+                        //check for internet connectivity
+                        if (that.server_connectivity_lost) {
+                        //put the upload object back
+                        that.upload_collection.unshift(this.current_entry);
+                        //stop the process
+                        return whole_upload_dfd.reject("Server connection lost during Upload");
+                        }
                         //it would be reached in foll cases:
                         //object to be uploaded doesn't exists in offline anymore
                         //ConvertNamespace failed
                         //online_id couldn't be injected
                         //The object discarded in upload error form could not be deleted
+                        //Internet connectivity lost during upload
                     })
                     .done(function() {
                         console.log("SUCESSFULLY UPLOADED AN OBJECT");
                     })
                     .always(function() {
                         // delete the object..finished processing it
+                        //if internet connectivity exists
+                        if (!that.server_connectivity_lost) {
                         that.current_entry.destroy();
                         // continue processing the objects even if this object failed
                         //  increment progress bar
@@ -211,7 +229,7 @@ define([
                         // increment upload status
                         that.upload_status["uploaded"]++;
                         //recursively process the rest of the objects
-                        that.pick_next(whole_upload_dfd);
+                        that.pick_next(whole_upload_dfd);}
                     });
             }
 
@@ -279,6 +297,23 @@ define([
                                         });
                                 })
                                 .fail(function(error) {
+                                    // server connection not established with server/ internet connection lost 
+                                    if(error.status == 0) {
+                                        var uploaded = that.upload_status["uploaded"];
+                                        var total = that.upload_status["total"];
+                                        var pending = total - uploaded;
+                                        that.tear_down();  
+                                        that.server_connectivity_lost = true;
+                                        that.status_view(total, uploaded, pending);
+                                        dfd.reject(error);
+                                    }
+                                    // unauthorised server connection i.e. when user is logged out from website( when django session expires)
+                                    else if(error.status == 401){
+                                        alert('Session time out. Login in to Digital Green website again!');
+                                        that.tear_down();
+                                        that.server_connectivity_lost = true;
+                                        dfd.reject(error);
+                                    }
                                     // server returned error when uploading object
                                     console.log("Error while saving oject on server");
                                     that.curr_entry_dfd = dfd;
@@ -299,6 +334,19 @@ define([
                     } else
                         dfd.reject(error);
                 });
+        },
+        // show the status of upladed/yet to uploaded data from upload queue
+        status_view: function(total, uploaded, pending) {
+            console.log("Upload Status View Initialised");
+            this.UploadStatusView_v = new UploadStatusView();
+            //append div-modal to body of dashboard.html
+            $(this.UploadStatusView_v.el)
+                .appendTo('body');
+            this.UploadStatusView_v.render();
+            //display the modal
+            $('#upload_status_modal').modal('show');
+            this.UploadStatusView_v.get_status(total, uploaded, pending);
+                
         },
 
         // show the json in its form with the error returned by server - let user fix it
