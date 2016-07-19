@@ -3,12 +3,12 @@ window.onload = initialize;
 
 function initialize() {
     // initialize any library here
-    $('select').material_select();
-    $(".button-collapse1").sideNav()
-    $(".button-collapse").sideNav()
+    $("select").material_select();
+    $(".button-collapse1").sideNav();
+    $(".button-collapse").sideNav();
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-    today.setMonth(today.getMonth() - 3)
+    today.setMonth(today.getMonth() - 3);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     gaddidar = true;
     selected_tab = "aggregator";
@@ -19,28 +19,35 @@ function initialize() {
 }
 
 function hide_nav(){
-    $('#filters_nav').hide();
-    $('#home').show();
-    $('#analytics').hide();
-    $('#time_series').hide();
+    $("#filters_nav").hide();
+    $("#home").show();
+    $("#analytics").hide();
+    $("#time_series").hide();
+    $("#home_tab").addClass('active');
+    $("#analytics_tab").removeClass('active');
+    $("#time_series_tab").removeClass('active');
 }
 
 function show_nav(tab){
-
-    $('#filters_nav').show();
-    $('#home').hide();
+    $("#home_tab").removeClass('active');
+    $("#analytics_tab").removeClass('active');
+    $("#time_series_tab").removeClass('active');
+    $("#filters_nav").show();
+    $("#home").hide();
     get_filter_data();
     set_filterlistener();
     outliers();
     if (tab=="analytics"){
-        $('.analytics_tabs').show();
-        $('#analytics').show();
-        $('#time_series').hide();
+        $(".analytics_tabs").show();
+        $("#analytics").show();
+        $("#time_series").hide();
+        $("#analytics_tab").addClass('active');
     }
     else if(tab=="time_series"){
         $('.analytics_tabs').hide();
         $('#analytics').hide();
         $('#time_series').show();
+        $('#time_series_tab').addClass('active');
     }
 }
 
@@ -353,7 +360,12 @@ $('.datepicker').pickadate({
 
 function change_tab(tab) {
     selected_tab = tab;
+    $('#aggregator_tab').removeClass('active');
+    $('#mandi_tab').removeClass('active');
+    $('#crop_tab').removeClass('active');
     change_graph();
+
+    
 }
 
 function change_graph(parameter) {
@@ -367,9 +379,13 @@ function change_graph(parameter) {
     $("#gaddidar_aggregator_graph").hide();
     $("#aggregator_farmer_count").show();
     if (selected_tab == "aggregator") {
+        $('#aggregator_tab').addClass('active');
+
         update_graphs_aggregator_wise(parameter);
+        
     }
     if (selected_tab == "mandi") {
+        $('#mandi_tab').addClass('active');
         $("#gaddidar_aggregator_graph").show();
         $("#aggregator_farmer_count").hide();
         update_graphs_mandi_wise(parameter);
@@ -377,10 +393,13 @@ function change_graph(parameter) {
             update_graphs_gaddidar_wise(parameter);
             gaddidar = false;
         }
+        
     }
-    if (selected_tab == "crop") {        
-        $("#aggregator_visits").hide()
+    if (selected_tab == "crop") {
+        $('#crop_tab').addClass('active');    
+        $("#aggregator_visits").hide();
         update_graphs_crop_wise(parameter);
+        
     }
 }
 

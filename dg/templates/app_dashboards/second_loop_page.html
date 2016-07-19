@@ -27,9 +27,9 @@
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
 			<div class="right col s5">
 			<ul class="hide-on-med-and-down grey lighten-2">
-				<li><a class="active blue-text" onclick="hide_nav('home')">Home</a></li>
-				<li><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
-				<li><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
+				<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
+				<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
+				<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
 			</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
@@ -43,33 +43,29 @@
 		<!-- <nav> -->
 		<div class="nav-wrapper  grey lighten-3" id="filters_nav">
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
-			<ul class="hide-on-small-and-down">
+			<ul class="hide-on-med-and-down">
 				<ul class="left">
 					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text">Filters</a></li>
-					<li class="analytics_tabs"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
-					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
-					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
-					
-				</ul>
-
-
-				<ul class="right">
-					<div class="row">
-						<div class="input-field col s4">
+					<li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
+					<li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
+					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
+				
+					</ul>
+					<ul class="right">
+						<li class="input-field ">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
-						</div>
-						<div class="input-field col s4">
+						</li>
+						<li class="input-field ">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
-						</div>
-						<li class="col s4"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
-					</div>
+						</li>
+						<li class="col s4"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger">GET DATA</a></li>
+						</ul>
 				</ul>
-			</ul>
 			<ul class="side-nav" id="mobile-demo1">
 				<ul class="left">
-					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse">Filters</a></li>
 					<li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
 					<li><a class="" onclick="change_tab('crop')">Crop</a></li>
@@ -81,7 +77,7 @@
 						<i class="material-icons black-text text-lighten-2 prefix">today</i>
 						<input id="to_date" placeholder="End Date" type="text" class="datepicker">
 					</div>
-					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger">GET DATA</a></ul>
 				</ul>
 			</ul>
 		</div>
