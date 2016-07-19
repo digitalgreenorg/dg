@@ -7,6 +7,7 @@ function initialize() {
     $(".button-collapse").sideNav({
       closeOnClick:true
     });
+    $(".button-collapse1").sideNav();
 
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
@@ -2189,7 +2190,7 @@ function plot_area_range_graph(container, dict) {
 
 // For payments sheet
 function genterate_payment_sheet(start_date, end_date) {
-    $.get("/loop/payments", {
+    $.get("/loop/payments/", {
             'start_date': start_date,
             'end_date': end_date
         })
