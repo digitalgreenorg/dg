@@ -12,11 +12,10 @@ function initialize() {
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     gaddidar = true;
     selected_tab = "aggregator";
-    parameter = "volume"
 
     set_filterlistener();
     get_filter_data();
-
+    outliers();
     total_static_data();
     recent_graphs_data();
     days_to_average = 15;
@@ -331,11 +330,16 @@ $('.datepicker').pickadate({
 
 function change_tab(tab) {
     selected_tab = tab;
-    change_graph(parameter);
+    change_graph();
 }
 
-function change_graph(param) {
-    parameter = param;
+function change_graph(parameter) {
+
+    $("#aggregator_visits").removeClass("active");
+    $("#aggregator_amount").removeClass("active");
+    $("#aggregator_volume").addClass("active");
+    $('ul.tabs').tabs();
+
     $("#aggregator_visits").show();
     $("#gaddidar_aggregator_graph").hide();
     $("#aggregator_farmer_count").show();
@@ -351,11 +355,7 @@ function change_graph(param) {
             gaddidar = false;
         }
     }
-    if (selected_tab == "crop") {
-        $("#aggregator_visits").removeClass("active");
-        $("#aggregator_volume").addClass("active");
-        $('ul.tabs').tabs();
-        parameter = "volume";
+    if (selected_tab == "crop") {        
         $("#aggregator_visits").hide()
         update_graphs_crop_wise(parameter);
     }
@@ -1057,6 +1057,7 @@ function fill_crop_drop_down() {
 function show_line_graphs() {
     var json_data = line_json_data.aggregator_data;
     var farmer_data = line_json_data.farmer;
+    var transport_data = line_json_data.transport_data;
     var dates = line_json_data['dates']
     var all_dates = [];
 
@@ -1079,6 +1080,18 @@ function show_line_graphs() {
         'data': [],
         'yAxis': 1
     }]
+
+    var series_cpk = [{
+        'name': "cpk",
+        'type': 'areaspline',
+        'data': []
+    }, {
+        'name': "spk",
+        'type': 'areaspline',
+        'data': []
+    }];
+
+
     for (var i = 0; i < all_dates.length; i++) {
         series[0]['data'].push([all_dates[i], null]);
         series[1]['data'].push([all_dates[i], null]);
@@ -1090,24 +1103,31 @@ function show_line_graphs() {
         series[0]['data'][index][1] += json_data[i]['quantity__sum'];
         series[1]['data'][index][1] += json_data[i]['amount__sum'];
     }
+    var transport_cost= new Array(all_dates.length).fill(0);
+    var farmer_share = new Array(all_dates.length).fill(0);
+    for (var i=0; i< transport_data.length;i++){
+        var index = all_dates.indexOf(new Date(transport_data[i]['date']).getTime());
+        transport_cost[index] +=transport_data[i]['transportation_cost__sum'];
+        farmer_share[index] +=transport_data[i]['farmer_share__sum'];
+    }
+
+    for (var i=0; i< all_dates.length; i++){
+        series_cpk[0]['data'].push([all_dates[i], series[0]['data'][i][1] > 0 ? transport_cost[i] / series[0]['data'][i][1] : null]);
+        series_cpk[1]['data'].push([all_dates[i], series[0]['data'][i][1] > 0 ? farmer_share[i] / series[0]['data'][i][1] : null]);
+    }
 
     for (var i = 0; i < farmer_data.length; i++) {
         var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
         series[2]['data'][index][1] += farmer_data[i]['farmer__count'];
     }
     createMaster($('#detail_container_time_series'),$('#master_container_time_series'),series)
+    console.log(series_cpk);
+    createMaster($('#detail_container_cpk'), $('#master_container_cpk'),series_cpk);
+
+
 }
 
-function cpk_spk_line() {
-    var dates = line_json_data['dates'];
-    var all_dates = [];
 
-    var first_date = new Date(dates[0]);
-    while (first_date <= new Date(dates[dates.length - 1])) {
-        all_dates.push(first_date.getTime());
-        first_date.setDate(first_date.getDate() + 1)
-    }
-}
 
 function crop_prices_graph(crop_id) {
     var json_data = line_json_data.crop_prices;
@@ -1373,7 +1393,6 @@ function createDetail(detail_container,masterChart, dict) {
     // create a detail chart referenced by a global variable
     detailChart = detail_container.highcharts({
         chart: {
-            reflow: false,
 
         },
         credits: {
@@ -1448,7 +1467,6 @@ function createDetail(detail_container,masterChart, dict) {
 function createMaster(detail_container,master_container,dict) {
     master_container.highcharts({
             chart: {
-                reflow: false,
                 zoomType: 'x',
                 events: {
 
@@ -1750,6 +1768,53 @@ function transporter_payment_sheet(data_json, aggregator) {
     }
 
 }
+
+
+function outliers(){
+    $.get("/loop/payments", {
+            'start_date': "2016-06-01",
+            'end_date': "2016-06-15"
+        }).done(function(data){
+            var json_data = JSON.parse(data);
+            var my_data = json_data.outlier_data;
+            var my_transport_data = json_data.outlier_transport_data;
+            var start_date =  new Date("2016-06-01");
+            var end_date = new Date("2016-06-15");
+            var dates = [];
+            while(start_date<=end_date){
+                dates.push(start_date.getFullYear()+"-"+("0"+(start_date.getMonth()+1)).slice(-2)+"-"+("0"+start_date.getDate()).slice(-2));
+                start_date.setDate(start_date.getDate()+1);
+            }
+            console.log(dates);
+            var quantites= new Array(dates.length).fill(0);
+            var farmers = new Array(dates.length).fill(0);
+
+            for (var i=0;i<my_data.length; i++){
+                var index = dates.indexOf(my_data[i]['date']);
+                quantites[index]+=(my_data[i]['quantity__sum']);
+                farmers[index]+=(my_data[i]['farmer__count']);
+            }
+
+            transport_data = new Array(dates.length).fill(0);
+
+            for (var i=0;i<my_transport_data.length; i++){
+                var index = dates.indexOf(my_transport_data[i]['date']);
+                transport_data[index]+=my_transport_data[i]['transportation_cost__sum'];
+            }
+            var cpk=[]
+            for (var i=0; i<dates.length; i++){
+                cpk.push(quantites[i] > 0 ? transport_data[i] / quantites[i] : 0.0);
+                if (cpk[i]<0.6 || farmers[i]<4){
+                    $('<div class="center col s1" style="background-color:red;height=50px;padding:20px;">' +i+ '</div>').appendTo('#outliers');
+                }
+                else{
+                    $('<div class="center col s1" style="background-color:green;height=50px;padding:20px;">' +i+ '</div>').appendTo('#outliers');
+                }
+            }
+
+        })
+}
+
 
 
 // function gaddidar_cpk_spk_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
