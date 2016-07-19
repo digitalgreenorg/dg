@@ -49,7 +49,7 @@
 					<li class="analytics_tabs"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
 					<li class="analytics_tabs"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
-					
+
 				</ul>
 
 
@@ -173,7 +173,7 @@
 
 {% endblock %} {% block content %}
 
-<div id="home">
+<div id="home_div">
 	<div class="row card white darken-1">
 		<h5>Overall</h5>
 		<hr/>
@@ -232,7 +232,7 @@
 				<h5>Recent</h5>
 			</div>
 			<div class="col s2">
-				<select id="mFrequency" class="initialized">
+				<select id="recent_cards_data_frequency" class="initialized">
 						<option value="7">7</option>
 						<option value="15" selected>15</option>
 						<option value="30">30</option>
@@ -299,7 +299,7 @@
 </div>
 
 
-<div id="analytics">
+<div id="analytics_div">
 	<div class="center">
 
 		<div id="modal1" class="modal">
@@ -314,15 +314,6 @@
 
 	<div class="container">
 		<div class="row ">
-
-			<!-- <select id="m_g_c_a" class="initialized">
-			<option value="" disabled >Choose your option</option>
-			<option value="1" selected>mandi</option>
-			<option value="2">gaddidar</option>
-			<option value="3">crop</option>
-		</select> -->
-
-
 			<div class=" col s12 l6">
 				<div class="row">
 					<ul class="tabs">
@@ -384,14 +375,14 @@
 </div>
 
 
-<div id="time_series">
-	
+<div id="time_series_div">
+
 		<div id="detail_container_time_series"></div>
 		<div id="master_container_time_series" style="height:100px"></div>
-	
+
 		<div id="detail_container_cpk"></div>
 		<div id="master_container_cpk" style="height:100px"></div>
-	
+
 		<div class="row">
 			<p class="col s3"></p>
 			<div class="input-field col s6">
