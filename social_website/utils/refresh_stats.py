@@ -18,7 +18,6 @@ def refresh_offline_stats():
     for row in stats:
         try:
             video = Video.objects.get(coco_id = row['videoID'])
-            video.offlineLikes = row['likes']
             video.offlineViews = row['views']
             video.adoptions = row['adoptions']
             video.save()

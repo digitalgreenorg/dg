@@ -117,7 +117,7 @@ def grade4(village_info):
             
 def grade5_6(village_info):
     grade = []
-    #Quality of dissemination gauged through number of questions/ comments  
+    #Quality of dissemination gauged through number of questions/comments  
     for i in village_info:
         questions_ratio = 0
         interest_ratio = 0 
@@ -126,33 +126,21 @@ def grade5_6(village_info):
         sum_per_ques = 0
         sum_per_interest = 0
         for sc in screenings_conducted_in_vil:
-            ques = PersonMeetingAttendance.objects.filter(screening__id = sc).exclude(expressed_question='').count()
-            interests = PersonMeetingAttendance.objects.filter(screening__id = sc, interested=1).count()
+            ques = Screening.objects.filter(id = sc).exclude(questions_asked = '').count()
             atten = PersonMeetingAttendance.objects.filter(screening__id = sc).count()
-            if interests:
-                ratio_per_interest = interests / (0.3 * atten)
-                if ratio_per_interest > 1:
-                    ratio_per_interest = 1
-            else:
-                ratio_per_interest = 0
-            #calculate 15% of atten and compare it with questions asked
             if ques:
                 ratio_per_ques = ques / (0.05 * atten)
                 if ratio_per_ques > 1:
                     ratio_per_ques = 1
-                #print sum_per_ques, vil_id
             else:
                 ratio_per_ques = 0
             sum_per_ques += ratio_per_ques
-            sum_per_interest += ratio_per_interest
-        #print sum_per_ques
         if len(screenings_conducted_in_vil):
             questions_ratio = sum_per_ques/len(screenings_conducted_in_vil)
-            interest_ratio = float(sum_per_interest)/len(screenings_conducted_in_vil)
         grade.append({'id': vil_id,
-                      'question_grade_ratio': questions_ratio,
-                      'interests_grade_ratio': interest_ratio})
-    print 'grade 5 and 6 done'
+                      'question_grade_ratio': questions_ratio})
+    print 'grade 5 done'
+    #interested removed
     return grade
             
             
@@ -171,14 +159,13 @@ if __name__ == "__main__":
     grade4 = grade4(village_id)
     grade5 = grade5_6(village_id)
     
-    
 #    wrtr.writerow(['village_id', 'village_name', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Final Grade'])
     grd_file.flush()
     for i in range(len(village_id)):
-        final_grade = 20 * grade1[i]['grade_ratio'] + 15 * grade2[i]['grade_ratio'] + 15 * grade3[i]['grade_ratio']
-        + 35 * grade4[i]['grade_ratio'] + 5 * grade5[i]['question_grade_ratio'] + 10 * grade5[i]['interests_grade_ratio']
+        final_grade = 25 * grade1[i]['grade_ratio'] + 20 * grade2[i]['grade_ratio'] + 15 * grade3[i]['grade_ratio']
+        + 35 * grade4[i]['grade_ratio'] + 5 * grade5[i]['question_grade_ratio']
         wrtr.writerow([str(grade1[i]['id']), grade1[i]['vil_name'], grade1[i]['grade_ratio'], grade2[i]['grade_ratio'],  grade3[i]['grade_ratio'],
-                       grade4[i]['grade_ratio'],grade5[i]['question_grade_ratio'], grade5[i]['interests_grade_ratio'], final_grade])
+                       grade4[i]['grade_ratio'],grade5[i]['question_grade_ratio'], final_grade])
         grd_file.flush()
     grd_file.close()
     print 'Done'

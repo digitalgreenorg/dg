@@ -1,308 +1,312 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
 import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Partner'
-        db.create_table('social_website_partner', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('coco_id', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('location', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('joinDate', self.gf('django.db.models.fields.DateField')()),
-            ('logoURL', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('websiteURL', self.gf('django.db.models.fields.URLField')(max_length=100, blank=True)),
-            ('collection_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('video_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('views', self.gf('django.db.models.fields.BigIntegerField')(default=0)),
-            ('likes', self.gf('django.db.models.fields.BigIntegerField')(default=0)),
-            ('adoptions', self.gf('django.db.models.fields.BigIntegerField')(default=0)),
-        ))
-        db.send_create_signal('social_website', ['Partner'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-        # Adding model 'Video'
-        db.create_table('social_website_video', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('coco_id', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('thumbnailURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
-            ('thumbnailURL16by9', self.gf('django.db.models.fields.URLField')(max_length=200)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('youtubeID', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('duration', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('onlineLikes', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('offlineLikes', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('onlineViews', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('offlineViews', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('adoptions', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('category', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subcategory', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('topic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subtopic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subject', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'])),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('social_website', ['Video'])
-
-        # Adding model 'Person'
-        db.create_table('social_website_person', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('coco_id', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('thumbnailURL', self.gf('django.db.models.fields.URLField')(max_length=100)),
-            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'])),
-        ))
-        db.send_create_signal('social_website', ['Person'])
-
-        # Adding model 'PersonVideoRecord'
-        db.create_table('social_website_personvideorecord', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('personID', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('videoID', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('views', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
-            ('like', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('adopted', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
-        ))
-        db.send_create_signal('social_website', ['PersonVideoRecord'])
-
-        # Adding model 'Comment'
-        db.create_table('social_website_comment', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-            ('isOnline', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Video'])),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Person'])),
-        ))
-        db.send_create_signal('social_website', ['Comment'])
-
-        # Adding model 'Collection'
-        db.create_table('social_website_collection', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('thumbnailURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'])),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('category', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subcategory', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('topic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subtopic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('subject', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('likes', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('views', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('adoptions', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('social_website', ['Collection'])
-
-        # Adding M2M table for field videos on 'Collection'
-        db.create_table('social_website_collection_videos', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('collection', models.ForeignKey(orm['social_website.collection'], null=False)),
-            ('video', models.ForeignKey(orm['social_website.video'], null=False))
-        ))
-        db.create_unique('social_website_collection_videos', ['collection_id', 'video_id'])
-
-        # Adding model 'FeaturedCollection'
-        db.create_table('social_website_featuredcollection', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('collection', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Collection'])),
-            ('collageURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
-        ))
-        db.send_create_signal('social_website', ['FeaturedCollection'])
-
-        # Adding model 'ImageSpec'
-        db.create_table('social_website_imagespec', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('imageURL', self.gf('django.db.models.fields.URLField')(max_length=400)),
-            ('altString', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('imageLinkURL', self.gf('django.db.models.fields.URLField')(max_length=400)),
-        ))
-        db.send_create_signal('social_website', ['ImageSpec'])
-
-        # Adding model 'Activity'
-        db.create_table('social_website_activity', (
-            ('uid', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('textContent', self.gf('django.db.models.fields.TextField')()),
-            ('facebookID', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
-            ('avatarURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
-            ('partner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Partner'], null=True, blank=True)),
-            ('farmer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Person'], null=True, blank=True)),
-            ('collection', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Collection'], null=True, blank=True)),
-            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['social_website.Video'], null=True, blank=True)),
-            ('newsFeed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('social_website', ['Activity'])
-
-        # Adding M2M table for field images on 'Activity'
-        db.create_table('social_website_activity_images', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('activity', models.ForeignKey(orm['social_website.activity'], null=False)),
-            ('imagespec', models.ForeignKey(orm['social_website.imagespec'], null=False))
-        ))
-        db.create_unique('social_website_activity_images', ['activity_id', 'imagespec_id'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Partner'
-        db.delete_table('social_website_partner')
-
-        # Deleting model 'Video'
-        db.delete_table('social_website_video')
-
-        # Deleting model 'Person'
-        db.delete_table('social_website_person')
-
-        # Deleting model 'PersonVideoRecord'
-        db.delete_table('social_website_personvideorecord')
-
-        # Deleting model 'Comment'
-        db.delete_table('social_website_comment')
-
-        # Deleting model 'Collection'
-        db.delete_table('social_website_collection')
-
-        # Removing M2M table for field videos on 'Collection'
-        db.delete_table('social_website_collection_videos')
-
-        # Deleting model 'FeaturedCollection'
-        db.delete_table('social_website_featuredcollection')
-
-        # Deleting model 'ImageSpec'
-        db.delete_table('social_website_imagespec')
-
-        # Deleting model 'Activity'
-        db.delete_table('social_website_activity')
-
-        # Removing M2M table for field images on 'Activity'
-        db.delete_table('social_website_activity_images')
-
-
-    models = {
-        'social_website.activity': {
-            'Meta': {'object_name': 'Activity'},
-            'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']", 'null': 'True', 'blank': 'True'}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'facebookID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'farmer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']", 'null': 'True', 'blank': 'True'}),
-            'images': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['social_website.ImageSpec']", 'null': 'True', 'blank': 'True'}),
-            'newsfeeed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']", 'null': 'True', 'blank': 'True'}),
-            'textContent': ('django.db.models.fields.TextField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']", 'null': 'True', 'blank': 'True'})
-        },
-        'social_website.collection': {
-            'Meta': {'object_name': 'Collection'},
-            'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'likes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videos': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['social_website.Video']", 'symmetrical': 'False'}),
-            'views': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-        },
-        'social_website.comment': {
-            'Meta': {'object_name': 'Comment'},
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'isOnline': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Person']"}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Video']"})
-        },
-        'social_website.featuredcollection': {
-            'Meta': {'object_name': 'FeaturedCollection'},
-            'collageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Collection']"}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'social_website.imagespec': {
-            'Meta': {'object_name': 'ImageSpec'},
-            'altString': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imageLinkURL': ('django.db.models.fields.URLField', [], {'max_length': '400'}),
-            'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '400'})
-        },
-        'social_website.partner': {
-            'Meta': {'object_name': 'Partner'},
-            'adoptions': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'coco_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'collection_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'joinDate': ('django.db.models.fields.DateField', [], {}),
-            'likes': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'logoURL': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'video_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'views': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'websiteURL': ('django.db.models.fields.URLField', [], {'max_length': '100', 'blank': 'True'})
-        },
-        'social_website.person': {
-            'Meta': {'object_name': 'Person'},
-            'coco_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '100'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'social_website.personvideorecord': {
-            'Meta': {'object_name': 'PersonVideoRecord'},
-            'adopted': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'like': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'personID': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'videoID': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'views': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'})
-        },
-        'social_website.video': {
-            'Meta': {'object_name': 'Video'},
-            'adoptions': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'category': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'coco_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'duration': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'offlineLikes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'offlineViews': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'onlineLikes': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'onlineViews': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['social_website.Partner']"}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'subtopic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'thumbnailURL16by9': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        }
-    }
-
-    complete_apps = ['social_website']
+    operations = [
+        migrations.CreateModel(
+            name='Activity',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('title', models.CharField(max_length=200)),
+                ('textContent', models.TextField()),
+                ('facebookID', models.CharField(max_length=50, null=True, blank=True)),
+                ('avatarURL', models.URLField()),
+                ('newsFeed', models.BooleanField()),
+                ('type', models.PositiveSmallIntegerField()),
+                ('titleURL', models.URLField(max_length=400)),
+            ],
+            options={
+                'verbose_name_plural': 'Activities',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Animator',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('coco_id', models.CharField(max_length=20)),
+                ('name', models.CharField(max_length=100)),
+                ('thumbnailURL', models.URLField(max_length=100)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Collection',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('title', models.CharField(max_length=200)),
+                ('thumbnailURL', models.URLField()),
+                ('state', models.CharField(max_length=100)),
+                ('language', models.CharField(max_length=20)),
+                ('category', models.CharField(max_length=500, blank=True)),
+                ('subcategory', models.CharField(max_length=500, blank=True)),
+                ('topic', models.CharField(max_length=500, blank=True)),
+                ('subtopic', models.CharField(max_length=500, blank=True)),
+                ('subject', models.CharField(max_length=500, blank=True)),
+                ('likes', models.IntegerField(default=0)),
+                ('views', models.IntegerField(default=0)),
+                ('adoptions', models.IntegerField(default=0)),
+                ('featured', models.BooleanField(default=False)),
+                ('description', models.TextField(null=True, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Comment',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('date', models.DateField(default=datetime.datetime(2016, 7, 5, 18, 14, 20, 354000))),
+                ('text', models.TextField()),
+                ('isOnline', models.BooleanField()),
+                ('animator', models.ForeignKey(blank=True, to='social_website.Animator', null=True)),
+                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='CronTimestamp',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=30)),
+                ('last_time', models.DateTimeField(default=datetime.datetime(2016, 7, 5, 18, 14, 20, 354000))),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='FeaturedCollection',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('collageURL', models.ImageField(help_text=b'Width Should be 642 and Height should be 321', upload_to=b'featured_collection')),
+                ('show_on_homepage', models.BooleanField(default=True)),
+                ('show_on_language_selection', models.BooleanField(default=True)),
+                ('collection', models.ForeignKey(to='social_website.Collection')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ImageSpec',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('imageURL', models.URLField(max_length=400)),
+                ('altString', models.CharField(max_length=200)),
+                ('imageLinkURL', models.URLField(max_length=400)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Milestone',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('videoNumber', models.IntegerField()),
+                ('villageNumber', models.IntegerField()),
+                ('screeningNumber', models.IntegerField()),
+                ('viewerNumber', models.IntegerField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Partner',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('coco_id', models.CharField(max_length=20, null=True, blank=True)),
+                ('name', models.CharField(help_text=b'Partner Name Should not have any spaces or /', unique=True, max_length=100)),
+                ('full_name', models.CharField(max_length=250)),
+                ('description', models.TextField(blank=True)),
+                ('location', models.CharField(max_length=100, blank=True)),
+                ('location_image', models.ImageField(help_text=b'Minimum Width Should be 302 and Minimum Height should be 202', null=True, upload_to=b'partner', blank=True)),
+                ('joinDate', models.DateField()),
+                ('logoURL', models.ImageField(help_text=b'Minimum Width Should be 61 and Minimum Height should be 61', upload_to=b'partner')),
+                ('websiteURL', models.URLField(default=b'', max_length=100)),
+                ('collection_count', models.PositiveIntegerField(default=0)),
+                ('video_count', models.PositiveIntegerField(default=0)),
+                ('views', models.BigIntegerField(default=0)),
+                ('likes', models.BigIntegerField(default=0)),
+                ('adoptions', models.BigIntegerField(default=0)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Person',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('coco_id', models.CharField(max_length=20)),
+                ('name', models.CharField(max_length=100)),
+                ('thumbnailURL', models.URLField(max_length=100)),
+                ('partner', models.ForeignKey(to='social_website.Partner')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='PersonVideoRecord',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('personID', models.CharField(max_length=20)),
+                ('videoID', models.CharField(max_length=20)),
+                ('views', models.PositiveSmallIntegerField(default=0)),
+                ('like', models.BooleanField(default=False)),
+                ('adopted', models.PositiveSmallIntegerField(default=0)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ResourceVideo',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('title', models.CharField(max_length=200)),
+                ('youtubeID', models.CharField(max_length=50)),
+                ('date', models.DateField(default=datetime.datetime(2016, 7, 5, 18, 14, 20, 354000))),
+                ('videoTag', models.CharField(default=b'f', max_length=2, choices=[(b'f', b'Film'), (b't', b'Testimonial')])),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Video',
+            fields=[
+                ('uid', models.AutoField(serialize=False, primary_key=True)),
+                ('coco_id', models.CharField(max_length=20)),
+                ('title', models.CharField(max_length=200)),
+                ('thumbnailURL', models.URLField()),
+                ('thumbnailURL16by9', models.URLField()),
+                ('description', models.TextField(default=b'')),
+                ('youtubeID', models.CharField(max_length=20)),
+                ('duration', models.IntegerField(null=True, blank=True)),
+                ('date', models.DateField()),
+                ('onlineLikes', models.IntegerField(default=0)),
+                ('onlineViews', models.IntegerField(default=0)),
+                ('offlineViews', models.IntegerField(default=0)),
+                ('adoptions', models.IntegerField(default=0)),
+                ('category', models.CharField(max_length=500, blank=True)),
+                ('subcategory', models.CharField(max_length=500, blank=True)),
+                ('topic', models.CharField(max_length=500, blank=True)),
+                ('subtopic', models.CharField(max_length=500, blank=True)),
+                ('subject', models.CharField(max_length=500, blank=True)),
+                ('language', models.CharField(max_length=20)),
+                ('state', models.CharField(max_length=100)),
+                ('partner', models.ForeignKey(to='social_website.Partner')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='VideoinCollection',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('order', models.IntegerField()),
+                ('collection', models.ForeignKey(to='social_website.Collection')),
+                ('video', models.ForeignKey(to='social_website.Video')),
+            ],
+            options={
+                'ordering': ['order'],
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='VideoLike',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('video', models.ForeignKey(to='social_website.Video')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='milestone',
+            name='partner',
+            field=models.ForeignKey(to='social_website.Partner', unique=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='comment',
+            name='video',
+            field=models.ForeignKey(to='social_website.Video'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='collection',
+            name='partner',
+            field=models.ForeignKey(to='social_website.Partner'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='collection',
+            name='videos',
+            field=models.ManyToManyField(to='social_website.Video', through='social_website.VideoinCollection'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='collection',
+            unique_together=set([('title', 'partner', 'state', 'language')]),
+        ),
+        migrations.AddField(
+            model_name='animator',
+            name='partner',
+            field=models.ForeignKey(to='social_website.Partner'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='activity',
+            name='collection',
+            field=models.ForeignKey(blank=True, to='social_website.Collection', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='activity',
+            name='farmer',
+            field=models.ForeignKey(blank=True, to='social_website.Person', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='activity',
+            name='images',
+            field=models.ManyToManyField(to='social_website.ImageSpec', null=True, blank=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='activity',
+            name='partner',
+            field=models.ForeignKey(blank=True, to='social_website.Partner', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='activity',
+            name='video',
+            field=models.ForeignKey(blank=True, to='social_website.Video', null=True),
+            preserve_default=True,
+        ),
+    ]

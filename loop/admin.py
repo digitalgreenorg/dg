@@ -10,9 +10,39 @@ class LoopAdmin(AdminSite):
         return request.user.is_active
 
 
+class LoopUserAssignedMandis(admin.StackedInline):
+    model = LoopUserAssignedMandi
+
+
+class LoopUserAssignedVillages(admin.StackedInline):
+    model = LoopUserAssignedVillage
+
+
+class LoopUserAdmin(admin.ModelAdmin):
+    inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
+    list_display = ('name', 'role', 'phone_number', 'village',)
+    search_fields = ['name', 'village__village_name']
+
+
+class LoopUserInline(admin.TabularInline):
+    model = LoopUser
+    extra = 5
+    exclude = ('assigned_mandis', 'assigned_villages')
+
+
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone')
-    search_fields = ['name', 'phone']
+    list_display = ('name', 'phone', '__unicode__')
+    search_fields = ['name', 'phone', 'village__village_name']
+
+
+# class LoopUserAssignedVillageAdmin(admin.ModelAdmin):
+#     list_display = ('loop_user', 'village')
+#     search_fields = ['loop_user__name', 'village__village_name']
+#
+#
+# class LoopUserAssignedMandiAdmin(admin.ModelAdmin):
+#     list_display = ('loop_user', 'mandi')
+#     search_fields = ['loop_user__name', 'mandi__mandi_name']
 
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
@@ -25,17 +55,21 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
 
 
 class TransporterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'transporter_name', 'transporter_phone')
+    list_display = ('id', 'transporter_name',
+                    'transporter_phone', '__unicode__')
     search_fields = ['transporter_name', 'transporter_phone']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__unicode__',
                     'transportation_cost', 'farmer_share')
+    search_fields = ['user_created__username', 'mandi__mandi_name']
+    list_filter = ('user_created__username', 'mandi__mandi_name')
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    list_display = ('id', 'gaddidar_name', 'gaddidar_phone', 'mandi', 'commission')
+    list_display = ('id', 'gaddidar_name',
+                    'gaddidar_phone', 'mandi', 'commission')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
 
 
@@ -49,7 +83,9 @@ loop_admin.register(Block)
 loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
-loop_admin.register(LoopUser)
+# loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
+# loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
+loop_admin.register(LoopUser, LoopUserAdmin)
 loop_admin.register(Crop)
 loop_admin.register(Farmer, FarmerAdmin)
 loop_admin.register(CombinedTransaction, CombinedTransactionAdmin)

@@ -8,7 +8,6 @@ from communications.models import Feedback
 from django.http import *
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils import simplejson
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
