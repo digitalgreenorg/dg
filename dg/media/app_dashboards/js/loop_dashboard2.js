@@ -19,6 +19,30 @@ function initialize() {
     total_static_data();
     recent_graphs_data();
     days_to_average = 15;
+    hide_nav();
+}
+
+function hide_nav(){
+    $('#filters_nav').hide();
+    $('#home').show();
+    $('#analytics').hide();
+    $('#time_series').hide();
+}
+
+function show_nav(tab){
+    $('#filters_nav').show();
+    $('#home').hide();
+    console.log(tab);
+    if (tab=="analytics"){
+        $('.analytics_tabs').show();
+        $('#analytics').show();
+        $('#time_series').hide();
+    }
+    else if(tab=="time_series"){
+        $('.analytics_tabs').hide();
+        $('#analytics').hide();
+        $('#time_series').show();
+    }
 }
 
 bullet_options = {
@@ -1120,9 +1144,8 @@ function show_line_graphs() {
         var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
         series[2]['data'][index][1] += farmer_data[i]['farmer__count'];
     }
-    createMaster($('#detail_container_time_series'),$('#master_container_time_series'),series)
-    console.log(series_cpk);
-    createMaster($('#detail_container_cpk'), $('#master_container_cpk'),series_cpk);
+    createMaster1($('#detail_container_time_series'),$('#master_container_time_series'),series)
+    createMaster2($('#detail_container_cpk'), $('#master_container_cpk'),series_cpk);
 
 
 }
@@ -1391,9 +1414,10 @@ function createDetail(detail_container,masterChart, dict) {
     });
 
     // create a detail chart referenced by a global variable
+    width = detail_container.width();
     detailChart = detail_container.highcharts({
         chart: {
-
+            width: width
         },
         credits: {
             enabled: false
@@ -1609,6 +1633,505 @@ function createMaster(detail_container,master_container,dict) {
         .highcharts(); // return chart instance
 }
 
+function createDetail1(detail_container,masterChart, dict) {
+
+    // prepare the detail chart
+    var myDict = []
+    var detailData = [],
+        detailStart = dict[0]['data'][0][0];
+
+    $.each(masterChart.series, function() {
+        if (this.name == "volume") {
+            axis = 0;
+        } else {
+            axis = 1;
+        }
+        var temp = {};
+        temp['name'] = this.name;
+        temp['type'] = this.type;
+        temp['data'] = new Array();
+        temp['yAxis'] = axis;
+        temp['pointStart'] = detailStart;
+        temp['pointInterval'] = 24 * 3600 * 1000;
+        temp['showInLegend'] = true;
+        $.each(this.data, function() {
+            if (this.x >= detailStart) {
+                temp['data'].push(this.y);
+            }
+
+        });
+        myDict.push(temp)
+    });
+
+    // create a detail chart referenced by a global variable
+    width = detail_container.width();
+    detailChart1 = detail_container.highcharts({
+        chart: {
+            width: width
+        },
+        credits: {
+            enabled: false
+        },
+
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [{
+            title: {
+                text: null
+            },
+            maxZoom: 0.1,
+
+        }, {
+            title: {
+                text: null
+            },
+
+            opposite: true
+        }],
+        tooltip: {
+            // formatter: function () {
+            //     var point = this.points[0];
+            //     return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
+            //         'Volume= ' + Highcharts.numberFormat(point.y, 2);
+            // },
+            shared: true
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.5
+            },
+            series: {
+                marker: {
+                    enabled: true,
+                    radius: 2.5,
+                    states: {
+                        hover: {
+                            enabled: true,
+                            radius: 3
+                        }
+                    }
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: 0,
+            verticalAlign: 'top',
+            y: 0,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        series: myDict,
+
+        exporting: {
+            enabled: false
+        }
+
+    }).highcharts(); // return chart
+}
+
+// create the master chart
+function createMaster1(detail_container,master_container,dict) {
+    master_container.highcharts({
+            chart: {
+                zoomType: 'x',
+                events: {
+
+                    // listen to the selection event on the master chart to update the
+                    // extremes of the detail chart
+                    selection: function(event) {
+                        var extremesObject = event.xAxis[0],
+                            min = extremesObject.min,
+                            max = extremesObject.max,
+                            detailData = [],
+                            xAxis = this.xAxis[0],
+                            myDict = [];
+
+                        $.each(this.series, function() {
+                            var temp = {};
+                            temp['name'] = this.name;
+                            temp['data'] = new Array();
+                            temp['pointStart'] = dict[0]['data'][0][0];
+                            temp['pointInterval'] = 24 * 3600 * 1000;
+                            $.each(this.data, function() {
+                                if (this.x > min && this.x < max) {
+                                    temp['data'].push([this.x, this.y]);
+                                }
+                            });
+                            myDict.push(temp);
+                        });
+                        console.log(myDict);
+                        // reverse engineer the last part of the data
+
+                        // move the plot bands to reflect the new detail span
+                        xAxis.removePlotBand('mask-before');
+                        xAxis.addPlotBand({
+                            id: 'mask-before',
+                            from: dict[0]['data'][0][0], //data[0][0],
+                            to: min,
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+
+                        xAxis.removePlotBand('mask-after');
+                        xAxis.addPlotBand({
+                            id: 'mask-after',
+                            from: max,
+                            to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+                        var pos = 0;
+                        $.each(this.series, function() {
+                            detailChart1.series[pos].setData(myDict[pos].data);
+                            pos++;
+                        });
+
+
+
+
+                        return false;
+                    }
+                }
+            },
+            title: {
+                text: null
+            },
+            xAxis: {
+                type: 'datetime',
+                showLastTickLabel: true,
+                maxZoom: 14 * 24 * 3600000, // fourteen days
+                plotBands: [{
+                    id: 'mask-before',
+                    from: dict[0]['data'][0][0],
+                    to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                    color: 'rgba(0, 0, 0, 0.2)'
+                }],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                gridLineWidth: 0,
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                min: 0.6,
+                showFirstLabel: false
+            }, {
+                gridLineWidth: 0,
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                min: 0.6,
+                showFirstLabel: false
+            }],
+            tooltip: {
+                formatter: function() {
+                    return false;
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    fillColor: {
+                        linearGradient: [0, 0, 0, 70],
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, 'rgba(255,255,255,0)']
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    enableMouseTracking: false
+                }
+            },
+
+            series: dict,
+
+            exporting: {
+                enabled: false
+            }
+
+        }, function(masterChart) {
+            createDetail1(detail_container,masterChart, dict);
+        })
+        .highcharts(); // return chart instance
+}
+function createDetail2(detail_container,masterChart, dict) {
+
+    // prepare the detail chart
+    var myDict = []
+    var detailData = [],
+        detailStart = dict[0]['data'][0][0];
+
+    $.each(masterChart.series, function() {
+        if (this.name == "volume") {
+            axis = 0;
+        } else {
+            axis = 1;
+        }
+        var temp = {};
+        temp['name'] = this.name;
+        temp['type'] = this.type;
+        temp['data'] = new Array();
+        temp['yAxis'] = axis;
+        temp['pointStart'] = detailStart;
+        temp['pointInterval'] = 24 * 3600 * 1000;
+        temp['showInLegend'] = true;
+        $.each(this.data, function() {
+            if (this.x >= detailStart) {
+                temp['data'].push(this.y);
+            }
+
+        });
+        myDict.push(temp)
+    });
+
+    // create a detail chart referenced by a global variable
+    width = detail_container.width();
+    detailChart2 = detail_container.highcharts({
+        chart: {
+            width: width
+        },
+        credits: {
+            enabled: false
+        },
+
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [{
+            title: {
+                text: null
+            },
+            maxZoom: 0.1,
+
+        }, {
+            title: {
+                text: null
+            },
+
+            opposite: true
+        }],
+        tooltip: {
+            // formatter: function () {
+            //     var point = this.points[0];
+            //     return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
+            //         'Volume= ' + Highcharts.numberFormat(point.y, 2);
+            // },
+            shared: true
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.5
+            },
+            series: {
+                marker: {
+                    enabled: true,
+                    radius: 2.5,
+                    states: {
+                        hover: {
+                            enabled: true,
+                            radius: 3
+                        }
+                    }
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: 0,
+            verticalAlign: 'top',
+            y: 0,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        series: myDict,
+
+        exporting: {
+            enabled: false
+        }
+
+    }).highcharts(); // return chart
+}
+
+// create the master chart
+function createMaster2(detail_container,master_container,dict) {
+    master_container.highcharts({
+            chart: {
+                zoomType: 'x',
+                events: {
+
+                    // listen to the selection event on the master chart to update the
+                    // extremes of the detail chart
+                    selection: function(event) {
+                        var extremesObject = event.xAxis[0],
+                            min = extremesObject.min,
+                            max = extremesObject.max,
+                            detailData = [],
+                            xAxis = this.xAxis[0],
+                            myDict = [];
+
+                        $.each(this.series, function() {
+                            var temp = {};
+                            temp['name'] = this.name;
+                            temp['data'] = new Array();
+                            temp['pointStart'] = dict[0]['data'][0][0];
+                            temp['pointInterval'] = 24 * 3600 * 1000;
+                            $.each(this.data, function() {
+                                if (this.x > min && this.x < max) {
+                                    temp['data'].push([this.x, this.y]);
+                                }
+                            });
+                            myDict.push(temp);
+                        });
+                        console.log(myDict);
+                        // reverse engineer the last part of the data
+
+                        // move the plot bands to reflect the new detail span
+                        xAxis.removePlotBand('mask-before');
+                        xAxis.addPlotBand({
+                            id: 'mask-before',
+                            from: dict[0]['data'][0][0], //data[0][0],
+                            to: min,
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+
+                        xAxis.removePlotBand('mask-after');
+                        xAxis.addPlotBand({
+                            id: 'mask-after',
+                            from: max,
+                            to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+                        var pos = 0;
+                        $.each(this.series, function() {
+                            detailChart2.series[pos].setData(myDict[pos].data);
+                            pos++;
+                        });
+
+
+
+
+                        return false;
+                    }
+                }
+            },
+            title: {
+                text: null
+            },
+            xAxis: {
+                type: 'datetime',
+                showLastTickLabel: true,
+                maxZoom: 14 * 24 * 3600000, // fourteen days
+                plotBands: [{
+                    id: 'mask-before',
+                    from: dict[0]['data'][0][0],
+                    to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                    color: 'rgba(0, 0, 0, 0.2)'
+                }],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                gridLineWidth: 0,
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                min: 0.6,
+                showFirstLabel: false
+            }, {
+                gridLineWidth: 0,
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                min: 0.6,
+                showFirstLabel: false
+            }],
+            tooltip: {
+                formatter: function() {
+                    return false;
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    fillColor: {
+                        linearGradient: [0, 0, 0, 70],
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, 'rgba(255,255,255,0)']
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    enableMouseTracking: false
+                }
+            },
+
+            series: dict,
+
+            exporting: {
+                enabled: false
+            }
+
+        }, function(masterChart) {
+            createDetail2(detail_container,masterChart, dict);
+        })
+        .highcharts(); // return chart instance
+}
+
 
 function plot_area_range_graph(container, dict) {
     container.highcharts({
@@ -1785,7 +2308,7 @@ function outliers(){
                 dates.push(start_date.getFullYear()+"-"+("0"+(start_date.getMonth()+1)).slice(-2)+"-"+("0"+start_date.getDate()).slice(-2));
                 start_date.setDate(start_date.getDate()+1);
             }
-            console.log(dates);
+
             var quantites= new Array(dates.length).fill(0);
             var farmers = new Array(dates.length).fill(0);
 
