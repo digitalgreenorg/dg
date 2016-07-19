@@ -12,10 +12,6 @@ function initialize() {
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     gaddidar = true;
     selected_tab = "aggregator";
-
-    set_filterlistener();
-    get_filter_data();
-    outliers();
     total_static_data();
     recent_graphs_data();
     days_to_average = 15;
@@ -30,9 +26,12 @@ function hide_nav(){
 }
 
 function show_nav(tab){
+
     $('#filters_nav').show();
     $('#home').hide();
-    console.log(tab);
+    get_filter_data();
+    set_filterlistener();
+    outliers();
     if (tab=="analytics"){
         $('.analytics_tabs').show();
         $('#analytics').show();
@@ -1063,13 +1062,15 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
             line_json_data = JSON.parse(data);
             show_line_graphs();
             fill_crop_drop_down();
-            crop_prices_graph(crop_ids[29]);
+            $('#container3').text("select crop see its variation");
         });
 }
 
 function fill_crop_drop_down() {
+    var tbody_obj = $('#crop_max_min_avg');
+    tbody_obj.html("");
+    tbody_obj.append('<option value="" disabled selected> Choose a Crop </option>');
     $.each(crops_for_filter, function(index, data) {
-        tbody_obj = $('#crop_max_min_avg');
         var li_item = '<option value=' + data.id + '>' + data.crop_name + '</option>';
         tbody_obj.append(li_item);
     });
@@ -1913,7 +1914,8 @@ function createDetail2(detail_container,masterChart, dict) {
     });
 
     // create a detail chart referenced by a global variable
-    width = detail_container.width();
+    var width = detail_container.width();
+    console.log(width);
     detailChart2 = detail_container.highcharts({
         chart: {
             width: width
@@ -2327,13 +2329,15 @@ function outliers(){
             var cpk=[]
             for (var i=0; i<dates.length; i++){
                 cpk.push(quantites[i] > 0 ? transport_data[i] / quantites[i] : 0.0);
-                if (cpk[i]<0.6 || farmers[i]<4){
+                if (cpk[i]>0.6 || farmers[i]<4){
                     $('<div class="center col s1" style="background-color:red;height=50px;padding:20px;">' +i+ '</div>').appendTo('#outliers');
                 }
                 else{
                     $('<div class="center col s1" style="background-color:green;height=50px;padding:20px;">' +i+ '</div>').appendTo('#outliers');
                 }
             }
+            console.log(cpk);
+            console.log(farmers);
 
         })
 }
