@@ -14,7 +14,7 @@ function initialize() {
     today.setMonth(today.getMonth() - 3);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
 
-    hide_nav();
+    hide_nav('home');
 
     total_static_data();
     recent_graphs_data();
@@ -26,6 +26,7 @@ function initialize() {
     get_filter_data();
     set_filterlistener();
     outliers();
+
 
 }
 
@@ -41,23 +42,39 @@ $('.datepicker').pickadate({
     }
 });
 
-function hide_nav() {
+function hide_nav(tab) {
     $("#filters_nav").hide();
-    $("#home_div").show();
+    $("#home_div").hide();
     $("#analytics_div").hide();
     $("#time_series_div").hide();
+    $("#payments_div").hide();
 
-    $("#home_tab").addClass('active');
+    $("#home_tab").removeClass('active');
+    $("#payments_tab").removeClass('active');
     $("#analytics_tab").removeClass('active');
     $("#time_series_tab").removeClass('active');
+
+    if (tab=='home'){
+        $("#home_div").show();
+        $("#home_tab").addClass('active');
+    }
+    else if(tab == 'payments'){
+        $("#payments_div").show();
+        $("#payments_tab").addClass('active');
+    }
+
+    
+    
 }
 
 function show_nav(tab) {
     $("#home_tab").removeClass('active');
+    $("#payments_tab").removeClass('active');
     $("#analytics_tab").removeClass('active');
     $("#time_series_tab").removeClass('active');
     $("#filters_nav").show();
     $("#home_div").hide();
+    $("#payments_div").hide();
 
     if (tab == "analytics") {
         $("#analytics_div").show();
@@ -482,6 +499,7 @@ function set_filterlistener() {
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val()
         aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+        outliers_summary(aggregator_id);
     });
 }
 
@@ -1932,7 +1950,6 @@ function createDetail2(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    console.log(width);
     detailChart2 = detail_container.highcharts({
         chart: {
             width: width
@@ -2197,15 +2214,17 @@ function genterate_payment_sheet(start_date, end_date) {
         .done(function(data) {
             payments_data = JSON.parse(data);
             fill_aggregator_drop_down();
-            aggregator_payment_sheet(payments_data.aggregator_data, aggregator_ids[1])
+            $('#aggregator_payment_sheet').text("Select Aggregator");
                 // transporter_payment_sheet(payments_data.transportation_data, aggregator_ids[5])
 
         })
 }
 
 function fill_aggregator_drop_down() {
+    var tbody_obj = $('#aggregator_payments');
+    tbody_obj.html("");
+    tbody_obj.append('<option value="" disabled selected> Choose a Aggregator </option>');
     $.each(aggregators_for_filter, function(index, data) {
-        tbody_obj = $('#aggregator_payments');
         var li_item = '<option value=' + data.user__id + '>' + data.name + '</option>';
         tbody_obj.append(li_item);
     });
@@ -2213,8 +2232,8 @@ function fill_aggregator_drop_down() {
 }
 
 function aggregator_payment_sheet(data_json, aggregator) {
-    var table_ref = document.getElementById("table2_tbody");
     $('#table2 tr:gt(0)').remove();
+    var table_ref = document.getElementById("table2_tbody");
     row = $('#table2_tbody');
     tr_name = $('<tr>');
     row.append(tr_name);
@@ -2259,6 +2278,15 @@ function aggregator_payment_sheet(data_json, aggregator) {
         cell2.style.fontWeight = "bold";
         cell3.innerHTML = str1.concat((total_payment).toFixed(2));
     }
+
+    $('#table2').DataTable({
+        buttons:[
+            'copy','excel','pdf'
+        ]
+    });
+
+
+
 
 }
 
@@ -2313,14 +2341,20 @@ function transporter_payment_sheet(data_json, aggregator) {
 
 
 function outliers() {
-    $.get("/loop/payments", {
+    $.get("/loop/payments/", {
         'start_date': "2016-06-01",
         'end_date': "2016-06-15"
     }).done(function(data) {
         var json_data = JSON.parse(data);
-        var my_data = json_data.outlier_data;
-        var my_transport_data = json_data.outlier_transport_data;
-        var start_date = new Date("2016-06-01");
+        my_data = json_data.outlier_data;
+        my_transport_data = json_data.outlier_transport_data;
+        outlier_daily_data = json_data.outlier_daily_data;
+
+        });
+}
+
+function outliers_summary(aggregator_id){
+    var start_date = new Date("2016-06-01");
         var end_date = new Date("2016-06-15");
         var dates = [];
         while (start_date <= end_date) {
@@ -2332,28 +2366,80 @@ function outliers() {
         var farmers = new Array(dates.length).fill(0);
 
         for (var i = 0; i < my_data.length; i++) {
-            var index = dates.indexOf(my_data[i]['date']);
-            quantites[index] += (my_data[i]['quantity__sum']);
-            farmers[index] += (my_data[i]['farmer__count']);
-        }
-
-        transport_data = new Array(dates.length).fill(0);
-
-        for (var i = 0; i < my_transport_data.length; i++) {
-            var index = dates.indexOf(my_transport_data[i]['date']);
-            transport_data[index] += my_transport_data[i]['transportation_cost__sum'];
-        }
-        var cpk = []
-        for (var i = 0; i < dates.length; i++) {
-            cpk.push(quantites[i] > 0 ? transport_data[i] / quantites[i] : 0.0);
-            if (cpk[i] > 0.6 || farmers[i] < 4) {
-                $('<div class="center col s1" style="background-color:red;height=50px;padding:20px;">' + i + '</div>').appendTo('#outliers');
-            } else {
-                $('<div class="center col s1" style="background-color:green;height=50px;padding:20px;">' + i + '</div>').appendTo('#outliers');
+            if (aggregator_id==my_data[i]['user_created__id']){
+               
+                var index = dates.indexOf(my_data[i]['date']);
+                quantites[index] += (my_data[i]['quantity__sum']);
+                farmers[index] += (my_data[i]['farmer__count']);
             }
         }
 
-    })
+        transport_data = new Array(dates.length).fill(0);
+        console.log(farmers)
+        
+
+        for (var i = 0; i < my_transport_data.length; i++) {
+            if (aggregator_id==my_transport_data[i]['user_created__id']){
+                var index = dates.indexOf(my_transport_data[i]['date']);
+                transport_data[index] += my_transport_data[i]['transportation_cost__sum'];
+            }
+        }
+        var cpk = []
+        $("#outliers").html("");
+        for (var i = 0; i < dates.length; i++) {
+            cpk.push(quantites[i] > 0 ? transport_data[i] / quantites[i] : 0.0);
+            if(farmers[i] == 0){
+                $('<div class="card center col s1" style="background-color:blue;"><span >'+dates[i]+'</span><p>#Farmer:'+farmers[i]+'</p><p>cpk:'+cpk[i]+' </p></div>').appendTo('#outliers');
+            }
+            else if(cpk[i] > 0.6 || farmers[i] < 4) {
+                $('<div class="card center col s1" onclick=create_outliers_table("'+dates[i]+'"'+','+aggregator_id+') style="background-color:red;"> <span>'+dates[i]+'</span><p>#Farmer:'+farmers[i]+'</p><p>cpk:'+(cpk[i]).toFixed(2)+' </p></div>').appendTo('#outliers');
+            }else {
+                $('<div class="card center col s1" style="background-color:green;"><span>'+dates[i]+'</span><p>#Farmer:'+farmers[i]+'</p><p>cpk:'+cpk[i]+' </p></div>').appendTo('#outliers');
+            }
+        }
+        console.log(cpk)
+
+    
+}
+
+function create_outliers_table(date,aggregator_id){
+    
+    var table_ref = document.getElementById("outliers_tbody");
+    $('#outliers_data tr:gt(0)').remove();
+    row = $('#outliers_tbody');
+    tr_name = $('<tr>');
+    row.append(tr_name);
+
+    var sno = 1;
+    var str1 = "Rs. "
+    for (var i = 0; i < outlier_daily_data.length; i++) {
+        if (date == outlier_daily_data[i]['date'] && aggregator_id==outlier_daily_data[i]['user_created__id']) {
+            var row = table_ref.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+
+            cell1.innerHTML = sno;
+            cell2.innerHTML = outlier_daily_data[i]['farmer__name'];
+            cell3.innerHTML = outlier_daily_data[i]['crop__crop_name'];
+            cell4.innerHTML = outlier_daily_data[i]['mandi__mandi_name'];
+            cell5.innerHTML = outlier_daily_data[i]['quantity__sum'];
+            cell6.innerHTML = outlier_daily_data[i]['price'];
+            sno += 1;
+            cell7.innerHTML = outlier_daily_data[i]['gaddidar__commission'];
+            
+        }
+    };
+
+}
+
+function exportTo(type) {
+  $('#table2').dataTable();
 }
 
 

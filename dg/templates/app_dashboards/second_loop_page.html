@@ -30,6 +30,7 @@
 				<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
 				<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
 				<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
+				<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">payments</a></li>
 			</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
@@ -169,7 +170,7 @@
 
 {% endblock %} {% block content %}
 
-<div id="home">
+<div id="home_div">
 	<div class="row card white darken-1">
 		<h5>Overall</h5>
 		<hr/>
@@ -295,7 +296,7 @@
 </div>
 
 
-<div id="analytics">
+<div id="analytics_div">
 	<div class="center">
 
 		<div id="modal1" class="modal">
@@ -380,7 +381,7 @@
 </div>
 
 
-<div id="time_series">
+<div id="time_series_div">
 	
 		<div id="detail_container_time_series"></div>
 		<div id="master_container_time_series" style="height:100px"></div>
@@ -398,38 +399,65 @@
 		<div id="container3" class="col s12">
 		</div>
 
+</div>
 
-
-
-<select id="aggregator_payments" class="initialized" >
-</select>
-<label>Select Aggregator</label>
-	<div id="aggregator_label">
-		<h5 class="center-align">Aggregator Wise Data</h5>
+<div id="payments_div">
+	<div class="row">
+		<p class="col s3"></p>
+		<div class="input-field col s6">
+			<select id="aggregator_payments" class="initialized" ></select>
+		</div>
+		<p class="col s3"></p>
 	</div>
-	<table id="table2" class="highlight bordered centered">
+		<div id="aggregator_payment_sheet">
+		</div>
+		<table id="table2" class="highlight bordered centered hide">
 
-		<thead>
-			<tr>
-				<th data-field="integer">S.No</th>
-				<th data-field="date">Date</th>
-				<th data-field="name">Mandi</th>
-				<th data-field="integer">Total Volume</th>
-				<th data-field="integer"> Total Farmers</th>
-				<th data-field="integer"> Net Payment</th>
-			</tr>
-		</thead>
+			<thead>
+				<tr>
+					<th data-field="integer">S.No</th>
+					<th data-field="date">Date</th>
+					<th data-field="name">Mandi</th>
+					<th data-field="integer">Total Volume</th>
+					<th data-field="integer"> Total Farmers</th>
+					<th data-field="integer"> Net Payment</th>
+				</tr>
+			</thead>
 
-		<tbody id="table2_tbody">
-			<tr>
+			<tbody id="table2_tbody">
+				<tr>
 
-			</tr>
-		</tbody>
-	</table>
+				</tr>
+			</tbody>
+		</table>
+
+		<div id="outliers" class="row"></div>
+
+		<table id="outliers_data" class="highlight bordered centered">
+
+			<thead>
+				<tr>
+					<th data-field="integer">S.No</th>
+					<th data-field="name">Farmer</th>
+					<th data-field="name">Crop</th>
+					<th data-field="name">Mandi</th>
+					<th data-field="integer">Quantity</th>
+					<th data-field="integer">Price</th>
+					<th data-field="integer">Gaddidar Contribution</th>
+				</tr>
+			</thead>
+
+			<tbody id="outliers_tbody">
+				<tr>
+
+				</tr>
+			</tbody>
+		</table>
 </div>
 
 
-<div id="outliers" class="row"></div>
+
+
 
 
 {% endblock %} {% block script %}
