@@ -26,12 +26,12 @@
 			<a href="#" class="brand-logo center black-text">LOOP</a>
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
 			<div class="right col s5">
-			<ul class="hide-on-med-and-down grey lighten-2">
-				<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
-				<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
-				<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
-				<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">payments</a></li>
-			</ul>
+				<ul class="hide-on-med-and-down grey lighten-2">
+					<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
+					<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
+					<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
+					<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">payments</a></li>
+				</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
 				<li><a onclick="hide_nav()">Home</a></li>
@@ -234,10 +234,10 @@
 			</div>
 			<div class="col s2">
 				<select id="recent_cards_data_frequency" class="initialized">
-						<option value="7">7</option>
-						<option value="15" selected>15</option>
-						<option value="30">30</option>
-						<option value="60">60</option>
+					<option value="7">7</option>
+					<option value="15" selected>15</option>
+					<option value="30">30</option>
+					<option value="60">60</option>
 				</select>
 			</div>
 		</div>
@@ -292,9 +292,9 @@
 	</div>
 
 
-	<div id="container2" >
+	<div id="container2">
 		<div id="detail_container"></div>
-			<div id="master_container" style="height:100px;"></div>
+		<div id="master_container" style="height:100px;"></div>
 	</div>
 
 </div>
@@ -378,33 +378,59 @@
 
 <div id="time_series_div">
 
-		<div id="detail_container_time_series"></div>
-		<div id="master_container_time_series" style="height:100px"></div>
+	<div id="detail_container_time_series"></div>
+	<div id="master_container_time_series" style="height:100px"></div>
 
-		<div id="detail_container_cpk"></div>
-		<div id="master_container_cpk" style="height:100px"></div>
+	<div id="detail_container_cpk"></div>
+	<div id="master_container_cpk" style="height:100px"></div>
 
-		<div class="row">
-			<p class="col s3"></p>
-			<div class="input-field col s6">
+	<div class="row">
+		<p class="col s3"></p>
+		<div class="input-field col s6">
 			<select id="crop_max_min_avg" class="initialized"></select>
-			</div>
-			<p class="col s3"></p>
 		</div>
-		<div id="container3" class="col s12">
-		</div>
+		<p class="col s3"></p>
+	</div>
+	<div id="container3" class="col s12">
+	</div>
 
 
 </div>
 
 <div id="payments_div">
-	<div class="row">
+	<ul class=" row tabs">
+		<li class="col s4 tab"><a class="active" href="#aggregator_payment_tab" onclick="clear_payment_table()">Aggregator</a></li>
+		<li class="col s4 tab"><a href="#transporter_payment_tab" onclick="clear_payment_table()">Transporter</a></li>
+		<li class="col s4 tab"><a href="#gaddidar_payment_tab" onclick="clear_payment_table()">Gaddidar</a></li>
+		</ul>
+	<div class="row" id="aggregator_payment_tab">
 		<p class="col s3"></p>
 		<div class="input-field col s6">
 			<select id="aggregator_payments" class="initialized" ></select>
 		</div>
 		<p class="col s3"></p>
+
+	<div id="outliers" class="row"></div>
+
+	<table id="outliers_data" class="highlight bordered centered">	</table>
+</div>
+
+<div class="row" id="transporter_payment_tab">
+	<p class="col s3"></p>
+	<div class="input-field col s6">
+		<select id="transporter_payments" class="initialized" ></select>
 	</div>
+	<p class="col s3"></p>
+</div>
+
+	<div class="row" id="gaddidar_payment_tab">
+		<p class="col s3"></p>
+		<div class="input-field col s6">
+			<select id="gaddidar_payments" class="initialized" ></select>
+		</div>
+		<p class="col s3"></p>
+</div>
+
 		<table id="table2" class="stripe">
 
 			<!-- <thead>
@@ -425,9 +451,6 @@
 			</tbody> -->
 		</table>
 
-		<div id="outliers" class="row"></div>
-
-		<table id="outliers_data" class="highlight bordered centered">
 
 			<!-- <thead>
 				<tr>
@@ -446,7 +469,7 @@
 
 				</tr>
 			</tbody> -->
-		</table>
+
 </div>
 
 
