@@ -15,11 +15,11 @@
     margin-bottom: 32px;
 }
 nav.top-nav {
-    height: 122px;
+    height: 100px;
     box-shadow: none;
 }
 nav.top-nav a.page-title {
-    line-height: 122px;
+    line-height: 100px;
     font-size: 48px;
 }
 a.button-collapse.top-nav {
