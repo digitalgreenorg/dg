@@ -23,6 +23,7 @@ class Command(BaseCommand):
 		mysql = con.cursor()
 		mysql.execute("""
             SELECT
+                LCT.date as \'Date\',
                 LP.name as \'Aggregator Name\',
                 AU.username as \'Aggregator Phone Number\',
                 LF.name as \'Farmer Name\',
@@ -31,7 +32,6 @@ class Command(BaseCommand):
                 LD.district_name as \'District Name\',
                 LM.mandi_name as \'Mandi Name\',
                 LC.crop_name as \'Crop Name\',
-                LCT.date as \'Date\',
                 LCT.quantity as \'Quantity\',
                 LCT.price as \'Price\',
                 LCT.amount as \'Amount\',
@@ -61,8 +61,8 @@ class Command(BaseCommand):
 		fields = mysql.fetchall()
 		field_hdrs = [i[0] for i in mysql.description]
 
-		#file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/loop_data.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/loop_data.xls'
+		#file = '/Users/jahnavi/dg/dg/media/social_website/uploads/emails/loop_data.xls'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/emails/loop_data.xls'
 
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Sheet1')
@@ -83,7 +83,7 @@ class Command(BaseCommand):
 					ws.write(i, j, cell)
 		wb.save(file)
 
-		email_list=['lokesh@digitalgreen.org','aditya@digitalgreen.org','tanmaygoel@digitalgreen.org','divish@digitalgreen.org','abhisheklodha@digitalgreen.org','smriti@digitalgreen.org']
+		email_list=['loop@digitalgreen.org', 'jahnavi@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
 		subject = 'LOOP: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,

@@ -1,42 +1,44 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
 import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Article'
-        db.create_table('communications_article', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('pub_date', self.gf('django.db.models.fields.DateField')()),
-            ('source', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('location', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('content', self.gf('django.db.models.fields.TextField')()),
-            ('link', self.gf('django.db.models.fields.URLField')(max_length=1000)),
-        ))
-        db.send_create_signal('communications', ['Article'])
+    dependencies = [
+    ]
 
-
-    def backwards(self, orm):
-        # Deleting model 'Article'
-        db.delete_table('communications_article')
-
-
-    models = {
-        'communications.article': {
-            'Meta': {'object_name': 'Article'},
-            'content': ('django.db.models.fields.TextField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.URLField', [], {'max_length': '1000'}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'pub_date': ('django.db.models.fields.DateField', [], {}),
-            'source': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        }
-    }
-
-    complete_apps = ['communications']
+    operations = [
+        migrations.CreateModel(
+            name='Article',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=500)),
+                ('pub_date', models.DateField(verbose_name=b'Date Published on')),
+                ('source', models.CharField(max_length=300)),
+                ('location', models.CharField(max_length=200)),
+                ('content', models.TextField()),
+                ('link', models.URLField(max_length=1000)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Feedback',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('rating', models.IntegerField(default=5)),
+                ('comments', models.CharField(max_length=1000)),
+                ('email', models.EmailField(max_length=254)),
+                ('date', models.DateField(default=datetime.datetime(2016, 7, 5, 18, 14, 20, 354000))),
+                ('time', models.DateTimeField(default=datetime.datetime.utcnow)),
+            ],
+            options={
+                'verbose_name_plural': 'Feedback',
+            },
+            bases=(models.Model,),
+        ),
+    ]

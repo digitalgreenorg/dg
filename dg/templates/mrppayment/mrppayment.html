@@ -1,0 +1,72 @@
+ {% include "includes/header_mrp.html" %}
+
+ <section id="main" role="main" class="wrapper">
+
+ 	<div class="inner-wrapper">
+
+ 	   <div class="featured layout-vr-xlg layoutclass">
+ 	   		<div class="layout-vr-xlg">
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">FROM</label>
+                    <input class="search search-input-wrapper input-block-level js-startperiod " id="sdate" type="text"/>
+                </div>
+
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">TO</label>
+                    <input class="search search-input-wrapper input-block-level js-endperiod" id="edate"type="text"/>
+                </div>
+            </div>
+            <br/>
+ 	   		<div class="my-select leftrelative" style = "padding-right : 40px;">
+
+                <div class="my-select-container" onclick="partnersetter();">
+                    <div class="my-icon"></div>
+                    <div id="partnername" class="selected-item-label js-selected-item-label">Choose Partner</div>
+
+                    <ul id="partnerlist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+
+            </div>
+
+ 	   		<div class="my-select leftrelative" style = "padding-right : 40px;">
+
+                <div class="my-select-container" onclick="districtsetter();">
+                    <div class="my-icon"></div>
+                    <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
+
+                    <ul id="districtlist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+            </div>
+
+ 	   		<div class="my-select leftrelative">
+
+                <div class="my-select-container" onclick="blocksetter();" >
+                    <div class="my-icon"></div>
+                    <div id="blockname" class="selected-item-label js-selected-item-label">Choose Block
+                    </div>
+
+                    <ul id="blocklist" class="options js-options nodisplay yscroll listheight">
+
+                    </ul>
+                </div>
+            </div>
+
+        <div class="fright">
+	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
+        </div>
+
+		<div id="maindiv">
+                <table id="example" class="display" style="text-align:center;">
+							    </table>
+		</div>
+     </div>
+	</div>
+</section>
+
+	<script  src="/media/mrppayment/mrppayment.js"></script>
+
+ {% include "includes/footer.html"%}

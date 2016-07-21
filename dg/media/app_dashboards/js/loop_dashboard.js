@@ -134,10 +134,10 @@ function update_tables() {
 	var opt = $('#table_option :selected').val();
 	if(opt ==1 ){
 		$("#village_table").show();
-		$("#mediator_table").hide();
+		$("#aggregator_table").hide();
 	}
 	else{
-		$("#mediator_table").show();
+		$("#aggregator_table").show();
 		$("#village_table").hide();
 	}
 }
@@ -195,7 +195,7 @@ function get_data(){
   }
   else{
     getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
-    getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
     getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
   }
 }
@@ -260,13 +260,13 @@ function getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_
            });
 }
 
-function getmediatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
+function getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids) {
   show_progress_bar();
-  $.get( "/loop/mediator_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
+  $.get( "/loop/aggregator_wise_data/", {'start_date':start_date, 'end_date':end_date, 'aggregator_ids[]': aggregator_ids, 'village_ids[]':village_ids, 'crop_ids[]':crop_ids, 'mandi_ids[]':mandi_ids})
            .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
-               fillmediatortable(data_json);
+               fillaggregatortable(data_json);
            });
 }
 
@@ -327,7 +327,7 @@ function fillvillagetable(data_json) {
    var cell5 = row.insertCell(4);
    cell1.innerHTML = "TOTAL";
    cell1.setAttribute('style','text-align:center; font-weight:bold;');
-   cell2.innerHTML = total_volume.toString().concat(" Kg");
+   cell2.innerHTML = total_volume.toFixed(1).toString().concat(" Kg");
    cell2.setAttribute('style','text-align:center; font-weight:bold;');
    cell3.innerHTML = str1.concat((total_amount).toFixed(2));
    cell3.setAttribute('style','text-align:center; font-weight:bold;');
@@ -341,7 +341,7 @@ plot_village_data(data_json,total_volume,total_amount);
 
 }
 
-function fillmediatortable(data_json) {
+function fillaggregatortable(data_json) {
   var table_ref = document.getElementById("table2");
   $('#table2 tr:gt(0)').remove();
   row = $('#table2_tbody');
@@ -390,9 +390,9 @@ function fillmediatortable(data_json) {
     cell4.style.fontWeight = "bold";
     cell5.innerHTML = (total_avg/data_json.length).toFixed(2);
     cell5.style.fontWeight = "bold";
-    // call to make mediator pie chart
+    // call to make aggregator pie chart
   }
-  plot_mediator_data(data_json,total_volume,total_amount);
+  plot_aggregator_data(data_json,total_volume,total_amount);
 }
 
 /* Fill data for highcharts */
@@ -410,7 +410,7 @@ function plot_village_data(data_json,total_volume,total_amount) {
 	plot_piechart($('#pie_amount'),amt_data,'Villages');
 }
 
-function plot_mediator_data(data_json,total_volume,total_amount){
+function plot_aggregator_data(data_json,total_volume,total_amount){
   var vol_data =[];
   var amt_data = [];
   for(var i=0 ; i<data_json.length; i++){
@@ -467,32 +467,32 @@ function plot_cropwise_data(data_json) {
   }
   total_crop_volume.push(data_dict);
 
-  // crop and mediator wise price calculation
-  var total_crop_mediator_price = [];
-  for(l=0; l<data_json['crops_mediators'].length; l++){
+  // crop and aggregator wise price calculation
+  var total_crop_aggregator_price = [];
+  for(l=0; l<data_json['crops_aggregators'].length; l++){
     var temp_price_dict = {};
-    var temp_crop = data_json['crops_mediators'][l]['crop__crop_name'];
-    var temp_mediator =  data_json['crops_mediators'][l]['user_name'];
-    var temp_mediator_id = data_json['crops_mediators'][l]['user_created__id']
-    temp_price_dict['name'] = temp_crop +'-'+ temp_mediator;
+    var temp_crop = data_json['crops_aggregators'][l]['crop__crop_name'];
+    var temp_aggregator =  data_json['crops_aggregators'][l]['user_name'];
+    var temp_aggregator_id = data_json['crops_aggregators'][l]['user_created__id']
+    temp_price_dict['name'] = temp_crop +'-'+ temp_aggregator;
     temp_price_dict['data'] = new Array(x_axis.length).fill(0.0);
-      for (j=0; j<data_json['crops_mediators_transactions'].length; j++) {
-        if (data_json['crops_mediators_transactions'][j]['crop__crop_name'] == temp_crop && data_json['crops_mediators_transactions'][j]['user_created__id'] == temp_mediator_id ){
-           var index_date = x_axis.indexOf(data_json['crops_mediators_transactions'][j]['date']);
-           var temp_amt_dict = data_json['crops_mediators_transactions'][j]['amount'];
-           var temp_vol_dict = data_json['crops_mediators_transactions'][j]['quantity'];
+      for (j=0; j<data_json['crops_aggregators_transactions'].length; j++) {
+        if (data_json['crops_aggregators_transactions'][j]['crop__crop_name'] == temp_crop && data_json['crops_aggregators_transactions'][j]['user_created__id'] == temp_aggregator_id ){
+           var index_date = x_axis.indexOf(data_json['crops_aggregators_transactions'][j]['date']);
+           var temp_amt_dict = data_json['crops_aggregators_transactions'][j]['amount'];
+           var temp_vol_dict = data_json['crops_aggregators_transactions'][j]['quantity'];
            if(temp_vol_dict != 0){
              temp_price_dict['data'][index_date] = temp_amt_dict/temp_vol_dict;
            }
         }
       }
-   total_crop_mediator_price.push(temp_price_dict);
+   total_crop_aggregator_price.push(temp_price_dict);
   }
   show_charts();
   // Plot charts
   plot_stacked_chart($("#crops_price"), x_axis, total_crop_income, "Total Amount Earned(₹)", "₹", true);
   plot_multiline_chart($("#crops_price2"), x_axis, total_crop_price, "Crop Price Per Day(₹)", "₹");
-  plot_multiline_chart($("#crop_aggregator_price"), x_axis, total_crop_mediator_price, "Crop Price Per Day(₹)");
+  plot_multiline_chart($("#crop_aggregator_price"), x_axis, total_crop_aggregator_price, "Crop Price Per Day(₹)");
   plot_stacked_chart($("#crops_volume"), x_axis, total_crop_volume, "Total Volume Dispatched(kg)", "kg", false, /*dashboard.farmers_count*/null);
   update_charts();
 }

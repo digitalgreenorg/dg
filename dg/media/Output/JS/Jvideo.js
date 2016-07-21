@@ -1,43 +1,36 @@
 
 // The values of the video details
-var farmerquant, languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,videosummary;
+var languagename, villagename, distname, statename, proddate, practiceshown, videosummary;
 
 // Displaying the data in the Video Page in Tab wise
 
-var videodesc2 ="<div id='videodatadiv2divdesctop'></div>";
-var videodesc41 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1span' colspan='2'>";
-var videodesc42	="</td></tr>";
-var videodesc43	="<tr><td class='videoinfotd1span' colspan='2'> Practices Shown: ";
-var videodesc44	="</td></tr>";
-var videodesc45	="<tr><td class='videoinfotd1'> Language:";
-var videodesc46 ="</td><td class='videoinfotd2'>Village: ";
-var videodesc47 ="</td></tr><tr><td class='videoinfotd1'> District: ";
-var videodesc48 ="</td><td class='videoinfotd2'> State: ";
-var videodesc49 ="</td></tr><tr><td class='videoinfotd1'> Production Duration: ";
-var videodesc50 ="</td><td class='videoinfotd2'> Produced On: "
-var videodesc51 ="</td></tr></table>";
+var videodesc2 = "<div id='videodatadiv2divdesctop'></div>";
+var videodesc41 = "<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1span' colspan='2'>Practices Shown: ";
+var videodesc44 = "</td></tr>";
+var videodesc45 = "<tr><td class='videoinfotd1'> Language: ";
+var videodesc46 = "</td><td class='videoinfotd2'>Village: ";
+var videodesc47 = "</td></tr><tr><td class='videoinfotd1'> District: ";
+var videodesc48 = "</td><td class='videoinfotd2'> State: ";
+var videodesc50 = "</td></tr><tr><td class='videoinfotd1'> Produced On: ";
+var videodesc51 = "</td></tr></table>";
 
 
-function displaynumstat(numstat0, numstat1,numstat2,numstat3,numstat4,numstat5,numstat6, numstat7,numstat8, numstat9)
+function displaynumstat(numstat0, numstat1, numstat2, numstat3, numstat4, numstat5, numstat6)
 {
-	farmerquant = numstat0;
-	languagename = numstat1;
-	villagename = numstat2;
-	distname = numstat3;	
-	statename = numstat4;
-	prodtime = numstat5;
-	prodenddate = numstat6;
-	farmeractor = numstat7
-	practiceshown = numstat8;
-	videosummary = numstat9;
-	
+	languagename = numstat0;
+	villagename = numstat1;
+	distname = numstat2;	
+	statename = numstat3;
+	proddate = numstat4;
+	practiceshown = numstat5;
+	videosummary = numstat6;
 }
 
 function displaydesc(temp){			
 			
 			// Adding the background colour to the selected tab            
 			if(temp==1){
-				$("div#videodatadiv2divdesc").html(videodesc41 + farmerquant + ": " + farmeractor + videodesc42 +  videodesc43 + practiceshown + videodesc44 + videodesc45 + languagename + videodesc46 + villagename + videodesc47 + distname + videodesc48 + statename + videodesc49 + prodtime + videodesc50 + prodenddate + videodesc51);
+				$("div#videodatadiv2divdesc").html(videodesc41 + practiceshown + videodesc44 + videodesc45 + languagename + videodesc46 + villagename + videodesc47 + distname + videodesc48 + statename + videodesc50 + proddate + videodesc51);
 				$("div#videodatadiv2divdesctop").css('margin-left','0px');					
 				//$("table#videoinfotable").slideDown();				
 			} //ifends
@@ -52,7 +45,6 @@ function displaydesc(temp){
 function videodefaultload(){ 
 					
 // Videos Page Help divs			
-			
 			
 			$("div#searchsort").mouseover(function() {            	
             	//$(this).css('background-color','#E7F7CF' );

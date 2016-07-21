@@ -7,9 +7,9 @@
 <link rel="stylesheet" type="text/css" href="/media/css/base.css">
 
   
-  <link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
+<link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
   
-  <script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
 <script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
 <script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
 <script type="text/javascript" src="/media/js/actions.js"></script>
@@ -133,7 +133,7 @@ Video production end date
 <tbody>
 
 {% for video in videos %}
-<tr class="{% cycle 'row1' 'row2'%}"><!--td><input class="action-select" value="12" name="_selected_action" type="checkbox"></td--><th><a href="/admin/dashboard/video/{{ video.id }}/">{{ video.title }}</a></th><td>{{ video.village}}</td><td class="nowrap">{{ video.video_production_start_date }}</td><td class="nowrap">{{ video.video_production_end_date }} </td></tr>
+<tr class="{% cycle 'row1' 'row2'%}"><!--td><input class="action-select" value="12" name="_selected_action" type="checkbox"></td--><th><a href="/admin/dashboard/video/{{ video.id }}/">{{ video.title }}</a></th><td>{{ video.village}}</td><td class="nowrap">{{ video.video_production_date }} </td></tr>
 {% endfor %}
 </tbody>
 </table>
