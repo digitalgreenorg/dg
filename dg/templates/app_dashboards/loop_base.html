@@ -8,7 +8,8 @@
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!--Import materialize.css-->
 <link rel="stylesheet" href="{% static 'app_dashboards/css/materialize.min.css'%}" media="screen, projection"/>
-<link rel="stylesheet" href="{% static 'app_dashboards/css/jquery.dataTables.css'%}" media="screen, projection"/>
+<link rel="stylesheet" href="{% static 'app_dashboards/datatablejs_media/css/jquery.dataTables.css'%}" media="screen, projection"/>
+<link rel="stylesheet" href="{% static 'app_dashboards/datatablejs_media/css/jquery.dataTables_themeroller.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/css/dataTables.tableTools.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/css/loopdashboard.css'%}" media="screen, projection"/>
 {% block extracss %}{% endblock %}
@@ -33,7 +34,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="{% static 'app_dashboards/js/materialize.min.js' %}"></script>
 <script src="{% static 'app_dashboards/js/jquery.sparkline.min.js' %}"></script>
-<script src="{% static 'app_dashboards/js/jquery.dataTables-1.10.6.min.js' %}"></script>
+<script src="{% static 'app_dashboards/datatablejs_media/js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'app_dashboards/js/dataTables.tableTools.js' %}"></script>
 
 {% block script %} {%endblock%}

@@ -2297,7 +2297,13 @@ $('#table2').DataTable({
         "dom": 'T<"clear">lfrtip',
         "tableTools": {
             "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf"
-        }
+        },
+        columnDefs: [
+            {
+                targets: [ 0, 1, 2 ],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
+        ]
     });
 
 }
