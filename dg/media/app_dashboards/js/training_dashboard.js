@@ -164,6 +164,7 @@ function get_filter_data() {
            data_json = JSON.parse(data);
            fill_trainer_filter(data_json.trainers);
            fill_question_filter(data_json.questions);
+           fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
            get_data();
        });
 }
@@ -178,6 +179,30 @@ function fill_question_filter(data_json) {
   $.each(data_json, function (index, data) {
     create_filter($('#questions'), data.id, data.text, true);
   });
+}
+
+function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) {
+    var num_passed = 0;
+    var num_failed = 0;
+    for (i=0; i< num_pass.length; i++) 
+    {
+        if (num_pass[i]['score__count'] != 0) 
+        {
+            if (num_pass[i]['score__sum']/num_pass[i]['score__count'] >= 0.7)
+            {
+                num_passed+=1;
+            }
+            else
+            {
+              num_failed+=1;
+            }
+        }
+    }  
+    var num_pass_percent = num_passed/(num_passed+num_failed)*100;
+    document.getElementById('num_trainings').innerHTML = num_trainings;
+    document.getElementById("mediators_trained").innerHTML = num_participants;
+    document.getElementById("pass_percent").innerHTML = parseFloat(num_pass_percent.toFixed(2));
+    document.getElementById("farmers_reached").innerHTML = num_farmers;
 }
 
 function create_filter(tbody_obj, id, name, checked) {
@@ -340,7 +365,7 @@ function plot_piechart(container_obj, _data, arg) {
 		}
 	};
 
-	series= [{
+	series = [{
 		type: 'pie',
 		name: arg,
 		data: _data

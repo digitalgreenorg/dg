@@ -46,23 +46,6 @@ ul.collapsible > li.active {
 <ul id="nav-mobile" class="side-nav fixed">
 	<li class="no-padding not-hoverable">
 	<ul class="collapsible collapsible-accordion">
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-teal">Place</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="teal" id="place_all" checked="checked"/>
-							<label for="place_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="places">
-				</tbody>
-			</table>
-		</div>
-		</li>
 		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-teal">Trainers</a>
 		<div class="collapsible-body container" style="display: none;">
 			<table class="filter-table centered">
@@ -118,7 +101,7 @@ ul.collapsible > li.active {
 			<div class="card-content teal white-text">
 				<div class="card-stats-title">
 					<i class="mdi-action-subject"></i> No. of Trainings:
-					<i class="">120</i>
+					<i id="num_trainings"> </i>
 				</div>
 			</div>
 		</div>
@@ -129,7 +112,7 @@ ul.collapsible > li.active {
 			<div class="card-content teal white-text">
 				<div class="card-stats-title">
 					<i class="mdi-social-group"></i> Mediators Trained:
-					<i class="">1896</i>
+					<i id="mediators_trained"> </i>
 				</div>
 			</div>
 		</div>
@@ -139,7 +122,7 @@ ul.collapsible > li.active {
 			<div class="card-content teal white-text">
 				<div class="card-stats-title">
 					<i class="mdi-action-spellcheck"></i> Pass Percentage:
-					<i class="">82%</i>
+					<i id="pass_percent"> </i>
 				</div>
 			</div>
 		</div>
@@ -149,7 +132,7 @@ ul.collapsible > li.active {
 			<div class="card-content teal white-text">
 				<div class="card-stats-title">
 					<i class="mdi-social-group-add"></i> Farmers Reached:
-					<i class="">10391</i>
+					<i id="farmers_reached"> </i>
 				</div>
 			</div>
 		</div>
@@ -216,7 +199,7 @@ ul.collapsible > li.active {
 	<div class="divider"></div>
 </div>
 
-<div id="training_table">
+<!--div id="training_table">
 	<div id="training_label">
 		<h5 class="center-align">Training Data</h5>
 	</div>
@@ -236,6 +219,6 @@ ul.collapsible > li.active {
 		</tbody>
 	</table>
 	<br>
-</div>
+</div-->
 
 {% endblock %}

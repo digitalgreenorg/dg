@@ -10,7 +10,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
 from models import Training, Score, Trainer, Question
-from activities.models import Screening, PersonAdoptPractice
+from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
 
 # Create your views here.
 @csrf_exempt
@@ -39,7 +39,12 @@ def dashboard(request):
 def filter_data(request):
     trainers = Trainer.objects.values('id', 'name')
     questions = Question.objects.values('id', 'text')
-    data_dict = {'trainers': list(trainers), 'questions': list(questions)}
+    participants = Score.objects.values_list('participant__id', flat=True).distinct()
+    num_trainings = Training.objects.count()
+    num_participants = len(participants)
+    num_pass = Score.objects.filter(score__in=[0,1]).values('participant').annotate(Sum('score'), Count('score'))
+    num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
+    data_dict = {'trainers': list(trainers), 'questions': list(questions), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_farmers': num_farmers}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
