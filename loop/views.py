@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter
 
 from loop_data_log import get_latest_timestamp
 
@@ -62,7 +62,8 @@ def filter_data(request):
     crops = Crop.objects.values('id', 'crop_name')
     mandis = Mandi.objects.values('id', 'mandi_name')
     gaddidars = Gaddidar.objects.values('id', 'gaddidar_name')
-    data_dict = {'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
+    transporters = Transporter.objects.values('id','transporter_name')
+    data_dict = {'transporters':list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
@@ -175,20 +176,21 @@ def total_static_data(request):
     total_farmers_reached = len(
         CombinedTransaction.objects.values('farmer').distinct())
     total_cluster_reached = len(LoopUser.objects.all())
-    total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").aggregate(
-        Sum('transportation_cost'), Sum('farmer_share'))
+    total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").values('date','user_created__id','mandi__id').annotate(
+        Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
-                  'total_transportation_cost': total_transportation_cost, 'total_cluster_reached': total_cluster_reached, 'total_volume_for_transport': total_volume_for_transport, 'total_repeat_farmers': total_repeat_farmers}
+                  'total_transportation_cost': list(total_transportation_cost), 'total_cluster_reached': total_cluster_reached, 'total_volume_for_transport': total_volume_for_transport, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 
 def recent_graphs_data(request):
 
-    stats = CombinedTransaction.objects.values('farmer__id', 'date').order_by(
+    stats = CombinedTransaction.objects.values('farmer__id', 'date','user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
     aggregators = LoopUser.objects.all().values('name', 'user_id')
+
     mandis = Mandi.objects.all().values('id', 'mandi_name')
     transportation_cost = DayTransportation.objects.values('date').order_by(
         '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
@@ -382,9 +384,9 @@ def payments(request):
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).values(
         'date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer'))
     outlier_data = CombinedTransaction.objects.filter(
-        **filter_args).values('date', 'user_created__id').annotate(Sum('quantity'), Count('farmer', distinct=True))
+        **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True))
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
-        'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), Avg('farmer_share'))
+        'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
     
     outlier_daily_data =  CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id', 'mandi__mandi_name','farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price').annotate(Sum('quantity'))
     

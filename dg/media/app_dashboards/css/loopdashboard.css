@@ -166,3 +166,7 @@ hr{
     header, main, footer {
         padding-left: 0;
     }
+
+.indicator {
+    right: 0px!important
+}

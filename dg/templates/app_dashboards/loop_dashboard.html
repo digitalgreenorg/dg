@@ -209,7 +209,7 @@
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">CPK</span>
+					<span class="card-title">Cost per KG</span>
 					<h5 id="total_expenditure_card"></h5>
 					<span id="total_expenditure_bullet"></span>
 				</div>
@@ -274,7 +274,7 @@
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">CPK</span>
+					<span class="card-title">Cost per Kg</span>
 					<h5 id="cpk_card"></h5>
 					<span id="cpk_sparkline"></span>
 				</div>
@@ -318,25 +318,23 @@
 			<div class=" col s12 l6">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4" id="sof"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
+						<li class="tab col s4"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
 					</ul>
 				</div>
 				<hr>
-				<h5 class="center-align" id="1stgraph"></h5>
 				<div id="aggregator_mandi" class="col s12"></div>
 			</div>
 
 			<div class="col s12 l6">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s6"><a class="center active" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
-						<li class="tab col s6"><a class="center" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
+						<li class="tab col s6"><a class="center active blue-text" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
+						<li class="tab col s6"><a class="center blue-text" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
 					</ul>
 				</div>
 				<hr>
-				<h5 class="center-align" id="2ndgraph"></h5>
 				<div id="mandi_cost" class="col s12"></div>
 			</div>
 
@@ -354,11 +352,13 @@
 			<!-- Graphs for gaddidar in market page -->
 			<div class="col s12 l6" id="gaddidar_aggregator_graph">
 				<div class="row">
-					<a class="center col s6" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')"> Volume</a>
-					<a class="center col s6" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')"> Amount</a>
+
+					<ul class="tabs">
+						<li class="tab col s6"><a class="center active blue-text" href="#" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
+						<li class="tab col s6"><a class="center blue-text" href="#" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
+					</ul>
 				</div>
 				<hr>
-				<h5 class="center-align" id="gaddidar_graph"></h5>
 				<div id="aggregator_gaddidar" class="col s12"></div>
 			</div>
 
@@ -377,13 +377,29 @@
 
 
 <div id="time_series_div">
-
-	<div id="detail_container_time_series"></div>
+<div id="container2">
+	<div class="row">
+		<p class="col s3"></p>
+		<div class="input-field col s6">
+			<select id="time_series_frequency" class="initialized" >
+					<option value="1" selected>Daily</option>
+					<option value="7">7 Days</option>
+					<option value="15">15 Days</option>
+					<option value="30">30 Days</option>
+			</select>
+		</div>
+		<p class="col s3"></p>
+	</div>
+<div class="row">
+	<div class="col s6">
+	<div id="detail_container_time_series"  style="height:350px"></div>
 	<div id="master_container_time_series" style="height:100px"></div>
-
-	<div id="detail_container_cpk"></div>
+	</div>
+	<div class="col s6">
+	<div id="detail_container_cpk"  style="height:350px"></div>
 	<div id="master_container_cpk" style="height:100px"></div>
-
+	</div>
+</div>
 	<div class="row">
 		<p class="col s3"></p>
 		<div class="input-field col s6">
@@ -394,15 +410,15 @@
 	<div id="container3" class="col s12">
 	</div>
 
-
+</div>
 </div>
 
 <div id="payments_div">
-	<ul class=" row tabs">
+	<!-- <ul class=" row tabs">
 		<li class="col s4 tab"><a class="active" href="#aggregator_payment_tab" onclick="clear_payment_table()">Aggregator</a></li>
 		<li class="col s4 tab"><a href="#transporter_payment_tab" onclick="clear_payment_table()">Transporter</a></li>
 		<li class="col s4 tab"><a href="#gaddidar_payment_tab" onclick="clear_payment_table()">Gaddidar</a></li>
-		</ul>
+		</ul> -->
 	<div class="row" id="aggregator_payment_tab">
 		<p class="col s3"></p>
 		<div class="input-field col s6">
@@ -410,12 +426,16 @@
 		</div>
 		<p class="col s3"></p>
 
-	<div id="outliers" class="row"></div>
+
+	<table  style="width:100%">
+	  <tr id="outliers">
+	  </tr>
+	</table>
 
 	<table id="outliers_data" class="highlight bordered centered">	</table>
 </div>
 
-<div class="row" id="transporter_payment_tab">
+<!-- <div class="row" id="transporter_payment_tab">
 	<p class="col s3"></p>
 	<div class="input-field col s6">
 		<select id="transporter_payments" class="initialized" ></select>
@@ -429,7 +449,7 @@
 			<select id="gaddidar_payments" class="initialized" ></select>
 		</div>
 		<p class="col s3"></p>
-</div>
+</div> -->
 
 		<table id="table2" class="stripe">
 
