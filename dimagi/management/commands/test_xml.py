@@ -18,7 +18,7 @@ from dimagi.scripts.exception_email import sendmail
 class Command(BaseCommand):
     
     def handle(self, *args, **options):
-        xml_objects = XMLSubmission.objects.get(error_code = -3)
+        xml_objects = XMLSubmission.objects.filter(error_code = -3)
         for obj in xml_objects:
             xml_string = obj.xml_data
             xml_parse = minidom.parseString(xml_string)
