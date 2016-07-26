@@ -171,10 +171,9 @@ function get_data(){
 		$('#modal1').openModal();
   }
   else{
-    gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_ids);
     gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids);
     getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids);
-    //getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids);
+    getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids);
   }
 }
 
@@ -222,16 +221,6 @@ function create_filter(tbody_obj, id, name, checked) {
 
 /* ajax to get json */
 
-function gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
-  show_progress_bar();
-  $.get( "/training/training_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
-           .done(function( data ) {
-               data_json = JSON.parse(data);
-               hide_progress_bar();
-//               filltrainingtable(data_json);
-           });  
-}
-
 function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
   $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
@@ -250,16 +239,6 @@ function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_
                hide_progress_bar();
                plot_questionwise_data(data_json);
            });
-}
-
-function getmediatordata(start_date, end_date, trainer_ids, question_ids, state_ids) {
-  show_progress_bar();
-  $.get( "/training/mediator_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
-           .done(function(data) {
-               data_json = JSON.parse(data);
-               hide_progress_bar();
-               plot_mediatorwise_data(data_json);
-           });  
 }
 
 function getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids) {
@@ -349,6 +328,18 @@ function plot_questionwise_data(data_json){
 }
 
 function plot_statewise_data(data_json) {
+  var x_axis = [];
+  var state_mediator_dict = [];
+  var state_percent_dict = [];
+
+  for (i=0; i<data_json.length; i++) {
+    x_axis.push(data_json[i]['participant__district__state__state_name']);
+    var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
+    state_mediator_dict.push(data_json[i]['participant__count']);
+    state_percent_dict.push(parseFloat(perc.toFixed(2)));
+  }
+
+  plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_percent_dict, state_mediator_dict, "Percentage Answered Correctly", "Mediators Correctly Answered", "%", "");
 }
 
 /* plot highcharts data */

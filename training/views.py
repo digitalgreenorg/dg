@@ -51,23 +51,6 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-def training_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    trainer_ids = request.GET.getlist('trainer_ids[]')
-    question_ids = request.GET.getlist('question_ids[]')
-    state_ids = request.GET.getlist('state_ids[]')
-    filter_args = {}
-    if(start_date !=""):
-        filter_args["date__gte"] = start_date
-    if(end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["trainer__id__in"] = trainer_ids
-    # question filter
-    training_list = Training.objects.filter(**filter_args).values('assessment','place','trainer__name','language__language_name').annotate(Count('participants'))
-    data = json.dumps(list(training_list))
-    return HttpResponse(data)
-
 def trainer_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
