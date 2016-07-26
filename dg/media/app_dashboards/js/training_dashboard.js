@@ -174,7 +174,6 @@ function get_data(){
     gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_ids);
     gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids);
     getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids);
-    //getmediatordata(start_date, end_date, trainer_ids, question_ids, state_ids);
     //getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids);
   }
 }
@@ -236,7 +235,7 @@ function gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_
 function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
   $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
-           .done(function( data ) {
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_trainerwise_data(data_json);
@@ -246,7 +245,7 @@ function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_i
 function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
   $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
-           .done(function( data ) {
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_questionwise_data(data_json);
@@ -256,7 +255,7 @@ function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_
 function getmediatordata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
   $.get( "/training/mediator_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
-           .done(function( data ) {
+           .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_mediatorwise_data(data_json);
@@ -278,7 +277,6 @@ function getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids
 function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) {
     var num_passed = 0;
     var num_failed = 0;
-    
     for (i=0; i< num_pass.length; i++) {
         if (num_pass[i]['score__count'] != 0) {
             if (num_pass[i]['score__sum']/num_pass[i]['score__count'] >= 0.7) {
@@ -288,8 +286,7 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) 
               num_failed+=1;
             }
         }
-    }  
-    
+    }      
     var num_pass_percent = num_passed/(num_passed+num_failed)*100;
 
     document.getElementById('num_trainings').innerHTML = num_trainings;
@@ -302,12 +299,15 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) 
 
 function plot_trainerwise_data(data_json) {
   var x_axis = [];
-  trainer_scores_dict = [];
+  var trainer_scores_dict = [];
+  var trainer_trainings_dict = [];
+  var trainer_mediators_dict = [];
+
   var total_score_dict = {};
   var avg_score_dict = {};
   var perc_score_dict = {};
   total_score_dict['name'] = 'Total Scores';
-  avg_score_dict['name'] = 'Scores per Participant';
+  avg_score_dict['name'] = 'Average Scores per Participant';
   perc_score_dict['name'] = 'Percent Answered Correctly';
   total_score_dict['data'] = new Array(data_json.length).fill(0.0);
   avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
@@ -319,11 +319,15 @@ function plot_trainerwise_data(data_json) {
     var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
     avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
     perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
-  }    
-  //question_scores_dict.push(total_score_dict);
+    trainer_trainings_dict.push(data_json[i]['training__id__count'])
+    trainer_mediators_dict.push(data_json[i]['participant__count'])
+    //70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
+  }
   trainer_scores_dict.push(avg_score_dict);
   trainer_scores_dict.push(perc_score_dict);
-  plot_multiline_chart($("#trainer_mediator_score"), x_axis, trainer_scores_dict, "Score", "%");
+
+  plot_multiline_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Score", "%");
+  plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_dict, trainer_mediators_dict, "Number of Trainings", "Number of Mediators", "", "")
 }
 
 function plot_questionwise_data(data_json){
@@ -514,5 +518,75 @@ function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, pref
       }
     },
     series: dict
+  });
+}
+
+function plot_dual_axis_chart(container_obj, x_axis, y_axis_1_dict, y_axis_2_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2) {
+  container_obj.highcharts({
+    chart: {
+            zoomType: 'xy'
+        },
+    title: '',
+    xAxis: [{
+            categories: x_axis,
+            crosshair: true
+        }],
+    yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value} '+unit_1,
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: y_axis_1_text,
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: y_axis_2_text,
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} '+unit_2,
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 120,
+            verticalAlign: 'top',
+            y: 100,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: [{
+            name: y_axis_2_text,
+            type: 'column',
+            yAxis: 1,
+            data: y_axis_2_dict,
+            tooltip: {
+                valueSuffix: unit_2
+            }
+
+        }, {
+            name: y_axis_1_text,
+            type: 'spline',
+            data: y_axis_1_dict,
+            tooltip: {
+                valueSuffix: unit_1
+            }
+        }]
   });
 }

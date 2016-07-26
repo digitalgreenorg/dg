@@ -75,6 +75,7 @@ def trainer_wise_data(request):
     question_ids = request.GET.getlist('question_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
+    # Check for module (Pico Seekho OR Documentation)
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
@@ -82,8 +83,8 @@ def trainer_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
-    #check for scores 0, 1, -1; Also check for module (Documentation or Pico Seekho)
-    trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'))
+    filter_args["score__in"] = [1, 0]
+    trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'), Count('training__id', distinct=True))
     data = json.dumps(list(trainer_list))
     return HttpResponse(data)
 
