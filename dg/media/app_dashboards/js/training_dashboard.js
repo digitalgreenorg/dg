@@ -181,30 +181,6 @@ function fill_question_filter(data_json) {
   });
 }
 
-function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) {
-    var num_passed = 0;
-    var num_failed = 0;
-    for (i=0; i< num_pass.length; i++) 
-    {
-        if (num_pass[i]['score__count'] != 0) 
-        {
-            if (num_pass[i]['score__sum']/num_pass[i]['score__count'] >= 0.7)
-            {
-                num_passed+=1;
-            }
-            else
-            {
-              num_failed+=1;
-            }
-        }
-    }  
-    var num_pass_percent = num_passed/(num_passed+num_failed)*100;
-    document.getElementById('num_trainings').innerHTML = num_trainings;
-    document.getElementById("mediators_trained").innerHTML = num_participants;
-    document.getElementById("pass_percent").innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    document.getElementById("farmers_reached").innerHTML = num_farmers;
-}
-
 function create_filter(tbody_obj, id, name, checked) {
   var row = $('<tr>');
   var td_name = $('<td>').html(name);
@@ -223,7 +199,7 @@ function gettrainingdata(start_date, end_date, trainer_ids, question_ids) {
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
-               filltrainingtable(data_json);
+//               filltrainingtable(data_json);
            });  
 }
 
@@ -259,27 +235,27 @@ function getmediatordata(start_date, end_date, trainer_ids, question_ids) {
 
 /* Table Generating UI Functions - Fill data in table */
 
-function filltrainingtable(data_json) {
-  $('#table1 tr:gt(0)').remove();
-  var row = $('#table1_tbody');
-  var tr_name = $('<tr>');
-  var table_ref = document.getElementById('table1');
-  for ( i =0; i< data_json.length; i++){
-     var row = table_ref.insertRow(-1);
-     var cell1 = row.insertCell(0);
-     var cell2 = row.insertCell(1);
-     var cell3 = row.insertCell(2);
-     var cell4 = row.insertCell(3);
-     var cell5 = row.insertCell(4);
-     cell1.innerHTML = data_json[i]['place'];
-     cell1.setAttribute('style','text-align:center;');
-     cell2.innerHTML = data_json[i]['trainer__name'];
-     cell2.setAttribute('style','text-align:center;');
-     cell3.innerHTML = data_json[i]['language__language_name'].toString();
-     cell3.setAttribute('style','text-align:center;');
-     cell4.innerHTML = data_json[i]['participants__count'].toString();
-     cell4.setAttribute('style','text-align:center;');
-  }
+function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) {
+    var num_passed = 0;
+    var num_failed = 0;
+    
+    for (i=0; i< num_pass.length; i++) {
+        if (num_pass[i]['score__count'] != 0) {
+            if (num_pass[i]['score__sum']/num_pass[i]['score__count'] >= 0.7) {
+                num_passed+=1;
+            }
+            else {
+              num_failed+=1;
+            }
+        }
+    }  
+    
+    var num_pass_percent = num_passed/(num_passed+num_failed)*100;
+
+    document.getElementById('num_trainings').innerHTML = num_trainings;
+    document.getElementById("mediators_trained").innerHTML = num_participants;
+    document.getElementById("pass_percent").innerHTML = parseFloat(num_pass_percent.toFixed(2));
+    document.getElementById("farmers_reached").innerHTML = num_farmers;
 }
 
 /* Fill data for highcharts */
