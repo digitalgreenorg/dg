@@ -11,6 +11,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from tastypie.models import ApiKey, create_api_key
 from models import Training, Score, Trainer, Question
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
+from geographies.models import State
 
 # Create your views here.
 @csrf_exempt
@@ -39,12 +40,14 @@ def dashboard(request):
 def filter_data(request):
     trainers = Trainer.objects.values('id', 'name')
     questions = Question.objects.values('id', 'text')
+    states = State.objects.values('id','state_name')
     participants = Score.objects.values_list('participant__id', flat=True).distinct()
     num_trainings = Training.objects.count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1]).values('participant').annotate(Sum('score'), Count('score'))
-    num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
-    data_dict = {'trainers': list(trainers), 'questions': list(questions), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_farmers': num_farmers}
+    #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
+    num_farmers = 28345
+    data_dict = {'trainers': list(trainers), 'questions': list(questions), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_farmers': num_farmers}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -53,6 +56,7 @@ def training_wise_data(request):
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
     question_ids = request.GET.getlist('question_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["date__gte"] = start_date
@@ -69,6 +73,7 @@ def trainer_wise_data(request):
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
     question_ids = request.GET.getlist('question_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
@@ -76,6 +81,8 @@ def trainer_wise_data(request):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
+    filter_args["participant__district__state__id__in"] = state_ids
+    #check for scores 0, 1, -1; Also check for module (Documentation or Pico Seekho)
     trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'))
     data = json.dumps(list(trainer_list))
     return HttpResponse(data)
@@ -85,6 +92,7 @@ def question_wise_data(request):
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
     question_ids = request.GET.getlist('question_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
@@ -92,6 +100,7 @@ def question_wise_data(request):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
+    filter_args["participant__district__state__id__in"] = state_ids
     question_list = Score.objects.filter(**filter_args).values('question__text').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
     data = json.dumps(list(question_list))
     return HttpResponse(data)
@@ -101,6 +110,7 @@ def mediator_wise_data(request):
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
     question_ids = request.GET.getlist('question_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
@@ -108,13 +118,31 @@ def mediator_wise_data(request):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
+    filter_args["participant__district__state__id__in"] = state_ids
     mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
     mediator_data = {}
     for i in mediator_list:
         screening_list = Screening.objects.filter(animator__id = i['participant'])
         #adoption_list = PersonAdoptPractice.objects.filter()
         mediator_data[i['participant']] = list(screening_list)
-    print mediator_data
+    #print mediator_data
     data = json.dumps(mediator_data, cls= DjangoJSONEncoder)
     return HttpResponse(data)
 
+def state_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    trainer_ids = request.GET.getlist('trainer_ids[]')
+    question_ids = request.GET.getlist('question_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["training__date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["training__date__lte"] = end_date
+    filter_args["training__trainer__id__in"] = trainer_ids
+    filter_args["question__id__in"] = question_ids
+    filter_args["participant__district__state__id__in"] = state_ids
+    state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
+    data = json.dumps(list(state_list))
+    return HttpResponse(data)

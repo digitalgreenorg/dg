@@ -46,39 +46,59 @@ ul.collapsible > li.active {
 <ul id="nav-mobile" class="side-nav fixed">
 	<li class="no-padding not-hoverable">
 	<ul class="collapsible collapsible-accordion">
-		<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-teal">Trainers</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="teal" id="trainer_all" checked="checked"/>
-							<label for="trainer_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="trainers">
-				</tbody>
-			</table>
-		</div>
+		<li class="bold not-hoverable">
+			<a class="collapsible-header  waves-effect waves-teal">Trainers</a>
+			<div class="collapsible-body container" style="display: none;">
+				<table class="filter-table centered">
+					<thead>
+						<tr>
+							<th class="center grey-text text-lighten-1">Select/Unselect</th>
+							<th>
+								<input type="checkbox" class="teal" id="trainer_all" checked="checked"/>
+								<label for="trainer_all"></label>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="trainers">
+					</tbody>
+				</table>
+			</div>
 		</li>
-		<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-teal">Questions</a>
-		<div class="collapsible-body container" style="display: none;">
-			<table class="filter-table centered">
-				<thead>
-					<tr>
-						<th class="center grey-text text-lighten-1">Select/Unselect</th>
-						<th>
-							<input type="checkbox" class="teal" id="question_all" checked="checked"/>
-							<label for="question_all"></label>
-						</th>
-					</tr>
-				</thead>
-				<tbody id="questions">
-				</tbody>
-			</table>
-		</div>
+		<li class="bold not-hoverable">
+			<a class="collapsible-header waves-effect waves-teal">Questions</a>
+			<div class="collapsible-body container" style="display: none;">
+				<table class="filter-table centered">
+					<thead>
+						<tr>
+							<th class="center grey-text text-lighten-1">Select/Unselect</th>
+							<th>
+								<input type="checkbox" class="teal" id="question_all" checked="checked"/>
+								<label for="question_all"></label>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="questions">
+					</tbody>
+				</table>
+			</div>
+		</li>
+		<li class="bold not-hoverable">
+			<a class="collapsible-header  waves-effect waves-teal">States</a>
+			<div class="collapsible-body container" style="display: none;">
+				<table class="filter-table centered">
+					<thead>
+						<tr>
+							<th class="center grey-text text-lighten-1">Select/Unselect</th>
+							<th>
+								<input type="checkbox" class="teal" id="state_all" checked="checked"/>
+								<label for="state_all"></label>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="states">
+					</tbody>
+				</table>
+			</div>
 		</li>
 		<li class="no-padding not-hoverable">
 			<br>
@@ -173,6 +193,7 @@ ul.collapsible > li.active {
 			<select id="table_option" class="initialized">
 				<!-- <option value="" disabled >Choose your option</option> -->
 				<option value="1" selected>Pico Seekho Assessment</option>
+				<option value="2">Documentation Assessment</option>
 			</select>
 		<label>Change the Assessment</label>
 	</div>
@@ -193,32 +214,10 @@ ul.collapsible > li.active {
 	<div class="divider"></div>
 	<br>
 	<div class="row">
-		<h5 class="center-align">Mediator-Wise Disseminations and Adoptions</h5>
-		<div id ="mediator_activity"></div>
+		<h5 class="center-align">State-Wise Mediator Scores</h5>
+		<div id ="state_mediator_score"></div>
 	</div>
 	<div class="divider"></div>
 </div>
-
-<!--div id="training_table">
-	<div id="training_label">
-		<h5 class="center-align">Training Data</h5>
-	</div>
-	<table id="table1" class="highlight bordered centered" >
-		<thead>
-			<tr>
-				<th data-field="name">Place</th>
-				<th data-field="name">Trainer</th>
-				<th data-field="name">Language</th>
-				<th data-field="integer">Total Participants</th>
-			</tr>
-		</thead>
-		<tbody id ="table1_tbody">
-			<tr>
-
-			</tr>
-		</tbody>
-	</table>
-	<br>
-</div-->
 
 {% endblock %}

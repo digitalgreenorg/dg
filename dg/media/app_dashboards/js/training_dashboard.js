@@ -88,6 +88,21 @@ function set_filterlistener() {
          });
     }
   });
+
+  $('#state_all').on('change', function(e) {
+    if (this.checked) {
+      $('#states').children().each(function() {
+          var states_all = $(this).children()[1].firstChild;
+          states_all.checked = true;
+         });
+    }
+    else {
+      $('#states').children().each(function() {
+          var states_all = $(this).children()[1].firstChild;
+          states_all.checked = false;
+         });
+    }
+  });
 }
 
 /* show charts */
@@ -131,6 +146,7 @@ function get_data(){
 
   var trainer_ids = [];
   var question_ids = [];
+  var state_ids = [];
 
   $('#trainers').children().each(function(){
     var trainer_div = $(this).children()[1].firstChild;
@@ -144,15 +160,22 @@ function get_data(){
       question_ids.push(question_div.getAttribute('data'));
   });
 
+  $('#states').children().each(function() {
+    var state_div = $(this).children()[1].firstChild;
+    if(state_div.checked)
+      state_ids.push(state_div.getAttribute('data'));
+  });
+
 	if(Date.parse(start_date) > Date.parse(end_date)){
 		//$('.modal-trigger').leanModal();
 		$('#modal1').openModal();
   }
   else{
-    gettrainingdata(start_date, end_date, trainer_ids, question_ids);
-    gettrainerdata(start_date, end_date, trainer_ids, question_ids);
-    getquestiondata(start_date, end_date, trainer_ids, question_ids);
-    //getmediatordata(start_date, end_date, trainer_ids, question_ids);
+    gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_ids);
+    gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids);
+    getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids);
+    //getmediatordata(start_date, end_date, trainer_ids, question_ids, state_ids);
+    //getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids);
   }
 }
 
@@ -164,21 +187,28 @@ function get_filter_data() {
            data_json = JSON.parse(data);
            fill_trainer_filter(data_json.trainers);
            fill_question_filter(data_json.questions);
+           fill_state_filter(data_json.states);
            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
            get_data();
        });
 }
 
 function fill_trainer_filter(data_json) {
-  $.each(data_json, function (index, data) {
-    create_filter($('#trainers'), data.id, data.name , true);
-  });
+    $.each(data_json, function (index, data) {
+      create_filter($('#trainers'), data.id, data.name , true);
+    });
 }
 
 function fill_question_filter(data_json) {
-  $.each(data_json, function (index, data) {
-    create_filter($('#questions'), data.id, data.text, true);
-  });
+    $.each(data_json, function (index, data) {
+        create_filter($('#questions'), data.id, data.text, true);
+    });
+}
+
+function fill_state_filter(data_json) {
+    $.each(data_json, function (index, data) {
+        create_filter($('#states'), data.id, data.state_name, true)
+    });
 }
 
 function create_filter(tbody_obj, id, name, checked) {
@@ -193,9 +223,9 @@ function create_filter(tbody_obj, id, name, checked) {
 
 /* ajax to get json */
 
-function gettrainingdata(start_date, end_date, trainer_ids, question_ids) {
+function gettrainingdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/training_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
+  $.get( "/training/training_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -203,9 +233,9 @@ function gettrainingdata(start_date, end_date, trainer_ids, question_ids) {
            });  
 }
 
-function gettrainerdata(start_date, end_date, trainer_ids, question_ids) {
+function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
+  $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -213,9 +243,9 @@ function gettrainerdata(start_date, end_date, trainer_ids, question_ids) {
            });
 }
 
-function getquestiondata(start_date, end_date, trainer_ids, question_ids) {
+function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
+  $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -223,13 +253,23 @@ function getquestiondata(start_date, end_date, trainer_ids, question_ids) {
            });
 }
 
-function getmediatordata(start_date, end_date, trainer_ids, question_ids) {
+function getmediatordata(start_date, end_date, trainer_ids, question_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/mediator_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids})
+  $.get( "/training/mediator_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
                plot_mediatorwise_data(data_json);
+           });  
+}
+
+function getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids) {
+  show_progress_bar();
+  $.get( "/training/state_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
+           .done(function( data ) {
+               data_json = JSON.parse(data);
+               hide_progress_bar();
+               plot_statewise_data(data_json);
            });  
 }
 
@@ -313,6 +353,9 @@ function plot_questionwise_data(data_json){
 }
 
 function plot_mediatorwise_data(data_json) {
+}
+
+function plot_statewise_data(data_json) {
 }
 
 /* plot highcharts data */
