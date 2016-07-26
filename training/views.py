@@ -102,6 +102,7 @@ def question_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
+    filter_args["score__in"] = [1, 0]
     question_list = Score.objects.filter(**filter_args).values('question__text').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
     data = json.dumps(list(question_list))
     return HttpResponse(data)
@@ -120,6 +121,7 @@ def mediator_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
+    filter_args["score__in"] = [1, 0]
     mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
     mediator_data = {}
     for i in mediator_list:
@@ -144,6 +146,7 @@ def state_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
+    filter_args["score__in"] = [1, 0]
     state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
     data = json.dumps(list(state_list))
     return HttpResponse(data)
