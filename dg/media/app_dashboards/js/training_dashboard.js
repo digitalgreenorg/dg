@@ -331,32 +331,21 @@ function plot_trainerwise_data(data_json) {
 }
 
 function plot_questionwise_data(data_json){
+  //add language filter
   var x_axis = [];
-  question_scores_dict = [];
-  var total_score_dict = {};
-  var avg_score_dict = {};
-  var perc_score_dict = {};
-  total_score_dict['name'] = 'Total Scores';
-  avg_score_dict['name'] = 'Percentage Scores per Participant';
-  perc_score_dict['name'] = 'Percent Answered Correctly';
-  total_score_dict['data'] = new Array(data_json.length).fill(0.0);
-  avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
-  perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
+  var question_mediator_dict = [];
+  var question_percent_dict = [];
+
   for (i=0; i<data_json.length; i++) {
     x_axis.push(data_json[i]['question__text']);
-    total_score_dict['data'][i] = data_json[i]['score__sum'];
-    var avg = (data_json[i]['score__sum']/data_json[i]['participant__count'])*100;
+    //var avg = (data_json[i]['score__sum']/data_json[i]['participant__count'])*100;
+    //send 2 sep dicts with data for number and percent
     var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
-    avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
-    perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
-  }    
-  //question_scores_dict.push(total_score_dict);
-  question_scores_dict.push(avg_score_dict);
-  question_scores_dict.push(perc_score_dict);
-  plot_multiline_chart($("#question_mediator_score"), x_axis, question_scores_dict, "Score", "%");
-}
+    question_mediator_dict.push(data_json[i]['participant__count']);
+    question_percent_dict.push(parseFloat(perc.toFixed(2)));
+  }
 
-function plot_mediatorwise_data(data_json) {
+  plot_dual_axis_chart($("#question_mediator_data"), x_axis, question_percent_dict, question_mediator_dict, "Percentage Answered Correctly", "Mediators Correctly Answered", "%", "");
 }
 
 function plot_statewise_data(data_json) {
