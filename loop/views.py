@@ -382,7 +382,7 @@ def payments(request):
         filter_args["date__lte"] = end_date
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).values(
-        'date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer'))
+        'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'gaddidar__commission').annotate(Sum('quantity'), Count('farmer'))
     outlier_data = CombinedTransaction.objects.filter(
         **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True))
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
@@ -391,10 +391,10 @@ def payments(request):
     outlier_daily_data =  CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id', 'mandi__mandi_name','farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price').annotate(Sum('quantity'))
     
     transportation_data = DayTransportation.objects.filter(**filter_args).values(
-        'date', 'user_created__id','transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__id" ,'transportation_vehicle__vehicle_number', 'mandi__mandi_name').annotate(Count('mandi__id'), Sum('transportation_cost'))
+        'date', 'user_created__id','transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name" ,'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share').annotate( Sum('transportation_cost'))
 
     gaddidar_data = CombinedTransaction.objects.filter(**filter_args).values(
-        'date', 'user_created__id', 'gaddidar__id', 'gaddidar__commission').annotate(Sum('quantity'))
+        'date', 'user_created__id','mandi__id', 'gaddidar__id', 'gaddidar__commission').annotate(Sum('quantity'))
 
     chart_dict = {'outlier_daily_data':list(outlier_daily_data), 'outlier_data': list(outlier_data), 'outlier_transport_data': list(outlier_transport_data),  'gaddidar_data': list(
         gaddidar_data), 'aggregator_data': list(aggregator_data), 'transportation_data': list(transportation_data)}

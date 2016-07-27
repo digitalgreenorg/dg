@@ -414,11 +414,21 @@
 </div>
 
 <div id="payments_div">
-	<!-- <ul class=" row tabs">
-		<li class="col s4 tab"><a class="active" href="#aggregator_payment_tab" onclick="clear_payment_table()">Aggregator</a></li>
-		<li class="col s4 tab"><a href="#transporter_payment_tab" onclick="clear_payment_table()">Transporter</a></li>
-		<li class="col s4 tab"><a href="#gaddidar_payment_tab" onclick="clear_payment_table()">Gaddidar</a></li>
-		</ul> -->
+
+	<div class="row">
+		<div class="input-field col s4">
+			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+			<input id="payments_from_date" placeholder="Start Date" type="text" class="datepicker black-text">
+		</div>
+		<div class="input-field col s4">
+			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+			<input id="payments_to_date" placeholder="End Date" type="text" class="datepicker black-text">
+		</div>
+
+		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+
+	</div>
+
 	<div class="row" id="aggregator_payment_tab">
 		<p class="col s3"></p>
 		<div class="input-field col s6">
@@ -427,49 +437,20 @@
 		<p class="col s3"></p>
 
 
-	<table  style="width:100%">
-	  <tr id="outliers">
-	  </tr>
-	</table>
+		<table  style="width:100%">
+		  <tr id="outliers">
+		  </tr>
+		</table>
 
-	<table id="outliers_data" class="highlight bordered centered">	</table>
-</div>
-
-<!-- <div class="row" id="transporter_payment_tab">
-	<p class="col s3"></p>
-	<div class="input-field col s6">
-		<select id="transporter_payments" class="initialized" ></select>
+		<table id="outliers_data" class="highlight bordered centered">	</table>
 	</div>
-	<p class="col s3"></p>
-</div>
 
-	<div class="row" id="gaddidar_payment_tab">
-		<p class="col s3"></p>
-		<div class="input-field col s6">
-			<select id="gaddidar_payments" class="initialized" ></select>
-		</div>
-		<p class="col s3"></p>
-</div> -->
 
 		<table id="table2" class="stripe">
-
-			<!-- <thead>
-				<tr>
-					<th data-field="integer">S.No</th>
-					<th data-field="date">Date</th>
-					<th data-field="name">Mandi</th>
-					<th data-field="integer">Total Volume</th>
-					<th data-field="integer"> Total Farmers</th>
-					<th data-field="integer"> Net Payment</th>
-				</tr>
-			</thead>
-
-			<tbody id="table2_tbody">
-				<tr>
-
-				</tr>
-			</tbody> -->
 		</table>
+
+		<table id="table3" class="stripe"></table>
+		<table id="table4" class="stripe"></table>
 
 
 			<!-- <thead>
