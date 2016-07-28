@@ -58,6 +58,7 @@ a.button-collapse.top-nav {
 
 .container{
     padding-top: 50px;
+    max-width: 100%
 }
 #container2{
     padding: 50px;

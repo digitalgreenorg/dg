@@ -25,18 +25,19 @@
 		<div class="nav-wrapper grey lighten-2">
 			<a href="#" class="brand-logo center black-text">LOOP</a>
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
-			<div class="right col s5">
+			<div class="left col s5">
 				<ul class="hide-on-med-and-down grey lighten-2">
 					<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
 					<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
 					<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
-					<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">payments</a></li>
+					<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">Payments</a></li>
 				</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
 				<li><a onclick="hide_nav()">Home</a></li>
 				<li><a onclick="show_nav('analytics')">Analytics</a></li>
 				<li><a onclick="show_nav('time_series')">Time Series</a></li>
+				<li><a onclick="hide_nav('payments')">Payments</a></li>
 			</ul>
 		</div>
 		<!-- </nav> -->
@@ -50,7 +51,6 @@
 					<li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
 					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
-
 				</ul>
 
 
@@ -332,13 +332,13 @@
 					<ul class="tabs">
 						<li class="tab col s6"><a class="center active blue-text" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
 						<li class="tab col s6"><a class="center blue-text" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
-						
+
 					</ul>
 				</div>
 				<div class="row" id="crop_prices_min_max">
 					<ul class="tabs">
 						<li class="tab col s12"><a class="center blue-text" id="aggregator_cost">Crop Prices</a></li>
-						
+
 					</ul>
 				</div>
 				<hr>
@@ -347,7 +347,7 @@
 
 			<div class="col s12 l6" id="aggregator_farmer_count">
 				<ul class="tabs">
-						<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume">Farmer Count</a></li>
+					<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume">Farmer Count</a></li>
 				</ul>
 				<hr>
 				<div id="farmers_count" class="col s12"></div>
@@ -387,45 +387,45 @@
 
 
 <div id="time_series_div">
-<div id="container2">
-	<div class="row">
-		<p class="col s3"></p>
-		<div class="input-field col s6">
-			<select id="time_series_frequency" class="initialized" >
+	<div id="container2">
+		<div class="row">
+			<p class="col s3"></p>
+			<div class="input-field col s6">
+				<select id="time_series_frequency" class="initialized">
 					<option value="1" selected>Daily</option>
 					<option value="7">7 Days</option>
 					<option value="15">15 Days</option>
 					<option value="30">30 Days</option>
-			</select>
+				</select>
+			</div>
+			<p class="col s3"></p>
 		</div>
-		<p class="col s3"></p>
-	</div>
-<div class="row">
-	<div class="col s12 m6">
-	<div id="detail_container_time_series"  style="height:350px"></div>
-	<div id="master_container_time_series" style="height:100px"></div>
-	</div>
-	<div class="col s12 m6">
-	<div id="detail_container_cpk"  style="height:350px"></div>
-	<div id="master_container_cpk" style="height:100px"></div>
-	</div>
-</div>
-	<div class="row">
-		<p class="col s3"></p>
-		<div class="input-field col s6">
-			<select id="crop_max_min_avg" class="initialized"></select>
+		<div class="row">
+			<div class="col s12 m6">
+				<div id="detail_container_time_series" style="height:350px"></div>
+				<div id="master_container_time_series" style="height:100px"></div>
+			</div>
+			<div class="col s12 m6">
+				<div id="detail_container_cpk" style="height:350px"></div>
+				<div id="master_container_cpk" style="height:100px"></div>
+			</div>
 		</div>
-		<p class="col s3"></p>
-	</div>
-	<div id="container3" class="col s12">
-	</div>
+		<div class="row">
+			<p class="col s3"></p>
+			<div class="input-field col s6">
+				<select id="crop_max_min_avg" class="initialized"></select>
+			</div>
+			<p class="col s3"></p>
+		</div>
+		<div id="container3" class="col s12">
+		</div>
 
-</div>
+	</div>
 </div>
 
 <div id="payments_div">
 
-	<div class="row">
+	<div class="row center">
 		<div class="input-field col s3">
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_from_date" placeholder="Start Date" type="text" class="datepicker black-text">
@@ -434,39 +434,36 @@
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_to_date" placeholder="End Date" type="text" class="datepicker black-text">
 		</div>
-
-		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="get_payments_data()">GET DATA</a>
-		
-
+		<a class="col s3 waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="get_payments_data()">GET DATA</a>
 	</div>
 
 	<div class="row" id="aggregator_payment_tab">
 		<p class="col s3"></p>
 		<div class="input-field col s6">
-			<select id="aggregator_payments" class="initialized" ></select>
+			<select id="aggregator_payments" class="initialized"></select>
 		</div>
 		<p class="col s3"></p>
 
 
-		<table  style="width:100%">
-		  <tr id="outliers">
-		  </tr>
+		<table style="width:100%">
+			<tr id="outliers">
+			</tr>
 		</table>
 
-		<table id="outliers_data" class="highlight bordered centered">	</table>
+		<table id="outliers_data" class="highlight bordered centered"> </table>
 
 		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="download_payments_data()">Download</a>
 	</div>
 
 
-		<table id="table2" class="stripe">
-		</table>
+	<table id="table2" class="stripe">
+	</table>
 
-		<table id="table3" class="stripe"></table>
-		<table id="table4" class="stripe"></table>
+	<table id="table3" class="stripe"></table>
+	<table id="table4" class="stripe"></table>
 
 
-			<!-- <thead>
+	<!-- <thead>
 				<tr>
 					<th data-field="integer">S.No</th>
 					<th data-field="name">Farmer</th>
