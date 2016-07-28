@@ -925,6 +925,16 @@ function() {
                             'src_attr': 'videos_seen',
                         }]
                     }
+                },
+                'mediator': {
+                    'animator': {
+                        'placeholder': 'id_animator',
+                        'name_field': 'name',
+                        'dependency': [{
+                            'source_form_element': 'village',
+                            'dep_attr': 'assigned_villages'
+                        }] 
+                    }
                 }
             }
         }
