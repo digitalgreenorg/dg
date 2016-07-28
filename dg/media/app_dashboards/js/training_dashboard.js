@@ -671,3 +671,71 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         series: data_dict
   });
 }
+
+function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3) {
+  container_obj.highcharts({
+    chart: {
+            zoomType: 'xy'
+        },
+    title: '',
+    xAxis: [{
+            categories: x_axis,
+            crosshair: true
+        }],
+    yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value} '+unit_1,
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            title: {
+                text: y_axis_1_text,
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            }
+        }, { // Secondary yAxis
+            title: {
+                text: y_axis_2_text,
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} '+unit_2,
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            opposite: true
+        }, { // Secondary yAxis
+            title: {
+                text: y_axis_3_text,
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            labels: {
+                format: '{value} '+unit_3,
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            opposite: true
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 120,
+            verticalAlign: 'top',
+            y: 100,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: data_dict
+  });
+}
