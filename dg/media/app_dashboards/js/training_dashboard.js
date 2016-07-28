@@ -294,7 +294,10 @@ function plot_trainerwise_data(data_json) {
   avg_score_dict['type'] = 'column';
   perc_score_dict['type'] = 'spline';
   trainer_trainings_dict['type'] = 'column';
-  trainer_mediators_dict['type'] = 'spline';
+  trainer_mediators_dict['type'] = 'column';
+
+  perc_score_dict['yAxis'] = 1;
+  trainer_trainings_dict['yAxis'] = 1;
 
   avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
   perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
@@ -311,16 +314,19 @@ function plot_trainerwise_data(data_json) {
     perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
     trainer_trainings_dict['data'][i] = data_json[i]['training__id__count'];
     trainer_mediators_dict['data'][i] = data_json[i]['participant__count'];
-    //70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
+   
+    //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
+    //TODO: Avg score per participant per trainer instead of how it is nows
+    //TODO: Make second graph line and stacked as per data instead of current graph
   }
 
-  trainer_scores_dict.push(avg_score_dict);
   trainer_scores_dict.push(perc_score_dict);
+  trainer_scores_dict.push(avg_score_dict);
   trainer_trainings_mediators_dict.push(trainer_trainings_dict);
   trainer_trainings_mediators_dict.push(trainer_mediators_dict);
 
-  plot_single_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "", "");
-  plot_single_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "", "")
+  plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
+  plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "Total Trainings", "", "");
 }
 
 function plot_questionwise_data(data_json){
