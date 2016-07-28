@@ -169,6 +169,7 @@ def crop_wise_data(request):
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
     ).aggregate(Sum('quantity'), Sum('amount'))
+    #remove total_volume_for_transport after entering past data and make changes in js accordingly
     total_volume_for_transport = CombinedTransaction.objects.filter(
         date__gte="2016-06-01").aggregate(Sum('quantity'))
     total_repeat_farmers = len(CombinedTransaction.objects.values(
@@ -176,6 +177,8 @@ def total_static_data(request):
     total_farmers_reached = len(
         CombinedTransaction.objects.values('farmer').distinct())
     total_cluster_reached = len(LoopUser.objects.all())
+
+    #remove date from filter
     total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").values('date','user_created__id','mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
@@ -387,9 +390,9 @@ def payments(request):
         **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True), Sum('gaddidar__commission'))
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
-    
+
     outlier_daily_data =  CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id', 'mandi__mandi_name','farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
-    
+
     transportation_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'user_created__id','transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name" ,'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share').annotate( Sum('transportation_cost'))
 

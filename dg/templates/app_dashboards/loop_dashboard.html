@@ -47,7 +47,7 @@
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="hide-on-med-and-down">
 				<ul class="left">
-					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text">Filters</a></li>
+					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}"/></a></li>
 					<li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
 					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
@@ -426,15 +426,17 @@
 <div id="payments_div">
 
 	<div class="row center">
-		<div class="input-field col s3">
+		<p class="col s3"></p>
+		<div class="input-field col s2">
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_from_date" placeholder="Start Date" type="text" class="datepicker black-text">
 		</div>
-		<div class="input-field col s3">
+		<div class="input-field col s2">
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_to_date" placeholder="End Date" type="text" class="datepicker black-text">
 		</div>
-		<a class="col s3 waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="get_payments_data()">GET DATA</a>
+		<a class="col s2 waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+		<p class="col s3"></p>
 	</div>
 
 	<div class="row" id="aggregator_payment_tab">
@@ -451,8 +453,9 @@
 		</table>
 
 		<table id="outliers_data" class="highlight bordered centered"> </table>
-
-	<!-- 	<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="download_payments_data()">Download</a> -->
+	</div>
+	<div class="row center">
+		<a id="download_payment_sheets" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="download_payments_data()">Download</a>
 	</div>
 
 
