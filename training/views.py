@@ -130,6 +130,6 @@ def state_wise_data(request):
     filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
+    state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True), Count('training__id', distinct=True))
     data = json.dumps(list(state_list))
     return HttpResponse(data)
