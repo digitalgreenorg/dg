@@ -313,6 +313,7 @@ function plot_trainerwise_data(data_json) {
     trainer_mediators_dict['data'][i] = data_json[i]['participant__count'];
     //70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
   }
+
   trainer_scores_dict.push(avg_score_dict);
   trainer_scores_dict.push(perc_score_dict);
   trainer_trainings_mediators_dict.push(trainer_trainings_dict);
@@ -325,19 +326,38 @@ function plot_trainerwise_data(data_json) {
 function plot_questionwise_data(data_json){
   //add language filter
   var x_axis = [];
-  var question_mediator_dict = [];
-  var question_percent_dict = [];
+  var question_dict = [];
+
+  var question_mediators_dict = {};
+  var question_percent_dict = {};
+
+  question_mediators_dict['name'] = 'Mediators Answered Correctly';
+  question_percent_dict['name'] = 'Percentage Answered Correctly';
+
+  question_mediators_dict['type'] = 'column';
+  question_percent_dict['type'] = 'spline';
+
+  question_percent_dict['yAxis'] = 1;
+
+  question_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
+  question_percent_dict['data'] = new Array(data_json.length).fill(0.0);
 
   for (i=0; i<data_json.length; i++) {
     x_axis.push(data_json[i]['question__text']);
-    //var avg = (data_json[i]['score__sum']/data_json[i]['participant__count'])*100;
-    //send 2 sep dicts with data for number and percent
+   
+    //TODO: send 2 sep dicts with data for number and percent
+    //TODO: English Only, General trend across questions using section and serial
+   
     var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
-    question_mediator_dict.push(data_json[i]['participant__count']);
-    question_percent_dict.push(parseFloat(perc.toFixed(2)));
+    question_mediators_dict['data'][i] = data_json[i]['participant__count'];
+    question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
   }
+  
+  question_dict.push(question_mediators_dict);
+  question_dict.push(question_percent_dict);
+  
 
-  plot_dual_axis_chart($("#question_mediator_data"), x_axis, question_percent_dict, question_mediator_dict, "Percentage Answered Correctly", "Mediators Correctly Answered", "%", "");
+  plot_dual_axis_chart($("#question_mediator_data"), x_axis, question_dict, "Mediators Answered Correctly", "Percentage Answered Correctly", "", "%");
 }
 
 function plot_statewise_data(data_json) {
@@ -566,7 +586,7 @@ function plot_single_axis_chart(container_obj, x_axis, data_dict, y_axis_text, u
   });
 }
 
-function plot_dual_axis_chart(container_obj, x_axis, y_axis_1_dict, y_axis_2_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2) {
+function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2) {
   container_obj.highcharts({
     chart: {
             zoomType: 'xy'
@@ -616,22 +636,6 @@ function plot_dual_axis_chart(container_obj, x_axis, y_axis_1_dict, y_axis_2_dic
             floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
-        series: [{
-            name: y_axis_2_text,
-            type: 'column',
-            yAxis: 1,
-            data: y_axis_2_dict,
-            tooltip: {
-                valueSuffix: unit_2
-            }
-
-        }, {
-            name: y_axis_1_text,
-            type: 'spline',
-            data: y_axis_1_dict,
-            tooltip: {
-                valueSuffix: unit_1
-            }
-        }]
+        series: data_dict
   });
 }
