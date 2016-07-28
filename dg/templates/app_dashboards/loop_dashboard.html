@@ -181,43 +181,43 @@
 		<div class="row">
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Clusters</span>
-					<h5 id="cluster_card"></h5>
+					<span class="card-title center">Clusters</span>
+					<!-- <h5 id="cluster_card"></h5> -->
 					<span id="cluster_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">Farmers</span>
-					<h5 id="total_farmers_card"></h5>
+					<!-- <h5 id="total_farmers_card"></h5> -->
 					<span id="total_farmers_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">Volume</span>
-					<h5 id="total_volume_card"></h5>
+					<!-- <h5 id="total_volume_card"></h5> -->
 					<span id="total_volume_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">Revenue</span>
-					<h5 id="revenue_card"></h5>
+					<!-- <h5 id="revenue_card"></h5> -->
 					<span id="revenue_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">Cost per KG</span>
-					<h5 id="total_expenditure_card"></h5>
+					<!-- <h5 id="total_expenditure_card"></h5> -->
 					<span id="total_expenditure_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">Sustainability</span>
-					<h5 id="sustainability_card"></h5>
+					<!-- <h5 id="sustainability_card"></h5> -->
 					<span id="sustainability_bullet"></span>
 				</div>
 			</div>
@@ -228,7 +228,7 @@
 	</div>
 
 	<div class="row card white darken-1">
-		<div id="recent_main" class="row">
+		<div id="recent_main" class="row" style="height:5px">
 			<div class="col s10">
 				<h5>Recent</h5>
 			</div>
@@ -241,7 +241,7 @@
 				</select>
 			</div>
 		</div>
-		<hr/>
+		<hr>
 		<div class="row">
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
@@ -328,10 +328,17 @@
 			</div>
 
 			<div class="col s12 l6">
-				<div class="row">
+				<div class="row" id="cpk_cost">
 					<ul class="tabs">
 						<li class="tab col s6"><a class="center active blue-text" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
 						<li class="tab col s6"><a class="center blue-text" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
+						
+					</ul>
+				</div>
+				<div class="row" id="crop_prices_min_max">
+					<ul class="tabs">
+						<li class="tab col s12"><a class="center blue-text" id="aggregator_cost">Crop Prices</a></li>
+						
 					</ul>
 				</div>
 				<hr>
@@ -339,7 +346,10 @@
 			</div>
 
 			<div class="col s12 l6" id="aggregator_farmer_count">
-				<h5 class="center-align" id="3rdgraph">Farmers Count</h5>
+				<ul class="tabs">
+						<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume">Farmer Count</a></li>
+				</ul>
+				<hr>
 				<div id="farmers_count" class="col s12"></div>
 			</div>
 
@@ -354,8 +364,8 @@
 				<div class="row">
 
 					<ul class="tabs">
-						<li class="tab col s6"><a class="center active blue-text" href="#" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
-						<li class="tab col s6"><a class="center blue-text" href="#" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
+						<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
+						<li class="tab col s6"><a class="center blue-text" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
 					</ul>
 				</div>
 				<hr>
@@ -391,11 +401,11 @@
 		<p class="col s3"></p>
 	</div>
 <div class="row">
-	<div class="col s6">
+	<div class="col s12 m6">
 	<div id="detail_container_time_series"  style="height:350px"></div>
 	<div id="master_container_time_series" style="height:100px"></div>
 	</div>
-	<div class="col s6">
+	<div class="col s12 m6">
 	<div id="detail_container_cpk"  style="height:350px"></div>
 	<div id="master_container_cpk" style="height:100px"></div>
 	</div>
@@ -416,16 +426,17 @@
 <div id="payments_div">
 
 	<div class="row">
-		<div class="input-field col s4">
+		<div class="input-field col s3">
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_from_date" placeholder="Start Date" type="text" class="datepicker black-text">
 		</div>
-		<div class="input-field col s4">
+		<div class="input-field col s3">
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_to_date" placeholder="End Date" type="text" class="datepicker black-text">
 		</div>
 
-		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="get_payments_data()">GET DATA</a>
+		
 
 	</div>
 
@@ -443,6 +454,8 @@
 		</table>
 
 		<table id="outliers_data" class="highlight bordered centered">	</table>
+
+		<a class="waves-effect waves-light black lighten-2 white-text btn modal-trigger center" onclick="download_payments_data()">Download</a>
 	</div>
 
 
