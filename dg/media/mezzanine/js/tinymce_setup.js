@@ -76,6 +76,7 @@ jQuery(function($) {
             convert_urls: false,
             menubar: false,
             statusbar: false,
+            forced_root_block: false,
             toolbar: ("insertfile undo redo | styleselect | bold italic | " +
                       "alignleft aligncenter alignright alignjustify | " +
                       "bullist numlist outdent indent | link image table | " +
