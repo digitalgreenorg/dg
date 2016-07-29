@@ -1,0 +1,9 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    <li><a href="{% url "admin:form_entries" object_id %}">{% trans "View entries" %}</a></li>
+    {{ block.super }}
+{% endblock %}
+
+
