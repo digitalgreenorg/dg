@@ -3668,6 +3668,7 @@ div.social-wrap button.googleplus {
 
 .user-dropdown {
     position: absolute;
+	margin-top: 68px;
     display: none;
     right: 0;
     background-color: white;
