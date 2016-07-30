@@ -66,6 +66,11 @@ function set_eventlistener() {
         }
     });
 
+    var today = new Date();
+    $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
+    $("#from_date").val(2015 + "-" + 01 + "-" + 01);
+
+
     set_filterlistener();
 
     //get data button click
