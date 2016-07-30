@@ -3,7 +3,7 @@ import logging
 
 from activities.models import Screening
 from coco.models import ServerLog
-from people.models import Person
+from people.models import Person, Animator
 from videos.models import Video
 from social_website.models import CronTimestamp, PersonVideoRecord
 from social_website.migration_functions import delete_person, delete_video, delete_animator, initial_personvideorecord, populate_farmers, populate_animators, update_questions_asked, update_website_video

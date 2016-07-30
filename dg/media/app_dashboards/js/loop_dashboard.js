@@ -78,6 +78,7 @@ function get_data_main() {
 }
 
 /* Progress Bar functions */
+
 function hide_progress_bar() {
     $('#progress_bar').hide()
 }
@@ -86,6 +87,7 @@ function show_progress_bar() {
     $('#progress_bar').show();
 }
 
+<<<<<<< HEAD
 // event listeners
 function set_eventlistener() {
 
@@ -97,6 +99,20 @@ function set_eventlistener() {
     $("#chart_option").change(function() {
         update_charts();
     });
+=======
+/* set event listeners here */
+
+function set_eventlistener(){
+
+  // to change the visibility of tables, charts on change in select
+  $("#table_option").change(function() {
+    update_tables();
+  });
+
+  $("#chart_option").change(function() {
+    update_charts();
+  });
+>>>>>>> origin/master
 
     $("#mFrequency").change(function(){
         days_to_average = $('#mFrequency :selected').val()
@@ -217,7 +233,7 @@ function show_charts() {
     $("#agg_crop_chart_div").show();
 }
 
-/*to change the visibility of tables , charts on change in select*/
+/* to change the visibility of tables, charts on change in select */
 
 function update_tables() {
     var opt = $('#table_option :selected').val();
@@ -241,6 +257,7 @@ function update_charts() {
     }
 }
 
+<<<<<<< HEAD
 
 function get_data() {
     var start_date = $('#from_date').val();
@@ -302,6 +319,52 @@ function get_data() {
         // getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
         get_aggregator_wise_data(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids, gaddidar_ids);
     }
+=======
+/* get data according to filters */
+
+function get_data(){
+  var start_date = $('#from_date').val();
+  var end_date = $('#to_date').val();
+
+  var aggregator_ids = [];
+  var village_ids = [];
+  var crop_ids = [];
+  var mandi_ids = [];
+
+  $('#aggregators').children().each(function(){
+    var aggregator_div = $(this).children()[1].firstChild;
+    if(aggregator_div.checked)
+      aggregator_ids.push(aggregator_div.getAttribute('data'));
+  });
+
+  $('#villages').children().each(function(){
+    var village_div = $(this).children()[1].firstChild;
+    if(village_div.checked)
+      village_ids.push(village_div.getAttribute('data'));
+  });
+
+  $('#crops').children().each(function(){
+    var crop_div = $(this).children()[1].firstChild;
+    if(crop_div.checked)
+      crop_ids.push(crop_div.getAttribute('data'));
+  });
+
+  $('#mandis').children().each(function(){
+    var mandi_div = $(this).children()[1].firstChild;
+    if(mandi_div.checked)
+      mandi_ids.push(mandi_div.getAttribute('data'));
+  });
+
+  if(Date.parse(start_date) > Date.parse(end_date)){
+    //$('.modal-trigger').leanModal();
+    $('#modal1').openModal();
+  }
+  else{
+    getvillagedata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getaggregatordata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+    getcropdata(start_date, end_date, aggregator_ids, village_ids, crop_ids, mandi_ids);
+  }
+>>>>>>> origin/master
 }
 
 /* Initializing filters */
@@ -531,6 +594,7 @@ function fillaggregatortable(data_json) {
 }
 
 /* Fill data for highcharts */
+<<<<<<< HEAD
 function plot_village_data(data_json, total_volume, total_amount) {
     var vol_data = [];
     var amt_data = [];
@@ -555,6 +619,33 @@ function plot_aggregator_data(data_json, total_volume, total_amount) {
     }
     plot_piechart($('#pie_vol2'), vol_data, 'VRP');
     plot_piechart($('#pie_amount2'), amt_data, 'VRP');
+=======
+
+function plot_village_data(data_json,total_volume,total_amount) {
+	var vol_data = [];
+	var amt_data = [];
+	for(var i=0 ; i<data_json.length; i++){
+		vol_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['quantity__sum']*100.0)/total_volume ])
+	}
+	for(var i=0 ; i<data_json.length; i++){
+		amt_data.push([data_json[i]['farmer__village__village_name'],  (data_json[i]['amount__sum']*100.0)/total_amount ])
+	}
+	plot_piechart($('#pie_vol'),vol_data,'Villages');
+	plot_piechart($('#pie_amount'),amt_data,'Villages');
+}
+
+function plot_aggregator_data(data_json,total_volume,total_amount){
+  var vol_data =[];
+  var amt_data = [];
+  for(var i=0 ; i<data_json.length; i++){
+    vol_data.push([data_json[i]['user_name'],  (data_json[i]['quantity__sum']*100.0)/total_volume ])
+  }
+  for(var i=0 ; i<data_json.length; i++){
+    amt_data.push([data_json[i]['user_name'],  (data_json[i]['amount__sum']*100.0)/total_amount ])
+  }
+  plot_piechart($('#pie_vol2'),vol_data,'VRP');
+  plot_piechart($('#pie_amount2'),amt_data,'VRP');
+>>>>>>> origin/master
 
 }
 

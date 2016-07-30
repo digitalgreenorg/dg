@@ -661,10 +661,6 @@ function() {
                         'source_form_element': 'village',
                         'dep_attr': 'village'
                     }],
-                    'filter': {
-                        attr: 'group',
-                        value: null
-                    }
                 },
                 farmers_attendance: {
                     dependency: [{
@@ -858,10 +854,6 @@ function() {
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }],
-                        'filter': {
-                            attr: 'group',
-                            value: null
-                        }
                     },
                     farmers_attendance: {
                         dependency: [{
@@ -932,6 +924,16 @@ function() {
                             'dep_attr': 'id',
                             'src_attr': 'videos_seen',
                         }]
+                    }
+                },
+                'mediator': {
+                    'animator': {
+                        'placeholder': 'id_animator',
+                        'name_field': 'name',
+                        'dependency': [{
+                            'source_form_element': 'village',
+                            'dep_attr': 'assigned_villages'
+                        }] 
                     }
                 }
             }

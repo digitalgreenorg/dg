@@ -42,6 +42,7 @@ TEMPLATE_LOADERS = (
 FILE_UPLOAD_PERMISSIONS = 0644
 
 STATIC_URL = '/media/'
+STATIC_ROOT = "/static/"
 STATICFILES_DIRS = (
    # Put strings here, like "/home/html/static" or "C:/www/django/static".
    # Always use forward slashes, even on Windows.
