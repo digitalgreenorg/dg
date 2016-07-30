@@ -64,7 +64,7 @@ def save_screening_data(xml_tree):
                 screening_data['start_time'] = temp_time.time()
 
                 try:
-                    ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], end_time=screening_data['end_time'], village_id=screening_data['selected_village'])
+                    ScreeningObject = Screening.objects.get(animator_id=screening_data['selected_mediator'], date=screening_data['date'], start_time=screening_data['start_time'], village_id=screening_data['selected_village'])
                     status['screening'] = 1
                     # add only if group doesn't exist
                     for group in screening_data['selected_group'].split(" "):
@@ -87,7 +87,6 @@ def save_screening_data(xml_tree):
                 except Screening.DoesNotExist as e:
                     screening = Screening(date=screening_data['date'],
                                           start_time=screening_data['start_time'],
-                                          end_time=screening_data['end_time'],
                                           location='Mobile',
                                           village_id=screening_data['selected_village'],
                                           animator_id=screening_data['selected_mediator'],
