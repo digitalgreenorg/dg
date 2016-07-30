@@ -162,7 +162,6 @@ function get_filter_data() {
        .done(function( data ) {
            data_json = JSON.parse(data);
            fill_trainer_filter(data_json.trainers);
-           fill_question_filter(data_json.questions);
            fill_state_filter(data_json.states);
            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
            get_data();
@@ -306,31 +305,43 @@ function plot_questionwise_data(data_json) {
   var question_dict = [];
 
   var question_mediators_dict = {};
+  var question_mediators_passed_dict = {};
   var question_percent_dict = {};
 
-  question_mediators_dict['name'] = 'Mediators Answered Correctly';
+  question_mediators_dict['name'] = 'Total Mediators';
+  question_mediators_passed_dict['name'] = "Mediators Answered Correctly"
   question_percent_dict['name'] = 'Percentage Answered Correctly';
 
   question_mediators_dict['type'] = 'column';
+  question_mediators_passed_dict['type'] = 'column';
   question_percent_dict['type'] = 'spline';
 
   question_percent_dict['yAxis'] = 1;
 
-  question_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
-  question_percent_dict['data'] = new Array(data_json.length).fill(0.0);
+  // question_mediators_dict['stacking'] = 'normal'
+  // question_mediators_passed_dict['stacking'] = 'normal'
 
-  for (i=0; i<data_json.length; i++) {
-    x_axis.push(data_json[i]['question__text']);
-   
-    //TODO: send 2 sep dicts with data for number and percent
-    //TODO: English Only, General trend across questions using section and serial
-   
-    var perc = (data_json[i]['score__sum']/data_json[i]['score__count'])*100;
-    question_mediators_dict['data'][i] = data_json[i]['participant__count'];
-    question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
+  question_mediators_dict['data'] = new Array(data_json.length/2).fill(0.0);
+  question_mediators_passed_dict['data'] = new Array(data_json.length/2).fill(0.0);
+  question_percent_dict['data'] = new Array(data_json.length/2).fill(0.0);
+
+  for (i=0; i<data_json.length/2; i++) {
+    if (data_json[i]['question__language__id'] == 2) {
+      x_axis.push(data_json[i]['question__text']);
+      var total_score = data_json[i]['score__sum'] + data_json[i+15]['score__sum'];
+      var total_count = data_json[i]['score__count'] + data_json[i+15]['score__count'];
+      var perc = total_score/total_count*100;
+      question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
+      question_mediators_dict['data'][i] = data_json[i]['participant__count'] + data_json[i+15]['participant__count'];
+      var eng_pass = data_json[i]['participant__count']*data_json[i]['score__sum']/data_json[i]['score__count'];
+      var hin_pass = data_json[i+15]['participant__count']*data_json[i+15]['score__sum']/data_json[i+15]['score__count'];
+      question_mediators_passed_dict['data'][i] = parseInt(eng_pass+hin_pass);
+
+    }
   }
   
   question_dict.push(question_mediators_dict);
+  question_dict.push(question_mediators_passed_dict);
   question_dict.push(question_percent_dict);
   
 
