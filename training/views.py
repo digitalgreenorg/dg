@@ -54,8 +54,7 @@ def filter_data(request):
 def trainer_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    trainer_ids = request.GET.getlist('trainer_ids[]')
-    question_ids = request.GET.getlist('question_ids[]')
+    trainer_ids = request.GET.getlist('trainer_ids[]') 
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     # Check for module (Pico Seekho OR Documentation)
@@ -64,7 +63,6 @@ def trainer_wise_data(request):
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'), Count('training__id', distinct=True))
@@ -75,7 +73,6 @@ def question_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
-    question_ids = request.GET.getlist('question_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
@@ -83,10 +80,9 @@ def question_wise_data(request):
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    question_list = Score.objects.filter(**filter_args).values('question__text').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
+    question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
     data = json.dumps(list(question_list))
     return HttpResponse(data)
 
@@ -94,7 +90,6 @@ def mediator_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
-    question_ids = request.GET.getlist('question_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
@@ -102,7 +97,6 @@ def mediator_wise_data(request):
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
@@ -119,7 +113,6 @@ def state_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     trainer_ids = request.GET.getlist('trainer_ids[]')
-    question_ids = request.GET.getlist('question_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
@@ -127,7 +120,6 @@ def state_wise_data(request):
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
     filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["question__id__in"] = question_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True), Count('training__id', distinct=True))

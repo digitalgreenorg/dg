@@ -74,21 +74,6 @@ function set_filterlistener() {
     }
   });
 
-  $('#question_all').on('change', function(e) {
-    if (this.checked) {
-      $('#questions').children().each(function() {
-          var questions_all = $(this).children()[1].firstChild;
-          questions_all.checked = true;
-         });
-    }
-    else {
-      $('#questions').children().each(function() {
-          var questions_all = $(this).children()[1].firstChild;
-          questions_all.checked = false;
-         });
-    }
-  });
-
   $('#state_all').on('change', function(e) {
     if (this.checked) {
       $('#states').children().each(function() {
@@ -145,19 +130,12 @@ function get_data(){
 	var end_date = $('#to_date').val();
 
   var trainer_ids = [];
-  var question_ids = [];
   var state_ids = [];
 
   $('#trainers').children().each(function(){
     var trainer_div = $(this).children()[1].firstChild;
     if(trainer_div.checked)
       trainer_ids.push(trainer_div.getAttribute('data'));
-  });
-
-  $('#questions').children().each(function(){
-    var question_div = $(this).children()[1].firstChild;
-    if(question_div.checked)
-      question_ids.push(question_div.getAttribute('data'));
   });
 
   $('#states').children().each(function() {
@@ -170,10 +148,10 @@ function get_data(){
 		//$('.modal-trigger').leanModal();
 		$('#modal1').openModal();
   }
-  else{
-    gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids);
-    getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids);
-    getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids);
+  else {
+    gettrainerdata(start_date, end_date, trainer_ids, state_ids);
+    getquestiondata(start_date, end_date, trainer_ids, state_ids);
+    getstatedata(start_date, end_date, trainer_ids, state_ids);
   }
 }
 
@@ -197,12 +175,6 @@ function fill_trainer_filter(data_json) {
     });
 }
 
-function fill_question_filter(data_json) {
-    $.each(data_json, function (index, data) {
-        create_filter($('#questions'), data.id, data.text, true);
-    });
-}
-
 function fill_state_filter(data_json) {
     $.each(data_json, function (index, data) {
         create_filter($('#states'), data.id, data.state_name, true)
@@ -221,9 +193,9 @@ function create_filter(tbody_obj, id, name, checked) {
 
 /* ajax to get json */
 
-function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_ids) {
+function gettrainerdata(start_date, end_date, trainer_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
+  $.get( "/training/trainer_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'state_ids[]':state_ids})
            .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -231,9 +203,9 @@ function gettrainerdata(start_date, end_date, trainer_ids, question_ids, state_i
            });
 }
 
-function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_ids) {
+function getquestiondata(start_date, end_date, trainer_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
+  $.get( "/training/question_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'state_ids[]':state_ids})
            .done(function(data) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -241,9 +213,9 @@ function getquestiondata(start_date, end_date, trainer_ids, question_ids, state_
            });
 }
 
-function getstatedata(start_date, end_date, trainer_ids, question_ids, state_ids) {
+function getstatedata(start_date, end_date, trainer_ids, state_ids) {
   show_progress_bar();
-  $.get( "/training/state_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'question_ids[]': question_ids, 'state_ids[]':state_ids})
+  $.get( "/training/state_wise_data/", {'start_date': start_date, 'end_date': end_date, 'trainer_ids[]': trainer_ids, 'state_ids[]':state_ids})
            .done(function( data ) {
                data_json = JSON.parse(data);
                hide_progress_bar();
@@ -316,7 +288,7 @@ function plot_trainerwise_data(data_json) {
     trainer_mediators_dict['data'][i] = data_json[i]['participant__count'];
    
     //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-    //TODO: Avg score per participant per trainer instead of how it is nows
+    //TODO: Avg score per participant per trainer instead of how it is now
     //TODO: Make second graph line and stacked as per data instead of current graph
   }
 
@@ -329,8 +301,7 @@ function plot_trainerwise_data(data_json) {
   plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "Total Trainings", "", "");
 }
 
-function plot_questionwise_data(data_json){
-  //add language filter
+function plot_questionwise_data(data_json) {
   var x_axis = [];
   var question_dict = [];
 
@@ -367,6 +338,11 @@ function plot_questionwise_data(data_json){
 }
 
 function plot_statewise_data(data_json) {
+
+  //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
+  //TODO: Avg score per participant per trainer instead of how it is now
+  //TODO: Make second graph line and stacked 3 axis as per data instead of current graph
+
   var x_axis = [];
   var state_scores_dict = [];
   var state_trainings_mediators_dict = [];
