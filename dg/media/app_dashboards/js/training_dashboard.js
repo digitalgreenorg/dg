@@ -224,10 +224,12 @@ function getstatedata(start_date, end_date, trainer_ids, state_ids) {
 
 /* Table Generating UI Functions - Fill data in table */
 
-function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) {
+function fill_top_boxes(num_trainings, num_participants, num_pass) {
     var num_passed = 0;
     var num_failed = 0;
+    var total_score = 0;
     for (i=0; i< num_pass.length; i++) {
+        total_score = total_score + num_pass[i]['score__sum'];
         if (num_pass[i]['score__count'] != 0) {
             if (num_pass[i]['score__sum']/num_pass[i]['score__count'] >= 0.7) {
                 num_passed+=1;
@@ -238,11 +240,12 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_farmers) 
         }
     }      
     var num_pass_percent = num_passed/(num_passed+num_failed)*100;
+    var avg_score = total_score/num_pass.length;
 
     document.getElementById('num_trainings').innerHTML = num_trainings;
     document.getElementById("mediators_trained").innerHTML = num_participants;
+    document.getElementById("average_score").innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById("pass_percent").innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    document.getElementById("farmers_reached").innerHTML = num_farmers;
 }
 
 /* Fill data for highcharts */

@@ -45,9 +45,8 @@ def filter_data(request):
     num_trainings = Training.objects.values('date','place','trainer').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1]).values('participant').annotate(Sum('score'), Count('score'))
-    num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
-    # num_farmers = 28345
-    data_dict = {'trainers': list(trainers), 'questions': list(questions), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_farmers': num_farmers}
+    #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
+    data_dict = {'trainers': list(trainers), 'questions': list(questions), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
