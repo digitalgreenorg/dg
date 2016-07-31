@@ -85,6 +85,20 @@ function set_eventlistener() {
 /* event listeners for filters */
 
 function set_filterlistener() {
+    $('#assessment_all').on('change', function(e) {
+        if (this.checked) {
+            $('#assessments').children().each(function() {
+                var assessments_all = $(this).children()[1].firstChild;
+                assessments_all.checked = true;
+            });
+        } else {
+            $('#assessments').children().each(function() {
+                var assessments_all = $(this).children()[1].firstChild;
+                assessments_all.checked = false;
+            });
+        }
+    });
+
     $('#trainer_all').on('change', function(e) {
         if (this.checked) {
             $('#trainers').children().each(function() {
@@ -134,8 +148,15 @@ function get_data() {
     var start_date = $('#from_date').val();
     var end_date = $('#to_date').val();
 
+    var assessment_ids = [];
     var trainer_ids = [];
     var state_ids = [];
+
+    $('#assessments').children().each(function() {
+        var assessment_div = $(this).children()[1].firstChild;
+        if (assessment_div.checked)
+            assessment_ids.push(trainer_div.getAttribute('data'));
+    });
 
     $('#trainers').children().each(function() {
         var trainer_div = $(this).children()[1].firstChild;
@@ -153,9 +174,9 @@ function get_data() {
         //$('.modal-trigger').leanModal();
         $('#modal1').openModal();
     } else {
-        gettrainerdata(start_date, end_date, trainer_ids, state_ids);
-        getquestiondata(start_date, end_date, trainer_ids, state_ids);
-        getstatedata(start_date, end_date, trainer_ids, state_ids);
+        gettrainerdata(start_date, end_date, trainer_ids, state_ids, assessment_ids);
+        getquestiondata(start_date, end_date, trainer_ids, state_ids, assessment_ids);
+        getstatedata(start_date, end_date, trainer_ids, state_ids, assessment_ids);
     }
 }
 
@@ -165,11 +186,18 @@ function get_filter_data() {
     $.get("/training/filter_data/", {})
         .done(function(data) {
             data_json = JSON.parse(data);
+            fill_assessment_filter(data_json.assessments);
             fill_trainer_filter(data_json.trainers);
             fill_state_filter(data_json.states);
             fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
             get_data();
         });
+}
+
+function fill_assessment_filter(data_json) {
+    $.each(data_json, function(index, data) {
+        create_filter($('#assessments'), data.id, data.name, true);
+    });
 }
 
 function fill_trainer_filter(data_json) {
@@ -196,13 +224,14 @@ function create_filter(tbody_obj, id, name, checked) {
 
 /* ajax to get json */
 
-function gettrainerdata(start_date, end_date, trainer_ids, state_ids) {
+function gettrainerdata(start_date, end_date, trainer_ids, state_ids, assessment_ids) {
     show_progress_bar();
     $.get("/training/trainer_wise_data/", {
             'start_date': start_date,
             'end_date': end_date,
             'trainer_ids[]': trainer_ids,
-            'state_ids[]': state_ids
+            'state_ids[]': state_ids,
+            'assessment_ids[]': assessment_ids
         })
         .done(function(data) {
             data_json = JSON.parse(data);
@@ -211,13 +240,14 @@ function gettrainerdata(start_date, end_date, trainer_ids, state_ids) {
         });
 }
 
-function getquestiondata(start_date, end_date, trainer_ids, state_ids) {
+function getquestiondata(start_date, end_date, trainer_ids, state_ids, assessment_ids) {
     show_progress_bar();
     $.get("/training/question_wise_data/", {
             'start_date': start_date,
             'end_date': end_date,
             'trainer_ids[]': trainer_ids,
-            'state_ids[]': state_ids
+            'state_ids[]': state_ids,
+            'assessment_ids[]': assessment_ids
         })
         .done(function(data) {
             data_json = JSON.parse(data);
@@ -226,13 +256,14 @@ function getquestiondata(start_date, end_date, trainer_ids, state_ids) {
         });
 }
 
-function getstatedata(start_date, end_date, trainer_ids, state_ids) {
+function getstatedata(start_date, end_date, trainer_ids, state_ids, assessment_ids) {
     show_progress_bar();
     $.get("/training/state_wise_data/", {
             'start_date': start_date,
             'end_date': end_date,
             'trainer_ids[]': trainer_ids,
-            'state_ids[]': state_ids
+            'state_ids[]': state_ids,
+            'assessment_ids[]': assessment_ids
         })
         .done(function(data) {
             data_json = JSON.parse(data);
