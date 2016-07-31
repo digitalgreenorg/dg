@@ -66,7 +66,9 @@ def trainer_wise_data(request):
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').order_by('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'), Count('training__id', distinct=True))
-    data = json.dumps(list(trainer_list))
+    mediator_list = Score.objects.filter(**filter_args).values('training__trainer__name', 'participant').order_by('training__trainer__name').annotate(Sum('score'), Count('score'))
+    data_dict = {'trainer_list': list(trainer_list), 'mediator_list': list(mediator_list)}
+    data = json.dumps(data_dict)
     return HttpResponse(data)
 
 def question_wise_data(request):
