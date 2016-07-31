@@ -89,31 +89,6 @@ def question_wise_data(request):
     data = json.dumps(list(question_list))
     return HttpResponse(data)
 
-def mediator_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    assessment_ids = request.GET.getlist('assessment_ids[]')
-    trainer_ids = request.GET.getlist('trainer_ids[]')
-    state_ids = request.GET.getlist('state_ids[]')
-    filter_args = {}
-    if(start_date !=""):
-        filter_args["training__date__gte"] = start_date
-    if(end_date != ""):
-        filter_args["training__date__lte"] = end_date
-    filter_args["training__assessment__id__in"] = assessment_ids
-    filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["participant__district__state__id__in"] = state_ids
-    filter_args["score__in"] = [1, 0]
-    mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
-    mediator_data = {}
-    for i in mediator_list:
-        screening_list = Screening.objects.filter(animator__id = i['participant'])
-        #adoption_list = PersonAdoptPractice.objects.filter()
-        mediator_data[i['participant']] = list(screening_list)
-    #print mediator_data
-    data = json.dumps(mediator_data, cls= DjangoJSONEncoder)
-    return HttpResponse(data)
-
 def state_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
