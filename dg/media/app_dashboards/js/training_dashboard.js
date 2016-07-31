@@ -8,7 +8,6 @@ function initialize() {
     $('select').material_select();
     get_filter_data();
     set_eventlistener();
-    // update_tables();
     // update_charts();
     $(".button-collapse").sideNav();
 }
@@ -70,7 +69,6 @@ function set_eventlistener() {
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     $("#from_date").val(2015 + "-" + 01 + "-" + 01);
 
-
     set_filterlistener();
 
     //get data button click
@@ -116,36 +114,19 @@ function set_filterlistener() {
     });
 }
 
-/* show charts */
-
-function show_charts() {
-    $("#crop_chart_div").show();
-    $("#agg_crop_chart_div").show();
-}
-
 /* to change the visibility of tables, charts on change in select */
 
-function update_tables() {
-    var opt = $('#table_option :selected').val();
-    if (opt == 1) {
-        $("#village_table").show();
-        $("#mediator_table").hide();
-    } else {
-        $("#mediator_table").show();
-        $("#village_table").hide();
-    }
-}
-
-function update_charts() {
-    var opt = $('#chart_option :selected').val();
-    if (opt == 1) {
-        $("#crop_chart_div").show();
-        $("#agg_crop_chart_div").hide();
-    } else {
-        $("#agg_crop_chart_div").show();
-        $("#crop_chart_div").hide();
-    }
-}
+// function update_charts() {
+//     var opt = $('#assessment_option :selected').val();
+//     if(opt == 1){
+//       $("#pico_assessment").show();
+//       $("#documentation_assessment").hide();
+//     }
+//     else{
+//       $("#documentation_assessment").show();
+//       $("#pico_assessment").hide();
+//     }
+// }
 
 /* get data according to filters */
 
