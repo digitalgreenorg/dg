@@ -27,13 +27,13 @@ function show_progress_bar() {
 function set_eventlistener() {
 
     // to change the visibility of tables, charts on change in select
-    $("#table_option").change(function() {
-        update_tables();
-    });
+    // $("#table_option").change(function() {
+    //     update_tables();
+    // });
 
-    $("#chart_option").change(function() {
-        update_charts();
-    });
+    // $("#chart_option").change(function() {
+    //     update_charts();
+    // });
 
     // //datepicker
     // $('.datepicker').pickadate({
@@ -85,9 +85,7 @@ function set_eventlistener() {
 /* event listeners for filters */
 
 function set_filterlistener() {
-    
-    // TODO: Only one should be selected in Assessment filter
-
+  
     $('#trainer_all').on('change', function(e) {
         if (this.checked) {
             $('#trainers').children().each(function() {
@@ -363,7 +361,6 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
-        // TODO: Total trainings yaxis, total mediators and mediators above 70% yaxis, % mediators above 70% yaxis
         plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
     }
 }
@@ -462,10 +459,6 @@ function plot_statewise_data(state_list, mediator_list) {
         document.getElementById('state_training_data').innerHTML = ''
     }
     else {
-        //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-        //TODO: Avg score per participant per trainer instead of how it is now
-        //TODO: Make second graph line and stacked 3 axis as per data instead of current graph
-
         var x_axis = [];
         var state_scores_dict = [];
         var state_trainings_mediators_dict = [];
@@ -525,10 +518,6 @@ function plot_statewise_data(state_list, mediator_list) {
 
             var pass_perc = state_mediators_pass_dict['data'][i]/state_mediators_dict['data'][i]*100;
             state_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
-
-            //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-            //TODO: Avg score per participant per trainer instead of how it is nows
-            //TODO: Make second graph line and stacked as per data instead of current graph
         }
 
         state_scores_dict.push(perc_score_dict);
