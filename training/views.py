@@ -9,7 +9,7 @@ from django.db.models import Count, Min, Sum, Avg, Max
 from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
-from models import Training, Score, Trainer, Question
+from models import Training, Score, Trainer, Question, Assessment
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
 from geographies.models import State
 
@@ -38,13 +38,13 @@ def dashboard(request):
     return render(request, 'app_dashboards/training_dashboard.html')
 
 def filter_data(request):
+    assessments = Assessment.objects.values('id', 'name')
     trainers = Trainer.objects.values('id', 'name')
-    questions = Question.objects.values('id', 'text')
     states = State.objects.values('id','state_name')
-    participants = Score.objects.values_list('participant__id', flat=True).distinct()
-    num_trainings = Training.objects.values('date','place','trainer').distinct().count()
+    participants = Score.objects.filter(assessment__id=1).values_list('participant__id', flat=True).distinct()
+    num_trainings = Training.objects.filter(assessment__id=1).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
-    num_pass = Score.objects.filter(score__in=[0,1]).values('participant').annotate(Sum('score'), Count('score'))
+    num_pass = Score.objects.filter(score__in=[0,1], assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
     #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
     data_dict = {'trainers': list(trainers), 'questions': list(questions), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
