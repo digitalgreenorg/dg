@@ -314,7 +314,7 @@ function plot_trainerwise_data(data_json) {
         trainer_mediators_dict['type'] = 'column';
 
         perc_score_dict['yAxis'] = 1;
-        trainer_trainings_dict['yAxis'] = 1;
+        trainer_mediators_dict['yAxis'] = 1;
 
         avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
         perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
@@ -331,19 +331,16 @@ function plot_trainerwise_data(data_json) {
             perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
             trainer_trainings_dict['data'][i] = data_json[i]['training__id__count'];
             trainer_mediators_dict['data'][i] = data_json[i]['participant__count'];
-
-            //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-            //TODO: Avg score per participant per trainer instead of how it is now
-            //TODO: Make second graph line and stacked as per data instead of current graph
         }
 
         trainer_scores_dict.push(perc_score_dict);
         trainer_scores_dict.push(avg_score_dict);
-        trainer_trainings_mediators_dict.push(trainer_trainings_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_dict);
+        trainer_trainings_mediators_dict.push(trainer_trainings_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
-        plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "Total Trainings", "", "");
+        // Total trainings axis, total mediators and mediators above 70% axis, % mediators above 70% axis
+        plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Total Trainings", "Mediators Trained", "", "");
     }
 }
 
@@ -397,7 +394,38 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_dict.push(question_percent_dict);
         
         } else {
-        // Documentation Module 
+            var question_mediators_dict = {};
+            var question_mediators_passed_dict = {};
+            var question_percent_dict = {};
+
+            question_mediators_dict['name'] = 'Total Mediators';
+            question_mediators_passed_dict['name'] = "Mediators Answered Correctly"
+            question_percent_dict['name'] = 'Percentage Answered Correctly';
+
+            question_mediators_dict['type'] = 'column';
+            question_mediators_passed_dict['type'] = 'column';
+            question_percent_dict['type'] = 'spline';
+
+            question_percent_dict['yAxis'] = 1;
+
+            question_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
+            question_mediators_passed_dict['data'] = new Array(data_json.length).fill(0.0);
+            question_percent_dict['data'] = new Array(data_json.length).fill(0.0);
+
+            for (i = 0; i < data_json.length; i++) {
+                x_axis.push(data_json[i]['question__text']);
+                var total_score = data_json[i]['score__sum'];
+                var total_count = data_json[i]['score__count'];
+                var perc = total_score / total_count * 100;
+                question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
+                question_mediators_dict['data'][i] = data_json[i]['participant__count'];
+                var med_pass = data_json[i]['participant__count'] * data_json[i]['score__sum'] / data_json[i]['score__count'];
+                question_mediators_passed_dict['data'][i] = parseInt(med_pass);   
+            }
+
+            question_dict.push(question_mediators_dict);
+            question_dict.push(question_mediators_passed_dict);
+            question_dict.push(question_percent_dict);
         }
 
         plot_dual_axis_chart($("#question_mediator_data"), x_axis, question_dict, "Mediators Answered Correctly", "Percentage Answered Correctly", "", "%");
