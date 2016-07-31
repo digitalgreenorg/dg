@@ -41,10 +41,10 @@ def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')
     trainers = Trainer.objects.values('id', 'name')
     states = State.objects.values('id','state_name')
-    participants = Score.objects.filter(assessment__id=1).values_list('participant__id', flat=True).distinct()
+    participants = Score.objects.filter(training__assessment__id=1).values_list('participant__id', flat=True).distinct()
     num_trainings = Training.objects.filter(assessment__id=1).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
-    num_pass = Score.objects.filter(score__in=[0,1], assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
+    num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
     #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
     data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
@@ -53,6 +53,7 @@ def filter_data(request):
 def trainer_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]') 
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
@@ -61,10 +62,10 @@ def trainer_wise_data(request):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
+    filter_args["training__assessment__id__in"] = assessment_ids
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    filter_args["training__assessment__id__in"] = assessment_ids
     trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'), Count('training__id', distinct=True))
     data = json.dumps(list(trainer_list))
     return HttpResponse(data)
@@ -72,6 +73,7 @@ def trainer_wise_data(request):
 def question_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
@@ -79,10 +81,10 @@ def question_wise_data(request):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
+    filter_args["training__assessment__id__in"] = assessment_ids
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    filter_args["training__assessment__id__in"] = assessment_ids
     question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id').order_by('-question__id').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
     data = json.dumps(list(question_list))
     return HttpResponse(data)
@@ -90,6 +92,7 @@ def question_wise_data(request):
 def mediator_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
@@ -97,10 +100,10 @@ def mediator_wise_data(request):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
+    filter_args["training__assessment__id__in"] = assessment_ids
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    filter_args["training__assessment__id__in"] = assessment_ids
     mediator_list = Score.objects.filter(**filter_args).values('participant').distinct()
     mediator_data = {}
     for i in mediator_list:
@@ -114,6 +117,7 @@ def mediator_wise_data(request):
 def state_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
@@ -121,10 +125,10 @@ def state_wise_data(request):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
+    filter_args["training__assessment__id__in"] = assessment_ids
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    filter_args["training__assessment__id__in"] = assessment_ids
     state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True), Count('training__id', distinct=True))
     data = json.dumps(list(state_list))
     return HttpResponse(data)

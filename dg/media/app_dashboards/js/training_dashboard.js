@@ -155,7 +155,7 @@ function get_data() {
     $('#assessments').children().each(function() {
         var assessment_div = $(this).children()[1].firstChild;
         if (assessment_div.checked)
-            assessment_ids.push(trainer_div.getAttribute('data'));
+            assessment_ids.push(assessment_div.getAttribute('data'));
     });
 
     $('#trainers').children().each(function() {
