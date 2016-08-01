@@ -85,7 +85,7 @@ function set_eventlistener() {
 /* event listeners for filters */
 
 function set_filterlistener() {
-    
+
     // TODO: Only one should be selected in Assessment filter
 
     $('#trainer_all').on('change', function(e) {
@@ -185,27 +185,33 @@ function get_filter_data() {
 
 function fill_assessment_filter(data_json) {
     $.each(data_json, function(index, data) {
-        create_filter($('#assessments'), data.id, data.name, true);
+        create_filter($('#assessments'), data.id, data.name, 'radio');
     });
+
+    $('#assessments tr:eq(0)').children()[1].firstChild.checked = true;
 }
 
 function fill_trainer_filter(data_json) {
     $.each(data_json, function(index, data) {
-        create_filter($('#trainers'), data.id, data.name, true);
+        create_filter($('#trainers'), data.id, data.name, 'checkbox');
     });
 }
 
 function fill_state_filter(data_json) {
     $.each(data_json, function(index, data) {
-        create_filter($('#states'), data.id, data.state_name, true)
+        create_filter($('#states'), data.id, data.state_name, 'checkbox')
     });
 }
 
-function create_filter(tbody_obj, id, name, checked) {
+function create_filter(tbody_obj, id, name, type) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
     row.append(td_name);
-    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+    if (type == 'checkbox') {
+        var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" /><label for="' + name + id + '"></label>';
+    } else if (type == 'radio') {
+        var checkbox_html = '<input type="radio" class="with-gap" name="assessment" data=' + id + ' id="' + name + id + '"/><label for="' + name + id + '"></label>';
+    }
     var td_checkbox = $('<td>').html(checkbox_html);
     row.append(td_checkbox);
     tbody_obj.append(row);
@@ -292,8 +298,7 @@ function plot_trainerwise_data(data_json) {
     if (data_json.length == 0) {
         document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('trainer_training_data').innerHTML = ''
-    }
-    else {
+    } else {
         var x_axis = [];
         var trainer_scores_dict = [];
         var trainer_trainings_mediators_dict = [];
@@ -347,8 +352,7 @@ function plot_trainerwise_data(data_json) {
 function plot_questionwise_data(data_json, assessment_ids) {
     if (data_json.length == 0) {
         document.getElementById('question_mediator_data').innerHTML = 'No data for this Assessment!'
-    }
-    else {
+    } else {
         var x_axis = [];
         var question_dict = [];
 
@@ -392,7 +396,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_dict.push(question_mediators_dict);
             question_dict.push(question_mediators_passed_dict);
             question_dict.push(question_percent_dict);
-        
+
         } else {
             var question_mediators_dict = {};
             var question_mediators_passed_dict = {};
@@ -420,7 +424,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
                 question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
                 question_mediators_dict['data'][i] = data_json[i]['participant__count'];
                 var med_pass = data_json[i]['participant__count'] * data_json[i]['score__sum'] / data_json[i]['score__count'];
-                question_mediators_passed_dict['data'][i] = parseInt(med_pass);   
+                question_mediators_passed_dict['data'][i] = parseInt(med_pass);
             }
 
             question_dict.push(question_mediators_dict);
@@ -436,8 +440,7 @@ function plot_statewise_data(data_json) {
     if (data_json.length == 0) {
         document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('state_training_data').innerHTML = ''
-    }
-    else {
+    } else {
         //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
         //TODO: Avg score per participant per trainer instead of how it is now
         //TODO: Make second graph line and stacked 3 axis as per data instead of current graph
