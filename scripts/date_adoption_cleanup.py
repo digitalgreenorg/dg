@@ -3,7 +3,8 @@ from os import path
 import csv
 from django.db.models import F
 
-proj_path = "C:\Users\Server-Tech\Documents\dg_clone"
+proj_path = "/home/ubuntu/code/dg_coco_test/dg"
+# proj_path = "C:\Users\Server-Tech\Documents\dg_clone"
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
