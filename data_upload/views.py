@@ -154,7 +154,7 @@ def handle_zip_download(request):
     zip_file.close() 
      
     resp = HttpResponse(buffer.getvalue(), 
-                        mimetype = "application/x-zip-compressed")
+                        content_type = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
     return resp
     

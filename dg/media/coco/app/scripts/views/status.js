@@ -115,13 +115,20 @@ define([
 
         // Resets the offline db
         reset: function() {
-            var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
-            if (val == true) {
-                Offline.reset_database();
+            // check if user has unsynced data in upload queue
+            if(upload_collection.length > 0){
+                var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+                if (val == true) {
+                    Offline.reset_database();
+                }    
+            }
+            else {
+                var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
+                if (val == true) {
+                    Offline.reset_database();
+                }
             }
         }
-
-
     });
 
     // Our module now returns our view

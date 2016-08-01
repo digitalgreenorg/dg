@@ -39,7 +39,7 @@
 					<td align="center"> {{left_panel_stats.views_adoptions.1}}</td>
 				</tr>
 				<tr>
-					<td align="center"><b> Views</b></td>
+					<td align="center"><b>Views</b></td>
 					<td align="center"><b>Adopted</b></td>
 				</tr>
 			</table>		
@@ -48,7 +48,7 @@
 	<div class="left_panel_bottom" style='padding-top:0px;'>
 		<div class='horizontal_line'> </div>
 		{% if left_panel_stats.questions_asked %}
-			<div class= 'statsLabel'> Questions Asked</div>
+			<div class= 'statsLabel'>Questions Asked</div>
 			<div class = 'statsValue'> {{ left_panel_stats.questions_asked }} </div>
 			<div class='horizontal_line'> </div>
 		{% endif %}
@@ -104,32 +104,20 @@
 						{% endif%}
 						<li class="vidsWatchedItem">
 							<div class="thumbnail" style="border: 1px solid green;">
-								<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank'>
+								<a href="{% url 'video' %}?id={{vid.id}}" target='_blank'>
 									<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
 							{% if vid.adopted %}
 									<div style="margin-top:-20px;margin-left:100px"><span class='label label-success' ><i class='icon-ok-sign icon-white'></i></span></div>
 							{% endif %}
-							{% if vid.interested %}
-							    <div style="margin-top:-20px;position:absolute;"><span class='label label-warning' >
-								<i class='icon-exclamation-sign icon-white'></i></span>
-								</div>
-							{% endif %}
 							{% if vid.question %}
-								{% if vid.interested %}
-									<div style="margin-top:-45px;"><span class='label label-important' rel="custompopover" data-content="{{vid.question}}">
-										<i class='icon-question-sign icon-white'></i></span>
-									</div>
-									<div style="height:25px;"></div>
-								{% else %}
 									<div style="margin-top:-20px;"><span class='label label-important' rel="custompopover" data-content="{{vid.question}}">
 										<i class='icon-question-sign icon-white'></i></span>
 									</div>
-								{% endif %}
 							{% endif %}
 							<div class="video_title" style="margin-top:0px;" >
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
+								<a href="{% url 'video' %}?id={{vid.id}}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
 							</div>
 							{% if vid.last_seen_date %}
 								<div class="question" style="margin-top:0px;">Last seen on <br>{{ vid.last_seen_date|date:"M d, Y" }} </div>

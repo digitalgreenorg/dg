@@ -6,10 +6,12 @@ define([
     'layoutmanager',
     'models/user_model',
     'auth',
-	'offline_utils', 
-	'configs',
-], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, all_configs){
-    
+	  'offline_utils', 
+	  'configs',
+    'collections/upload_collection'
+
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, all_configs, upload_collection){
+
     var LoginView = Backbone.Layout.extend({
       template: "#login",
       events:{
@@ -105,13 +107,22 @@ define([
 	  
       // to login with different user - clear the offline db of existing user
 	  change_user: function(){
-		var val = confirm("Your current database will be deleted and a new database will be downloaded");
-		if (val==true){
-			Offline.reset_database();
-		}
-	  }
+      // check if user has unsynced data in upload queue
+      if(upload_collection.length > 0){
+        var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+        if (val == true) {
+            Offline.reset_database();
+        }    
+      }
+      else{
+    		var val = confirm("Your current database will be deleted and a new database will be downloaded");
+    		if (val==true){
+    			Offline.reset_database();
+    		}
+  	  }
+    }
       
-    });
+  });
     
   // Our module now returns our view
   return LoginView;
