@@ -27,13 +27,13 @@ function show_progress_bar() {
 function set_eventlistener() {
 
     // to change the visibility of tables, charts on change in select
-    $("#table_option").change(function() {
-        update_tables();
-    });
+    // $("#table_option").change(function() {
+    //     update_tables();
+    // });
 
-    $("#chart_option").change(function() {
-        update_charts();
-    });
+    // $("#chart_option").change(function() {
+    //     update_charts();
+    // });
 
     // //datepicker
     // $('.datepicker').pickadate({
@@ -85,9 +85,6 @@ function set_eventlistener() {
 /* event listeners for filters */
 
 function set_filterlistener() {
-
-    // TODO: Only one should be selected in Assessment filter
-
     $('#trainer_all').on('change', function(e) {
         if (this.checked) {
             $('#trainers').children().each(function() {
@@ -231,7 +228,7 @@ function gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_trainerwise_data(data_json);
+            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list);
         });
 }
 
@@ -263,7 +260,7 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_statewise_data(data_json);
+            plot_statewise_data(data_json.state_list, data_json.mediator_list);
         });
 }
 
@@ -294,8 +291,8 @@ function fill_top_boxes(num_trainings, num_participants, num_pass) {
 
 /* Fill data for highcharts */
 
-function plot_trainerwise_data(data_json) {
-    if (data_json.length == 0) {
+function plot_trainerwise_data(trainer_list, mediator_list) {
+    if (trainer_list.length == 0) {
         document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('trainer_training_data').innerHTML = ''
     } else {
@@ -307,45 +304,68 @@ function plot_trainerwise_data(data_json) {
         var perc_score_dict = {};
         var trainer_trainings_dict = {};
         var trainer_mediators_dict = {};
+        var trainer_mediators_pass_dict = {};
+        var trainer_pass_perc_dict = {};
 
         avg_score_dict['name'] = 'Average Scores per Participant';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         trainer_trainings_dict['name'] = 'Total Trainings';
         trainer_mediators_dict['name'] = 'Mediators Trained';
+        trainer_mediators_pass_dict['name'] = 'Mediator scores above 70%';
+        trainer_pass_perc_dict['name'] = 'Percentage scores above 70%';
 
         avg_score_dict['type'] = 'column';
         perc_score_dict['type'] = 'spline';
         trainer_trainings_dict['type'] = 'column';
         trainer_mediators_dict['type'] = 'column';
+        trainer_mediators_pass_dict['type'] = 'column';
+        trainer_pass_perc_dict['type'] = 'spline';
 
         perc_score_dict['yAxis'] = 1;
         trainer_mediators_dict['yAxis'] = 1;
+        trainer_mediators_pass_dict['yAxis'] = 1;
+        trainer_pass_perc_dict['yAxis'] = 2;
 
-        avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
-        perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
-        trainer_trainings_dict['data'] = new Array(data_json.length).fill(0.0);
-        trainer_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
+        avg_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
+        perc_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
+        trainer_trainings_dict['data'] = new Array(trainer_list.length).fill(0.0);
+        trainer_mediators_dict['data'] = new Array(trainer_list.length).fill(0.0);
+        trainer_mediators_pass_dict['data'] = new Array(trainer_list.length).fill(0.0);
+        trainer_pass_perc_dict['data'] = new Array(trainer_list.length).fill(0.0);
 
-        for (i = 0; i < data_json.length; i++) {
-            x_axis.push(data_json[i]['training__trainer__name']);
+        for (i = 0; i < trainer_list.length; i++) {
+            x_axis.push(trainer_list[i]['training__trainer__name']);
 
-            var avg = (data_json[i]['score__sum'] / data_json[i]['participant__count']);
-            var perc = (data_json[i]['score__sum'] / data_json[i]['score__count']) * 100;
+            var avg = (trainer_list[i]['score__sum'] / trainer_list[i]['participant__count']);
+            var perc = (trainer_list[i]['score__sum'] / trainer_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
             perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
-            trainer_trainings_dict['data'][i] = data_json[i]['training__id__count'];
-            trainer_mediators_dict['data'][i] = data_json[i]['participant__count'];
+            trainer_trainings_dict['data'][i] = trainer_list[i]['training__id__count'];
+            trainer_mediators_dict['data'][i] = trainer_list[i]['participant__count'];
+            trainer_mediators_pass_dict['data'][i] = 0;
+
+            for (j = 0; j < mediator_list.length; j++) {
+                if (trainer_list[i]['training__trainer__name'] == mediator_list[j]['training__trainer__name']) {
+                    if (mediator_list[j]['score__sum']/mediator_list[j]['score__count'] >= 0.7) {
+                        trainer_mediators_pass_dict['data'][i] += 1;
+                    }
+                }
+            }
+
+            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100;
+            trainer_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
         trainer_scores_dict.push(perc_score_dict);
         trainer_scores_dict.push(avg_score_dict);
-        trainer_trainings_mediators_dict.push(trainer_mediators_dict);
         trainer_trainings_mediators_dict.push(trainer_trainings_dict);
+        trainer_trainings_mediators_dict.push(trainer_mediators_dict);
+        trainer_trainings_mediators_dict.push(trainer_mediators_pass_dict);
+        trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
-        // Total trainings axis, total mediators and mediators above 70% axis, % mediators above 70% axis
-        plot_dual_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Total Trainings", "Mediators Trained", "", "");
+        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
     }
 }
 
@@ -436,15 +456,12 @@ function plot_questionwise_data(data_json, assessment_ids) {
     }
 }
 
-function plot_statewise_data(data_json) {
-    if (data_json.length == 0) {
+function plot_statewise_data(state_list, mediator_list) {
+    if (state_list.length == 0) {
         document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('state_training_data').innerHTML = ''
-    } else {
-        //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-        //TODO: Avg score per participant per trainer instead of how it is now
-        //TODO: Make second graph line and stacked 3 axis as per data instead of current graph
-
+    }
+    else {
         var x_axis = [];
         var state_scores_dict = [];
         var state_trainings_mediators_dict = [];
@@ -453,48 +470,68 @@ function plot_statewise_data(data_json) {
         var perc_score_dict = {};
         var state_trainings_dict = {};
         var state_mediators_dict = {};
+        var state_mediators_pass_dict = {};
+        var state_pass_perc_dict = {};
 
         avg_score_dict['name'] = 'Average Scores per Mediator';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         state_trainings_dict['name'] = 'Total Trainings';
         state_mediators_dict['name'] = 'Mediators Trained';
+        state_mediators_pass_dict['name'] = 'Mediator scores above 70%';
+        state_pass_perc_dict['name'] = 'Percentage scores above 70%';
 
         avg_score_dict['type'] = 'column';
         perc_score_dict['type'] = 'spline';
         state_trainings_dict['type'] = 'column';
         state_mediators_dict['type'] = 'column';
+        state_mediators_pass_dict['type'] = 'column';
+        state_pass_perc_dict['type'] = 'spline';
 
         perc_score_dict['yAxis'] = 1;
-        state_trainings_dict['yAxis'] = 1;
+        state_mediators_dict['yAxis'] = 1;
+        state_mediators_pass_dict['yAxis'] = 1;
+        state_pass_perc_dict['yAxis'] = 2;
 
-        avg_score_dict['data'] = new Array(data_json.length).fill(0.0);
-        perc_score_dict['data'] = new Array(data_json.length).fill(0.0);
-        state_trainings_dict['data'] = new Array(data_json.length).fill(0.0);
-        state_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
+        avg_score_dict['data'] = new Array(state_list.length).fill(0.0);
+        perc_score_dict['data'] = new Array(state_list.length).fill(0.0);
+        state_trainings_dict['data'] = new Array(state_list.length).fill(0.0);
+        state_mediators_dict['data'] = new Array(state_list.length).fill(0.0);
+        state_mediators_pass_dict['data'] = new Array(state_list.length).fill(0.0);
+        state_pass_perc_dict['data'] = new Array(state_list.length).fill(0.0);
 
-        for (i = 0; i < data_json.length; i++) {
-            x_axis.push(data_json[i]['participant__district__state__state_name']);
+        for (i = 0; i < state_list.length; i++) {
+            x_axis.push(state_list[i]['participant__district__state__state_name']);
 
-            var avg = (data_json[i]['score__sum'] / data_json[i]['participant__count']);
-            var perc = (data_json[i]['score__sum'] / data_json[i]['score__count']) * 100;
+            var avg = (state_list[i]['score__sum'] / state_list[i]['participant__count']);
+            var perc = (state_list[i]['score__sum'] / state_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
             perc_score_dict['data'][i] = parseFloat(perc.toFixed(2));
-            state_trainings_dict['data'][i] = data_json[i]['training__id__count'];
-            state_mediators_dict['data'][i] = data_json[i]['participant__count'];
+            state_trainings_dict['data'][i] = state_list[i]['training__id__count'];
+            state_mediators_dict['data'][i] = state_list[i]['participant__count'];
+            state_mediators_pass_dict['data'][i] = 0;
 
-            //TODO: 70% above is not feasible. Per Trainer, per mediator, score summary required for this. -> Precalulation tables need to be created for better execution.
-            //TODO: Avg score per participant per trainer instead of how it is nows
-            //TODO: Make second graph line and stacked as per data instead of current graph
+            for (j = 0; j < mediator_list.length; j++) {
+                if (state_list[i]['participant__district__state__state_name'] == mediator_list[j]['participant__district__state__state_name']) {
+                    if (mediator_list[j]['score__sum']/mediator_list[j]['score__count'] >= 0.7) {
+                        state_mediators_pass_dict['data'][i] += 1;
+                    }
+                }
+            }
+
+            var pass_perc = state_mediators_pass_dict['data'][i]/state_mediators_dict['data'][i]*100;
+            state_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
         state_scores_dict.push(perc_score_dict);
         state_scores_dict.push(avg_score_dict);
         state_trainings_mediators_dict.push(state_trainings_dict);
         state_trainings_mediators_dict.push(state_mediators_dict);
+        state_trainings_mediators_dict.push(state_mediators_pass_dict);
+        state_trainings_mediators_dict.push(state_pass_perc_dict);
 
         plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "Percent Answered Correctly", "", "%");
-        plot_dual_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "Mediators Trained", "Total Trainings", "", "");
+        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
     }
 }
 
