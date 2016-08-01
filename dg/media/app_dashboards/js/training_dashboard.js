@@ -722,12 +722,17 @@ function plot_single_axis_chart(container_obj, x_axis, data_dict, y_axis_text, u
             shared: true
         },
         legend: {
-            layout: 'vertical',
-            align: 'left',
-            x: 120,
+            // layout: 'vertical',
+            // align: 'left',
+            // x: 120,
+            // verticalAlign: 'top',
+            // y: 100,
+            // floating: true,
+            align: 'center',
             verticalAlign: 'top',
-            y: 100,
-            floating: true,
+            layout: 'horizontal',
+            x: 0,
+            y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
         series: data_dict
@@ -776,12 +781,17 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
             shared: true
         },
         legend: {
-            layout: 'vertical',
-            align: 'left',
-            x: 120,
+            // layout: 'vertical',
+            // align: 'left',
+            // x: 120,
+            // verticalAlign: 'top',
+            // y: 100,
+            // floating: true,
+            align: 'center',
             verticalAlign: 'top',
-            y: 100,
-            floating: true,
+            layout: 'horizontal',
+            x: 0,
+            y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
         series: data_dict
@@ -844,12 +854,11 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
             shared: true
         },
         legend: {
-            layout: 'vertical',
-            align: 'left',
-            x: 120,
-            verticalAlign: 'top',
-            y: 100,
-            floating: true,
+          align: 'center',
+          verticalAlign: 'top',
+          layout: 'horizontal',
+          x: 0,
+          y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
         series: data_dict
