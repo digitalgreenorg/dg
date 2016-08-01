@@ -229,7 +229,8 @@ def execute(request):
         video = True
         checked_list.append('video')
     elif (len(video) > 0 and video_chk[0] == None) or (len(video) > 0 and video_chk[0] != None):
-        video = video.objects.filter(title__in=video)
+        video = Video.objects.filter(title__in=video)
+        print video
         videoTemp = []
         for videoObject in video:
             videoTemp.append(str(videoObject.id))
@@ -239,7 +240,7 @@ def execute(request):
 
 
     ###############################Partition#################################
-    
+
 
     if (animator_chk[0] == None):
         animator = False
