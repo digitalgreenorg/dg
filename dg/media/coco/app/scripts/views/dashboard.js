@@ -63,7 +63,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (listing) $('#dashboard_items')
                         .append(this.item_template({
                         name: member + "/list",
-                        title: configs[member]["page_header"] + 's'
+                        title: configs[member]["config_name"]
                     }));
 
                     if (add) $('#dashboard_items_add')
