@@ -1,8 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
 # Variables
+TYPE_OF_ROLE = (
+	(1, 'MRP'),
+	(0, 'Animator'),
+)
+
 DAY_CHOICES = (
                 ('Monday', 'Monday'),
                 ('Tuesday', 'Tuesday'),
@@ -19,31 +23,14 @@ GENDER_CHOICES = (
 )
 
 VIDEO_TYPE = (
-        (1, 'Demonstration'),
-        (2, 'Success story/ Testimonial'),
-        (3, 'Activity Introduction'),
-        (4, 'Discussion'),
-        (5, 'General Awareness'),
+        (1, 'Eligible for Adoption'),
+        (2, 'Not Eligible for adoption')
 )
 
 STORYBASE = (
         (1, 'Agricultural'),
         (2, 'Institutional'),
         (3, 'Health'),
-)
-
-ACTORS = (
-        ('I', 'Individual'),
-        ('F', 'Family'),
-        ('G', 'Group'),
-)
-
-SUITABLE_FOR = (
-        (1, 'Dissemination'),
-        (2, 'Video Production Training'),
-        (3, 'Dissemination Training'),
-        (4, 'Nothing'),
-        (5, 'Pending for Approval'),
 )
 
 ADOPTION_VERIFICATION = (

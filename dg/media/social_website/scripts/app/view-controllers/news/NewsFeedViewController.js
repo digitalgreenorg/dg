@@ -193,7 +193,7 @@ define(function(require) {
                     for (; j < videosLen; j++) {
                         var currentVideo = videos[j];
 
-                        collectionStats.likes += (currentVideo.offlineLikes + currentVideo.onlineLikes);
+                        collectionStats.likes += currentVideo.onlineLikes;
                         collectionStats.views += (currentVideo.offlineViews + currentVideo.onlineViews);
                         collectionStats.adoptions += currentVideo.adoptions;
                         collectionStats.totalDuration += currentVideo.duration;

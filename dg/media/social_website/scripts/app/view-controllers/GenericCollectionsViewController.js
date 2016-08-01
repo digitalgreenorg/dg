@@ -353,7 +353,7 @@ define(function(require) {
                 time += currentVideo.duration;
                 adoptions += currentVideo.adoptions;
                 views += currentVideo.offlineViews + currentVideo.onlineViews;
-                likes += currentVideo.offlineLikes + currentVideo.onlineLikes;
+                likes += currentVideo.onlineLikes;
             }
 
             return {

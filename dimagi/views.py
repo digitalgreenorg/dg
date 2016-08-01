@@ -86,11 +86,6 @@ def update_submission(obj):
             start_time = str(start[1].split('.')[0])
             obj.start_time = start_date + " " + start_time
 
-            end = data.getElementsByTagName('n0:timeEnd')[0].childNodes[0].nodeValue.split('T')
-            end_date = str(end[0])
-            end_time = str(end[1].split('.')[0])
-            obj.end_time = end_date + " " + end_time
-
         elif data.getElementsByTagName('device_report'):
             obj.type = "Report"
             obj.app_version = 0

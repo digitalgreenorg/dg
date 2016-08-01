@@ -33,7 +33,6 @@ class XMLSubmission(models.Model):
     error_message = models.TextField(null=True)
     username = models.CharField(max_length=40, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
-    end_time = models.DateTimeField(null=True, blank=True)
     type = models.CharField(max_length=10, default='')
     app_version = models.IntegerField(default='0')
 
