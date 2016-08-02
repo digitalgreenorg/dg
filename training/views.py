@@ -50,6 +50,26 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+def date_filter_data(request):
+
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    print "**********************************************"
+    print start_date
+    print end_date
+    print "**********************************************"
+    assessments = Assessment.objects.values('id', 'name')
+    trainers = Trainer.objects.values('id', 'name')
+    states = State.objects.values('id','state_name')
+    participants = Score.objects.filter(training__assessment__id=1, training__date__gte=start_date, training__date__lte=end_date).values_list('participant__id', flat=True).distinct()
+    num_trainings = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('date', 'place', 'trainer').distinct().count()
+    num_participants = len(participants)
+    num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('participant').annotate(Sum('score'), Count('score'))
+    #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
+    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
 def trainer_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']

@@ -163,6 +163,14 @@ function get_data() {
         gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        $.get("/training/date_filter_data/", {
+            'start_date': start_date,
+            'end_date': end_date
+        })
+        .done(function(data) {
+            data_json = JSON.parse(data);
+            fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
+        });
     }
 }
 
@@ -289,9 +297,35 @@ function fill_top_boxes(num_trainings, num_participants, num_pass) {
     document.getElementById('pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
 }
 
+function fill_bottom_boxes(num_trainings, num_participants, num_pass) {
+    var num_passed = 0;
+    var num_failed = 0;
+    var total_score = 0;
+    for (i = 0; i < num_pass.length; i++) {
+        total_score = total_score + num_pass[i]['score__sum'];
+        if (num_pass[i]['score__count'] != 0) {
+            if (num_pass[i]['score__sum'] / num_pass[i]['score__count'] >= 0.7) {
+                num_passed += 1;
+            } else {
+                num_failed += 1;
+            }
+        }
+    }
+
+    var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
+    var avg_score = total_score / num_pass.length;
+
+    document.getElementById('filtered_num_trainings').innerHTML = num_trainings;
+    document.getElementById('filtered_mediators_trained').innerHTML = num_participants;
+    document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
+    document.getElementById('filtered_pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
+}
+
 /* Fill data for highcharts */
 
 function plot_trainerwise_data(trainer_list, mediator_list) {
+
+
     if (trainer_list.length == 0) {
         document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('trainer_training_data').innerHTML = ''
@@ -299,7 +333,7 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         var x_axis = [];
         var trainer_scores_dict = [];
         var trainer_trainings_mediators_dict = [];
-
+      
         var avg_score_dict = {};
         var perc_score_dict = {};
         var trainer_trainings_dict = {};
@@ -321,6 +355,7 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         trainer_mediators_pass_dict['type'] = 'column';
         trainer_pass_perc_dict['type'] = 'spline';
 
+    
         perc_score_dict['yAxis'] = 1;
         trainer_mediators_dict['yAxis'] = 1;
         trainer_mediators_pass_dict['yAxis'] = 1;
@@ -357,8 +392,8 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
             trainer_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
-        trainer_scores_dict.push(perc_score_dict);
         trainer_scores_dict.push(avg_score_dict);
+        trainer_scores_dict.push(perc_score_dict);
         trainer_trainings_mediators_dict.push(trainer_trainings_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_pass_dict);
@@ -523,8 +558,8 @@ function plot_statewise_data(state_list, mediator_list) {
             state_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
-        state_scores_dict.push(perc_score_dict);
         state_scores_dict.push(avg_score_dict);
+        state_scores_dict.push(perc_score_dict);
         state_trainings_mediators_dict.push(state_trainings_dict);
         state_trainings_mediators_dict.push(state_mediators_dict);
         state_trainings_mediators_dict.push(state_mediators_pass_dict);
@@ -744,6 +779,8 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         chart: {
             zoomType: 'xy'
         },
+
+        credits:{enabled : false},
         title: '',
         xAxis: [{
             categories: x_axis,
@@ -803,6 +840,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
         chart: {
             zoomType: 'xy'
         },
+        credits:{enabled :false},
         title: '',
         xAxis: [{
             categories: x_axis,
@@ -815,6 +853,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
                     color: Highcharts.getOptions().colors[1]
                 }
             },
+
             title: {
                 text: y_axis_1_text,
                 style: {
