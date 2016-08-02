@@ -151,6 +151,8 @@ ul.side-nav.fixed:hover {
 h5 {
     font-size: 18px;
     font-weight: 400;
+    padding-left:10px;
+    padding-top: 10px;
 }
 h4 {
     font-size: 26px;
@@ -159,8 +161,8 @@ h4 {
 hr{
   border: 0;
    height: 0;
-   border-top: 1px solid rgba(0, 0, 0, 0.1);
-   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+   border-top: 2px solid rgba(0, 0, 0, 0.1);
+   border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 @media only screen and (max-width: 992px) {

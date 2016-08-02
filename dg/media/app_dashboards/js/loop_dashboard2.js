@@ -30,6 +30,8 @@ function initialize() {
     $('#aggregator_payment_tab').hide();
     $("#download_payment_sheets").hide();
 
+    max_volume_crop_id = 0;
+
 }
 
 //datepicker
@@ -535,7 +537,7 @@ function set_filterlistener() {
 
     // For graphs in time series
     $("#crop_max_min_avg").change(function() {
-        var crop_id = $('#crop_max_min_avg :selected').val()
+        var crop_id = $('#crop_max_min_avg :selected').val();
         crop_prices_graph(crop_id);
     });
 
@@ -570,6 +572,16 @@ function set_filterlistener() {
         } else {
             createMaster1($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false));
             createMaster2($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false));
+        }
+    });
+
+    $('#payments_from_date').change(function() {
+        var start_date = $('#payments_from_date').val();
+        if (start_date != '') {
+            var from_date = new Date(new Date(start_date));
+            $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
+        } else {
+            $('#payments_to_date').val('');
         }
     });
 
@@ -785,6 +797,7 @@ function update_graphs_gaddidar_wise(chart) {
 function update_graphs_crop_wise(chart) {
 
     if (chart == null) {
+        console.log(bar_graphs_json_data.mandi_crop);
         aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.mandi_crop, "quantity__sum");
         max_min_graph($('#mandi_cost'), bar_graphs_json_data.crop_prices)
         farmer_crop_visits($("#farmers_count"), bar_graphs_json_data.crop_prices)
@@ -1114,6 +1127,7 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
     temp_total['data'] = [];
     temp_total['pointPadding'] = 0.3;
     temp_total['pointPlacement'] = 0;
+    temp_total['pointWidth'] = 15;
 
     var temp_repeat = {};
     temp_repeat['name'] = "Total Repeat Farmers";
@@ -1122,6 +1136,7 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
     temp_repeat['data'] = [];
     temp_repeat['pointPadding'] = 0.4;
     temp_repeat['pointPlacement'] = 0;
+    temp_repeat['pointWidth'] = 15;
 
     var data_for_sorting = []
 
@@ -1237,7 +1252,7 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
             show_line_graphs();
             fill_crop_drop_down();
             //Setting bandha gobhi to default When the page loads
-            crop_prices_graph(3);
+            crop_prices_graph(-1);
         });
 }
 
@@ -1254,12 +1269,12 @@ function fill_crop_drop_down() {
 }
 
 
-
+//To show time series graohs for volumr,amount,farmer count, cpk,spk
 function show_line_graphs() {
     var json_data = line_json_data.aggregator_data;
     var farmer_data = line_json_data.farmer;
     var transport_data = line_json_data.transport_data;
-    var dates = line_json_data['dates']
+    var dates = line_json_data['dates'];
     var all_dates = [];
 
     var first_date = new Date(dates[0]);
@@ -1317,7 +1332,7 @@ function show_line_graphs() {
     for (var i = 0; i < json_data.length; i++) {
         var index = all_dates.indexOf(new Date(json_data[i]['date']).getTime());
         time_series_volume_amount_farmers[0]['data'][index][1] += json_data[i]['quantity__sum'];
-        time_series_volume_amount_farmers[1]['data'][index][1] += json_data[i]['amount__sum'];
+        time_series_volume_amount_farmers[2]['data'][index][1] += json_data[i]['amount__sum'];
     }
     transport_cost = new Array(all_dates.length).fill(null);
     farmer_share = new Array(all_dates.length).fill(null);
@@ -1334,7 +1349,7 @@ function show_line_graphs() {
 
     for (var i = 0; i < farmer_data.length; i++) {
         var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
-        time_series_volume_amount_farmers[2]['data'][index][1] += farmer_data[i]['farmer__count'];
+        time_series_volume_amount_farmers[1]['data'][index][1] += farmer_data[i]['farmer__count'];
     }
 
     createMaster1($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers)
@@ -1351,7 +1366,7 @@ function crop_prices_graph(crop_id) {
     var first_date = new Date(dates[0]);
     while (first_date <= new Date(dates[dates.length - 1])) {
         all_dates.push(first_date.getTime());
-        first_date.setDate(first_date.getDate() + 1)
+        first_date.setDate(first_date.getDate() + 1);
     }
 
     var series = [{
@@ -1372,6 +1387,18 @@ function crop_prices_graph(crop_id) {
         avgs.push([all_dates[i], null])
     }
 
+    var max_vol = 0;
+    //By default selecting the crop with max volume
+    if (crop_id == -1) {
+        for (var i = 0; i < json_data.length; i++) {
+            if (json_data[i]['quantity__sum'] > max_vol) {
+                max_vol = json_data[i]['quantity__sum'];
+                crop_id = json_data[i]['crop__id'].toString();
+            }
+        }
+            $('#crop_max_min_avg option[value="'+crop_id+'"]').prop('selected',true);
+            $('#crop_max_min_avg').material_select();
+    }
 
     for (var i = 0; i < json_data.length; i++) {
         var index = all_dates.indexOf(new Date(json_data[i]['date']).getTime());
@@ -1670,8 +1697,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
             },
             min: 0,
             max: dict[0]['data'][0]['y'],
-            gridLineColor: 'transparent',
-
+            gridLineColor: 'transparent'
         },
         scrollbar: {
             enabled: true
@@ -1720,13 +1746,10 @@ function plot_max_min(container, x_axis, dict) {
             text: null
         },
 
-
-
         xAxis: {
             categories: x_axis,
             min: 0,
             max: max,
-
         },
 
         yAxis: {
@@ -2040,7 +2063,8 @@ function createDetail1(detail_container, masterChart, dict) {
             }
 
         });
-        myDict.push(temp)
+        myDict.push(temp);
+
     });
 
     // create a detail chart referenced by a global variable
@@ -2335,6 +2359,7 @@ function createDetail2(detail_container, masterChart, dict) {
             //     return '<b>' + point.series.name + '</b><br/>' + Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
             //         'Volume= ' + Highcharts.numberFormat(point.y, 2);
             // },
+            valueDecimals: 2,
             shared: true
         },
         legend: {
@@ -2521,12 +2546,16 @@ function createMaster2(detail_container, master_container, dict) {
 
 
 function plot_area_range_graph(container, dict) {
-    width = $("#container2").width()
+    //Initially width of container3 is 0
+    container_width = $("#container3").width();
+    if (container_width == 0) {
+        container_width = $("#container2").width();
+    }
     container.highcharts({
 
         chart: {
             zoomType: 'x',
-            width: width
+            width: container_width
         },
 
         title: {
