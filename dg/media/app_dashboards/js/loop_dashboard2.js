@@ -84,12 +84,26 @@ function show_nav(tab) {
         $("#time_series_div").hide();
         $(".analytics_tabs").show();
         $("#analytics_tab").addClass('active');
+        PlotAnalyticsGraphs();
     } else if (tab == "time_series") {
         $("#analytics_div").hide();
         $("#time_series_div").show();
         $(".analytics_tabs").hide();
         $("#time_series_tab").addClass('active');
+        PlotTimeSeriesGraphs();
     }
+}
+
+function PlotAnalyticsGraphs(){
+  totals();
+  change_graph();
+}
+
+function PlotTimeSeriesGraphs(){
+  show_line_graphs();
+  fill_crop_drop_down();
+  //Setting crop with max volume to default
+  crop_prices_graph(-1);
 }
 
 // function clear_payment_table(){
@@ -712,8 +726,8 @@ function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids,
         })
         .done(function(data) {
             bar_graphs_json_data = JSON.parse(data);
-            totals();
-            change_graph();
+            // totals();
+            // change_graph();
         });
 }
 
@@ -797,7 +811,6 @@ function update_graphs_gaddidar_wise(chart) {
 function update_graphs_crop_wise(chart) {
 
     if (chart == null) {
-        console.log(bar_graphs_json_data.mandi_crop);
         aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.mandi_crop, "quantity__sum");
         max_min_graph($('#mandi_cost'), bar_graphs_json_data.crop_prices)
         farmer_crop_visits($("#farmers_count"), bar_graphs_json_data.crop_prices)
@@ -1249,10 +1262,10 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
         })
         .done(function(data) {
             line_json_data = JSON.parse(data);
-            show_line_graphs();
-            fill_crop_drop_down();
-            //Setting bandha gobhi to default When the page loads
-            crop_prices_graph(-1);
+            // show_line_graphs();
+            // fill_crop_drop_down();
+            // //Setting crop with max volume to default
+            // crop_prices_graph(-1);
         });
 }
 
@@ -2202,10 +2215,6 @@ function createMaster1(detail_container, master_container, dict) {
                             detailChart1.series[pos].setData(myDict[pos].data);
                             pos++;
                         });
-
-
-
-
                         return false;
                     }
                 }
@@ -2850,7 +2859,6 @@ function create_outliers_table(date, aggregator_id) {
     var data_set = [];
     var sno = 1;
 
-    console.log(outliers_data);
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
