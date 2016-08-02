@@ -81,8 +81,8 @@ class Command(BaseCommand):
 		fields = mysql.fetchall()
 		field_hdrs = [i[0] for i in mysql.description]
 
-		# file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/emails/training_data.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/training_data.xls'
+		#file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/emails/training_data.xls'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/emails/training_data.xls'
 		
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Training Data Summary')
@@ -124,8 +124,8 @@ class Command(BaseCommand):
 					ws1.write(i, j, cell)
 		wb.save(file)
 
-		email_list = ['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org', 'tanmaygoel@digitalgreen.org', 'jahnavi@digitalgreen.org', 'smriti@digitalgreen.org']
-		# email_list=['lokesh@digitalgreen.org']
+		email_list = ['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org','tech@digitalgreen.org']
+		#email_list=['sujit@digitalgreen.org']
 		subject = 'Training: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
