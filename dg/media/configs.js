@@ -119,7 +119,7 @@ function() {
 
     var village_configs = {
         'page_header': 'Village',
-        'config_English': 'LALA',
+        'config_English': 'Villages',
         'config_Hindi': 'विलेजस',
         'rest_api_url': '/coco/api/v2/village/',
         'list_elements': [{'header':'ID','element':'online_id'},{'header':'Name','element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'header':'State','element':'state_name'}],
@@ -134,7 +134,7 @@ function() {
     var mediator_configs = {
         'page_header': 'Mediator',
         'config_English': 'Mediators',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'मीडियेटर',
         'labels_Hindi': {name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
         'labels_English': {name: "Name", district: "District", gender: "Gender", phone_number: "Phone Number", assigned_villages: "Assigned Villages"},
         'add_template_name': 'mediator_add_edit_template',
@@ -218,7 +218,7 @@ function() {
     var video_configs = {
         'page_header': 'Video',
         'config_English': 'Videos',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'वीडियो',
         'labels_Hindi': {title: "शीर्षक", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village", production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", youtubeid: "Youtube Id"},
         'labels_English': {title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village", production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", youtubeid: "Youtube Id"},
         'add_template_name': 'video_add_edit_template',
@@ -472,7 +472,7 @@ function() {
     var group_configs = {
         'page_header': 'Group',
         'config_English': 'Groups',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'ग्रूप्स',
         'labels_Hindi': {name: "नाम", village: "Village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
         'labels_English': {name: "Name", village: "village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
         'add_template_name': 'group_add_edit_template',
@@ -567,7 +567,7 @@ function() {
     var screening_configs = {
         'page_header': 'Screening',
         'config_English': 'Screenings',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'सक्रीनिंग्स',
         'labels_Hindi': {date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person: "Person"},
@@ -770,7 +770,7 @@ function() {
     var adoption_configs = {
         'page_header': 'Adoption',
         'config_English': 'Adoptions',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'अडॉप्षन्स',
         'labels_Hindi': {village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", date_of_adoption: "तिथि", date_of_verification: "Date of Verification"},
         'labels_English': {village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification"},
         'add_template_name': 'adoption_add_template',
@@ -969,7 +969,7 @@ function() {
     var person_configs = {
         'page_header': 'Person',
         'config_English': 'Persons',
-        'config_Hindi': 'विलेजस',
+        'config_Hindi': 'पर्सन्स',
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
         'list_elements': [{'header':'ID','element':'online_id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
@@ -1080,7 +1080,7 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
-        languages: ['Hindi', 'English', 'Telugu'],
+        languages: ['Hindi', 'English'],
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

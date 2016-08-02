@@ -19,7 +19,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             //start the background inc download process
             this.background_download();
             _(this)
-                .bindAll('render');
+                .bindAll('render');                                                             
             //re-render the view when User model changes - to keep username updated
             User.on('change', this.render);
             this.upload_entries = upload_collection.length;
@@ -28,8 +28,14 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         serialize: function() {
             // send username and # of uploadQ items to the template 
             var username = User.get("username");
+            var language = User.get("language");
+            if(language === undefined) {
+                    language = "English";
+            }
             return {
                 username: username,
+                language: language,
+                configs: configs,
                 upload_entries: this.upload_entries
             }
         },
@@ -38,6 +44,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("rendering dashboard");
             //iterate over entities defined in config and create their "list" and "add" rows 
             for (var member in configs) {
+                var language = User.get("language");
+                if(language === undefined) {
+                    language = "English";
+                }
                 if (member == "misc") continue;
                 var listing = true;
                 var add = true;
@@ -60,7 +70,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (listing) $('#dashboard_items')
                         .append(this.item_template({
                         name: member + "/list",
-                        title: configs[member]["page_header"] + 's'
+                        title: configs[member]['config_'+language]
                     }));
 
                     if (add) $('#dashboard_items_add')
