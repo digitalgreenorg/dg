@@ -28,11 +28,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         serialize: function() {
             // send username and # of uploadQ items to the template 
             var username = User.get("username");
-            var language = User.get("language");
             return {
                 username: username,
-                language: language,
-                configs: configs,
                 upload_entries: this.upload_entries
             }
         },
@@ -63,7 +60,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (listing) $('#dashboard_items')
                         .append(this.item_template({
                         name: member + "/list",
-                        title: configs[member]["config_name"]
+                        title: configs[member]["page_header"] + 's'
                     }));
 
                     if (add) $('#dashboard_items_add')
