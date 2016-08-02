@@ -1172,6 +1172,11 @@ a {
     height: 87px;
 }
 
+.media .img-size-events img{
+    width: 285px;
+    height: 218px;
+}
+
 .media .img-size-usaid img{
     width: 404px;
     height: 247px;  
@@ -3663,6 +3668,7 @@ div.social-wrap button.googleplus {
 
 .user-dropdown {
     position: absolute;
+	margin-top: 68px;
     display: none;
     right: 0;
     background-color: white;
