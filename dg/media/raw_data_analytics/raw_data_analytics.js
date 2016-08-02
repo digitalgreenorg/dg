@@ -7,18 +7,21 @@ window.onload = date;
  });*/
 //###############################Populate the dropdowns for filter######################################
 
-function populate(src, val) {
-    //console.log(src);
-    console.log(val[0]);
+function statepopulate(src, val) {
+
+    $('#districtID ').find('option').remove();
+    $('#blockID ').find('option').remove();
+    $('#villageID ').find('option').remove();
+
+    $('#villageId ').trigger('chosen:updated');
+    $('#blockId ').trigger('chosen:updated');
+    $('#districtId ').trigger('chosen:updated');
     for (var j in val) {
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
             .done(function (data) {
                 data_json = JSON.parse(data);
-              //  console.log(data_json);
-                /*                $('#stateID ').find('option:gt(0)').remove();
-                 $('#districtID ').find('option:gt(0)').remove();
-                 $('#blockID ').find('option:gt(0)').remove();
-                 $('#villageID ').find('option:gt(0)').remove();*/
+
+
                 for (var i in data_json) {
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
                         $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
@@ -27,54 +30,89 @@ function populate(src, val) {
 
             });
 
-
     }
-
 
 }
 
 
-/*
- function districtchange(src, val) {
- console.log(val)
- $.get("/raw_data_analytics/dropdown_district/", {selected: val})
- .done(function (data) {
- data_json = JSON.parse(data);
- $('#districtID ').find('option:gt(0)').remove();
- $('#blockID ').find('option:gt(0)').remove();
- $('#villageID ').find('option:gt(0)').remove();
- for (i in data_json) {
- $('#districtId').append("<option value='data_json[i]'>" + data_json[i] + "</option>");
- }
- });
- }
+function districtpopulate(src, val) {
+    $('#blockID ').find('option').remove();
+    $('#villageID ').find('option').remove();
+    $('#villageId').trigger('chosen:updated');
+    $('#blockId').trigger('chosen:updated')
+    for (var j in val) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+            .done(function (data) {
+                data_json = JSON.parse(data);
 
- function blockchange(src, val) {
- $.get("/raw_data_analytics/dropdown_block/", {selected: val})
- .done(function (data) {
- data_json = JSON.parse(data);
- $('#blockID ').find('option:gt(0)').remove();
- $('#villageID ').find('option:gt(0)').remove();
- for (i in data_json) {
- $('#blockId').append("<option value='data_json[i]'>" + data_json[i] + "</option>");
+                ;
+                for (var i in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
 
- }
- });
- }
+                }
 
- function villagechange(src, val) {
- $.get("/raw_data_analytics/dropdown_village/", {selected: val})
- .done(function (data) {
- data_json = JSON.parse(data);
- $('#villageID ').find('option:gt(0)').remove();
- for (i in data_json) {
- $('#villageId').append("<option value='data_json[i]'>" + data_json[i] + "</option>");
- }
- });
- }
- function videochange(src, val) {
+            });
 
- }*/
+    }
+}
+
+function blockpopulate(src, val) {
+    $('#villageID ').find('option').remove();
+    $('#villageId ').trigger('chosen:updated');
+    for (var j in val) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+            .done(function (data) {
+                data_json = JSON.parse(data);
+
+                for (var i in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
+
+                }
+
+            });
+
+    }
+}
+
+function villagepopulate(src, val) {
+    for (var j in val) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+            .done(function (data) {
+                data_json = JSON.parse(data);
+
+                for (var i in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
+
+                }
+
+            });
+
+    }
+}
+function videopopulate(src, val) {
+    for (var j in val) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+            .done(function (data) {
+                data_json = JSON.parse(data);
+                //  console.log(data_json);
+                /*$('#stateID ').find('option:gt(0)').remove();
+                 $('#districtID ').find('option:gt(0)').remove();
+                 $('#blockID ').find('option:gt(0)').remove();
+                 $('#villageID ').find('option:gt(0)').remove();*/
+
+                for (var i in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
+
+                }
+
+            });
+
+    }
+}
 //##################################################################################################################
 
 function list_display() {
@@ -97,7 +135,7 @@ function validation_check() {
     count_partition = 0;
     var count_values = 0;
     var i;
-    
+
     for (i = 0; i < checked_partitions.length; i++) {
 
         if (checked_partitions[i].checked) {
