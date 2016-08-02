@@ -81,9 +81,9 @@ class Command(BaseCommand):
 		fields = mysql.fetchall()
 		field_hdrs = [i[0] for i in mysql.description]
 
-		#file = '/Users/jahnavi/dg/dg/media/social_website/uploads/emails/training_data.xls'
+		# file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/emails/training_data.xls'
 		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/training_data.xls'
-
+		
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Training Data Summary')
 		style = xlwt.easyxf('font: bold 1')
@@ -108,7 +108,7 @@ class Command(BaseCommand):
 
 		ws1 = wb.add_sheet('Participant Scores')
 		style = xlwt.easyxf('font: bold 1')
-		col_widths = [10,20,25,6]
+		col_widths = [10,20,25,15,15]
 		date_xf = xlwt.easyxf(num_format_str='DD/MM/YYYY') # sets date format in Excel
 
 		for i,hdr in enumerate(field_hdrs):
@@ -125,7 +125,7 @@ class Command(BaseCommand):
 		wb.save(file)
 
 		email_list = ['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org', 'tanmaygoel@digitalgreen.org', 'jahnavi@digitalgreen.org', 'smriti@digitalgreen.org']
-		#email_list=['jahnavi@digitalgreen.org']
+		# email_list=['lokesh@digitalgreen.org']
 		subject = 'Training: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
