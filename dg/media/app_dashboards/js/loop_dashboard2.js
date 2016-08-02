@@ -818,8 +818,8 @@ function totals(){
     var cpk = (total_cost/total_volume).toFixed(2);
     var spk = (total_recovered/total_volume).toFixed(2);
 
-    $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(2));
-    $("#aggregator_amount").text("amount: " + parseFloat(total_amount).toFixed(2));
+    $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(2) + " Kg");
+    $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(2));
     $("#aggregator_visits").text("visits: " + total_visits);
     $("#aggregator_cpk").text("SPK:CPK :: " + spk+":"+cpk);
     $("#aggregator_cost").text("Recovered:Total :: " + total_recovered+":"+total_cost);
