@@ -30,8 +30,6 @@ function initialize() {
     $('#aggregator_payment_tab').hide();
     $("#download_payment_sheets").hide();
 
-    max_volume_crop_id = 0;
-
 }
 
 //datepicker
@@ -94,21 +92,17 @@ function show_nav(tab) {
     }
 }
 
-function PlotAnalyticsGraphs(){
-  totals();
-  change_graph();
+function PlotAnalyticsGraphs() {
+    totals();
+    change_graph();
 }
 
-function PlotTimeSeriesGraphs(){
-  show_line_graphs();
-  fill_crop_drop_down();
-  //Setting crop with max volume to default
-  crop_prices_graph(-1);
+function PlotTimeSeriesGraphs() {
+    show_line_graphs();
+    fill_crop_drop_down();
+    //Setting crop with max volume to default
+    crop_prices_graph(-1);
 }
-
-// function clear_payment_table(){
-//   $("#table2_wrapper").hide();
-// }
 
 bullet_options = {
     type: "bullet",
@@ -162,26 +156,26 @@ function total_static_data() {
         var rs = "₹";
 
         // document.getElementById('cluster_card').innerHTML = clusters;
-        plot_solid_guage($('#cluster_bullet'), clusters, 35);
+        plot_solid_guage($('#cluster_bullet'), 0,clusters, 35);
         // $('#cluster_bullet').sparkline([30, clusters, 50], bullet_options);
 
         // document.getElementById('total_farmers_card').innerHTML = total_farmers_reached + " <sub style='font-size: 12px'>" + parseFloat((total_repeat_farmers / total_farmers_reached) * 100).toFixed(2) + "%" + "</sub>";
-        plot_solid_guage($('#total_farmers_bullet'), total_farmers_reached, 2000);
+        plot_solid_guage($('#total_farmers_bullet'),0, total_farmers_reached, 2000);
         // $('#total_farmers_bullet').sparkline([1500, total_farmers_reached, 5000], bullet_options);
 
         // document.getElementById('total_volume_card').innerHTML = parseFloat(total_volume).toFixed(0).concat(kg);
-        plot_solid_guage($('#total_volume_bullet'), parseInt(total_volume), 5500000);
+        plot_solid_guage($('#total_volume_bullet'),0, parseInt(total_volume), 5000000);
         // $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);
 
         // document.getElementById('revenue_card').innerHTML = rs.concat(parseFloat(total_amount).toFixed(0));
-        plot_solid_guage($('#revenue_bullet'), parseInt(total_amount), 27000000);
+        plot_solid_guage($('#revenue_bullet'),0, parseInt(total_amount), 25000000);
         // $('#revenue_bullet').sparkline([10000000, total_amount, 15000000], bullet_options);
 
         // document.getElementById('total_expenditure_card').innerHTML = parseFloat(total_cpk).toFixed(2); //rs.concat(parseFloat(total_transportation_cost).toFixed(2) - parseFloat(total_farmer_share).toFixed(2));
-        plot_solid_guage($('#total_expenditure_bullet'), parseFloat(total_cpk.toFixed(2)), 0.4);
+        plot_solid_guage($('#total_expenditure_bullet'),-1, parseFloat(0-total_cpk.toFixed(2)), 0);
 
         // document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
-        plot_solid_guage($('#sustainability_bullet'), parseFloat(sustainability.toFixed(2)), 60);
+        plot_solid_guage($('#sustainability_bullet'),0, parseFloat(sustainability.toFixed(2)), 60);
     })
 }
 
@@ -1409,8 +1403,8 @@ function crop_prices_graph(crop_id) {
                 crop_id = json_data[i]['crop__id'].toString();
             }
         }
-            $('#crop_max_min_avg option[value="'+crop_id+'"]').prop('selected',true);
-            $('#crop_max_min_avg').material_select();
+        $('#crop_max_min_avg option[value="' + crop_id + '"]').prop('selected', true);
+        $('#crop_max_min_avg').material_select();
     }
 
     for (var i = 0; i < json_data.length; i++) {
@@ -2090,7 +2084,7 @@ function createDetail1(detail_container, masterChart, dict) {
             enabled: false
         },
         title: {
-            text: null
+            text: "Volume and Farmer"
         },
 
         xAxis: {
@@ -2106,7 +2100,6 @@ function createDetail1(detail_container, masterChart, dict) {
             title: {
                 text: null
             },
-
             opposite: true
         }],
         tooltip: {
@@ -2971,12 +2964,17 @@ function download_payments_data() {
     $("#table4").tableExport([], "Transporter_payment_sheet");
 }
 
-function plot_solid_guage(container, present, target) {
+function plot_solid_guage(container,minimum, present, target) {
     var gaugeOptions = {
         chart: {
             type: 'solidgauge',
-            width: 170,
-            height: 100
+            width: 180,
+            height: 110,
+            plotBackgroundColor: null,
+            plotBackgroundImage: null,
+            plotBorderWidth: 0,
+            plotShadow: false,
+            margin: [-10, 0, 0, 0]
         },
         exporting: {
             enabled: false
@@ -2985,7 +2983,7 @@ function plot_solid_guage(container, present, target) {
 
         pane: {
             center: ['50%', '85%'],
-            size: '140%',
+            size: '150%',
             startAngle: -90,
             endAngle: 90,
             background: {
@@ -3003,14 +3001,15 @@ function plot_solid_guage(container, present, target) {
         // the value axis
         yAxis: {
             stops: [
-                [0.1, '#55BF3B'], // green
+                [0.1, '#DF5353'], // green
                 [0.5, '#DDDF0D'], // yellow
-                [0.9, '#DF5353'] // red
+                [0.9, '#55BF3B'] // red 55BF3B
             ],
             lineWidth: 0,
             minorTickInterval: null,
-            tickPixelInterval: 400,
+            // tickPixelInterval: 500,
             tickWidth: 0,
+            tickAmount:2,
             title: {
                 y: -70
             },
@@ -3021,8 +3020,9 @@ function plot_solid_guage(container, present, target) {
 
         plotOptions: {
             solidgauge: {
+              // innerRadius: '75%',
                 dataLabels: {
-                    y: 5,
+                    y:5,
                     borderWidth: 0,
                     useHTML: true
                 }
@@ -3033,11 +3033,11 @@ function plot_solid_guage(container, present, target) {
     // The speed gauge
     container.highcharts(Highcharts.merge(gaugeOptions, {
         yAxis: {
-            min: 0,
+            min: minimum,
             max: target,
-            title: {
-                text: 'Target'
-            }
+            // title: {
+            //     text: 'Target'
+            // }
         },
 
         credits: {
@@ -3048,7 +3048,10 @@ function plot_solid_guage(container, present, target) {
             name: 'Present',
             data: [present],
             dataLabels: {
-                format: null
+              format: '<div style="text-align:center"><span style="font-size:18px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                    // <span style="font-size:12px;color:silver">km/h</span>
+                    '</div>'
             },
             tooltip: {
                 valueSuffix: null
