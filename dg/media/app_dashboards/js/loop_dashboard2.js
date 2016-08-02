@@ -156,7 +156,7 @@ function total_static_data() {
         var rs = "₹";
 
         // document.getElementById('cluster_card').innerHTML = clusters;
-        plot_solid_guage($('#cluster_bullet'), 0,clusters, 35);
+        plot_solid_guage($('#cluster_bullet'), 0,clusters, 25);
         // $('#cluster_bullet').sparkline([30, clusters, 50], bullet_options);
 
         // document.getElementById('total_farmers_card').innerHTML = total_farmers_reached + " <sub style='font-size: 12px'>" + parseFloat((total_repeat_farmers / total_farmers_reached) * 100).toFixed(2) + "%" + "</sub>";
@@ -175,7 +175,7 @@ function total_static_data() {
         plot_solid_guage($('#total_expenditure_bullet'),-1, parseFloat(0-total_cpk.toFixed(2)), 0);
 
         // document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
-        plot_solid_guage($('#sustainability_bullet'),0, parseFloat(sustainability.toFixed(2)), 60);
+        plot_solid_guage($('#sustainability_bullet'),0, parseFloat(sustainability.toFixed(2)), 50);
     })
 }
 
@@ -2045,7 +2045,7 @@ function createMaster(detail_container, master_container, dict) {
 function createDetail1(detail_container, masterChart, dict) {
 
     // prepare the detail chart
-    var myDict = []
+    var myDict = [];
     var detailData = [],
         detailStart = dict[0]['data'][0][0];
 
@@ -2084,7 +2084,7 @@ function createDetail1(detail_container, masterChart, dict) {
             enabled: false
         },
         title: {
-            text: "Volume and Farmer"
+            text: "Volume and Farmer",
         },
 
         xAxis: {
@@ -2891,9 +2891,9 @@ function create_outliers_table(date, aggregator_id) {
         }, {
             title: "Farmers"
         }, {
-            title: "Quantity"
-        }, {
             title: "Transport Cost"
+        }, {
+            title: "Quantity"
         }, {
             title: "Farmer Share"
         }, {
@@ -3007,9 +3007,9 @@ function plot_solid_guage(container,minimum, present, target) {
             ],
             lineWidth: 0,
             minorTickInterval: null,
-            // tickPixelInterval: 500,
+            tickPixelInterval: 400,
             tickWidth: 0,
-            tickAmount:2,
+            // tickAmount:2,
             title: {
                 y: -70
             },
