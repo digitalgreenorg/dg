@@ -22,15 +22,15 @@
 <div class="navbar-fixed">
 	<nav class="top-nav" id="analytics_page_nav_bar">
 
-		<div class="nav-wrapper grey lighten-2">
-			<a href="#" class="brand-logo center black-text">LOOP</a>
+		<div class="nav-wrapper grey darken-3">
+			<a href="#" class="brand-logo center white-text">LOOP</a>
 			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
 			<div class="left col s5">
 				<ul class="hide-on-med-and-down grey lighten-2">
-					<li class="active" id="home_tab"><a class="blue-text" onclick="hide_nav('home')">Home</a></li>
-					<li id="analytics_tab"><a class="blue-text" onclick="show_nav('analytics')">Analytics</a></li>
-					<li id="time_series_tab"><a class="blue-text" onclick="show_nav('time_series')">Time Series</a></li>
-					<li id="payments_tab"><a class="blue-text" onclick="hide_nav('payments')">Payments</a></li>
+					<li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
+					<li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
+					<li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
+					<li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
 				</ul>
 			</div>
 			<ul class="side-nav" id="page-navigation">
@@ -43,11 +43,13 @@
 		<!-- </nav> -->
 
 		<!-- <nav> -->
-		<div class="nav-wrapper  grey lighten-3" id="filters_nav">
+		<div class="nav-wrapper  grey lighten-2" id="filters_nav">
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="hide-on-med-and-down">
 				<ul class="left">
-					<li><a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}"/></a></li>
+					<li>
+						<a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}" /></a>
+					</li>
 					<li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
 					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
@@ -64,7 +66,7 @@
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
 						</div>
-						<li class="col s4"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
+						<li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
 					</div>
 				</ul>
 			</ul>
@@ -389,8 +391,8 @@
 <div id="time_series_div">
 	<div id="container2">
 		<div class="row">
-			<p class="col s3"></p>
-			<div class="input-field col s6">
+			<p class="col s4"></p>
+			<div class="input-field col s4">
 				<select id="time_series_frequency" class="initialized">
 					<option value="1" selected>Daily</option>
 					<option value="7">7 Days</option>
@@ -398,7 +400,7 @@
 					<option value="30">30 Days</option>
 				</select>
 			</div>
-			<p class="col s3"></p>
+			<p class="col s4"></p>
 		</div>
 		<div class="row">
 			<div class="col s12 m6">
@@ -435,16 +437,16 @@
 			<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 			<input id="payments_to_date" placeholder="End Date" type="text" class="datepicker black-text">
 		</div>
-		<a class="col s2 waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+		<a class="col s2 waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
 		<p class="col s3"></p>
 	</div>
 
 	<div class="row" id="aggregator_payment_tab">
-		<p class="col s3"></p>
-		<div class="input-field col s6">
+		<p class="col s4"></p>
+		<div class="input-field col s4">
 			<select id="aggregator_payments" class="initialized"></select>
 		</div>
-		<p class="col s3"></p>
+		<p class="col s4"></p>
 
 
 		<table style="width:100%">
@@ -455,7 +457,7 @@
 		<table id="outliers_data" class="highlight bordered centered"> </table>
 	</div>
 	<div class="row center">
-		<a id="download_payment_sheets" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" onclick="download_payments_data()">Download</a>
+		<a id="download_payment_sheets" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="download_payments_data()">Download</a>
 	</div>
 
 
