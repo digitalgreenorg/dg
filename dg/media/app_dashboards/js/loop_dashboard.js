@@ -387,14 +387,14 @@ function cummulative_farmer_and_volume() {
 
     var cumm_volume = new Array(all_dates.length).fill(0.0);
     var cumm_farmers = new Array(all_dates.length).fill(0.0);
-    var temp_volume = {}
+    var temp_volume = {};
     temp_volume['name'] = "volume";
     temp_volume['data'] = [];
     temp_volume['type'] = 'spline';
     temp_volume['pointInterval'] = 24 * 3600 * 1000;
     temp_volume['pointStart'] = all_dates[all_dates.length - 1]; // Pointing to the starting date
     temp_volume['showInLegend'] = true;
-    var temp_farmers = {}
+    var temp_farmers = {};
     temp_farmers['name'] = "farmers";
     temp_farmers['data'] = [];
     temp_farmers['type'] = 'spline';
@@ -485,6 +485,9 @@ function set_filterlistener() {
     });
 
     $('#get_data').click(function() {
+      time_series_frequency=1;
+      $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
+      $('#time_series_frequency').material_select();
         get_data();
     });
 
