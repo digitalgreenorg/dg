@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator
 
 from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED
 
@@ -50,7 +51,7 @@ class QAReviewerName(models.Model):
 class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
     qareviewername = models.ForeignKey(QAReviewerName)
-    suitable_for = models.IntegerField(max_length=1,choices=TYPE_CHOICES)
+    suitable_for = models.IntegerField(validators=[MaxValueValidator(9)],choices=TYPE_CHOICES)
     comment = models.CharField(max_length=200)
     
     def __unicode__(self):

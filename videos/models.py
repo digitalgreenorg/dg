@@ -187,18 +187,3 @@ class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
-
-class Category (CocoModel):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=500)
-
-    def __unicode__(self):
-        return self.name
-
-class SubCategory(CocoModel):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=500)
-    category = models.ForeignKey(Category)
-   
-    def __unicode__(self):
-        return self.name
