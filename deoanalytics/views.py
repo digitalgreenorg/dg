@@ -92,3 +92,4 @@ def deodatasetter(request):
         "slag": slag,
         "alag": alag,
         "mode": int(mode)}}))
+        
