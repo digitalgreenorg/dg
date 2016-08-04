@@ -477,7 +477,7 @@ function change_graph(parameter) {
     }
 }
 
-//To check for any items data change (textview, drop downs)
+//To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
     $("#recent_cards_data_frequency").change(function() {
         days_to_average = $('#recent_cards_data_frequency :selected').val()
@@ -596,7 +596,6 @@ function set_filterlistener() {
         }
     });
 
-
     $('#payments_to_date').change(function() {
         var end_date = $('#payments_to_date').val();
         if (end_date != '') {
@@ -605,6 +604,11 @@ function set_filterlistener() {
         } else {
             $('#payments_to_date').val('');
         }
+    });
+
+    $('#get_filter_data_button').click(function() {
+      gaddidar=true;
+      get_data();
     });
 }
 
@@ -735,15 +739,16 @@ function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids,
             bar_graphs_json_data = JSON.parse(data);
             // totals();
             // change_graph();
+            PlotAnalyticsGraphs();
         });
 }
 
 
 function update_graphs_aggregator_wise(chart) {
     if (chart == null) {
-        $('#1stgraph').text("Aggregator Wise");
+        // $('#1stgraph').text("Aggregator Wise");
         aggregator_graph($('#aggregator_mandi'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.aggregator_mandi, "quantity__sum");
-        $('#2ndgraph').text("Cost per kg");
+        // $('#2ndgraph').text("Cost per kg");
         cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data);
         repeat_farmers($('#farmers_count'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.total_repeat_farmers);
     } else {
@@ -859,8 +864,8 @@ function totals() {
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(2) + " Kg");
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(2));
     $("#aggregator_visits").text("visits: " + total_visits);
-    $("#aggregator_cpk").text("SPK:CPK :: " + spk + ":" + cpk);
-    $("#aggregator_cost").text("Recovered:Total :: " + total_recovered + ":" + total_cost);
+    $("#aggregator_cpk").text("SPK/CPK :: " + spk + "/" + cpk);
+    $("#aggregator_cost").text("Recovered/Total :: " + total_recovered + "/" + total_cost);
 
 }
 
@@ -1158,7 +1163,7 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
     temp_repeat['pointPlacement'] = 0;
     temp_repeat['pointWidth'] = 15;
 
-    var data_for_sorting = []
+    var data_for_sorting = [];
 
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
@@ -1207,9 +1212,12 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
         series[1]['data'].push({
             'name': data_for_sorting[i]['name'],
             'y': data_for_sorting[i]['total_repeat_farmers']
-        })
+        });
 
     }
+
+    console.log("Repeat Farmer : ");
+    console.log(series);
     plot_drilldown(container, series, drilldown);
 }
 
@@ -1274,6 +1282,7 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
             // fill_crop_drop_down();
             // //Setting crop with max volume to default
             // crop_prices_graph(-1);
+            PlotTimeSeriesGraphs();
         });
 }
 
@@ -1304,7 +1313,7 @@ function show_line_graphs() {
         first_date.setDate(first_date.getDate() + 1)
     }
     time_series_volume_amount_farmers = [{
-        'name': "volume",
+        'name': "Volume",
         'type': 'areaspline',
         'data': [],
         'color': 'rgba(0,0,0,0.3)',
@@ -1328,14 +1337,14 @@ function show_line_graphs() {
     }]
 
     time_series_cpk_spk = [{
-        'name': "cpk",
+        'name': "Cost per Kg",
         'type': 'areaspline',
         'data': [],
         'color': 'rgba(0,0,255,0.3)',
         'pointStart': all_dates[0],
         'pointInterval': 24 * 3600 * 1000
     }, {
-        'name': "spk",
+        'name': "Sustainability per Kg",
         'type': 'areaspline',
         'data': [],
         'color': 'rgba(0,255,0,0.3)',
@@ -1353,7 +1362,7 @@ function show_line_graphs() {
     for (var i = 0; i < json_data.length; i++) {
         var index = all_dates.indexOf(new Date(json_data[i]['date']).getTime());
         time_series_volume_amount_farmers[0]['data'][index][1] += json_data[i]['quantity__sum'];
-        time_series_volume_amount_farmers[2]['data'][index][1] += json_data[i]['amount__sum'];
+        time_series_volume_amount_farmers[1]['data'][index][1] += json_data[i]['amount__sum'];
     }
     transport_cost = new Array(all_dates.length).fill(null);
     farmer_share = new Array(all_dates.length).fill(null);
@@ -1370,7 +1379,7 @@ function show_line_graphs() {
 
     for (var i = 0; i < farmer_data.length; i++) {
         var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
-        time_series_volume_amount_farmers[1]['data'][index][1] += farmer_data[i]['farmer__count'];
+        time_series_volume_amount_farmers[2]['data'][index][1] += farmer_data[i]['farmer__count'];
     }
 
     createMaster1($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers)
@@ -1606,7 +1615,9 @@ function plot_stacked_chart(container_obj, dict) {
         chart: {
             height: 300,
         },
-
+        credits: {
+            enabled: false
+        },
         title: {
             text: null
         },
@@ -1699,6 +1710,9 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
             //          },
             //      }
         },
+        credits: {
+            enabled: false
+        },
         title: {
             text: null
         },
@@ -1762,7 +1776,9 @@ function plot_max_min(container, x_axis, dict) {
             inverted: true,
             height: 300
         },
-
+        credits: {
+            enabled: false
+        },
         title: {
             text: null
         },
@@ -1838,13 +1854,13 @@ function createDetail(detail_container, masterChart, dict) {
     });
 
     // create a detail chart referenced by a global variable
-    width = detail_container.width();
+    // width = detail_container.width();
     detailChart = detail_container.highcharts({
         chart: {
-            width: width
+            // width: width
         },
         title: {
-            text: null
+            text: "Volume and Farmers Cummulative Count"
         },
         credits: {
             enabled: false
@@ -1863,7 +1879,6 @@ function createDetail(detail_container, masterChart, dict) {
             title: {
                 text: null
             },
-
             opposite: true
         }],
         tooltip: {
@@ -2064,7 +2079,7 @@ function createDetail1(detail_container, masterChart, dict) {
         detailStart = dict[0]['data'][0][0];
 
     $.each(masterChart.series, function() {
-        if (this.name == "volume") {
+        if (this.name == "Volume") {
             axis = 0;
         } else {
             axis = 1;
@@ -2098,7 +2113,7 @@ function createDetail1(detail_container, masterChart, dict) {
             enabled: false
         },
         title: {
-            text: "Volume and Farmer",
+            text: null,
         },
 
         xAxis: {
@@ -2148,7 +2163,7 @@ function createDetail1(detail_container, masterChart, dict) {
             }
         },
         legend: {
-            align: 'right',
+            align: 'center',
             x: 0,
             verticalAlign: 'top',
             y: 0,
@@ -2318,7 +2333,7 @@ function createDetail2(detail_container, masterChart, dict) {
         detailStart = dict[0]['data'][0][0];
 
     $.each(masterChart.series, function() {
-        if (this.name == "volume") {
+        if (this.name == "Volume") {
             axis = 0;
         } else {
             axis = 1;
@@ -2399,7 +2414,7 @@ function createDetail2(detail_container, masterChart, dict) {
             }
         },
         legend: {
-            align: 'right',
+            align: 'center',
             x: 0,
             verticalAlign: 'top',
             y: 0,
@@ -2983,7 +2998,7 @@ function plot_solid_guage(container, minimum, present, target) {
         chart: {
             type: 'solidgauge',
             width: 180,
-            height: 110,
+            height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
             plotBorderWidth: 0,
@@ -2997,7 +3012,7 @@ function plot_solid_guage(container, minimum, present, target) {
 
         pane: {
             center: ['50%', '85%'],
-            size: '150%',
+            size: '140%',
             startAngle: -90,
             endAngle: 90,
             background: {
