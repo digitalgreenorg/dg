@@ -610,7 +610,7 @@ function set_filterlistener() {
       gaddidar=true;
       get_data();
     });
-}
+    }
 
 
 //To make a call when filters are changed
