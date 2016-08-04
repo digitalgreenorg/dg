@@ -44,7 +44,6 @@ def login(request):
 
 
 def home(request):
-    print request
     return render_to_response(request, 'loop_base.html')
 
 
