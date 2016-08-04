@@ -613,7 +613,7 @@ function set_filterlistener() {
       gaddidar=true;
       get_data();
     });
-}
+    }
 
 
 //To make a call when filters are changed
@@ -723,6 +723,7 @@ function get_data() {
         //$('.modal-trigger').leanModal();
         $('#modal1').openModal();
     } else {
+        $(".button-collapse1").sideNav('hide');
         get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
         get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
         // genterate_payment_sheet(start_date, end_date);
