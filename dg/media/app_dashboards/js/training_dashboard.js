@@ -346,14 +346,27 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         trainer_trainings_dict['name'] = 'Total Trainings';
         trainer_mediators_dict['name'] = 'Mediators Trained';
         trainer_mediators_pass_dict['name'] = 'Mediator scores above 70%';
-        trainer_pass_perc_dict['name'] = 'Percentage scores above 70%';
+        // trainer_pass_perc_dict['name'] = 'Percentage scores above 70%';
+
+        /*trainer_trainings_dict['pointPadding'] = 0.3;
+        trainer_trainings_dict['pointPlacement'] = 0.05;*/
+
+        trainer_mediators_dict['pointPadding'] = -0.2;
+        trainer_mediators_dict['pointPlacement'] = 0.125;
+
+        trainer_mediators_pass_dict['pointPadding'] = 0.2;
+        trainer_mediators_pass_dict['pointPlacement'] = -0.168;
+
+        trainer_mediators_dict['color'] = 'rgba(248,161,63,1)';
+        trainer_trainings_dict['color'] = '#000000';
+        trainer_mediators_pass_dict['color'] = 'rgba(186,60,61,.9)';
 
         avg_score_dict['type'] = 'column';
         perc_score_dict['type'] = 'spline';
-        trainer_trainings_dict['type'] = 'column';
+        trainer_trainings_dict['type'] = 'spline';
         trainer_mediators_dict['type'] = 'column';
         trainer_mediators_pass_dict['type'] = 'column';
-        trainer_pass_perc_dict['type'] = 'spline';
+        // trainer_pass_perc_dict['type'] = 'spline';
 
     
         perc_score_dict['yAxis'] = 1;
@@ -388,16 +401,17 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
                 }
             }
 
-            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100;
+            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100; //todo
             trainer_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
         trainer_scores_dict.push(avg_score_dict);
         trainer_scores_dict.push(perc_score_dict);
-        trainer_trainings_mediators_dict.push(trainer_trainings_dict);
+        
         trainer_trainings_mediators_dict.push(trainer_mediators_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_pass_dict);
-        trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
+        trainer_trainings_mediators_dict.push(trainer_trainings_dict);
+        // trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
         plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
@@ -522,6 +536,40 @@ function plot_statewise_data(state_list, mediator_list) {
         state_mediators_pass_dict['type'] = 'column';
         state_pass_perc_dict['type'] = 'spline';
 
+
+       /* var dataLabels = {};
+        dataLabels['enabled'] = true;
+        dataLabels['formatter'] = 'function() {return 25+""}';
+
+        var column = {};
+        column['grouping'] = false;
+        column['shadow'] = false;
+        column['borderWidth'] = 0;
+        column['dataLabels'] = dataLabels;
+
+        var plotOptions = {};
+        plotOptions['column'] = column;
+
+
+
+        var str = "{" + 
+           "column: {"+
+                "grouping: false,"+
+                "shadow: false,"+
+                "borderWidth: 0,"+
+                "dataLabels: {"+
+                           "enabled: true,"+
+                          "formatter: function() {return 25+' '}"+
+                       "}"+
+            "}"+
+        "}";
+
+        //str = JSON.stringify(eval("("+str+")"));
+        state_mediators_dict['plotOptions'] = plotOptions;*/
+        state_mediators_dict['dataLabels'] = {};
+        state_mediators_dict['dataLabels']['enabled'] = 'true';
+        state_mediators_dict['dataLabels']['format'] = '25'+'';
+
         perc_score_dict['yAxis'] = 1;
         state_mediators_dict['yAxis'] = 1;
         state_mediators_pass_dict['yAxis'] = 1;
@@ -564,6 +612,7 @@ function plot_statewise_data(state_list, mediator_list) {
         state_trainings_mediators_dict.push(state_mediators_dict);
         state_trainings_mediators_dict.push(state_mediators_pass_dict);
         state_trainings_mediators_dict.push(state_pass_perc_dict);
+        console.log(state_mediators_dict);
 
         plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "Percent Answered Correctly", "", "%");
         plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
@@ -834,7 +883,6 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         series: data_dict
     });
 }
-
 function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3) {
     container_obj.highcharts({
         chart: {
@@ -889,6 +937,8 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
             },
             opposite: true
         }],
+
+
         tooltip: {
             shared: true
         },
@@ -900,6 +950,6 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
           y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
-        series: data_dict
+        series:  data_dict
     });
 }
