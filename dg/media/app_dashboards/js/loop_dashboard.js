@@ -586,6 +586,9 @@ function set_filterlistener() {
     $('#payments_from_date').change(function() {
         var start_date = $('#payments_from_date').val();
         if (start_date != '') {
+            $("#aggregator_payment_tab").hide();
+            $("#download_payment_sheets").hide();
+            $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
         } else {
@@ -593,6 +596,16 @@ function set_filterlistener() {
         }
     });
 
+
+    $('#payments_to_date').change(function() {
+        var end_date = $('#payments_to_date').val();
+        if (end_date != '') {
+            $("#aggregator_payment_tab").hide();
+            $("#download_payment_sheets").hide();
+        } else {
+            $('#payments_to_date').val('');
+        }
+    });
 }
 
 
@@ -2788,7 +2801,7 @@ function get_payments_data() {
 
         });
     } else {
-        alert("Invalid Date Range")
+        alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date.")
     }
 }
 
