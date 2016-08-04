@@ -1093,6 +1093,8 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         languages: ['Hindi', 'English'],
+        meta_English: {pause_download: "Pause Download"},
+        meta_Hindi: {pause_download: "डाउनलोड रोकें"},
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

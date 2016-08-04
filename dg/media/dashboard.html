@@ -175,7 +175,7 @@
                             <%$.each(all_configs, function(key,val) {
                                 if(key!="misc"){
                                 //console.log(all_configs[key]['config_'+language]);
-                                var keyCap = all_configs[key]['config_'+language]
+                                var keyCap = all_configs[key]['config_'+language];
                                 %>
                                 <tr id="<%=key%>">
                                     <td><%= keyCap %></td>
@@ -187,7 +187,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Pause download</button>
+                    <% var pause_download = all_configs['misc']['meta_'+language]['pause_download'];%>
+                    <button id = "stop_full_download" type="button" class="btn btn-danger" disabled><%= pause_download %></button>
                 </div>
             </div> <!-- modal-content -->
         </div> <!-- modal-dialog -->
