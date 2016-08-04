@@ -386,6 +386,8 @@ function() {
     };
 
     var language_configs = {
+        'config_English': 'Languages',
+        'config_Hindi': 'लॅंग्वेजस',
         'rest_api_url': '/coco/api/v2/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
@@ -396,6 +398,8 @@ function() {
     };
 
     var category_configs = {
+        'config_English': 'Categories',
+        'config_Hindi': 'केटेगरीस',
         'rest_api_url': '/coco/api/v2/category/',
         'entity_name': 'category',
         'sort_field': 'category_name',
@@ -406,6 +410,8 @@ function() {
     };
 
     var subcategory_configs = {
+        'config_English': 'Sub Categories',
+        'config_Hindi': 'सब केटेगरीस',
         'rest_api_url': '/coco/api/v2/subcategory/',
         'entity_name': 'subcategory',
         'sort_field': 'subcategory_name',
@@ -424,6 +430,8 @@ function() {
     };
 
     var videopractice_configs = {
+        'config_English': 'Video Practices',
+        'config_Hindi': 'वीडियो प्रॅक्टिसस',
         'rest_api_url': '/coco/api/v2/videopractice/',
         'entity_name': 'videopractice',
         'sort_field': 'videopractice_name',
@@ -442,6 +450,8 @@ function() {
     };
 
     var nonnegotiable_configs = {
+        'config_English': 'Non Negotiables',
+        'config_Hindi': 'नों नेगोटियब्लेस',
         'rest_api_url': '/coco/api/v2/nonnegotiable/',
         'entity_name': 'nonnegotiable',
         'sort_field': 'non_negotiable',
@@ -460,6 +470,8 @@ function() {
     };
 
     var district_configs = {
+        'config_English': 'Districts',
+        'config_Hindi': 'डिस्ट्रिक्ट्स',
         'rest_api_url': '/coco/api/v2/district/',
         'entity_name': 'district',
         'sort_field': 'district_name',

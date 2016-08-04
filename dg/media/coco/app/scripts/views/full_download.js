@@ -13,8 +13,9 @@ define([
     'indexeddb_backbone_config',
     'configs',
     'offline_utils',
+    'models/user_model',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline, User) {
 
 
     var FullDownloadView = Backbone.Layout.extend({
@@ -31,7 +32,9 @@ define([
 
         //send the list of entities to the template 
         serialize: function() {
+            var language = User.get("language");
             return {
+                language: language,
                 all_configs: all_configs
             }
         },

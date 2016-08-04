@@ -174,10 +174,11 @@
                         <table class="table" style="width:100%">
                             <%$.each(all_configs, function(key,val) {
                                 if(key!="misc"){
-                                var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
+                                //console.log(all_configs[key]['config_'+language]);
+                                var keyCap = all_configs[key]['config_'+language]
                                 %>
                                 <tr id="<%=key%>">
-                                    <td><%= keyCap %>s</td>
+                                    <td><%= keyCap %></td>
                                     <td class="status_text">In Progress</td>
                                     <td class="status_numbers"></td>
                                 </tr>
