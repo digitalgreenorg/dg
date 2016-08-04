@@ -57,7 +57,7 @@ a.button-collapse.top-nav {
 }
 
 .container{
-    padding-top: 50px;
+    padding-top: 35px;
     max-width: 100%
 }
 #container2{
@@ -65,7 +65,7 @@ a.button-collapse.top-nav {
 }
 ul.side-nav.fixed li.logo {
     text-align: center;
-    margin-top: 32px;
+    /*margin-top: 32px;*/
     margin-bottom: 80px;
 }
 ul.side-nav.fixed li.logo:hover {
