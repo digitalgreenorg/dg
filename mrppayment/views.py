@@ -16,19 +16,19 @@ class mrppayment(generic.ListView):
 
 def partnersetter(request):
     partners = Partner.objects.values('partner_name', 'id').order_by('partner_name')
-    return HttpResponse(json.dumps(list(partners)), mimetype="application/json")
+    return HttpResponse(json.dumps(list(partners)), content_type="application/json")
 
 def districtsetter(request):
     selectedpartner = request.GET.get('partner', None)
     districts = Person.objects.select_related().filter(partner_id=selectedpartner).values(
         'village__block__district__district_name', 'village__block__district__id').distinct()
-    return HttpResponse(json.dumps(list(districts)), mimetype="application/json")
+    return HttpResponse(json.dumps(list(districts)), content_type="application/json")
 
 
 def blocksetter(request):
     selecteddistrict = request.GET.get('district', None)
     blocks = Block.objects.filter(district__id=selecteddistrict).values('block_name', 'id')
-    return HttpResponse(json.dumps(list(blocks)), mimetype="application/json")
+    return HttpResponse(json.dumps(list(blocks)), content_type="application/json")
 
 
 def getreport(request):
