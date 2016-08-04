@@ -3,13 +3,16 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import *
 
 from activities.models import PersonMeetingAttendance
+from social_website.models import Comment, Video as social_video
+from programs.models import Partner
+from videos.models import Language, Video
+
 from output import views
 from output.database.SQL import video_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, \
     run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
-from programs.models import Partner
-from videos.models import Language, Video
+
 import datetime
 import json
 import math
@@ -28,8 +31,8 @@ def video_module(request):
     tot_vid = run_query_raw(shared_sql.get_totals(geog, id, from_date, to_date, partners, "tot_vid"))[0][0];
     tot_vid = 0 if tot_vid is None else tot_vid 
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
-    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
+#    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
+#    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
@@ -38,7 +41,7 @@ def video_module(request):
     return render_to_response('video_module.html',dict(search_box_params = search_box_params,\
                                                           tot_video=tot_vid,\
                                                           tot_vids_screened=tot_vids_screened, \
-                                                          tot_average= tot_avg, \
+                                                          #tot_average= tot_avg, \
                                                           get_req_url = get_req_url
                                                           ))
 
@@ -47,33 +50,6 @@ def video_module(request):
     ################
     ## PIE CHARTS ##
     ################
-
-
-# Pie chart for male-female ratio in video module
-def video_pie_graph_mf_ratio(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_malefemale_ratio, \
-                                      {"M":"Male","F":"Female"}, 'Ratio of videos featuring {{value}} actors', \
-                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
-
-#Data generator for Actor Wise Pie chart
-def video_actor_wise_pie(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_actor_wise_pie, \
-                                      {"I":"Individual","F":"Family","G":"Group"}, 'Ratio of videos featuring {{value}} actor',\
-                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
-
-
-#Data generator for Video-Type Wise Pie chart
-def video_type_wise_pie(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.pie_chart_data(video_analytics_sql.video_type_wise_pie, \
-                                      {1:"Demonstration",2:"Success Story",3:"Activity Introduction",4:"Discussion",5:"General Awareness"}, \
-                                      'Ratio of videos featuring {{value}} type',\
-                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
@@ -148,14 +124,10 @@ def video(request):
         except Video.DoesNotExist:
             vid = Video.objects.select_related().get(old_coco_id=id)
             return HttpResponseRedirect("?id=" + str(vid.id))
-        vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
         
         tot_vid_scr = vid.screening_set.count()
         tot_vid_adopt = vid.personadoptpractice_set.count()
-        
-        actors = vid.farmers_shown.values('person_name')
-        actor_data = dict(actors = actors, tot_actors = len(actors))
-        
+                
         #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
         #in title and question
         title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
@@ -163,13 +135,15 @@ def video(request):
 
         views = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid)
         tot_vid_views = views.count()
-        ques = views.exclude(expressed_question =  '')
-        ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
-                           'person__village__block__district__state__state_name','screening__date')
+
+        website_vid = social_video.objects.get(coco_id = str(vid.id))
+        comm = Comment.objects.filter(video = website_vid)
+        ques = comm.exclude(text = '')
+        ques = ques.values('text','animator__name','date')
         if(len(ques) > 0):
             ques_arr = []
             for x in ques:
-                ques_arr.append([x['expressed_question'].split(' '), x])
+                ques_arr.append([x['text'].split(' '), x])
                 
             scores = []
             for ques in ques_arr:
@@ -181,7 +155,6 @@ def video(request):
             scores.sort(key = (lambda x: x[0]), reverse = True)
             ques = scores
         #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
-        
         
         rel_vids_all = Video.objects.exclude(pk=vid.pk)
         rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
@@ -198,7 +171,6 @@ def video(request):
                                                          tot_vid_scr = tot_vid_scr, \
                                                          tot_vid_adopt = tot_vid_adopt, \
                                                          tot_vid_views = tot_vid_views, \
-                                                         actors = actor_data, \
                                                          ques = ques, \
                                                          rel_vids = rel_vids))
     else:
@@ -206,7 +178,7 @@ def video(request):
 
 
 def video_search(request):
-    video_suitable_for = request.GET.get('videosuitable')
+    video_type = request.GET.get('videotype')
     video_uploaded = request.GET.get('videouploaded')
     season = request.GET.getlist('season')
     lang = request.GET.get('lang')
@@ -228,26 +200,25 @@ def video_search(request):
     
     search_box_params = {}
     
-
     vids = Video.objects.all()
     
     if(query):
         vids = vids.filter(title__icontains = query)
         search_box_params['query'] = query
-    if(video_suitable_for):
-        if(int(video_suitable_for) != -1):
-            vids = vids.filter(video_suitable_for = int(video_suitable_for))
+    if(video_type):
+        if(int(video_type) != -1):
+            vids = vids.filter(video_type = int(video_type))
     else:
-        vids = vids.filter(video_suitable_for = 1)
-    search_box_params['video_suitable_for'] = video_suitable_for
+        vids = vids.filter(video_type = 1)
+    search_box_params['video_type'] = video_type
     if(from_date):
         search_box_params['from_date'] = from_date;
         from_date = datetime.date(*map(int,from_date.split('-')))
-        vids = vids.filter(video_production_end_date__gte = from_date)
+        vids = vids.filter(production_date__gte = from_date)
     if(to_date):
         search_box_params['to_date'] = to_date;
         to_date = datetime.date(*map(int,to_date.split('-')))
-        vids = vids.filter(video_production_end_date__lte = to_date)
+        vids = vids.filter(production_date__lte = to_date)
     if(video_uploaded == '1'):
         vids = vids.exclude(youtubeid = '')
         search_box_params['video_uploaded'] = video_uploaded
@@ -300,9 +271,9 @@ def video_search(request):
         search_box_params['sort'] = sort
         if(sort_order == "asc"):
             search_box_params['sort_order'] = sort_order
-            vids = vids.order_by('video_production_end_date', 'id')
+            vids = vids.order_by('video_production_date', 'id')
         else:
-            vids = vids.order_by('-video_production_end_date', 'id')
+            vids = vids.order_by('-video_production_date', 'id')
     elif(sort == 'adoptions'):
         vids = vids.annotate(adoptions=Count('personadoptpractice'))
         search_box_params['sort'] = sort
@@ -338,7 +309,6 @@ def video_search(request):
     
     return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
                                             
-
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     video_id = int(request.GET['id'])

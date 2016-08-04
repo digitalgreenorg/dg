@@ -43,13 +43,16 @@ class Command(BaseCommand):
 			JOIN
 				training_trainer TR ON TR.id = TTT.trainer_id
 			GROUP BY
-				S.training_id;
+				S.training_id
+			ORDER BY
+				T.date DESC;
 		""")
 
 		mysql1 = con.cursor()
 		mysql1.execute("""
 			SELECT 
    				S.training_id AS \'Training ID\',
+   				T.date AS \'Date\',
    				TR.name AS \'Trainer\', 
    				A.name AS \'Participant\', 
    				COUNT(S.score) AS \'Score\'
@@ -57,6 +60,8 @@ class Command(BaseCommand):
     			training_score S
         	LEFT JOIN
     			training_training_trainer TT ON TT.training_id = S.training_id
+        	LEFT JOIN
+        		training_training T ON T.id = S.training_id
         	LEFT JOIN
     			training_trainer TR ON TR.id = TT.trainer_id
         	LEFT JOIN
@@ -68,7 +73,7 @@ class Command(BaseCommand):
 				TR.id, 
 				S.training_id
 			ORDER BY 
-				S.training_id DESC, 
+				T.date DESC, 
 				TR.name, 
 				A.name;
 		""")
@@ -76,9 +81,9 @@ class Command(BaseCommand):
 		fields = mysql.fetchall()
 		field_hdrs = [i[0] for i in mysql.description]
 
-		#file = '/Users/jahnavi/dg/dg/media/social_website/uploads/emails/training_data.xls'
-		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/training_data.xls'
-
+		#file = 'C:/Users/Server-Tech/Documents/dg_clone/dg/media/social_website/uploads/emails/training_data.xls'
+		file = '/home/ubuntu/code/dg_git/dg/media/social_website/uploads/emails/training_data.xls'
+		
 		wb = xlwt.Workbook()
 		ws = wb.add_sheet('Training Data Summary')
 		style = xlwt.easyxf('font: bold 1')
@@ -103,7 +108,7 @@ class Command(BaseCommand):
 
 		ws1 = wb.add_sheet('Participant Scores')
 		style = xlwt.easyxf('font: bold 1')
-		col_widths = [10,20,25,6]
+		col_widths = [10,20,25,15,15]
 		date_xf = xlwt.easyxf(num_format_str='DD/MM/YYYY') # sets date format in Excel
 
 		for i,hdr in enumerate(field_hdrs):
@@ -119,15 +124,15 @@ class Command(BaseCommand):
 					ws1.write(i, j, cell)
 		wb.save(file)
 
-		#email_list=['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org']
-		email_list=['jahnavi@digitalgreen.org']
+		email_list = ['bihar@digitalgreen.org', 'namita@digitalgreen.org', 'charu@digitalgreen.org', 'aditya@digitalgreen.org','tech@digitalgreen.org']
+		#email_list=['sujit@digitalgreen.org']
 		subject = 'Training: Data received till '+str(datetime.date.today())
 		from_email = 'server@digitalgreen.org'
 		body = """Hi Everyone,
 
 This is a weekly automated email to monitor training data entry.
 
-This mail is to keep you updated on the progress in data entry and keep check on quality of entered data. 
+This mail is to keep you updated on the progress in data entry. 
 
 
 Thank you for your support!

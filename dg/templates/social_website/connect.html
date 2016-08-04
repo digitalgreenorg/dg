@@ -1,14 +1,17 @@
 {% include "includes/header.html" %}
 
-        <section id="investors" class="about-bg about-bg-white">
+        <section id="investors" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <ul class="h-list layout-vr-md h-list-xlg hdg-source-lt hdg-source-semibold hdg-partners">
-                        <li class="heading-partner"><a href="#investors">INVESTORS</a></li>
-                        <li class="heading-partner"><a href="#india">OUR PARTNERS - INDIA</li>
-                        <li class="heading-partner"><a href="#africa">OUR PARTNERS - AFRICA</li>
-                        <li class="heading-partner"><a href="#afghanisthan">OUR PARTNERS - AFGHANISTHAN</li>
-                        <li class="heading-partner"><a href="#research">RESEARCH & TECHNOLOGY PARTNERS</li>
+                        <li class="grid-pad-lt-sm heading-partner grid-pad-rt-sm"><a href="#investors">INVESTORS</a></li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#india">INDIA</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#ethiopia">ETHIOPIA</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#ghana">GHANA</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#niger">NIGER</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#tanzania">TANZANIA</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#afghanisthan">AFGHANISTHAN</li>
+                        <li class="heading-partner grid-pad-rt-sm"><a href="#research">RESEARCH & TECH PARTNERS</li>
                     </ul>
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Investors</h2>
                     <div class="grid">
@@ -44,15 +47,29 @@
                                 </div>
                             </a>
                             <div class="grid-pad-lt-md grid-pad-rt layout-vr-sm">
+                                <p class="js-intro line-clamp partner-line-clamp"><a class="hdg-source-semibold">United States Agency for International Development (USAID) </a>is supporting us in India to apply our low-cost, community-based video approach for enhanced peer-to-peer learning to address Reproductive, Maternal, Newborn, Child, and Adolescent health (RMNCH+A) nutritional goals through a new project - Digital Integration to Scale Gender-Sensitive Nutrition Social and Behavior Change Communication (SBCC). This project aims to reach over 200,000 women in 2,000 villages of states in India with high burden of under-nutrition. Read more about the project <a href="{% url 'usaid' %}">here</a>.
+                                <br>
+                                Timeline: Dec 2015 – Dec 2019</p>
+                                <a href="#" class="js-show-more hdg-green">Show More</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
+                            <a href="{% url 'usaid' %}">
+                                <div class="grid-pad-lt-md img-connect layout-vr-sm">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/usaid.png" alt=""/>
+                                </div>
+                            </a>
+                            <div class="grid-pad-lt-md grid-pad-rt layout-vr-sm">
                                 <p class="js-intro line-clamp partner-line-clamp"><a class="hdg-source-semibold">United States Agency for International Development (USAID) </a>is supporting us in Ethiopia to reach 1 million smallholder farmers to help them access information on agronomic practices.
                                 <br>
                                 Timeline: Dec 2014 – Dec 2017</p>
                                 <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="grid">
-                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-sm">
+                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="https://www.gov.uk/government/organisations/department-for-international-development" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
                                     <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt=""/>
@@ -64,7 +81,7 @@
                                 Timeline: Oct 2012 – March 2015 </p>
                             </div>
                         </div>
-                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-sm">
+                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="http://www.icrisat.org/" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
                                     <img src="{{STATIC_URL}}social_website/content/partners/icrisat.png" alt=""/>
@@ -77,7 +94,10 @@
                                 <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
-                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-sm">
+                    </div>
+
+                    <div class="grid">
+                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="http://www.birac.nic.in/" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
                                     <img src="{{STATIC_URL}}social_website/content/partners/birac.jpg" alt=""/>
@@ -90,8 +110,6 @@
                                 <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="grid">
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="http://google.com/" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
@@ -117,6 +135,9 @@
                                 Timeline: April 2014 - Mar 2015</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="grid">
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="http://www.oracle.com/index.html" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
@@ -130,8 +151,6 @@
                                 <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="grid">
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
                             <a href="http://www.marcatusqed.com/" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
@@ -150,7 +169,7 @@
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id="india" class="about-bg">
+        <section id="india" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper media">
                     <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - India</h2>
@@ -355,24 +374,32 @@
                             </a>
                             <a href="{% url 'partner' 'MYRADA' %}" class="hdg-source-semibold">MYRADA</a>
                         </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'OLM' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/olm.jpg" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'OLM' %}" class="hdg-source-semibold">OLM</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'Bihan' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/bihan.jpg" alt="" />
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'Bihan' %}" class="hdg-source-semibold">Bihan</a>
+                        </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
         
-        <section id="africa" class="about-bg about-bg-white">
+        <section id="ethiopia" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper media">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Africa</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Ethiopia</h2>
                     <div class="grid centered">
-                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
-                            <a href="{% url 'partner' 'WCF' %}">
-                                <div class="img-connect">
-                                    <img src="{{STATIC_URL}}social_website/content/partners/wcf.jpg" alt=""/>
-                                </div>
-                            </a>
-                            <a href="{% url 'partner' 'WCF' %}" class="hdg-source-semibold">WCF</a>
-                        </div>
                         <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
                             <a href="{% url 'partner' 'OA-SAA' %}">
                                 <div class="img-connect">
@@ -404,6 +431,76 @@
                                 </div>
                             </a>
                             <a href="{% url 'partner' 'AGRA' %}" class="hdg-source-semibold">AGRA</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'MoA-Ethiopia' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/moa.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'MoA-Ethiopia' %}" class="hdg-source-semibold">MoA Ethiopia</a>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="ghana" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Ghana</h2>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'WCF' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/wcf.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'WCF' %}" class="hdg-source-semibold">WCF</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="http://www.grameenfoundation.org/" target="_blank">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/gf.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="http://www.grameenfoundation.org/" class="hdg-source-semibold" target="_blank">Grameen Foundation</a>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="niger" class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Niger</h2>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'SPRING' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/spring.png" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'SPRING' %}" class="hdg-source-semibold">SPRING</a>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="tanzania" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Our Partners - Tanzania</h2>
+                    <div class="grid centered">
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="{% url 'partner' 'FML' %}">
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/fml.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <a href="{% url 'partner' 'FML' %}" class="hdg-source-semibold">FML</a>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
