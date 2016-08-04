@@ -219,7 +219,8 @@
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
-                    <button class="btn pull-left" id= "sync">Sync
+                    <% var sync = configs['misc']['meta_'+language]['sync'];%>
+                    <button class="btn pull-left" id= "sync"><%= sync %>
                     <span class="badge" id="upload_num"><%=upload_entries%></span>
                     </button>
                 </div>
@@ -249,8 +250,9 @@
                             
                             </ul>
                             </div>
+                            <
                             <button type="button" class="coco_sync btn btn-default" id="sync">
-                                Sync
+                                <%=configs['misc']['meta_'+language]['sync'] %>
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
                             </button>
                         </div>
