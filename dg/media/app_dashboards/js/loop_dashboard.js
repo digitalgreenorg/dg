@@ -1825,10 +1825,10 @@ function createDetail(detail_container, masterChart, dict) {
     });
 
     // create a detail chart referenced by a global variable
-    width = detail_container.width();
+    // width = detail_container.width();
     detailChart = detail_container.highcharts({
         chart: {
-            width: width
+            // width: width
         },
         title: {
             text: null
