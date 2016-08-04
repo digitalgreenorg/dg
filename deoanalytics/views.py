@@ -93,3 +93,4 @@ def deodatasetter(request):
         "alag": alag,
         "mode": int(mode)}}))
         
+        
