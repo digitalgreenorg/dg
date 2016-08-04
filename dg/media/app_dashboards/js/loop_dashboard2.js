@@ -156,26 +156,26 @@ function total_static_data() {
         var rs = "₹";
 
         // document.getElementById('cluster_card').innerHTML = clusters;
-        plot_solid_guage($('#cluster_bullet'), 0,clusters, 25);
+        plot_solid_guage($('#cluster_bullet'), 0, clusters, 25);
         // $('#cluster_bullet').sparkline([30, clusters, 50], bullet_options);
 
         // document.getElementById('total_farmers_card').innerHTML = total_farmers_reached + " <sub style='font-size: 12px'>" + parseFloat((total_repeat_farmers / total_farmers_reached) * 100).toFixed(2) + "%" + "</sub>";
-        plot_solid_guage($('#total_farmers_bullet'),0, total_farmers_reached, 2000);
+        plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 2000);
         // $('#total_farmers_bullet').sparkline([1500, total_farmers_reached, 5000], bullet_options);
 
         // document.getElementById('total_volume_card').innerHTML = parseFloat(total_volume).toFixed(0).concat(kg);
-        plot_solid_guage($('#total_volume_bullet'),0, parseInt(total_volume), 5000000);
+        plot_solid_guage($('#total_volume_bullet'), 0, parseInt(total_volume), 5000000);
         // $('#total_volume_bullet').sparkline([1000000, total_volume, 1500000], bullet_options);
 
         // document.getElementById('revenue_card').innerHTML = rs.concat(parseFloat(total_amount).toFixed(0));
-        plot_solid_guage($('#revenue_bullet'),0, parseInt(total_amount), 25000000);
+        plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 25000000);
         // $('#revenue_bullet').sparkline([10000000, total_amount, 15000000], bullet_options);
 
         // document.getElementById('total_expenditure_card').innerHTML = parseFloat(total_cpk).toFixed(2); //rs.concat(parseFloat(total_transportation_cost).toFixed(2) - parseFloat(total_farmer_share).toFixed(2));
-        plot_solid_guage($('#total_expenditure_bullet'),-1, parseFloat(0-total_cpk.toFixed(2)), 0);
+        plot_solid_guage($('#total_expenditure_bullet'), -1, parseFloat(0 - total_cpk.toFixed(2)), 0);
 
         // document.getElementById('sustainability_card').innerHTML = parseFloat(sustainability).toFixed(2).concat(" %");
-        plot_solid_guage($('#sustainability_bullet'),0, parseFloat(sustainability.toFixed(2)), 50);
+        plot_solid_guage($('#sustainability_bullet'), 0, parseFloat(sustainability.toFixed(2)), 50);
     })
 }
 
@@ -806,8 +806,8 @@ function update_graphs_crop_wise(chart) {
 
     if (chart == null) {
         aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.mandi_crop, "quantity__sum");
-        max_min_graph($('#mandi_cost'), bar_graphs_json_data.crop_prices)
-        farmer_crop_visits($("#farmers_count"), bar_graphs_json_data.crop_prices)
+        max_min_graph($('#mandi_cost'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.crop_prices,bar_graphs_json_data.mandi_crop_prices);
+        farmer_crop_visits($("#farmers_count"), bar_graphs_json_data.crop_prices);
 
     } else {
 
@@ -1201,21 +1201,22 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
 }
 
 //Analytics Crops tab  Max Min graph is being plotted here
-function max_min_graph(container, json_data) {
+function max_min_graph(container,crop_ids,crop_names,crop_parameter,mandi_ids,mandi_names,mandi_parameter, json_data_crop,json_data_mandi) {
 
-    json_data.sort(function(a, b) {
-        return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"])
+    json_data_crop.sort(function(a, b) {
+        return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"]);
     })
 
-    var x_axis = []
+    var x_axis = [];
     var series = [{
         "name": "Max_Min",
         "data": []
-    }]
+    }];
+    //TODO:add mandi drill down for crop prices
 
-    for (var i = 0; i < json_data.length; i++) {
-        x_axis.push(json_data[i]['crop__crop_name'])
-        series[0]['data'].push([json_data[i]['price__min'], json_data[i]['price__max']])
+    for (var i = 0; i < json_data_crop.length; i++) {
+        x_axis.push(json_data_crop[i]['crop__crop_name']);
+        series[0]['data'].push([json_data_crop[i]['price__min'], json_data_crop[i]['price__max']]);
     }
 
     plot_max_min(container, x_axis, series)
@@ -2964,7 +2965,7 @@ function download_payments_data() {
     $("#table4").tableExport([], "Transporter_payment_sheet");
 }
 
-function plot_solid_guage(container,minimum, present, target) {
+function plot_solid_guage(container, minimum, present, target) {
     var gaugeOptions = {
         chart: {
             type: 'solidgauge',
@@ -3020,9 +3021,9 @@ function plot_solid_guage(container,minimum, present, target) {
 
         plotOptions: {
             solidgauge: {
-              // innerRadius: '75%',
+                // innerRadius: '75%',
                 dataLabels: {
-                    y:5,
+                    y: 5,
                     borderWidth: 0,
                     useHTML: true
                 }
@@ -3048,7 +3049,7 @@ function plot_solid_guage(container,minimum, present, target) {
             name: 'Present',
             data: [present],
             dataLabels: {
-              format: '<div style="text-align:center"><span style="font-size:18px;color:' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color:' +
                     ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
                     // <span style="font-size:12px;color:silver">km/h</span>
                     '</div>'
