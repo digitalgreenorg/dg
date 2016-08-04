@@ -51,18 +51,22 @@ class QACocoModelForm(ModelForm):
 class VideoContentApprovalForm(QACocoModelForm):
     class Meta:
         model = VideoContentApproval
+        exclude = ()
 
 class VideoQualityReviewForm(QACocoModelForm):
     class Meta:
         model = VideoQualityReview
+        exclude = ()
 
 class DisseminationQualityForm(QACocoModelForm):
     class Meta:
         model = DisseminationQuality
+        exclude = ()
 
 class NonNegotiableForm(QACocoModelForm):       
     class Meta:
         model = NonNegotiable
+        exclude = ()
 
 class AdoptionVerificationForm(QACocoModelForm):
     class Meta:
