@@ -1220,8 +1220,6 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
 
     }
 
-    console.log("Repeat Farmer : ");
-    console.log(series);
     plot_drilldown(container, series, drilldown);
 }
 
