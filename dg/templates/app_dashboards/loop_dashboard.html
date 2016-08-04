@@ -1,8 +1,5 @@
 {% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}DashBoard{% endblock %} {% block extracss %}
 
-<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/materialize.min.css'%}" />
-<link rel="stylesheet" media="screen, projection" href="{% static 'app_dashboards/css/loopdashboard.css'%}" />
-
 <style>
 	li.not-hoverable:hover,
 	li.not-hoverable:active {
@@ -317,13 +314,14 @@
 	</div>
 
 	<div class="container">
-		<div class="row ">
+		<div class="row">
 			<div class=" col s12 m6">
 				<div class="row">
 					<ul class="tabs">
 						<li class="tab col s4"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
+                        <div class="indicator"></div>
 					</ul>
 				</div>
 				<hr>
