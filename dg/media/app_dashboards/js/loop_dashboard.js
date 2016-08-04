@@ -561,6 +561,7 @@ function set_filterlistener() {
         aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
         // $("#table2_wrapper").show();
         $("#download_payment_sheets").show();
+        $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
     });
 
@@ -591,6 +592,7 @@ function set_filterlistener() {
         if (start_date != '') {
             $("#aggregator_payment_tab").hide();
             $("#download_payment_sheets").hide();
+            $('#aggregator_payment_details').hide();
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
@@ -604,6 +606,7 @@ function set_filterlistener() {
         if (end_date != '') {
             $("#aggregator_payment_tab").hide();
             $("#download_payment_sheets").hide();
+            $('#aggregator_payment_details').hide();
         } else {
             $('#payments_to_date').val('');
         }
@@ -2651,9 +2654,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     var sno = 1;
     var str1 = "Rs. ";
-    var data_set = [];
-    var gaddidar_data_set = [];
-    var transporter_data_set = [];
+     data_set = [];
+     gaddidar_data_set = [];
+     transporter_data_set = [];
     var dates = [];
     var mandis = [];
     var quantites = [];
@@ -2709,16 +2712,17 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = quantites[i][j] * 0.25 - gaddidar_amount[i][j] + transport_cost[i][j] - farmer_share[i][j];
+
             data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], (gaddidar_amount[i][j]).toFixed(0), net_payment]);
-            sno += 1
-            total_volume += quantites[i][j]
-            total_payment += net_payment
+            sno += 1;
+            total_volume += quantites[i][j];
+            total_payment += net_payment;
         }
     }
+    console.log(data_set);
 
     $('#table2').DataTable({
         destroy: true,
-
         data: data_set,
         columns: [{
             title: "S No"
@@ -2741,14 +2745,21 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Payment"
         }],
-        "dom": '<"clear">',
-        "pageLength": 20,
-        // "tableTools": {
-        //     "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf"
-        // }
+        "dom": 'T<"clear">rtip',
+        "pageLength": 2,
+        "tableTools": {
+"sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+"aButtons": [
+                           {
+                               "sExtends": "csv",
+                               "sButtonText": "Download",
+                               "bBomInc": true,
+                               "title":"Total Payment Sheet"
+                           }]
+        }
     });
 
-    $("#table2").hide();
+    // $("#table2").hide();
     // $("#table2").tableExport([],"total_payment");
 
     $('#table3').DataTable({
@@ -2763,15 +2774,25 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Quantity"
         }, {
-            title: "Commission"
+            title: "Gaddidar Commission"
         }, {
             title: "Share"
         }],
-        "dom": '<"clear">',
-        "pageLength": 20,
+        "dom": 'T<"clear">rtip',
+        "pageLength": 2,
+        "tableTools": {
+            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                                       {
+                                           "sExtends": "csv",
+                                           "sButtonText": "Download",
+                                           "bBomInc": true,
+                                           "title":"Gaddidar Payment Sheet"
+                                       }]
+        }
 
     });
-    $("#table3").hide();
+    // $("#table3").hide();
     // $("#table3").tableExport([],"Gaddidar");
     $('#table4').DataTable({
         destroy: true,
@@ -2789,11 +2810,21 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Transport Cost"
         }],
-        "dom": '<"clear">',
-        "pageLength": 20,
+        "dom": 'T<"clear">rtip',
+        "pageLength": 2,
+        "tableTools": {
+            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                                       {
+                                           "sExtends": "csv",
+                                           "sButtonText": "Download",
+                                           "bBomInc": true,
+                                           "title":"Transporter Payment Sheet"
+                                       }]
+        }
 
     });
-    $("#table4").hide();
+    // $("#table4").hide();
     // $("#table4").tableExport([],"transport");
 
 
@@ -2990,6 +3021,18 @@ function show_detailed_data(d, aggregator_id) {
 
 
 function download_payments_data() {
+
+    console.log(data_set);
+  //   alasql.into.CSV = function(filename, opts, data, columns, cb) {
+  //     opt.quote = '"';
+  //  opt.utf8Bom = false;
+  //  var res = data.length;
+  //  var s = opt.utf8Bom ? "\ufeff" : '';
+  //   }
+
+      // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
+          // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
+              // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
     $("#table2").tableExport([], "Total_payment");
     $("#table3").tableExport([], "Gaddidar_payment_sheet");
     $("#table4").tableExport([], "Transporter_payment_sheet");
