@@ -161,12 +161,4 @@ class ScreeningForm(CocoModelForm):
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
-
-class CategoryForm(CocoModelForm):
-    class Meta:
-        model = Category
-
-class SubCategoryForm(CocoModelForm):
-    class Meta:
-        model = SubCategory
         exclude = ()
