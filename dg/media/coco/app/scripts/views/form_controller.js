@@ -40,10 +40,12 @@ var message_combined_failure = "";
         //setting up the form view
         beforeRender: function() {
             console.log(this.params);
+            var language = User.get("language");
+            var button = configs['misc']['meta_'+language]['save'];
             // pass on the params to the form view - also add desired names of the buttons on form - null hides the button
             this.params = $.extend(this.params, {
                 serialize: {
-                    button1: "Save and Add Another",
+                    button1: button,
                     button2: null
                 }
             });
