@@ -58,60 +58,33 @@
 
 
                                 $("#stateId").next().bind("click", function () {
-                                    statepopulate('state', $("#countryId").val());
+                                    populate('state', $("#countryId").val());
                                     $("#stateId").trigger("chosen:updated");
                                 });
                                 $("#districtId").next().bind("click", function () {
-                                    districtpopulate("district", $("#stateId").val());
+                                    populate("district", $("#stateId").val());
                                     $("#districtId").trigger("chosen:updated");
                                 });
                                 $("#blockId").next().bind("click", function () {
-                                    blockpopulate("block", $("#districtId").val());
+                                    populate("block", $("#districtId").val());
                                     $("#blockId").trigger("chosen:updated");
                                 });
                                 $("#villageId").next().bind("click", function () {
-                                    villagepopulate("village", $("#blockId").val());
+                                    populate("village", $("#blockId").val());
                                     $("#villageId").trigger("chosen:updated");
                                 });
                                 $("#videoId").next().bind("click", function () {
-                                    videopopulate("video", $("#partnerId").val());
+                                    populate("video", $("#partnerId").val());
                                     $("#videoId").trigger("chosen:updated");
                                 });
                             });
 
                         </script>
                         <style>
-                            .chosen-with-drop {
+                            .chosen-with-frop {
                                 position: absolute;
-                                display: inline-block;
-                                vertical-align: middle;
-                                font-size: 13px;
-                                -webkit-user-select: none;
-                                -moz-user-select: none;
-                                user-select: none;
-                            }
-
-                            .chosen-container-multi .chosen-choices {
-                                position: relative;
-                                overflow: hidden;
-                                margin: 0;
-                                padding: 0 5px;
-                                width: 100%;
-                                height: 70%;
-                                border: 1px solid #aaa;
-                                background-color: #fff;
-                                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-                                background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
-                                background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
-                                background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
-                                background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
-                                cursor: text;
                             }
                         </style>
-                        <script>
-
-                        </script>
-
 
                         <div id="date" name="Date">
                             <p class="copy">
@@ -124,12 +97,13 @@
                             </p>
                         </div>
                     </center>
-                    <div name="Filters"
-                         style='padding-left:77px;  padding-right:50px; float:left;'>
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Filters:</h3>
+
+                    <div id="Filters"
+                         style='padding-left:77px;  padding-right:50px; float:left; margin-top:3%;width: 85%;'>
+                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm" align="center">Filters:</h3>
                         <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
-                            <div name='partner' id='partnerID' style="position: static">
-                                Partner &nbsp;&nbsp;
+                            <div name='partner' id='partnerID' style="width: 25%;float: left;">
+                                <span> Partner &nbsp;&nbsp;</span>
 
                                 <select class="select" multiple name='partner' id='partnerId'
                                         style=" width: 150px; ">
@@ -141,9 +115,8 @@
                                     {% endif %}
                                 </select>
                             </div>
-                            </br>
 
-                            <div name='country' id='countryID'>
+                            <div name='country' id='countryID' style="width:25%; float:left; ">
                                 Country &nbsp;
                                 <select class='select' multiple="multiple" name='country' id='countryId'
                                         style="width: 150px; ">
@@ -154,9 +127,9 @@
                                     {% endif %}
                                 </select>
                             </div>
-                            </br>
 
-                            <div name='state' id='stateID'>
+
+                            <div name='state' id='stateID' style="float: left; width: 25%; ">
                                 State &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <select class='State' multiple name='state' id='stateId'
 
@@ -165,9 +138,9 @@
 
                                 </select>
                             </div>
-                            </br>
 
-                            <div name='district' id='districtID'>
+
+                            <div name='district' id='districtID' style="float: left; width: 25%; ">
                                 District &nbsp;&nbsp;&nbsp;
                                 <select class='select' multiple="multiple" name='district' id='districtId'
 
@@ -176,73 +149,80 @@
 
                                 </select>
                             </div>
-                            </br>
-                            <div name='block' id='blockID'>
-                                Block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <select class='select' multiple="multiple" name='block' id='blockId'
+                            <div id="second_row" style="position: relative;margin-top: 3%;float: left">
+                                <div name='block' id='blockID' style="position:relative;float: left; width: 25%; margin-top: 3%; ">
+                                    Block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <select class='select' multiple="multiple" name='block' id='blockId'
 
-                                        style="width: 150px; "
-                                >
+                                            style="width: 150px; "
+                                    >
 
 
-                                </select>
+                                    </select>
+                                </div>
+
+
+                                <div name='village' id='villageID'
+                                     style="position:relative;float: left; width: 25%; margin-top: 3%;margin-left: 6%">
+                                    Village &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <select class='select' multiple="multiple" name='village' id='villageId'
+                                            style="width: 150px;">
+
+                                    </select>
+                                </div>
+
+                                <div name="video" id=" videoID"
+                                     style="position:relative;float:left;width: 25%;margin-top: 3%; margin-left: 5%">
+                                    Video &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <select class="select" multiple="multiple" name='video' id="videoId"
+                                            style="width:150px;">
+                                    </select>
+                                </div>
                             </div>
-                            </br>
 
-                            <div name='village' id='villageID'>
-                                Village &nbsp;&nbsp;&nbsp;&nbsp;
-                                <select class='select' multiple="multiple" name='village' id='villageId'
-                                        style="width: 150px;">
 
-                                </select>
-                            </div>
-                            </br>
-                            <div name="video" id=" videoID">
-                                Video &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <select class="select" multiple="multiple" name='video' id="videoId"
-                                        style="width:150px;">
-                                </select>
-                            </div>
-                            </br>
                         </div>
-                    </div>
 
-                    <div name="Partition" style=' padding-right:110px; display:inline-block; float:left;'>
+                    </div>
+                    <div name="Partition"
+                         style=' padding-right:110px; display:inline-block; float:left;padding-top: 2%;margin-left: 15%;margin-top: 3%'>
                         <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
                         <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
                             <ul style='list-style-type: none;'>
-                                <li><input type="checkbox" id="partner" name="partner_chk" value"partner">Partner
-                                <li><input type="checkbox" id="country" name="country_chk" value"country">Country
-                                <li><input type="checkbox" id="state" name="state_chk" value"state">State
-                                <li><input type="checkbox" id="district" name="district_chk" value"district">District
-                                <li><input type="checkbox" id="block" name="block_chk" value"block">Block
-                                <li><input type="checkbox" id="village" name="village_chk" value"village">Village
-                                <li><input type="checkbox" id="animator" name="animator_chk" value"animator">Animator(Mediator)
-                                <li><input type="checkbox" id="people" name="people_chk" value"animator">Registered
+                                <li><input type="checkbox" id="partner" name="partner_chk" value="partner">Partner
+                                <li><input type="checkbox" id="country" name="country_chk" value="country">Country
+                                <li><input type="checkbox" id="state" name="state_chk" value="state">State
+                                <li><input type="checkbox" id="district" name="district_chk" value="district">District
+                                <li><input type="checkbox" id="block" name="block_chk" value="block">Block
+                                <li><input type="checkbox" id="village" name="village_chk" value="village">Village
+                                <li><input type="checkbox" id="animator" name="animator_chk" value="animator">Animator(Mediator)
+                                <li><input type="checkbox" id="people" name="people_chk" value="animator">Registered
                                     Viewers
-                                <li><input type="checkbox" id="group" name="group_chk" value"animator">SHG
-                                <li><input type="checkbox" id="video" name="video_chk" value"videos">Videos
+                                <li><input type="checkbox" id="group" name="group_chk" value="animator">SHG
+                                <li><input type="checkbox" id="video" name="video_chk" value="videos">Videos
                             </ul>
                         </div>
                     </div>
 
-                    <div name="Values" style='float:left; display: inline-block'>
+                    <div name="Values" style='float:left; display: inline-block; padding-top: 2%;margin-left: 20%;margin-top: 3%'>
                         <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Values:</h3>
                         <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
                             <ul style='list-style-type: none;'>
-                                <li><input type="checkbox" id="screening" name="screening_chk" value"screening">Number
+                                <li><input type="checkbox" id="screening" name="screening_chk" value="screening">Number
                                     of Screenings
-                                <li><input type="checkbox" id="adoption" name="adoption_chk" value"adoption">Number of
+                                <li><input type="checkbox" id="adoption" name="adoption_chk" value="adoption">Number of
                                     Adoptions
-                                <li><input type="checkbox" id="animator_no" name="no_animator_chk" value"numAnimators">Number
+                                <li><input type="checkbox" id="animator_no" name="no_animator_chk" value="numAnimators">Number
                                     of Animators(Mediators)
-                                <li><input type="checkbox" id="attendance" name="attendance_chk" value"attendance">Number
+                                <li><input type="checkbox" id="attendance" name="attendance_chk" value="attendance">Number
                                     of Viewers
-                                <li><input type="checkbox" id="video_screened_no" name="no_video_screened_chk" value"numVideoScreened">Number
+                                <li><input type="checkbox" id="video_screened_no" name="no_video_screened_chk"
+                                           value="numVideoScreened">Number
                                     of Videos Screened
-                                <li><input type="checkbox" id="video_produced_no" name="no_video_produced_chk" value"numVideoProduced">Number
+                                <li><input type="checkbox" id="video_produced_no" name="no_video_produced_chk"
+                                           value="numVideoProduced">Number
                                     of Videos Produced
-                                <li><input type="checkbox" id="list" name="list" value"list">List
+                                <li><input type="checkbox" id="list" name="list" value="list">List
                             </ul>
                             <div id="listoptions" name='listoptions' style='visibility:hidden'>
                                 <select class='select' name='list_video' id='list_video' style='width:200px;'>
@@ -253,9 +233,9 @@
                             </div>
                         </div>
                     </div>
-                    <div name="Buttons" class="centered layout-vr-lg" style="padding-top:80px; float:right;">
+                    <div name="Buttons" class="centered layout-vr-lg" style="padding-top:80px; float:left;">
                         <input class="btn" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
-                        <input class="btn" type="button" value="Reset" onClick="this.form.reset();">
+                        <input class="btn" type="button" value="Reset" onClick="this.form.reset(); ">
                     </div>
 
                 </form>
