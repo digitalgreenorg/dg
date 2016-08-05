@@ -258,7 +258,7 @@
                         </div>
                     </div>
                     <p id="helptext">
-                    Please download the database by clicking on the sync button
+                    
                     </p>
                     <div class="row">
                         <div id="coco_nav" class="col-lg-1 col-md-2 col-sm-3 col-xs-10 navbar-collapse collapse">
@@ -293,7 +293,8 @@
     </div>
     <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
     <div class="col-xs-4 align-right">
-        <a id="help" href="{% url 'faq' %}"> Help </a>
+        <% if(language === undefined){ language = configs.misc.meta_default}; %>
+        <a id="help" href="{% url 'faq' %}"> <%= configs['misc']['meta_'+language]['help']%> </a>
         <img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5">
         <img id= "online" src="/media/coco/app/images/online.png" title= "You are online" class="connection-indicator"/>
         <img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline" class="connection-indicator"/>

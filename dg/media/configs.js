@@ -1093,8 +1093,9 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         languages: ['Hindi', 'English'],
-        meta_English: {pause_download: "Pause Download", sync: "Sync", save: "Save and Add Another"},
-        meta_Hindi: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें"},
+        meta_default: 'English',
+        meta_English: {pause_download: "Pause Download", sync: "Sync", save: "Save and Add Another", help:"Help"},
+        meta_Hindi: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें", help:"हेल्प"},
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

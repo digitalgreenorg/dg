@@ -23,6 +23,7 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             return {
                 username: username,
                 language: language,
+                configs: configs,
             }
         },
 

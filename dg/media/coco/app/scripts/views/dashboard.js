@@ -30,7 +30,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             var username = User.get("username");
             var language = User.get("language");
             if(language === undefined) {
-                    language = "English";
+                    language = configs.misc.meta_default;
             }
             return {
                 username: username,
@@ -46,7 +46,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             for (var member in configs) {
                 var language = User.get("language");
                 if(language === undefined) {
-                    language = "English";
+                    language = configs.misc.meta_default;
                 }
                 if (member == "misc") continue;
                 var listing = true;
