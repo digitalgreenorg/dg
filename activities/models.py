@@ -96,6 +96,35 @@ class Screening(CocoModel):
     def screening_location(self):
         return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
 
+    def get_max_attendance(self):
+        max_attendance = 0
+        for group in self.farmer_groups_targeted.all():
+            max_attendance += len(Person.objects.filter(group_id=group.id))
+        return max_attendance
+
+    def get_attendance(self):
+        return len(self.farmers_attendance.all())
+    
+    def get_adoptions(self):
+
+        self.d_date_yyyy = self.date.year
+        self.d_date_mm = self.date.month
+        self.d_date_dd = self.date.day
+
+        no_of_adoption = 0
+
+        videoes_screened_list = [ p for p in self.videoes_screened.all()]
+
+        attendees = [ p for p in self.farmers_attendance.all()]
+        
+        for v in videoes_screened_list :
+            adoption_list = PersonAdoptPractice.objects.filter(video_id=v.id, person__in=attendees, date_of_adoption__gt=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd),date_of_adoption__lte=datetime.date(self.d_date_yyyy, self.d_date_mm, self.d_date_dd)+datetime.timedelta(weeks=6))
+            no_of_adoption += len(adoption_list)
+
+        return no_of_adoption
+        
+
+
 post_save.connect(save_log, sender=Screening)
 pre_delete.connect(delete_log, sender=Screening)
 

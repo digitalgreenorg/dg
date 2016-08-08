@@ -1,8 +1,8 @@
 __author__ = 'HP'
-import json, datetime
-
+import json, datetime, time
+import calendar
 from django.http import HttpResponse
-
+from django.db.models import Sum
 from activities.models import PersonAdoptPractice, Screening, VRPpayment
 from coco.models import CocoUser
 from people.models import Person
@@ -90,6 +90,7 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
     each_diss_vid_arr_detail = []
     #ppl_attending = custom_object.get_diss_attendees(diss_id)
     for video in dissemination.videoes_screened.all():
+
         custom_object.get_adoption_data(video.id, ppl_attending)
         each_video_adopt_dict = {}
         video_adopted_ppl = custom_object.get_new_adoption_list(dissemination.date)
@@ -97,6 +98,7 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
         each_video_adopt_dict['v_id'] = video.id
         each_video_adopt_dict['v_n_adoptions'] = video_adopted_ppl.count()
         each_video_adopt_dict['v_n_expected_adoptions'] = ppl_attending_count
+        # According to DOc this is not correct that in deno -> new attendes but in Nuerator We take all adopters, basically it should be only new adopters assuming one can adopt again
         denominator = ppl_attending_count - video_already_adopted_ppl.count()
         if (denominator > 0):
             if (((video_adopted_ppl.count() * 100) / denominator) > 30):
@@ -108,8 +110,38 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
         each_diss_vid_arr_detail.append(each_video_adopt_dict)
     return each_diss_vid_arr_detail
 
+def cal_data(selectedpartner, selectedblock, start_date, end_date) :
+
+
+    start_yyyy = start_date[-4:]
+    start_mm = start_date[:2]
+    start_dd = 01
+    end_yyyy = end_date[-4:]
+    end_mm = end_date   [:2]
+    end_dd = calendar.monthrange(int(end_yyyy),int(end_mm))[1]
+
+    obj = Screening()
+    d = Screening.objects.filter(village__block_id = selectedblock, partner_id=selectedpartner, date__gte=datetime.date(int(start_yyyy), int(start_mm), start_dd), date__lte=datetime.date(int(end_yyyy), int(end_mm), end_dd)).prefetch_related('animator','village')
+
+    print "*****************************************************"
+    count_attendance_success = 0
+    count_adoption_success = 0
+    for i in d :
+        i.adoption_success = 1 if ((i.get_adoptions() / i.get_attendance()) >= 0.30) else 0
+        i.attendance_success = 1 if ((i.get_attendance() / i.get_max_attendance()) >= 0.70) else 0 
+
+        if(i.attendance_success ) :
+            count_attendance_success += 1
+        if(i.adoption_success ) :
+            count_adoption_success += 1
+
+    print "%d %d" % (d[0].adoption_success, count_attendance_success)
+    return d
+
 
 def makereport(request):
+
+
     per_dissemination_rate = 28                     # Amount to be given to VRP for one successful dissemination
     per_adoption_rate = 12                          # Amount to be given to VRP for one successful adoption
     start_date = request.GET.get('startperiod', None)
@@ -118,7 +150,27 @@ def makereport(request):
     selectedblock = request.GET.get('block', None)
     custom_object = VRPpayment(selectedpartner, selectedblock, start_date, end_date)
     list_of_vrps = custom_object.get_req_id_vrp()
+
+
+
+    # New implementation
+
+    # comp_data = cal_data(selectedpartner, selectedblock, start_date, end_date)
+    # print comp_data.values('animator_id', 'animator__name','village__village_name').annotate(count_successful_screening = Sum('attendance_success'))
+    # result_dict = {}
+    # for i in comp_data:
+    #     if(i.animator not in result_dict.keys()):
+    #         result_dict[i] = {'num_screening' = }
+
+    #now lets do some debugging
+
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "############################################" + ST
     complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "<<<<<<<------------------------>>>>>>>" + ST
     output_array = []
     i = 0
     for each_vrp in complete_data:
@@ -142,4 +194,7 @@ def makereport(request):
     else:
         report_data = output_array
         resp = json.dumps({"vrppayment":report_data})
+    ts = time.time();
+    ST = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" + ST
     return HttpResponse(resp)
