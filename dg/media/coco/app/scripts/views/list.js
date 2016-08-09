@@ -1,5 +1,5 @@
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'models/user_model', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline, User) {
 
 
     var ListView = Backbone.Layout.extend({
@@ -12,12 +12,14 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             //TODO: if !entity_config, handle error etc
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
-            this.render();
+            User.on('change', this.render);
         },
 
         serialize: function () {
             //send these to the list page template
+            var language = User.get('language');
             return {
+                language : language,
                 page_header: this.entity_config.page_header,
             };
         },
@@ -35,7 +37,8 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
         },
         
         get_row_header: function () {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var header_row = $.map(list_elements, function (column_definition) {
                 var header = "";
                 if ('header' in column_definition) {
@@ -56,7 +59,8 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
         },
         
         get_row: function (model_object) {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var row = $.map(list_elements, function (column_definition) {
                 var cell = '';
                 if ('element' in column_definition) {
@@ -114,6 +118,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                     "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "bAutoWidth":false,
+                    "bDestroy": true,
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [

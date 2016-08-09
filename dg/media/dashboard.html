@@ -164,7 +164,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Download</h3>
+                    <h3><%= all_configs['misc']['meta_'+language]['download'] %></h3>
                 </div>
                 <div class="modal-body">
                     <div class="progress progress-info progress-striped">
@@ -179,7 +179,7 @@
                                 %>
                                 <tr id="<%=key%>">
                                     <td><%= keyCap %></td>
-                                    <td class="status_text">In Progress</td>
+                                    <td class="status_text"><%= all_configs['misc']['meta_'+language]['inprogress'] %></td>
                                     <td class="status_numbers"></td>
                                 </tr>
                             <%}});%>
