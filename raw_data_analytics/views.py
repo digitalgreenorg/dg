@@ -69,7 +69,6 @@ def dropdown_video(request):
     videos = Video.objects.filter(partner__partner_name=partner_selected).values_list('title', flat=True)  # todo
 
     resp = json.dumps([unicode(i) for i in videos])
-
     return HttpResponse(resp)
 
 
@@ -81,7 +80,6 @@ def execute(request):
     block = request.POST.getlist("block")
     village = request.POST.getlist("village")
     video = request.POST.getlist("video")
-
     filterDict = {
         'partner': partner,
         'country': country,
@@ -104,6 +102,7 @@ def execute(request):
     video_chk = [request.POST.get("video_chk")]
     list_combo = str(request.POST.get("list"))
     videolist = str(request.POST.get("list_video"))
+
 
     partitionDict = {
         'partner_chk': partner_chk,
@@ -230,7 +229,6 @@ def execute(request):
         checked_list.append('video')
     elif (len(video) > 0 and video_chk[0] == None) or (len(video) > 0 and video_chk[0] != None):
         video = Video.objects.filter(title__in=video)
-        print video
         videoTemp = []
         for videoObject in video:
             videoTemp.append(str(videoObject.id))
@@ -260,11 +258,11 @@ def execute(request):
         group = True
         checked_list.append('persongroup')
 
-    if (video_chk[0] == None):
-        video = False
-    elif (video_chk[0] != None):
-        video = True
-        checked_list.append('video')
+#    if (video_chk[0] == None):
+#        video = False
+#    elif (video_chk[0] != None):
+#        video = True
+#        checked_list.append('video')
 
     ###############################Value#################################
 
@@ -310,8 +308,7 @@ def execute(request):
         videolist = False
 
     priority = {}
-
-    if (list_combo == 'on'):
+    if (list_combo == 'list'):
         for x in checked_list:
             if ((x in categoryDictionary['geographies']) or (x == 'partner')):
                 for x, v in orderDictionary.items():
@@ -368,7 +365,6 @@ def execute(request):
     }
 
     options = {'partition': partition, 'value': value}
-
     args = []
     args.append(from_date)
     args.append(to_date)

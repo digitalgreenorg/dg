@@ -11,7 +11,7 @@
             <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top: -2%">Raw Data Analytics</h2>
             <div class="media layout-vr-xlg">
 
-                <form target="_blank" action="/raw_data_analytics/execute/" id="form" method="POST"
+                <form target="_blank" action="/raw_data_analytics/execute/" id="formId" method="POST"
                       enctype="multipart/form-data" onclick="list_display(this)" style="margin-top: -5%">
                     {% csrf_token %}
 
@@ -31,6 +31,7 @@
 
                         });
                     </script>
+
                     <script type="text/javascript">
                         var datefield = document.createElement("input")
                         datefield.setAttribute("type", "date")
@@ -55,10 +56,32 @@
                     <script>
 
                         jQuery(document).ready(function ($) {
+                            $('#resetId').click(function () {
+
+                                $('#partnerId').val('').trigger("chosen:updated");
+                                $('#countryId').val('').trigger("chosen:updated");
+                                $('#stateId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+                                $('#districtId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+                                $('#blockId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+                                $('#villageId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+                                $('#videoId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+                                $("#formId").each(function () {
+                                    this.reset();
+                                });
+
+                            });
+                            $('#formId').keypress(function (event) {
+
+                                if (event.keyCode === 10 || event.keyCode === 13)
+                                    event.preventDefault();
+
+                            });
                             $("#partnerId").bind("change", function () {
+                                $('#videoId').prop('disabled', false);
                                 $("#videoId").val('').trigger("chosen:updated");
                             });
                             $("#countryID").bind("change", function () {
+                                $('#stateId').prop('disabled', false);
                                 $('#stateId').find('option').remove();
                                 $("#districtId").find('option').remove();
                                 $("#blockId").find('option').remove();
@@ -69,6 +92,7 @@
                                 $("#villageId").val('').trigger("chosen:updated");
                             });
                             $("#stateId").bind("change", function () {
+                                $("#districtId").prop('disabled', false);
                                 $("#districtId").find('option').remove();
                                 $("#blockId").find('option').remove();
                                 $("#villageId").find('option').remove();
@@ -77,7 +101,7 @@
                                 $("#villageId").val('').trigger("chosen:updated");
                             });
                             $("#districtId").bind("change", function () {
-
+                                $("#blockId").prop('disabled', false);
                                 $("#blockId").find('option').remove();
                                 $("#villageId").find('option').remove();
                                 $("#blockId").val('').trigger("chosen:updated");
@@ -85,6 +109,7 @@
 
                             });
                             $("#blockId").bind("change", function () {
+                                $("#villageId").prop('disabled', false);
                                 $("#villageId").find('option').remove();
                                 $("#villageId").val('').trigger("chosen:updated");
 
@@ -162,7 +187,7 @@
 
                                 <div name='state' id='stateID' style="">
                                     State &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <select class='State' multiple name='state' id='stateId'
+                                    <select class='State' multiple name='state' id='stateId' disabled="true"
 
                                             style="width: 450px;"
                                     >
@@ -175,7 +200,7 @@
                                     District &nbsp;&nbsp;&nbsp;
                                     <select class='select' multiple="multiple" name='district' id='districtId'
 
-                                            style="width: 450px;"
+                                            disabled="true" style="width: 450px;"
                                     >
 
                                     </select>
@@ -187,7 +212,7 @@
                                     Block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class='select' multiple="multiple" name='block' id='blockId'
 
-                                            style="  width: 450px; "
+                                            style="  width: 450px; " disabled="true"
                                     >
 
 
@@ -199,7 +224,7 @@
                                      style=" ">
                                     Village &nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class='select' multiple="multiple" name='village' id='villageId'
-                                            style="width: 450px;">
+                                            style="width: 450px;" disabled="true">
 
                                     </select>
                                 </div>
@@ -208,7 +233,7 @@
                                      style="">
                                     Video &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class="select" multiple="multiple" name='video' id="videoId"
-                                            style="width: 450px;height: auto">
+                                            style="width: 450px;height: auto" disabled="true">
                                     </select>
                                 </div>
 
@@ -263,17 +288,18 @@
                                 </ul>
                                 <div id="listoptions" name='listoptions' style='visibility:hidden'>
                                     <select class='select' name='list_video' id='list_video' style='width:200px;'>
-                                        <option value='-1'>-----------------List of------------------</option>
+                                        <option value='0'>-----------------List of------------------</option>
                                         <option value='listVideoProduced'>Produced Videos</option>
                                         <option value='listVideoScreened'>Screened Videos</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div name="Buttons" class="centered layout-vr-lg" style="padding-top:20px; float:left;margin-left: 5%;margin-bottom: 20%;margin-top: -4%">
-                        <input class="btn" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
-                        <input class="btn" type="button" value="Reset" onClick="this.form.reset(); ">
-                    </div>
+                        <div name="Buttons" class="centered layout-vr-lg"
+                             style="padding-top:20px; float:left;margin-left: 5%;margin-bottom: 20%;margin-top: -4%">
+                            <input class="btn" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
+                            <input class="btn" type="button" id="resetId" value="Reset">
+                        </div>
                     </div>
 
 

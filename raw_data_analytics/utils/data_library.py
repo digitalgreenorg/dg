@@ -57,12 +57,15 @@ class data_lib():
 
             for item in options['value']:
                 if item == 'list' and options['value']['list'] != False:
+
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
+
                 if options['value'][item] != False and item != 'list':
                     relevantValueDictionary[item] = options['value'][item]
+
         else:
             print "Warning - Invalid input for Value fields"
 
@@ -152,8 +155,8 @@ class data_lib():
 #        print selectResult
 #        print "----------------------------------FROM PART--------------------------------"
 #        print fromResult
-#        print "----------------------------------WHERE PART-------------------------------"
-#        print whereResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
 #        print "---------------------------------GROUP_BY PART----------------------------"
 #        print groupbyResult
 #        print "--------------------------------ORDER_BY PART-----------------------------"
