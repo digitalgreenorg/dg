@@ -282,8 +282,8 @@
     <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
     <div class="col-xs-4 align-right">
         <% if(language === undefined){ language = configs.misc.meta_default}; %>
-        <div class="btn-group col-sm-offset-2">
-            <button class="btn btn-default coco_sync dropdown-toggle" style="margin-right: 2%;" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
+        <div class="btn-group">
+            <button class="btn btn-default coco_sync dropdown-toggle" style="margin-right:10px" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
                 <%=language%>
                 <span class="caret"></span>
             </button>
@@ -517,7 +517,7 @@
 <!--///////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES START ///////////////////////////////////////////-->
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset class="form-horizontal">
-        <legend>Add Mediator</legend>
+        <legend><%= mediator %></legend>
 		<p class="bold-helptext"> All fields in bold are required</p>
         <div class="form-group">
             <label class="control-label col-sm-2"><b><%= name %></b></label>
@@ -571,7 +571,7 @@
 <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="screening_add_edit_template">
             <fieldset class="form-horizontal">
-                <legend>Add Screening</legend>
+                <legend><%= screening %></legend>
 				<p class="bold-helptext"> All fields in bold are required</p>
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
@@ -698,7 +698,7 @@
 <!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="adoption_edit_template">
         <fieldset class="form-horizontal">
-                <legend>Edit Adoption</legend>
+                <legend><%= adoption %></legend>
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
                 	<div class="col-sm-4"> 
@@ -732,7 +732,7 @@
 </script>
 <script type="text/template" id="adoption_add_template">
         <fieldset class="form-horizontal">
-            <legend>Add Adoption</legend>
+            <legend><%= adoption %></legend>
             <p class="bold-helptext"> All fields in bold are required</p>
             <div class="form-group">
                 <label class="control-label col-sm-2"><%= village %></label>
@@ -867,7 +867,7 @@
 <!--////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="group_add_edit_template">
     <fieldset class="form-horizontal">
-        <legend>Add Group</legend>
+        <legend><%= group %></legend>
         <p class="bold-helptext"> All fields in bold are required</p>
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b><%= name %></b></label>
@@ -925,7 +925,7 @@
 <!--///////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="video_add_edit_template">
         <fieldset class="form-horizontal">
-            <legend>Add Video</legend>
+            <legend><%= video %></legend>
             <p class="bold-helptext"> All fields in bold are required</p>
             <div class="form-group">
                 <label class="col-sm-2 control-label"><%= title %></label>
@@ -1066,22 +1066,22 @@
 
 <script type="text/template" id="person_add_edit_template">
         <fieldset class="form-horizontal">
-            <legend>Add Person</legend>
+            <legend><%= person %></legend>
 			<p class="bold-helptext"> All fields in bold are required</p>
             <div class="form-group"> 
-                <label class="control-label col-sm-2">Name</label>
+                <label class="control-label col-sm-2"><%= name %></label>
             	<div class="col-sm-4">
                     <input type="text" name="person_name" class="form-control">
              	</div>
             </div>
             <div class="form-group"> 
-                <label class="control-label col-sm-2">Father Name</label>
+                <label class="control-label col-sm-2"><%= father_name %></label>
                 <div class="col-sm-4"> 
                     <input type="text" name="father_name" class="form-control">
                 </div>
             </div>
             <div class="form-group"> 
-                <label class="control-label col-sm-2">Village</label>
+                <label class="control-label col-sm-2"><%= village %></label>
                 <div class="col-sm-4"> 
                     <select id = "id_village" name="village" class="chosen-select form-control">
                         
@@ -1089,7 +1089,7 @@
                 </div>
             </div>
             <div class="form-group"> 
-                <label class="control-label col-sm-2">Gender</label>
+                <label class="control-label col-sm-2"><%= gender %></label>
                 <div class="col-sm-4">
                     <select name="gender" class="form-control">
                         <option value='' selected='selected'>---------</option> 
@@ -1099,19 +1099,19 @@
                 </div>
             </div> 
             <div class="form-group">
-            	<label class="control-label col-sm-2 notbold">Age</label>
+            	<label class="control-label col-sm-2 notbold"><%= age %></label>
             	<div class="col-sm-4"> 
                     <input class="input-mini form-control" name="age" type="text" placeholder="Age">
             	</div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2 notbold">Phone Number</label>
+                <label class="control-label col-sm-2 notbold"><%= phone_no %></label>
                 <div class="col-sm-4">
                     <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
                 </div>
             </div>
 			<div class="form-group"> 
-                <label class="control-label col-sm-2 notbold">Group</label> 
+                <label class="control-label col-sm-2 notbold"><%= group %></label> 
                 <div class="col-sm-4">
                     <select id = "id_group" name="group" class="chosen-select form-control">
                     
