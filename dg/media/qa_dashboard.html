@@ -493,9 +493,9 @@
             </div>
         </div>
         <div class="form-group">
-                <label class="col-sm-2 control-label notbold">Comment</label>
+                <label class="col-sm-2 control-label">Comment</label>
                 <div class="col-sm-4">
-                    <textarea name="comment" class="input-xlarge form-control" rows="4" placeholder="Comment"></textarea>
+                    <textarea required name="comment" class="input-xlarge form-control" rows="4" placeholder="Comment"></textarea>
                 </div>
         </div>
         </fieldset>
@@ -598,11 +598,10 @@
             </div>
         </div>
          <div class="form-group">
-                <label class="col-sm-2 control-label">Youtube Id</label>
+                <label class="col-sm-2 control-label">YouTube ID</label>
                 <div class="col-sm-4">
                     <input type="text" name="youtubeid" class="form-control">
                 </div>
-                <div class="help-block col-sm-4"><b>Link</b></div>
             </div>
         <fieldset class="form-horizontal">
             <legend> </legend>
@@ -716,13 +715,13 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Total Score</label>
                 <div class="col-sm-4">
-                    <input type="text" name="total_score" class="form-control">
+                    <input readonly type="text" name="total_score" class="form-control">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Video Grade</label>
                 <div class="col-sm-4">
-                    <input type="text" name="video_grade" class="form-control">
+                    <input readonly type="text" name="video_grade" class="form-control">
                 </div>
             </div>
             <div class="form-group">
@@ -743,9 +742,9 @@
             </div>
         </div>
         <div class="form-group">
-                <label class="col-sm-2 control-label notbold">Remark</label>
+                <label class="col-sm-2 control-label">Remarks</label>
                 <div class="col-sm-4">
-                    <textarea name="remarks" class="input-xlarge form-control" rows="4" placeholder="Remarks"></textarea>
+                    <textarea required name="remarks" class="input-xlarge form-control" rows="4" placeholder="Remarks"></textarea>
                 </div>
         </div>
         
@@ -831,7 +830,30 @@
                 <div class="col-sm-4">
                     <input class="date-picker form-control" id="id_date" name="date" type="text" placeholder="YYYY-MM-DD">
                 </div>
+        </div>
+        <legend> </legend>
+        <div class="form-group">
+        <label class="dis-block control-label col-sm-2 ">PICO Projector</label>
+            <div class="col-sm-4">
+                    <select required name="pico" class="chosen-select form-control">
+                        <option value='' selected='selected'>-----------</option>
+                        <option value='0'>Not Working</option>
+                        <option value='1'>Working</option>
+                    </select>                
             </div>
+        </div>
+
+        <div class="form-group">
+        <label class="dis-block control-label col-sm-2 ">Speaker</label>
+            <div class="col-sm-4">
+                    <select required name="speaker" class="chosen-select form-control">
+                        <option value='' selected='selected'>-----------</option>
+                        <option value='0'>Not Working</option>
+                        <option value='1'>Working</option>
+                    </select>                
+            </div>
+        </div>
+
         <fieldset class="form-horizontal">
             <legend> </legend>
 
@@ -885,13 +907,13 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Total Score</label>
                 <div class="col-sm-4">
-                    <input type="text" name="total_score" class="form-control">
+                    <input readonly type="text" name="total_score" class="form-control">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Grade</label>
                 <div class="col-sm-4">
-                    <input type="text" name="video_grade" class="form-control">
+                    <input readonly type="text" name="video_grade" class="form-control">
                 </div>
             </div>
         <div class="form-group">
@@ -904,9 +926,9 @@
             </div>
         </div>
         <div class="form-group">
-                <label class="col-sm-2 control-label notbold">Remark</label>
+                <label class="col-sm-2 control-label">Remarks</label>
                 <div class="col-sm-4">
-                    <textarea name="remark" class="input-xlarge form-control" rows="4" placeholder="Remark"></textarea>
+                    <textarea required name="remark" class="input-xlarge form-control" rows="4" placeholder="Remark"></textarea>
                 </div>
         </div>
         

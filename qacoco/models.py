@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 
-from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED
+from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED, EQUIPMENT_WORK
 
 from geographies.models import District,Block,Village
 from programs.models import Partner
@@ -96,6 +96,8 @@ class DisseminationQuality(QACocoModel):
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
     qareviewername = models.ForeignKey(QAReviewerName)
     remark = models.CharField(max_length=200)
+    pico = models.CharField(max_length=1, choices=EQUIPMENT_WORK)
+    speaker = models.CharField(max_length=1, choices=EQUIPMENT_WORK)
 
     class Meta:
         verbose_name_plural = "Dissemination qualities"
