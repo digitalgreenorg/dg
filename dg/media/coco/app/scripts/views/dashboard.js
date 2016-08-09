@@ -8,7 +8,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         events: {
             "click #sync": "sync",
             "click #inc_download": "inc_download",
-            "click .js_language": "language"
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -82,7 +81,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                         .append("<li class='disabled'><a><i class='glyphicon glyphicon-plus-sign' title='You are not allowed to add this currently'></a></li>");
                 }
             }
-            
+            this.upload_entries = upload_collection.length;
             //keep the # uploadq entries shown on view up-to-date
             upload_collection.on('all', function() {
                 $("#upload_num")
@@ -309,17 +308,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         // check internet connection
         is_internet_connected: function() {
             return navigator.onLine;
-        }, 
-        
-        language: function(e) {
-            e.preventDefault();
-            var language_chosen = $(e.currentTarget).text();
-            var language_current = User.get("language");
-            if(language_chosen!=language_current){
-                User.save({"language":language_chosen});
-            }
-            this.upload_entries = upload_collection.length;
-
         }
     });
 

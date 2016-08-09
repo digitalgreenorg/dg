@@ -238,19 +238,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <div class="btn-group col-sm-push-2">
-                            <button class="btn btn-default coco_sync dropdown-toggle" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
-                                <%=language%>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="language">
-                                <% _.each(configs.misc.languages, function(language) { %>
-                                    <li role="presentation" class="js_language" name="<%= language %>"><a role="menuitem" tabindex="-1" href="#"><%= language %></a></li>
-                                <% }); %>
                             
-                            </ul>
-                            </div>
-                            <
                             <button type="button" class="coco_sync btn btn-default" id="sync">
                                 <%=configs['misc']['meta_'+language]['sync'] %>
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
@@ -294,7 +282,19 @@
     <div class="col-xs-4 align-center coco-brand"><a href="#"> COCO </a></div>
     <div class="col-xs-4 align-right">
         <% if(language === undefined){ language = configs.misc.meta_default}; %>
-        <a id="help" href="{% url 'faq' %}"> <%= configs['misc']['meta_'+language]['help']%> </a>
+        <div class="btn-group col-sm-offset-2">
+            <button class="btn btn-default coco_sync dropdown-toggle" style="margin-right: 2%;" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
+                <%=language%>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="language">
+                <% _.each(configs.misc.languages, function(language) { %>
+                    <li role="presentation" class="js_language" name="<%= language %>"><a role="menuitem" tabindex="-1" href="#"><%= language %></a></li>
+                <% }); %>
+            
+            </ul>
+        </div>
+        <a  id="help" href="{% url 'faq' %}"> <%= configs['misc']['meta_'+language]['help']%> </a>
         <img src="/media/coco/app/images/default.png" class="img-responsive img-user mrg-lt-5">
         <img id= "online" src="/media/coco/app/images/online.png" title= "You are online" class="connection-indicator"/>
         <img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline" class="connection-indicator"/>
@@ -305,8 +305,6 @@
                 <% if(language === undefined){ language = configs.misc.meta_default}; %>
                 <%if(typeof(username)!=undefined){%>
                 <li class="user-dropdown-option">Hi <%=username%>!</li>
-                <li class="user-dropdown-option"><%=language%></li>
-                <li class="user-dropdown-option" id="dropdown-help"><a href="{% url 'faq' %}"> Help </a></li>
                 <li class="user-dropdown-option"><a id="logout" style="cursor:pointer"><%= configs['misc']['meta_'+language]['logout']%></a></li>
                 <%}%>
             </ul>

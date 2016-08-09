@@ -6,7 +6,8 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
     var HeaderView = Backbone.Layout.extend({
         template: "#page_header",
         events: {
-            "click #logout": "logout"
+            "click #logout": "logout",
+            "click .js_language": "language",
         },
         
         initialize: function() {
@@ -23,7 +24,7 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             return {
                 username: username,
                 language: language,
-                configs: configs,
+                configs: configs
             }
         },
 
@@ -79,6 +80,15 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
                 .always(function() {
                 window.location.href = window.location.origin + window.location.pathname;
             });
+        },
+
+        language: function(e) {
+            e.preventDefault();
+            var language_chosen = $(e.currentTarget).text();
+            var language_current = User.get("language");
+            if(language_chosen!=language_current){
+                User.save({"language":language_chosen});
+            }
         }
     });
 
