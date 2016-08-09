@@ -109,6 +109,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if($(window).width()<768)
                         $(".collapse").collapse('hide');
             });
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+            }
+            else{
+                $('#sync').attr('disabled', true);
+            }
         },
         
         //enable add, list links
@@ -312,7 +318,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             if(language_chosen!=language_current){
                 User.save({"language":language_chosen});
             }
-            
+            this.upload_entries = upload_collection.length;
+
         }
     });
 
