@@ -10,9 +10,10 @@ define([
     'configs',
     'collections/upload_collection',
     'views/notification',
+    'models/user_model',
     'offline_utils',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -30,7 +31,10 @@ define([
 
         serialize: function() {
             // send the following to the template
+            var language = User.get('language');
             return {
+                language: language,
+                configs: configs,
                 full_d_timestamp: this.full_download_timestamp,
                 inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,

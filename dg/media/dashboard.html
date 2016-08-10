@@ -69,10 +69,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Uploading</h3>
+                    <h3><%= configs['misc']['meta_'+language]['upload'] %></h3>
                 </div>
                 <div class="modal-body">
-                    Data items to be uploaded = <span id="num_upload"> </span>
+                    <%= configs['misc']['meta_'+language]['upload_total'] %> = <span id="num_upload"> </span>
                     <br>
                     <div class="progress progress-info progress-striped">
                         <div class="progress-bar" id = "pbar" style="width: 0%"></div>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="stop_upload" type="button" class="btn">Stop It!</button>
+                    <button id="stop_upload" type="button" class="btn"><%= configs['misc']['meta_'+language]['stop'] %></button>
                 </div>
             </div>
         </div>
@@ -99,24 +99,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Upload Error</h3>
-                    <h4>Internet connectivity lost. Please try after sometime!</h4>
+                    <h3><%= configs['misc']['meta_'+language]['error'] %></h3>
+                    <h4><%= configs['misc']['meta_'+language]['upload_error'] %></h4>
                 </div>
                 <div class="modal-body">
                     <br>
                     <table class="table">
-                        <tr><td>Total data to be uploaded:</td> 
+                        <tr><td><%= configs['misc']['meta_'+language]['upload_total'] %>:</td> 
                             <td id="upl_total"> </td>
                         </tr>
-                        <tr><td>Data uploaded:</td>
+                        <tr><td><%= configs['misc']['meta_'+language]['upload_done'] %>:</td>
                             <td id="upl_done"> </td>
-                        </tr><td>Data pending to be uploaded:</td>
+                        </tr><td><%= configs['misc']['meta_'+language]['upload_pending'] %>:</td>
                             <td id="upl_pending"> </td>                           
                         </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="Ok" type="button" class="btn">Ok</button>
+                    <button id="Ok" type="button" class="btn"><%= configs['misc']['meta_'+language]['close'] %></button>
                 </div>
             </div>
         </div>
@@ -127,7 +127,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Downloading</h3>
+                    <h3><%= all_configs['misc']['meta_'+language]['download'] %></h3>
                 </div>
                 <div class="modal-body">
                     <div class="progress progress-info progress-striped">
@@ -141,7 +141,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="stop_inc_download" type="button" class="btn">Stop It!</button>
+                    <button id="stop_inc_download" type="button" class="btn"><%= all_configs['misc']['meta_'+language]['stop'] %></button>
                 </div>
             </div>
         </div>
@@ -187,7 +187,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <% var pause_download = all_configs['misc']['meta_'+language]['pause_download'];%>
+                    <% var pause_download = all_configs['misc']['meta_'+language]['stop'];%>
                     <button id = "stop_full_download" type="button" class="btn btn-danger" disabled><%= pause_download %></button>
                 </div>
             </div> <!-- modal-content -->
@@ -408,7 +408,7 @@
             </div>
         </div>
     </div>
-    <button id="reset_database" class="btn btn-small btn-primary mrg-top-20" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
+    <button id="reset_database" class="btn btn-small btn-primary mrg-top-20" title= "Delete your database and download fresh database from server"><%= configs['misc']['meta_'+language]['delete_download'] %></button>
 </script>
 
 <script type="text/template" id="form_template">
