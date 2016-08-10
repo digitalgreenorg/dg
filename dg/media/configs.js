@@ -1103,8 +1103,8 @@ function() {
         download_chunk_size: 2000,
         languages: ['Hindi', 'English'],
         meta_default: 'English',
-        meta_English: {pause_download: "Pause Download", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Download", inprogress:"In Progress", done:"Done"},
-        meta_Hindi: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोड", inprogress:"इन प्रोग्रेस", done:"समाप्त"},
+        meta_English: {pause_download: "Pause Download", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Download", inprogress:"In Progress", done:"Done", edit:"Edit"},
+        meta_Hindi: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोड", inprogress:"इन प्रोग्रेस", done:"समाप्त", edit:"एडिट"},
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

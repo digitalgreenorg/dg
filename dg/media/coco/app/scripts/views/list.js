@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             //TODO: if !entity_config, handle error etc
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
+            this.render();
             User.on('change', this.render);
         },
 
@@ -53,7 +54,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                 return {sTitle: header};
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
-                header_row.push({sTitle: "Edit"});
+                header_row.push({sTitle: all_configs['misc']['meta_'+language]['edit']});
             }
             return header_row;
         },
