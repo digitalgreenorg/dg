@@ -463,8 +463,7 @@
 	</div>
 	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
 
-	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;">
-	For multiple column sorting, press and hold the shift key while sorting each column.
+	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;"><%= list_page_help %>
 </script>
 
 <script type="text/template" id="options_template">
@@ -623,7 +622,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label notbold"><%= questions_asked %></label>
                     <div class="col-sm-4">
-                        <textarea name="questions_asked" class="input-xlarge form-control" rows="4" placeholder="questions_asked"></textarea>
+                        <textarea name="questions_asked" class="input-xlarge form-control" rows="4"></textarea>
                     </div>
                 </div>
                     <br>
@@ -948,7 +947,7 @@
                 </div>
             </div> 
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2"><%= production_team %></label>
+                <label class="control-label dis-block col-sm-2"><%= production_date %></label>
                 <div class="col-sm-4">
                     <input class="date-picker form-control" id="production_date" name="production_date" type="text" class="form-control" placeholder="YYYY-MM-DD">
                 </div>
@@ -966,7 +965,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label notbold"><%= benefit %></label>
                 <div class="col-sm-4">
-                    <textarea name="benefit" class="input-xlarge form-control" rows="4" placeholder="benefit"></textarea>
+                    <textarea name="benefit" class="input-xlarge form-control" rows="4"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -1000,7 +999,6 @@
                 <div class="col-sm-4">
                     <select id = "id_subcategory" name="subcategory" class="chosen-select form-control">
                         <option selected="selected" value="">
-                            Sub Category
                         </option>
                     </select>
                 </div>
@@ -1010,7 +1008,6 @@
                 <div class="col-sm-4">
                     <select id = "id_videopractice" name="videopractice" class="chosen-select form-control">
                         <option selected="selected" value="">
-                            Video Practice
                         </option>
                     </select>
                 </div>
@@ -1024,7 +1021,7 @@
             <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
-                    <input name="youtubeid" type="text" placeholder="youtubeid" class="form-control"><br>
+                    <input name="youtubeid" type="text" class="form-control"><br>
                 </div>
             </div>
         </fieldset>
@@ -1099,13 +1096,13 @@
             <div class="form-group">
             	<label class="control-label col-sm-2 notbold"><%= age %></label>
             	<div class="col-sm-4"> 
-                    <input class="input-mini form-control" name="age" type="text" placeholder="Age">
+                    <input class="input-mini form-control" name="age" type="text">
             	</div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2 notbold"><%= phone_no %></label>
                 <div class="col-sm-4">
-                    <input name="phone_no" type="text" placeholder="Phone Number" class="form-control">
+                    <input name="phone_no" type="text" class="form-control">
                 </div>
             </div>
 			<div class="form-group"> 

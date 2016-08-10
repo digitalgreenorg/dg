@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             var language = User.get('language');
             return {
                 page_header: this.entity_config['config_'+language],
+                list_page_help: all_configs['misc']['meta_'+language]['list_page_help']
             };
         },
 
@@ -122,7 +123,12 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                     "bDestroy": true,
                     "oLanguage": {
                         "sSearch": all_configs['misc']['meta_'+language]['search'],
-                        "sLengthMenu": all_configs['misc']['meta_'+language]['enteries']+"_MENU_"
+                        "sLengthMenu": all_configs['misc']['meta_'+language]['enteries']+"_MENU_",
+                        "sInfo": all_configs['misc']['meta_'+language]['total_enteries']+"_TOTAL_",
+                        "oPaginate": {
+                            "sNext": all_configs['misc']['meta_'+language]['next'],
+                            "sPrevious": all_configs['misc']['meta_'+language]['previous']
+                        },
                     },
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
