@@ -18,8 +18,9 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
 
         serialize: function () {
             //send these to the list page template
+            var language = User.get('language');
             return {
-                page_header: this.entity_config.page_header,
+                page_header: this.entity_config['config_'+language],
             };
         },
 
@@ -104,6 +105,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             // render data and call function get_row() to make array_table_values which is assigned to aaData later to
             // fill the table with the relevant values.
             var self = this;
+            var language = User.get('language');
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
@@ -118,16 +120,20 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "bAutoWidth":false,
                     "bDestroy": true,
+                    "oLanguage": {
+                        "sSearch": all_configs['misc']['meta_'+language]['search'],
+                        "sLengthMenu": all_configs['misc']['meta_'+language]['enteries']+"_MENU_"
+                    },
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [
                             {
                                 "sExtends": "copy",
-                                "sButtonText": "Copy to Clipboard"
+                                "sButtonText": all_configs['misc']['meta_'+language]['copy_clipboard']
                             },
                             {
                                 "sExtends": "xls",
-                                "sButtonText": "Download in Excel"
+                                "sButtonText": all_configs['misc']['meta_'+language]['excel_download']
                             }
                         ]
 
