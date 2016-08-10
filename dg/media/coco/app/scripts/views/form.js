@@ -37,12 +37,15 @@ define([
             // send the following info to template
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
+            var language = User.get('language');
+            this.entity_config = all_configs[this.entity_name];
             // HTML for form 
             //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
+            s_passed["add_row"] = this.entity_config['labels_'+language]['add_row'];
             return s_passed;
         },
 
