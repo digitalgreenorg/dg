@@ -18,9 +18,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
 
         serialize: function () {
             //send these to the list page template
-            var language = User.get('language');
             return {
-                language : language,
                 page_header: this.entity_config.page_header,
             };
         },

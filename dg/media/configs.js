@@ -120,9 +120,9 @@ function() {
     var village_configs = {
         'page_header': 'Village',
         'config_English': 'Villages',
-        'config_Hindi': 'विलेजस',
+        'config_हिन्दी': 'विलेजस',
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Name','element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'header':'State','element':'state_name'}],
-        'list_elements_Hindi': [{'header':'आइडी','element':'online_id'},{'header':'नाम','element':'village_name'},{'header':'ब्लॉक','element':'block_name'},{'header':'स्टार्ट डटे','element':'start_date'},{'header':'स्टेट','element':'state_name'}],
+        'list_elements_हिन्दी': [{'header':'आइडी','element':'online_id'},{'header':'नाम','element':'village_name'},{'header':'ब्लॉक','element':'block_name'},{'header':'स्टार्ट डटे','element':'start_date'},{'header':'स्टेट','element':'state_name'}],
         'rest_api_url': '/coco/api/v2/village/',
         'entity_name': 'village',
         'dashboard_display': {
@@ -135,10 +135,10 @@ function() {
     var mediator_configs = {
         'page_header': 'Mediator',
         'config_English': 'Mediators',
-        'config_Hindi': 'मीडियेटर',
-        'labels_Hindi': {mediator: "मीडियेटर", name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
+        'config_हिन्दी': 'मीडियेटर',
+        'labels_हिन्दी': {mediator: "मीडियेटर", name: "नाम", district: "जिला", gender: "लिंग", phone_number: "फोन नंबर", assigned_villages: "Assigned Villages"},
         'labels_English': {mediator: "Mediator",name: "Name", district: "District", gender: "Gender", phone_number: "Phone Number", assigned_villages: "Assigned Villages"},
-        'list_elements_Hindi': [{'header':'आइडी', 'element':'online_id'},{'header':'नाम','element':'name'},{'header':'विलेजस','subelement':'village_name','element':'assigned_villages'}],
+        'list_elements_हिन्दी': [{'header':'आइडी', 'element':'online_id'},{'header':'नाम','element':'name'},{'header':'विलेजस','subelement':'village_name','element':'assigned_villages'}],
         'list_elements_English': [{'header':'ID', 'element':'online_id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}],
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
@@ -220,10 +220,10 @@ function() {
     var video_configs = {
         'page_header': 'Video',
         'config_English': 'Videos',
-        'config_Hindi': 'वीडियो',
-        'labels_Hindi': {video:"वीडियो", title: "शीर्षक", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village", production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", youtubeid: "Youtube Id"},
+        'config_हिन्दी': 'वीडियो',
+        'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village", production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", youtubeid: "Youtube Id"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village", production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", youtubeid: "Youtube Id"},
-        'list_elements_Hindi': [{'header':'आइडी', 'element':'online_id'},{'header':'टाइटल', 'element':'title'},{'header':'विलेज','element':'village.village_name'},{'header':'प्रोडक्षन डटे','element':'production_date'}],
+        'list_elements_हिन्दी': [{'header':'आइडी', 'element':'online_id'},{'header':'टाइटल', 'element':'title'},{'header':'विलेज','element':'village.village_name'},{'header':'प्रोडक्षन डटे','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
@@ -390,7 +390,7 @@ function() {
 
     var language_configs = {
         'config_English': 'Languages',
-        'config_Hindi': 'लॅंग्वेजस',
+        'config_हिन्दी': 'लॅंग्वेजस',
         'rest_api_url': '/coco/api/v2/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
@@ -402,7 +402,7 @@ function() {
 
     var category_configs = {
         'config_English': 'Categories',
-        'config_Hindi': 'केटेगरीस',
+        'config_हिन्दी': 'केटेगरीस',
         'rest_api_url': '/coco/api/v2/category/',
         'entity_name': 'category',
         'sort_field': 'category_name',
@@ -414,7 +414,7 @@ function() {
 
     var subcategory_configs = {
         'config_English': 'Sub Categories',
-        'config_Hindi': 'सब केटेगरीस',
+        'config_हिन्दी': 'सब केटेगरीस',
         'rest_api_url': '/coco/api/v2/subcategory/',
         'entity_name': 'subcategory',
         'sort_field': 'subcategory_name',
@@ -434,7 +434,7 @@ function() {
 
     var videopractice_configs = {
         'config_English': 'Video Practices',
-        'config_Hindi': 'वीडियो प्रॅक्टिसस',
+        'config_हिन्दी': 'वीडियो प्रॅक्टिसस',
         'rest_api_url': '/coco/api/v2/videopractice/',
         'entity_name': 'videopractice',
         'sort_field': 'videopractice_name',
@@ -454,7 +454,7 @@ function() {
 
     var nonnegotiable_configs = {
         'config_English': 'Non Negotiables',
-        'config_Hindi': 'नों नेगोटियब्लेस',
+        'config_हिन्दी': 'नों नेगोटियब्लेस',
         'rest_api_url': '/coco/api/v2/nonnegotiable/',
         'entity_name': 'nonnegotiable',
         'sort_field': 'non_negotiable',
@@ -474,7 +474,7 @@ function() {
 
     var district_configs = {
         'config_English': 'Districts',
-        'config_Hindi': 'डिस्ट्रिक्ट्स',
+        'config_हिन्दी': 'डिस्ट्रिक्ट्स',
         'rest_api_url': '/coco/api/v2/district/',
         'entity_name': 'district',
         'sort_field': 'district_name',
@@ -487,10 +487,10 @@ function() {
     var group_configs = {
         'page_header': 'Group',
         'config_English': 'Groups',
-        'config_Hindi': 'ग्रूप्स',
-        'labels_Hindi': {group: "ग्रूप्स", name: "नाम", village: "Village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
+        'config_हिन्दी': 'ग्रूप्स',
+        'labels_हिन्दी': {group: "ग्रूप्स", name: "नाम", village: "Village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
         'labels_English': {group:"Group", name: "Name", village: "village", person_name: "Person Name", father_name: "Father Name", age: "Age", gender: "Gender", phone_no: "Phone No"},
-        'list_elements_Hindi': [{'header':'आइडी','element':'online_id'},{'header':'नाम','element':'group_name'},{'header':'विलेज','element':'village.village_name'}],
+        'list_elements_हिन्दी': [{'header':'आइडी','element':'online_id'},{'header':'नाम','element':'group_name'},{'header':'विलेज','element':'village.village_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Name','element':'group_name'},{'header':'Village','element':'village.village_name'}],
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
@@ -583,14 +583,14 @@ function() {
     var screening_configs = {
         'page_header': 'Screening',
         'config_English': 'Screenings',
-        'config_Hindi': 'सक्रीनिंग्स',
-        'labels_Hindi': {screening:"सक्रीनिंग्स", date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
+        'config_हिन्दी': 'सक्रीनिंग्स',
+        'labels_हिन्दी': {screening:"सक्रीनिंग्स", date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person: "Person"},
         'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person: "Person"},
-        'list_elements_Hindi': [{'header':'आइडी','element':'online_id'},{'header':'सक्रीनिंग डटे','element':'date'},{'header':'मीडियेटर','element':'animator.name'},{'header':'विलेज','element':'village.village_name'},{'header':'ग्रूप्स आटएंडेड','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियोस सक्रींड','subelement':'title','element':'videoes_screened'}],
+        'list_elements_हिन्दी': [{'header':'आइडी','element':'online_id'},{'header':'सक्रीनिंग डटे','element':'date'},{'header':'मीडियेटर','element':'animator.name'},{'header':'विलेज','element':'village.village_name'},{'header':'ग्रूप्स आटएंडेड','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियोस सक्रींड','subelement':'title','element':'videoes_screened'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
@@ -787,10 +787,10 @@ function() {
     var adoption_configs = {
         'page_header': 'Adoption',
         'config_English': 'Adoptions',
-        'config_Hindi': 'अडॉप्षन्स',
-        'labels_Hindi': {adoption:"अडॉप्षन्", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video:"Video", date_of_adoption: "तिथि", date_of_verification: "Date of Verification"},
+        'config_हिन्दी': 'अडॉप्षन्स',
+        'labels_हिन्दी': {adoption:"अडॉप्षन्", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video:"Video", date_of_adoption: "तिथि", date_of_verification: "Date of Verification"},
         'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification"},
-        'list_elements_Hindi': [{'header':'आइडी','element':'online_id'},{'header':'अडॉप्षन डटे','element':'date_of_adoption'},{'header':'पर्सन आइडी','element':'person.online_id'},{'header':'पर्सन','element':'person.person_name'},{'header':'ग्रूप','element':'group.group_name'},{'header':'विलेज','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
+        'list_elements_हिन्दी': [{'header':'आइडी','element':'online_id'},{'header':'अडॉप्षन डटे','element':'date_of_adoption'},{'header':'पर्सन आइडी','element':'person.online_id'},{'header':'पर्सन','element':'person.person_name'},{'header':'ग्रूप','element':'group.group_name'},{'header':'विलेज','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Adoption Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
@@ -987,10 +987,10 @@ function() {
     var person_configs = {
         'page_header': 'Person',
         'config_English': 'Persons',
-        'config_Hindi': 'पर्सन्स',
-        'labels_Hindi': {person:"पर्सन", name:"नाम", father_name:"पिता का नाम", village: "विलेज", gender:"जेंडर", age:"उम्र", phone_no:"नंबर",group:"ग्रूप"},
+        'config_हिन्दी': 'पर्सन्स',
+        'labels_हिन्दी': {person:"पर्सन", name:"नाम", father_name:"पिता का नाम", village: "विलेज", gender:"जेंडर", age:"उम्र", phone_no:"नंबर",group:"ग्रूप"},
         'labels_English': {person: "Person", name:"Name", father_name:"Father Name", village: "Village", gender:"Gender", age:"Age", phone_no:"Phone Number",group:"Group"},
-        'list_elements_Hindi': [{'header':'आइडी','element':'online_id'},{'header':'पर्सन नेम','element':'person_name'},{'header':'फादर नेम','element':'father_name'},{'header':'विलेज','element':'village.village_name'},{'header':'ग्रूप','element':'group.group_name'}],
+        'list_elements_हिन्दी': [{'header':'आइडी','element':'online_id'},{'header':'पर्सन नेम','element':'person_name'},{'header':'फादर नेम','element':'father_name'},{'header':'विलेज','element':'village.village_name'},{'header':'ग्रूप','element':'group.group_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
@@ -1101,10 +1101,10 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
-        languages: ['Hindi', 'English'],
+        languages: ['हिन्दी', 'English'],
         meta_default: 'English',
         meta_English: {pause_download: "Pause Download", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Download", inprogress:"In Progress", done:"Done", edit:"Edit"},
-        meta_Hindi: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोड", inprogress:"इन प्रोग्रेस", done:"समाप्त", edit:"एडिट"},
+        meta_हिन्दी: {pause_download: "डाउनलोड रोकें", sync:"सिंक", save: "सवे करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोड", inprogress:"इन प्रोग्रेस", done:"समाप्त", edit:"एडिट"},
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/",
         afterFullDownload: function(start_time, download_status){

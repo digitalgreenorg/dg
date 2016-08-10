@@ -91,8 +91,6 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             }
         }
     });
-
-
     // Our module now returns our view
     return HeaderView;
 });
