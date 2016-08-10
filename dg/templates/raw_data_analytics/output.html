@@ -78,6 +78,7 @@
                             });
                             $("#partnerId").bind("change", function () {
                                 $('#videoId').prop('disabled', false);
+                                $('#videoId').find('option').remove();
                                 $("#videoId").val('').trigger("chosen:updated");
                             });
                             $("#countryID").bind("change", function () {
@@ -233,7 +234,7 @@
                                      style="">
                                     Video &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class="select" multiple="multiple" name='video' id="videoId"
-                                            style="width: 450px;height: auto" disabled="true">
+                                            style="width: 450px;height: auto" disabled="false">
                                     </select>
                                 </div>
 

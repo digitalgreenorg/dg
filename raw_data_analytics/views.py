@@ -67,8 +67,8 @@ def dropdown_village(request):
 def dropdown_video(request):
     partner_selected = request.GET.get('selected', None)
     videos = Video.objects.filter(partner__partner_name=partner_selected).values_list('title', flat=True)  # todo
-
     resp = json.dumps([unicode(i) for i in videos])
+
     return HttpResponse(resp)
 
 
