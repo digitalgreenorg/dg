@@ -865,11 +865,13 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
 function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3, datalablels_dict) {
 
     var i = 0;
-    var len = datalablels_dict.length;
+    var len = Object.keys(datalablels_dict).length
 
-    if(len != 0) {
+    console.log(len);
+
+    if(len > 0) {
         console.log(typeof datalablels_dict)
-        len = 20;
+       len =Object.keys(datalablels_dict['data']).length;
         var dataLabels = {
             enabled :true,
             formatter: function() {
@@ -878,11 +880,12 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
                     return (datalablels_dict['data'][i-1] + "%");
                 }
             }
-        };    
+        }; 
+        data_dict[0]['dataLabels'] = dataLabels;   
     }
     
 
-    data_dict[0]['dataLabels'] = dataLabels;
+    
     container_obj.highcharts({
         chart: {
             zoomType: 'xy'
