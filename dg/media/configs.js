@@ -1112,7 +1112,7 @@ function() {
         meta_English: {stop: "Stop",close:"close", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
                        delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",
                        error:"Error!!", upload_error:"Internet connectivity lost. Please try after sometime!", copy_clipboard:"Copy to clipboard", excel_download:"Download in excel", search: 'Search: ', enteries:"Enteries: "},
-        meta_हिन्दी: {stop: "रोकें",close:"बंद करे", sync:"सिंक", save: "सवे करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोडिंग...", upload:"अपलोडिंग...",inprogress:"इन प्रोग्रेस", done:"समाप्त", edit:"एडिट",
+        meta_हिन्दी: {stop: "रोकें",close:"बंद करे", sync:"सिंक", save: "सेव करें", help:"हेल्प", logout:"लोगौट", download:"डाउनलोडिंग...", upload:"अपलोडिंग...",inprogress:"इन प्रोग्रेस", done:"समाप्त", edit:"एडिट",
                        delete_download:"डिलीट एंड डाउनलोड डेटबेस", save_again:"सेव अगेन", discard:"डिसकार्ड", upload_total:"कुल डेटा अपलोडिंग के लिए", upload_done:"डेटा अपलोडेड", upload_pending:"डेटा अपूर्ण",
                        error: "त्रुटि!!", upload_error:"इंटरनेट कनेक्टिविटी खो दिया है। कृपया कुछ देर बाद प्रयास करें!",copy_clipboard:"क्लिपबोर्ड पर कॉपी करें", excel_download:"एक्सेल में डाउनलोड करें", search: "खोजें: ", enteries:"एंट्रीयान: "},
         background_download_interval: 5 * 60 * 1000,
