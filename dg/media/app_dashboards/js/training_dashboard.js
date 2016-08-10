@@ -9,7 +9,12 @@ function initialize() {
     get_filter_data();
     set_eventlistener();
     // update_charts();
-    $(".button-collapse").sideNav();
+    $(".button-collapse").sideNav({
+          menuWidth: 300, // Default is 240
+          edge: 'left', // Choose the horizontal origin
+          closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+        }
+      );
 }
 
 /* Progress Bar functions */
@@ -870,25 +875,31 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
     console.log(len);
 
     if(len > 0) {
-        console.log(typeof datalablels_dict)
-       len =Object.keys(datalablels_dict['data']).length;
+        console.log(typeof datalablels_dict);
+        len =Object.keys(datalablels_dict['data']).length;
         var dataLabels = {
             enabled :true,
+            // format:'25',
             formatter: function() {
+                if(i >= len) {
+                    i = 0;
+                }
                 while(i < len){
                     i++;
                     return (datalablels_dict['data'][i-1] + "%");
                 }
-            }
+            },
+            allowOverlap : true
         }; 
-        data_dict[0]['dataLabels'] = dataLabels;   
+        data_dict[0]['dataLabels'] = dataLabels;  
     }
     
 
     
     container_obj.highcharts({
         chart: {
-            zoomType: 'xy'
+            zoomType: 'xy',
+            spacingRight : 30
         },
         credits:{enabled :false},
         title: '',
