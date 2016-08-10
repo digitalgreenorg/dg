@@ -517,7 +517,7 @@
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset class="form-horizontal">
         <legend><%= mediator %></legend>
-		<p class="bold-helptext"> All fields in bold are required</p>
+		
         <div class="form-group">
             <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
@@ -571,7 +571,7 @@
 <script type="text/template" id="screening_add_edit_template">
             <fieldset class="form-horizontal">
                 <legend><%= screening %></legend>
-				<p class="bold-helptext"> All fields in bold are required</p>
+				
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
@@ -732,7 +732,7 @@
 <script type="text/template" id="adoption_add_template">
         <fieldset class="form-horizontal">
             <legend><%= adoption %></legend>
-            <p class="bold-helptext"> All fields in bold are required</p>
+            
             <div class="form-group">
                 <label class="control-label col-sm-2"><%= village %></label>
                 <div class="col-sm-4"> 
@@ -772,7 +772,6 @@
                 <br>
         </fieldset>
         <fieldset class = "inline_table">
-            <h5>Adoptions</h5>
             <table id="adoptions_table" class="table">
                 <thead>
                     <tr class="hide-header">
@@ -867,7 +866,7 @@
 <script type="text/template" id="group_add_edit_template">
     <fieldset class="form-horizontal">
         <legend><%= group %></legend>
-        <p class="bold-helptext"> All fields in bold are required</p>
+        
         <div class="form-group"> 
             <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
@@ -925,7 +924,7 @@
 <script type="text/template" id="video_add_edit_template">
         <fieldset class="form-horizontal">
             <legend><%= video %></legend>
-            <p class="bold-helptext"> All fields in bold are required</p>
+            
             <div class="form-group">
                 <label class="col-sm-2 control-label"><%= title %></label>
                 <div class="col-sm-4">
@@ -1053,9 +1052,9 @@
 
 <script type="text/template" id="nonnegotiable_inline_header">
     <tr class="hide-header">  
-       <th class="col-md-1 control-label notbold"> Sr. No.</th>
-       <th class="col-md-6 control-label notbold"> Non Negotiables</th>
-       <th class="col-md-5 control-label notbold">Physically Verifiable</th>             
+       <th class="col-md-1 control-label notbold"><%= sr_no %></th>
+       <th class="col-md-6 control-label notbold"><%= non_n %></th>
+       <th class="col-md-5 control-label notbold"><%= physically_verifiable %></th>             
     </tr>
 </script>
 
@@ -1066,7 +1065,7 @@
 <script type="text/template" id="person_add_edit_template">
         <fieldset class="form-horizontal">
             <legend><%= person %></legend>
-			<p class="bold-helptext"> All fields in bold are required</p>
+			
             <div class="form-group"> 
                 <label class="control-label col-sm-2"><%= name %></label>
             	<div class="col-sm-4">
