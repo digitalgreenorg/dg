@@ -82,6 +82,7 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
             });
         },
 
+        //this function is called when user clicks on language change options
         language: function(e) {
             e.preventDefault();
             var language_chosen = $(e.currentTarget).text();
