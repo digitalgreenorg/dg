@@ -1,4 +1,5 @@
-{% extends "app_dashboards/training_base.html" %}
+
+  <div class="navbar-fixed">{% extends "app_dashboards/training_base.html" %}
 {% load static %}
 
 {% block title %}Dashboard | Home {% endblock %}
@@ -28,20 +29,22 @@ ul.collapsible > li.active {
 	<div id="progress_bar" class="progress no-margin teal lighten-4">
 		<div class="indeterminate teal"></div>
 	</div>
+	  <div class="navbar-fixed">
 	<nav class="top-nav">
 		<div class="nav-wrapper teal lighten-2">
 			<div class="container">
 				<!-- <a href="#" class="page-title">Training Dashboard</a> -->
 				 <a href="#" class="brand-logo center">Training Dashboard</a>
-				 <!-- <ul id = "nav-mpbile" class="button-collapse">
-					<li><a href="#" data-activates="slide-out"><i class = "material-icons">menu</i></a></li>
-				</ul> -->
+				 <ul id = "nav-mpbile" >
+					<li><a href="#" data-activates="slide-out" class="button-collapse" style = "display:block;"><i class = "material-icons">menu</i></a></li>
+				</ul>
 				<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 			</div>
 		</div>
 	</nav>
+</div>
 </header>
-
+<a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a>
 <ul id="slide-out" class="side-nav">
 	<li class="no-padding not-hoverable">
 	<ul class="collapsible collapsible-accordion">
@@ -117,22 +120,22 @@ ul.collapsible > li.active {
 
 	</ul>
 </ul>
-<a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a>
+<!-- <a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a> -->
 {% endblock %}
 
 
 {% block content %}
 <br>
-<blockquote style = "margin-top:3%">
+<!-- <blockquote style = "margin-top:3%">
       <h4>Total Data</h4>
-</blockquote>
-<div class="row">
+</blockquote> -->
+<div id = "box-1" class="row">
 	<div class="col s12 m6 l3">
 		<div class="card teal darken-1">
 			<div class="">
 			<div class="card-content teal white-text">
 				<div class="card-stats-title">
-					<i class="mdi-social-school"></i> No. of Trainings:
+					<i class="mdi-social-school"></i> Number of Trainings:
 					<i id="num_trainings"> </i>
 				</div>
 			</div>
@@ -181,31 +184,32 @@ ul.collapsible > li.active {
 	</div> -->
 </div>
 
-<div class="row valign-wrapper" >
-		<div class="input-field col s6">
+<!-- <div class="row valign-wrapper" >
+		<div class="input-field col s2">
 			<i class="material-icons teal-text text-lighten-2 prefix">today</i>
 			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
 			<label for="from_date">Start Date:</label>
 
 		</div>
-		<div class="input-field col s6">
+		<div class="input-field col s2">
 			<i class="material-icons teal-text text-lighten-2 prefix">today</i>
 			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
 			<label for="to_date" class="active">End Date:</label>
 		</div>
-</div>
+		<div class = "col s2">
+			<a id="get_data" class="waves-effect waves-light teal lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
 
-<div class="center">
-	<a id="get_data" class="waves-effect waves-light teal lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
-	<div id="modal1" class="modal">
-		<div class="modal-content">
-			<p>Invalid Date Range</p>
+			<div id="modal1" class="modal">
+				<div class="modal-content">
+					<p>Invalid Date Range</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class=" modal-action modal-close waves-effect waves-teal btn-flat">OK</a>
+				</div>
+			</div>
+
 		</div>
-		<div class="modal-footer">
-			<a href="#!" class=" modal-action modal-close waves-effect waves-teal btn-flat">OK</a>
-		</div>
-	</div>
-</div>
+</div> -->
 <div>
 <br>
 </div>
@@ -213,60 +217,103 @@ ul.collapsible > li.active {
 
 <!-- Adding Line for filtered data -->
 
-<blockquote style = "margin-top:3%">
+<!-- <blockquote style = "margin-top:3%">
       <h4>Filtered Data</h4>
-</blockquote>
-<div class="row" >
-	<div class="col s12 m6 l3">
-		<div class="card teal darken-1">
-			<div class="">
-			<div class="card-content teal white-text">
-				<div class="card-stats-title">
-					<i class="mdi-social-school"></i> No. of Trainings:
-					<i id="filtered_num_trainings"> </i>
-				</div>
-			</div>
-		</div>
-		</div>
+</blockquote> -->
+
+<div id = "box-2" class="row" style = "background-color: #EFEFEF;" >
+
+	<div class="col s12 m6 l1 offset-l1">
+		
+		<!-- <i class="mdi-social-school"></i> -->
+		 Number of Trainings:
+		<i id="filtered_num_trainings"> </i>
+		
 	</div>
-	<div class="col s12 m6 l3">
-		<div class="card teal darken-1">
-			<div class="card-content teal white-text">
-				<div class="card-stats-title">
-					<i class="mdi-social-group"></i> Mediators Trained:
-					<i id="filtered_mediators_trained"> </i>
-				</div>
-			</div>
-		</div>
+	<div class="col s12 m6 l1">
+		
+		<!-- <i class="mdi-social-group"></i> -->
+		Mediators Trained:
+		<i id="filtered_mediators_trained"> </i>
+		
 	</div>
-	<div class="col s12 m6 l3">
-		<div class="card teal darken-1">
-			<div class="card-content teal white-text">
-				<div class="card-stats-title">
-					<i class="mdi-action-subject"></i> Average Score:
-					<i id="filtered_average_score"> </i>
-				</div>
-			</div>
-		</div>
+	<div class="col s12 m6 l1">
+		
+		<!-- <i class="mdi-action-subject"></i>  -->
+		Average Score:
+		<i id="filtered_average_score"> </i>
+		
 	</div>
-	<div class="col s12 m6 l3">
-		<div class="card teal darken-1">
-			<div class="card-content teal white-text">
-				<div class="card-stats-title">
-					<i class="mdi-action-spellcheck"></i> Pass Percentage:
-					<i id="filtered_pass_percent"> </i>
-				</div>
-			</div>
-		</div>
+	<div class="col s12 m6 l1">
+		
+		<!-- <i class="mdi-action-spellcheck"></i>  -->
+		Pass Percentage:
+		<i id="filtered_pass_percent"> </i>
+		
 	</div>
 
-	<!-- End  of Code for filtered data -->
+	<div class="input-field col s12 m6 l2 ">
 
-<div class="container" style="margin-top:5%;">
+		<i class="material-icons teal-text text-lighten-2 prefix">today</i>
+		<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+		<label for="from_date">Start Date:</label>
+
+	</div>
+	<div class="input-field col s12 m6 l2 ">
+		<i class="material-icons teal-text text-lighten-2 prefix">today</i>
+		<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+		<label for="to_date" class="active">End Date:</label>
+	</div>
+
+	<div class = "col s12 m6 l2">
+			<a id="get_data" class="waves-effect waves-light teal lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a>
+
+			<div id="modal1" class="modal">
+				<div class="modal-content">
+					<p>Invalid Date Range</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class=" modal-action modal-close waves-effect waves-teal btn-flat">OK</a>
+				</div>
+			</div>
+
+		</div>
+
+</div>
+</div>
+
+<!-- End  of Code for filtered data -->
+<div  class="container col s12" style="margin-top:2%;">
+	<div class="row">
+		
+		  <ul class="tabs">
+		    <li class="tab col s12"><a class="active" href="#tab1" onshow = "myFunction()" >Trainer-Wise Mediator Data</a></li>
+		    <li class="tab col s12"><a  href="#tab2">Question-Wise Mediator Data</a></li>
+		    <li class="tab col s12"><a href="#tab3">State-Wise Mediator Data</a></li>
+		  </ul>
+		
+		<div id="tab1" class="col s12">
+			<div id="trainer_training_data" tabindex='1' style="margin-top:2%"></div>
+			<br>
+			<div id="trainer_mediator_data" tabindex='1'></div>
+		</div>
+		<div id="tab2" class="tab col s12">
+			
+			<div id="question_mediator_data" tabindex='1' style="margin-top:2%"></div>
+		</div>
+		<div id="tab3">
+			<div  id="state_training_data" tabindex='1'></div>
+			<br>
+			<div id="state_mediator_data" tabindex='1' ></div>
+		</div>
+	</div>
+</div> 
+
+<!-- <div class="container" style="margin-top:5%;">
 	<br>
-	<div class="row" style = "margin-top: 20%;">
+	<div class="row">
 		<h5 class="center-align" >Trainer-Wise Mediator Data</h5>
-		<div id="trainer_training_data" style="margin-top:30px"></div>
+		<div id="trainer_training_data" style="margin-top:2%"></div>
 		<br>
 		<div id="trainer_mediator_data"></div>
 	</div>
@@ -280,11 +327,11 @@ ul.collapsible > li.active {
 	<br>
 	<div class="row" style="margin-top:30px">
 		<h5 class="center-align">State-Wise Mediator Data</h5>
-		<div id="state_mediator_data"></div>
-		<br>
 		<div id="state_training_data" style="margin-top:30px"></div>
+		<br>
+		<div id="state_mediator_data"></div>
 	</div>
 	<div class="divider"></div>
-</div>
+</div> -->
 
 {% endblock %}

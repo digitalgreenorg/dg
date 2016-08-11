@@ -133,7 +133,26 @@ ul.side-nav.fixed:hover {
 main, footer {
     padding-left: 240px;
 }
+html {
+    background-color: #efefef;
+}
+.row {
+  background-color: #ffffff;
+}
+
+#box-1.row {
+  padding: 2%;
+}
+#box-2 {
+
+}
+#num_trainings, #mediators_trained, #average_score, #pass_percent, #filtered_num_trainings, 
+#filtered_mediators_trained, #filtered_average_score, #filtered_pass_percent{
+    font-weight: bold;
+    font-size: 2rem;
+}
 @media only screen and (max-width: 992px) {
     main, footer {
     padding-left: 0;
 }
+
