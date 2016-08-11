@@ -129,7 +129,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         },
 
         //disable add, list links
-        db_not_downloaded: function() {
+        /*db_not_downloaded: function() {
             $('.list_items')
                 .bind('click', false);
             $('.list_items')
@@ -137,7 +137,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links disabled");
             $("#helptext")
                 .show();
-        },
+        },*/
 
         //if DB exists initiate upload and then inc download otherwise start full download
         sync: function() {
