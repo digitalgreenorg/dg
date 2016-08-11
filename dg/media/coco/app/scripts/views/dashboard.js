@@ -98,7 +98,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 that.db_downloaded();
             })
                 .fail(function(model, error) {
-                that.db_not_downloaded();
+                //that.db_not_downloaded();
+                console.log("DB not downloaded");
             });
             
             // $("#main-navbar").on('click',function(){
