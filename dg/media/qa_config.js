@@ -7,6 +7,7 @@ function() {
         'rest_api_url': '/qacoco/api/v1/VideoContentApproval/',
         'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'}],
         'entity_name': 'VideoContentApproval',
+        'inc_table_name': 'videocontentapproval',
         'dashboard_display': {
             listing: true,
             add: true
@@ -80,6 +81,7 @@ function() {
         'rest_api_url': '/qacoco/api/v1/VideoQualityReview/',
         'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'VideoQualityReview',
+        'inc_table_name': 'videoqualityreview',
         'dashboard_display': {
             listing: true,
             add: true
@@ -141,6 +143,7 @@ function() {
         'rest_api_url': '/qacoco/api/v1/DisseminationQuality/',
         'list_elements': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'DisseminationQuality',
+        'inc_table_name': 'disseminationquality',
         'dashboard_display': {
             listing: true,
             add: true
@@ -233,6 +236,7 @@ function() {
         'rest_api_url': '/qacoco/api/v1/AdoptionVerification/',
         'list_elements': [{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
         'entity_name': 'AdoptionVerification',
+        'inc_table_name': 'adoptionverification',
         'dashboard_display': {
             listing: true,
             add: true
@@ -444,7 +448,7 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         background_download_interval: 5 * 60 * 1000,
-        inc_download_url: "/get_log/",
+        inc_download_url: "/qa_get_log/",
         afterFullDownload: function(start_time, download_status){
             return saveTimeTaken();
             function saveTimeTaken(){

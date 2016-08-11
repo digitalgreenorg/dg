@@ -1,8 +1,10 @@
 import datetime
 from django.db import models
+from django.db.models.signals import pre_delete, post_save
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 
+from qacoco.qa_data_log import delete_log, save_log
 from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED, EQUIPMENT_WORK
 
 from geographies.models import District,Block,Village
@@ -25,7 +27,7 @@ class ServerLog(models.Model):
     model_id = models.IntegerField(null=True)
     partner = models.IntegerField(null=True)
 
-class QACocoUser(models.Model):
+class QACocoUser(QACocoModel):
 	user = models.ForeignKey(User)
 	partner = models.ForeignKey(Partner)
 	districts = models.ManyToManyField(District)
@@ -40,6 +42,8 @@ class QAReviewer(models.Model):
 
 	def __unicode__(self):
 		return u'%s' % (self.reviewer_name)
+post_save.connect(save_log, sender=QAReviewer)
+pre_delete.connect(delete_log, sender=QAReviewer)
 
 class QAReviewerName(models.Model):
     reviewer_category = models.ForeignKey(QAReviewer)
@@ -47,6 +51,8 @@ class QAReviewerName(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.name)
+post_save.connect(save_log, sender=QAReviewerName)
+pre_delete.connect(delete_log, sender=QAReviewerName)
 
 class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
@@ -57,6 +63,8 @@ class VideoContentApproval(QACocoModel):
     def __unicode__(self):
         display = u'%s' % (self.video)
         return display
+post_save.connect(save_log, sender=VideoContentApproval)
+pre_delete.connect(delete_log, sender=VideoContentApproval)
 
 class VideoQualityReview(QACocoModel):
     video = models.ForeignKey(Video)
@@ -80,6 +88,8 @@ class VideoQualityReview(QACocoModel):
     def __unicode__(self):
         display = "%s" % (self.video)
         return display
+post_save.connect(save_log, sender=VideoQualityReview)
+pre_delete.connect(delete_log, sender=VideoQualityReview)
 
 class DisseminationQuality(QACocoModel):
     block = models.ForeignKey(Block)
@@ -101,6 +111,8 @@ class DisseminationQuality(QACocoModel):
 
     class Meta:
         verbose_name_plural = "Dissemination qualities"
+post_save.connect(save_log, sender=DisseminationQuality)
+pre_delete.connect(delete_log, sender=DisseminationQuality)
 
 class AdoptionVerification(QACocoModel):   
     block = models.ForeignKey(Block)
@@ -112,3 +124,5 @@ class AdoptionVerification(QACocoModel):
     video = models.ForeignKey(Video)
     qareviewername = models.ForeignKey(QAReviewerName)
     adopted = models.IntegerField(choices=ADOPTED, null=True)
+post_save.connect(save_log, sender=AdoptionVerification)
+pre_delete.connect(delete_log, sender=AdoptionVerification)
