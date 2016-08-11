@@ -55,6 +55,7 @@ def deodatasetter(request):
 
     start_date = datetime.datetime.strptime(sdate, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(edate, "%Y-%m-%d")
+    end_date+= datetime.timedelta(days=1)
 
     Screening_objects = Screening.objects.filter(user_created_id=selecteddeo, time_created__gte=start_date, time_created__lte=end_date)
     screenings_entrydate = Screening_objects.values_list('time_created', flat=True)
@@ -91,3 +92,5 @@ def deodatasetter(request):
         "slag": slag,
         "alag": alag,
         "mode": int(mode)}}))
+        
+        
