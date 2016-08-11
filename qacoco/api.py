@@ -124,10 +124,14 @@ def get_user_videos(user_id):
     ###Videos produced by partner with in the same state
     qacoco_user = QACocoUser.objects.get(user_id = user_id)
     districts = qacoco_user.get_districts()
-    user_states = State.objects.filter(district__in = districts).distinct().values_list('id', flat=True)
+    #user_states = State.objects.filter(district__in = districts).distinct().values_list('id', flat=True)
+    user_videos = qacoco_user.get_videos().values_list('id', flat = True)
+    videos = Video.objects.filter(village__block__district__in = districts).values_list('id', flat = True)
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
-    videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = qacoco_user.partner_id).values_list('id', flat = True)
-    return (list(videos))
+    #videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = qacoco_user.partner_id).values_list('id', flat = True)
+    ###Get videos screened to allow inter partner sharing of videos
+    #videos_seen = set(Person.objects.filter(village__block__district__in = districts, partner_id = qacoco_user.partner_id).values_list('screening__videoes_screened', flat=True))
+    return set(list(videos) + list(user_videos))
 
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
@@ -218,7 +222,7 @@ class VideoResource(BaseResource):
         queryset = Video.objects.all()
         resource_name = 'video'
         authentication = SessionAuthentication()
-        authorization = Authorization()
+        authorization = VideoAuthorization()
 
 class BlockResource(BaseResource):
     class Meta:

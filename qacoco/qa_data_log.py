@@ -24,19 +24,20 @@ def save_log(sender, **kwargs ):
     except Exception, ex:
         user = None
     
-    # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
-    model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
-    if sender == "Village":
-        village_id = instance.id
-    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable' or sender == 'Category' or sender == 'SubCategory'or sender == 'VideoPractice':
-        village_id = None
-    elif sender == "PersonAdoptPractice":
-        village_id = instance.person.village.id
-    else:
-        village_id = instance.village.id
-    partner_id = None if sender in ["Village", 'Language', 'NonNegotiable', 'Category', 'SubCategory', 'VideoPractice', 'DisseminationQuality', 'VideoContentApproval', 'VideoQualityReview', 'AdoptionVerification'] else instance.partner.id
+    model_id = instance.id
+
+    if sender in ['VideoContentApproval', 'VideoQualityReview']:
+        district_id = instance.video.village.block.district_id
+    elif sender in ['DisseminationQuality', 'AdoptionVerification']:
+        district_id = instance.village.block.district_id
+
+    if sender in ['VideoContentApproval', 'VideoQualityReview']:
+        partner_id = instance.video.partner_id
+    elif sender in ['DisseminationQuality', 'AdoptionVerification']:
+        partner_id = instance.mediator.partner_id
+
     ServerLog = get_model('qacoco', 'ServerLog')
-    log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
+    log = ServerLog(district=district_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
@@ -65,29 +66,30 @@ def delete_log(sender, **kwargs ):
 def qa_send_updated_log(request):
     timestamp = request.GET.get('timestamp', None)
     if timestamp:
-        CocoUser = get_model('qacoco','QACocoUser')
+        QACocoUser = get_model('qacoco','QACocoUser')
         CocoUserDistricts = get_model('qacoco','QACocoUser_districts')
         try:
-            coco_user = CocoUser.objects.get(user_id=request.user.id)
+            coco_user = QACocoUser.objects.get(user_id=request.user.id)
         except Exception as e:
             raise UserDoesNotExist('User with id: '+str(request.user.id) + 'does not exist')
         partner_id = coco_user.partner_id
-        villages = CocoUserDistricts.objects.filter(qacocouser_id = coco_user.id).values_list('district_id', flat = True)
+        districts = CocoUserDistricts.objects.filter(qacocouser_id = coco_user.id).values_list('district_id', flat = True)
         ServerLog = get_model('qacoco', 'ServerLog')
-        rows = ServerLog.objects.filter(timestamp__gte = timestamp)
+        #based on same district
+        rows = ServerLog.objects.filter(timestamp__gte = timestamp,district__in = districts)
+        #based on same user
+        rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp,user_id = request.user.id)
         if partner_id:
-            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
+            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, district__in = districts, partner = partner_id )
         else:
-            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
+            rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, district__in = districts)
         if rows:
             data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-            print data
-            print rows
             return HttpResponse(data, content_type="application/json")
     return HttpResponse("0")
 
 def get_latest_timestamp():
-    ServerLog = get_model('coco', 'ServerLog')
+    ServerLog = get_model('qacoco', 'ServerLog')
     try:
         timestamp = ServerLog.objects.latest('id')
     except Exception as e:

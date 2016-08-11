@@ -21,21 +21,26 @@ class ServerLog(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, related_name="qacocoserverlog_user", null=True)
-    village = models.IntegerField(null=True)
+    district = models.IntegerField(null=True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
     partner = models.IntegerField(null=True)
 
 class QACocoUser(QACocoModel):
-	user = models.ForeignKey(User)
-	partner = models.ForeignKey(Partner)
-	districts = models.ManyToManyField(District)
-	def get_districts(self):
-		return self.districts.all()
-	
-	def __unicode__(self):
-		return  u'%s' % (self.user.username)
+    user = models.OneToOneField(User)
+    partner = models.ForeignKey(Partner)
+    districts = models.ManyToManyField(District)
+    videos = models.ManyToManyField(Video)
+
+    def get_videos(self):
+        return self.videos.all()
+
+    def get_districts(self):
+        return self.districts.all()
+
+    def __unicode__(self):
+        return  u'%s' % (self.user.username)
 
 class QAReviewer(models.Model):
 	reviewer_name = models.CharField(max_length=20)

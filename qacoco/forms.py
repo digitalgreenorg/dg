@@ -23,6 +23,10 @@ class UserModelDistrictMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "%s" % (obj.district_name)
 
+class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s (%s) (%s)" % (obj.title, obj.village.block.district.district_name, obj.language.language_name)
+
 class QACocoUserForm(forms.ModelForm):
     districts = UserModelDistrictMultipleChoiceField(
         widget=FilteredSelectMultiple(
@@ -30,6 +34,14 @@ class QACocoUserForm(forms.ModelForm):
                                       is_stacked=False
                                      ),
         queryset=District.objects.all()
+        )
+    videos = UserModelVideoMultipleChoiceField(
+        widget=FilteredSelectMultiple(
+                                      verbose_name='videos',
+                                      is_stacked=False
+                                     ),
+        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
+        required=False
         )
 
 class QACocoModelForm(ModelForm):
