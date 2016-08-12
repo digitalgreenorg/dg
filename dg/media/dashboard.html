@@ -494,10 +494,11 @@
                         </div>
                         <div class="clearfix form-group">
                             <select id="language" type="text" placeholder="Language" class="form-control">
-                                <option value='' selected='selected'>Language</option>
-                                <% _.each(configs.misc.languages, function(language) { %>
+                                <option value='English' selected='selected'>English</option>
+                                <% _.each(configs.misc.languages, function(language) { 
+                                    if(language != 'English'){%>
                                     <option value="<%= language %>"><%= language %></option> 
-                                    <% }); %>
+                                    <% }}); %>
                             </select>
                         </div>
                         <button id= "login_button" class="btn btn-primary" type="submit" data-loading-text="Logging In...">Sign in</button>
