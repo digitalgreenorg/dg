@@ -31,7 +31,7 @@ class LoopUserInline(admin.TabularInline):
 
 
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone', '__unicode__')
+    list_display = ('name', 'phone', '__village__')
     search_fields = ['name', 'phone', 'village__village_name']
 
 
