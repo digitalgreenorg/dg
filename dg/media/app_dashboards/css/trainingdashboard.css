@@ -15,8 +15,7 @@
     margin-bottom: 32px;
 }
 nav.top-nav {
-    height: 80px;
-    box-shadow: none;
+    height: 65px;
 }
 nav.top-nav a.page-title {
     line-height: 80px;
@@ -141,18 +140,23 @@ html {
 }
 
 #box-1.row {
-  padding: 2%;
+  background-color: #EFEFEF;
+  padding: -10px;
 }
-#box-2 {
-
+#box-2.row {
+    margin-top: -1%;
 }
 #num_trainings, #mediators_trained, #average_score, #pass_percent, #filtered_num_trainings, 
 #filtered_mediators_trained, #filtered_average_score, #filtered_pass_percent{
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 200%;
 }
 @media only screen and (max-width: 992px) {
     main, footer {
     padding-left: 0;
 }
 
+#get_data
+{
+    margin-top: 10%;
+}

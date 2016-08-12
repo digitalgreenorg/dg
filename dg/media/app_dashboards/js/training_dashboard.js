@@ -12,10 +12,11 @@ function initialize() {
     $(".button-collapse").sideNav({
           menuWidth: 300, // Default is 240
           edge: 'left', // Choose the horizontal origin
-          closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+           closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
         }
       );
-    
+
+
 }
 
 $( window ).resize(function() {
@@ -23,13 +24,6 @@ $( window ).resize(function() {
 });
 
 /* Progress Bar functions */
-function xyz() {
-    $('#state_mediator_data').focus();
-}
-
-function myFunction(){
-    alert("hi");
-}
 
 function hide_progress_bar() {
     $('#progress_bar').hide()
@@ -68,6 +62,9 @@ function set_eventlistener() {
         selectMonths: true,
         selectYears: 15,
         format: "yyyy-mm-dd",
+        onClose: function() {
+            $('.datepicker').blur();
+        },
         max: -1,
         onSet: function(element) {
             if (element.select) {
@@ -79,6 +76,9 @@ function set_eventlistener() {
         selectMonths: true,
         selectYears: 15,
         format: "yyyy-mm-dd",
+        onClose: function() {
+            $('.datepicker').blur();
+        },
         max: true,
         onSet: function(element) {
             if (element.select) {
@@ -517,7 +517,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
                 }
             }
 
-            question_dict.push(question_mediators_dict);
+            // question_dict.push(question_mediators_dict);
             question_dict.push(question_mediators_passed_dict);
             // question_dict.push(question_percent_dict);
 
@@ -548,7 +548,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
                 question_mediators_passed_dict['data'][i] = parseInt(med_pass);
             }
 
-            question_dict.push(question_mediators_dict);
+            // question_dict.push(question_mediators_dict);
             question_dict.push(question_mediators_passed_dict);
             // question_dict.push(question_percent_dict);
         }
