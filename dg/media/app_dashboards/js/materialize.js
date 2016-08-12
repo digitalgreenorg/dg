@@ -1212,22 +1212,31 @@ $(document).ready(function(){
 
       $content = $($active[0].hash);
 
-      // append indicator then set indicator width to tab width
+     // append indicator then set indicator width to tab width
       $this.append('<div class="indicator"></div>');
       var $indicator = $this.find('.indicator');
+
       if ($this.is(":visible")) {
-        $indicator.css({"right": $tabs_width - (($index + 1) * $tab_width)});
-        $indicator.css({"left": $index * $tab_width});
+        var right = $tabs_width - (($index + 1) * $tab_width);
+        var left = $index * $tab_width
+        if(right < 0) {right = 0};
+
+        $indicator.css({"right": right});
+        $indicator.css({"left": left});
       }
       $(window).resize(function () {
+        var right = $tabs_width - (($index + 1) * $tab_width);
+        var left = $index * $tab_width
+        if(right < 0) {right = 0};
+
         $tabs_width = $this.width();
         $tab_width = $this.find('li').first().outerWidth();
         if ($index < 0) {
           $index = 0;
         }
         if ($tab_width !== 0 && $tabs_width !== 0) {
-          $indicator.css({"right": $tabs_width - (($index + 1) * $tab_width)});
-          $indicator.css({"left": $index * $tab_width});
+           $indicator.css({"right": right});
+           $indicator.css({"left": left});
         }
       });
 
@@ -1270,7 +1279,9 @@ $(document).ready(function(){
 
         // Update indicator
         if (($index - $prev_index) >= 0) {
-          $indicator.velocity({"right": $tabs_width - (($index + 1) * $tab_width)}, { duration: 300, queue: false, easing: 'easeOutQuad'});
+        	var right = $tabs_width - (($index + 1) * $tab_width);
+        	if (right<0){right=0};
+          $indicator.velocity({"right":right }, { duration: 300, queue: false, easing: 'easeOutQuad'});
           $indicator.velocity({"left": $index * $tab_width}, {duration: 300, queue: false, easing: 'easeOutQuad', delay: 90});
 
         }

@@ -80,15 +80,7 @@ def execute(request):
     block = request.POST.getlist("block")
     village = request.POST.getlist("village")
     video = request.POST.getlist("video")
-    filterDict = {
-        'partner': partner,
-        'country': country,
-        'state': state,
-        'district': district,
-        'block': block,
-        'village': village,
-        'video': video
-    }
+
 
     partner_chk = [request.POST.get("partner_chk")]
     country_chk = [request.POST.get("country_chk")]
@@ -104,20 +96,7 @@ def execute(request):
     videolist = str(request.POST.get("list_video"))
 
 
-    partitionDict = {
-        'partner_chk': partner_chk,
-        'country_chk': country_chk,
-        'state_chk': state_chk,
-        'district_chk': district_chk,
-        'block_chk': block_chk,
-        'village_chk': village_chk,
-        'animator_chk': animator_chk,
-        'people_chk':people_chk,
-        'group_chk': group_chk,
-        'video_chk': video_chk,
-        'list_combo': list_combo,
-        'videolist':videolist
-    }
+
 
     val_screening = [request.POST.get("screening_chk")]
     val_adoption = [request.POST.get("adoption_chk")]
@@ -126,24 +105,47 @@ def execute(request):
     val_video_screened_num = [request.POST.get("no_video_screened_chk")]
     val_video_produced_num = [request.POST.get("no_video_produced_chk")]
 
-    valueDict = {
-        'val_screening':val_screening,
-        'val_adoption': val_adoption,
-        'val_val_no_animator': val_no_animator,
-        'val_attendance':val_attendance,
-        'val_video_screened_num':val_video_screened_num,
-        'val_video_produced_num':val_video_produced_num
-    }
+
 
     from_date = [request.POST.get("from_date")]
     to_date = [request.POST.get("to_date")]
+
+#####################Dictionary for Generic  #################################
+    dict ={'partner':[partner,partner_chk,'partner_name',Partner],
+        'country':[country,country_chk,'country_name',Country],
+        'state':[state,state_chk,'state_name',State],
+        'district':[district,district_chk,'district_name',District],
+        'block':[block,block_chk,'block_name',Block],
+        'village':[village,village_chk,'village_name',Village],
+        'video':[video,video_chk,'title',Video]
+        }
 
     ###############################filter#################################
 
     checked_list = []
 
+    for keys in dict:
+        if (len(dict[keys][0]) == 0 and dict[keys][1][0] != None):
+            dict[keys][0] = True
+            checked_list.append(str(keys))
+        elif len(dict[keys][0]) > 0 :
+            query = dict[keys][2]+'__in'
+            dict[keys][0]=dict[keys][3].objects.filter(**{query:dict[keys][0]})
+            Temp =[]
+            for partitionObject in dict[keys][0] :
+                Temp.append(str(partitionObject.id))
+                dict[keys][0] = Temp
+        elif (len(dict[keys][0])== 0 and dict[keys][1][0] == None):
+            dict[keys][0] = False
+            print dict[keys][0]
+
+        print dict[keys][0]
+
+    '''
+
 
     # print partner
+
     if (len(partner) == 0 and partner_chk[0] != None):
         partner = True
         checked_list.append('partner')
@@ -236,6 +238,7 @@ def execute(request):
     elif(len(video) == 0 and video_chk[0]==None):
         video = False
 
+    '''
 
     ###############################Partition#################################
 
@@ -342,16 +345,16 @@ def execute(request):
         to_date = '%s-%s-%s' % (now.year, now.month, now.day)
 
     partition = {
-        'partner': partner,
-        'country': country,
-        'state': state,
-        'district': district,
-        'block': block,
-        'village': village,
+        'partner': dict['partner'][0],
+        'country': dict['country'][0],
+        'state': dict['state'][0],
+        'district': dict['district'][0],
+        'block': dict['block'][0],
+        'village': dict['village'][0],
         'animator': animator,
         'person': person,
         'persongroup': group,
-        'video': video
+        'video': dict['video'][0]
     }
 
     value = {
@@ -365,6 +368,7 @@ def execute(request):
     }
 
     options = {'partition': partition, 'value': value}
+    print options
     args = []
     args.append(from_date)
     args.append(to_date)
