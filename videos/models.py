@@ -157,6 +157,7 @@ class Video(CocoModel):
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
     partner = models.ForeignKey(Partner)
+    is_dg_video = models.BooleanField(verbose_name="Is DigitalGreen Video", db_index=True, default=False)
     review_status = models.IntegerField(choices=VIDEO_REVIEW,default=0, validators=[MaxValueValidator(1)])
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
     reviewer = models.IntegerField(choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])

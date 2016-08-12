@@ -77,7 +77,7 @@ class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
                 (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice']}),
                 (None,{'fields':['village','production_team']}),
-                ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
+                ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer', 'is_dg_video']}),
     ]
     list_display = ('id', 'title', 'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
     search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
@@ -221,4 +221,6 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
+    raw_id_fields = ('partner', 'user')
+
 

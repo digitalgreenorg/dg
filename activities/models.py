@@ -86,6 +86,8 @@ class Screening(CocoModel):
     observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
+    is_dg_video = models.BooleanField(verbose_name="Is DigitalGreen Video", db_index=True, default=False)
+    listened_to_prc = models.BooleanField(verbose_name="Listened to PRC", db_index=True, default=False)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -121,6 +123,9 @@ class PersonAdoptPractice(CocoModel):
     verification_status = models.IntegerField(choices=ADOPTION_VERIFICATION, default=0, validators=[MaxValueValidator(2)])
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
+    listened_to_prc = models.BooleanField(verbose_name="Listened to PRC", db_index=True, default=False)
+    size_land = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
