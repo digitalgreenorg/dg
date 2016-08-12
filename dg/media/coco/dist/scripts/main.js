@@ -3368,13 +3368,13 @@ define('auth_offline_backend',[
   }
   
   // if u, p matches that in user table, sets login state = true 
-  var login = function(username, password){
+  var login = function(username, password, language){
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, true)
+                  save_login_state(username, password, language, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -3389,7 +3389,7 @@ define('auth_offline_backend',[
           },
           error: function(){
               // No user has been found in the database. This is probably a new login, and database is yet to be created.
-               save_login_state(username, password, true)
+               save_login_state(username, password, language, true)
                .done(function (){
                    return dfd.resolve("New user registered in offline database.");
                })
@@ -3402,9 +3402,9 @@ define('auth_offline_backend',[
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, loggedin){
+  var save_login_state = function(username, password, language, loggedin){
       var dfd = new $.Deferred();
-      User.save({'username':username, 'password':password, 'loggedin':loggedin},{
+      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language},{
           success: function(){
               console.log("user state saved in offline");
               dfd.resolve();
@@ -5048,11 +5048,12 @@ define('views/form',[
     'configs',
     'offline_utils',
     'denormalize',
+    'models/user_model',
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer, User) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -5071,12 +5072,15 @@ define('views/form',[
             // send the following info to template
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
+            var language = User.get('language');
+            this.entity_config = all_configs[this.entity_name];
             // HTML for form 
-            s_passed["form_template"] = this.form_template;
+            //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
+            s_passed["add_row"] = this.entity_config['labels_'+language]['add_row'];
             return s_passed;
         },
 
@@ -5105,21 +5109,23 @@ define('views/form',[
         // Refactor possible
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
+            var language = User.get("language");
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
+            this.labels = this.entity_config['labels_'+language]
             if (this.edit_case) {
-                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
                     this.foreign_entities = this.entity_config.edit.foreign_entities;
                     this.inline = this.entity_config.edit.inline;
                     this.bulk = this.entity_config.edit.bulk;
                 }
             } else {
-                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.add_template_name).html());
                 if (this.entity_config.add) {
                     this.foreign_entities = this.entity_config.add.foreign_entities;
                     this.inline = this.entity_config.add.inline;
@@ -5236,7 +5242,9 @@ define('views/form',[
 
         afterRender: function() {
             var that = this;
-
+            
+            //rendering labels
+            this.render_labels();
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -5260,6 +5268,11 @@ define('views/form',[
             this.initiate_form_widgets();
         },
 
+        render_labels: function(){
+            $f_el = this.$("#form_template_render");
+            $f_el.append(this.form_template(this.labels));
+        },
+        
         //fetches all foreign collections and renders them when all are fetched
         fetch_and_render_foreign_entities: function() {
             var for_entities_fetch_dfds = []
@@ -5329,7 +5342,9 @@ define('views/form',[
         //render header, empty inlines if add case, fetch and render related inlines if edit case
         render_inlines: function() {
             var that = this;
-            this.$('#inline_header').html($('#' + this.inline.header).html());
+            var temp = _.template($('#' + this.inline.header).html());
+            $f_el = this.$('#inline_header');
+            $f_el.append(temp(this.labels));
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -6356,7 +6371,9 @@ define('views/upload_status',[
     'underscore',
     'layoutmanager',
     'collections/upload_collection',
-    ], function(jquery, underscore, layoutmanager, upload_collection) {
+    'models/user_model',
+    'configs'
+    ], function(jquery, underscore, layoutmanager, upload_collection, User, configs) {
 
         var UploadStatusView = Backbone.Layout.extend({
 
@@ -6371,6 +6388,15 @@ define('views/upload_status',[
             "click #Ok": "tear_down"
         },
         
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                configs: configs,
+            };
+        },
+
         //removes the view
         tear_down: function() {
             $('#upload_status_modal').modal('hide');
@@ -6596,7 +6622,7 @@ define('auth',[
     }
     
     // logs-in to the offline backend, if internet accessible - logs-in to the server backend
-    var login = function(username, password) {
+    var login = function(username, password, language) {
         var dfd = new $.Deferred();
         console.log("Attemting login");
         // internet accessible - login to server backend - when successfull - login to offline backend
@@ -6609,7 +6635,7 @@ define('auth',[
                 })
                 .done(function() {
                     // online login successful, try offline backend login
-                    OfflineAuthBackend.login(username, password)
+                    OfflineAuthBackend.login(username, password, language)
                         .done(function() {
                             // login successful
                             console.log("Login Successful");
@@ -6623,7 +6649,7 @@ define('auth',[
                 });
         } else {
             // internet not accessible - only try logging into offline backend
-            OfflineAuthBackend.login(username, password)
+            OfflineAuthBackend.login(username, password, language)
                 .done(function() {
                     console.log("Login Successful");
                     post_login_success();
@@ -6698,11 +6724,12 @@ define('views/upload',[
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'models/user_model',
     'views/upload_status',
     'auth',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView, auth) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, User, UploadStatusView, auth) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -6715,6 +6742,16 @@ define('views/upload',[
 
         events: {
             "click #stop_upload": "stop_upload"
+        },
+
+
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                configs: configs,
+            };
         },
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
@@ -7041,10 +7078,11 @@ define('views/upload',[
         show_form: function(entity_name, json, err_msg) {
             console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(json));
             // create a form instance with that json
+            var language = User.get('language');
             p = new Form({
                 serialize: {
-                    button1: "Save again",
-                    button2: "Discard"
+                    button1: configs['misc']['meta_'+language]['save_again'],
+                    button2: configs['misc']['meta_'+language]['discard']
                 },
                 entity_name: entity_name,
                 model_json: json
@@ -7140,9 +7178,10 @@ define('views/incremental_download',[
     'configs',
     'convert_namespace',
     'offline_utils',
+    'models/user_model',
     'indexeddb-backbone',
     'bootstrapjs',
-], function(jquery, underscore, layoutmanager, indexeddb, all_configs, ConvertNamespace, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, all_configs, ConvertNamespace, Offline, User) {
 
     var IncrementalDownloadView = Backbone.Layout.extend({
 
@@ -7166,6 +7205,16 @@ define('views/incremental_download',[
             document.getElementById('inc_pbar').style.width = (w + this.progress_bar_step) + '%';
         },
         */
+
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                all_configs: all_configs,
+            };
+        },
+
         //update the status on the view - # of downloaded/# of total objects
         update_status: function(status) {
             console.log(status);
@@ -7704,8 +7753,9 @@ define('views/full_download',[
     'indexeddb_backbone_config',
     'configs',
     'offline_utils',
+    'models/user_model',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline, User) {
 
 
     var FullDownloadView = Backbone.Layout.extend({
@@ -7722,7 +7772,9 @@ define('views/full_download',[
 
         //send the list of entities to the template 
         serialize: function() {
+            var language = User.get("language");
             return {
+                language: language,
                 all_configs: all_configs
             }
         },
@@ -7956,10 +8008,12 @@ define('views/full_download',[
             var downloaded = this.download_status[entity_name].downloaded;
             //get the # of total objects for thi entity
             var total = this.download_status[entity_name].total;
+            //get the language chosen by user
+            var language = User.get('language');
             //set the text
-            var s_text = "In Progress";
+            var s_text = all_configs['misc']['meta_'+language]['inprogress'];
             if (downloaded >= total)
-                s_text = "Done";
+                s_text = all_configs['misc']['meta_'+language]['done'];
             //set the num
             var s_num = String(downloaded) + "/" + String(total);
             
@@ -8276,7 +8330,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         template: "#dashboard",
         events: {
             "click #sync": "sync",
-            "click #inc_download": "inc_download"
+            "click #inc_download": "inc_download",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -8287,16 +8341,23 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             //start the background inc download process
             this.background_download();
             _(this)
-                .bindAll('render');
-            //re-render the view when User model changes - to keep username updated    
+                .bindAll('render');                                                             
+            //re-render the view when User model changes - to keep username updated
+            User.on('change', this.render);
             this.upload_entries = upload_collection.length;
         },
 
         serialize: function() {
             // send username and # of uploadQ items to the template 
             var username = User.get("username");
+            var language = User.get("language");
+            if(language === undefined) {
+                    language = configs.misc.meta_default;
+            }
             return {
                 username: username,
+                language: language,
+                configs: configs,
                 upload_entries: this.upload_entries
             }
         },
@@ -8305,6 +8366,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("rendering dashboard");
             //iterate over entities defined in config and create their "list" and "add" rows 
             for (var member in configs) {
+                var language = User.get("language");
+                if(language === undefined) {
+                    language = configs.misc.meta_default;
+                }
                 if (member == "misc") continue;
                 var listing = true;
                 var add = true;
@@ -8327,7 +8392,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (listing) $('#dashboard_items')
                         .append(this.item_template({
                         name: member + "/list",
-                        title: configs[member]["page_header"] + 's'
+                        title: configs[member]['config_'+language]
                     }));
 
                     if (add) $('#dashboard_items_add')
@@ -8339,7 +8404,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                         .append("<li class='disabled'><a><i class='glyphicon glyphicon-plus-sign' title='You are not allowed to add this currently'></a></li>");
                 }
             }
-            
+            this.upload_entries = upload_collection.length;
             //keep the # uploadq entries shown on view up-to-date
             upload_collection.on('all', function() {
                 $("#upload_num")
@@ -8356,7 +8421,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 that.db_downloaded();
             })
                 .fail(function(model, error) {
-                that.db_not_downloaded();
+                //that.db_not_downloaded();
+                console.log("DB not downloaded");
             });
             
             // $("#main-navbar").on('click',function(){
@@ -8366,6 +8432,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if($(window).width()<768)
                         $(".collapse").collapse('hide');
             });
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+            }
+            else{
+                $('#sync').attr('disabled', true);
+            }
         },
         
         //enable add, list links
@@ -8380,7 +8452,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         },
 
         //disable add, list links
-        db_not_downloaded: function() {
+        /*db_not_downloaded: function() {
             $('.list_items')
                 .bind('click', false);
             $('.list_items')
@@ -8388,7 +8460,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links disabled");
             $("#helptext")
                 .show();
-        },
+        },*/
 
         //if DB exists initiate upload and then inc download otherwise start full download
         sync: function() {
@@ -8575,7 +8647,8 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
     var HeaderView = Backbone.Layout.extend({
         template: "#page_header",
         events: {
-            "click #logout": "logout"
+            "click #logout": "logout",
+            "click .js_language": "language",
         },
         
         initialize: function() {
@@ -8588,8 +8661,11 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
         serialize: function() {
             // Send username 
             var username = User.get("username");
+            var language = User.get("language");
             return {
                 username: username,
+                language: language,
+                configs: configs
             }
         },
 
@@ -8645,10 +8721,18 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
                 .always(function() {
                 window.location.href = window.location.origin + window.location.pathname;
             });
+        },
+
+        //this function is called when user clicks on language change options
+        language: function(e) {
+            e.preventDefault();
+            var language_chosen = $(e.currentTarget).text();
+            var language_current = User.get("language");
+            if(language_chosen!=language_current){
+                User.save({"language":language_chosen});
+            }
         }
     });
-
-
     // Our module now returns our view
     return HeaderView;
 });
@@ -11976,7 +12060,7 @@ else if ( jQuery && !jQuery.fn.dataTable.TableTools ) {
 
 
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'models/user_model', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline, User) {
 
 
     var ListView = Backbone.Layout.extend({
@@ -11990,12 +12074,15 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
             this.render();
+            User.on('change', this.render);
         },
 
         serialize: function () {
             //send these to the list page template
+            var language = User.get('language');
             return {
-                page_header: this.entity_config.page_header,
+                page_header: this.entity_config['config_'+language],
+                list_page_help: all_configs['misc']['meta_'+language]['list_page_help']
             };
         },
 
@@ -12012,7 +12099,8 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
         },
         
         get_row_header: function () {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var header_row = $.map(list_elements, function (column_definition) {
                 var header = "";
                 if ('header' in column_definition) {
@@ -12027,13 +12115,14 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
                 return {sTitle: header};
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
-                header_row.push({sTitle: "Edit"});
+                header_row.push({sTitle: all_configs['misc']['meta_'+language]['edit']});
             }
             return header_row;
         },
         
         get_row: function (model_object) {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var row = $.map(list_elements, function (column_definition) {
                 var cell = '';
                 if ('element' in column_definition) {
@@ -12078,6 +12167,7 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
             // render data and call function get_row() to make array_table_values which is assigned to aaData later to
             // fill the table with the relevant values.
             var self = this;
+            var language = User.get('language');
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
@@ -12091,16 +12181,26 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
                     "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "bAutoWidth":false,
+                    "bDestroy": true,
+                    "oLanguage": {
+                        "sSearch": all_configs['misc']['meta_'+language]['search'],
+                        "sLengthMenu": all_configs['misc']['meta_'+language]['enteries']+"_MENU_",
+                        "sInfo": all_configs['misc']['meta_'+language]['total_enteries']+"_TOTAL_",
+                        "oPaginate": {
+                            "sNext": all_configs['misc']['meta_'+language]['next'],
+                            "sPrevious": all_configs['misc']['meta_'+language]['previous']
+                        },
+                    },
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [
                             {
                                 "sExtends": "copy",
-                                "sButtonText": "Copy to Clipboard"
+                                "sButtonText": all_configs['misc']['meta_'+language]['copy_clipboard']
                             },
                             {
                                 "sExtends": "xls",
-                                "sButtonText": "Download in Excel"
+                                "sButtonText": all_configs['misc']['meta_'+language]['excel_download']
                             }
                         ]
 
@@ -12127,8 +12227,9 @@ define('views/form_controller',[
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'models/user_model',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online, User) {
 
     // FormController: Brings up the Add/Edit form
 
@@ -12148,16 +12249,19 @@ var message_combined_failure = "";
             console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
             _.bindAll(this);
+            User.on('change', this.render);
         },
         template: "<div><div id = 'form'></div></div>",
 
         //setting up the form view
         beforeRender: function() {
             console.log(this.params);
+            var language = User.get("language");
+            var button = configs['misc']['meta_'+language]['save'];
             // pass on the params to the form view - also add desired names of the buttons on form - null hides the button
             this.params = $.extend(this.params, {
                 serialize: {
-                    button1: "Save and Add Another",
+                    button1: button,
                     button2: null
                 }
             });
@@ -12616,9 +12720,10 @@ define('views/status',[
     'configs',
     'collections/upload_collection',
     'views/notification',
+    'models/user_model',
     'offline_utils',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -12636,7 +12741,10 @@ define('views/status',[
 
         serialize: function() {
             // send the following to the template
+            var language = User.get('language');
             return {
+                language: language,
+                configs: configs,
                 full_d_timestamp: this.full_download_timestamp,
                 inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
@@ -12749,10 +12857,12 @@ define('views/login',[
     'layoutmanager',
     'models/user_model',
     'auth',
-	  'offline_utils',
+	  'offline_utils', 
+	  'configs',
     'collections/upload_collection'
-], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, upload_collection){
-    
+
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, all_configs, upload_collection){
+
     var LoginView = Backbone.Layout.extend({
       template: "#login",
       events:{
@@ -12768,8 +12878,14 @@ define('views/login',[
       },
       
       serialize: function(){
+          var s_passed = {};
+          
+          // name of the entity bieng added/edited
+          
           // send the user info to the template
-          return User.toJSON();
+          s_passed["user"] = User.toJSON();
+          s_passed["configs"] = all_configs;
+          return s_passed;
       },
       
       scrap_view: function(){
@@ -12805,24 +12921,31 @@ define('views/login',[
           this.set_login_button_state('loading');
           var username = this.$('#username').val();
           var password = this.$('#password').val();
+          var language = this.$('#language').val();
           var that = this;
           // use the auth module to authenticate
-          Auth.login(username, password)
-              .done(function(){
-                  //login successfull - route to the home view
-                  that.scrap_view();
-                  window.Router.navigate("", {
-                      trigger:true
+          if (language != ''){
+              Auth.login(username, password, language)
+                  .done(function(){
+                      //login successfull - route to the home view
+                      that.scrap_view();
+                      window.Router.navigate("", {
+                          trigger:true
+                      });
+                  })
+                  .fail(function(error){
+                      // authentication failed
+                      // clear the password
+    			      $("#password").val('');
+                      // show the error
+    				  that.$('#error_msg').html(error);
+                      that.set_login_button_state('reset');
                   });
-              })
-              .fail(function(error){
-                  // authentication failed
-                  // clear the password
-			      $("#password").val('');
-                  // show the error
-				  that.$('#error_msg').html(error);
-                  that.set_login_button_state('reset');
-              });
+          }
+          else{
+              that.$('#error_msg').html("Language not Selected");
+              that.set_login_button_state('reset');
+          }
       },
       
       // set state of login button - disable while authentication request is under process
@@ -12870,7 +12993,7 @@ define('views/app_layout',['views/dashboard', 'views/app_header', 'views/list', 
             var username = User.get("username");
             console.log(User);
             return {
-                username: username
+                username: username,
             }
                 
         },

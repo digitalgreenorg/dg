@@ -13,11 +13,12 @@ define([
     'configs',
     'offline_utils',
     'denormalize',
+    'models/user_model',
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer, User) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -36,12 +37,15 @@ define([
             // send the following info to template
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
+            var language = User.get('language');
+            this.entity_config = all_configs[this.entity_name];
             // HTML for form 
-            s_passed["form_template"] = this.form_template;
+            //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
+            s_passed["add_row"] = this.entity_config['labels_'+language]['add_row'];
             return s_passed;
         },
 
@@ -70,21 +74,23 @@ define([
         // Refactor possible
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
+            var language = User.get("language");
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
+            this.labels = this.entity_config['labels_'+language]
             if (this.edit_case) {
-                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
                     this.foreign_entities = this.entity_config.edit.foreign_entities;
                     this.inline = this.entity_config.edit.inline;
                     this.bulk = this.entity_config.edit.bulk;
                 }
             } else {
-                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.add_template_name).html());
                 if (this.entity_config.add) {
                     this.foreign_entities = this.entity_config.add.foreign_entities;
                     this.inline = this.entity_config.add.inline;
@@ -201,7 +207,9 @@ define([
 
         afterRender: function() {
             var that = this;
-
+            
+            //rendering labels
+            this.render_labels();
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -225,6 +233,11 @@ define([
             this.initiate_form_widgets();
         },
 
+        render_labels: function(){
+            $f_el = this.$("#form_template_render");
+            $f_el.append(this.form_template(this.labels));
+        },
+        
         //fetches all foreign collections and renders them when all are fetched
         fetch_and_render_foreign_entities: function() {
             var for_entities_fetch_dfds = []
@@ -294,7 +307,9 @@ define([
         //render header, empty inlines if add case, fetch and render related inlines if edit case
         render_inlines: function() {
             var that = this;
-            this.$('#inline_header').html($('#' + this.inline.header).html());
+            var temp = _.template($('#' + this.inline.header).html());
+            $f_el = this.$('#inline_header');
+            $f_el.append(temp(this.labels));
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
