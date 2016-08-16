@@ -25,8 +25,9 @@ define([
         },
 
         initialize: function() {
-            _(this).bindAll('fill_status');
+            _(this).bindAll('render');
             this.fill_status();
+            User.on('change', this.render);
         },
 
         serialize: function() {
