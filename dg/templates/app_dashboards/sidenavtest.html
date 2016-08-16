@@ -35,17 +35,21 @@
 					<div class="nav-wrapper grey darken-3">
 						<!-- <a href="#" class="page-title">Training Dashboard</a> -->
 						 <a href="#" class="brand-logo center" style="font-size:175%;">Training Dashboard</a>
-						 <ul id="nav-mobile" style="margin-left:-12%;">
+						<!--  <ul id="nav-mobile" style="margin-left:-12%;">
 							<li><a href="#" data-activates="slide-out" class="button-collapse" style="display:block;"><i class="material-icons show-on-large">menu</i></a></li>
-						</ul>
+						</ul> -->
 						<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 					</div>
 				</div>
 			</nav>
 		</div>
+
+
+
+		<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
 	</header>
 
-	<ul id="slide-out" class="side-nav">
+	<ul id="nav-mobile" class="side-nav fixed">
 		<li class="no-padding not-hoverable">
 		<ul class="collapsible collapsible-accordion">
 			<li class="bold not-hoverable">
@@ -339,30 +343,5 @@
 		</div>
 	</div>
 </div>
-
-<!-- <div class="container" style="margin-top:5%;">
-	<br>
-	<div class="row">
-		<h5 class="center-align" >Trainer-Wise Mediator Data</h5>
-		<div id="trainer_training_data" style="margin-top:2%"></div>
-		<br>
-		<div id="trainer_mediator_data"></div>
-	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row" style="margin-top:30px">
-		<h5 class="center-align">Question-Wise Mediator Data</h5>
-		<div id="question_mediator_data"></div>
-	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row" style="margin-top:30px">
-		<h5 class="center-align">State-Wise Mediator Data</h5>
-		<div id="state_training_data" style="margin-top:30px"></div>
-		<br>
-		<div id="state_mediator_data"></div>
-	</div>
-	<div class="divider"></div>
-</div> -->
 
 {% endblock %}

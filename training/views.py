@@ -36,6 +36,9 @@ def login(request):
 
 def dashboard(request):
     return render(request, 'app_dashboards/training_dashboard.html')
+    
+def sidenavtest(request):
+    return render(request, 'app_dashboards/sidenavtest.html')
 
 def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')
