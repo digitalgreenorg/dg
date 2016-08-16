@@ -180,6 +180,9 @@ class Farmer(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
+        return "%s (%s)" % (self.name,self.village.village_name)
+
+    def __village__(self):
         return "%s" % (self.village.village_name)
 
     class Meta:
