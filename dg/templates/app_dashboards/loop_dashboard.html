@@ -55,16 +55,16 @@
 
 				<ul class="right">
 					<div class="row">
-                        <div class="input-field col s4">
-                            <label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
-                        </div>
+						<div class="input-field col s4">
+							<label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
+						</div>
 						<div class="input-field col s4">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
 						</div>
-                        <div class="input-field col s4">
-                            <label class="to_label" id="to_label">To:&nbsp;&nbsp;</label>
-                        </div>
+						<div class="input-field col s4">
+							<label class="to_label" id="to_label">To:&nbsp;&nbsp;</label>
+						</div>
 						<div class="input-field col s4">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
@@ -182,42 +182,61 @@
 		<div class="row">
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters
+						<div class="help-tip">
+			<p>This represents the number of cluster LOOP is currently being used into.</p>
+		</div></span>
 					<!-- <h5 id="cluster_card"></h5> -->
 					<span id="cluster_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers
+						<div class="help-tip">
+			<p>This represents the number of unique farmers reached through LOOP.</p>
+		</div></span>
 					<!-- <h5 id="total_farmers_card"></h5> -->
 					<span id="total_farmers_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)
+						<div class="help-tip">
+			<p>This represents the total volume of crops that has been aggregated under LOOP.</p>
+		</div></span>
 					<!-- <h5 id="total_volume_card"></h5> -->
 					<span id="total_volume_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Revenue(₹)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;Payments(₹)
+						<div class="help-tip">
+			<p>This represents total amount that the farmers have received selling the crops.</p>
+		</div></span>
 					<!-- <h5 id="revenue_card"></h5> -->
 					<span id="revenue_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost/Kg</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg
+						<div class="help-tip">
+			<p>This represents ratio of total transportation cost to total volume.</p>
+		</div>
+					</span>
 					<!-- <h5 id="total_expenditure_card"></h5> -->
 					<span id="total_expenditure_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;Sustainability(%)</span>
+					<span class="card-title">&nbsp;&nbsp;Sustainability(%)
+						<div class="help-tip">
+			<p>This represents ratio of farmer share in transportation cost to total transportation cost</p>
+		</div></span>
 					<!-- <h5 id="sustainability_card"></h5> -->
 					<span id="sustainability_bullet"></span>
 				</div>
@@ -229,11 +248,11 @@
 	</div>
 
 	<div class="row card white darken-1">
-		<div id="recent_main" class="row" style="height:5px">
+		<div id="recent_main" class="row" style="height:44px;margin-bottom:0px;">
 			<div class="col s10">
 				<h5>Recent</h5>
 			</div>
-			<div class="col s2">
+			<div class="col s2" style="width:15%;height: 40px;">
 				<select id="recent_cards_data_frequency" class="initialized">
 					<option value="7">7</option>
 					<option value="15" selected>15</option>
@@ -268,7 +287,7 @@
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Revenue(₹)</span>
+					<span class="card-title">Payments(₹)</span>
 					<h5 id="recent_revenue_card"></h5>
 					<span id="recent_revenue_sparkline"></span>
 				</div>
@@ -292,12 +311,12 @@
 		</div>
 	</div>
 
-<div class="row">
-	<div id="container2" class="col s12">
-		<div id="detail_container" ></div>
-		<div id="master_container" style="height:100px;"></div>
+	<div class="row">
+		<div id="container2" class="col s12">
+			<div id="detail_container"></div>
+			<div id="master_container" style="height:100px;"></div>
+		</div>
 	</div>
-</div>
 </div>
 
 
@@ -322,7 +341,7 @@
 						<li class="tab col s4"><a class="center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
 						<li class="tab col s4"><a class="center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
-                        <div class="indicator"></div>
+						<div class="indicator"></div>
 					</ul>
 				</div>
 				<hr>
@@ -449,36 +468,39 @@
 		</div>
 		<p class="col s4"></p>
 
-<div id="aggregator_payment_details">
+		<div id="aggregator_payment_details">
 
-		<table style="width:100%">
-			<tr id="outliers">
-			</tr>
-		</table>
-
-		<table id="outliers_data" class="highlight bordered centered"> </table>
-
-		<br><br><br>
-		<hr/>
-
-		<div class="row center">
-			<h3>Payment Sheets</h3>
-		</div>
-		<div class="row center">
-		<div class="col s4" style="overflow-y:auto;">
-			<table id="table2" class="stripe">
+			<table style="width:100%">
+				<tr id="outliers">
+				</tr>
 			</table>
-</div>
-<p class="col s1">
 
-		<div class="col s3"style="overflow-y:auto;">
-			<table id="table3" class="stripe"></table>
+			<table id="outliers_data" class="highlight bordered centered"> </table>
+
+			<br>
+			<br>
+			<br>
+			<hr/>
+
+			<div class="row center">
+				<h3>Payment Sheets</h3>
+			</div>
+			<div class="row center">
+				<div class="col s4" style="overflow-y:auto;">
+					<table id="table2" class="stripe">
+					</table>
+				</div>
+				<p class="col s1">
+
+					<div class="col s3" style="overflow-y:auto;">
+						<table id="table3" class="stripe"></table>
+					</div>
+					<p class="col s1">
+						<div class="col s3" style="overflow-y:auto;">
+							<table id="table4" class="stripe"></table>
+						</div>
+			</div>
 		</div>
-		<p class="col s1">
-				<div class="col s3"style="overflow-y:auto;">
-			<table id="table4" class="stripe"></table></div>
-</div>
-</div>
 	</div>
 	<!-- <div class="row center">
 		<a id="download_payment_sheets" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="download_payments_data()">Download</a>
