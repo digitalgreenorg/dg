@@ -771,13 +771,13 @@
             }
         }
         document.getElementsByName('total_score')[0].value=score;
-        if(score>=7){
+        if(score>=11){
             grade='A';
         }
-        else if (score>=5 && score<7) {
+        else if (score>=8 && score<11) {
             grade='B';
         }
-        else if(score<5){
+        else if(score<8){
         grade='C';
         }
         
@@ -859,8 +859,8 @@
 
     <div id="scores1">
 
-        <div class="form-group">
-               <label class="control-label dis-block col-sm-2">Equipment Setup And Handling</label>
+            <div class="form-group">
+               <label class="control-label dis-block col-sm-2">Connected and handled equipment properly</label>
                 <div class="col-sm-4">
                     <input type="radio" name="equipments_setup_handling" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('equipments_setup_handling')">Bad(0)
                     <input type="radio" name="equipments_setup_handling" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('equipments_setup_handling')">Fair(1)
@@ -869,7 +869,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Context Setting</label>
+                <label class="control-label dis-block col-sm-2">Set up desired darkness, screen size and picture quality</label>
                 <div class="col-sm-4">
                     <input type="radio" name="context_setting" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('context_setting')">Bad(0)
                     <input type="radio" name="context_setting" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('context_setting')">Fair(1)
@@ -877,15 +877,39 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Facilitation</label>
+                <label class="control-label dis-block col-sm-2">Introduced the topic and reason for choosing it</label>
                 <div class="col-sm-4">
-                    <input type="radio" name="facilitation" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('facilitation')">Bad(0)
-                    <input type="radio" name="facilitation" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('facilitation')">Fair(1)
-                    <input type="radio" name="facilitation" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('facilitation')">Very Good(2)
+                    <input type="radio" name="introduce_topic" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('introduce_topic')">Bad(0)
+                    <input type="radio" name="introduce_topic" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('introduce_topic')">Fair(1)
+                    <input type="radio" name="introduce_topic" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('introduce_topic')">Very Good(2)
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Subject Knowledge</label>
+                <label class="control-label dis-block col-sm-2">Paused videos at important places for discussion</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="paused_video" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('paused_video')">Bad(0)
+                    <input type="radio" name="paused_video" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('paused_video')">Fair(1)
+                    <input type="radio" name="paused_video" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('paused_video')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Encouraged for adoption by two way interaction</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="encouraged_adoption" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('encouraged_adoption')">Bad(0)
+                    <input type="radio" name="encouraged_adoption" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('encouraged_adoption')">Fair(1)
+                    <input type="radio" name="encouraged_adoption" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('encouraged_adoption')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Summarized video focusing on the non-negotiables</label>
+                <div class="col-sm-4">
+                    <input type="radio" name="summarized_video" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('summarized_video')">Bad(0)
+                    <input type="radio" name="summarized_video" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('summarized_video')">Fair(1)
+                    <input type="radio" name="summarized_video" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('summarized_video')">Very Good(2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-2">Had accurate knowledge about practice</label>
                 <div class="col-sm-4">
                     <input type="radio" name="subject_knowledge" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('subject_knowledge')">Bad(0)
                     <input type="radio" name="subject_knowledge" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('subject_knowledge')">Fair(1)
@@ -893,14 +917,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label dis-block col-sm-2">Documentation</label>
+                <label class="control-label dis-block col-sm-2">Filled dissemination format at or immediately after the session</label>
                 <div class="col-sm-4">
-                    <input type="radio" name="documentation" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('documentation')">Bad(0)
-                    <input type="radio" name="documentation" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('documentation')">Fair(1)
-                    <input type="radio" name="documentation" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('documentation')">Very Good(2)
+                    <input type="radio" name="filled_dissemination" value=0 style="margin: 10px 10px 0 10px;" onchange="cal_score1('filled_dissemination')">Bad(0)
+                    <input type="radio" name="filled_dissemination" value=1 style="margin: 0 10px 0 30px;" onchange="cal_score1('filled_dissemination')">Fair(1)
+                    <input type="radio" name="filled_dissemination" value=2 style="margin: 0 10px 0 30px;" onchange="cal_score1('filled_dissemination')">Very Good(2)
                 </div>
             </div>
-
     </div>
             <fieldset class="form-horizontal">
             <legend> </legend>
