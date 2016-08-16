@@ -268,8 +268,8 @@
 <script type="text/template" id="page_layout">
     <div id="header" class="row global-header"></div>
     <div class="row">
-        <div id="side_panel" class="side_panel col-lg-2 col-md-3 col-sm-4"></div>
-        <div id="content" class="col-lg-10 col-md-9 col-sm-8"></div>
+        <div id="side_panel" class="side_panel col-lg-3 col-md-4 col-sm-5"></div>
+        <div id="content" class="col-lg-9 col-md-8 col-sm-7"></div>
     </div>
 </script>
 
@@ -284,7 +284,7 @@
     <div class="col-xs-4 align-right">
         <% if(language === undefined){ language = configs.misc.meta_default}; %>
         <div class="btn-group">
-            <button class="btn btn-default coco_sync dropdown-toggle" style="margin-right:10px" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
+            <button class="btn btn-default" style="margin-right:10px" type="button" id="language" data-toggle="dropdown" aria-expanded="true">
                 <%=language%>
                 <span class="caret"></span>
             </button>
@@ -649,7 +649,8 @@
 </script>
 
 <script type="text/template" id="person_pma_template">
-    <tr class="stack-table screeningadd" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
+<% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("screeningadd_"+class_ln);%>
+    <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
         <td>
             <div class="form-group">
                 <div class="controls">
@@ -807,7 +808,8 @@
 </script>
 
 <script type="text/template" id="adoption_inline">
-    <tr class="stack-table adoptionadd" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
+<% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("adoptionadd_"+class_ln);%>
+    <tr class="stack-table" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
     <td>
     <div class="form-group">
         <div class="controls">
@@ -890,7 +892,8 @@
 </script>
 
 <script type="text/template" id="person_inline">
-    <tr class="stack-table groupadd" index = <%=index%> name="row<%=index%>">
+    <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("groupadd_"+class_ln);%>
+    <tr class="stack-table " index = <%=index%> name="row<%=index%>">
         <td><div class="form-group"><div class="controls">
                 <input type="text" name="person_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm" >
             </div></div>
@@ -1033,7 +1036,8 @@
 </script>
 
 <script type="text/template" id="nonnegotiable_inline">
-    <tr class="stack-table videoadd" index = <%=index%> name="row<%=index%>">
+<% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
+    <tr class="stack-table" index = <%=index%> name="row<%=index%>">
     <td>
                 <%=index+1%>.</td>
 

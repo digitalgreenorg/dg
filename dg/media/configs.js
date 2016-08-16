@@ -232,7 +232,7 @@ function() {
                             approval_date: "स्वीकृति तिथि", youtubeid: "यूट्यूब आईडी", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
         'labels_français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
                             village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
-                            approval_date: "स्वीकृति तिथि", youtubeid: "यूट्यूब आईडी", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
+                            approval_date: "Date de validation", youtubeid: "Identité Youtube", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
                            production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", 
                            youtubeid: "Youtube Id", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
