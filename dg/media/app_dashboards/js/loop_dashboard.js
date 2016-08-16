@@ -119,7 +119,7 @@ sparkline_option = {
     height: '40',
     lineColor: '#00bfbf',
     fillColor: '#dde1df',
-    lineWidth: 2
+    lineWidth: 2,
 };
 
 
@@ -485,9 +485,9 @@ function set_filterlistener() {
     });
 
     $('#get_data').click(function() {
-      time_series_frequency=1;
-      $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
-      $('#time_series_frequency').material_select();
+        time_series_frequency = 1;
+        $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
+        $('#time_series_frequency').material_select();
         get_data();
     });
 
@@ -613,10 +613,10 @@ function set_filterlistener() {
     });
 
     $('#get_filter_data_button').click(function() {
-      gaddidar=true;
-      get_data();
+        gaddidar = true;
+        get_data();
     });
-    }
+}
 
 
 //To make a call when filters are changed
@@ -831,7 +831,7 @@ function update_graphs_crop_wise(chart) {
 
     if (chart == null) {
         aggregator_graph($('#aggregator_mandi'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.mandi_crop, "quantity__sum");
-        max_min_graph($('#mandi_cost'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.crop_prices,bar_graphs_json_data.mandi_crop_prices);
+        max_min_graph($('#mandi_cost'), crop_ids, crop_names, 'crop__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.crop_prices, bar_graphs_json_data.mandi_crop_prices);
         farmer_crop_visits($("#farmers_count"), bar_graphs_json_data.crop_prices);
 
     } else {
@@ -1227,7 +1227,7 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
 }
 
 //Analytics Crops tab  Max Min graph is being plotted here
-function max_min_graph(container,crop_ids,crop_names,crop_parameter,mandi_ids,mandi_names,mandi_parameter, json_data_crop,json_data_mandi) {
+function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_ids, mandi_names, mandi_parameter, json_data_crop, json_data_mandi) {
 
     json_data_crop.sort(function(a, b) {
         return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"]);
@@ -2654,9 +2654,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     var sno = 1;
     var str1 = "Rs. ";
-     data_set = [];
-     gaddidar_data_set = [];
-     transporter_data_set = [];
+    data_set = [];
+    gaddidar_data_set = [];
+    transporter_data_set = [];
     var dates = [];
     var mandis = [];
     var quantites = [];
@@ -2748,14 +2748,13 @@ function aggregator_payment_sheet(data_json, aggregator) {
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
         "tableTools": {
-"sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
-"aButtons": [
-                           {
-                               "sExtends": "csv",
-                               "sButtonText": "Download",
-                               "bBomInc": true,
-                               "title":"Total Payment Sheet"
-                           }]
+            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [{
+                "sExtends": "csv",
+                "sButtonText": "Download",
+                "bBomInc": true,
+                "title": "Total Payment Sheet"
+            }]
         }
     });
 
@@ -2782,13 +2781,12 @@ function aggregator_payment_sheet(data_json, aggregator) {
         "pageLength": 2,
         "tableTools": {
             "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [
-                                       {
-                                           "sExtends": "csv",
-                                           "sButtonText": "Download",
-                                           "bBomInc": true,
-                                           "title":"Gaddidar Payment Sheet"
-                                       }]
+            "aButtons": [{
+                "sExtends": "csv",
+                "sButtonText": "Download",
+                "bBomInc": true,
+                "title": "Gaddidar Payment Sheet"
+            }]
         }
 
     });
@@ -2814,13 +2812,12 @@ function aggregator_payment_sheet(data_json, aggregator) {
         "pageLength": 2,
         "tableTools": {
             "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [
-                                       {
-                                           "sExtends": "csv",
-                                           "sButtonText": "Download",
-                                           "bBomInc": true,
-                                           "title":"Transporter Payment Sheet"
-                                       }]
+            "aButtons": [{
+                "sExtends": "csv",
+                "sButtonText": "Download",
+                "bBomInc": true,
+                "title": "Transporter Payment Sheet"
+            }]
         }
 
     });
@@ -3023,16 +3020,16 @@ function show_detailed_data(d, aggregator_id) {
 function download_payments_data() {
 
     console.log(data_set);
-  //   alasql.into.CSV = function(filename, opts, data, columns, cb) {
-  //     opt.quote = '"';
-  //  opt.utf8Bom = false;
-  //  var res = data.length;
-  //  var s = opt.utf8Bom ? "\ufeff" : '';
-  //   }
+    //   alasql.into.CSV = function(filename, opts, data, columns, cb) {
+    //     opt.quote = '"';
+    //  opt.utf8Bom = false;
+    //  var res = data.length;
+    //  var s = opt.utf8Bom ? "\ufeff" : '';
+    //   }
 
-      // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
-          // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
-              // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
+    // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
+    // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
+    // alasql("SELECT * INTO CSV('aggregator_payment.csv') FROM ?",[data_set]);
     $("#table2").tableExport([], "Total_payment");
     $("#table3").tableExport([], "Gaddidar_payment_sheet");
     $("#table4").tableExport([], "Transporter_payment_sheet");
@@ -3112,6 +3109,7 @@ function plot_solid_guage(container, minimum, present, target) {
             // title: {
             //     text: 'Target'
             // }
+
         },
 
         credits: {
@@ -3122,8 +3120,8 @@ function plot_solid_guage(container, minimum, present, target) {
             name: 'Present',
             data: [present],
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:18px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                format: '<div style="text-align:center"><span style="font-size:16px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' + present.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span><br/>' +
                     // <span style="font-size:12px;color:silver">km/h</span>
                     '</div>'
             },
