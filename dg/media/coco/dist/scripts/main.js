@@ -5080,6 +5080,7 @@ define('views/form',[
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
+            s_passed["language"] = language;
             s_passed["add_row"] = this.entity_config['labels_'+language]['add_row'];
             return s_passed;
         },
@@ -12735,8 +12736,9 @@ define('views/status',[
         },
 
         initialize: function() {
-            _(this).bindAll('fill_status');
+            _(this).bindAll('render');
             this.fill_status();
+            User.on('change', this.render);
         },
 
         serialize: function() {
