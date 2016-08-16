@@ -6,7 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Min, Sum, Avg, Max
+from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter
@@ -267,7 +267,7 @@ def new_aggregator_wise_data(request):
         **filter_args).values('crop__crop_name').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
 
     # mandi_crop_prices = CombinedTransaction.objects.filter(
-        # **filter_args).values('crop__crop_name', 'mandi__id').annotate(Min('price'), Max('price'))
+    # **filter_args).values('crop__crop_name', 'mandi__id').annotate(Min('price'), Max('price'))
 
     # visits={}
     #
@@ -290,8 +290,8 @@ def new_aggregator_wise_data(request):
 
     chart_dict = {"total_repeat_farmers": list(total_repeat_farmers), "crop_prices": list(crop_prices), 'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'aggregator_crop': list(
         aggregator_crop), 'mandi_gaddidar': list(mandi_gaddidar), 'mandi_crop': list(mandi_crop), 'gaddidar_crop': list(gaddidar_crop), 'transportation_cost_mandi': list(transportation_cost_mandi)
-        }
-        # ,"mandi_crop_prices":list(mandi_crop_prices)}
+    }
+    # ,"mandi_crop_prices":list(mandi_crop_prices)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
@@ -391,8 +391,10 @@ def payments(request):
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).values(
         'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'gaddidar__commission').annotate(Sum('quantity'), Count('farmer'))
+
     outlier_data = CombinedTransaction.objects.filter(
-        **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True), Sum('gaddidar__commission'))
+        **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
+
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 

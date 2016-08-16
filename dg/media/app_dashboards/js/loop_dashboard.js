@@ -47,7 +47,8 @@ $('.datepicker').pickadate({
 
 //To hide the second navigation bar that comes on analytics and time series page only
 function hide_nav(tab) {
-    $("#filters_nav").hide();
+    $("#filters_nav").removeClass('show');
+    $("#filters_nav").addClass('hide');
     $("#home_div").hide();
     $("#analytics_div").hide();
     $("#time_series_div").hide();
@@ -73,7 +74,8 @@ function show_nav(tab) {
     $("#payments_tab").removeClass('active');
     $("#analytics_tab").removeClass('active');
     $("#time_series_tab").removeClass('active');
-    $("#filters_nav").show();
+    $("#filters_nav").removeClass('hide');
+    $("#filters_nav").addClass('show');
     $("#home_div").hide();
     $("#payments_div").hide();
 
@@ -377,7 +379,7 @@ function get_cpk(avg_vol) {
 function cummulative_farmer_and_volume() {
 
     var all_dates = [];
-    var farmer_ids = []
+    var farmer_ids = [];
 
     var first_date = new Date(dates[dates.length - 1]);
     while (first_date <= new Date(dates[0])) {
@@ -1923,7 +1925,7 @@ function createDetail(detail_container, masterChart, dict) {
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
             borderColor: '#CCC',
             borderWidth: 1,
-            shadow: false
+            shadow: true
         },
         series: myDict,
 
@@ -2911,6 +2913,7 @@ function create_outliers_table(date, aggregator_id) {
     var data_set = [];
     var sno = 1;
 
+    console.log(outliers_data);
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
