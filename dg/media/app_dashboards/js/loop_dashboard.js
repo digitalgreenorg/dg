@@ -115,8 +115,8 @@ bullet_options = {
 
 sparkline_option = {
     type: 'line',
-    width: '100',
-    height: '40',
+    width: '150',
+    height: '60',
     lineColor: '#00bfbf',
     fillColor: '#dde1df',
     lineWidth: 2,
@@ -210,7 +210,7 @@ function plot_cards_data() {
     document.getElementById('recent_cluster_card').innerHTML = active_clusters[0];
     $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
 
-    document.getElementById('recent_volume_card').innerHTML = (avg_vol[0]).toFixed(0).concat(kg);
+    document.getElementById('recent_volume_card').innerHTML = (avg_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(kg);
     $('#recent_volume_sparkline').sparkline(avg_vol.reverse(), sparkline_option);
 
     var active_farmers = avg[1];
@@ -218,7 +218,7 @@ function plot_cards_data() {
     $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
 
     var avg_amt = avg[2];
-    document.getElementById('recent_revenue_card').innerHTML = rs.concat((avg_amt[0]).toFixed(0));
+    document.getElementById('recent_revenue_card').innerHTML = rs.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
     var data = get_cpk(avg_vol.reverse());
@@ -275,8 +275,8 @@ function get_average() {
         }
         j++;
         if (j < stats_length && today >= new Date(stats[j]['date'])) {
-            avg_vol.push(temp_vol);
-            avg_amt.push(temp_amt);
+            avg_vol.push(temp_vol.toFixed(0));
+            avg_amt.push(temp_amt.toFixed(0));
             temp_vol = 0;
             temp_amt = 0;
 
@@ -338,8 +338,8 @@ function get_cpk(avg_vol) {
                 cpk.push(0);
                 sustainability_per_kg.push(0);
             } else {
-                cpk.push(temp / avg_vol[k]);
-                sustainability_per_kg.push(f_share / temp * 100);
+                cpk.push((temp / avg_vol[k]).toFixed(2));
+                sustainability_per_kg.push((f_share / temp * 100).toFixed(2));
             }
 
             k++;
@@ -360,8 +360,8 @@ function get_cpk(avg_vol) {
         cpk.push(0);
         sustainability_per_kg.push(0);
     } else {
-        cpk.push(temp / avg_vol[k]);
-        sustainability_per_kg.push(f_share / temp * 100);
+        cpk.push((temp / avg_vol[k]).toFixed(2));
+        sustainability_per_kg.push((f_share / temp * 100).toFixed(2));
     }
 
     //Adding 0 cost for previous data making length of both arrays same
