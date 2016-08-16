@@ -5,9 +5,96 @@ window.onload = date;
  $('#date').val(cur_date);
  alert(cur_date);
  });*/
-//####################################Reset Form#######################################
+//####################################Form Ready#######################################
 
+  jQuery(document).ready(function ($) {
 
+    $('#partnerId').chosen({});
+    $('#countryId').chosen({});
+    $('#stateId').chosen({});
+    $('#districtId').chosen({});$('#blockId').chosen({});
+    $('#villageId').chosen({});
+    $('#videoId').chosen({});
+    $('#resetId').click(function () {
+
+        $('#partnerId').val('').trigger("chosen:updated");
+        $('#countryId').val('').trigger("chosen:updated");
+        $('#stateId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#districtId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#blockId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#villageId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#videoId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $("#formId").each(function () {
+            this.reset();
+        });
+
+    });
+    $('#formId').keypress(function (event) {
+
+        if (event.keyCode === 10 || event.keyCode === 13)
+            event.preventDefault();
+
+    });
+    $("#partnerId").bind("change", function () {
+        $('#videoId').prop('disabled', false);
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
+    });
+    $("#countryID").bind("change", function () {
+        $('#stateId').prop('disabled', false);
+        $('#stateId').find('option').remove();
+        $("#districtId").find('option').remove();
+        $("#blockId").find('option').remove();
+        $("#villageId").find('option').remove();
+        $("#stateId").val('').trigger("chosen:updated");
+        $("#districtId").val('').trigger("chosen:updated");
+        $("#blockId").val('').trigger("chosen:updated");
+        $("#villageId").val('').trigger("chosen:updated");
+    });
+    $("#stateId").bind("change", function () {
+        $("#districtId").prop('disabled', false);
+        $("#districtId").find('option').remove();
+        $("#blockId").find('option').remove();
+        $("#villageId").find('option').remove();
+        $("#districtId").val('').trigger("chosen:updated");
+        $("#blockId").val('').trigger("chosen:updated");
+        $("#villageId").val('').trigger("chosen:updated");
+    });
+    $("#districtId").bind("change", function () {
+        $("#blockId").prop('disabled', false);
+        $("#blockId").find('option').remove();
+        $("#villageId").find('option').remove();
+        $("#blockId").val('').trigger("chosen:updated");
+        $("#villageId").val('').trigger("chosen:updated");
+
+    });
+    $("#blockId").bind("change", function () {
+        $("#villageId").prop('disabled', false);
+        $("#villageId").find('option').remove();
+        $("#villageId").val('').trigger("chosen:updated");
+
+    });
+    $("#stateId").next().bind("click", function () {
+        populate('state', $("#countryId").val());
+        $("#stateId").trigger("chosen:updated");
+    });
+    $("#districtId").next().bind("click", function () {
+        populate("district", $("#stateId").val());
+        $("#districtId").trigger("chosen:updated");
+    });
+    $("#blockId").next().bind("click", function () {
+        populate("block", $("#districtId").val());
+        $("#blockId").trigger("chosen:updated");
+    });
+    $("#villageId").next().bind("click", function () {
+        populate("village", $("#blockId").val());
+        $("#villageId").trigger("chosen:updated");
+    });
+    $("#videoId").next().bind("click", function () {
+        populate_video("video", $("#partnerId").val());
+        $("#videoId").trigger("chosen:updated");
+    });
+});
 //###############################Populate the dropdowns for filter######################################
 
 function populate(src, val) {
@@ -15,8 +102,6 @@ function populate(src, val) {
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
             .done(function (data) {
                 data_json = JSON.parse(data);
-
-
                 for (var i in data_json) {
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
                         $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
@@ -27,6 +112,21 @@ function populate(src, val) {
 
     }
 
+}
+function populate_video(src,val){
+  for (var j in val) {
+      $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+          .done(function (data) {
+              data_json = JSON.parse(data);
+              for (var i in data_json) {
+                  if (jQuery("#" + src + "Id" + " option[value='" + data_json[i][0] + "']").length == 0)
+                      $("#" + src + "Id").append('<option value="' + data_json[i][0] + '">' + data_json[i][0]+' ( '+data_json[i][1]+' )' + '</option>');
+
+              }
+
+          });
+
+  }
 }
 
 //##################################################################################################################

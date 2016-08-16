@@ -66,9 +66,8 @@ def dropdown_village(request):
 
 def dropdown_video(request):
     partner_selected = request.GET.get('selected', None)
-    videos = Video.objects.filter(partner__partner_name=partner_selected).values_list('title', flat=True)  # todo
-    resp = json.dumps([unicode(i) for i in videos])
-
+    videos = Video.objects.filter(partner__partner_name=partner_selected).values_list('title','id')  # todo
+    resp = json.dumps([i for i in videos])
     return HttpResponse(resp)
 
 
@@ -141,9 +140,9 @@ def execute(request):
 
         print dict[keys][0]
 
-    '''
 
 
+        '''
     # print partner
 
     if (len(partner) == 0 and partner_chk[0] != None):
@@ -237,8 +236,8 @@ def execute(request):
         video = videoTemp
     elif(len(video) == 0 and video_chk[0]==None):
         video = False
+        '''
 
-    '''
 
     ###############################Partition#################################
 
@@ -368,7 +367,7 @@ def execute(request):
     }
 
     options = {'partition': partition, 'value': value}
-    print options
+    
     args = []
     args.append(from_date)
     args.append(to_date)

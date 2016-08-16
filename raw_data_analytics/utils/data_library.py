@@ -145,12 +145,16 @@ class data_lib():
         self.Dict.clear()
 
         selectResult = self.getSelectComponent(partitionDict, valueDictElement)
+#        print selectResult
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
+#        print fromResult
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
+#        print whereResult
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
+#        print groupbyResult
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-
+#        print orderbyResult
 #        print "----------------------------------SELECT PART------------------------------"
 #        print selectResult
 #        print "----------------------------------FROM PART--------------------------------"
@@ -310,11 +314,14 @@ class data_lib():
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
+        
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
+
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
+
                         ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1

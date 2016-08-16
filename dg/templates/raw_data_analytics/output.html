@@ -18,19 +18,7 @@
 
                     </br></br></br>
                     <!--<center>-->
-                    <script type="text/javascript">
-                        jQuery(function ($) {
-
-                            $('#partnerId').chosen({});
-                            $('#countryId').chosen({});
-                            $('#stateId').chosen({});
-                            $('#districtId').chosen({});
-                            $('#blockId').chosen({});
-                            $('#villageId').chosen({});
-                            $('#videoId').chosen({});
-
-                        });
-                    </script>
+                  
 
                     <script type="text/javascript">
                         var datefield = document.createElement("input")
@@ -53,104 +41,20 @@
                         }
                     </script>
 
-                    <script>
-
-                        jQuery(document).ready(function ($) {
-                            $('#resetId').click(function () {
-
-                                $('#partnerId').val('').trigger("chosen:updated");
-                                $('#countryId').val('').trigger("chosen:updated");
-                                $('#stateId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-                                $('#districtId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-                                $('#blockId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-                                $('#villageId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-                                $('#videoId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-                                $("#formId").each(function () {
-                                    this.reset();
-                                });
-
-                            });
-                            $('#formId').keypress(function (event) {
-
-                                if (event.keyCode === 10 || event.keyCode === 13)
-                                    event.preventDefault();
-
-                            });
-                            $("#partnerId").bind("change", function () {
-                                $('#videoId').prop('disabled', false);
-                                $('#videoId').find('option').remove();
-                                $("#videoId").val('').trigger("chosen:updated");
-                            });
-                            $("#countryID").bind("change", function () {
-                                $('#stateId').prop('disabled', false);
-                                $('#stateId').find('option').remove();
-                                $("#districtId").find('option').remove();
-                                $("#blockId").find('option').remove();
-                                $("#villageId").find('option').remove();
-                                $("#stateId").val('').trigger("chosen:updated");
-                                $("#districtId").val('').trigger("chosen:updated");
-                                $("#blockId").val('').trigger("chosen:updated");
-                                $("#villageId").val('').trigger("chosen:updated");
-                            });
-                            $("#stateId").bind("change", function () {
-                                $("#districtId").prop('disabled', false);
-                                $("#districtId").find('option').remove();
-                                $("#blockId").find('option').remove();
-                                $("#villageId").find('option').remove();
-                                $("#districtId").val('').trigger("chosen:updated");
-                                $("#blockId").val('').trigger("chosen:updated");
-                                $("#villageId").val('').trigger("chosen:updated");
-                            });
-                            $("#districtId").bind("change", function () {
-                                $("#blockId").prop('disabled', false);
-                                $("#blockId").find('option').remove();
-                                $("#villageId").find('option').remove();
-                                $("#blockId").val('').trigger("chosen:updated");
-                                $("#villageId").val('').trigger("chosen:updated");
-
-                            });
-                            $("#blockId").bind("change", function () {
-                                $("#villageId").prop('disabled', false);
-                                $("#villageId").find('option').remove();
-                                $("#villageId").val('').trigger("chosen:updated");
-
-                            });
-                            $("#stateId").next().bind("click", function () {
-                                populate('state', $("#countryId").val());
-                                $("#stateId").trigger("chosen:updated");
-                            });
-                            $("#districtId").next().bind("click", function () {
-                                populate("district", $("#stateId").val());
-                                $("#districtId").trigger("chosen:updated");
-                            });
-                            $("#blockId").next().bind("click", function () {
-                                populate("block", $("#districtId").val());
-                                $("#blockId").trigger("chosen:updated");
-                            });
-                            $("#villageId").next().bind("click", function () {
-                                populate("village", $("#blockId").val());
-                                $("#villageId").trigger("chosen:updated");
-                            });
-                            $("#videoId").next().bind("click", function () {
-                                populate("video", $("#partnerId").val());
-                                $("#videoId").trigger("chosen:updated");
-                            });
-                        });
-
-                    </script>
 
 
-                    <div id="rightdiv" style="width:65%;float: left;margin-bottom: 27%">
-                        <div id="date" name="Date">
-                            <p class="copy">
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Date:
-                            </h3>
-                            <h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">From:
-                                &nbsp;<input type="date" id="from_date" name="from_date" size="20">&nbsp;&nbsp;
-                                To: &nbsp; <input type="date" id="to_date" name="to_date" size="20">
-                            </h3>
-                            </p>
-                        </div>
+                    <div id="date" name="Date">
+                        <p class="copy">
+                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Date:
+                        </h3>
+                        <h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">From:
+                            &nbsp;<input type="date" id="from_date" name="from_date" size="20">&nbsp;&nbsp;
+                            To: &nbsp; <input type="date" id="to_date" name="to_date" size="20">
+                        </h3>
+                        </p>
+                    </div>
+                    <div id="rightdiv" style="width:55%;float: left;margin-bottom: 27%">
+
 
                         <!--</center>-->
 
@@ -243,9 +147,9 @@
 
                         </div>
                     </div>
-                    <div id="leftdiv" style="width: 35%; float:left">
+                    <div id="leftdiv" style="width: 45%; float:left">
                         <div name="Partition"
-                             style=' padding-right:10px; display:inline-block; float:left;margin-left: 5%;'>
+                             style=' padding-right:10px; display:inline-block; float:left;margin-left: 5%;margin-top:3%;'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
                                 <ul style='list-style-type: none;'>
@@ -265,7 +169,7 @@
                         </div>
 
                         <div name="Values"
-                             style='float:left; display: inline-block; padding-top: 2%;margin-left: 5%;'>
+                             style='float:left; display: inline-block; padding-top: 2%;margin-left: 5%;margin-top:1%'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Values:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
                                 <ul style='list-style-type: none;'>
@@ -297,7 +201,7 @@
                             </div>
                         </div>
                         <div name="Buttons" class="centered layout-vr-lg"
-                             style="padding-top:20px; float:left;margin-left: 5%;margin-bottom: 20%;margin-top: -4%">
+                             style="padding-top:20px; float:left;margin-bottom: 20%;margin-top: 5%;margin-right:20%;">
                             <input class="btn" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
                             <input class="btn" type="button" id="resetId" value="Reset">
                         </div>
