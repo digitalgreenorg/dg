@@ -12,16 +12,33 @@ function initialize() {
     $(".button-collapse").sideNav({
           menuWidth: 300, // Default is 240
           edge: 'left', // Choose the horizontal origin
-           closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
+          closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
         }
       );
 
 
 }
 
-$( window ).resize(function() {
-  get_data();
+
+$('#link2').on('click', function () {
+    setInterval(function () {
+        $('#question_mediator_data').highcharts().reflow();
+    }, 5);
 });
+
+$('#link3').on('click', function () {
+    setInterval(function () {
+        $('#state_training_data').highcharts().reflow();
+    }, 10);
+
+    setInterval(function () {
+        $('#state_mediator_data').highcharts().reflow();
+    }, 10);
+});
+
+/*$( window ).resize(function() {
+  get_data();
+});*/
 
 /* Progress Bar functions */
 
@@ -867,7 +884,7 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
     container_obj.highcharts({
         chart: {
             zoomType: 'xy',
-            width:width_
+            /*width:width_*/
         },
 
         credits:{enabled : false},
@@ -957,7 +974,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
         chart: {
             zoomType: 'xy',
             spacingRight : 30,
-            width: width_
+            /*width: width_*/
         },
         credits:{enabled :false},
         subtitle: {

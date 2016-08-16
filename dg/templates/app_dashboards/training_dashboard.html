@@ -31,21 +31,19 @@
 		</div>
 		<div class="navbar-fixed">
 			<nav class="top-nav">
-				<div class="container">
+				
 					<div class="nav-wrapper grey darken-3">
 						<!-- <a href="#" class="page-title">Training Dashboard</a> -->
 						 <a href="#" class="brand-logo center" style="font-size:175%;">Training Dashboard</a>
-						 <ul id="nav-mobile" style="margin-left:-12%;">
-							<li><a href="#" data-activates="slide-out" class="button-collapse" style="display:block;"><i class="material-icons show-on-large">menu</i></a></li>
-						</ul>
+						<a href="#" data-activates="mobile-demo" class="button-collapse" style="display:block;"><i class="material-icons">menu</i></a>
 						<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 					</div>
-				</div>
+				
 			</nav>
 		</div>
 	</header>
 
-	<ul id="slide-out" class="side-nav">
+	<ul id="mobile-demo" class="side-nav">
 		<li class="no-padding not-hoverable">
 		<ul class="collapsible collapsible-accordion">
 			<li class="bold not-hoverable">
@@ -317,10 +315,10 @@
 <div  class="container col s12" style="margin-top:-0.5%;">
 	<div class="row">
 		
-		  <ul class="tabs">
-		    <li class="tab col s12"><a class="active" href="#tab1" >Trainer-Wise</a></li>
-		    <li class="tab col s12"><a  href="#tab2">Question-Wise</a></li>
-		    <li class="tab col s12"><a href="#tab3">State-Wise</a></li>
+		  <ul class="tabs" style="overflow-x: hidden;">
+		    <li class="tab col s12"><a id="link1" class="active" href="#tab1" >Trainer-Wise</a></li>
+		    <li class="tab col s12"><a id="link2" href="#tab2">Question-Wise</a></li>
+		    <li class="tab col s12"><a id="link3" href="#tab3">State-Wise</a></li>
 		  </ul>
 		
 		<div id="tab1" class="col s12">
