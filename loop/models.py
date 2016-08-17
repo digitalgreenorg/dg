@@ -21,7 +21,6 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
-
 class Country(LoopModel):
     id = models.AutoField(primary_key=True)
     country_name = models.CharField(max_length=50)
@@ -38,7 +37,7 @@ class State(LoopModel):
     state_name = models.CharField(max_length=50)
     country = models.ForeignKey(Country)
     is_visible = models.BooleanField(default=True)
-
+    state_name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return self.state_name
 
@@ -51,7 +50,7 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
-
+    district_name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return "%s (%s)" % (self.district_name, self.state.state_name)
 
@@ -64,7 +63,7 @@ class Block(LoopModel):
     block_name = models.CharField(max_length=50)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-
+    _name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return "%s (%s)" % (self.block_name, self.district.district_name)
 
@@ -79,7 +78,7 @@ class Village(LoopModel):
     longitude = models.FloatField(null=True, blank=True)
     block = models.ForeignKey(Block)
     is_visible = models.BooleanField(default=True)
-
+    village_name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return "%s (%s)" % (self.village_name, self.block.block_name)
 
@@ -98,7 +97,7 @@ class Mandi(LoopModel):
     longitude = models.FloatField(null=True)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-
+    mandi_name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name, self.district.district_name)
 
@@ -122,6 +121,8 @@ class LoopUser(LoopModel):
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     village = models.ForeignKey(Village, default=None, null=True)
+    name_en = models.CharField(max_length=100)
+    preferred_language = models.ForeignKey(Language, default=None, null=True)
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -158,6 +159,7 @@ class Gaddidar(LoopModel):
     commission = models.FloatField(default=1.0)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
+    gaddidar_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return self.gaddidar_name
@@ -233,7 +235,7 @@ class Vehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
     is_visible = models.BooleanField(default=True)
-
+    vehicle_name_en = models.CharField(max_length=100)
     def __unicode__(self):
         return self.vehicle_name
 
