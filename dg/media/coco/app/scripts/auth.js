@@ -78,26 +78,51 @@ define([
         console.log("Attemting login");
         // internet accessible - login to server backend - when successfull - login to offline backend
         if (internet_connected()) {
-            // try server backend login
-            online_login(username, password)
-                .fail(function(error) {
-                    console.log("Online login failed - " + error);
-                    dfd.reject(error);
-                })
-                .done(function() {
-                    // online login successful, try offline backend login
-                    OfflineAuthBackend.login(username, password, language)
-                        .done(function() {
-                            // login successful
-                            console.log("Login Successful");
-                            post_login_success();
-                            dfd.resolve();
-                        })
-                        .fail(function (error){
-                            console.log("Offline login failed - " + error);
-                            dfd.reject(error);
-                        });
-                });
+          $.post("/coco/login/", {
+            "username": username,
+            "password": password
+          })
+            .done(function(resp) {
+                // create the column here and store partner name in that column
+                if (resp.success == "1"){
+                  OfflineAuthBackend.login(username, password, language, resp.partner_name)
+                      .done(function() {
+                          // login successful
+                          console.log("Login Successful");
+                          post_login_success();
+                          return dfd.resolve();
+                      })
+                  
+                }
+                    
+                else{
+                  return dfd.reject("Username or password is incorrect (Server)");
+                }
+                    
+            })
+            .fail(function(resp) {
+                return dfd.reject("Could not contact server. Try again in a minute.");
+            });
+          // try server backend login
+          // online_login(username, password)
+          //     .fail(function(error) {
+          //         console.log("Online login failed - " + error);
+          //         dfd.reject(error);
+          //     })
+          //     .done(function() {
+          //         // online login successful, try offline backend login
+          //         OfflineAuthBackend.login(username, password, language)
+          //             .done(function() {
+          //                 // login successful
+          //                 console.log("Login Successful");
+          //                 post_login_success();
+          //                 dfd.resolve();
+          //             })
+          //             .fail(function (error){
+          //                 console.log("Offline login failed - " + error);
+          //                 dfd.reject(error);
+          //             });
+          //     });
         } else {
             // internet not accessible - only try logging into offline backend
             OfflineAuthBackend.login(username, password, language)

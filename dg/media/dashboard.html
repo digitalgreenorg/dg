@@ -19,7 +19,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -623,6 +623,12 @@
                         <textarea name="questions_asked" class="input-xlarge form-control" rows="4"></textarea>
                     </div>
                 </div>
+                <div class="form-group" id="is_dg_video">
+                    <label class="col-sm-2 control-label notbold"><%= is_dg_video %></label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" name="is_dg_video">
+                    </div>
+                </div>
                     <br>
             </fieldset>
             <fieldset class = "inline_table">
@@ -1028,6 +1034,12 @@
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
                     <input name="youtubeid" type="text" class="form-control"><br>
+                </div>
+            </div>
+            <div class="form-group" id="is_dg_video">
+                <label class="dis-block col-sm-2 control-label notbold"><%= is_dg_video %></label>
+                <div class="col-sm-4">
+                    <input name="is_dg_video" type="checkbox"><br>
                 </div>
             </div>
         </fieldset>

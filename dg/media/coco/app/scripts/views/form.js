@@ -237,6 +237,10 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var partner_name = User.get('partner_name');
+            if (partner_name != "umed"){
+                $f_el.find("#is_dg_video").addClass('hidden');
+            }
         },
         
         //fetches all foreign collections and renders them when all are fetched
