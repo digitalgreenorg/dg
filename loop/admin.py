@@ -20,7 +20,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    list_display = ('name', 'role', 'phone_number', 'village',)
+    list_display = ('name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 
 
@@ -70,7 +70,7 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 class GaddidarAdmin(admin.ModelAdmin):
     list_display = ('id', 'gaddidar_name',
-                    'gaddidar_phone', 'mandi', 'commission')
+                    'gaddidar_phone', 'mandi', 'commission', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
     list_filter = ['mandi__mandi_name']
 
@@ -82,19 +82,19 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mandi_name', 'district')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
     search_fields = ['mandi_name', 'district__district_name']
     list_filter = ['district__district_name']
 
 
 class VillageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'village_name', 'block')
+    list_display = ('id', 'village_name', 'block', 'village_name_en')
     search_fields = ['village_name', 'block__block_name']
     list_filter = ['block__block_name']
 
 
 class CropAdmin(admin.ModelAdmin):
-    list_display = ('id', 'crop_name')
+    list_display = ('id', 'crop_name', 'crop_name_en')
     search_fields = ['crop_name']
 
 loop_admin = LoopAdmin(name='loop_admin')
@@ -115,3 +115,4 @@ loop_admin.register(Vehicle)
 loop_admin.register(TransportationVehicle, TransportationVehicleAdmin)
 loop_admin.register(DayTransportation, DayTransportationAdmin)
 loop_admin.register(Gaddidar, GaddidarAdmin)
+loop_admin.register(Language)
