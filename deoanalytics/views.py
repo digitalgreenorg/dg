@@ -84,7 +84,7 @@ def deodatasetter(request):
             a_laglist.append(a_lag.days)
         a_avglag = sum(a_laglist) / float(len(a_laglist))
         alag = int(a_avglag)
-    persons = Person.objects.filter(user_created_id=selecteddeo, time_created__gte=start_date, time_created__lte=end_date).count()  
+    persons = Person.objects.filter(user_created_id=selecteddeo, time_created__gte=start_date, time_created__lte=end_date).count()
     return HttpResponse(json.dumps({"analytics":{
         "screenings":s_dict,
         "adoptions": a_dict,
@@ -92,5 +92,3 @@ def deodatasetter(request):
         "slag": slag,
         "alag": alag,
         "mode": int(mode)}}))
-        
-        
