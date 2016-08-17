@@ -4,7 +4,9 @@ define([
     'underscore',
     'layoutmanager',
     'collections/upload_collection',
-    ], function(jquery, underscore, layoutmanager, upload_collection) {
+    'models/user_model',
+    'configs'
+    ], function(jquery, underscore, layoutmanager, upload_collection, User, configs) {
 
         var UploadStatusView = Backbone.Layout.extend({
 
@@ -19,6 +21,15 @@ define([
             "click #Ok": "tear_down"
         },
         
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                configs: configs,
+            };
+        },
+
         //removes the view
         tear_down: function() {
             $('#upload_status_modal').modal('hide');

@@ -73,7 +73,7 @@ define([
     }
     
     // logs-in to the offline backend, if internet accessible - logs-in to the server backend
-    var login = function(username, password) {
+    var login = function(username, password, language) {
         var dfd = new $.Deferred();
         console.log("Attemting login");
         // internet accessible - login to server backend - when successfull - login to offline backend
@@ -86,7 +86,7 @@ define([
                 })
                 .done(function() {
                     // online login successful, try offline backend login
-                    OfflineAuthBackend.login(username, password)
+                    OfflineAuthBackend.login(username, password, language)
                         .done(function() {
                             // login successful
                             console.log("Login Successful");
@@ -100,7 +100,7 @@ define([
                 });
         } else {
             // internet not accessible - only try logging into offline backend
-            OfflineAuthBackend.login(username, password)
+            OfflineAuthBackend.login(username, password, language)
                 .done(function() {
                     console.log("Login Successful");
                     post_login_success();

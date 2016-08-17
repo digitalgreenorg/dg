@@ -10,11 +10,12 @@ define([
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'models/user_model',
     'views/upload_status',
     'auth',
     'indexeddb-backbone',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, UploadStatusView, auth) {
+], function(jquery, underscore, layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online, User, UploadStatusView, auth) {
 
     var UploadView = Backbone.Layout.extend({
 
@@ -27,6 +28,16 @@ define([
 
         events: {
             "click #stop_upload": "stop_upload"
+        },
+
+
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                configs: configs,
+            };
         },
 
         //set the user_interrupt flag when user clicks on stop button - flag is checked before starting to process each upload object. So upload would be stopped after the current object bieng uploaded is finished bieng processed
@@ -353,10 +364,11 @@ define([
         show_form: function(entity_name, json, err_msg) {
             console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(json));
             // create a form instance with that json
+            var language = User.get('language');
             p = new Form({
                 serialize: {
-                    button1: "Save again",
-                    button2: "Discard"
+                    button1: configs['misc']['meta_'+language]['save_again'],
+                    button2: configs['misc']['meta_'+language]['discard']
                 },
                 entity_name: entity_name,
                 model_json: json
