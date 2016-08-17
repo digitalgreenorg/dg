@@ -10,7 +10,7 @@ define([
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
-              save_login_state(User.get("username"), User.get("password"), false)
+              save_login_state(User.get("username"), User.get("password"), User.get('language'), false)
                   .done(function(){
                       dfd.resolve();
                   })
