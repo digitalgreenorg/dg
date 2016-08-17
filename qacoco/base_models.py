@@ -7,10 +7,10 @@ TYPE_CHOICES = (
 	)
 
 SCORE_CHOICES = (
-	(0,0),
-	(1,1),
-	(2,2),
-	(3,3),
+	('0','0'),
+	('1','1'),
+	('2','2'),
+	('3','3'),
 	)
 
 VIDEO_GRADE = (
@@ -20,8 +20,8 @@ VIDEO_GRADE = (
 )
 
 APPROVAL = (
-	(0, 'No'),
-	(1, 'Yes'),
+	('0', 'No'),
+	('1', 'Yes'),
 	)
 
 ADOPTED = (
