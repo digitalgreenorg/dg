@@ -211,6 +211,16 @@ class Crop(LoopModel):
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
 
+#############Crop name in multiple languages###############
+class Language(LoopModel):
+    id = models.AutoField(primary_key=True)
+    language_name = models.CharField(max_length=25)
+
+class Croplanguage(LoopModel):
+    id = models.AutoField(primary_key=True)
+    crop_id = models.ForeignKey(Crop)
+    crop_name = models.CharField(max_length=30)
+    language = models.ForeignKey(Language)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
