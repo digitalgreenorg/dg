@@ -1,10 +1,6 @@
+
 window.onload = date;
 
-/*$(document).ready(function() {
- var cur_date = new Date();
- $('#date').val(cur_date);
- alert(cur_date);
- });*/
 //####################################Form Ready#######################################
 
   jQuery(document).ready(function ($) {
@@ -97,14 +93,14 @@ window.onload = date;
 });
 //###############################Populate the dropdowns for filter######################################
 
-function populate(src, val) {
-    for (var j in val) {
-        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+function populate(src, prevValue) {
+    for (var values in prevValue) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
             .done(function (data) {
                 data_json = JSON.parse(data);
-                for (var i in data_json) {
-                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[i] + "']").length == 0)
-                        $("#" + src + "Id").append('<option value="' + data_json[i] + '">' + data_json[i] + '</option>');
+                for (var jsonData in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[jsonData] + '">' + data_json[jsonData] + '</option>');
 
                 }
 
@@ -113,14 +109,14 @@ function populate(src, val) {
     }
 
 }
-function populate_video(src,val){
-  for (var j in val) {
-      $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: val[j]})
+function populate_video(src,prevValue){
+  for (var values in prevValue) {
+      $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
           .done(function (data) {
               data_json = JSON.parse(data);
-              for (var i in data_json) {
-                  if (jQuery("#" + src + "Id" + " option[value='" + data_json[i][0] + "']").length == 0)
-                      $("#" + src + "Id").append('<option value="' + data_json[i][0] + '">' + data_json[i][0]+' ( '+data_json[i][1]+' )' + '</option>');
+              for (var jsonData in data_json) {
+                  if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
+                      $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' + '</option>');
 
               }
 

@@ -140,105 +140,6 @@ def execute(request):
 
         print dict[keys][0]
 
-
-
-        '''
-    # print partner
-
-    if (len(partner) == 0 and partner_chk[0] != None):
-        partner = True
-        checked_list.append('partner')
-    elif (len(partner) > 0 and partner_chk[0] == None) or (len(partner) >0 and partner_chk[0] != None):
-        partner=Partner.objects.filter(partner_name__in=partner)
-        partnerTemp =[]
-        for partnerObject in partner :
-            partnerTemp.append(str(partnerObject.id))
-        partner = partnerTemp
-     #   print partner
-    elif (len(partner)== 0 and partner_chk[0] == None):
-        partner = False
-
-
-    if (len(country) == 0 and country_chk[0] != None):
-        country = True
-        checked_list.append('country')
-    elif (len(country) > 0 and country_chk[0] == None) or (len(country) >0  and country_chk[0] != None):
-        country=Country.objects.filter(country_name__in=country)
-        countryTemp=[]
-        for countryObject in country :
-            countryTemp.append(str(countryObject.id))
-        country = countryTemp
-    elif (len(country) == 0 and country_chk[0] == None):
-        country = False
-
-
-    if (len(state) == 0  and state_chk[0] != None):
-        state = True
-        checked_list.append('state')
-    elif (len(state) > 0 and state_chk[0] == None) or (len(state) > 0 and state_chk[0] != None):
-        state = State.objects.filter(state_name__in=state)
-        stateTemp=[]
-        for stateObject in state:
-            stateTemp.append(str(stateObject.id))
-        state = stateTemp
-    elif (len(state) == 0 and state_chk[0] == None):
-        state = False
-
-
-    if (len(district)==0 and district_chk[0] != None):
-        district = True
-        checked_list.append('district')
-    elif (len(district)>0 and district_chk[0] == None) or (len(district)>0 and district_chk[0] != None):
-        district=District.objects.filter(district_name__in=district)
-        districtTemp=[]
-        for districtObject in district:
-            districtTemp.append(str(districtObject.id))
-        district = districtTemp
-    elif ( len(district)==0 and district_chk[0] == None):
-        district = False
-
-
-    if (len(block) == 0 and block_chk[0] != None):
-        block = True
-        checked_list.append('block')
-    elif (len(block) > 0 and block_chk[0] == None) or (len(block) > 0 and block_chk[0] != None):
-        block=Block.objects.filter(block_name__in=block)
-        blockTemp=[]
-        for blockObject in block :
-            blockTemp.append(str(blockObject.id))
-        block = blockTemp
-    elif (len(block) == 0 and block_chk[0] == None):
-        block = False
-
-
-    if (len(village) == 0 and village_chk[0] != None):
-        village = True
-        checked_list.append('village')
-    elif (len(village) >0 and village_chk[0] == None) or (len(village) > 0 and village_chk[0] != None):
-        #village_uni = unicode(village)
-        village = Village.objects.filter(village_name__in=village)
-        villageTemp = []
-        for villageObject in village:
-            villageTemp.append(str(villageObject.id))
-        village = villageTemp
-    elif (len(village) == 0 and village_chk[0] == None):
-        village = False
-
-
-    if (len(video) == 0 and video_chk[0] != None):
-        video = True
-        checked_list.append('video')
-    elif (len(video) > 0 and video_chk[0] == None) or (len(video) > 0 and video_chk[0] != None):
-        video = Video.objects.filter(title__in=video)
-        videoTemp = []
-        for videoObject in video:
-            videoTemp.append(str(videoObject.id))
-        video = videoTemp
-    elif(len(video) == 0 and video_chk[0]==None):
-        video = False
-        '''
-
-
     ###############################Partition#################################
 
 
@@ -367,7 +268,7 @@ def execute(request):
     }
 
     options = {'partition': partition, 'value': value}
-    
+
     args = []
     args.append(from_date)
     args.append(to_date)
@@ -379,7 +280,7 @@ def execute(request):
                                   context_instance=RequestContext(request))
 
     else:
-        if not list(filter(lambda a: a != False, partition.values())):
+        if not list(filter(lambda listvalue: listvalue != False, partition.values())):
             error = 'Please select atleast one partition field!!'
             return render_to_response("raw_data_analytics/error.html", {'error': error},
                                       context_instance=RequestContext(request))

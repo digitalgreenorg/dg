@@ -143,15 +143,10 @@ class data_lib():
 
     def getRequiredTables(self, partitionDict, valueDictElement, args, lookup_matrix):
         self.Dict.clear()
-
         selectResult = self.getSelectComponent(partitionDict, valueDictElement)
-#        print selectResult
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
-#        print fromResult
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
-#        print whereResult
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-#        print groupbyResult
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
 #        print orderbyResult
@@ -314,7 +309,7 @@ class data_lib():
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
-        
+
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
