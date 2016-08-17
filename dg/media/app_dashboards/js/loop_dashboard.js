@@ -209,27 +209,27 @@ function plot_cards_data() {
     var rs = "₹";
 
     var active_clusters = avg[3];
-    document.getElementById('recent_cluster_card').innerHTML = active_clusters[0];
+    document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + active_clusters[0];
     $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
 
-    document.getElementById('recent_volume_card').innerHTML = (avg_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(kg);
+    document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (avg_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(kg);
     $('#recent_volume_sparkline').sparkline(avg_vol.reverse(), sparkline_option);
 
     var active_farmers = avg[1];
-    document.getElementById('recent_active_farmers_card').innerHTML = active_farmers[0];
+    document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
     $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
 
     var avg_amt = avg[2];
-    document.getElementById('recent_revenue_card').innerHTML = rs.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
     var data = get_cpk(avg_vol.reverse());
     var cpk = data[0];
-    document.getElementById('cpk_card').innerHTML = rs.concat(parseFloat(cpk[0]).toFixed(2));
+    document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(parseFloat(cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
 
     var sustainability = data[1];
-    document.getElementById('recent_sustainability_card').innerHTML = parseFloat(sustainability[0]).toFixed(2) + "%";
+    document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(sustainability[0]).toFixed(2) + "%";
     $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
 }
 
@@ -1225,17 +1225,17 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
 
     }
 
-    plot_drilldown(container, series, drilldown,false);
+    plot_drilldown(container, series, drilldown, false);
 }
 
 //Analytics Crops tab  Max Min graph is being plotted here
 function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_ids, mandi_names, mandi_parameter, json_data) {
 
-var json_data_crop=json_data.crop_prices;
-var json_data_mandi=json_data.mandi_crop_prices;
-// console.log(json_data_mandi);
+    var json_data_crop = json_data.crop_prices;
+    var json_data_mandi = json_data.mandi_crop_prices;
+    // console.log(json_data_mandi);
     // json_data_crop.sort(function(a, b) {
-        // return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"]);
+    // return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"]);
     // });
 
 
@@ -1259,7 +1259,7 @@ var json_data_mandi=json_data.mandi_crop_prices;
         temp['data'].push({
             'name': crop_names[i],
             'low': 0,
-            'high':0,
+            'high': 0,
             'drilldown': crop_names[i]
         });
         drilldown['series'].push({
@@ -1273,80 +1273,60 @@ var json_data_mandi=json_data.mandi_crop_prices;
             drilldown['series'][i]['data'].push({
                 "name": mandi_names[j],
                 "low": 0,
-                "high":0
+                "high": 0
             });
         }
     }
     temp['showInLegend'] = false;
     series.push(temp);
 
-    // console.log(series);
-    // console.log(drilldown);
-
-
     for (var i = 0; i < json_data_mandi.length; i++) {
         var drilldown_index = mandi_ids.indexOf(json_data_mandi[i][mandi_parameter].toString());
         var index = crop_ids.indexOf(json_data_mandi[i][crop_parameter].toString());
 
 
-        drilldown['series'][index]['data'][drilldown_index]['low']=json_data_mandi[i]['price__min'];
-        drilldown['series'][index]['data'][drilldown_index]['high']=json_data_mandi[i]['price__max'];
+        drilldown['series'][index]['data'][drilldown_index]['low'] = json_data_mandi[i]['price__min'];
+        drilldown['series'][index]['data'][drilldown_index]['high'] = json_data_mandi[i]['price__max'];
 
     }
-    var max_crop_price=0;
+    var max_crop_price = 0;
     for (var i = 0; i < json_data_crop.length; i++) {
         var index = crop_ids.indexOf(json_data_crop[i][crop_parameter].toString());
-          // if(json_data_crop[i]['price__max']>0){
-          series[0]['data'][index]['low']=json_data_crop[i]['price__min'];
-          series[0]['data'][index]['high']=json_data_crop[i]['price__max'];
-          if(max_crop_price<json_data_crop[i]['price__max']){
-            max_crop_price=json_data_crop[i]['price__max'];
-          }
+        // if(json_data_crop[i]['price__max']>0){
+        series[0]['data'][index]['low'] = json_data_crop[i]['price__min'];
+        series[0]['data'][index]['high'] = json_data_crop[i]['price__max'];
+        if (max_crop_price < json_data_crop[i]['price__max']) {
+            max_crop_price = json_data_crop[i]['price__max'];
+        }
         // }
 
-}
-
-for(var i=series[0]['data'].length-1;i>=0;i--){
-  if(series[0]['data'][i]['high']==0){
-    series[0]['data'].splice(i,1);
-    drilldown['series'].splice(i,1);
-  }
-}
-
-for(var i=0;i<series[0]['data'].length;i++){
-  for(var j=drilldown['series'][i]['data'].length-1;j>=0;j--){
-    if(drilldown['series'][i]['data'][j]['high']==0){
-      drilldown['series'][i]['data'].splice(j,1);
     }
-  }
-}
 
-for (var i = 0; i < series[0]['data'].length; i++) {
-    drilldown['series'][i]['data'].sort(function(a, b) {
+    for (var i = series[0]['data'].length - 1; i >= 0; i--) {
+        if (series[0]['data'][i]['high'] == 0) {
+            series[0]['data'].splice(i, 1);
+            drilldown['series'].splice(i, 1);
+        }
+    }
+
+    for (var i = 0; i < series[0]['data'].length; i++) {
+        for (var j = drilldown['series'][i]['data'].length - 1; j >= 0; j--) {
+            if (drilldown['series'][i]['data'][j]['high'] == 0) {
+                drilldown['series'][i]['data'].splice(j, 1);
+            }
+        }
+    }
+
+    for (var i = 0; i < series[0]['data'].length; i++) {
+        drilldown['series'][i]['data'].sort(function(a, b) {
+            return (b['high'] - b['low']) - (a['high'] - a["low"]);
+        });
+    }
+
+
+    series[0]['data'].sort(function(a, b) {
         return (b['high'] - b['low']) - (a['high'] - a["low"]);
     });
-  }
-
-
-series[0]['data'].sort(function(a, b) {
-        return (b['high'] - b['low']) - (a['high'] - a["low"]);
-    });
-
-    // for (var i = 0; i < crop_ids.length; i++) {
-    //     drilldown['series'][i]['data'].sort(function(a, b) {
-    //         return (b['high'] - b['low']) - (a['high'] - a["low"]);
-    //     });
-    //     for (var j = 0; drilldown['series'][i]['data'].length; j++) {
-    //         if (drilldown['series'][i]['data'][j]['high'] == 0 ||drilldown['series'][i]['data'][j]['low'] == 0) {
-    //             drilldown['series'][i]['data'] = drilldown['series'][i]['data'].slice(0, j);
-    //             break;
-    //         }
-    //     }
-    // }
-
-// console.log(series);
-// console.log(drilldown);
-    //TODO:add mandi drill down for crop prices
 
     // for (var i = 0; i < json_data_crop.length; i++) {
     //     x_axis.push(json_data_crop[i]['crop__crop_name']);
@@ -1354,7 +1334,7 @@ series[0]['data'].sort(function(a, b) {
     // }
 
 
-    plot_drilldown1(container,series,drilldown,false,max_crop_price);
+    plot_drilldown1(container, series, drilldown, false, max_crop_price);
 
     // plot_max_min(container, x_axis, series)
 }
@@ -1878,7 +1858,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
     });
 }
 
-function plot_drilldown1(container_obj, dict, drilldown, floats,max_scale) {
+function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
 
     if (dict[0]['data'].length >= 6) {
         var max = 5;
@@ -1895,7 +1875,7 @@ function plot_drilldown1(container_obj, dict, drilldown, floats,max_scale) {
         chart: {
             type: 'columnrange',
             height: 300,
-            inverted:true
+            inverted: true
         },
         credits: {
             enabled: false
@@ -1929,7 +1909,7 @@ function plot_drilldown1(container_obj, dict, drilldown, floats,max_scale) {
         },
         plotOptions: {
             columnrange: {
-              grouping:false,
+                grouping: false,
                 dataLabels: {
                     enabled: true,
                     format: format
@@ -1945,66 +1925,66 @@ function plot_drilldown1(container_obj, dict, drilldown, floats,max_scale) {
 
 
 
-function plot_max_min(container, x_axis, dict) {
-
-    if (dict[0]['data'].length >= 6) {
-        var max = 5;
-    } else {
-        var max = dict[0]['data'].length - 1;
-    }
-
-    container.highcharts({
-
-        chart: {
-            type: 'columnrange',
-            inverted: true,
-            height: 300
-        },
-        credits: {
-            enabled: false
-        },
-        title: {
-            text: null
-        },
-
-        xAxis: {
-            categories: x_axis,
-            min: 0,
-            max: max,
-        },
-
-        yAxis: {
-            title: {
-                text: null
-            },
-            min: 0,
-            gridLineColor: 'transparent',
-        },
-
-        scrollbar: {
-            enabled: true,
-        },
-
-        plotOptions: {
-            columnrange: {
-                dataLabels: {
-                    enabled: true,
-                    formatter: function() {
-                        return this.y;
-                    }
-                }
-            }
-        },
-
-        legend: {
-            enabled: false
-        },
-
-        series: dict
-
-    });
-
-};
+// function plot_max_min(container, x_axis, dict) {
+//
+//     if (dict[0]['data'].length >= 6) {
+//         var max = 5;
+//     } else {
+//         var max = dict[0]['data'].length - 1;
+//     }
+//
+//     container.highcharts({
+//
+//         chart: {
+//             type: 'columnrange',
+//             inverted: true,
+//             height: 300
+//         },
+//         credits: {
+//             enabled: false
+//         },
+//         title: {
+//             text: null
+//         },
+//
+//         xAxis: {
+//             categories: x_axis,
+//             min: 0,
+//             max: max,
+//         },
+//
+//         yAxis: {
+//             title: {
+//                 text: null
+//             },
+//             min: 0,
+//             gridLineColor: 'transparent',
+//         },
+//
+//         scrollbar: {
+//             enabled: true,
+//         },
+//
+//         plotOptions: {
+//             columnrange: {
+//                 dataLabels: {
+//                     enabled: true,
+//                     formatter: function() {
+//                         return this.y;
+//                     }
+//                 }
+//             }
+//         },
+//
+//         legend: {
+//             enabled: false
+//         },
+//
+//         series: dict
+//
+//     });
+//
+// };
 
 
 function createDetail(detail_container, masterChart, dict) {
