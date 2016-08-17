@@ -127,7 +127,7 @@ sparkline_option = {
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         var json_data = JSON.parse(data);
-
+        console.log(json_data);
         var total_volume = json_data['total_volume']['quantity__sum'];
 
         var total_amount = json_data['total_volume']['amount__sum'];
@@ -3133,6 +3133,12 @@ function plot_solid_guage(container, minimum, present, target) {
         }]
 
     }));
+}
+
+////////////////////////// Language Select //////////////////////////////////
+
+function change_language(){
+
 }
 
 // function gaddidar_cpk_spk_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
