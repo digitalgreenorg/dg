@@ -52,24 +52,31 @@
 					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
 				</ul>
 
-
 				<ul class="right">
+
 					<div class="row">
-						<div class="input-field col s4">
+						<div class="input-field col s4" class="initialized" >
+							<select id='languageID' onchange=>
+								<option value='Hindi' selected>Hindi</option>
+								<option value='English' >English</option>
+								<option value='French' >French</option>
+							</select>
+						</div>
+						<div class="input-field col s3">
 							<label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
 						</div>
-						<div class="input-field col s4">
+						<div class="input-field col s3">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
 						</div>
-						<div class="input-field col s4">
+						<div class="input-field col s3">
 							<label class="to_label" id="to_label">To:&nbsp;&nbsp;</label>
 						</div>
-						<div class="input-field col s4">
+						<div class="input-field col s3">
 							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
 							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
 						</div>
-						<li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
+						<li class="col s3"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
 					</div>
 				</ul>
 			</ul>

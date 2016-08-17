@@ -216,11 +216,17 @@ class Language(LoopModel):
     id = models.AutoField(primary_key=True)
     language_name = models.CharField(max_length=25)
 
+    def __unicode__(self):
+        return self.language_name
+
 class Croplanguage(LoopModel):
     id = models.AutoField(primary_key=True)
     crop_id = models.ForeignKey(Crop)
     crop_name = models.CharField(max_length=30)
     language = models.ForeignKey(Language)
+
+    def __unicode__(self):
+        return self.crop_name
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)

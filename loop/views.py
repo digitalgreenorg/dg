@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, Croplanguage
 
 from loop_data_log import get_latest_timestamp
 
@@ -187,6 +187,11 @@ def total_static_data(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def crop_language_data(request):
+    crops = Croplanguage.objects.filter(language=request.GET.get('language'))
+    data = json.dumps(crops)
+    
+    return HttpResponse(data)
 
 def recent_graphs_data(request):
 
