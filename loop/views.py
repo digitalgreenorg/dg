@@ -264,10 +264,10 @@ def new_aggregator_wise_data(request):
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).extra(select={'crop__crop_name':'crop__crop_name_en'}).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
+        **filter_args).annotate(crop__crop_name=F('crop__crop_name_en')).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).extra(select={'crop__crop_name':'crop__crop_name_en','mandi__mandi_name':'mandi__mandi_name_en'}).values('crop__crop_name','crop__id','mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
+        **filter_args).annotate(crop__crop_name=F('crop__crop_name_en'),mandi__mandi_name=F('mandi__mandi_name_en')).values('crop__crop_name','crop__id','mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
 
     # visits={}
     #
@@ -387,19 +387,19 @@ def payments(request):
     if (end_date != ""):
         filter_args["date__lte"] = end_date
 
-    aggregator_data = CombinedTransaction.objects.filter(**filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en','gaddidar__gaddidar_name':'gaddidar__gaddidar_name_en'}).values(
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'),gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
         'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'gaddidar__commission').annotate(Sum('quantity'), Count('farmer'))
 
     outlier_data = CombinedTransaction.objects.filter(
-        **filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en'}).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
+        **filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en')).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
 
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
-    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en','gaddidar__gaddidar_name':'gaddidar__gaddidar_name_en','farmer__name':'farmer__name_en','crop__crop_name':'crop__crop_name_en'}).values('date', 'user_created__id', 'mandi__mandi_name',
+    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'),gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en'),crop__crop_name=F('crop__crop_name_en')).values('date', 'user_created__id', 'mandi__mandi_name',
                                                                                   'farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
 
-    transportation_data = DayTransportation.objects.filter(**filter_args).values(
+    transportation_data = DayTransportation.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'),transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share').annotate(Sum('transportation_cost'))
 
     gaddidar_data = CombinedTransaction.objects.filter(**filter_args).values(
