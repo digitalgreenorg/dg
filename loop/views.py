@@ -56,11 +56,11 @@ def second_loop_page(request):
 
 
 def filter_data(request):
-    aggregators = LoopUser.objects.values('user__id', 'name')
-    villages = Village.objects.values('id', 'village_name')
-    crops = Crop.objects.values('id', 'crop_name')
-    mandis = Mandi.objects.values('id', 'mandi_name')
-    gaddidars = Gaddidar.objects.values('id', 'gaddidar_name')
+    aggregators = LoopUser.objects.extra(select={'name':'name_en'}).values('user__id', 'name')
+    villages = Village.objects.extra(select={'village_name':'village_name_en'}).values('id', 'village_name')
+    crops = Crop.objects.extra(select={'crop_name':'crop_name_en'}).values('id', 'crop_name')
+    mandis = Mandi.objects.extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
+    gaddidars = Gaddidar.objects.extra(select={'gaddidar_name':'gaddidar_name_en'}).values('id', 'gaddidar_name')
     transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'transporters': list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars)}
@@ -192,14 +192,14 @@ def recent_graphs_data(request):
 
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
-    aggregators = LoopUser.objects.all().values('name', 'user_id')
+    aggregators = LoopUser.objects.all().extra(select={'name':'name_en'}).values('name', 'user_id')
 
-    mandis = Mandi.objects.all().values('id', 'mandi_name')
+    mandis = Mandi.objects.all().extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
     transportation_cost = DayTransportation.objects.values('date').order_by(
         '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
     dates = CombinedTransaction.objects.values_list(
         'date', flat=True).distinct().order_by('-date')
-    crops = Crop.objects.all().values('id', 'crop_name')
+    crops = Crop.objects.all().extra(select={'crop_name':'crop_name_en'}).values('id', 'crop_name')
 
     chart_dict = {'stats': list(stats), 'aggregators': list(aggregators), 'mandis': list(
         mandis), 'transportation_cost': list(transportation_cost), 'dates': list(dates), 'crops': list(crops)}
@@ -264,10 +264,10 @@ def new_aggregator_wise_data(request):
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
+        **filter_args).extra(select={'crop__crop_name':'crop__crop_name_en'}).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).values('crop__crop_name','crop__id','mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
+        **filter_args).extra(select={'crop__crop_name':'crop__crop_name_en','mandi__mandi_name':'mandi__mandi_name_en'}).values('crop__crop_name','crop__id','mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
 
     # visits={}
     #
@@ -387,16 +387,16 @@ def payments(request):
     if (end_date != ""):
         filter_args["date__lte"] = end_date
 
-    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values(
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en','gaddidar__gaddidar_name':'gaddidar__gaddidar_name_en'}).values(
         'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'gaddidar__commission').annotate(Sum('quantity'), Count('farmer'))
 
     outlier_data = CombinedTransaction.objects.filter(
-        **filter_args).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
+        **filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en'}).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
 
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
-    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id', 'mandi__mandi_name',
+    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).extra(select={'mandi__mandi_name':'mandi__mandi_name_en','gaddidar__gaddidar_name':'gaddidar__gaddidar_name_en','farmer__name':'farmer__name_en','crop__crop_name':'crop__crop_name_en'}).values('date', 'user_created__id', 'mandi__mandi_name',
                                                                                   'farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
 
     transportation_data = DayTransportation.objects.filter(**filter_args).values(
