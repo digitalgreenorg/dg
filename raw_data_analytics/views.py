@@ -136,9 +136,6 @@ def execute(request):
                 dict[keys][0] = Temp
         elif (len(dict[keys][0])== 0 and dict[keys][1][0] == None):
             dict[keys][0] = False
-            print dict[keys][0]
-
-        print dict[keys][0]
 
     ###############################Partition#################################
 

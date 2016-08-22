@@ -17,9 +17,6 @@ from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from videos.models import  NonNegotiable,Video
 
-import foreign_keys
-from django.db.models.loading import get_model
-from django.contrib.contenttypes.models import ContentType
 
 
 class PersonMeetingAttendanceForm(forms.ModelForm):

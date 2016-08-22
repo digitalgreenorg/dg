@@ -263,7 +263,7 @@ class data_lib():
         if not partitionElements:
             if valueElement in self.categoryDictionary['partitionCumValues'].keys():
                 majorTablesList.append(self.tableDictionary[valueElement])
-        return ' , '.join(majorTablesList)
+        return ' , '.join(list(set(majorTablesList)))
 
 
     # Function to make whereComponent of the query
