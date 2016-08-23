@@ -25,6 +25,12 @@ class data_lib():
 
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
+    
+    def uniqueList(self,ElementsList):
+        seen = set()
+        seen_add = seen.add
+        return [elements for elements in ElementsList if not (elements in seen or seen_add(elements))]
+
     def handle_controller(self, args, options):
 
         final_df = pd.DataFrame()
@@ -49,7 +55,6 @@ class data_lib():
             for item in options['partition']:
                 if options['partition'][item] != False:
                     relevantPartitionDictionary[item] = options['partition'][item]
-
         else:
             print "Warning - Invalid input for partition fields"
 
@@ -149,21 +154,20 @@ class data_lib():
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-#        print orderbyResult
-#        print "----------------------------------SELECT PART------------------------------"
-#        print selectResult
-#        print "----------------------------------FROM PART--------------------------------"
-#        print fromResult
-#        print "----------------------------------WHERE PART-------------------------------"
-#        print whereResult
-#        print "---------------------------------GROUP_BY PART----------------------------"
-#        print groupbyResult
-#        print "--------------------------------ORDER_BY PART-----------------------------"
-#        print orderbyResult
+        print orderbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
+        print "--------------------------------ORDER_BY PART-----------------------------"
+        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
-
         selectComponentList = []
         selectComponentKeysList = []
         idElementVal = -1
@@ -171,7 +175,6 @@ class data_lib():
         if not partitionElements and 'list' in valueElement:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
-
         else:
             for items in partitionElements:
                 for i in self.selectDictionary[items]:
@@ -186,11 +189,9 @@ class data_lib():
 
         self.idElementKey = idElementKey
         self.idElementValue = idElementVal
-
         selectComponentList.append(
             self.tableDictionary[self.idElementKey] + '.' + self.groupbyDictionary[self.idElementKey] + ' AS \'' + self.headerDictionary[self.idElementKey][
                 self.groupbyDictionary[self.idElementKey]] + '\'')
-
         for i in self.selectDictionary[valueElement]:
             if (self.selectDictionary[valueElement][i] == True):
                 x = ['count(', 'distinct']
@@ -211,6 +212,7 @@ class data_lib():
                     selectComponentList.append(
                         str(self.tableDictionary[valueElement]) + '.' + i + ' AS \'' + self.headerDictionary[valueElement][
                             i] + '\'')
+        selectComponentList = self.uniqueList(selectComponentList)
         return ','.join(selectComponentList)
 
     # Function to make tables by recursive calls for tables.
