@@ -30,9 +30,9 @@
 
             </div>
 
- 	   		<div class="my-select leftrelative" style = "padding-right : 40px;">
+ 	   		<!-- <div class="my-select leftrelative" style = "padding-right : 40px;">
 
-                <div class="my-select-container" onclick="districtsetter();">
+                <div id = "test_destrict" class="my-select-container" onclick="districtsetter();">
                     <div class="my-icon"></div>
                     <div id="districtname" class="selected-item-label js-selected-item-label">Choose District</div>
 
@@ -40,7 +40,7 @@
 
                     </ul>
                 </div>
-            </div>
+            </div> -->
 
  	   		<div class="my-select leftrelative">
 
@@ -55,35 +55,22 @@
                 </div>
             </div>
 
-        <div class="fright">
-	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
+            <div class="fright">
+    	      <a id="gobutton" class="btn" onclick="mrp_payment_goclicked()">GO</a>
+            </div>
+
+    		<div id="maindiv">
+                    <table id="example" class="display" style="text-align:center;">
+    				</table>
+    		</div>
         </div>
-
-		<div id="maindiv">
-                <table id="example" class="display" style="text-align:center;">
-							    </table>
-		</div>
-     </div>
 	</div>
-
-
-<h2>Chosen Plugin Demo :</h2>
-
-<select name=fruits id=sl_fruits style="width:300px;">
-    <option value=0>Orange</option>
-    <option value=1>Apple</option>
-    <option value=2>Pear</option>
-    <option value=3>Fig</option>
-    <option value=4>Banana</option>
-</select>
-    
-    
-<script>
-    $('#sl_fruits').chosen();
-    </script>
-
 </section>
 
-	<script  src="/media/mrppayment/mrppayment.js"></script>
+<select id = "sl_fruits" onchange="setdistrictlistdiv(value);">
+</select>
+<select id = "block_test" onchange="setblocklistdiv(value);">
+</select>
+<script  src="/media/mrppayment/mrppayment.js"></script>
 
  {% include "includes/footer.html"%}

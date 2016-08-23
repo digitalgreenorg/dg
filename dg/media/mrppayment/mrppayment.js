@@ -11,6 +11,7 @@ var chosendeos = [];
 var bflag = 0;
 var tflag = 0;
 
+
 function partnersetter()
     {
       if (pflag == 0)
@@ -73,8 +74,8 @@ function setpartnerlistdiv(id, name)
       var partner_name = name;
       j$("div#partnername").html(partner_name);
       j$("div#districtname").html("Choose District");
-      document.getElementById('districtlist').classList.remove('nodisplay');
-      document.getElementById('districtlist').classList.add('blockdisplay');
+      // document.getElementById('districtlist').classList.remove('nodisplay');
+      // document.getElementById('districtlist').classList.add('blockdisplay');
       diflag = 1;
       districtfilter(partner_id);
     }
@@ -83,8 +84,8 @@ function districtsetter()
     {
       if (diflag == 0)
       {
-          document.getElementById('districtlist').classList.remove('nodisplay');
-          document.getElementById('districtlist').classList.add('blockdisplay');
+          // document.getElementById('districtlist').classList.remove('nodisplay');
+          // document.getElementById('districtlist').classList.add('blockdisplay');
           document.getElementById('partnerlist').classList.remove('blockdisplay');
           document.getElementById('partnerlist').classList.add('nodisplay');
           document.getElementById('blocklist').classList.remove('blockdisplay');
@@ -94,8 +95,8 @@ function districtsetter()
 
       else if (diflag == 1)
       {
-          document.getElementById('districtlist').classList.remove('blockdisplay');
-          document.getElementById('districtlist').classList.add('nodisplay');
+          // document.getElementById('districtlist').classList.remove('blockdisplay');
+          // document.getElementById('districtlist').classList.add('nodisplay');
           diflag = 0;
       }
     }
@@ -112,13 +113,15 @@ function districtfilter(partner_id)
 
         success: function(data){
 
-            var listitems = '';
+            var listitems = '<option value="" disabled selected>Choose District</option>';
+
             for (var i = 0; i < data.length; i++)
             {
 
-              listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[i].village__block__district__id +  '"onclick="' + 'setdistrictlistdiv(this' + ',' + partner_id + ')' + '">' + data[i].village__block__district__district_name + '</li>';
+              listitems += '<option id = "' + data[i].village__block__district__id +  '"value = ' + partner_id + '>' + data[i].village__block__district__district_name + '</option>';
             }
-            j$("ul#districtlist").html(listitems);
+            j$("select#sl_fruits").html(listitems);
+            j$('#sl_fruits').chosen();
         },
         error: function(data){
                 alert("Sorry there was an error!");
@@ -126,11 +129,13 @@ function districtfilter(partner_id)
       });
     }
 
-function setdistrictlistdiv(text, partner_id) {
+function setdistrictlistdiv(partner_id) {
+      var text = $('#sl_fruits option:selected');
+      console.log(text);
       chosendeos = [];
       var district_name = $(text).html();//text.innerText.trim();
-      var district_id = text.id
-      j$("div#districtname").html(district_name);
+      var district_id = text.attr('id')
+      // j$("div#districtname").html(district_name);
       j$("div#blockname").html("Choose Block");
       document.getElementById('blocklist').classList.remove('nodisplay');
       document.getElementById('blocklist').classList.add('blockdisplay');
@@ -144,8 +149,8 @@ function blocksetter() {
     if (bflag == 0) {
         document.getElementById('blocklist').classList.remove('nodisplay');
         document.getElementById('blocklist').classList.add('blockdisplay');
-        document.getElementById('districtlist').classList.remove('blockdisplay');
-        document.getElementById('districtlist').classList.add('nodisplay');
+        // document.getElementById('districtlist').classList.remove('blockdisplay');
+        // document.getElementById('districtlist').classList.add('nodisplay');
         document.getElementById('partnerlist').classList.remove('blockdisplay');
         document.getElementById('partnerlist').classList.add('nodisplay');
         bflag = 1;
@@ -173,9 +178,10 @@ function blockfilter(district_id) {
 
                 var listitems = '';
                 for (var i = 0; i < data.length; i++) {
-                    listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[i].id + '"onclick="' + 'setblocklistdiv(this' + ',' + district_id + ')' + '">' + data[i].block_name + '</li>';
+                    listitems += '<option id="' + data[i].id +'"value = ' + district_id + '>'+ data[i].block_name + '</option>';
                 }
-                $("ul#blocklist").html(listitems);
+                $("select#block_test").html(listitems);
+                j$('#block_test').chosen();
             },
             error: function (data) {
                 alert("Sorry there was an error!");
@@ -183,8 +189,9 @@ function blockfilter(district_id) {
         });
 }
 
-function setblocklistdiv(text, district_id) {
+function setblocklistdiv(district_id) {
     var block_name = $(text).html();//text.innerText.trim();
+
     j$("div#blockname").html(block_name);
     document.getElementById('blocklist').classList.remove('nodisplay');
     document.getElementById('blocklist').classList.add('blockdisplay');
@@ -275,7 +282,7 @@ function mrp_payment_goclicked() {
            },
           error: function (data) {
               j$.unblockUI();
-              alert("Sorry there was an error !");
+              alert("Sorry there was an error fata !");
           }
       });
     }
