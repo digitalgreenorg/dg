@@ -154,7 +154,7 @@ class data_lib():
 #        print selectResult
 #        print "----------------------------------FROM PART--------------------------------"
 #        print fromResult
-#       print "----------------------------------WHERE PART-------------------------------"
+#        print "----------------------------------WHERE PART-------------------------------"
 #        print whereResult
 #        print "---------------------------------GROUP_BY PART----------------------------"
 #        print groupbyResult

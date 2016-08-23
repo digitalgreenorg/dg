@@ -101,13 +101,9 @@ function populate(src, prevValue) {
                 for (var jsonData in data_json) {
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData] + "']").length == 0)
                         $("#" + src + "Id").append('<option value="' + data_json[jsonData] + '">' + data_json[jsonData] + '</option>');
-
                 }
-
             });
-
     }
-
 }
 function populate_video(src,prevValue){
   for (var values in prevValue) {
@@ -117,11 +113,8 @@ function populate_video(src,prevValue){
               for (var jsonData in data_json) {
                   if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
                       $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' + '</option>');
-
               }
-
           });
-
   }
 }
 
@@ -135,7 +128,6 @@ function list_display() {
     }
     else
         listoptions.style.visibility = "hidden";
-
 }
 //validation check
 function validation_check() {
@@ -169,7 +161,6 @@ function validation_check() {
     else if ((count_partition != 0) && (count_values == 0) && (!list.checked)) {
         alert("Please select atleast one value field!!");
         event.preventDefault();
-
     }
 
 
@@ -183,7 +174,6 @@ function validation_check() {
             alert("Along with list please select either Animator/Group/Registered Viewers/Video from Partitions");
             error = 1;
             event.preventDefault();
-
         }
 
         else if ((count_partition_restrict == 0) && (count_partition == 0)) {
@@ -192,8 +182,6 @@ function validation_check() {
             event.preventDefault();
 
         }
-
-
     }
     //alert(list_video.selectedIndex);
     if (((animator.checked) && (animator_no.checked)) ||
@@ -203,7 +191,7 @@ function validation_check() {
         ((video.checked) && (animator_no.checked)) ||
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))) {
-        alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
+        alert("Please select List of videos screened or list of videos produced from dropdown");
         error = 1;
         event.preventDefault();
     }
@@ -220,12 +208,8 @@ function validation_check() {
             alert("No other value fields can be selected along with list!!");
             error = 1;
             event.preventDefault();
-
         }
-
     }
-
-
 }
 //#######################################onload-date################################################
 function date() {
