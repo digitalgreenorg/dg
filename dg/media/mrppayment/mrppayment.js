@@ -12,28 +12,6 @@ var bflag = 0;
 var tflag = 0;
 
 
-function partnersetter()
-    {
-      if (pflag == 0)
-      {
-          document.getElementById('partnerlist').classList.remove('nodisplay');
-          document.getElementById('partnerlist').classList.add('blockdisplay');
-          document.getElementById('districtlist').classList.remove('blockdisplay');
-          document.getElementById('districtlist').classList.add('nodisplay');
-          document.getElementById('blocklist').classList.remove('blockdisplay');
-          document.getElementById('blocklist').classList.add('nodisplay');
-          pflag = 1;
-      }
-
-      else if (pflag == 1)
-      {
-          document.getElementById('partnerlist').classList.remove('blockdisplay');
-          document.getElementById('partnerlist').classList.add('nodisplay');
-          pflag = 0;
-      }
-
-}
-
 j$(document).ready(function() {
 
   var stdate = document.getElementById('sdate');
@@ -43,26 +21,6 @@ j$(document).ready(function() {
   var id = 11;
   var name = 'BRLPS';
   setpartnerlistdiv(id, name);
-
-  // $.ajax(
-  //       {
-  //         type:'GET',
-  //         url: window.location.origin + "/analytics/mrptool/getpartner",
-
-  //         success: function(data) {
-  //            var listitems = '';
-  //            for (var j = 0; j < data.length; j++)
-  //            {
-  //              listitems += '<li class=' + '"item h-overflow"' + 'id="' + data[j].id +  '"onclick="' + 'setpartnerlistdiv(this)' + '">' + data[j].partner_name + '</li>';
-  //            }
-  //            // $("ul#partnerlist")[0].innerHTML= listitems;
-  //            $("ul#partnerlist").html(listitems);
-  //         },
-  //         error: function(data){
-  //            alert("Sorry there was an error while partner!");
-  //         }
-  //       });
-
 });
 
 // function setpartnerlistdiv(text)
@@ -72,34 +30,40 @@ function setpartnerlistdiv(id, name)
       var partner_id = id;
       // var partner_name = $(text).html();//text.innerText.trim();
       var partner_name = name;
-      j$("div#partnername").html(partner_name);
-      j$("div#districtname").html("Choose District");
+      
+      
+      var listitems = '<option value = ' + partner_id + ' >' + name + '</option>';
+      j$("select#partnerlist").append(listitems);
+      j$("select#partnerlist").show();
+      j$('#partnerlist').chosen();
+      // j$("div#partnername").html(partner_name);
+      // j$("div#districtname").html("Choose District");
       // document.getElementById('districtlist').classList.remove('nodisplay');
       // document.getElementById('districtlist').classList.add('blockdisplay');
       diflag = 1;
       districtfilter(partner_id);
     }
 
-function districtsetter()
-    {
-      if (diflag == 0)
-      {
-          // document.getElementById('districtlist').classList.remove('nodisplay');
-          // document.getElementById('districtlist').classList.add('blockdisplay');
-          document.getElementById('partnerlist').classList.remove('blockdisplay');
-          document.getElementById('partnerlist').classList.add('nodisplay');
-          document.getElementById('blocklist').classList.remove('blockdisplay');
-          document.getElementById('blocklist').classList.add('nodisplay');
-          diflag = 1;
-      }
+// function districtsetter()
+//     {
+//       if (diflag == 0)
+//       {
+//           // document.getElementById('districtlist').classList.remove('nodisplay');
+//           // document.getElementById('districtlist').classList.add('blockdisplay');
+//           document.getElementById('partnerlist').classList.remove('blockdisplay');
+//           document.getElementById('partnerlist').classList.add('nodisplay');
+//           document.getElementById('blocklist').classList.remove('blockdisplay');
+//           document.getElementById('blocklist').classList.add('nodisplay');
+//           diflag = 1;
+//       }
 
-      else if (diflag == 1)
-      {
-          // document.getElementById('districtlist').classList.remove('blockdisplay');
-          // document.getElementById('districtlist').classList.add('nodisplay');
-          diflag = 0;
-      }
-    }
+//       else if (diflag == 1)
+//       {
+//           // document.getElementById('districtlist').classList.remove('blockdisplay');
+//           // document.getElementById('districtlist').classList.add('nodisplay');
+//           diflag = 0;
+//       }
+//     }
 
 function districtfilter(partner_id)
     {
@@ -113,15 +77,16 @@ function districtfilter(partner_id)
 
         success: function(data){
 
-            var listitems = '<option value="" disabled selected>Choose District</option>';
+            j$("select#districtlist").show();
+            var listitems = '<option value = -1> -------</option>';
 
             for (var i = 0; i < data.length; i++)
             {
 
               listitems += '<option id = "' + data[i].village__block__district__id +  '"value = ' + partner_id + '>' + data[i].village__block__district__district_name + '</option>';
             }
-            j$("select#sl_fruits").html(listitems);
-            j$('#sl_fruits').chosen();
+            j$("select#districtlist").append(listitems);
+            j$('#districtlist').chosen();
         },
         error: function(data){
                 alert("Sorry there was an error!");
@@ -130,42 +95,44 @@ function districtfilter(partner_id)
     }
 
 function setdistrictlistdiv(partner_id) {
-      var text = $('#sl_fruits option:selected');
-      console.log(text);
+
+      var text = $('#districtlist option:selected');
       chosendeos = [];
       var district_name = $(text).html();//text.innerText.trim();
-      var district_id = text.attr('id')
+      var district_id = text.attr('id');
       // j$("div#districtname").html(district_name);
-      j$("div#blockname").html("Choose Block");
-      document.getElementById('blocklist').classList.remove('nodisplay');
-      document.getElementById('blocklist').classList.add('blockdisplay');
-      bflag = 1;
-      blockfilter(district_id);
+      // j$("div#blockname").html("Choose Block");
+      // document.getElementById('blocklist').classList.remove('nodisplay');
+      // document.getElementById('blocklist').classList.add('blockdisplay');
+      if(district_id != -1) {
+        blockfilter(district_id);
+      }
+      
 }
 
 /* MRP payment code starts here */
 
-function blocksetter() {
-    if (bflag == 0) {
-        document.getElementById('blocklist').classList.remove('nodisplay');
-        document.getElementById('blocklist').classList.add('blockdisplay');
-        // document.getElementById('districtlist').classList.remove('blockdisplay');
-        // document.getElementById('districtlist').classList.add('nodisplay');
-        document.getElementById('partnerlist').classList.remove('blockdisplay');
-        document.getElementById('partnerlist').classList.add('nodisplay');
-        bflag = 1;
-    }
-    else if (bflag == 1) {
+// function blocksetter() {
+//     if (bflag == 0) {
+//         document.getElementById('blocklist').classList.remove('nodisplay');
+//         document.getElementById('blocklist').classList.add('blockdisplay');
+//         // document.getElementById('districtlist').classList.remove('blockdisplay');
+//         // document.getElementById('districtlist').classList.add('nodisplay');
+//         document.getElementById('partnerlist').classList.remove('blockdisplay');
+//         document.getElementById('partnerlist').classList.add('nodisplay');
+//         bflag = 1;
+//     }
+//     else if (bflag == 1) {
 
-        document.getElementById('blocklist').classList.remove('blockdisplay');
-        document.getElementById('blocklist').classList.add('nodisplay');
-        bflag = 0;
+//         document.getElementById('blocklist').classList.remove('blockdisplay');
+//         document.getElementById('blocklist').classList.add('nodisplay');
+//         bflag = 0;
 
-    }
-}
+//     }
+// }
 
 function blockfilter(district_id) {
-  
+    console.log(district_id);
     j$.ajax(
         {
             type: 'GET',
@@ -175,13 +142,23 @@ function blockfilter(district_id) {
             url: window.location.origin + "/analytics/mrptool/getblock",
 
             success: function (data) {
-
+                // j$("select#block_test").empty();
+                // console.log(data);
+                if(bflag == 0) {
+                  j$("select#blocklist").show();
+                  j$('#blocklist').chosen();
+                  bflag = 1;
+                }
+                
                 var listitems = '';
                 for (var i = 0; i < data.length; i++) {
                     listitems += '<option id="' + data[i].id +'"value = ' + district_id + '>'+ data[i].block_name + '</option>';
                 }
-                $("select#block_test").html(listitems);
-                j$('#block_test').chosen();
+                
+                j$('#blocklist').val('').find('option').remove().end();
+                j$("select#blocklist").append(listitems);
+                j$('#blocklist').trigger('chosen:updated');
+
             },
             error: function (data) {
                 alert("Sorry there was an error!");
@@ -189,14 +166,14 @@ function blockfilter(district_id) {
         });
 }
 
-function setblocklistdiv(district_id) {
-    var block_name = $(text).html();//text.innerText.trim();
+// function setblocklistdiv(district_id) {
+//     // var block_name = $(text).html();//text.innerText.trim();
 
-    j$("div#blockname").html(block_name);
-    document.getElementById('blocklist').classList.remove('nodisplay');
-    document.getElementById('blocklist').classList.add('blockdisplay');
-    bflag = 1;
-}
+//     j$("div#blockname").html(block_name);
+//     // document.getElementById('blocklist').classList.remove('nodisplay');
+//     // document.getElementById('blocklist').classList.add('blockdisplay');
+//     bflag = 1;
+// }
 
 function mrp_payment_goclicked() {
 
@@ -204,11 +181,11 @@ function mrp_payment_goclicked() {
     var sdate = document.getElementById("sdate").value;
     var edate = document.getElementById("edate").value;
     var partner = document.getElementById("partnername");
-    var partner_name = j$(partner).html();
+    var partner_name = j$("#partnerlist option:selected").text();
     var district = document.getElementById("districtname");
-    var district_name = j$(district).html();
+    var district_name = $("#districtlist option:selected").text();
     var block = document.getElementById("blockname");
-    var block_name = j$(block).html();
+    var block_name = $("#blocklist option:selected").text();
     
     if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" ) {
       alert("Information Incomplete! Please fill missing entries");
