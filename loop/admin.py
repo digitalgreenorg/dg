@@ -57,12 +57,12 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
 
 class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
-                    'transporter_phone', '__unicode__')
+                    'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__unicode__',
+    list_display = ('id', 'date', '__aggregator__','__transporter__','__vehicle__',
                     'transportation_cost', 'farmer_share')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = ('user_created__username', 'mandi__mandi_name')
@@ -76,7 +76,7 @@ class GaddidarAdmin(admin.ModelAdmin):
 
 
 class TransportationVehicleAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__', 'vehicle_number')
+    list_display = ('id', '__transporter__','__vehicle__', 'vehicle_number')
     search_fields = ['transporter__transporter_name', 'vehicle__vehicle_name']
     list_filter = ['transporter__transporter_name']
 

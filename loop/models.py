@@ -225,6 +225,9 @@ class Transporter(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
+        return "%s" % (self.transporter_name)
+
+    def __block__(self):
         return "%s" % (self.block.block_name)
 
     class Meta:
@@ -257,9 +260,11 @@ class TransportationVehicle(LoopModel):
     vehicle_number = models.CharField(max_length=20)
     is_visible = models.BooleanField(default=True)
 
-    def __unicode__(self):
-        return "%s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name)
+    def __transporter__(self):
+        return "%s" % (self.transporter.transporter_name)
 
+    def __vehicle__(self):
+        return "%s" % (self.vehicle.vehicle_name)
     class Meta:
         unique_together = ("transporter", "vehicle", "vehicle_number",)
 
@@ -282,7 +287,13 @@ class DayTransportation(LoopModel):
     timestamp = models.CharField(max_length=25)
 
     def __unicode__(self):
-        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name,self.transportation_vehicle.transporter.transporter_name,self.transportation_vehicle.vehicle.vehicle_name)
+    def __aggregator__(self):
+        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+    def __transporter__(self):
+        return "%s" % (self.transportation_vehicle.transporter.transporter_name)
+    def __vehicle__(self):
+        return "%s (%s)" % (self.transportation_vehicle.vehicle.vehicle_name,self.transportation_vehicle.vehicle_number)
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
