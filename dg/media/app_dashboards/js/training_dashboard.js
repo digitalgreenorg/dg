@@ -46,6 +46,42 @@ $('#link3').on('click', function () {
     }, 10);
 });
 
+
+//Search Trainers in SideNav
+
+$("#search_trainers").keyup(function() {
+var value = this.value;
+
+$("#trainers_table").find("tr").each(function(index) {
+    if (index === -1) return;
+
+    var if_td_has = false; //boolean value to track if td had the entered key
+    $(this).find('td').each(function () {
+        if_td_has = if_td_has || $(this).text().indexOf(value) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+    });
+
+    $(this).toggle(if_td_has);
+
+});
+});
+
+
+//Search States in Side Nav
+$("#search_states").keyup(function() {
+var value = this.value;
+
+$("#states_table").find("tr").each(function(index) {
+    if (index === -1) return;
+
+    var if_td_has = false; //boolean value to track if td had the entered key
+    $(this).find('td').each(function () {
+        if_td_has = if_td_has || $(this).text().indexOf(value) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+    });
+
+    $(this).toggle(if_td_has);
+
+});
+});
 /*$( window ).resize(function() {
   get_data();
 });*/

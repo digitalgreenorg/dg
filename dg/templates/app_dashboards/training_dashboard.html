@@ -77,12 +77,17 @@
 					<table class="filter-table centered">
 						<thead>
 							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect All</th>
+								<th><input placeholder="Search" id="search_trainers" type="text" class="validate"></th>
 								<th>
 									<input type="checkbox" class="teal" id="trainer_all" checked="checked"/>
 									<label for="trainer_all"></label>
 								</th>
 							</tr>
+						</thead>
+					</table>
+					
+					<table class="filter-table centered" id="trainers_table">
+						<thead>
 						</thead>
 						<tbody id="trainers">
 						</tbody>
@@ -110,15 +115,21 @@
 			<li class="bold not-hoverable">
 				<a class="collapsible-header waves-effect waves-teal">States</a>
 				<div class="collapsible-body container" style="display: none;">
+
 					<table class="filter-table centered">
 						<thead>
 							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect All</th>
+								<th><input placeholder="Search" id="search_states" type="text" class="validate"></th>
 								<th>
 									<input type="checkbox" class="teal" id="state_all" checked="checked"/>
 									<label for="state_all"></label>
 								</th>
 							</tr>
+						</thead>
+					</table>
+
+					<table class="filter-table centered" id="states_table">
+						<thead>
 						</thead>
 						<tbody id="states">
 						</tbody>
@@ -294,7 +305,7 @@
 		</div>
 
 		<div class = "col s12 m4 l1">
-				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:15%; background-color:rgba(0,0,0,0.7);">GET</a>
+				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:40%; background-color:rgba(0,0,0,0.7);">GET</a>
 
 				<div id="modal1" class="modal">
 					<div class="modal-content">
