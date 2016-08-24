@@ -241,15 +241,27 @@ class NonNegotiableAuthorization(Authorization):
 
 class BaseResource(ModelResource):
     
+    # override for update to save Empty data
+    def update_obj(self, bundle):
+        empty_field_dict = {k: v for k, v in bundle.data.items() if not v}
+        for k, v in empty_field_dict.items():
+            if k == "is_dg_video":
+                bundle.obj.is_dg_video = False
+            if k == "listened_to_prc":
+                bundle.obj.listened_to_prc = False
+        return bundle
+
     def full_hydrate(self, bundle):
         bundle = super(BaseResource, self).full_hydrate(bundle)
         bundle.obj.user_modified_id = bundle.request.user.id
+        self.update_obj(bundle)
         return bundle
     
     def obj_create(self, bundle, **kwargs):
         """
         A ORM-specific implementation of ``obj_create``.
         """
+
         bundle.obj = self._meta.object_class()
 
         for key, value in kwargs.items():
@@ -469,6 +481,7 @@ class ScreeningResource(BaseResource):
     
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
+        person_meeting_attendance_list = []
         if pma_list:
             bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
             user_id = None
@@ -476,12 +489,23 @@ class ScreeningResource(BaseResource):
                 user_id =  bundle.request.user.id
             screening_id  = getattr(bundle.obj,'id')
             for pma in pma_list:
+                listened_to_prc = pma.get('listened_to_prc')
+                person_id = pma.get('person_id')
                 try:
-                    attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'],
-                                                    user_created_id = user_id)
-                    attendance.save()
-                except Exception, e:
+                    person_meeting_attendance_list.append(PersonMeetingAttendance(screening_id=screening_id,
+                                                                                  person_id=person_id,
+                                                                                  listened_to_prc=listened_to_prc,
+                                                                                  user_created_id = user_id))
+                except Exception as e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
+
+            PersonMeetingAttendance.objects.bulk_create(person_meeting_attendance_list)
+                # try:
+                #     attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'],
+                #                                     user_created_id = user_id)
+                #     attendance.save()
+                # except Exception, e:
+                #     raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
         
             return bundle
         else:
@@ -499,7 +523,8 @@ class ScreeningResource(BaseResource):
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
             pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'],
-                                          user_created_id = user_id)
+                                          user_created_id = user_id, 
+                                          listened_to_prc=pma.get('listened_to_prc'))
             pma.save()    
         return bundle
     
@@ -512,6 +537,7 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmers_attendance(self, bundle):
         return [{'person_id':pma.person.id, 
                  'person_name': pma.person.person_name, 
+                 'listened_to_prc': pma.listened_to_prc
                  }  
                  for pma in bundle.obj.personmeetingattendance_set.all()]
     

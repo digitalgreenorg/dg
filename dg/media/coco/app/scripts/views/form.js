@@ -192,7 +192,6 @@ define([
         */
         initialize: function(params) {
             console.log("ADD/EDIT: params to add/edit view: ");
-            console.log(params);
             this.final_json = null;
             _.bindAll(this);
 
@@ -240,6 +239,14 @@ define([
             var partner_name = User.get('partner_name');
             if (partner_name != "umed"){
                 $f_el.find("#is_dg_video").addClass('hidden');
+                // $f_el.find("#size_land").addClass('hidden');
+                // $f_el.find("#listened_to_prc").addClass('hidden');
+            }
+            if (partner_name != "moa-dg ethiopia"){
+                $f_el.find("#label_size_land").addClass('hidden');
+                $f_el.find("#label_listened_to_prc").addClass('hidden');
+                $f_el.find("#size_land").addClass('hidden');
+                $f_el.find("#listened_to_prc").addClass('hidden');
             }
         },
         
@@ -333,7 +340,6 @@ define([
                             }
                             return false;
                         });
-                        console.log(inl_models);
                         // render the inlines into the form
                         that.fill_inlines(inl_models);
                     })
@@ -463,6 +469,18 @@ define([
 
         // initiate the dropdown and date, time widgets
         initiate_form_widgets: function() {
+            
+            var partner_name = User.get('partner_name');
+            if (partner_name != "moa-dg ethiopia"){
+                $('#bulk tr').each(function(idx){
+                    var ltp = "listened_to_prc"+ idx
+                    var s_l = "size_land" + idx
+                    $(this).find("#"+ s_l).addClass("hidden");
+                    $(this).find("#"+ ltp).addClass("hidden");
+
+                });
+            }
+
             $(".chosen-select").chosen({
                 'search_contains': true,
                 'width': '100%'
@@ -699,7 +717,6 @@ define([
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
                     });
                     if (this.num_sources[element] <= 0)

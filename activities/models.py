@@ -86,8 +86,7 @@ class Screening(CocoModel):
     observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
-    is_dg_video = models.BooleanField(verbose_name="Is DigitalGreen Video", db_index=True, default=False)
-    listened_to_prc = models.BooleanField(verbose_name="Listened to PRC", db_index=True, default=False)
+    is_dg_video = models.BooleanField(verbose_name="Is this a DigitalGreen Video?", db_index=True, default=False)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -107,6 +106,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
+    listened_to_prc = models.BooleanField(verbose_name="Listened to PRC", db_index=True, default=False)
     
     def __unicode__(self):
         return  u'%s' % (self.id)

@@ -61,10 +61,14 @@ class ScreeningAdmin(admin.ModelAdmin):
     raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
     list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name', 'observer')
     list_editable = ('observation_status', 'screening_grade', 'observer')
+
+
     class Media:
         js = (
                 settings.STATIC_URL + "js/qa_screening.js",
         )
+
+    inlines = [FarmerAttendanceInline]
 
 class NonNegotiablesInline(admin.TabularInline):
     model =  NonNegotiable
