@@ -26,13 +26,23 @@ $('#link2').on('click', function () {
     }, 5);
 });
 
-$('#link3').on('click', function () {
+$('#link1').on('click', function () {
     setInterval(function () {
         $('#state_training_data').highcharts().reflow();
     }, 10);
 
     setInterval(function () {
         $('#state_mediator_data').highcharts().reflow();
+    }, 10);
+});
+
+$('#link3').on('click', function () {
+    setInterval(function () {
+        $('#trainer_training_data').highcharts().reflow();
+    }, 10);
+
+    setInterval(function () {
+        $('#trainer_mediator_data').highcharts().reflow();
     }, 10);
 });
 
@@ -216,7 +226,7 @@ function get_bottom_boxes(){
     })
     .done(function(data) {
         data_json = JSON.parse(data);
-        fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
+        fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_villages, data_json.num_beneficiaries);
     });
 }
 
@@ -230,7 +240,7 @@ function get_filter_data() {
             fill_assessment_filter(data_json.assessments);
             fill_trainer_filter(data_json.trainers);
             fill_state_filter(data_json.states);
-            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
+            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_villages,data_json.num_beneficiaries);
 
             get_data();
         });
@@ -322,7 +332,7 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
 
 /* Table Generating UI Functions - Fill data in table */
 
-function fill_top_boxes(num_trainings, num_participants, num_pass) {
+function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
@@ -343,9 +353,11 @@ function fill_top_boxes(num_trainings, num_participants, num_pass) {
     document.getElementById('mediators_trained').innerHTML = num_participants;
     document.getElementById('average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
+    document.getElementById('villages_reached').innerHTML = num_villages;
+    document.getElementById('viewers_reached').innerHTML = num_beneficiaries;
 }
 
-function fill_bottom_boxes(num_trainings, num_participants, num_pass) {
+function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
@@ -367,6 +379,8 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass) {
     document.getElementById('filtered_mediators_trained').innerHTML = num_participants;
     document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('filtered_pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
+    document.getElementById('filtered_villages_reached').innerHTML = num_villages;
+    document.getElementById('filtered_viewers_reached').innerHTML = num_beneficiaries;
 }
 
 /* Fill data for highcharts */
@@ -475,7 +489,7 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         // trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "", "", "%");
-        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_pass_perc_dict, "%", "% of mediators scoring above 70%");
+        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Total Trainings");
     }
 }
 

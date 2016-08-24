@@ -1,5 +1,5 @@
 
-<div class="navbar-fixed">{% extends "app_dashboards/training_base.html" %}
+{% extends "app_dashboards/training_base.html" %}
 	{% load static %}
 
 	{% block title %}Dashboard | Home {% endblock %}
@@ -35,13 +35,29 @@
 					<div class="nav-wrapper grey darken-3">
 						<!-- <a href="#" class="page-title">Training Dashboard</a> -->
 						 <a href="#" class="brand-logo center" style="font-size:175%;">Training Dashboard</a>
-						<a href="#" data-activates="mobile-demo" class="button-collapse" style="display:block;"><i class="material-icons">menu</i></a>
+						<a href="#" data-activates="mobile-demo" class="button-collapse" style="display:block;margin-left:3%;"><i class="material-icons">menu</i></a>
 						<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 					</div>
 				
 			</nav>
 		</div>
+
+		
+
+		
 	</header>
+
+	
+
+	<!-- <a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a> -->
+	{% endblock %}
+
+
+	{% block content %}
+	<br>
+	<!-- <blockquote style = "margin-top:3%">
+	      <h4>Total Data</h4>
+	</blockquote> -->
 
 	<ul id="mobile-demo" class="side-nav">
 		<li class="no-padding not-hoverable">
@@ -119,55 +135,67 @@
 		</ul>
 	</ul>
 
-	<!-- <a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a> -->
-	{% endblock %}
-
-
-	{% block content %}
-	<br>
-	<!-- <blockquote style = "margin-top:3%">
-	      <h4>Total Data</h4>
-	</blockquote> -->
-
 	<div id = "box-1" class="row">
-		<div class="col s12 m6 l3">
+		<div class="col s12 m6 l2" >
 			<div class="card teal darken-1">
 				<div class="">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-social-school"></i> No. of Trainings:<br/>
+						<i class="mdi-social-school"></i> No. of<br/> Trainings:<br/>
 						<i id="num_trainings"> </i>
 					</div>
 				</div>
 			</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l3">
+		<div class="col s12 m6 l2" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-social-group"></i> Mediators Trained: <br/>
+						<i class="mdi-social-group"></i> Mediators<br/> Trained: <br/>
 						<i id="mediators_trained"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l3">
+		<div class="col s12 m6 l2" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-subject"></i> Average Score:<br/>
+						<i class="mdi-action-subject"></i> Average<br/> Score:<br/>
 						<i id="average_score"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l3">
+		<div class="col s12 m6 l2" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-spellcheck"></i> Pass Percentage:<br/>
+						<i class="mdi-action-spellcheck"></i> Pass<br/> Percentage:<br/>
 						<i id="pass_percent"> </i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 m6 l2" >
+			<div class="card teal darken-1">
+				<div class="card-content teal white-text">
+					<div class="card-stats-title" style="font-size:80%;">
+						<i class="mdi-action-spellcheck"></i> Villages<br/> Reached:<br/>
+						<i id="villages_reached"> </i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 m6 l2" >
+			<div class="card teal darken-1">
+				<div class="card-content teal white-text">
+					<div class="card-stats-title" style="font-size:80%;">
+						<i class="mdi-action-spellcheck"></i> Viewers<br/> Reached:<br/>
+						<i id="viewers_reached"> </i>
 					</div>
 				</div>
 			</div>
@@ -255,18 +283,18 @@
 		<div class="input-field col s12 m4 l1">
 
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+			<input id="from_date" placeholder="Start Date" type="text" class="datepicker" style="font-size:80%;"> 
 			<label for="from_date">From:</label>
 		</div>
 
 		<div class="input-field col s12 m4 l1 ">
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+			<input id="to_date" placeholder="End Date" type="text" class="datepicker" style="font-size:80%;">
 			<label for="to_date" class="active">To:</label>
 		</div>
 
 		<div class = "col s12 m4 l1">
-				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:15%;">GET</a>
+				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:15%; background-color:rgba(0,0,0,0.7);">GET</a>
 
 				<div id="modal1" class="modal">
 					<div class="modal-content">
@@ -279,62 +307,82 @@
 
 		</div>
 
-		<div class="col s6 m6 l2 offset-l1" style="font-size:80%;">
+		<div class="col s6 m6 l1 offset-l3" style="font-size:80%;">
 			
 		
-			 No. of Trainings:<br/>
+			 No. of<br/> Trainings:<br/>
 			<i id="filtered_num_trainings"> </i>
 			
 		</div>
-		<div class="col s6 m6 l2" style="font-size:80%;">
+		<div class="col s6 m6 l1" style="font-size:80%;">
 			
 			
-			Mediators Trained:<br/>
+			Mediators<br/> Trained:<br/>
 			<i id="filtered_mediators_trained"> </i>
 			
 		</div>
-		<div class="col s6 m6 l2" style="font-size:80%;">
+		<div class="col s6 m6 l1" style="font-size:80%;">
 			
 			
-			Average Score:<br/>
+			Average<br/> Score:<br/>
 			<i id="filtered_average_score"> </i>
 			
 		</div>
-		<div class="col s6 m6 l2" style="font-size:80%;">
+		<div class="col s6 m6 l1" style="font-size:80%;">
 			
 		
-			Pass Percentage:<br/>
+			Pass<br/> Percentage:<br/>
 			<i id="filtered_pass_percent"> </i>
 			
 		</div>
 
+		<div class="col s6 m6 l1" style="font-size:80%;">
+			
+		
+			Villages<br/> Reached:<br/>
+			<i id="filtered_villages_reached"> </i>
+			
+		</div>
+
+		<div class="col s6 m6 l1" style="font-size:80%;">
+			
+		
+			Viewers<br/> Reached:<br/>
+			<i id="filtered_viewers_reached"> </i>
+			
+		</div>
+
 	</div>
-</div>
+
 
 <!-- End  of Code for filtered data -->
-<div  class="container col s12" style="margin-top:-0.5%;">
-	<div class="row">
+<div  class="container col s12 m12 l12" style="margin-top:-0.5%;width:100%;">
+	<div class="row" style="">
 		
 		  <ul class="tabs" style="overflow-x: hidden;">
-		    <li class="tab col s12"><a id="link1" class="active" href="#tab1" >Trainer-Wise</a></li>
+		    <li class="tab col s12"><a id="link1" class="active" href="#tab1" >State-Wise</a></li>
 		    <li class="tab col s12"><a id="link2" href="#tab2">Question-Wise</a></li>
-		    <li class="tab col s12"><a id="link3" href="#tab3">State-Wise</a></li>
+		    <li class="tab col s12"><a id="link3" href="#tab3">Trainer-Wise</a></li>
 		  </ul>
-		
-		<div id="tab1" class="col s12">
-			<div id="trainer_training_data" style="margin-top:2%"></div>
-			<br>
-			<div id="trainer_mediator_data" ></div>
-		</div>
-		<div id="tab2" class="tab col s12">
-			
-			<div id="question_mediator_data" style="margin-top:2%"></div>
-		</div>
-		<div id="tab3">
+
+		<div id="tab1" class="tab col s12">
 			<div  id="state_training_data" style="margin-top:2%"></div>
 			<br>
 			<div id="state_mediator_data"  ></div>
 		</div>
+
+		
+		<div id="tab2" class="tab col s12">
+			
+			<div id="question_mediator_data" style="margin-top:2%"></div>
+		</div>
+
+		<div id="tab3" class="tab col s12">
+			<div id="trainer_training_data" style="margin-top:2%"></div>
+			<br>
+			<div id="trainer_mediator_data" ></div>
+		</div>
+		
 	</div>
 </div>
 

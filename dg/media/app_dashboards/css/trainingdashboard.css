@@ -140,16 +140,23 @@ html {
 }
 
 #box-1.row {
-  background-color: #EFEFEF;
-  padding: -10px;
+  background-color: #ffffff;
+  padding-top:1.5%;
+
 }
 #box-2.row {
     margin-top: -1%;
+
 }
-#num_trainings, #mediators_trained, #average_score, #pass_percent, #filtered_num_trainings, 
-#filtered_mediators_trained, #filtered_average_score, #filtered_pass_percent{
+#num_trainings, #mediators_trained, #average_score, #pass_percent, #pass_perce,#pass_perc,#villages_reached,#viewers_reached{
     font-weight: bold;
     font-size: 200%;
+}
+
+#filtered_num_trainings,#filtered_mediators_trained, #filtered_average_score, #filtered_pass_percent,#filtered_villages_reached, #filtered_viewers_reached
+{
+    font-weight: bold;
+    font-size: 150%;
 }
 
 
