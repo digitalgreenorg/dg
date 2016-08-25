@@ -50,7 +50,13 @@ $('#link3').on('click', function () {
 //Search Trainers in SideNav
 
 $("#search_trainers").keyup(function() {
+
+//$("#trainer_all").prop("disabled",true);    
 var value = this.value;
+if(value.length != 0)
+    $("#trainer_all").prop("disabled",true);
+else
+    $("#trainer_all").prop("disabled",false);
 
 $("#trainers_table").find("tr").each(function(index) {
     if (index === -1) return;
@@ -70,6 +76,10 @@ $("#trainers_table").find("tr").each(function(index) {
 $("#search_states").keyup(function() {
 var value = this.value;
 
+if(value.length != 0)
+    $("#state_all").prop("disabled",true);
+else
+    $("#state_all").prop("disabled",false);
 $("#states_table").find("tr").each(function(index) {
     if (index === -1) return;
 
