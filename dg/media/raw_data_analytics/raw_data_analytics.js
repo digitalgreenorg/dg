@@ -193,7 +193,7 @@ function validation_check() {
         ((video.checked) && (animator_no.checked)) ||
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))) {
-        alert("Please select List of videos screened or list of videos produced from dropdown");
+        alert("Invalid Combination of Partition and Value Fields!!!");
         error = 1;
         event.preventDefault();
     }
