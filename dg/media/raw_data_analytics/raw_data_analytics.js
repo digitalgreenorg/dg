@@ -94,6 +94,7 @@ window.onload = date;
 //###############################Populate the dropdowns for filter######################################
 
 function populate(src, prevValue) {
+    if (!(jQuery("#" + src + "Id" + " option ").length != 0))
     for (var values in prevValue) {
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
             .done(function (data) {
@@ -106,6 +107,7 @@ function populate(src, prevValue) {
     }
 }
 function populate_video(src,prevValue){
+  if (!(jQuery("#" + src + "Id" + " option ").length != 0))  
   for (var values in prevValue) {
       $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
           .done(function (data) {
@@ -191,7 +193,7 @@ function validation_check() {
         ((video.checked) && (animator_no.checked)) ||
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))) {
-        alert("Please select List of videos screened or list of videos produced from dropdown");
+        alert("Invalid Combination of Partition and Value Fields!!!");
         error = 1;
         event.preventDefault();
     }
@@ -210,6 +212,16 @@ function validation_check() {
             event.preventDefault();
         }
     }
+    newfrom_date = new Date($('#from_date').val())
+    newto_date  =new Date($('#to_date').val());
+    span =new Date(newto_date-newfrom_date)
+    days = span/1000/60/60/24;
+    if(!(days>0)){
+        alert("'From Date' cannot be greater than 'To Date'");
+            error = 1;
+            event.preventDefault();
+    }
+    
 }
 //#######################################onload-date################################################
 function date() {
@@ -217,4 +229,5 @@ function date() {
     document.getElementById('to_date').valueAsDate = date;
     date.setMonth(date.getMonth() - 1);
     document.getElementById('from_date').valueAsDate = date;
+   
 }

@@ -154,17 +154,17 @@ class data_lib():
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-        print orderbyResult
-        print "----------------------------------SELECT PART------------------------------"
-        print selectResult
-        print "----------------------------------FROM PART--------------------------------"
-        print fromResult
-        print "----------------------------------WHERE PART-------------------------------"
-        print whereResult
-        print "---------------------------------GROUP_BY PART----------------------------"
-        print groupbyResult
-        print "--------------------------------ORDER_BY PART-----------------------------"
-        print orderbyResult
+#        print orderbyResult
+#        print "----------------------------------SELECT PART------------------------------"
+#        print selectResult
+#        print "----------------------------------FROM PART--------------------------------"
+#        print fromResult
+#        print "----------------------------------WHERE PART-------------------------------"
+#        print whereResult
+#        print "---------------------------------GROUP_BY PART----------------------------"
+#        print groupbyResult
+#        print "--------------------------------ORDER_BY PART-----------------------------"
+#        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -265,7 +265,8 @@ class data_lib():
         if not partitionElements:
             if valueElement in self.categoryDictionary['partitionCumValues'].keys():
                 majorTablesList.append(self.tableDictionary[valueElement])
-        return ' , '.join(list(set(majorTablesList)))
+        majorTablesList = self.uniqueList(majorTablesList)
+        return ' , '.join(majorTablesList)
 
 
     # Function to make whereComponent of the query

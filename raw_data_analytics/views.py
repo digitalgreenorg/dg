@@ -218,15 +218,19 @@ def execute(request):
 
             elif (x == "animator"):
                 list_combo = 'listAnimator'
+                break;
 
             elif (x == "persongroup"):
                 list_combo = 'listGroup'
+                break;
 
             elif (x == "person"):
                 list_combo = 'listPerson'
+                break;
 
             elif (x == "video"):
                 list_combo = videolist
+                break;
 
     ##############################Date#################################
 
@@ -270,7 +274,6 @@ def execute(request):
     args.append(from_date)
     args.append(to_date)
     dlib = data_lib()
-    #print options
     if options['value']['list'] == 'on':
         error = 'Output cannot be generated for this input ! Please check filters and partition field !!'
         return render_to_response("raw_data_analytics/error.html", {'error': error},
@@ -295,3 +298,4 @@ def execute(request):
                 return render_to_response('raw_data_analytics/result.html', {'from_date': from_date, 'to_date': to_date,
                                                                              'dataf': unicode(df, errors='ignore')},
                                           context_instance=RequestContext(request))
+    
