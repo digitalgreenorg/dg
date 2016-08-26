@@ -274,7 +274,6 @@ def execute(request):
     args.append(from_date)
     args.append(to_date)
     dlib = data_lib()
-    #print options
     if options['value']['list'] == 'on':
         error = 'Output cannot be generated for this input ! Please check filters and partition field !!'
         return render_to_response("raw_data_analytics/error.html", {'error': error},
