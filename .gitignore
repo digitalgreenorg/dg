@@ -317,3 +317,4 @@
 *.prefs
 .DS_Store
 /apache/*
+.idea/
