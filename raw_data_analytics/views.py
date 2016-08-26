@@ -218,15 +218,19 @@ def execute(request):
 
             elif (x == "animator"):
                 list_combo = 'listAnimator'
+                break;
 
             elif (x == "persongroup"):
                 list_combo = 'listGroup'
+                break;
 
             elif (x == "person"):
                 list_combo = 'listPerson'
+                break;
 
             elif (x == "video"):
                 list_combo = videolist
+                break;
 
     ##############################Date#################################
 
