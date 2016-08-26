@@ -617,7 +617,7 @@ function() {
         'labels_français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
             del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", is_dg_video: "Est DigitalGreen Video ?", listened_to_prc: "Mettez ✓ si le député a écouté un PRC sur le même sujet"},
-        'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
+        'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "Mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person_attended: "Person", is_dg_video: "Is this a DigitalGreen Screening?", listened_to_prc: "Put ✓ if the member has listened to a PRC on the same topic"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
@@ -1139,6 +1139,7 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         languages: ['हिन्दी', 'English', 'Français'],
+        tweak_fields_based_on_partner: ['umed', 'moa-dg ethiopia'],
         meta_default: 'English',
         meta_English: {stop: "Stop",close:"close", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
                        delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",

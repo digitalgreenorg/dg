@@ -21,9 +21,4 @@ class Migration(migrations.Migration):
             name='size_land',
             field=models.DecimalField(null=True, max_digits=10, decimal_places=2, blank=True),
         ),
-        migrations.AddField(
-            model_name='screening',
-            name='listened_to_prc',
-            field=models.BooleanField(default=False, db_index=True, verbose_name=b'Listened to PRC'),
-        ),
     ]

@@ -38,7 +38,7 @@ def record_full_download_time(request):
     return HttpResponse("1")
        
 def reset_database_check(request):
-    if not(request.user):
+    if not request.user.is_authenticated():
         return HttpResponse("0")
     cocouser = CocoUser.objects.get(user = request.user)
     if not(cocouser and cocouser.time_modified):

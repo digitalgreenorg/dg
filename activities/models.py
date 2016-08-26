@@ -1,4 +1,6 @@
 import json, datetime
+from decimal import Decimal
+from django.core.validators import MinValueValidator 
 import calendar
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
@@ -124,7 +126,9 @@ class PersonAdoptPractice(CocoModel):
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     listened_to_prc = models.BooleanField(verbose_name="Listened to PRC", db_index=True, default=False)
-    size_land = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    size_land = models.DecimalField(max_digits=10, decimal_places=2,
+                                    null=True, blank=True,
+                                    validators=[MinValueValidator(Decimal('0.01'))])
 
 
     def __unicode__(self):

@@ -19,7 +19,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
     
-    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -644,7 +644,7 @@
                             <th class="notbold">
                                 <%= person %>
                             </th>
-                            <th>
+                            <th id="label_scr_listened_to_prc" class="notbold">
                               <%= listened_to_prc %>
                             </th>
                         </tr>
@@ -696,7 +696,7 @@
                 </div>
             </div>
         </td>
-        <td>
+        <td id="td_listened_to_prc<%=index%>">
           <div class="form-group">
             <div class="controls">
               <input type="checkbox" id="id_listened_to_prc<%=index%>" name="listened_to_prc">
@@ -746,13 +746,13 @@
                     </div>
                 </div>
                 <div class="form-group" id="size_land"> 
-                    <label class="control-label col-sm-2"><%=size_land%></label>
+                    <label class="control-label col-sm-2 notbold"><%=size_land%></label>
                     <div class="col-sm-4">
-                        <input class="form-control" id="id_size_land" type="text" placeholder="Size of land on which the practice adopted " name="size_land">  
+                        <input class="form-control" id="id_size_land" type="number" min="0" placeholder="Size of land on which the practice adopted " name="size_land">  
                     </div>
                 </div>
                 <div class="form-group" id="listened_to_prc"> 
-                    <label class="control-label col-sm-2"><%=listened_to_prc%></label>
+                    <label class="control-label col-sm-2 notbold"><%=listened_to_prc%></label>
                     <div class="col-sm-4">
                         <input type="checkbox" id="listened_to_prc" name="listened_to_prc"> 
                     </div>
@@ -821,10 +821,10 @@
                         <th>
                             <%=date_of_verification%>
                         </th>
-                        <th id="label_size_land">
+                        <th id="label_size_land" class="notbold">
                           <%=size_land%>
                         </th>
-                        <th id="label_listened_to_prc">
+                        <th id="label_listened_to_prc" class="notbold">
                           <%=listened_to_prc%>
                         </th>
                     </tr>
@@ -897,7 +897,7 @@
         <td>
             <div class="form-group" id="size_land<%=index%>">
                 <div class="controls">
-                    <input type="text" class="input-sm form-control" id="size_land<%=index%>" name="size_land<%=index%>" required>
+                    <input type="text" class="input-sm form-control" id="size_land<%=index%>" name="size_land<%=index%>">
                 </div>
             </div>
         </td>

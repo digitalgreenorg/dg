@@ -125,7 +125,8 @@ define([
           //     });
         } else {
             // internet not accessible - only try logging into offline backend
-            OfflineAuthBackend.login(username, password, language)
+            var partner_name = User.get('partner_name')
+            OfflineAuthBackend.login(username, password, language, partner_name)
                 .done(function() {
                     console.log("Login Successful");
                     post_login_success();

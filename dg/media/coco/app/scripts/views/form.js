@@ -236,13 +236,15 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+
             var partner_name = User.get('partner_name');
-            if (partner_name != "umed"){
+            // if (partner_name != "umed"){
+            if (partner_name != all_configs.misc.tweak_fields_based_on_partner[0]){
                 $f_el.find("#is_dg_video").addClass('hidden');
                 // $f_el.find("#size_land").addClass('hidden');
                 // $f_el.find("#listened_to_prc").addClass('hidden');
             }
-            if (partner_name != "moa-dg ethiopia"){
+            if (partner_name != all_configs.misc.tweak_fields_based_on_partner[1]){
                 $f_el.find("#label_size_land").addClass('hidden');
                 $f_el.find("#label_listened_to_prc").addClass('hidden');
                 $f_el.find("#size_land").addClass('hidden');
@@ -471,7 +473,7 @@ define([
         initiate_form_widgets: function() {
             
             var partner_name = User.get('partner_name');
-            if (partner_name != "moa-dg ethiopia"){
+            if (partner_name != all_configs.misc.tweak_fields_based_on_partner[1]){
                 $('#bulk tr').each(function(idx){
                     var ltp = "listened_to_prc"+ idx
                     var s_l = "size_land" + idx
@@ -684,7 +686,7 @@ define([
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
-
+            var partner_name = User.get('partner_name')
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
@@ -714,22 +716,47 @@ define([
                             return;
                         var t_json = model.toJSON();
                         t_json["index"] = index;
+                        t_json['listened_to_prc'] = f_json.listened_to_prc
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
                         $f_el.append(expanded_template(t_json));
+                        // manipulate after the template td has rendered
+                        var ltp = "id_listened_to_prc"+ index
+                        if (partner_name == all_configs.misc.tweak_fields_based_on_partner[1]){
+                            // var s_l = "id_size_land" + idx
+                            // $(this).find("#"+ s_l).addClass("hidden");
+                            if (t_json.listened_to_prc == true){
+                                $f_el.find("#"+ ltp).attr("checked", true);    
+                            }else{
+                                $f_el.find("#"+ ltp).removeAttr("checked")
+                            }
+                        }else{
+                            $f_el.find("#"+ ltp).addClass("hidden"); 
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 } else {
+                    // add case simply check the partner name and display accordingly
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
                         t_json["index"] = index;
                         $f_el.append(expanded_template(t_json));
+                        var ltp = "#td_listened_to_prc"+ index
+                        if (partner_name != all_configs.misc.tweak_fields_based_on_partner[1]){
+                            // hide the column
+                            $f_el.find(ltp).addClass("hidden");
+                        }
                     });
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+                // hide the coloumn label when it has been rendered
+                if (partner_name != all_configs.misc.tweak_fields_based_on_partner[1]){
+                    // hide the column
+                    $("#label_scr_listened_to_prc").addClass("hidden");
+                }
             } else {
                 console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);

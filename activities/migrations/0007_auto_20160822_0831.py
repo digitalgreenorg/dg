@@ -11,10 +11,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='screening',
-            name='listened_to_prc',
-        ),
         migrations.AddField(
             model_name='personmeetingattendance',
             name='listened_to_prc',
