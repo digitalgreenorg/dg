@@ -2905,8 +2905,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
-        "tableTools": {
-            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+        "oTableTools": {
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
@@ -2937,8 +2937,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
-        "tableTools": {
-            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+        "oTableTools": {
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
@@ -2968,8 +2968,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
-        "tableTools": {
-            "sSwfPath": "/media/app_dashboards/js/swf/copy_csv_xls_pdf.swf",
+        "oTableTools": {
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
