@@ -3,32 +3,64 @@
  */
 // JavaScript Document
 
-
+// To remove Conflict
 var j$ = jQuery.noConflict();
-var pflag = 0;
-var diflag = 0;
 var chosendeos = [];
 var bflag = 0;
-var tflag = 0;
+
 
 
 j$(document).ready(function() {
 
   var stdate = document.getElementById('sdate');
+  var current_date = new Date();
+  var current_month = current_date.getMonth() + 2;
+  var current_year = current_date.getFullYear().toString();
+
+  block_month_list = [];
+  for (var month = current_month; month <= 12; month++) {
+    block_month_list.push(month);
+  }
+
+  console.log(block_month_list);
+
   j$(stdate).monthpicker();
+  j$(stdate).monthpicker('disableMonths', block_month_list);
+
+  j$(stdate).monthpicker().bind('monthpicker-change-year', function (e, year) {
+      console.log(typeof(current_year) + ' ' + typeof(year));
+      if(year == current_year) {
+        j$(stdate).monthpicker('disableMonths', block_month_list);
+      } else if(year > current_year) {
+          j$(stdate).monthpicker('disableMonths', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // (re)enables all
+      } else {
+        j$(stdate).monthpicker('disableMonths', []); // (re)enables all
+      }
+
+  });
+
   var etdate = document.getElementById('edate');
   j$(etdate).monthpicker();
+  j$(etdate).monthpicker('disableMonths', block_month_list);
+
+  j$(etdate).monthpicker().bind('monthpicker-change-year', function (e, year) {
+      console.log(typeof(current_year) + ' ' + typeof(year));
+      if(year == current_year) {
+        j$(etdate).monthpicker('disableMonths', block_month_list);
+      }else if(year > current_year) {
+          j$(stdate).monthpicker('disableMonths', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // (re)enables all
+      }  else {
+        j$(etdate).monthpicker('disableMonths', []); // (re)enables all
+      }
+  });
   var id = 11;
   var name = 'BRLPS';
   setpartnerlistdiv(id, name);
 });
 
 // function setpartnerlistdiv(text)
-function setpartnerlistdiv(id, name)
-    {
-      // var partner_id = text.id;
+function setpartnerlistdiv(id, name) {
       var partner_id = id;
-      // var partner_name = $(text).html();//text.innerText.trim();
       var partner_name = name;
       
       
@@ -36,34 +68,8 @@ function setpartnerlistdiv(id, name)
       j$("select#partnerlist").append(listitems);
       j$("select#partnerlist").show();
       j$('#partnerlist').chosen();
-      // j$("div#partnername").html(partner_name);
-      // j$("div#districtname").html("Choose District");
-      // document.getElementById('districtlist').classList.remove('nodisplay');
-      // document.getElementById('districtlist').classList.add('blockdisplay');
-      diflag = 1;
       districtfilter(partner_id);
     }
-
-// function districtsetter()
-//     {
-//       if (diflag == 0)
-//       {
-//           // document.getElementById('districtlist').classList.remove('nodisplay');
-//           // document.getElementById('districtlist').classList.add('blockdisplay');
-//           document.getElementById('partnerlist').classList.remove('blockdisplay');
-//           document.getElementById('partnerlist').classList.add('nodisplay');
-//           document.getElementById('blocklist').classList.remove('blockdisplay');
-//           document.getElementById('blocklist').classList.add('nodisplay');
-//           diflag = 1;
-//       }
-
-//       else if (diflag == 1)
-//       {
-//           // document.getElementById('districtlist').classList.remove('blockdisplay');
-//           // document.getElementById('districtlist').classList.add('nodisplay');
-//           diflag = 0;
-//       }
-//     }
 
 function districtfilter(partner_id)
     {
@@ -100,36 +106,11 @@ function setdistrictlistdiv(partner_id) {
       chosendeos = [];
       var district_name = $(text).html();//text.innerText.trim();
       var district_id = text.attr('id');
-      // j$("div#districtname").html(district_name);
-      // j$("div#blockname").html("Choose Block");
-      // document.getElementById('blocklist').classList.remove('nodisplay');
-      // document.getElementById('blocklist').classList.add('blockdisplay');
       if(district_id != -1) {
         blockfilter(district_id);
       }
       
 }
-
-/* MRP payment code starts here */
-
-// function blocksetter() {
-//     if (bflag == 0) {
-//         document.getElementById('blocklist').classList.remove('nodisplay');
-//         document.getElementById('blocklist').classList.add('blockdisplay');
-//         // document.getElementById('districtlist').classList.remove('blockdisplay');
-//         // document.getElementById('districtlist').classList.add('nodisplay');
-//         document.getElementById('partnerlist').classList.remove('blockdisplay');
-//         document.getElementById('partnerlist').classList.add('nodisplay');
-//         bflag = 1;
-//     }
-//     else if (bflag == 1) {
-
-//         document.getElementById('blocklist').classList.remove('blockdisplay');
-//         document.getElementById('blocklist').classList.add('nodisplay');
-//         bflag = 0;
-
-//     }
-// }
 
 function blockfilter(district_id) {
     j$.ajax(
@@ -141,7 +122,6 @@ function blockfilter(district_id) {
             url: window.location.origin + "/analytics/mrptool/getblock",
 
             success: function (data) {
-                // j$("select#block_test").empty();
                 if(bflag == 0) {
                   j$("select#blocklist").show();
                   j$('#blocklist').chosen();
@@ -164,14 +144,6 @@ function blockfilter(district_id) {
         });
 }
 
-// function setblocklistdiv(district_id) {
-//     // var block_name = $(text).html();//text.innerText.trim();
-
-//     j$("div#blockname").html(block_name);
-//     // document.getElementById('blocklist').classList.remove('nodisplay');
-//     // document.getElementById('blocklist').classList.add('blockdisplay');
-//     bflag = 1;
-// }
 
 function mrp_payment_goclicked() {
 
@@ -184,83 +156,87 @@ function mrp_payment_goclicked() {
     var district_name = $("#districtlist option:selected").text();
     var block = document.getElementById("blockname");
     var block_name = $("#blocklist option:selected").text();
-
-    if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" || block_name == "-------") {
+    if ((sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" || block_name == "-------")) {
       alert("Information Incomplete! Please fill missing entries");
-    } else {
+    }else {
+      if(sdate > edate) {
+        alert("Choose Correct date range");
+      } else {
+        j$(document).ready(function () {
+            j$.blockUI({ css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#ffffff'
+            } });
+        });
+        
+        j$.ajax({
 
-      j$(document).ready(function () {
-          j$.blockUI({ css: {
-              border: 'none',
-              padding: '15px',
-              backgroundColor: '#000',
-              '-webkit-border-radius': '10px',
-              '-moz-border-radius': '10px',
-              opacity: .5,
-              color: '#ffffff'
-          } });
-      });
-      
-      j$.ajax({
+            type: 'GET',
+            data: {
+                'start_date' : sdate,
+                'end_date' : edate,
+                'partner_name' : partner_name,
+                'district_name' : district_name,
+                'block_name': block_name
+            },
 
-          type: 'GET',
-          data: {
-              'start_date' : sdate,
-              'end_date' : edate,
-              'partner_name' : partner_name,
-              'district_name' : district_name,
-              'block_name': block_name
-          },
+            url: window.location.origin + "/analytics/mrptool/report",
 
-          url: window.location.origin + "/analytics/mrptool/report",
+            success: function (data) {
+                j$.unblockUI();
+                var listitems = data;
+                if(tflag == 1) {
+                  j$('#example').dataTable().fnDestroy();
+                  j$('#example').empty();
+                }
+                j$("#example").dataTable({
 
-          success: function (data) {
-              j$.unblockUI();
-              var listitems = data;
-              if(tflag == 1) {
-                j$('#example').dataTable().fnDestroy();
-                j$('#example').empty();
-              }
-              j$("#example").dataTable({
+                    "sDom": 'T<"clear">lfrtip',
+                    "bDeferRender": true,
+                    "bAutoWidth": false,
+                    "columnDefs": [
+                      { "title": "My column title", "targets": 0 }
+                    ],
+                    "aoColumns": [
+                        {sTitle: "S. No."},
+                        {sTitle: "Name"},
+                        {sTitle: "Total Screening"},
+                        {sTitle: "Successful Screening"},
+                        {sTitle: "Screening amount"},
+                        {sTitle: "Adoptions"},
+                        {sTitle: "Adoptions Amount"},
+                        {sTitle: "Total Amount"}
+                    ],
 
-                  "sDom": 'T<"clear">lfrtip',
-                  "bDeferRender": true,
-                  "bAutoWidth": false,
-                  "aoColumns": [
-                      {sTitle: "S.no"},
-                      {sTitle: "Name"},
-                      {sTitle: "Total Screening"},
-                      {sTitle: "Successful Screening"},
-                      {sTitle: "Screening amount"},
-                      {sTitle: "Adoptions"},
-                      {sTitle: "Adoptions Amount"},
-                      {sTitle: "Total Amount"}
-                  ],
+                    "aaData": data['output'] ,      //aaData takes array_table_values and push data in the table.
+            "oTableTools":{
 
-                  "aaData": data['output'] ,      //aaData takes array_table_values and push data in the table.
-          "oTableTools":{
-
-              "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
-        "aButtons": [
-                               {
-                                   "sExtends": "copy",
-                                   "sButtonText": "Copy to Clipboard"
-                               },
-                               {
-                                   "sExtends": "xls",
-                                   "sButtonText": "Download in Excel"
-                               }
-                           ]
-                      }
-              })
-              tflag = 1;
-           },
-          error: function (data) {
-              j$.unblockUI();
-              alert("Sorry there was an error!");
-          }
-      });
+                "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+          "aButtons": [
+                                 {
+                                     "sExtends": "copy",
+                                     "sButtonText": "Copy to Clipboard"
+                                 },
+                                 {
+                                     "sExtends": "xls",
+                                      "sTitle": 'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
+                                     "sButtonText": "Download in Excel"
+                                 }
+                             ]
+                        }
+                });
+                tflag = 1;
+             },
+            error: function (data) {
+                j$.unblockUI();
+                alert("Sorry there was an error!");
+            }
+        });
+      }
     }
 }
-
-/* MRP Payment code ends here */
