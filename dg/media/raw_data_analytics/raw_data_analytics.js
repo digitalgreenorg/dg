@@ -94,6 +94,7 @@ window.onload = date;
 //###############################Populate the dropdowns for filter######################################
 
 function populate(src, prevValue) {
+    if (!(jQuery("#" + src + "Id" + " option ").length != 0))
     for (var values in prevValue) {
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
             .done(function (data) {
@@ -106,6 +107,7 @@ function populate(src, prevValue) {
     }
 }
 function populate_video(src,prevValue){
+  if (!(jQuery("#" + src + "Id" + " option ").length != 0))  
   for (var values in prevValue) {
       $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
           .done(function (data) {
