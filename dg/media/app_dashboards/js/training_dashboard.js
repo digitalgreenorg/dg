@@ -20,7 +20,7 @@ function initialize() {
 }
 
 
-$('#link2').on('click', function () {
+$('#link3').on('click', function () {
     setInterval(function () {
         $('#question_mediator_data').highcharts().reflow();
     }, 5);
@@ -36,7 +36,7 @@ $('#link1').on('click', function () {
     }, 10);
 });
 
-$('#link3').on('click', function () {
+$('#link2').on('click', function () {
     setInterval(function () {
         $('#trainer_training_data').highcharts().reflow();
     }, 10);
@@ -63,7 +63,7 @@ $("#trainers_table").find("tr").each(function(index) {
 
     var if_td_has = false; //boolean value to track if td had the entered key
     $(this).find('td').each(function () {
-        if_td_has = if_td_has || $(this).text().indexOf(value) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+        if_td_has = if_td_has || $(this).text().toLowerCase().indexOf(value.toLowerCase()) !== -1; //Check if td's text matches key and then use OR to check it for all td's
     });
 
     $(this).toggle(if_td_has);
@@ -85,7 +85,7 @@ $("#states_table").find("tr").each(function(index) {
 
     var if_td_has = false; //boolean value to track if td had the entered key
     $(this).find('td').each(function () {
-        if_td_has = if_td_has || $(this).text().indexOf(value) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+        if_td_has = if_td_has || $(this).text().toLowerCase().indexOf(value.toLowerCase()) !== -1; //Check if td's text matches key and then use OR to check it for all td's
     });
 
     $(this).toggle(if_td_has);
