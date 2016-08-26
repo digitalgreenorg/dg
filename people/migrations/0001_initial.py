@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 ('gender', models.CharField(max_length=1, choices=[(b'M', b'Male'), (b'F', b'Female')])),
                 ('phone_no', models.CharField(max_length=100, blank=True)),
                 ('total_adoptions', models.PositiveIntegerField(default=0, editable=False, blank=True)),
+                ('role', models.IntegerField(default = 0, choices=[(1, b'MRP'), (0, b'Animator')])),
             ],
             options={
             },
@@ -264,6 +265,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='animator',
-            unique_together=set([('name', 'gender', 'partner', 'district')]),
+            unique_together=set([('name', 'gender', 'partner', 'district','role')]),
         ),
     ]

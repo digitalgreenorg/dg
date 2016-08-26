@@ -15,7 +15,7 @@ from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-from videos.models import  NonNegotiable
+from videos.models import  NonNegotiable,Video
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -98,7 +98,7 @@ class AnimatorAdmin(admin.ModelAdmin):
     inlines = [AnimatorAssignedVillages]
     list_display = ('name', 'partner', 'district', 'role',)
     search_fields = ['name', 'partner__partner_name', 'role',]
-
+    
 
 class PersonGroupInline(admin.TabularInline):
     model = PersonGroup
@@ -221,4 +221,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
-
