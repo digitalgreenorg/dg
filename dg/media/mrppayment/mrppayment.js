@@ -132,7 +132,6 @@ function setdistrictlistdiv(partner_id) {
 // }
 
 function blockfilter(district_id) {
-    console.log(district_id);
     j$.ajax(
         {
             type: 'GET',
@@ -143,7 +142,6 @@ function blockfilter(district_id) {
 
             success: function (data) {
                 // j$("select#block_test").empty();
-                // console.log(data);
                 if(bflag == 0) {
                   j$("select#blocklist").show();
                   j$('#blocklist').chosen();
@@ -186,7 +184,7 @@ function mrp_payment_goclicked() {
     var district_name = $("#districtlist option:selected").text();
     var block = document.getElementById("blockname");
     var block_name = $("#blocklist option:selected").text();
-    console.log(block_name);
+
     if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" || block_name == "-------") {
       alert("Information Incomplete! Please fill missing entries");
     } else {
