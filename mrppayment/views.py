@@ -27,8 +27,6 @@ def districtsetter(request):
 
 def blocksetter(request):
     selecteddistrict = request.GET.get('district', None)
-    print "******************district********************"
-    print selecteddistrict
     blocks = Block.objects.filter(district__id=selecteddistrict).values('block_name', 'id')
     return HttpResponse(json.dumps(list(blocks)), content_type="application/json")
 
