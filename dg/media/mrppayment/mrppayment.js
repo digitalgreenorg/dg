@@ -7,8 +7,7 @@
 var j$ = jQuery.noConflict();
 var chosendeos = [];
 var bflag = 0;
-
-
+var tflag = 0;
 
 j$(document).ready(function() {
 
@@ -17,20 +16,19 @@ j$(document).ready(function() {
   var current_month = current_date.getMonth() + 2;
   var current_year = current_date.getFullYear().toString();
 
-  block_month_list = [];
+  var from_block_month_list = [];
+  var to_block_month_list = [];
   for (var month = current_month; month <= 12; month++) {
-    block_month_list.push(month);
+    from_block_month_list.push(month);
+    to_block_month_list.push(month);
   }
 
-  console.log(block_month_list);
-
   j$(stdate).monthpicker();
-  j$(stdate).monthpicker('disableMonths', block_month_list);
+  j$(stdate).monthpicker('disableMonths', from_block_month_list);
 
   j$(stdate).monthpicker().bind('monthpicker-change-year', function (e, year) {
-      console.log(typeof(current_year) + ' ' + typeof(year));
       if(year == current_year) {
-        j$(stdate).monthpicker('disableMonths', block_month_list);
+        j$(stdate).monthpicker('disableMonths', from_block_month_list);
       } else if(year > current_year) {
           j$(stdate).monthpicker('disableMonths', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // (re)enables all
       } else {
@@ -41,18 +39,18 @@ j$(document).ready(function() {
 
   var etdate = document.getElementById('edate');
   j$(etdate).monthpicker();
-  j$(etdate).monthpicker('disableMonths', block_month_list);
+  j$(etdate).monthpicker('disableMonths', to_block_month_list);
 
   j$(etdate).monthpicker().bind('monthpicker-change-year', function (e, year) {
-      console.log(typeof(current_year) + ' ' + typeof(year));
       if(year == current_year) {
-        j$(etdate).monthpicker('disableMonths', block_month_list);
+        j$(etdate).monthpicker('disableMonths', to_block_month_list);
       }else if(year > current_year) {
-          j$(stdate).monthpicker('disableMonths', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // (re)enables all
+          j$(etdate).monthpicker('disableMonths', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // (re)enables all
       }  else {
         j$(etdate).monthpicker('disableMonths', []); // (re)enables all
       }
   });
+
   var id = 11;
   var name = 'BRLPS';
   setpartnerlistdiv(id, name);
@@ -62,7 +60,6 @@ j$(document).ready(function() {
 function setpartnerlistdiv(id, name) {
       var partner_id = id;
       var partner_name = name;
-      
       
       var listitems = '<option value = ' + partner_id + ' >' + name + '</option>';
       j$("select#partnerlist").append(listitems);
@@ -88,7 +85,6 @@ function districtfilter(partner_id)
 
             for (var i = 0; i < data.length; i++)
             {
-
               listitems += '<option id = "' + data[i].village__block__district__id +  '"value = ' + partner_id + '>' + data[i].village__block__district__district_name + '</option>';
             }
             j$("select#districtlist").append(listitems);
@@ -100,17 +96,14 @@ function districtfilter(partner_id)
       });
     }
 
-function setdistrictlistdiv(partner_id) {
-
-      var text = $('#districtlist option:selected');
-      chosendeos = [];
-      var district_name = $(text).html();//text.innerText.trim();
+function setdistrictlistdiv(partner_id) 
+    {
+      var text = j$('#districtlist option:selected');
       var district_id = text.attr('id');
       if(district_id != -1) {
         blockfilter(district_id);
-      }
-      
-}
+      } 
+    }
 
 function blockfilter(district_id) {
     j$.ajax(
@@ -136,7 +129,6 @@ function blockfilter(district_id) {
                 j$('#blocklist').val('').find('option').remove().end();
                 j$("select#blocklist").append(listitems);
                 j$('#blocklist').trigger('chosen:updated');
-
             },
             error: function (data) {
                 alert("Sorry there was an error!");
@@ -145,21 +137,22 @@ function blockfilter(district_id) {
 }
 
 
-function mrp_payment_goclicked() {
-
-
+function mrp_payment_goclicked() 
+  {
     var sdate = document.getElementById("sdate").value;
     var edate = document.getElementById("edate").value;
     var partner = document.getElementById("partnername");
     var partner_name = j$("#partnerlist option:selected").text();
     var district = document.getElementById("districtname");
-    var district_name = $("#districtlist option:selected").text();
+    var district_name = j$("#districtlist option:selected").text();
     var block = document.getElementById("blockname");
-    var block_name = $("#blocklist option:selected").text();
+    var block_name = j$("#blocklist option:selected").text();
     if ((sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" || block_name == "-------")) {
       alert("Information Incomplete! Please fill missing entries");
     }else {
-      if(sdate > edate) {
+      var sdateArr = sdate.split("/");
+      var edateArr = edate.split("/");
+      if((sdateArr[1] > edateArr[1]) || (sdateArr[1] == edateArr[1] && sdateArr[0] > edateArr[0])) {
         alert("Choose Correct date range");
       } else {
         j$(document).ready(function () {
