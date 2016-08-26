@@ -141,7 +141,7 @@ function set_eventlistener() {
         selectYears: 15,
         format: "yyyy-mm-dd",
         onClose: function() {
-            $('.datepicker').blur();
+            $(document.activeElement).blur()
         },
         max: -1,
         onSet: function(element) {
@@ -155,7 +155,7 @@ function set_eventlistener() {
         selectYears: 15,
         format: "yyyy-mm-dd",
         onClose: function() {
-            $('.datepicker').blur();
+            $(document.activeElement).blur()
         },
         max: true,
         onSet: function(element) {
