@@ -40,7 +40,7 @@
 		<!-- </nav> -->
 
 		<!-- <nav> -->
-		<div class="nav-wrapper  grey lighten-2" id="filters_nav">
+		<div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="hide-on-med-and-down">
 				<ul class="left">
@@ -182,42 +182,61 @@
 		<div class="row">
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters
+						<div class="help-tip">
+			<p>Group of villages in close proximity served by one Loop aggregator.</p>
+		</div></span>
 					<!-- <h5 id="cluster_card"></h5> -->
 					<span id="cluster_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers
+						<div class="help-tip">
+			<p> Farmers who have used Loop service at least once.</p>
+		</div></span>
 					<!-- <h5 id="total_farmers_card"></h5> -->
 					<span id="total_farmers_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)
+						<div class="help-tip">
+			<p>Total weight of farmer produce in kg collected and sold at the market.​</p>
+		</div></span>
 					<!-- <h5 id="total_volume_card"></h5> -->
 					<span id="total_volume_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Revenue(₹)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;Payments(₹)
+						<div class="help-tip">
+			<p>Total amount of payments made to farmers for their produce.</p>
+		</div></span>
 					<!-- <h5 id="revenue_card"></h5> -->
 					<span id="revenue_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost/Kg</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg
+						<div class="help-tip">
+			<p> Total CPK of vegetables sold = Transport CPK + Aggregator CPK</p>
+		</div>
+					</span>
 					<!-- <h5 id="total_expenditure_card"></h5> -->
 					<span id="total_expenditure_bullet"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;Sustainability(%)</span>
+					<span class="card-title">&nbsp;&nbsp;Sustainability(%)
+						<div class="help-tip">
+			<p>Operational cost covered by local players = Sustainability Per Kg (SPK) / CPK where SPK = Trader discount per kg on commision + Farmers transport contribution per kg</p>
+		</div></span>
 					<!-- <h5 id="sustainability_card"></h5> -->
 					<span id="sustainability_bullet"></span>
 				</div>
@@ -229,11 +248,11 @@
 	</div>
 
 	<div class="row card white darken-1">
-		<div id="recent_main" class="row" style="height:5px">
+		<div id="recent_main" class="row" style="height:44px;margin-bottom:0px;">
 			<div class="col s10">
 				<h5>Recent</h5>
 			</div>
-			<div class="col s2">
+			<div class="col s2" style="width:15%;height: 40px;">
 				<select id="recent_cards_data_frequency" class="initialized">
 					<option value="7">7</option>
 					<option value="15" selected>15</option>
@@ -246,7 +265,7 @@
 		<div class="row">
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">#Clusters</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
 					<h5 id="recent_cluster_card"></h5>
 					<span id="recent_cluster_sparkline"></span>
 				</div>
@@ -254,28 +273,28 @@
 
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">#Farmers</span>
-					<h5 id="recent_active_farmers_card"></h5>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
+					<h5 id="recent_active_farmers_card">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
 					<span id="recent_active_farmers_sparkline"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Volume(Kg)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
 					<h5 id="recent_volume_card"></h5>
 					<span id="recent_volume_sparkline"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Revenue(₹)</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
 					<h5 id="recent_revenue_card"></h5>
 					<span id="recent_revenue_sparkline"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Cost per Kg</span>
+					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg</span>
 					<h5 id="cpk_card"></h5>
 					<span id="cpk_sparkline"></span>
 				</div>
@@ -283,7 +302,7 @@
 
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
-					<span class="card-title">Sustainability(%)</span>
+					<span class="card-title">&nbsp;&nbsp;Sustainability(%)</span>
 					<h5 id="recent_sustainability_card"></h5>
 					<span id="recent_sustainability_sparkline"></span>
 				</div>
