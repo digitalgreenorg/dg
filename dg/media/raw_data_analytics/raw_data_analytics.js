@@ -138,14 +138,13 @@ function validation_check() {
     var checked_partitions_restrict = [animator, group, people, video];
     var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no]
     var count_partition_restrict = 0;
-    count_partition = 0;
+    var count_partition = 0;
     var count_values = 0;
     var i;
 
     for (i = 0; i < checked_partitions.length; i++) {
 
         if (checked_partitions[i].checked) {
-            console.log(checked_partitions[i]);
             count_partition++;
         }
     }
