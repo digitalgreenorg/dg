@@ -210,6 +210,16 @@ function validation_check() {
             event.preventDefault();
         }
     }
+    newfrom_date = new Date($('#from_date').val())
+    newto_date  =new Date($('#to_date').val());
+    span =new Date(newto_date-newfrom_date)
+    days = span/1000/60/60/24;
+    if(!(days>0)){
+        alert("'From Date' cannot be greater than 'To Date'");
+            error = 1;
+            event.preventDefault();
+    }
+    
 }
 //#######################################onload-date################################################
 function date() {
@@ -217,4 +227,5 @@ function date() {
     document.getElementById('to_date').valueAsDate = date;
     date.setMonth(date.getMonth() - 1);
     document.getElementById('from_date').valueAsDate = date;
+   
 }
