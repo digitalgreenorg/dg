@@ -182,3 +182,41 @@ def state_wise_data(request):
     data_dict = {'state_list': list(state_list), 'mediator_list': list(mediator_list)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
+
+
+def month_wise_data(request):
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    assessment_ids = request.GET.getlist('assessment_ids[]')
+    trainer_ids = request.GET.getlist('trainer_ids[]')
+    state_ids = request.GET.getlist('state_ids[]')
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["training__date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["training__date__lte"] = end_date
+    filter_args["training__assessment__id__in"] = assessment_ids
+    filter_args["training__trainer__id__in"] = trainer_ids
+    filter_args["participant__district__state__id__in"] = state_ids
+    filter_args["score__in"] = [1, 0]
+    month_list = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec']
+    #participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
+    #num_farmers = PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values('screening__animator__district__state__state_name').order_by('screening__animator__district__state__state_name').annotate(Count('person', distinct=True))
+    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
+                                   db=dg.settings.DATABASES['default']['NAME'],
+                                    charset = 'utf8',
+                                     use_unicode = True)
+    query = '''SELECT MONTH(tt.date) as \'Month\',count(distinct tt.id) \'Number of Training\' FROM training_training tt WHERE tt.date > 20160101 AND tt.date < 20161231 GROUP BY  MONTH(tt.date) order by MONTH(tt.date)'''
+    print query 
+    cur = mysql_cn.cursor()
+    cur.execute(query)
+    result = cur.fetchall()
+    month_data_list = []
+    for row in result:
+        month_data_list.append(int(row[1]))
+    mysql_cn.close()
+    print month_data_list
+    data_dict = {'trainings':'Number of Trainings','data_list':month_data_list}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)    

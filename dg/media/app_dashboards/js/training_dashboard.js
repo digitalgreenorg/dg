@@ -19,6 +19,11 @@ function initialize() {
 
 }
 
+$('#link4').on('click', function () {
+    setInterval(function () {
+        $('#month_training_data').highcharts().reflow();
+    }, 5);
+});
 
 $('#link3').on('click', function () {
     setInterval(function () {
@@ -258,6 +263,7 @@ function get_data() {
         gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        getmonthdata(start_date,end_date,assessment_ids,trainer_ids,state_ids);
         get_bottom_boxes();
     }
 }
@@ -375,6 +381,24 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
             plot_statewise_data(data_json.state_list, data_json.mediator_list);
         });
 }
+
+function getmonthdata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+    show_progress_bar();
+    $.get("/training/month_wise_data/", {
+            'start_date': start_date,
+            'end_date': end_date,
+            'assessment_ids[]': assessment_ids,
+            'trainer_ids[]': trainer_ids,
+            'state_ids[]': state_ids
+        })
+        .done(function(data) {
+            data_json = JSON.parse(data);
+            hide_progress_bar();
+            plot_monthwise_data(data_json.trainings, data_json.data_list);
+        });
+}
+
+
 
 /* Table Generating UI Functions - Fill data in table */
 
@@ -725,6 +749,65 @@ function plot_statewise_data(state_list, mediator_list) {
         plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "", "", "%");
         plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "No. of total trainings");
     }
+}
+
+
+
+function plot_monthwise_data(series_name, series_data_list) {
+
+        $('#month_training_data').highcharts({
+        chart: {
+            type: 'column'
+        },
+        credits:{enabled :false},
+        title: {
+            text: 'No. Of Trainings Per Month'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of trainings'
+            }
+        },
+        tooltip: {
+            shared: true,
+        },
+
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0,
+                dataLabels: {
+                enabled: true,
+                format:'{point.y}'
+            }
+            }
+        },
+        series: [{
+            name: series_name,
+            data: series_data_list
+       
+            }]
+    });
+
+  
 }
 
 /* plot highcharts data */
