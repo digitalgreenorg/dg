@@ -182,6 +182,9 @@ def total_static_data(request):
     total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").values('date', 'user_created__id', 'mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
+
+    gaddidar_share = GaddidarCommission.objects.all();
+
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_cluster_reached': total_cluster_reached, 'total_volume_for_transport': total_volume_for_transport, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)

@@ -7,7 +7,7 @@ from loop_data_log import save_log, delete_log
 
 RoleChoice = ((1, "Admin"), (2, "Aggregator"))
 ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
-
+DISCOUNT_CRITERIA = ((1, "Volume"), (2, "Amount"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -164,6 +164,8 @@ class Gaddidar(LoopModel):
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
+    discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
+
     def __unicode__(self):
         return self.gaddidar_name
 
@@ -193,10 +195,8 @@ class Farmer(LoopModel):
     class Meta:
         unique_together = ("phone", "name")
 
-
 post_save.connect(save_log, sender=Farmer)
 pre_delete.connect(delete_log, sender=Farmer)
-
 
 class Crop(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -212,10 +212,8 @@ class Crop(LoopModel):
     class Meta:
         unique_together = ("crop_name",)
 
-
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
-
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -233,7 +231,6 @@ class Transporter(LoopModel):
 post_save.connect(save_log, sender=Transporter)
 pre_delete.connect(delete_log, sender=Transporter)
 
-
 class Vehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
@@ -245,10 +242,8 @@ class Vehicle(LoopModel):
     class Meta:
         unique_together = ("vehicle_name",)
 
-
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(delete_log, sender=Vehicle)
-
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -263,10 +258,8 @@ class TransportationVehicle(LoopModel):
     class Meta:
         unique_together = ("transporter", "vehicle", "vehicle_number",)
 
-
 post_save.connect(save_log, sender=TransportationVehicle)
 pre_delete.connect(delete_log, sender=TransportationVehicle)
-
 
 class DayTransportation(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -318,6 +311,18 @@ class CombinedTransaction(LoopModel):
 post_save.connect(save_log, sender=CombinedTransaction)
 pre_delete.connect(delete_log, sender=CombinedTransaction)
 
+class GaddidarCommission(LoopModel):
+    gaddidar = models.ForeignKey(Gaddidar)
+    start_date = models.DateField(auto_now=False)
+    discount_percent = models.FloatField()
+
+
+class GaddidarShareOutliers(LoopModel):
+    gaddidar = models.ForeignKey(Gaddidar)
+    aggregator = models.ForeignKey(LoopUser)
+    date = models.DateField(auto_now=False)
+    amount = models.FloatField()
+
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
@@ -329,3 +334,4 @@ class Log(models.Model):
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
+
