@@ -150,7 +150,7 @@ function blockfilter(district_id) {
                   bflag = 1;
                 }
                 
-                var listitems = '';
+                var listitems = '<option value = -1>-------</option>';
                 for (var i = 0; i < data.length; i++) {
                     listitems += '<option id="' + data[i].id +'"value = ' + district_id + '>'+ data[i].block_name + '</option>';
                 }
@@ -186,8 +186,8 @@ function mrp_payment_goclicked() {
     var district_name = $("#districtlist option:selected").text();
     var block = document.getElementById("blockname");
     var block_name = $("#blocklist option:selected").text();
-    
-    if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" ) {
+    console.log(block_name);
+    if (sdate == "" || edate == "" || partner_name == "" || district_name == "" ||  block_name == "" || block_name == "-------") {
       alert("Information Incomplete! Please fill missing entries");
     } else {
 
@@ -259,7 +259,7 @@ function mrp_payment_goclicked() {
            },
           error: function (data) {
               j$.unblockUI();
-              alert("Sorry there was an error fata !");
+              alert("Sorry there was an error!");
           }
       });
     }
