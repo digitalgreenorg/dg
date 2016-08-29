@@ -355,32 +355,30 @@ def data_for_line_graph(request):
     filter_transportation["user_created__id__in"] = aggregator_ids
     filter_transportation["mandi__id__in"] = mandi_ids
 
-    farmer = CombinedTransaction.objects.filter(
-        **filter_args).values('date').annotate(Count('farmer'))
+    # farmer = CombinedTransaction.objects.filter(
+        # **filter_args).values('date').annotate(Count('farmer'))
 
     transport_data = DayTransportation.objects.filter(**filter_transportation).values(
-        'date', 'user_created__id', 'mandi__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
+        'date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
-    mandi_data = CombinedTransaction.objects.filter(
-        **filter_args).values('mandi__id', 'date').order_by('date').annotate(Sum('quantity'))
+    # mandi_data = CombinedTransaction.objects.filter(
+        # **filter_args).values('mandi__id', 'date').order_by('date').annotate(Sum('quantity'))
 
-    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values(
-        'user_created__id', 'date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).values('date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
 
-    crop_data = CombinedTransaction.objects.filter(
-        **filter_args).values('crop__id', 'date').order_by('date').annotate(Sum('quantity'))
+    # crop_data = CombinedTransaction.objects.filter(
+        # **filter_args).values('crop__id', 'date').order_by('date').annotate(Sum('quantity'))
 
-    gaddidar_data = CombinedTransaction.objects.filter(
-        **filter_args).values('gaddidar__id', 'date').order_by('date').annotate(Sum('quantity'))
+    # gaddidar_data = CombinedTransaction.objects.filter(
+        # **filter_args).values('gaddidar__id', 'date').order_by('date').annotate(Sum('quantity'))
 
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list(
-        'date', flat=True).distinct().order_by('date')
+    dates = CombinedTransaction.objects.filter(**filter_args).values(
+        'date').distinct().order_by('date').annotate(Count('farmer'))
 
     crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).values('crop__id', 'date').annotate(Min('price'), Avg('price'), Max('price'), Sum('quantity'), Sum('amount'))
+        **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
 
-    chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(crop_prices), 'farmer': list(farmer), 'mandi_data': list(
-        mandi_data), 'dates': list(dates), 'aggregator_data': list(aggregator_data), 'crop_data': list(crop_data), 'gaddidar_data': list(gaddidar_data)}
+    chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data)}
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
