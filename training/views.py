@@ -49,20 +49,33 @@ def filter_data(request):
     num_trainings = Training.objects.filter(assessment__id=1).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
-    num_villages = Screening.objects.values('village__id').distinct().count()
+    training_objs = Training.objects.filter(assessment__id = 1).values('participants__id','date')
+    for item in training_objs:
+        item['participants__id'] = int(item['participants__id'])
+    print training_objs    
+    count = 0           
+    for item in training_objs:
+        count += Screening.objects.filter(animator_id=item['participants__id'], date__gte=item['date']).values('village_id').distinct().count()
+    num_villages = count
+    num_beneficiaries = 0
+    for item in training_objs:
+        num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte=item['date']).values('farmers_attendance__id').distinct().count()
 
-    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
-                                   db=dg.settings.DATABASES['default']['NAME'],
-                                    charset = 'utf8',
-                                     use_unicode = True)
-    query = 'Select count(distinct(person_id)) as viewers from person_meeting_attendance_myisam'
-    cur = mysql_cn.cursor()
-    cur.execute(query)
-    result = cur.fetchall()
-    for row in result:
-        num_beneficiaries = row[0]
-    mysql_cn.close()
+
+                    
+
+    # mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+    #                                passwd=dg.settings.DATABASES['default']['PASSWORD'],
+    #                                db=dg.settings.DATABASES['default']['NAME'],
+    #                                 charset = 'utf8',
+    #                                  use_unicode = True)
+    # query = 'Select count(distinct(person_id)) as viewers from person_meeting_attendance_myisam'
+    # cur = mysql_cn.cursor()
+    # cur.execute(query)
+    # result = cur.fetchall()
+    # for row in result:
+    #     num_beneficiaries = row[0]
+    # mysql_cn.close()
 
 
     print "******* Num villages"
