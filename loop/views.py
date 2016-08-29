@@ -355,14 +355,8 @@ def data_for_line_graph(request):
     filter_transportation["user_created__id__in"] = aggregator_ids
     filter_transportation["mandi__id__in"] = mandi_ids
 
-    # farmer = CombinedTransaction.objects.filter(
-        # **filter_args).values('date').annotate(Count('farmer'))
-
     transport_data = DayTransportation.objects.filter(**filter_transportation).values(
         'date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
-
-    # mandi_data = CombinedTransaction.objects.filter(
-        # **filter_args).values('mandi__id', 'date').order_by('date').annotate(Sum('quantity'))
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).values('date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
 
@@ -371,6 +365,10 @@ def data_for_line_graph(request):
 
     # gaddidar_data = CombinedTransaction.objects.filter(
         # **filter_args).values('gaddidar__id', 'date').order_by('date').annotate(Sum('quantity'))
+    # mandi_data = CombinedTransaction.objects.filter(
+        # **filter_args).values('mandi__id', 'date').order_by('date').annotate(Sum('quantity'))
+    # farmer = CombinedTransaction.objects.filter(
+        # **filter_args).values('date').annotate(Count('farmer'))
 
     dates = CombinedTransaction.objects.filter(**filter_args).values(
         'date').distinct().order_by('date').annotate(Count('farmer'))
