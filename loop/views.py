@@ -226,20 +226,19 @@ def recent_graphs_data(request):
 
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
-    aggregators = LoopUser.objects.all().extra(
-        select={'name': 'name_en'}).values('name', 'user_id')
+    # aggregators = LoopUser.objects.all().extra(
+        # select={'name': 'name_en'}).values('name', 'user_id')
 
-    mandis = Mandi.objects.all().extra(
-        select={'mandi_name': 'mandi_name_en'}).values('id', 'mandi_name')
+    # mandis = Mandi.objects.all().extra(
+        # select={'mandi_name': 'mandi_name_en'}).values('id', 'mandi_name')
     transportation_cost = DayTransportation.objects.values('date').order_by(
         '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
     dates = CombinedTransaction.objects.values_list(
         'date', flat=True).distinct().order_by('-date')
-    crops = Crop.objects.all().extra(
-        select={'crop_name': 'crop_name_en'}).values('id', 'crop_name')
+    # crops = Crop.objects.all().extra(
+        # select={'crop_name': 'crop_name_en'}).values('id', 'crop_name')
 
-    chart_dict = {'stats': list(stats), 'aggregators': list(aggregators), 'mandis': list(
-        mandis), 'transportation_cost': list(transportation_cost), 'dates': list(dates), 'crops': list(crops)}
+    chart_dict = {'stats': list(stats), 'transportation_cost': list(transportation_cost), 'dates': list(dates)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 

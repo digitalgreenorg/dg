@@ -191,11 +191,11 @@ function recent_graphs_data() {
         json_data = JSON.parse(data);
 
         dates = json_data['dates'];
-        aggregators_details = json_data.aggregators;
-        mandis = json_data['mandis'];
+        // aggregators_details = json_data.aggregators;
+        // mandis = json_data['mandis'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
-        crops = json_data['crops'];
+        // crops = json_data['crops'];
 
         plot_cards_data();
 
@@ -241,11 +241,9 @@ function plot_cards_data() {
 function get_average() {
 
     var today = new Date();
-
     today.setDate(today.getDate() - days_to_average);
 
     var avg_vol = [];
-
     var avg_amt = [];
 
     var active_farmers = [];
