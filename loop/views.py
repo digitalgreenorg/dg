@@ -51,10 +51,6 @@ def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
 
 
-def second_loop_page(request):
-    return render(request, 'app_dashboards/second_loop_page.html')
-
-
 def filter_data(request):
     aggregators = LoopUser.objects.extra(select={'name':'name_en'}).values('user__id', 'name')
     villages = Village.objects.extra(select={'village_name':'village_name_en'}).values('id', 'village_name')
