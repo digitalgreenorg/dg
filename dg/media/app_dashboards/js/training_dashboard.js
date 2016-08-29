@@ -16,8 +16,12 @@ function initialize() {
         }
       );
 
-
 }
+
+$('#nav_menu1').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
 
 $('#link4').on('click', function () {
     setInterval(function () {
@@ -112,6 +116,15 @@ $("#states_table").find("tr").each(function(index) {
 
 });
 });
+
+
+// reset
+function reset_filter_form() {
+    $('#search_trainers').val('');
+     $('#search_states').val('');
+ 
+
+}
 /*$( window ).resize(function() {
   get_data();
 });*/
