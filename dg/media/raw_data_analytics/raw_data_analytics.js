@@ -32,9 +32,9 @@ window.onload = date;
 
     });
     $("#partnerId").bind("change", function () {
-        $('#videoId').prop('disabled', false);
+  /*      $('#videoId').prop('disabled', false);
         $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        $("#videoId").val('').trigger("chosen:updated");*/
     });
     $("#countryID").bind("change", function () {
         $('#stateId').prop('disabled', false);
@@ -87,7 +87,7 @@ window.onload = date;
         $("#villageId").trigger("chosen:updated");
     });
     $("#videoId").next().bind("click", function () {
-        populate_video("video", $("#partnerId").val());
+        populate_video("video");
         $("#videoId").trigger("chosen:updated");
     });
 });
@@ -106,18 +106,19 @@ function populate(src, prevValue) {
             });
     }
 }
-function populate_video(src,prevValue){
-  if (!(jQuery("#" + src + "Id" + " option ").length != 0))  
-  for (var values in prevValue) {
-      $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
+function populate_video(src){
+  if (!(jQuery("#" + src + "Id" + " option ").length != 0))
+  //for (var values in prevValue) {
+
+      $.get("/raw_data_analytics/dropdown_video/", {"country[]":$("#countryId").val(),"partner[]":$("#partnerId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
           .done(function (data) {
               data_json = JSON.parse(data);
               for (var jsonData in data_json) {
                   if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
-                      $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' + '</option>');
+                      $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' +'</option>');
               }
           });
-  }
+  //}
 }
 
 //##################################################################################################################

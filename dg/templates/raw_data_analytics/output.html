@@ -62,21 +62,6 @@
                              style=' float:left; margin-top: 2%'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Filters:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
-                                <div name='partner' id='partnerID' style="">
-                                    <span> Partner &nbsp;&nbsp;</span>
-
-                                    <select class="select" multiple name='partner' id='partnerId'
-                                            style=" width: 450px; ">
-
-
-                                        {% if partners %}
-                                            {% for partner in partners %}
-                                                <option value="{{ partner }}"> {{ partner }} </option>{% endfor %}
-                                        {% endif %}
-                                    </select>
-                                </div>
-                                <br>
-
                                 <div name='country' id='countryID' style="">
                                     Country &nbsp;
                                     <select class='select' multiple="multiple" name='country' id='countryId'
@@ -134,11 +119,25 @@
                                     </select>
                                 </div>
                                 <br>
+                                <div name='partner' id='partnerID' style="">
+                                    <span> Partner &nbsp;&nbsp;</span>
+
+                                    <select class="select" multiple name='partner' id='partnerId'
+                                            style=" width: 450px; ">
+
+
+                                        {% if partners %}
+                                            {% for partner in partners %}
+                                                <option value="{{ partner }}"> {{ partner }} </option>{% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <br>
                                 <div name="video" id=" videoID"
                                      style="">
                                     Video &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class="select" multiple="multiple" name='video' id="videoId"
-                                            style="width: 450px;height: auto" disabled="false">
+                                            style="width: 450px;height: auto" >
                                     </select>
                                 </div>
 
