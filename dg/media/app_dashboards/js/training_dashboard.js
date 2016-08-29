@@ -56,8 +56,10 @@ $('#link2').on('click', function () {
 
 $("#search_trainers").keyup(function() {
 
+    var index_map = {};
+
 //$("#trainer_all").prop("disabled",true);    
-var value = this.value;
+var value = this.value.trim();
 if(value.length != 0)
     $("#trainer_all").prop("disabled",true);
 else
@@ -66,9 +68,15 @@ else
 $("#trainers_table").find("tr").each(function(index) {
     if (index === -1) return;
 
+    trainer_name_array = $(this).text().toLowerCase().split(" ");
     var if_td_has = false; //boolean value to track if td had the entered key
     $(this).find('td').each(function () {
-        if_td_has = if_td_has || $(this).text().toLowerCase().indexOf(value.toLowerCase()) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+        for(var i = 0; i < trainer_name_array.length; i++){
+            if(trainer_name_array[i].indexOf(value.toLowerCase()) == 0) {
+                    if_td_has = true; 
+                    break;
+            }
+        }//Check if td's text matches key and then use OR to check it for all td's
     });
 
     $(this).toggle(if_td_has);
@@ -88,10 +96,17 @@ else
 $("#states_table").find("tr").each(function(index) {
     if (index === -1) return;
 
+    state_name_array = $(this).text().toLowerCase().split(" ");
     var if_td_has = false; //boolean value to track if td had the entered key
     $(this).find('td').each(function () {
-        if_td_has = if_td_has || $(this).text().toLowerCase().indexOf(value.toLowerCase()) !== -1; //Check if td's text matches key and then use OR to check it for all td's
+        for(var i = 0; i < state_name_array.length; i++){
+            if(state_name_array[i].indexOf(value.toLowerCase()) == 0) {
+                    if_td_has = true;
+                    break;
+            }
+        }//Check if td's text matches key and then use OR to check it for all td's
     });
+
 
     $(this).toggle(if_td_has);
 
@@ -112,7 +127,7 @@ function divFunction(){
     alert("i will disappoint you");
 }
 
-function show_progress_bar() {
+function show_progress_bar() { 
     $('#progress_bar').show();
 }
 
