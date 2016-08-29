@@ -1,12 +1,11 @@
 .filter-table th, .filter-table td {
-	padding: 0px;
-	margin-top: 0px;
-	padding-left: 5px;
+    padding: 0px;
+    margin-top: 0px;
+    padding-left: 5px;
 }
 .filter-table td label, .filter-table th label {
-	margin-top:7px;
+    margin-top: 7px;
 }
-
 .bold>a {
     font-weight: bold;
 }
@@ -14,14 +13,16 @@
     height: 57px;
     margin-bottom: 32px;
 }
-nav.top-nav {
+
+/*nav.top-nav {
     height: 122px;
     box-shadow: none;
 }
-nav.top-nav a.page-title {
+nav.top-nav a.page-title  {
     line-height: 122px;
     font-size: 48px;
-}
+}*/
+
 a.button-collapse.top-nav {
     position: absolute;
     text-align: center;
@@ -35,25 +36,39 @@ a.button-collapse.top-nav {
     font-size: 32px;
     z-index: 2;
 }
-a.button-collapse.top-nav.full {
+
+/*a.button-collapse.top-nav.full {
     line-height: 122px;
-}
+}*/
+
 @media only screen and (max-width: 600px) {
     a.button-collapse.top-nav {
-    left: 5%}
-}@media only screen and (max-width: 992px) {
+        left: 5%
+    }
+}
+@media only screen and (max-width: 992px) {
     nav .nav-wrapper {
-    text-align: center;
+        text-align: center;
+    }
+    nav .nav-wrapper a.page-title {
+        font-size: 36px;
+    }
 }
-nav .nav-wrapper a.page-title {
-    font-size: 36px;
-}
-}@media only screen and (min-width: 993px) {
+@media only screen and (min-width: 993px) {
     .container {
-    width: 85%}
-}ul.side-nav.fixed li.logo {
+        width: 95%
+    }
+}
+.container {
+    padding-top: 35px;
+    max-width: 100%
+}
+#container2 {
+    padding: 50px;
+}
+ul.side-nav.fixed li.logo {
     text-align: center;
-    margin-top: 32px;
+    /*margin-top: 32px;*/
     margin-bottom: 80px;
 }
 ul.side-nav.fixed li.logo:hover {
@@ -130,10 +145,131 @@ ul.side-nav.fixed:hover {
     background-color: #eee;
     outline: none;
 }
-header, main, footer {
-    padding-left: 240px;
+
+/*#recent_main {
+    height: 10px;
+}*/
+
+h5 {
+    font-size: 18px;
+    font-weight: 400;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+h4 {
+    font-size: 26px;
+    font-weight: 400;
+}
+hr {
+    border: 0;
+    height: 0;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+.indicator {
+    margin-left: 20px!important;
+    margin-right: 20px!important;
+}
+.tabs .active {
+    font-weight: Bold;
+}
+.card .card-title {
+    font-size: 20px;
 }
 @media only screen and (max-width: 992px) {
     header, main, footer {
-    padding-left: 0;
+        padding-left: 0;
+    }
+}
+.row.vdivide [class*='col']:not(:last-child):after {
+    background: #e0e0e0;
+    width: 1px;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    min-height: 70px;
+}
+.help-tip {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    background-color: #424242;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+    line-height: 24px;
+    cursor: default;
+}
+.help-tip:before {
+    content: '?';
+    font-weight: bold;
+    color: #fff;
+}
+.help-tip:hover p {
+    display: block;
+    transform-origin: 100% 0%;
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+}
+.help-tip p {
+    /* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #BCDBEA;
+    color: #fff;
+    padding: 10px;
+    width: 150px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    /*right: -4px;*/
+    font-size: 13px;
+    line-height: 1.4;
+    position: absolute;
+    z-index: 1;
+}
+.help-tip p:before {
+    /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #007676;
+    /*right:10px;*/
+    left: 0px;
+    top: -12px;
+}
+.help-tip p:after {
+    /* Prevents the tooltip from being hidden */
+    width: 100%;
+    height: 40px;
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 0;
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    100% {
+        opacity: 100%;
+        transform: scale(1);
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
 }

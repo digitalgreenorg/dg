@@ -7,7 +7,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         template: "#dashboard",
         events: {
             "click #sync": "sync",
-            "click #inc_download": "inc_download"
+            "click #inc_download": "inc_download",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -18,16 +18,23 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             //start the background inc download process
             this.background_download();
             _(this)
-                .bindAll('render');
-            //re-render the view when User model changes - to keep username updated    
+                .bindAll('render');                                                             
+            //re-render the view when User model changes - to keep username updated
+            User.on('change', this.render);
             this.upload_entries = upload_collection.length;
         },
 
         serialize: function() {
             // send username and # of uploadQ items to the template 
             var username = User.get("username");
+            var language = User.get("language");
+            if(language === undefined) {
+                    language = configs.misc.meta_default;
+            }
             return {
                 username: username,
+                language: language,
+                configs: configs,
                 upload_entries: this.upload_entries
             }
         },
@@ -36,6 +43,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("rendering dashboard");
             //iterate over entities defined in config and create their "list" and "add" rows 
             for (var member in configs) {
+                var language = User.get("language");
+                if(language === undefined) {
+                    language = configs.misc.meta_default;
+                }
                 if (member == "misc") continue;
                 var listing = true;
                 var add = true;
@@ -58,7 +69,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if (listing) $('#dashboard_items')
                         .append(this.item_template({
                         name: member + "/list",
-                        title: configs[member]["page_header"] + 's'
+                        title: configs[member]['config_'+language]
                     }));
 
                     if (add) $('#dashboard_items_add')
@@ -70,7 +81,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                         .append("<li class='disabled'><a><i class='glyphicon glyphicon-plus-sign' title='You are not allowed to add this currently'></a></li>");
                 }
             }
-            
+            this.upload_entries = upload_collection.length;
             //keep the # uploadq entries shown on view up-to-date
             upload_collection.on('all', function() {
                 $("#upload_num")
@@ -87,7 +98,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 that.db_downloaded();
             })
                 .fail(function(model, error) {
-                that.db_not_downloaded();
+                //that.db_not_downloaded();
+                console.log("DB not downloaded");
             });
             
             // $("#main-navbar").on('click',function(){
@@ -97,6 +109,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     if($(window).width()<768)
                         $(".collapse").collapse('hide');
             });
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+            }
+            else{
+                $('#sync').attr('disabled', true);
+            }
         },
         
         //enable add, list links
@@ -111,7 +129,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         },
 
         //disable add, list links
-        db_not_downloaded: function() {
+        /*db_not_downloaded: function() {
             $('.list_items')
                 .bind('click', false);
             $('.list_items')
@@ -119,7 +137,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links disabled");
             $("#helptext")
                 .show();
-        },
+        },*/
 
         //if DB exists initiate upload and then inc download otherwise start full download
         sync: function() {
