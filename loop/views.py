@@ -11,7 +11,6 @@ from django.db.models import Count, Min, Sum, Avg, Max, F
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, \
     GaddidarCommission, GaddidarShareOutliers
-
 from loop_data_log import get_latest_timestamp
 
 # Create your views here.
@@ -167,8 +166,7 @@ def total_static_data(request):
     ).aggregate(Sum('quantity'), Sum('amount'))
     # remove total_volume_for_transport after entering past data and make
     # changes in js accordingly
-    total_volume_for_transport = CombinedTransaction.objects.filter(
-        date__gte="2016-06-01").aggregate(Sum('quantity'))
+    total_volume_for_transport = CombinedTransaction.objects.filter(date__gte="2016-06-01").aggregate(Sum('quantity'))
     total_repeat_farmers = len(CombinedTransaction.objects.values(
         'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1))
     total_farmers_reached = len(
@@ -187,6 +185,36 @@ def total_static_data(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def calculate_gaddidar_share():
+    gc_queryset = GaddidarCommission.objects.all()
+    gco_queryset = GaddidarShareOutliers.objects.all()
+    combined_ct_queryset = CombinedTransaction.objects.values('date','user_created_id','gaddidar','gaddidar__discount_criteria').annotate(Sum('quantity'),Sum('amount'))
+    sum = 0
+    for CT in combined_ct_queryset:
+        if CT['date'] not in [x.date for x in gco_queryset]:
+            try:
+                gc_list_set = gc_queryset.filter(start_date__lte = CT['date'], gaddidar = CT['gaddidar']).order_by('-start_date')
+                if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count()>0:
+                    sum += CT['quantity__sum'] * gc_list_set[0].discount_percent
+                elif gc_list_set.count()>0:
+                    sum += CT['amount__sum'] * gc_list_set[0].discount_percent
+            except GaddidarCommission.DoesNotExist:
+                print "Not found: ", CT['date'],CT['gaddidar']
+                pass
+        else:
+            try:
+                print "-------------------------", CT['date']
+                user = LoopUser.objects.get(
+                    user_id=CT['user_created_id'])
+                print gco_queryset[0].amount
+                print gco_queryset[0].date
+                print gco_queryset.get(date = CT['date'])
+                print "-------------------------"
+                sum += gco_queryset.get(date = CT['date'], aggregator=user.user_id).values_list('amount', flat=True)[0]
+            except GaddidarShareOutliers.DoesNotExist:
+                print "GSO Not found : ", CT['date'],CT['gaddidar']
+                pass
+    return sum
 
 def calculate_gaddidar_share():
     gc_queryset = GaddidarCommission.objects.all()
