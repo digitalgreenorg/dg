@@ -7,6 +7,7 @@ from loop_data_log import save_log, delete_log
 
 RoleChoice = ((1, "Admin"), (2, "Aggregator"))
 ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
+DISCOUNT_CRITERIA = ((1, "Volume"), (2, "Amount"))
 
 
 class LoopModel(models.Model):
@@ -164,6 +165,8 @@ class Gaddidar(LoopModel):
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
+    discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
+
     def __unicode__(self):
         return self.gaddidar_name
 
@@ -318,6 +321,22 @@ class CombinedTransaction(LoopModel):
 post_save.connect(save_log, sender=CombinedTransaction)
 pre_delete.connect(delete_log, sender=CombinedTransaction)
 
+class GaddidarCommission(LoopModel):
+    gaddidar = models.ForeignKey(Gaddidar)
+    start_date = models.DateField(auto_now=False)
+    discount_percent = models.FloatField()
+    discount_percent = models.FloatField(validators=[MinValueValidator(0.0),MaxValueValidator(1.0)], default=0.0)
+    class Meta:
+        unique_together = ("start_date", "gaddidar")
+
+
+class GaddidarShareOutliers(LoopModel):
+    gaddidar = models.ForeignKey(Gaddidar)
+    aggregator = models.ForeignKey(LoopUser)
+    date = models.DateField(auto_now=False)
+    amount = models.FloatField()
+    class Meta:
+        unique_together = ("date", "gaddidar", "aggregator")
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)

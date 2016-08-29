@@ -9,7 +9,8 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, \
+    GaddidarCommission, GaddidarShareOutliers
 
 from loop_data_log import get_latest_timestamp
 
@@ -49,10 +50,6 @@ def home(request):
 
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
-
-
-def second_loop_page(request):
-    return render(request, 'app_dashboards/second_loop_page.html')
 
 
 def filter_data(request):
@@ -182,11 +179,35 @@ def total_static_data(request):
     total_transportation_cost = DayTransportation.objects.filter(date__gte="2016-06-01").values('date', 'user_created__id', 'mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
+
+    gaddidar_share = calculate_gaddidar_share()
+
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
-                  'total_transportation_cost': list(total_transportation_cost), 'total_cluster_reached': total_cluster_reached, 'total_volume_for_transport': total_volume_for_transport, 'total_repeat_farmers': total_repeat_farmers}
+                  'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_volume_for_transport': total_volume_for_transport, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+
+def calculate_gaddidar_share():
+    gc_queryset = GaddidarCommission.objects.all()
+    gco_queryset = GaddidarShareOutliers.objects.all()
+    combined_ct_queryset = CombinedTransaction.objects.values('date','user_created_id','gaddidar_id').annotate(Sum('quantity'),Sum('amount'))
+    sum = 0
+    print combined_ct_queryset
+    for CT in combined_ct_queryset:
+        print CT['date']
+        if CT['date'] not in [x['date'] for x in gco_queryset]:
+            print "$$$$$$$$$$$$$$$$$$$$$$"+ CT['date']
+            gc_list_set = gc_queryset.filter(start_date__lte = CT['date'], gaddidar = CT.gaddidar).order_by('start_date').desc()
+            if CT.gaddidar.discount_criteria == 1:
+                print "heeellllllllllloooooooooo"
+                sum += CT.quantity__sum * gc_list_set[0].discount_percent
+            else:
+                print "sexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                sum += CT.amount__sum * gc_list_set[0].discount_percent
+        else:
+            sum += gco_queryset.filter(date = CT.date, aggregator__loop_user__id = CT['user_created_id']).values_list('amount', flat=True)[0]
+    return sum
 
 def recent_graphs_data(request):
 
