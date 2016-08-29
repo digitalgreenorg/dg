@@ -139,7 +139,7 @@ class LoopUser(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.user.username
+        return self.name
 
     def get_villages(self):
         return self.assigned_villages.all()
