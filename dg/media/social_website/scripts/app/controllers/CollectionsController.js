@@ -102,6 +102,9 @@ define(function(require) {
                     this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true);
                     this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true);
                 }
+                if ($(".js-collections-wrapper").attr('data-country') != 'None'){
+                    this._references.collectionFiltersViewController._setFilterStatus('country', $(".js-collections-wrapper").attr('data-country'), true);
+                }
                 if ($(".js-collections-wrapper").attr('data-state') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
                 }

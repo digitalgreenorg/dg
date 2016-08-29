@@ -47,9 +47,9 @@ def social_home(request):
     return render_to_response('home.html', context, context_instance = RequestContext(request))
 
 
-def collection_view(request, partner, state, language, title, video=1):
+def collection_view(request, partner, country, state, language, title, video=1):
     try:
-        collection = Collection.objects.get(partner__name__iexact = partner, state__iexact = state, language__iexact = language, title__iexact = title)
+        collection = Collection.objects.get(partner__name__iexact = partner, country__iexact = country, state__iexact = state, language__iexact = language, title__iexact = title)
     except Collection.DoesNotExist:
         return HttpResponseRedirect(reverse('discover'))
     try:
@@ -80,6 +80,8 @@ def collection_view(request, partner, state, language, title, video=1):
               }
     if collection.featured :
       return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
+    print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" 
+    print context 
     return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
 
 
@@ -238,6 +240,7 @@ def search_view(request):
     searchString = request.GET.get('searchString', None)
     partner = request.GET.get('partner', None)
     title = request.GET.get('title', None)
+    country = request.GET.get('country', None)
     state = request.GET.get('state', None)
     language = request.GET.get('language', None)
     category = request.GET.get('category', None)
@@ -254,6 +257,7 @@ def search_view(request):
               'searchString' : searchString,
               'partner' : partner,
               'title' : title,
+              'country': country,
               'state' : state,
               'language' : language,
               'category' : category,
@@ -297,6 +301,7 @@ def searchFilters(request):
     category = params.getlist('filters[category][]', None)
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
+    country = params.getlist('filters[country[]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
     
@@ -312,6 +317,7 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'category', category, facet_dict)
     filters = make_sub_filter(filters, 'subcategory', subcategory, facet_dict)
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
+    filters = make_sub_filter(filters, 'country', country, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
     filters = make_sub_filter(filters, 'subject', subject, facet_dict)
     filters = make_sub_filter(filters, 'language', language, facet_dict)
@@ -341,6 +347,7 @@ def featuredCollection(request):
     featured_collection_dict = {
         'title': collection.title,
         'state': collection.state,
+        'country': collection.country,
         'likes': collection.likes,
         'views': collection.views,
         'adoptions': collection.adoptions,
@@ -402,6 +409,9 @@ def collection_edit_view(request, collection):
     partner = sorted(partner)
     state = video.values_list('state',flat=True)
     state = sorted(set(state))
+    country = video.values_list('country',flat=True)
+    country = sorted(set(country))
+
     context= {
               'header': {
                          'jsController':'CollectionAdd',
@@ -411,6 +421,7 @@ def collection_edit_view(request, collection):
               'language': language,
               'partner' : partner,
               'state' : state,
+              'country': country,
               }
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 
@@ -425,6 +436,9 @@ def collection_add_view(request):
     partner = sorted(partner)
     state = video.values_list('state',flat=True)
     state = sorted(set(state))
+    country = video.values_list('country',flat=True)
+    country = sorted(set(country))
+
     context= {
               'header': {
                          'jsController':'CollectionAdd',
@@ -432,6 +446,7 @@ def collection_add_view(request):
               'language': language,
               'partner' : partner,
               'state' : state,
+              'country': country,
               }
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 

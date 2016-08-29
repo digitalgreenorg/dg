@@ -125,6 +125,20 @@ FACET_MAPPING = {
                                             },
                                "state" : {
                                           "fields":{
+                                                    "country":{
+                                                             "type":"string",
+                                                             "analyzer":"keyword"
+                                                             },
+                                                    "partial":{
+                                                               "search_analyzer":"full_name",
+                                                                "index_analyzer":"partial_name",
+                                                                "type":"string"
+                                                                }
+                                                    },
+                                            "type":"multi_field"
+                                            },
+                               "state" : {
+                                          "fields":{
                                                     "state":{
                                                              "type":"string",
                                                              "analyzer":"keyword"
