@@ -149,13 +149,14 @@ function total_static_data() {
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
-        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
+        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
 
         var clusters = json_data['total_cluster_reached'];
 
-        var total_cpk = total_transportation_cost / total_volume_for_transport;
+        // var total_cpk = total_transportation_cost / total_volume_for_transport;
+        var total_cpk = total_transportation_cost / total_volume;
 
         var kg = "Kg";
         var rs = "₹";
@@ -191,11 +192,11 @@ function recent_graphs_data() {
         json_data = JSON.parse(data);
 
         dates = json_data['dates'];
-        aggregators_details = json_data.aggregators;
-        mandis = json_data['mandis'];
+        // aggregators_details = json_data.aggregators;
+        // mandis = json_data['mandis'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
-        crops = json_data['crops'];
+        // crops = json_data['crops'];
 
         plot_cards_data();
 
@@ -241,11 +242,9 @@ function plot_cards_data() {
 function get_average() {
 
     var today = new Date();
-
     today.setDate(today.getDate() - days_to_average);
 
     var avg_vol = [];
-
     var avg_amt = [];
 
     var active_farmers = [];
@@ -1401,13 +1400,13 @@ function fill_crop_drop_down() {
 //To show time series graohs for volumr,amount,farmer count, cpk,spk
 function show_line_graphs() {
     var json_data = line_json_data.aggregator_data;
-    var farmer_data = line_json_data.farmer;
+    // var farmer_data = line_json_data.farmer;
     var transport_data = line_json_data.transport_data;
-    var dates = line_json_data['dates'];
+    var dates_and_farmer_count = line_json_data.dates;
     var all_dates = [];
 
-    var first_date = new Date(dates[0]);
-    while (first_date <= new Date(dates[dates.length - 1])) {
+    var first_date = new Date(dates_and_farmer_count[0]['date']);
+    while (first_date <= new Date(dates_and_farmer_count[dates_and_farmer_count.length - 1]['date'])) {
         all_dates.push(first_date.getTime());
         first_date.setDate(first_date.getDate() + 1)
     }
@@ -1463,8 +1462,10 @@ function show_line_graphs() {
         time_series_volume_amount_farmers[0]['data'][index][1] += json_data[i]['quantity__sum'];
         time_series_volume_amount_farmers[1]['data'][index][1] += json_data[i]['amount__sum'];
     }
+
     transport_cost = new Array(all_dates.length).fill(null);
     farmer_share = new Array(all_dates.length).fill(null);
+
     for (var i = 0; i < transport_data.length; i++) {
         var index = all_dates.indexOf(new Date(transport_data[i]['date']).getTime());
         transport_cost[index] += transport_data[i]['transportation_cost__sum'];
@@ -1476,9 +1477,9 @@ function show_line_graphs() {
         time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1] : null]);
     }
 
-    for (var i = 0; i < farmer_data.length; i++) {
-        var index = all_dates.indexOf(new Date(farmer_data[i]['date']).getTime());
-        time_series_volume_amount_farmers[2]['data'][index][1] += farmer_data[i]['farmer__count'];
+    for (var i = 0; i < dates_and_farmer_count.length; i++) {
+        var index = all_dates.indexOf(new Date(dates_and_farmer_count[i]['date']).getTime());
+        time_series_volume_amount_farmers[2]['data'][index][1] += dates_and_farmer_count[i]['farmer__count'];
     }
 
     createMaster1($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers)
@@ -1489,11 +1490,11 @@ function show_line_graphs() {
 //To show max, min , avg prices for crops in time series page
 function crop_prices_graph(crop_id) {
     var json_data = line_json_data.crop_prices;
-    var dates = line_json_data['dates'];
+    var dates = line_json_data.dates;
     var all_dates = [];
 
-    var first_date = new Date(dates[0]);
-    while (first_date <= new Date(dates[dates.length - 1])) {
+    var first_date = new Date(dates[0]['date']);
+    while (first_date <= new Date(dates[dates.length - 1]['date'])) {
         all_dates.push(first_date.getTime());
         first_date.setDate(first_date.getDate() + 1);
     }
