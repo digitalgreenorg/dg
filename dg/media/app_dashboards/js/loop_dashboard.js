@@ -880,7 +880,6 @@ function totals() {
 function aggregator_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data, parameter) {
     var series = [];
     var drilldown = {};
-
     drilldown['series'] = [];
 
     // These three values are to show at top
@@ -891,9 +890,6 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
     temp['colorByPoint'] = false;
     temp['data'] = [];
     temp['pointWidth'] = 15;
-
-    console.log(axis_names[0]);
-
 
     for (var i = 0; i < axis.length; i++) {
         temp['data'].push({
