@@ -55,11 +55,11 @@
 				<ul class="right">
 
 					<div class="row">
-						<div class="input-field col s4" class="initialized" >
-							<select id='languageID' onchange=>
-								<option value='Hindi' selected>Hindi</option>
+						<div class="col s3" class="initialized" style="float:right;">
+							<select id='languageID' onchange='change_language(this.value)'>
+								<option value="-1" disabled selected> Choose Language</option>>
+								<option value='Hindi' >Hindi</option>
 								<option value='English' >English</option>
-								<option value='French' >French</option>
 							</select>
 						</div>
 						<div class="input-field col s3">

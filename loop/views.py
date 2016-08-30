@@ -55,12 +55,16 @@ def second_loop_page(request):
     return render(request, 'app_dashboards/second_loop_page.html')
 
 
-def filter_data(request):
-    aggregators = LoopUser.objects.extra(select={'name':'name_en'}).values('user__id', 'name')
-    villages = Village.objects.extra(select={'village_name':'village_name_en'}).values('id', 'village_name')
+def filter_data(request):                                               #TODO: aggregator name, village,mandis,gaddidars
+#    aggregators = LoopUser.objects.extra(select={'name':'name_en'}).values('user__id', 'name')
+    aggregators = LoopUser.objects.all().values('user__id','name','name_en')
+#    villages = Village.objects.extra(select={'village_name':'village_name_en'}).values('id', 'village_name')
+    villages = Village.objects.all().values('id','village_name','village_name_en')
     crops = Crop.objects.extra(select={'crop_name':'crop_name_en'}).values('id', 'crop_name')
-    mandis = Mandi.objects.extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
-    gaddidars = Gaddidar.objects.extra(select={'gaddidar_name':'gaddidar_name_en'}).values('id', 'gaddidar_name')
+#    mandis = Mandi.objects.extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
+    mandis = Mandi.objects.all().values('id','mandi_name','mandi_name_en')
+#    gaddidars = Gaddidar.objects.extra(select={'gaddidar_name':'gaddidar_name_en'}).values('id', 'gaddidar_name')
+    gaddidars = Gaddidar.objects.all().values('id','gaddidar_name','gaddidar_name_en')
     transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'transporters': list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars)}
@@ -193,13 +197,14 @@ def crop_language_data(request):
     
     return HttpResponse(data)
 
-def recent_graphs_data(request):
+def recent_graphs_data(request):                                                #TODO:Aggregator name,mandi name,
 
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
-    aggregators = LoopUser.objects.all().extra(select={'name':'name_en'}).values('name', 'user_id')
-
-    mandis = Mandi.objects.all().extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
+#    aggregators = LoopUser.objects.all().extra(select={'name':'name_en'}).values('name', 'user_id')
+    aggregators = LoopUser.objects.all().values('name','user_id','name_en')
+#    mandis = Mandi.objects.all().extra(select={'mandi_name':'mandi_name_en'}).values('id', 'mandi_name')
+    mandis = Mandi.objects.all().values('id','mandi_name','mandi_name_en')
     transportation_cost = DayTransportation.objects.values('date').order_by(
         '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
     dates = CombinedTransaction.objects.values_list(
@@ -228,7 +233,7 @@ def farmer_count_aggregator_wise(request):
     return HttpResponse(data)
 
 
-def new_aggregator_wise_data(request):
+def new_aggregator_wise_data(request):                              #TODO: mandi crop prices
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     aggregator_ids = request.GET.getlist('aggregator_ids[]')
@@ -270,7 +275,7 @@ def new_aggregator_wise_data(request):
 
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).annotate(crop__crop_name=F('crop__crop_name_en')).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
-
+    #TODO:mandi_crop_prices
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).annotate(crop__crop_name=F('crop__crop_name_en'),mandi__mandi_name=F('mandi__mandi_name_en')).values('crop__crop_name','crop__id','mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
 
@@ -383,8 +388,8 @@ def data_for_time_chart(request):
     return HttpResponse(data)
 
 
-def payments(request):
-    start_date = request.GET['start_date']
+def payments(request):                                                      #TODO: aggregatordata,outlierdata,outlier_daily_data,
+    start_date = request.GET['start_date']                                  #      transportation_data
     end_date = request.GET['end_date']
     filter_args = {}
     if (start_date != ""):
