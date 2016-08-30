@@ -1712,6 +1712,9 @@ function plot_stacked_chart(container_obj, dict) {
         credits: {
             enabled: false
         },
+        exporting: {
+            enabled: false
+        },
         title: {
             text: null
         },
@@ -1809,6 +1812,9 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
         credits: {
             enabled: false
         },
+        exporting: {
+            enabled: false
+        },
         title: {
             text: null
         },
@@ -1874,6 +1880,9 @@ function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
             type: 'columnrange',
             height: 300,
             inverted: true
+        },
+        exporting: {
+            enabled: false
         },
         credits: {
             enabled: false
