@@ -475,7 +475,7 @@ h1 small{
         padding-right: 0;
     }
     .coco_sync{
-        margin-left: 50px;
+        margin-left: 130px;
     }
 
 
@@ -588,28 +588,66 @@ h1 small{
         width: 50%; 
     }
 
-	.groupadd td:nth-of-type(1):before { content: "Person Name"; }
-	.groupadd td:nth-of-type(2):before { content: "Father Name"; }
-	.groupadd td:nth-of-type(3):before { content: "Age"; }
-	.groupadd td:nth-of-type(4):before { content: "Gender"; }
-	.groupadd td:nth-of-type(5):before { content: "Phone No."; }
-    
-	.screeningadd td:nth-of-type(1):before { content: "Delete?"; }
-	.screeningadd td:nth-of-type(2):before { content: "Sr. No"; }
-	.screeningadd td:nth-of-type(3):before { content: "Person"; }
-	.screeningadd td:nth-of-type(4):before { content: "Expressed Adopted Video"; }
-	.screeningadd td:nth-of-type(5):before { content: "Question Asked"; }
-    .screeningadd td:nth-of-type(6):before { content: "Interested?"; }
-    
-    .adoptionadd td:nth-of-type(1):before { content: "Delete?"; }
-	.adoptionadd td:nth-of-type(2):before { content: "Sr. No."; }
-	.adoptionadd td:nth-of-type(3):before { content: "Person"; }
-	.adoptionadd td:nth-of-type(4):before { content: "Video"; }
-	.adoptionadd td:nth-of-type(5):before { content: "Date of Adoption"; }
+	.groupadd_English td:nth-of-type(1):before { content: "Person Name"; }
+	.groupadd_English td:nth-of-type(2):before { content: "Father Name"; }
+	.groupadd_English td:nth-of-type(3):before { content: "Age"; }
+	.groupadd_English td:nth-of-type(4):before { content: "Gender"; }
+	.groupadd_English td:nth-of-type(5):before { content: "Phone No."; }
 
-    .videoadd td:nth-of-type(1):before { content: "Sr. No"; }
-    .videoadd td:nth-of-type(2):before { content: "Non Negotiable"; }
-    .videoadd td:nth-of-type(3):before { content: "Physically Verifiable"; }
+    .groupadd_हिन्दी td:nth-of-type(1):before { content: "सदस्य का नाम"; }
+    .groupadd_हिन्दी td:nth-of-type(2):before { content: "पिता/पति का नाम"; }
+    .groupadd_हिन्दी td:nth-of-type(3):before { content: "आयु"; }
+    .groupadd_हिन्दी td:nth-of-type(4):before { content: "लिंग"; }
+    .groupadd_हिन्दी td:nth-of-type(5):before { content: "फ़ोन नंबर"; }
+
+    .groupadd_français td:nth-of-type(1):before { content: "Nom de la personne"; }
+    .groupadd_français td:nth-of-type(2):before { content: "Nom du père"; }
+    .groupadd_français td:nth-of-type(3):before { content: "Age"; }
+    .groupadd_français td:nth-of-type(4):before { content: "Genre"; }
+    .groupadd_français td:nth-of-type(5):before { content: "Numéro de téléphone"; }
+    
+	.screeningadd_English td:nth-of-type(1):before { content: "Delete?"; }
+	.screeningadd_English td:nth-of-type(2):before { content: "Sr. No"; }
+	.screeningadd_English td:nth-of-type(3):before { content: "Person"; }
+	
+    .screeningadd_हिन्दी td:nth-of-type(1):before { content: "हटाओ"; }
+    .screeningadd_हिन्दी td:nth-of-type(2):before { content: "क्रम संख्या"; }
+    .screeningadd_हिन्दी td:nth-of-type(3):before { content: "सदस्य जिन्होने भाग लिया"; }
+
+    .screeningadd_français td:nth-of-type(1):before { content: "effacer"; }
+    .screeningadd_français td:nth-of-type(2):before { content: "Serie de Numéro"; }
+    .screeningadd_français td:nth-of-type(3):before { content: "Personne"; }
+
+
+    .adoptionadd_English td:nth-of-type(1):before { content: "Delete?"; }
+	.adoptionadd_English td:nth-of-type(2):before { content: "Sr. No."; }
+	.adoptionadd_English td:nth-of-type(3):before { content: "Person"; }
+	.adoptionadd_English td:nth-of-type(4):before { content: "Date of Adoption"; }
+    .adoptionadd_English td:nth-of-type(5):before { content: "Date of Verification"; }
+
+    .adoptionadd_हिन्दी  td:nth-of-type(1):before { content: "हटाओ"; }
+    .adoptionadd_हिन्दी  td:nth-of-type(2):before { content: "क्रम संख्या"; }
+    .adoptionadd_हिन्दी  td:nth-of-type(3):before { content: "सदस्य"; }
+    .adoptionadd_हिन्दी  td:nth-of-type(4):before { content: "अपनाने की तारीख"; }
+    .adoptionadd_हिन्दी  td:nth-of-type(5):before { content: "अपनाने के जाँच की तारीख"; }
+
+    .adoptionadd_français td:nth-of-type(1):before { content: "effacer"; }
+    .adoptionadd_français td:nth-of-type(2):before { content: "Serie de Numéro"; }
+    .adoptionadd_français td:nth-of-type(3):before { content: "Personne"; }
+    .adoptionadd_français td:nth-of-type(4):before { content: "Date d'adoption"; }
+    .adoptionadd_français td:nth-of-type(5):before { content: "Date de vérification"; }
+
+    .videoadd_English td:nth-of-type(1):before { content: "Sr. No"; }
+    .videoadd_English td:nth-of-type(2):before { content: "Non Negotiable"; }
+    .videoadd_English td:nth-of-type(3):before { content: "Physically Verifiable"; }
+
+    .videoadd_हिन्दी td:nth-of-type(1):before { content: "क्रम संख्या"; }
+    .videoadd_हिन्दी td:nth-of-type(2):before { content: "अति आवश्यक बातें"; }
+    .videoadd_हिन्दी td:nth-of-type(3):before { content: "जाँच करने योग्य"; }
+
+    .videoadd_français td:nth-of-type(1):before { content: "Serie de Numéro"; }
+    .videoadd_français td:nth-of-type(2):before { content: "Non négociables"; }
+    .videoadd_français td:nth-of-type(3):before { content: "Physiquement vérifiable"; }
     }
 
 @media(max-width:1200px){
