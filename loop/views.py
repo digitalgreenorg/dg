@@ -242,23 +242,6 @@ def recent_graphs_data(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
-
-def farmer_count_aggregator_wise(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    farmers_count = CombinedTransaction.objects.filter(**filter_args).values(
-        'user_created__id').annotate(Count('farmer', distinct=True))
-
-    chart_dict = {'farmers_count': list(farmers_count)}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-    return HttpResponse(data)
-
-
 def new_aggregator_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']

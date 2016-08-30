@@ -150,7 +150,7 @@ function total_static_data() {
         var total_expenditure = total_transportation_cost - total_farmer_share;
         // var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
-        var sustainability = (total_farmer_share +total_gaddidar_contribution) / total_transportation_cost * 100;
+        var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 
         var clusters = json_data['total_cluster_reached'];
 
@@ -459,8 +459,7 @@ function change_graph(parameter) {
     if (selected_tab == "aggregator") {
         $('#aggregator_tab').addClass('active');
         update_graphs_aggregator_wise(parameter);
-    }
-    if (selected_tab == "mandi") {
+    } else if (selected_tab == "mandi") {
         $('#mandi_tab').addClass('active');
         $("#gaddidar_aggregator_graph").show();
         $("#aggregator_farmer_count").hide();
@@ -469,9 +468,7 @@ function change_graph(parameter) {
             update_graphs_gaddidar_wise(parameter);
             gaddidar = false;
         }
-
-    }
-    if (selected_tab == "crop") {
+    } else if (selected_tab == "crop") {
         $('#crop_tab').addClass('active');
         $("#aggregator_visits").hide();
         $("#cpk_cost").hide();
@@ -674,7 +671,7 @@ function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
     row.append(td_name);
-    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = ' + name + ' /><label for="' + name + id + '"></label>';
+    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = "' + name + '" /><label for="' + name + id + '"></label>';
     var td_checkbox = $('<td>').html(checkbox_html);
     row.append(td_checkbox);
     tbody_obj.append(row);
@@ -774,10 +771,10 @@ function update_graphs_aggregator_wise(chart) {
         }
 
         if (chart == "cost_recovered") {
-            $('#2ndgraph').text("Total Cost")
+            $('#2ndgraph').text("Total Cost");
             transport_cost_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.transportation_cost_mandi);
         } else if (chart == "cpk_spk") {
-            $('#2ndgraph').text("Cost per kg")
+            $('#2ndgraph').text("Cost per kg");
             cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data);
         }
     }
@@ -894,6 +891,8 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
     temp['colorByPoint'] = false;
     temp['data'] = [];
     temp['pointWidth'] = 15;
+
+    console.log(axis_names[0]);
 
 
     for (var i = 0; i < axis.length; i++) {
