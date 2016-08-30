@@ -3012,7 +3012,7 @@ function outliers_summary(aggregator_id) {
     var start_date = new Date(payments_start_date);
     var end_date = new Date(payments_to_date);
     var dates = [];
-    while (start_date <= end_date) {
+    while (start_date.getDate() <= end_date.getDate()) {
         dates.push(start_date.getTime());
         start_date.setDate(start_date.getDate() + 1);
     }
