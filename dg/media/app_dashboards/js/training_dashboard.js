@@ -262,38 +262,44 @@ function set_filterlistener() {
 function get_data() {
     var start_date = $('#from_date').val();
     var end_date = $('#to_date').val();
+    if(start_date === '' || end_date === '')
+    {
+        alert("Please fill date");
+    }
+    else
+    {
+        var assessment_ids = [];
+        var trainer_ids = [];
+        var state_ids = [];
 
-    var assessment_ids = [];
-    var trainer_ids = [];
-    var state_ids = [];
+        $('#assessments').children().each(function() {
+            var assessment_div = $(this).children()[1].firstChild;
+            if (assessment_div.checked)
+                assessment_ids.push(assessment_div.getAttribute('data'));
+        });
 
-    $('#assessments').children().each(function() {
-        var assessment_div = $(this).children()[1].firstChild;
-        if (assessment_div.checked)
-            assessment_ids.push(assessment_div.getAttribute('data'));
-    });
+        $('#trainers').children().each(function() {
+            var trainer_div = $(this).children()[1].firstChild;
+            if (trainer_div.checked)
+                trainer_ids.push(trainer_div.getAttribute('data'));
+        });
 
-    $('#trainers').children().each(function() {
-        var trainer_div = $(this).children()[1].firstChild;
-        if (trainer_div.checked)
-            trainer_ids.push(trainer_div.getAttribute('data'));
-    });
+        $('#states').children().each(function() {
+            var state_div = $(this).children()[1].firstChild;
+            if (state_div.checked)
+                state_ids.push(state_div.getAttribute('data'));
+        });
 
-    $('#states').children().each(function() {
-        var state_div = $(this).children()[1].firstChild;
-        if (state_div.checked)
-            state_ids.push(state_div.getAttribute('data'));
-    });
-
-    if (Date.parse(start_date) > Date.parse(end_date)) {
-        //$('.modal-trigger').leanModal();
-        $('#modal1').openModal();
-    } else {
-        gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-        getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-        getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-        getmonthdata(start_date,end_date,assessment_ids,trainer_ids,state_ids);
-        get_bottom_boxes();
+        if (Date.parse(start_date) > Date.parse(end_date)) {
+            //$('.modal-trigger').leanModal();
+            $('#modal1').openModal();
+        } else {
+            gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getmonthdata(start_date,end_date,assessment_ids,trainer_ids,state_ids);
+            get_bottom_boxes();
+                }
     }
 }
 
@@ -492,8 +498,12 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
 
 
     if (trainer_list.length == 0) {
-        document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
-        document.getElementById('trainer_training_data').innerHTML = ''
+
+        plot_dual_axis_chart($("#trainer_mediator_data"), [], {}, "Average Scores per Participant", "", "", "%","");
+        plot_multiple_axis_chart($("#trainer_training_data"), [], {}, "Mediators Trained", "", "", "", "", "%", {}, "", "","No data for this assessment");
+    
+        /*document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
+        document.getElementById('trainer_training_data').innerHTML = ''*/
     } else {
         var x_axis = [];
         var trainer_scores_dict = [];
@@ -591,14 +601,16 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
     //    trainer_trainings_mediators_dict.push(trainer_trainings_dict);
         // trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
-        plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "", "", "%");
-        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Total Trainings");
+        plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "", "", "%","");
+        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Total Trainings","");
     }
 }
 
 function plot_questionwise_data(data_json, assessment_ids) {
     if (data_json.length == 0) {
-        document.getElementById('question_mediator_data').innerHTML = 'No data for this Assessment!'
+        plot_multiple_axis_chart($("#question_mediator_data"), [], {}, "No. of Mediators", "", "","","", "%", {}, "%", "","No data for this assessment");
+
+       /* document.getElementById('question_mediator_data').innerHTML = 'No data for this Assessment!'*/
     } else {
         var x_axis = [];
         var question_dict = [];
@@ -687,7 +699,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
             // question_dict.push(question_percent_dict);
         }
 
-        plot_multiple_axis_chart($("#question_mediator_data"), x_axis, question_dict, "No. of Mediators", "", "","","", "%", question_percent_dict, "%", "% of mediators scoring above 70%");
+        plot_multiple_axis_chart($("#question_mediator_data"), x_axis, question_dict, "No. of Mediators", "", "","","", "%", question_percent_dict, "%", "% of mediators scoring above 70%","");
         // plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_pass_perc_dict);
 
     }
@@ -695,8 +707,11 @@ function plot_questionwise_data(data_json, assessment_ids) {
 
 function plot_statewise_data(state_list, mediator_list) {
     if (state_list.length == 0) {
-        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
-        document.getElementById('state_training_data').innerHTML = ''
+        plot_dual_axis_chart($("#state_mediator_data"), [], {}, "Average Scores per Mediator", "", "", "%","");
+        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "No. of total trainings","No data for this assessment");
+   
+/*        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
+        document.getElementById('state_training_data').innerHTML = ''*/
     }
     else {
         var x_axis = [];
@@ -779,8 +794,8 @@ function plot_statewise_data(state_list, mediator_list) {
         state_trainings_mediators_dict.push(state_mediators_pass_dict);
         // state_trainings_mediators_dict.push(state_pass_perc_dict);
 
-        plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "", "", "%");
-        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "No. of total trainings");
+        plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "", "", "%","");
+        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "No. of total trainings","");
     }
 }
 
@@ -1047,15 +1062,19 @@ function plot_single_axis_chart(container_obj, x_axis, data_dict, y_axis_text, u
     });
 }
 
-function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2) {
+function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2, title_) {
 
     var width_ = $('.container').width();
     console.log(width_);
+
     var dataLabels = {
         enabled:true,
         formatter:function (){return this.y;}
     };
-    data_dict[0]['dataLabels'] = dataLabels;
+
+    var len = Object.keys(data_dict).length
+    if(len != 0)
+        data_dict[0]['dataLabels'] = dataLabels;
 
     container_obj.highcharts({
         chart: {
@@ -1064,7 +1083,7 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         },
 
         credits:{enabled : false},
-        title: '',
+        title:{text: title_},
         xAxis: [{
             categories: x_axis,
             crosshair: true
@@ -1108,8 +1127,8 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
             // y: 100,
             // floating: true,
             align: 'center',
-            verticalAlign: 'top',
             layout: 'horizontal',
+        
             x: 0,
             y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -1117,7 +1136,7 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         series: data_dict
     });
 }
-function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3, datalablels_dict, label_type, custom_subtitle) {
+function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3, datalablels_dict, label_type, custom_subtitle, title_) {
 
     var i = 0;
     var len = Object.keys(datalablels_dict).length
@@ -1153,6 +1172,8 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
             /*width: width_*/
         },
         credits:{enabled :false},
+        title:{ text: title_
+        },
         subtitle: {
             text: 'Labels represent : ' + custom_subtitle
         },
@@ -1210,8 +1231,8 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
         },
         legend: {
           align: 'center',
-          verticalAlign: 'top',
           layout: 'horizontal',
+
           x: 0,
           y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
