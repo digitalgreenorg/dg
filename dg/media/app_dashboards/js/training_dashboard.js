@@ -171,6 +171,7 @@ function set_eventlistener() {
         onClose: function() {
             $(document.activeElement).blur()
         },
+        min: new Date(2015,01,01),
         max: -1,
         onSet: function(element) {
             if (element.select) {
@@ -447,12 +448,12 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages,
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
     var avg_score = total_score / num_pass.length;
 
-    document.getElementById('num_trainings').innerHTML = num_trainings;
-    document.getElementById('mediators_trained').innerHTML = num_participants;
+    document.getElementById('num_trainings').innerHTML = numberWithCommas(num_trainings);
+    document.getElementById('mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    document.getElementById('villages_reached').innerHTML = num_villages;
-    document.getElementById('viewers_reached').innerHTML = num_beneficiaries;
+    document.getElementById('villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
 }
 
 function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
@@ -473,12 +474,16 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villag
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
     var avg_score = total_score / num_pass.length;
 
-    document.getElementById('filtered_num_trainings').innerHTML = num_trainings;
-    document.getElementById('filtered_mediators_trained').innerHTML = num_participants;
+    document.getElementById('filtered_num_trainings').innerHTML = numberWithCommas(num_trainings);
+    document.getElementById('filtered_mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('filtered_pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    document.getElementById('filtered_villages_reached').innerHTML = num_villages;
-    document.getElementById('filtered_viewers_reached').innerHTML = num_beneficiaries;
+    document.getElementById('filtered_villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('filtered_viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 /* Fill data for highcharts */
@@ -1149,7 +1154,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
         },
         credits:{enabled :false},
         subtitle: {
-            text: 'Lables represent : ' + custom_subtitle
+            text: 'Labels represent : ' + custom_subtitle
         },
         xAxis: [{
             categories: x_axis,

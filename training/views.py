@@ -105,21 +105,40 @@ def date_filter_data(request):
     num_trainings = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('participant').annotate(Sum('score'), Count('score'))
-    num_villages = Screening.objects.filter(date__gte = start_date, date__lte = end_date).values('village__id').distinct().count()
-    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
-                                   db=dg.settings.DATABASES['default']['NAME'],
-                                    charset = 'utf8',
-                                     use_unicode = True)
-    query = '''Select count(distinct(person_id)) as viewers from person_meeting_attendance_myisam where date between '''+ '\''+start_date+'\''+'''and'''+'\''+end_date+'\''
-    print query 
-    cur = mysql_cn.cursor()
-    cur.execute(query)
-    result = cur.fetchall()
+
+
+    # Start
+
+    training_objs = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('participants__id','date')
+    for item in training_objs:
+        item['participants__id'] = int(item['participants__id'])
+    print training_objs    
+    count = 0           
+    for item in training_objs:
+        count += Screening.objects.filter(animator_id=item['participants__id'], date__gte = item['date'], date__lte = end_date).values('village_id').distinct().count()
+    num_villages = count
     num_beneficiaries = 0
-    for row in result:
-        num_beneficiaries = row[0]
-    mysql_cn.close()
+    for item in training_objs:
+        num_beneficiaries += PersonMeetingAttendance.objects.filter(screening__animator_id = item['participants__id'], screening__date__gte = item['date'], screening__date__lte = end_date).values('person_id').distinct().count()
+        # num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte = start_date, screening__date__lte = end_date).values('farmers_attendance__id').distinct().count()
+
+    # End 
+
+    # num_villages = Screening.objects.filter(date__gte = start_date, date__lte = end_date).values('village__id').distinct().count()
+    # mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+    #                                passwd=dg.settings.DATABASES['default']['PASSWORD'],
+    #                                db=dg.settings.DATABASES['default']['NAME'],
+    #                                 charset = 'utf8',
+    #                                  use_unicode = True)
+    # query = '''Select count(distinct(person_id)) as viewers from person_meeting_attendance_myisam where date between '''+ '\''+start_date+'\''+'''and'''+'\''+end_date+'\''
+    # print query 
+    # cur = mysql_cn.cursor()
+    # cur.execute(query)
+    # result = cur.fetchall()
+    # num_beneficiaries = 0
+    # for row in result:
+    #     num_beneficiaries = row[0]
+    # mysql_cn.close()
     #num_beneficiaries = PersonMeetingAttendance.objects.filter(screening__date__gte = start_date, screening__date__lte = end_date).values('person_id').distinct().count()
     print "######### filtered villages"
     print num_villages
