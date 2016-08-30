@@ -480,6 +480,16 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villag
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
     var avg_score = total_score / num_pass.length;
 
+    if(isNaN(avg_score))
+    {
+        avg_score = 0;
+    }
+
+    if(isNaN(num_pass_percent))
+    {
+        num_pass_percent = 0;
+    }
+
     document.getElementById('filtered_num_trainings').innerHTML = numberWithCommas(num_trainings);
     document.getElementById('filtered_mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
