@@ -266,27 +266,29 @@ def new_aggregator_wise_data(request):
 
     total_repeat_farmers = CombinedTransaction.objects.filter(
         **filter_args).values('user_created__id', 'farmer').annotate(farmer_count=Count('farmer'))
-    # stats = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'mandi__id', 'crop__crop_name', 'date', 'farmer__id', 'quantity', 'amount', 'gaddidar__id').order_by('-date')
     aggregator_mandi = CombinedTransaction.objects.filter(**filter_args).values(
         'user_created__id', 'mandi__id').annotate(Sum('quantity'), Sum('amount'), mandi__id__count=Count('date', distinct=True))
     aggregator_gaddidar = CombinedTransaction.objects.filter(**filter_args).values(
-        'user_created__id', 'gaddidar__id', 'date', 'gaddidar__mandi__id').annotate(Sum('quantity'), Sum('amount'))
-    # aggregator_crop = CombinedTransaction.objects.filter(**filter_args).values(
-    #     'user_created__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
+        'user_created__id', 'gaddidar__id').annotate(Sum('quantity'), Sum('amount'))
+
     mandi_gaddidar = CombinedTransaction.objects.filter(
         **filter_args).values('mandi__id', 'gaddidar__id').annotate(Sum('quantity'), Sum('amount'))
     mandi_crop = CombinedTransaction.objects.filter(
         **filter_args).values('mandi__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
-    # gaddidar_crop = CombinedTransaction.objects.filter(
-    #     **filter_args).values('gaddidar__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
+
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values(
-        'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
+        'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).annotate(crop__crop_name=F('crop__crop_name_en')).values('crop__crop_name', 'crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).annotate(crop__crop_name=F('crop__crop_name_en'), mandi__mandi_name=F('mandi__mandi_name_en')).values('crop__crop_name', 'crop__id', 'mandi__id', 'mandi__mandi_name').annotate(Min('price'), Max('price'))
+        **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
+    # stats = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'mandi__id', 'crop__crop_name', 'date', 'farmer__id', 'quantity', 'amount', 'gaddidar__id').order_by('-date')
+    # aggregator_crop = CombinedTransaction.objects.filter(**filter_args).values(
+    #     'user_created__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
+    # gaddidar_crop = CombinedTransaction.objects.filter(
+    #     **filter_args).values('gaddidar__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
 
     # visits={}
     #
