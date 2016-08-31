@@ -144,12 +144,13 @@ function total_static_data() {
             total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
             total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
         }
-        // TODO - DONE: # we need to calculate gaddidar contribution by using a for loop here
+        // TODO - DONE: # we need to calculate gaddidar contribution by WITHOUT using a for loop here
 
-        var total_gaddidar_contribution = 0;
-        for(var i=0;i<json_data['total_gaddidar_contribution'].length; i++){
-            total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
-        }
+        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+
+//        for(var i=0;i<json_data['total_gaddidar_contribution'].length; i++){
+//            total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
+//        }
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
 //        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];

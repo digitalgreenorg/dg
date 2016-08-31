@@ -183,16 +183,19 @@ def total_static_data(request):
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
-    gaddidar_share = calculate_gaddidar_share(None, None, None, None)
-    for i in gaddidar_share:
-        print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-        print i
+    gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def gaddidar_contribution_for_totat_static_data():
+    gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
+    total_share = 0
+    for entry in gaddidar_share_list:
+        total_share += entry['amount']
+    return total_share
 
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     parameters_dictionary = { 'start_date' : start_date, 'end_date' : end_date,  'mandi__in' : mandi_list, 'aggregator__in':aggregator_list}
