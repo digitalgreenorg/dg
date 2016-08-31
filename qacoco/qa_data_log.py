@@ -30,11 +30,15 @@ def save_log(sender, **kwargs ):
         district_id = instance.video.village.block.district_id
     elif sender in ['DisseminationQuality', 'AdoptionVerification']:
         district_id = instance.village.block.district_id
+    else:
+        district_id = None
 
     if sender in ['VideoContentApproval', 'VideoQualityReview']:
         partner_id = instance.video.partner_id
     elif sender in ['DisseminationQuality', 'AdoptionVerification']:
         partner_id = instance.mediator.partner_id
+    else:
+        partner_id = None
 
     ServerLog = get_model('qacoco', 'ServerLog')
     log = ServerLog(district=district_id, user=user, action=action, entry_table=sender,

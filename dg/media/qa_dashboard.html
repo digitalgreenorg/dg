@@ -521,17 +521,17 @@
     </fieldset>
 </script>
 <script type="text/template" id="nn_template">
-    <tr class="stack-table nnadd" id="row7" index = <%=index%> NonNegotiable_id = <%=id%> model_id = <%=id%>>
+    <tr class="stack-table nnadd"  index = <%=index%> id = <%=id%> model_id = <%=id%>>
         <td>
             <div class="form-group">
                 <div class="controls">
-                <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
                 <%=index+1%>
+                <input type="text"  class="form-control" style="display:none;" id="id<%=index%>" name="id<%=index%>" value = "<%=id%>" disabled>
                 </div>
             </div>
         </td>
         <td ><div class="form-group"><div class="controls">
-            <textarea name="non_negotiable<%=index%>" id="NonNegotiable_id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
+            <textarea name="non_negotiable<%=index%>" id="id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
                 
             </div></div>
         </td> 
@@ -1069,17 +1069,17 @@
     </fieldset>
 </script>
 <script type="text/template" id="nn_verification_template">
-    <tr class="stack-table nnadd" id="row7" index = <%=index%> NonNegotiable_id = <%=id%> model_id = <%=id%>>
+    <tr class="stack-table nnadd" id="row7" index = <%=index%> nonnegotiable_id = <%=id%> model_id = <%=id%>>
         <td>
             <div class="form-group">
                 <div class="controls">
-                <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
                 <%=index+1%>
+                 <input type="text"  class="form-control" style="display:none;" id="nonnegotiable_id<%=index%>" name="nonnegotiable_id<%=index%>" value = "<%=id%>" disabled>
                 </div>
             </div>
         </td>
         <td ><div class="form-group"><div class="controls">
-            <textarea name="non_negotiable<%=index%>" id="NonNegotiable_id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
+            <textarea name="non_negotiable<%=index%>" id="nonnegotiable_id<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="1" maxlength="500"rows="1" style="resize:vertical; width:82%;" disabled> <%=non_negotiable%> </textarea>
                 
             </div></div>
         </td> 
@@ -1094,9 +1094,16 @@
         </td>
         <td>
             <div class="form-group">
-                <div class="checkbox">
-                        <input class="mrg-lt-auto" type="checkbox" name="adopted">
-                        <input class="mrg-lt-auto" type="checkbox" name="adopted">
+                <div class="controls">
+                <% if (typeof(adopted) !== "undefined") { %>
+                    <% if(adopted == true){ %>
+                        <input class="mrg-lt-auto" type="checkbox" value="1" name="adopted" checked>
+                    <% } else{ %>
+                        <input class="mrg-lt-auto" type="checkbox" value="1" name="adopted">
+                    <% } %>
+                <% } else{ %>
+                    <input class="mrg-lt-auto" type="checkbox" value="1" name="adopted">
+                <% } %>
                 </div>
             </div>
         </td>

@@ -9,12 +9,16 @@ from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
 
-from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName
+from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName, AdoptionNonNegotiableVerfication
 from geographies.models import Block, Village, State,District
 from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
 from videos.models import Video, Category, SubCategory, NonNegotiable
 from qacoco.forms import VideoContentApprovalForm, VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
 from people.models import Animator, Person, PersonGroup
+
+class AdoptionVerificationNotSaved(Exception):
+    pass
+
 class ModelFormValidation(FormValidation):
     """
         Override tastypie's standard ``FormValidation`` since this does not care
@@ -292,7 +296,7 @@ class NonNegotiableResource(BaseResource):
         queryset = NonNegotiable.objects.prefetch_related('video').all()
         resource_name = 'nonnegotiable'
         authentication = SessionAuthentication()
-        authorization = Authorization()
+        authorization = NonNegotiableAuthorization()
         validation = ModelFormValidation(form_class=NonNegotiableForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
@@ -309,6 +313,22 @@ class VideoContentApprovalResource(BaseResource):
                 authorization = Authorization()
                 authentication = SessionAuthentication()
                 validation = ModelFormValidation(form_class=VideoContentApprovalForm)
+        
+        def get_list(self, request, **kwargs):
+            resp = super(VideoContentApprovalResource, self).get_list(request, **kwargs)
+            import json
+            from django.http import HttpResponse
+            data = json.loads(resp.content)
+            all_nonnego = NonNegotiable.objects.all()
+            for entry in data['objects']:
+                #print entry
+                video_id = entry['video']['id']
+                video_non_nego = all_nonnego.filter(video_id=video_id).values('non_negotiable', 'physically_verifiable','id')
+                entry['nonnegotiable'] = list(video_non_nego)
+            data = json.dumps(data)
+            return HttpResponse(data, content_type='application/json', status=200)
+
+
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
         hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
         dehydrate_qareviewername = partial(foreign_key_to_id, field_name = 'qareviewername', sub_field_names=['id','name'])
@@ -363,6 +383,7 @@ class AdoptionVerificationResource(BaseResource):
         person = fields.ForeignKey(PersonResource, 'person')
         group = fields.ForeignKey(PersonGroupResource, 'group')
         qareviewername = fields.ForeignKey(QAReviewerNameResource, 'qareviewername')
+        nonnegotiable = fields.ListField()
         class Meta:
                 queryset = AdoptionVerification.objects.all()
                 always_return_data = True
@@ -370,6 +391,49 @@ class AdoptionVerificationResource(BaseResource):
                 authorization = Authorization()
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=AdoptionVerificationForm)
+
+        def obj_create(self, bundle, **kwargs):
+            print "here 1"
+            nonnego_list = bundle.data.get('nonnegotiable')
+            print nonnego_list
+            if nonnego_list:
+                print "here2"
+                bundle = super(AdoptionVerificationResource, self).obj_create(bundle, **kwargs)
+                print "here3"
+                user_id = None
+                if bundle.request.user:
+                    user_id =  bundle.request.user.id
+                adoptionverification_id  = getattr(bundle.obj,'id')
+                for pma in nonnego_list:
+                    try:
+                        print "print pma"
+                        print pma
+                        attendance = AdoptionNonNegotiableVerfication(adoptionverification_id=adoptionverification_id, nonnegotiable_id=pma['nonnegotiable_id'], adopted=pma['adopted'],
+                                                    user_created_id = user_id)
+                        attendance.save()
+                    except Exception, e:
+                        raise AdoptionVerificationNotSaved('For AdoptionVerification with id: ' + str(adoptionverification_id) + ' pma is not getting saved. pma details: '+ str(e))
+        
+                return bundle
+            else:
+                raise AdoptionVerificationNotSaved('Can not be saved because nonnegotiable list is not available')
+
+        def obj_update(self, bundle, **kwargs):
+            #Edit case many to many handling. First clear out the previous related objects and create new objects
+            bundle = super(AdoptionVerificationResource, self).obj_update(bundle, **kwargs)
+            user_id = None
+            if bundle.request.user:
+                user_id =  bundle.request.user.id
+        
+            adoptionverification_id = bundle.data.get('id')
+            del_objs = AdoptionNonNegotiableVerfication.objects.filter(adoptionverification__id=adoptionverification_id).delete()
+            nonnego_list = bundle.data.get('nonnegotiable')
+            for pma in nonnego_list:
+                pma = AdoptionNonNegotiableVerfication(adoptionverification_id=adoptionverification_id, nonnegotiable_id=pma['nonnegotiable_id'], adopted=pma['adopted'],
+                                                    user_created_id = user_id)
+                pma.save()    
+            return bundle
+
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
         hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
         dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
@@ -384,3 +448,9 @@ class AdoptionVerificationResource(BaseResource):
         hydrate_qareviewername = partial(dict_to_foreign_uri, field_name ='qareviewername')
         dehydrate_person = partial(foreign_key_to_id, field_name = 'person', sub_field_names=['id','person_name'])
         hydrate_person = partial(dict_to_foreign_uri, field_name ='person', resource_name = 'person')
+        def dehydrate_nonnegotiable(self, bundle):
+            return [{'nonnegotiable_id':non.nonnegotiable.id, 
+                 'nonnegotiable': non.nonnegotiable.non_negotiable,
+                 'adopted': non.adopted, 
+                 }  
+                 for non in bundle.obj.adoptionnonnegotiableverfication_set.all()]

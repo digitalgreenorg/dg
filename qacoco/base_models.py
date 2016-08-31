@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 
 TYPE_CHOICES = (
-			(0, 'Not For Adoption'),
-			(1, 'For Adoption'),
+			('0', 'Not For Adoption'),
+			('1', 'For Adoption'),
 	)
 
 SCORE_CHOICES = (
@@ -25,8 +25,8 @@ APPROVAL = (
 	)
 
 ADOPTED = (
-	(0, 'No'),
-	(1, 'Yes'),
+	('0', 'No'),
+	('1', 'Yes'),
 	)
 
 EQUIPMENT_WORK = (

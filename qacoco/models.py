@@ -62,7 +62,7 @@ pre_delete.connect(delete_log, sender=QAReviewerName)
 class VideoContentApproval(QACocoModel):
     video = models.ForeignKey(Video)
     qareviewername = models.ForeignKey(QAReviewerName)
-    suitable_for = models.IntegerField(validators=[MaxValueValidator(9)],choices=TYPE_CHOICES)
+    suitable_for = models.CharField(max_length=1, choices=TYPE_CHOICES)
     comment = models.CharField(max_length=200)
     
     def __unicode__(self):
@@ -132,6 +132,17 @@ class AdoptionVerification(QACocoModel):
     verification_date = models.DateField()
     video = models.ForeignKey(Video)
     qareviewername = models.ForeignKey(QAReviewerName)
-    adopted = models.IntegerField(choices=ADOPTED, null=True)
+    adopt_nonnegotiable = models.ManyToManyField(NonNegotiable, through='AdoptionNonNegotiableVerfication',blank=True,null=True)
 post_save.connect(save_log, sender=AdoptionVerification)
 pre_delete.connect(delete_log, sender=AdoptionVerification)
+
+class AdoptionNonNegotiableVerfication(QACocoModel):
+    id = models.AutoField(primary_key=True)
+    adoptionverification = models.ForeignKey(AdoptionVerification)
+    nonnegotiable = models.ForeignKey(NonNegotiable)
+    adopted = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return  u'%s' % (self.id)
+
+
