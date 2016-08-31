@@ -198,8 +198,8 @@ def gaddidar_contribution_for_totat_static_data():
     return total_share
 
 def calculate_gaddidar_share(start_date, mandi_list, aggregator_list):
-    parameters_dictionary = { 'start_date' : start_date, 'mandi__in' : mandi_list, 'aggregator__in':aggregator_list}
-    parameters_dictionary_for_outliers = { 'date' : start_date, 'mandi__in' : mandi_list, 'aggregator__in':aggregator_list}
+    parameters_dictionary = { 'start_date' : start_date}
+    parameters_dictionary_for_outliers = { 'date' : start_date, 'aggregator__in':aggregator_list}
     parameters_dictionary_for_ct = { 'date' : start_date, 'mandi__in' : mandi_list, 'user_created__id__in':aggregator_list}
 
     arguments_for_ct = {}
@@ -207,7 +207,7 @@ def calculate_gaddidar_share(start_date, mandi_list, aggregator_list):
     arguments_for_gaddidar_outliers ={}
 
     for k, v in parameters_dictionary.items():
-        if k=='start_date' and v:
+        if v:
             arguments_for_gaddidar_commision[k]=v
 
     for k, v in parameters_dictionary_for_ct.items():
@@ -215,9 +215,7 @@ def calculate_gaddidar_share(start_date, mandi_list, aggregator_list):
             arguments_for_ct[k] = v
 
     for k, v in parameters_dictionary_for_outliers.items():
-        if k=='date' and v:
-            arguments_for_gaddidar_outliers[k]=v
-        if k=='aggregator__in' and v:
+        if v:
             arguments_for_gaddidar_outliers[k]=v
 
     gc_queryset = GaddidarCommission.objects.filter(**arguments_for_gaddidar_commision)
