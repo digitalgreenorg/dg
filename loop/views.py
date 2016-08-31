@@ -191,16 +191,17 @@ def total_static_data(request):
     return HttpResponse(data)
 
 def gaddidar_contribution_for_totat_static_data():
-    gaddidar_share_list = calculate_gaddidar_share(None, None, None)
+    gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
     total_share = 0
     for entry in gaddidar_share_list:
         total_share += entry['amount']
     return total_share
 
-def calculate_gaddidar_share(start_date, mandi_list, aggregator_list):
-    parameters_dictionary = { 'start_date' : start_date}
-    parameters_dictionary_for_outliers = { 'date' : start_date, 'aggregator__in':aggregator_list}
-    parameters_dictionary_for_ct = { 'date' : start_date, 'mandi__in' : mandi_list, 'user_created__id__in':aggregator_list}
+def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
+
+    parameters_dictionary = {'mandi__in' : mandi_list}
+    parameters_dictionary_for_outliers = {'mandi__in':mandi_list, 'aggregator__user__in':aggregator_list}
+    parameters_dictionary_for_ct = {'date__gte' : start_date, 'date__lte':end_date, 'mandi__in' : mandi_list, 'user_created__id__in':aggregator_list}
 
     arguments_for_ct = {}
     arguments_for_gaddidar_commision={}
@@ -311,7 +312,16 @@ def new_aggregator_wise_data(request):
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
 
-    gaddidar_contribution = calculate_gaddidar_share(start_date,mandi_ids,aggregator_ids)
+    print ("!!!!!!!!!!!!!!")
+    print start_date
+    print mandi_ids
+    print aggregator_ids
+    gaddidar_contribution = calculate_gaddidar_share(start_date, end_date, mandi_ids,aggregator_ids)
+    print ("@@@@@@@@@@@")
+    print gaddidar_contribution
+    print type(gaddidar_contribution)
+
+
     # stats = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'mandi__id', 'crop__crop_name', 'date', 'farmer__id', 'quantity', 'amount', 'gaddidar__id').order_by('-date')
     # aggregator_crop = CombinedTransaction.objects.filter(**filter_args).values(
     #     'user_created__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
@@ -337,7 +347,7 @@ def new_aggregator_wise_data(request):
     #         if (agg_man['user_created__id'], agg_man['mandi__id']) == visit:
     #             agg_man['mandi__id__count'] = visits[(agg_man['user_created__id'], agg_man['mandi__id'])]
 
-    chart_dict = {"total_repeat_farmers": list(total_repeat_farmers), "crop_prices": list(crop_prices), 'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'mandi_gaddidar': list(mandi_gaddidar), 'mandi_crop': list(mandi_crop),  'transportation_cost_mandi': list(transportation_cost_mandi), "mandi_crop_prices": list(mandi_crop_prices), "gaddidar_contribution":list(gaddidar_contribution)}
+    chart_dict = {"total_repeat_farmers": list(total_repeat_farmers), "crop_prices": list(crop_prices), 'aggregator_mandi': list(aggregator_mandi), 'aggregator_gaddidar': list(aggregator_gaddidar), 'mandi_gaddidar': list(mandi_gaddidar), 'mandi_crop': list(mandi_crop),  'transportation_cost_mandi': list(transportation_cost_mandi), "mandi_crop_prices": list(mandi_crop_prices), "gaddidar_contribution":gaddidar_contribution}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)

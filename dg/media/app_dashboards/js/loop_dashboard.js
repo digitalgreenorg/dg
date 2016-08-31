@@ -1040,6 +1040,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
 function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
     var vol_stats = json_data.aggregator_mandi;
     var cost_stats = json_data.transportation_cost_mandi;
+    var gaddidar_share_stats = json_data.gaddidar_contribution;
     var series = [];
     var drilldown = {};
     drilldown['allowPointDrilldown'] = false;
@@ -1095,6 +1096,13 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     }
 
     //TODO : # we need to run a for loop here and for a particular mandi/aggregaor we will have to calculate gaddidar contribution here.
+
+    console.log(axis);
+    console.log(axis_parameter);
+    console.log(cost_stats);
+    console.log("****************************");
+    console.log(gaddidar_share_stats);
+
     var data_for_sorting = []
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
