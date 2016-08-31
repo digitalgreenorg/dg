@@ -363,26 +363,6 @@ class GaddidarShareOutliers(LoopModel):
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
 
-class GaddidarCommission(LoopModel):
-    gaddidar = models.ForeignKey(Gaddidar)
-    start_date = models.DateField(auto_now=False)
-    discount_percent = models.FloatField(validators=[MinValueValidator(0.0),
-                                                     MaxValueValidator(1.0)], default=0.0)
-
-    class Meta:
-        unique_together = ("start_date", "gaddidar")
-
-
-class GaddidarShareOutliers(LoopModel):
-    gaddidar = models.ForeignKey(Gaddidar)
-    aggregator = models.ForeignKey(LoopUser)
-    date = models.DateField(auto_now=False)
-    amount = models.FloatField()
-
-    class Meta:
-        unique_together = ("date", "gaddidar", "aggregator")
-
-
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(
