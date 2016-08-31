@@ -23,6 +23,22 @@ $('#nav_menu1').on('click', function() {
     reset_filter_form();
 });
 
+
+/*$('#nav_assessments').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});*/
+
+$('#nav_trainers').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+$('#nav_states').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
 $('#link4').on('click', function () {
     setTimeout(function () {
         $('#month_training_data').highcharts().reflow();
@@ -121,7 +137,10 @@ $("#states_table").find("tr").each(function(index) {
 // reset
 function reset_filter_form() {
     $('#search_trainers').val('');
+    $('#search_trainers').keyup();
+
      $('#search_states').val('');
+     $('#search_states').keyup();
  
 
 }
