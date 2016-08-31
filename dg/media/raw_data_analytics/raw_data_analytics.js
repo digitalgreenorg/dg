@@ -32,9 +32,9 @@ window.onload = date;
 
     });
     $("#partnerId").bind("change", function () {
-  /*      $('#videoId').prop('disabled', false);
+        $('#videoId').prop('disabled', false);
         $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");*/
+        $("#videoId").val('').trigger("chosen:updated");
     });
     $("#countryID").bind("change", function () {
         $('#stateId').prop('disabled', false);
@@ -46,6 +46,8 @@ window.onload = date;
         $("#districtId").val('').trigger("chosen:updated");
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
     });
     $("#stateId").bind("change", function () {
         $("#districtId").prop('disabled', false);
@@ -55,6 +57,8 @@ window.onload = date;
         $("#districtId").val('').trigger("chosen:updated");
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
     });
     $("#districtId").bind("change", function () {
         $("#blockId").prop('disabled', false);
@@ -62,13 +66,21 @@ window.onload = date;
         $("#villageId").find('option').remove();
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
 
     });
     $("#blockId").bind("change", function () {
         $("#villageId").prop('disabled', false);
         $("#villageId").find('option').remove();
         $("#villageId").val('').trigger("chosen:updated");
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
 
+    });
+    $('villageId').bind("change",function () {
+        $('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");
     });
     $("#stateId").next().bind("click", function () {
         populate('state', $("#countryId").val());

@@ -66,25 +66,34 @@ def dropdown_village(request):
 
 
 def dropdown_video(request):
-    print request.GET
     country_selected = request.GET.getlist('country[]')
     partner_selected = request.GET.getlist('partner[]')
     state_selected = request.GET.getlist('state[]')
     district_selected = request.GET.getlist('district[]')
     block_selected = request.GET.getlist('block[]')
     village_selected = request.GET.getlist('village[]')
-    #partner_selected = request.GET.get('partner[]')
-    videocountry = Video.objects.filter(village__block__district__state__state_name__in=state_selected).filter(village__block__district__state__country__country_name__in=country_selected).values_list('title','id','youtubeid')
-    print videocountry
 
-    videos = Video.objects.filter(partner__partner_name__in=partner_selected).values_list('title','id')  # todo
-    videovill =Video.objects.filter(village__village_name__in=village_selected).values_list('title','id','youtubeid')
-    videoblock =Video.objects.filter(village__block__block_name__in=block_selected).values_list('title','id','youtubeid')
-    videodistrict = Video.objects.filter(village__block__district__district_name__in=district_selected).values_list('title','id','youtubeid')
-    videostate = Video.objects.filter(village__block__district__state__state_name__in=state_selected).values_list('title','id','youtubeid')
-    
-    print videocountry
-    resp = json.dumps([i for i in videocountry])
+    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected}
+    final_dict ={}
+    videos = []
+
+    if partner_selected[0]!='':
+        videos = list(Video.objects.filter(partner__partner_name__in=partner_selected).values_list('title','id','youtubeid'))
+        
+    for keys in filter_dict:
+        if filter_dict[keys][0]!='':
+            final_dict[keys]=filter_dict[keys]
+    if final_dict:
+        if not videos:
+            videos = list(Video.objects.filter(**final_dict).values_list('title','id','youtubeid'))
+        else:
+            video = (list(Video.objects.filter(**final_dict).values_list('title','id','youtubeid')))
+            videos.extend(video)
+
+    elif not videos:
+        videos = list(Video.objects.all().values_list('title','id','youtubeid'))
+
+    resp = json.dumps([i for i in videos])
     return HttpResponse(resp)
 
 
