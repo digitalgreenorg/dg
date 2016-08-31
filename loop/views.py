@@ -241,7 +241,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
                     sum += gso_gaddidar_date_aggregator[0]
             except GaddidarShareOutliers.DoesNotExist:
                 pass
-        result.append({'date':CT['date'], 'user_created__id':user.id, 'gaddidar__id':CT['gaddidar'], 'mandi__id':CT['mandi'], 'amount':sum})
+        result.append({'date':CT['date'], 'user_created__id':CT['user_created_id'], 'gaddidar__id':CT['gaddidar'], 'mandi__id':CT['mandi'], 'amount':sum})
     return result
 
 def crop_language_data(request):
