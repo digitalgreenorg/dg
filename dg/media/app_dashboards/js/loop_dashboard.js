@@ -144,11 +144,12 @@ function total_static_data() {
             total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
             total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
         }
-
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
 
+//        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+
         var total_expenditure = total_transportation_cost - total_farmer_share;
-        // var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
+//        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 

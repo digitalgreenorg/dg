@@ -98,7 +98,7 @@ class AnimatorAdmin(admin.ModelAdmin):
     inlines = [AnimatorAssignedVillages]
     list_display = ('name', 'partner', 'district', 'role',)
     search_fields = ['name', 'partner__partner_name', 'role',]
-
+    
 
 class PersonGroupInline(admin.TabularInline):
     model = PersonGroup
@@ -221,4 +221,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
-
