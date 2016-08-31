@@ -63,7 +63,7 @@
 		<li class="no-padding not-hoverable">
 		<ul class="collapsible collapsible-accordion">
 			<li class="bold not-hoverable" style="line-height:130%; padding-top:10%;">
-				<a class="collapsible-header waves-effect waves-teal">Assessments</a>
+				<a id="nav_assessments" class="collapsible-header waves-effect waves-teal">Assessments</a>
 				<div class="collapsible-body container" style="display: none;">
 					<table class="filter-table centered">
 						<tbody id="assessments">
@@ -72,7 +72,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable" style="line-height:130%;padding-top:5%;">
-				<a class="collapsible-header waves-effect waves-teal">Trainers</a>
+				<a id="nav_trainers" class="collapsible-header waves-effect waves-teal">Trainers</a>
 				<div class="collapsible-body container" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
@@ -113,7 +113,7 @@
 				</div>
 			</li> -->
 			<li class="bold not-hoverable" style="line-height:130%;padding-top:4%;">
-				<a class="collapsible-header waves-effect waves-teal">States</a>
+				<a id="nav_states" class="collapsible-header waves-effect waves-teal">States</a>
 				<div class="collapsible-body container" style="display: none;">
 
 					<table class="filter-table centered">
@@ -146,51 +146,51 @@
 		</ul>
 	</ul>
 
-	<div id = "box-1" class="row" style="margin-left:-22%;margin-right:-22%;padding-top:2.5;padding-bottom:2.5%; padding-left:4%;padding-right:4%;">
-		<div class="col s12 m6 l2" >
+	<div id = "box-1" class="row col s12 m12" style="margin-left:-22%;margin-right:-22%;padding-top:2.5;padding-bottom:2.5%; padding-left:4%;padding-right:4%;">
+		<div class="col s10 m4 l3 offset-s1 offset-m1" >
 			<div class="card teal darken-1">
 				<div class="">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-social-school"></i> No. of<br/> Trainings:<br/>
+						<i class="mdi-social-school"></i> No. of Trainings:<br/>
 						<i id="num_trainings"> </i>
 					</div>
 				</div>
 			</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l2" >
+		<div class="col s10 m4 l3 offset-s1 offset-m1" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-social-group"></i> Mediators<br/> Trained: <br/>
+						<i class="mdi-social-group"></i> Mediators Trained: <br/>
 						<i id="mediators_trained"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l2" >
+		<div class="col s10 m4 l3 offset-s1 offset-m1" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-subject"></i> Average<br/> Score:<br/>
+						<i class="mdi-action-subject"></i> Average Score:<br/>
 						<i id="average_score"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col s12 m6 l2" >
+		<div class="col s10 m4 l3 offset-s1 offset-m1" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-spellcheck"></i> Pass<br/> Percentage:<br/>
+						<i class="mdi-action-spellcheck"></i> Pass Percentage:<br/>
 						<i id="pass_percent"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col s12 m6 l2" >
+		<!-- <div class="col s12 m6 l2" >
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
@@ -210,7 +210,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	<!-- 	<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
@@ -291,21 +291,21 @@
 			
 		</div> -->
 
-		<div class="input-field col s12 m4 l1">
+		<div class="input-field col s12 m6 l2">
 
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="from_date" placeholder="Start Date" type="text" class="datepicker" style="font-size:80%;"> 
+			<input id="from_date" placeholder="Start Date" type="text" class="datepicker" style="font-size:80%;font-weight:bold;"> 
 			<label for="from_date">From:</label>
 		</div>
 
-		<div class="input-field col s12 m4 l1 ">
+		<div class="input-field col s12 m6 l2 ">
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="to_date" placeholder="End Date" type="text" class="datepicker" style="font-size:80%;">
+			<input id="to_date" placeholder="End Date" type="text" class="datepicker" style="font-size:80%; font-weight:bold;">
 			<label for="to_date" class="active">To:</label>
 		</div>
 
-		<div class = "col s12 m4 l1">
-				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:40%; background-color:rgba(0,0,0,0.7);">GET</a>
+		<div class = "col s3 m3 l1 offset-s5 offset-m5">
+				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:40%;margin-bottom:40%; background-color:rgba(0,0,0,0.7);">GET</a>
 
 				<div id="modal1" class="modal" style = "width:20%; height:25%">
 					<div class="modal-content">
@@ -318,28 +318,28 @@
 
 		</div>
 
-		<div class="col s6 m6 l1 offset-l3" style="font-size:80%;">
+		<div class="col s4 m4 l1 offset-l2 offset-s3 offset-m2" style="font-size:80%;">
 			
 		
 			 No. of<br/> Trainings:<br/>
 			<i id="filtered_num_trainings"> </i>
 			
 		</div>
-		<div class="col s6 m6 l1" style="font-size:80%;">
+		<div class="col s4 m4 l1" style="font-size:80%;">
 			
 			
 			Mediators<br/> Trained:<br/>
 			<i id="filtered_mediators_trained"> </i>
 			
 		</div>
-		<div class="col s6 m6 l1" style="font-size:80%;">
+		<div class="col s4 m4 l1 offset-s3 offset-m2" style="font-size:80%;">
 			
 			
 			Average<br/> Score:<br/>
 			<i id="filtered_average_score"> </i>
 			
 		</div>
-		<div class="col s6 m6 l1" style="font-size:80%;">
+		<div class="col s4 m4 l1" style="font-size:80%;">
 			
 		
 			Pass<br/> Percentage:<br/>
@@ -347,7 +347,7 @@
 			
 		</div>
 
-		<div class="col s6 m6 l1" style="font-size:80%;">
+		<!-- <div class="col s6 m6 l1" style="font-size:80%;">
 			
 		
 			Villages<br/> Reached:<br/>
@@ -361,7 +361,7 @@
 			Viewers<br/> Reached:<br/>
 			<i id="filtered_viewers_reached"> </i>
 			
-		</div>
+		</div> -->
 
 	</div>
 

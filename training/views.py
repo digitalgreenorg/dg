@@ -49,21 +49,21 @@ def filter_data(request):
     num_trainings = Training.objects.filter(assessment__id=1).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
-    training_objs = Training.objects.filter(assessment__id = 1).values('participants__id','date')
-    for item in training_objs :
-        if(item['participants__id'] is not None) :
-            item['participants__id'] = int(item['participants__id'])
-        else :
-            del item
+    # training_objs = Training.objects.filter(assessment__id = 1).values('participants__id','date')
+    # for item in training_objs :
+    #     if(item['participants__id'] is not None) :
+    #         item['participants__id'] = int(item['participants__id'])
+    #     else :
+    #         del item
             
-    print training_objs    
-    count = 0           
-    for item in training_objs:
-        count += Screening.objects.filter(animator_id=item['participants__id'], date__gte=item['date']).values('village_id').distinct().count()
-    num_villages = count
-    num_beneficiaries = 0
-    for item in training_objs:
-        num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte=item['date']).values('farmers_attendance__id').distinct().count()
+    # print training_objs    
+    # count = 0           
+    # for item in training_objs:
+    #     count += Screening.objects.filter(animator_id=item['participants__id'], date__gte=item['date']).values('village_id').distinct().count()
+    # num_villages = count
+    # num_beneficiaries = 0
+    # for item in training_objs:
+    #     num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte=item['date']).values('farmers_attendance__id').distinct().count()
 
 
                     
@@ -82,15 +82,15 @@ def filter_data(request):
     # mysql_cn.close()
 
 
-    print "******* Num villages"
-    print num_villages
-    print "*********"
+    # print "******* Num villages"
+    # print num_villages
+    # print "*********"
 
-    print "******* Beneficiaries"
-    print num_beneficiaries
-    print "*********"
+    # print "******* Beneficiaries"
+    # print num_beneficiaries
+    # print "*********"
     #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
-    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_villages': num_villages, 'num_beneficiaries': num_beneficiaries}
+    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -113,20 +113,20 @@ def date_filter_data(request):
 
     # Start
 
-    training_objs = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('participants__id','date')
-    for item in training_objs:
-        if(item['participants__id'] is not None) :
-            item['participants__id'] = int(item['participants__id'])
-        else :
-            del item
-    print training_objs    
-    count = 0           
-    for item in training_objs:
-        count += Screening.objects.filter(animator_id=item['participants__id'], date__gte = item['date'], date__lte = end_date).values('village_id').distinct().count()
-    num_villages = count
-    num_beneficiaries = 0
-    for item in training_objs:
-        num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte = item['date'], date__lte = end_date).values('farmers_attendance__id').distinct().count()
+    # training_objs = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('participants__id','date')
+    # for item in training_objs:
+    #     if(item['participants__id'] is not None) :
+    #         item['participants__id'] = int(item['participants__id'])
+    #     else :
+    #         del item
+    # print training_objs    
+    # count = 0           
+    # for item in training_objs:
+    #     count += Screening.objects.filter(animator_id=item['participants__id'], date__gte = item['date'], date__lte = end_date).values('village_id').distinct().count()
+    # num_villages = count
+    # num_beneficiaries = 0
+    # for item in training_objs:
+    #     num_beneficiaries += Screening.objects.filter(animator_id= item['participants__id'], date__gte = item['date'], date__lte = end_date).values('farmers_attendance__id').distinct().count()
 
     # End 
 
@@ -146,15 +146,15 @@ def date_filter_data(request):
     #     num_beneficiaries = row[0]
     # mysql_cn.close()
     #num_beneficiaries = PersonMeetingAttendance.objects.filter(screening__date__gte = start_date, screening__date__lte = end_date).values('person_id').distinct().count()
-    print "######### filtered villages"
-    print num_villages
-    print "#########"
+    # print "######### filtered villages"
+    # print num_villages
+    # print "#########"
 
-    print "******* Filtered Beneficiaries"
-    print num_beneficiaries
-    print "*********"
+    # print "******* Filtered Beneficiaries"
+    # print num_beneficiaries
+    # print "*********"
     #num_farmers = len(PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values_list('person', flat=True).distinct())
-    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass), 'num_villages': num_villages, 'num_beneficiaries': num_beneficiaries}
+    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
