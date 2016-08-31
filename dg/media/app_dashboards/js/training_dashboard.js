@@ -24,35 +24,35 @@ $('#nav_menu1').on('click', function() {
 });
 
 $('#link4').on('click', function () {
-    setInterval(function () {
+    setTimeout(function () {
         $('#month_training_data').highcharts().reflow();
-    }, 5);
+    }, 2);
 });
 
 $('#link3').on('click', function () {
-    setInterval(function () {
+    setTimeout(function () {
         $('#question_mediator_data').highcharts().reflow();
-    }, 5);
+    }, 2);
 });
 
 $('#link1').on('click', function () {
-    setInterval(function () {
+    setTimeout(function () {
         $('#state_training_data').highcharts().reflow();
-    }, 10);
+    }, 2);
 
-    setInterval(function () {
+    setTimeout(function () {
         $('#state_mediator_data').highcharts().reflow();
-    }, 10);
+    }, 2);
 });
 
 $('#link2').on('click', function () {
-    setInterval(function () {
+    setTimeout(function () {
         $('#trainer_training_data').highcharts().reflow();
-    }, 10);
+    }, 2);
 
-    setInterval(function () {
+    setTimeout(function () {
         $('#trainer_mediator_data').highcharts().reflow();
-    }, 10);
+    }, 2);
 });
 
 
@@ -1088,7 +1088,7 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
 
     container_obj.highcharts({
         chart: {
-            zoomType: 'xy',
+            zoomType: '',
             /*width:width_*/
         },
 
@@ -1177,7 +1177,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
     
     container_obj.highcharts({
         chart: {
-            zoomType: 'xy',
+            zoomType: '',
             spacingRight : 30,
             /*width: width_*/
         },
