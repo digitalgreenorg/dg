@@ -1092,7 +1092,6 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         values_cost_spk[index] += cost_stats[i]['farmer_share__sum'];
         values_cost_cpk_drilldown[index][drilldown_index] += cost_stats[i]['transportation_cost__sum'];
         values_cost_spk_drilldown[index][drilldown_index] += cost_stats[i]['farmer_share__sum'];
-
     }
 
     //TODO : # we need to run a for loop here and for a particular mandi/aggregaor we will have to calculate gaddidar contribution here.
