@@ -149,9 +149,9 @@ function total_static_data() {
 //        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
-        var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 //        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
+        var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 
         var clusters = json_data['total_cluster_reached'];
 
@@ -460,8 +460,7 @@ function change_graph(parameter) {
     if (selected_tab == "aggregator") {
         $('#aggregator_tab').addClass('active');
         update_graphs_aggregator_wise(parameter);
-    }
-    if (selected_tab == "mandi") {
+    } else if (selected_tab == "mandi") {
         $('#mandi_tab').addClass('active');
         $("#gaddidar_aggregator_graph").show();
         $("#aggregator_farmer_count").hide();
@@ -470,9 +469,7 @@ function change_graph(parameter) {
             update_graphs_gaddidar_wise(parameter);
             gaddidar = false;
         }
-
-    }
-    if (selected_tab == "crop") {
+    } else if (selected_tab == "crop") {
         $('#crop_tab').addClass('active');
         $("#aggregator_visits").hide();
         $("#cpk_cost").hide();
@@ -675,7 +672,7 @@ function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
     var td_name = $('<td>').html(name);
     row.append(td_name);
-    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = ' + name + ' /><label for="' + name + id + '"></label>';
+    var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = "' + name + '" /><label for="' + name + id + '"></label>';
     var td_checkbox = $('<td>').html(checkbox_html);
     row.append(td_checkbox);
     tbody_obj.append(row);
@@ -775,10 +772,10 @@ function update_graphs_aggregator_wise(chart) {
         }
 
         if (chart == "cost_recovered") {
-            $('#2ndgraph').text("Total Cost")
+            $('#2ndgraph').text("Total Cost");
             transport_cost_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data.transportation_cost_mandi);
         } else if (chart == "cpk_spk") {
-            $('#2ndgraph').text("Cost per kg")
+            $('#2ndgraph').text("Cost per kg");
             cpk_spk_graph($('#mandi_cost'), aggregator_ids, aggregator_names, 'user_created__id', mandi_ids, mandi_names, 'mandi__id', bar_graphs_json_data);
         }
     }
@@ -884,7 +881,6 @@ function totals() {
 function aggregator_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data, parameter) {
     var series = [];
     var drilldown = {};
-
     drilldown['series'] = [];
 
     // These three values are to show at top
@@ -895,7 +891,6 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
     temp['colorByPoint'] = false;
     temp['data'] = [];
     temp['pointWidth'] = 15;
-
 
     for (var i = 0; i < axis.length; i++) {
         temp['data'].push({
@@ -3018,7 +3013,7 @@ function outliers_summary(aggregator_id) {
     var start_date = new Date(payments_start_date);
     var end_date = new Date(payments_to_date);
     var dates = [];
-    while (start_date <= end_date) {
+    while (start_date.getDate() <= end_date.getDate()) {
         dates.push(start_date.getTime());
         start_date.setDate(start_date.getDate() + 1);
     }
