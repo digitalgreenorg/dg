@@ -349,7 +349,6 @@ class GaddidarCommission(LoopModel):
     mandi = models.ForeignKey(Mandi)
     gaddidar = models.ForeignKey(Gaddidar)
     start_date = models.DateField(auto_now=False)
-    discount_percent = models.FloatField()
     discount_percent = models.FloatField(validators=[MinValueValidator(0.0),MaxValueValidator(1.0)], default=0.0)
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
