@@ -1099,9 +1099,25 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
 
     console.log(axis);
     console.log(axis_parameter);
+    console.log("###########################");
+    console.log(values);
+    console.log(values_parameter)
     console.log(cost_stats);
     console.log("****************************");
     console.log(gaddidar_share_stats);
+
+    console.log(values_cost_spk);
+
+    for (var i=0; i<gaddidar_share_stats.length; i++){
+        var index = axis.indexOf(gaddidar_share_stats[i][axis_parameter].toString());
+        var drilldown_index = values.indexOf(gaddidar_share_stats[i][values_parameter].toString());
+        console.log(index);
+        console.log(values_cost_spk[index]);
+        values_cost_spk[index] += gaddidar_share_stats[i]['amount'];
+        console.log(values_cost_spk[index]);
+        values_cost_spk_drilldown[index][drilldown_index] += gaddidar_share_stats[i]['amount'];
+        console.log("hello");
+    }
 
     var data_for_sorting = []
     for (var i = 0; i < axis.length; i++) {
