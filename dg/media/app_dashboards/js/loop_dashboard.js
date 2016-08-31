@@ -1,9 +1,6 @@
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
-////////////////////////// Language Select //////////////////////////////////
-
-
 function initialize() {
     // initialize any library here
     var language = 'Hindi'
@@ -74,7 +71,6 @@ function hide_nav(tab) {
 
 //To show the second navigation bar that comes on analytics and time series page only
 function show_nav(tab) {
-    console.log("show");
     $("#home_tab").removeClass('active');
     $("#payments_tab").removeClass('active');
     $("#analytics_tab").removeClass('active');
@@ -134,7 +130,6 @@ sparkline_option = {
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         var json_data = JSON.parse(data);
-        console.log(json_data);
         var total_volume = json_data['total_volume']['quantity__sum'];
 
         var total_amount = json_data['total_volume']['amount__sum'];
@@ -189,7 +184,6 @@ function total_static_data() {
 
 //To request data for recent graphs on home page
 function recent_graphs_data(language) {
-    console.log(language);
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         json_data = JSON.parse(data);
 
