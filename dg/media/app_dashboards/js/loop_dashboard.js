@@ -22,6 +22,7 @@ function initialize() {
 
     gaddidar = true;
     selected_tab = "aggregator";
+    selected_parameter = "volume";
 
     time_series_frequency = 1;
 
@@ -450,10 +451,12 @@ function change_tab(tab) {
 
 //To change graphs on analytics page (Aggregator, Mandi, Crop)
 function change_graph(parameter) {
-
     $("#aggregator_visits").removeClass("active");
     $("#aggregator_amount").removeClass("active");
     $("#aggregator_volume").addClass("active");
+    $("#aggregator_cpk").addClass("active");
+    $("#aggregator_cost").removeClass("active");
+
     $('ul.tabs').tabs();
 
     $("#aggregator_visits").show();
@@ -462,18 +465,22 @@ function change_graph(parameter) {
     $("#gaddidar_aggregator_graph").hide();
     $("#aggregator_farmer_count").show();
     if (selected_tab == "aggregator") {
+        $("#farmer_count_tab").addClass("active");
         $('#aggregator_tab').addClass('active');
         update_graphs_aggregator_wise(parameter);
     } else if (selected_tab == "mandi") {
         $('#mandi_tab').addClass('active');
         $("#gaddidar_aggregator_graph").show();
         $("#aggregator_farmer_count").hide();
+        $("#gaddidar_volume").addClass("active");
+        // $("#gaddidar_amount").removeClass("active");
         update_graphs_mandi_wise(parameter);
-        if (gaddidar) {
-            update_graphs_gaddidar_wise(parameter);
-            gaddidar = false;
-        }
+        // if (gaddidar) {
+        update_graphs_gaddidar_wise(selected_parameter);
+        // gaddidar = false;
+        // }
     } else if (selected_tab == "crop") {
+        $("#farmer_count_tab").addClass("active");
         $('#crop_tab').addClass('active');
         $("#aggregator_visits").hide();
         $("#cpk_cost").hide();
@@ -797,13 +804,16 @@ function update_graphs_mandi_wise(chart) {
 
 function update_graphs_gaddidar_wise(chart) {
     if (chart == null) {
+        selected_parameter = null;
         aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', bar_graphs_json_data.aggregator_gaddidar, "quantity__sum");
         // cpk_spk_graph($('#mandi_cost'), mandi_ids, mandi_names, 'mandi__id', aggregator_ids, aggregator_names, 'user_created__id', bar_graphs_json_data);
     } else {
         if (chart == "volume") {
+            selected_parameter = "volume";
             aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', bar_graphs_json_data.aggregator_gaddidar, "quantity__sum");
 
         } else if (chart == "amount") {
+            selected_parameter = "amount";
             aggregator_graph($('#aggregator_gaddidar'), gaddidar_ids, gaddidar_names, 'gaddidar__id', aggregator_ids, aggregator_names, 'user_created__id', bar_graphs_json_data.aggregator_gaddidar, "amount__sum");
 
         }
@@ -970,30 +980,49 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     series.push(temp_cost);
     series.push(temp_cost_recovered);
 
+    // var values_cost = new Array(axis.length).fill(0.0);
+    // var values_cost_drilldown = [];
+    // var values_cost_recovered = new Array(axis.length).fill(0.0);
+    // var values_cost_recovered_drilldown = [];
+
+    // for (var i = 0; i < axis.length; i++) {
+    //     values_cost_drilldown.push(new Array(values.length).fill(0));
+    //     values_cost_recovered_drilldown.push(new Array(values.length).fill(0));
+    // }
+    //
+    // for (var i = 0; i < json_data.length; i++) {
+    //     var index = axis.indexOf(json_data[i][axis_parameter].toString());
+    //     var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+    //     values_cost[index] += json_data[i]['transportation_cost__sum'];
+    //     values_cost_recovered[index] += json_data[i]['farmer_share__sum'];
+    //     values_cost_drilldown[index][drilldown_index] += json_data[i]['transportation_cost__sum'];
+    //     values_cost_recovered_drilldown[index][drilldown_index] += json_data[i]['farmer_share__sum'];
+    // }
+
     var data_for_sorting = [];
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
-            'cost': values_cost[i],
-            'cost_recovered': values_cost_recovered[i]
+            'cost': 0,
+            'cost_recovered': 0
         });
         drilldown['series'].push({
             'name': axis_names[i],
             'id': axis_names[i] + "cost",
             'data': [],
-            'xAxis': 1,
+            // 'xAxis': 1,
             'pointWidth': 15
         });
         drilldown['series'].push({
             'name': axis_names[i],
             'id': axis_names[i] + "recovered",
             'data': [],
-            'xAxis': 1,
+            // 'xAxis': 1,
             'pointWidth': 15
         });
         for (var j = 0; j < values.length; j++) {
             drilldown['series'][i * 2]['data'].push([values_names[j], 0]);
-            drilldown['series'][i * 2 + 1]['data'].push([values_names[j],0]);
+            drilldown['series'][i * 2 + 1]['data'].push([values_names[j], 0]);
         }
     }
 
@@ -1011,7 +1040,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         return (b['cost']) - (a['cost']);
     });
 
-    for (var i = 0; i < axis_names.length; i++) {
+    for (var i = 0; i < axis.length; i++) {
         series[0]['data'].push({
             'name': data_for_sorting[i]['name'],
             'y': data_for_sorting[i]['cost'],
@@ -1028,8 +1057,8 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
-    }
 
+    }
     plot_drilldown(container, series, drilldown, false);
 }
 
@@ -1154,9 +1183,6 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
     }
 
-console.log(series);
-console.log(drilldown);
-console.log("=========================");
     plot_drilldown(container, series, drilldown, true);
 }
 
