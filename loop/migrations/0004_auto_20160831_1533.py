@@ -47,6 +47,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='gaddidarshareoutliers',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='gaddidarshareoutliers',
             name='user_created',
             field=models.ForeignKey(related_name='loop_gaddidarshareoutliers_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
         ),
@@ -62,6 +67,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='gaddidarcommission',
+            name='mandi',
+            field=models.ForeignKey(to='loop.Mandi'),
+        ),
+        migrations.AddField(
+            model_name='gaddidarcommission',
             name='user_created',
             field=models.ForeignKey(related_name='loop_gaddidarcommission_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
         ),
@@ -72,10 +82,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='gaddidarshareoutliers',
-            unique_together=set([('date', 'gaddidar', 'aggregator')]),
+            unique_together=set([('date', 'gaddidar', 'aggregator', 'mandi')]),
         ),
         migrations.AlterUniqueTogether(
             name='gaddidarcommission',
-            unique_together=set([('start_date', 'gaddidar')]),
+            unique_together=set([('start_date', 'gaddidar', 'mandi')]),
         ),
     ]

@@ -148,12 +148,12 @@ function total_static_data() {
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
 
-//        for(var i=0;i<json_data['total_gaddidar_contribution'].length; i++){
-//            total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
-//        }
+        //        for(var i=0;i<json_data['total_gaddidar_contribution'].length; i++){
+        //            total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
+        //        }
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
-//        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
+        //        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 
@@ -1410,6 +1410,7 @@ function show_line_graphs() {
     // var farmer_data = line_json_data.farmer;
     var transport_data = line_json_data.transport_data;
     var dates_and_farmer_count = line_json_data.dates;
+    var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
     var all_dates = [];
 
     var first_date = new Date(dates_and_farmer_count[0]['date']);
@@ -1480,6 +1481,11 @@ function show_line_graphs() {
     }
 
     //TODO : # we need to caluclate gaddidar contribution here also. Lets put it with farmer share because when frequency changes only farmer share is being taken into consideration (or consider gaddidar contribution there as well)
+    var gaddidar_contribution_length = gaddidar_contribution.length;
+    for (var i = 0; i < gaddidar_contribution_length; i++) {
+        var index = all_dates.indexOf(new Date(gaddidar_contribution[i]['date']).getTime());
+        farmer_share[index] += gaddidar_contribution[i]['amount'];
+    }
 
     for (var i = 0; i < all_dates.length; i++) {
         time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? transport_cost[i] / time_series_volume_amount_farmers[0]['data'][i][1] : null]);
