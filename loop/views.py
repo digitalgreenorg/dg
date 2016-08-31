@@ -9,8 +9,8 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, \
-    GaddidarCommission, GaddidarShareOutliers
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, Croplanguage, GaddidarCommission, GaddidarShareOutliers
+
 from loop_data_log import get_latest_timestamp
 
 # Create your views here.
@@ -52,16 +52,11 @@ def dashboard(request):
 
 
 def filter_data(request):
-    aggregators = LoopUser.objects.extra(
-        select={'name': 'name_en'}).values('user__id', 'name')
-    villages = Village.objects.extra(
-        select={'village_name': 'village_name_en'}).values('id', 'village_name')
-    crops = Crop.objects.extra(
-        select={'crop_name': 'crop_name_en'}).values('id', 'crop_name')
-    mandis = Mandi.objects.extra(
-        select={'mandi_name': 'mandi_name_en'}).values('id', 'mandi_name')
-    gaddidars = Gaddidar.objects.extra(
-        select={'gaddidar_name': 'gaddidar_name_en'}).values('id', 'gaddidar_name')
+    aggregators = LoopUser.objects.all().values('user__id','name','name_en')
+    villages = Village.objects.all().values('id','village_name','village_name_en')
+    crops = Crop.objects.extra(select={'crop_name':'crop_name_en'}).values('id', 'crop_name')
+    mandis = Mandi.objects.all().values('id','mandi_name','mandi_name_en')
+    gaddidars = Gaddidar.objects.all().values('id','gaddidar_name','gaddidar_name_en')
     transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'transporters': list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars)}
@@ -249,15 +244,18 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
         result.append({'date':CT['date'], 'user_created__id':user.id, 'gaddidar__id':CT['gaddidar'], 'mandi__id':CT['mandi'], 'amount':sum})
     return result
 
+def crop_language_data(request):
+    crops = Croplanguage.objects.filter(language=request.GET.get('language'))
+    data = json.dumps(crops)
+    
+    return HttpResponse(data)
+
 def recent_graphs_data(request):
 
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
-    # aggregators = LoopUser.objects.all().extra(
-        # select={'name': 'name_en'}).values('name', 'user_id')
-
-    # mandis = Mandi.objects.all().extra(
-        # select={'mandi_name': 'mandi_name_en'}).values('id', 'mandi_name')
+    aggregators = LoopUser.objects.all().values('name','user_id','name_en')
+    mandis = Mandi.objects.all().values('id','mandi_name','mandi_name_en')
     transportation_cost = DayTransportation.objects.values('date').order_by(
         '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
     dates = CombinedTransaction.objects.values_list(
@@ -307,8 +305,8 @@ def new_aggregator_wise_data(request):
         'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
-        **filter_args).annotate(crop__crop_name=F('crop__crop_name_en')).values('crop__crop_name', 'crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
-
+        **filter_args).annotate(crop__crop_name=F('crop__crop_name_en')).values('crop__crop_name','crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True))
+    #TODO:mandi_crop_prices
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
 

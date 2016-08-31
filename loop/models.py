@@ -22,10 +22,12 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
-
-class Language(models.Model):
+class Language(LoopModel):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
+    language_name = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return self.language_name
 
 
 class Country(LoopModel):
@@ -59,6 +61,7 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
+
     district_name_en = models.CharField(max_length=100, null=True)
 
     def __unicode__(self):
@@ -229,6 +232,16 @@ class Crop(LoopModel):
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
 
+#############Crop name in multiple languages###############
+
+class Croplanguage(LoopModel):
+    id = models.AutoField(primary_key=True)
+    crop_id = models.ForeignKey(Crop)
+    crop_name = models.CharField(max_length=30)
+    language = models.ForeignKey(Language)
+
+    def __unicode__(self):
+        return self.crop_name
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
