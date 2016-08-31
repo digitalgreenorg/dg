@@ -184,7 +184,9 @@ def total_static_data(request):
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     gaddidar_share = calculate_gaddidar_share(None, None, None, None)
-    print gaddidar_share
+    for i in gaddidar_share:
+        print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        print i
 
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_repeat_farmers': total_repeat_farmers}
@@ -203,9 +205,9 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     gso_queryset = GaddidarShareOutliers.objects.filter(**arguments)
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments).values(
         'date', 'user_created_id', 'gaddidar', 'mandi' ,'gaddidar__discount_criteria').annotate(Sum('quantity'), Sum('amount'))
-    sum = 0
     result = []
     for CT in combined_ct_queryset:
+        sum=0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
         if CT['date'] not in [x.date for x in gso_queryset]:
             try:
