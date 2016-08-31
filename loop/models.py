@@ -361,10 +361,8 @@ class GaddidarShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
-
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
-
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
