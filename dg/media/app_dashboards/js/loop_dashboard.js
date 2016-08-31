@@ -1345,17 +1345,16 @@ function farmer_crop_visits(container, json_data) {
     temp_repeat['data'] = [];
 
     json_data.sort(function(a, b) {
-        return (b['farmer__count']) - (a['farmer__count'])
+        return (b['farmer__count']) - (a['farmer__count']);
     })
 
     series.push(temp_repeat);
 
     for (var i = 0; i < json_data.length; i++) {
-        series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']])
+        series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
     }
 
-    plot_stacked_chart(container, series)
-
+    plot_stacked_chart(container, series);
 }
 
 //Data for Time series grpahs request is being made here
@@ -1426,7 +1425,7 @@ function show_line_graphs() {
         'color': 'rgba(0,255,0,0.3)',
         'pointStart': all_dates[0],
         'pointInterval': 24 * 3600 * 1000
-    }]
+    }];
 
     time_series_cpk_spk = [{
         'name': "Cost per Kg",
@@ -1496,11 +1495,9 @@ function crop_prices_graph(crop_id) {
     var series = [{
         'name': 'Range',
         'type': 'boxplot',
-
     }, {
         'name': 'Average Price',
         'type': 'line',
-
     }];
 
     var ranges = [];
@@ -1540,7 +1537,6 @@ function crop_prices_graph(crop_id) {
     series[0]['data'] = ranges;
 
     plot_area_range_graph($("#container3"), series);
-
 }
 
 //To change frequency of time series graphs
@@ -1611,8 +1607,6 @@ function get_frequency_data(start_date, end_date, series, frequency, averaged) {
             temp_series['data'][temp][1] /= count;
         }
         new_series.push(temp_series);
-
-
     }
     return new_series;
 }
@@ -1678,7 +1672,6 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
         if (new Date(new_x_axis[index + 1]) <= new Date(series[0]['data'][k][0])) {
             index += 1;
         }
-
         new_volume[index] += time_series_volume_amount_farmers[0]['data'][k][1];
         new_transport_cost[index] += transport_cost[k];
         new_farmer_share[index] += farmer_share[k];
@@ -1691,10 +1684,7 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
     new_series.push(temp_series_cpk);
     new_series.push(temp_series_spk);
 
-
-
     return new_series;
-
 }
 
 
@@ -1710,9 +1700,6 @@ function plot_stacked_chart(container_obj, dict) {
             height: 300,
         },
         credits: {
-            enabled: false
-        },
-        exporting: {
             enabled: false
         },
         title: {
