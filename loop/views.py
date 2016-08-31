@@ -310,15 +310,7 @@ def new_aggregator_wise_data(request):
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
 
-    print ("!!!!!!!!!!!!!!")
-    print start_date
-    print mandi_ids
-    print aggregator_ids
     gaddidar_contribution = calculate_gaddidar_share(start_date, end_date, mandi_ids,aggregator_ids)
-    print ("@@@@@@@@@@@")
-    print gaddidar_contribution
-    print type(gaddidar_contribution)
-
 
     # stats = CombinedTransaction.objects.filter(**filter_args).values('user_created__id', 'mandi__id', 'crop__crop_name', 'date', 'farmer__id', 'quantity', 'amount', 'gaddidar__id').order_by('-date')
     # aggregator_crop = CombinedTransaction.objects.filter(**filter_args).values(
