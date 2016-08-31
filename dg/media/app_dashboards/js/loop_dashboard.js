@@ -144,19 +144,13 @@ function total_static_data() {
             total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
             total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
         }
-
-        var gaddidar_share = 0;
-        for(var i=0;i<json_data['total_gaddidar_contribution'].length; i++){
-            gaddidar_share += json_data['total_gaddidar_contribution'][i]['amount'];
-        }
-
-
-//        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+        // TODO: # we need to calculate gaddidar contribution by using a for loop here
+        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
 //        var total_volume_for_transport = json_data['total_volume_for_transport']['quantity__sum'];
 
-        var sustainability = (total_farmer_share + gaddidar_share) / total_transportation_cost * 100;
+        var sustainability = (total_farmer_share + total_gaddidar_contribution) / total_transportation_cost * 100;
 
         var clusters = json_data['total_cluster_reached'];
 
@@ -1095,6 +1089,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         values_cost_spk_drilldown[index][drilldown_index] += cost_stats[i]['farmer_share__sum'];
 
     }
+
+    //TODO : # we need to run a for loop here and for a particular mandi/aggregaor we will have to calculate gaddidar contribution here.
     var data_for_sorting = []
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
@@ -1470,6 +1466,8 @@ function show_line_graphs() {
         transport_cost[index] += transport_data[i]['transportation_cost__sum'];
         farmer_share[index] += transport_data[i]['farmer_share__sum'];
     }
+
+    //TODO : # we need to caluclate gaddidar contribution here also. Lets put it with farmer share because when frequency changes only farmer share is being taken into consideration (or consider gaddidar contribution there as well)
 
     for (var i = 0; i < all_dates.length; i++) {
         time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? transport_cost[i] / time_series_volume_amount_farmers[0]['data'][i][1] : null]);
@@ -3069,6 +3067,7 @@ function create_outliers_table(date, aggregator_id) {
     var data_set = [];
     var sno = 1;
 
+    // TODO : # we will have to write another function to calculate total gaddidar contribution for payments also.
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
