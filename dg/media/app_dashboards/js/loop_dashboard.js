@@ -970,25 +970,6 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     series.push(temp_cost);
     series.push(temp_cost_recovered);
 
-    var values_cost = new Array(axis.length).fill(0.0);
-    var values_cost_drilldown = [];
-    var values_cost_recovered = new Array(axis.length).fill(0.0);
-    var values_cost_recovered_drilldown = [];
-
-    for (var i = 0; i < axis.length; i++) {
-        values_cost_drilldown.push(new Array(values.length).fill(null));
-        values_cost_recovered_drilldown.push(new Array(values.length).fill(null));
-    }
-
-    for (var i = 0; i < json_data.length; i++) {
-        var index = axis.indexOf(json_data[i][axis_parameter].toString());
-        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
-        values_cost[index] += json_data[i]['transportation_cost__sum'];
-        values_cost_recovered[index] += json_data[i]['farmer_share__sum'];
-        values_cost_drilldown[index][drilldown_index] += json_data[i]['transportation_cost__sum'];
-        values_cost_recovered_drilldown[index][drilldown_index] += json_data[i]['farmer_share__sum'];
-    }
-
     var data_for_sorting = [];
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
@@ -1011,26 +992,26 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
             'pointWidth': 15
         });
         for (var j = 0; j < values.length; j++) {
-            drilldown['series'][i * 2]['data'].push([values_names[j], values_cost_drilldown[i][j]]);
-            drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_recovered_drilldown[i][j]]);
+            drilldown['series'][i * 2]['data'].push([values_names[j], 0]);
+            drilldown['series'][i * 2 + 1]['data'].push([values_names[j],0]);
         }
     }
 
-    // var json_data_length = json_data.length;
-    // for (var i = 0; i < json_data_length; i++) {
-    //     var index = axis.indexOf(json_data[i][axis_parameter].toString());
-    //     var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
-    //     drilldown['series'][index * 2]['data'][drilldown_index][1] += json_data[i]['transportation_cost__sum'];
-    //     drilldown['series'][index * 2 + 1]['data'][drilldown_index][1] += json_data[i]['farmer_share__sum'];
-    //     data_for_sorting[index]['cost'] += json_data[i]['transportation_cost__sum'];
-    //     data_for_sorting[index]['cost_recovered'] += json_data[i]['farmer_share__sum'];
-    // }
+    var json_data_length = json_data.length;
+    for (var i = 0; i < json_data_length; i++) {
+        var index = axis.indexOf(json_data[i][axis_parameter].toString());
+        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+        drilldown['series'][index * 2]['data'][drilldown_index][1] += json_data[i]['transportation_cost__sum'];
+        drilldown['series'][index * 2 + 1]['data'][drilldown_index][1] += json_data[i]['farmer_share__sum'];
+        data_for_sorting[index]['cost'] += json_data[i]['transportation_cost__sum'];
+        data_for_sorting[index]['cost_recovered'] += json_data[i]['farmer_share__sum'];
+    }
 
     data_for_sorting.sort(function(a, b) {
         return (b['cost']) - (a['cost']);
     });
 
-    for (var i = 0; i < axis.length; i++) {
+    for (var i = 0; i < axis_names.length; i++) {
         series[0]['data'].push({
             'name': data_for_sorting[i]['name'],
             'y': data_for_sorting[i]['cost'],
@@ -1047,11 +1028,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
-
     }
-
-    console.log(series);
-    console.log(drilldown);
 
     plot_drilldown(container, series, drilldown, false);
 }
@@ -1147,6 +1124,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         for (var j = 0; j < values.length; j++) {
             if (values_vol_drilldown[i][j] > 0) {
                 drilldown['series'][i * 2]['data'].push([values_names[j], values_cost_cpk_drilldown[i][j] / values_vol_drilldown[i][j]]);
+            }
+            if (values_cost_cpk_drilldown[i][j] > 0) {
                 drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_cost_cpk_drilldown[i][j]]);
             }
         }
@@ -1175,9 +1154,9 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
     }
 
-    console.log("----------------------------------------------------------");
-    console.log(series);
-    console.log(drilldown);
+console.log(series);
+console.log(drilldown);
+console.log("=========================");
     plot_drilldown(container, series, drilldown, true);
 }
 
