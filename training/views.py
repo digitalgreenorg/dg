@@ -165,6 +165,7 @@ def trainer_wise_data(request):
     trainer_ids = request.GET.getlist('trainer_ids[]') 
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
+    trainer_wise_avg_score = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
@@ -173,9 +174,15 @@ def trainer_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    trainer_list = Score.objects.filter(**filter_args).values('training__trainer__name').order_by('training__trainer__name').annotate(Count('participant', distinct=True), Sum('score'), Count('score'), Count('training__id', distinct=True))
+    trainer_list_obj = Score.objects.filter(**filter_args).all()
+    trainer_list_filter_1 = trainer_list_obj.values('training__trainer__name').order_by('training__trainer__name').annotate(Count('participant', distinct=True) , Sum('score'), Count('score'), Count('training__id', distinct=True),all_participant_count=Count('participant', distinct=False))
+    trainer_list_filter_2 = trainer_list_obj.values('training__trainer__name', 'training_id').order_by('training__trainer__name').annotate(Count('participant', distinct = True), Count('score'))
+    for trainer in trainer_list_filter_2 :
+        print trainer['training__trainer__name']
+        
+    print trainer_wise_avg_score
     mediator_list = Score.objects.filter(**filter_args).values('training__trainer__name', 'participant').order_by('training__trainer__name').annotate(Sum('score'), Count('score'))
-    data_dict = {'trainer_list': list(trainer_list), 'mediator_list': list(mediator_list)}
+    data_dict = {'trainer_list': list(trainer_list_filter_1), 'mediator_list': list(mediator_list), 'test' : list(trainer_list_filter_2)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 

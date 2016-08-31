@@ -381,7 +381,8 @@ function gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list);
+            console.log(data_json.test);
+            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list, data_json.test);
         });
 }
 
@@ -504,7 +505,7 @@ function numberWithCommas(x) {
 
 /* Fill data for highcharts */
 
-function plot_trainerwise_data(trainer_list, mediator_list) {
+function plot_trainerwise_data(trainer_list, mediator_list, test) {
 
 
     if (trainer_list.length == 0) {
@@ -570,7 +571,7 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         for (i = 0; i < trainer_list.length; i++) {
             x_axis.push(trainer_list[i]['training__trainer__name']);
 
-            var avg = (trainer_list[i]['score__sum'] / trainer_list[i]['participant__count']);
+            var avg = (trainer_list[i]['score__sum'] / trainer_list[i]['all_participant_count']);
             var perc = (trainer_list[i]['score__sum'] / trainer_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
