@@ -8,9 +8,10 @@ define([
     'configs',
     'convert_namespace',
     'offline_utils',
+    'models/user_model',
     'indexeddb-backbone',
     'bootstrapjs',
-], function(jquery, underscore, layoutmanager, indexeddb, all_configs, ConvertNamespace, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, all_configs, ConvertNamespace, Offline, User) {
 
     var IncrementalDownloadView = Backbone.Layout.extend({
 
@@ -34,6 +35,16 @@ define([
             document.getElementById('inc_pbar').style.width = (w + this.progress_bar_step) + '%';
         },
         */
+
+        serialize: function () {
+            //send these to the list page template
+            var language = User.get('language');
+            return {
+                language: language,
+                all_configs: all_configs,
+            };
+        },
+
         //update the status on the view - # of downloaded/# of total objects
         update_status: function(status) {
             console.log(status);

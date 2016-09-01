@@ -100,7 +100,7 @@ class AnimatorAdmin(admin.ModelAdmin):
     inlines = [AnimatorAssignedVillages]
     list_display = ('name', 'partner', 'district', 'role',)
     search_fields = ['name', 'partner__partner_name', 'role',]
-
+    
 
 class PersonGroupInline(admin.TabularInline):
     model = PersonGroup

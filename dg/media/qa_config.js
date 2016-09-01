@@ -2,10 +2,12 @@ define([],
 function() {
 	var VideoContentApproval_configs = {
 		'page_header': 'Video Content Approval',
+        'config_English': 'Video Content Approval',
 		'add_template_name': 'video_content_approval_add_edit_template',
         'edit_template_name': 'video_content_approval_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoContentApproval/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'}],
+        'labels_English': {add_row:"Add Empty Rows"},
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'}],
         'entity_name': 'VideoContentApproval',
         'inc_table_name': 'videocontentapproval',
         'dashboard_display': {
@@ -76,10 +78,12 @@ function() {
 
     var VideoQualityReview_configs = {
         'page_header': 'Video Quality Review',
+        'config_English': 'Video Quality Review',
         'add_template_name': 'Video_Quality_Review_add_edit_template',
         'edit_template_name': 'Video_Quality_Review_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoQualityReview/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
+        'labels_English': {add_row:"Add Empty Rows"},
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'VideoQualityReview',
         'inc_table_name': 'videoqualityreview',
         'dashboard_display': {
@@ -138,10 +142,12 @@ function() {
 
     var DisseminationQuality_configs = {
         'page_header': 'Dissemination Quality',
+        'config_English': 'Dissemination Quality',
         'add_template_name': 'Dissemination_Quality_add_edit_template',
         'edit_template_name': 'Dissemination_Quality_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/DisseminationQuality/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
+        'labels_English': {add_row:"Add Empty Rows"},
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'DisseminationQuality',
         'inc_table_name': 'disseminationquality',
         'dashboard_display': {
@@ -231,10 +237,12 @@ function() {
 
     var AdoptionVerification_configs = {
         'page_header': 'Adoption Verification',
+        'config_English': 'Adoption Verification',
         'add_template_name': 'Adoption_Verification_add_edit_template',
         'edit_template_name': 'Adoption_Verification_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/AdoptionVerification/',
-        'list_elements': [{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
+        'labels_English': {add_row:"Add Empty Rows"},
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
         'entity_name': 'AdoptionVerification',
         'inc_table_name': 'adoptionverification',
         'dashboard_display': {
@@ -361,6 +369,8 @@ function() {
         }
     };
 	var video_configs = {
+        'config_English': 'Videos',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/video/',
         'entity_name': 'video',
         'sort_field': 'title',
@@ -370,6 +380,8 @@ function() {
         }
     };
     var group_configs = {
+        'config_English': 'Groups',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/group/',
         'entity_name': 'group',
         'sort_field': 'group_name',
@@ -379,6 +391,8 @@ function() {
         }
     };
     var person_configs = {
+        'config_English': 'Persons',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/person/',
         'entity_name': 'person',
         'sort_field': 'person_name',
@@ -388,6 +402,8 @@ function() {
         }
     };
     var nonnegotiable_configs = {
+        'config_English': 'Non Negotiables',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/nonnegotiable/',
         'entity_name': 'nonnegotiable',
         'sort_field': 'non_negotiable',
@@ -406,6 +422,8 @@ function() {
     };
 
     var mediator_configs = {
+        'config_English': 'Mediators',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/mediator/',
         'entity_name': 'mediator',
         'sort_field': 'name',
@@ -416,6 +434,8 @@ function() {
     };
     
     var block_configs = {
+        'config_English': 'Blocks',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/block/',
         'entity_name': 'block',
         'sort_field': 'block_name',
@@ -426,6 +446,8 @@ function() {
     };
     
     var village_configs = {
+        'config_English': 'Villages',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/village/',
         'entity_name': 'village',
         'sort_field': 'village_name',
@@ -436,6 +458,8 @@ function() {
     };
 
     var qareviewername_configs = {
+        'config_English': 'QA Reviewer Name',
+        'labels_English': {add_row:"Add Empty Rows"},
         'rest_api_url': '/qacoco/api/v1/qareviewername/',
         'entity_name': 'qareviewername',
         'sort_field': 'name',
@@ -447,6 +471,19 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
+        languages: ['English'],
+        meta_default: 'English',
+        meta_English: {stop: "Stop",close:"close", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
+                       delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",
+                       error:"Error!!", upload_error:"Internet connectivity lost. Please try after sometime!", copy_clipboard:"Copy to clipboard", excel_download:"Download in excel", search: 'Search: ', enteries:"Enteries: ",total_enteries:"Total Enteries: ",
+                       next:"Next", previous:"Previous", list_page_help:"For multiple column sorting, press and hold the shift key while sorting each column.",
+                       line_1:"Welcome to QACOCO", line_2:"COCO helps you to seamlessly enter data in conditions of intermittent connectivity.",
+                       line_3:"Add data", line_4:"To add some data, click on (+) sign next to the type of data that you want to add.",
+                       line_5:"View Data", line_6:"To view, sort and search through your data, click on the data link in the sidebar.",
+                       line_7:"Sync data", line_8:"To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it. The number in the button shows how many entries are yet to be uploaded. Clicking on the sync button will also download the database if it is not completely downloaded.",
+                       line_9:"We value your feedback", line_10:"Do share your feedback by mailing us at <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a>",
+                       line_11:"Database last deleted and downloaded at", line_12:"Database last synced at",
+                       line_13:"Entries to upload"},
         background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/qa_get_log/",
         afterFullDownload: function(start_time, download_status){
