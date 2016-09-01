@@ -10,7 +10,7 @@ function initialize() {
     set_eventlistener();
     // update_charts();
     $(".button-collapse").sideNav({
-          menuWidth: 300, // Default is 240
+          // Default is 240
           edge: 'left', // Choose the horizontal origin
           closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
         }
@@ -171,7 +171,7 @@ function set_eventlistener() {
         onClose: function() {
             $(document.activeElement).blur()
         },
-        min: new Date(2015,01,01),
+        min: new Date(2014,12,31),
         max: -1,
         onSet: function(element) {
             if (element.select) {
@@ -186,6 +186,7 @@ function set_eventlistener() {
         onClose: function() {
             $(document.activeElement).blur()
         },
+        min: new Date(2014,12,31),
         max: true,
         onSet: function(element) {
             if (element.select) {
@@ -264,7 +265,7 @@ function get_data() {
     var end_date = $('#to_date').val();
     if(start_date === '' || end_date === '')
     {
-        alert("Please fill date");
+        $('#modal1').openModal();
     }
     else
     {
@@ -397,6 +398,7 @@ function getquestiondata(start_date, end_date, assessment_ids, trainer_ids, stat
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
+            console.log(data_json);
             plot_questionwise_data(data_json, assessment_ids);
         });
 }
@@ -507,7 +509,7 @@ function numberWithCommas(x) {
 
 function plot_trainerwise_data(trainer_list, mediator_list, test) {
 
-
+    console.log(mediator_list);
     if (trainer_list.length == 0) {
 
         plot_dual_axis_chart($("#trainer_mediator_data"), [], {}, "Average Scores per Participant", "", "", "%","");
@@ -716,10 +718,9 @@ function plot_questionwise_data(data_json, assessment_ids) {
 }
 
 function plot_statewise_data(state_list, mediator_list, state_test) {
-    console.log(state_test);
     if (state_list.length == 0) {
         plot_dual_axis_chart($("#state_mediator_data"), [], {}, "Average Scores per Mediator", "", "", "%","");
-        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "No. of total trainings","No data for this assessment");
+        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "","No data for this assessment");
    
 /*        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('state_training_data').innerHTML = ''*/

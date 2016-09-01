@@ -45,8 +45,8 @@ def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')
     trainers = Trainer.objects.values('id', 'name')
     states = State.objects.values('id','state_name')
-    participants = Score.objects.filter(training__assessment__id=1).values_list('participant__id', flat=True).distinct()
-    num_trainings = Training.objects.filter(assessment__id=1).values('date', 'place', 'trainer').distinct().count()
+    participants = Score.objects.filter(training__assessment__id=1).values('participant__id').distinct()
+    num_trainings = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('training_id').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
     # training_objs = Training.objects.filter(assessment__id = 1).values('participants__id','date')
@@ -106,7 +106,8 @@ def date_filter_data(request):
     trainers = Trainer.objects.values('id', 'name')
     states = State.objects.values('id','state_name')
     participants = Score.objects.filter(training__assessment__id=1, training__date__gte=start_date, training__date__lte=end_date).values_list('participant__id', flat=True).distinct()
-    num_trainings = Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('date', 'place', 'trainer').distinct().count()
+    num_trainings = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('training_id').distinct().count()
+    # Training.objects.filter(assessment__id = 1, date__gte = start_date, date__lte = end_date).values('date', 'place', 'trainer').distinct().count()
     num_participants = len(participants)
     num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('participant').annotate(Sum('score'), Count('score'))
 
@@ -278,7 +279,11 @@ def month_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
+
+
+
     month_list = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec']
+
     #participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
     #num_farmers = PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values('screening__animator__district__state__state_name').order_by('screening__animator__district__state__state_name').annotate(Count('person', distinct=True))
     mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
@@ -286,13 +291,19 @@ def month_wise_data(request):
                                    db=dg.settings.DATABASES['default']['NAME'],
                                     charset = 'utf8',
                                      use_unicode = True)
-    query = '''SELECT MONTH(tt.date) as \'Month\',count(distinct tt.id) \'Number of Training\' FROM training_training tt WHERE tt.date > 20160101 AND tt.date < 20161231 GROUP BY  MONTH(tt.date) order by MONTH(tt.date)'''
+    query = '''SELECT MONTH(tt.date) as \'Month\',count(distinct tt.id) \'Number of Training\' FROM training_score ts join training_training tt on tt.id = ts.training_id and tt.date >= 20160101 AND tt.date <= 20161231 GROUP BY  MONTH(tt.date) order by MONTH(tt.date)'''
     cur = mysql_cn.cursor()
     cur.execute(query)
     result = cur.fetchall()
     month_data_list = []
+    count = 1
     for row in result:
-        month_data_list.append(int(row[1]))
+        if(row[0] == count) :
+            month_data_list.append(int(row[1]))
+        else :
+            month_data_list.append(0)
+        count += 1
+
     mysql_cn.close()
     data_dict = {'trainings':'Number of Trainings','data_list':month_data_list}
     data = json.dumps(data_dict)
