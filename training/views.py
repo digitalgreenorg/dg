@@ -166,6 +166,7 @@ def trainer_wise_data(request):
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     trainer_wise_avg_score = {}
+    trainer_wise_avg_score_list = []
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
@@ -176,13 +177,25 @@ def trainer_wise_data(request):
     filter_args["score__in"] = [1, 0]
     trainer_list_obj = Score.objects.filter(**filter_args).all()
     trainer_list_filter_1 = trainer_list_obj.values('training__trainer__name').order_by('training__trainer__name').annotate(Count('participant', distinct=True) , Sum('score'), Count('score'), Count('training__id', distinct=True),all_participant_count=Count('participant', distinct=False))
-    trainer_list_filter_2 = trainer_list_obj.values('training__trainer__name', 'training_id').order_by('training__trainer__name').annotate(Count('participant', distinct = True), Count('score'))
+    trainer_list_filter_2 = trainer_list_obj.values('training__trainer__name', 'training_id').order_by('training__trainer__name').annotate(Count('participant', distinct=True ), Sum('score'))
+
     for trainer in trainer_list_filter_2 :
-        print trainer['training__trainer__name']
+        trainer_name = trainer['training__trainer__name']
+        if(trainer_name not in trainer_wise_avg_score) :
+            trainer_wise_avg_score[trainer_name] = {}
+            trainer_wise_avg_score[trainer_name]['participant_count'] = trainer['participant__count']
+            trainer_wise_avg_score[trainer_name]['score_sum'] = trainer['score__sum']
+        else :
+            trainer_wise_avg_score[trainer_name]['participant_count'] += trainer['participant__count']
+            trainer_wise_avg_score[trainer_name]['score_sum'] += trainer['score__sum']
+
+    for trainer_score in sorted(trainer_wise_avg_score) :
+        json_obj = {}
+        json_obj[trainer_score] = trainer_wise_avg_score[trainer_score]
+        trainer_wise_avg_score_list.append(json_obj)
         
-    print trainer_wise_avg_score
     mediator_list = Score.objects.filter(**filter_args).values('training__trainer__name', 'participant').order_by('training__trainer__name').annotate(Sum('score'), Count('score'))
-    data_dict = {'trainer_list': list(trainer_list_filter_1), 'mediator_list': list(mediator_list), 'test' : list(trainer_list_filter_2)}
+    data_dict = {'trainer_list': list(trainer_list_filter_1), 'mediator_list': list(mediator_list), 'test' : trainer_wise_avg_score_list}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -212,6 +225,8 @@ def state_wise_data(request):
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
+    state_wise_avg_score = {}
+    state_wise_avg_score_list = []
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
@@ -220,11 +235,30 @@ def state_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    state_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name').order_by('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True), Count('training__id', distinct=True))
+
+    state_list_obj = Score.objects.filter(**filter_args)
+    state_list_filter1 = state_list_obj.values('participant__district__state__state_name').order_by('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True), Count('training__id', distinct=True))
+    state_list_filter2 = state_list_obj.values('participant__district__state__state_name', 'training_id').order_by('participant__district__state__state_name').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
+
+    for state in state_list_filter2 :
+        state_name = state['participant__district__state__state_name']
+        if(state_name not in state_wise_avg_score) :
+            state_wise_avg_score[state_name] = {}
+            state_wise_avg_score[state_name]['participant_count'] = state['participant__count']
+            state_wise_avg_score[state_name]['score_sum'] = state['score__sum']
+        else :
+            state_wise_avg_score[state_name]['participant_count'] += state['participant__count']
+            state_wise_avg_score[state_name]['score_sum'] += state['score__sum']
+
+    for state_score in sorted(state_wise_avg_score) :
+        json_obj = {}
+        json_obj[state_score] = state_wise_avg_score[state_score]
+        state_wise_avg_score_list.append(json_obj)
+
     #participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
     #num_farmers = PersonMeetingAttendance.objects.filter(screening__animator__in=participants).values('screening__animator__district__state__state_name').order_by('screening__animator__district__state__state_name').annotate(Count('person', distinct=True))
     mediator_list = Score.objects.filter(**filter_args).values('participant__district__state__state_name', 'participant').order_by('participant__district__state__state_name').annotate(Sum('score'), Count('score'))
-    data_dict = {'state_list': list(state_list), 'mediator_list': list(mediator_list)}
+    data_dict = {'state_list': list(state_list_filter1), 'mediator_list': list(mediator_list), 'state_test' : list(state_wise_avg_score_list)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -253,7 +287,6 @@ def month_wise_data(request):
                                     charset = 'utf8',
                                      use_unicode = True)
     query = '''SELECT MONTH(tt.date) as \'Month\',count(distinct tt.id) \'Number of Training\' FROM training_training tt WHERE tt.date > 20160101 AND tt.date < 20161231 GROUP BY  MONTH(tt.date) order by MONTH(tt.date)'''
-    print query 
     cur = mysql_cn.cursor()
     cur.execute(query)
     result = cur.fetchall()
@@ -261,7 +294,6 @@ def month_wise_data(request):
     for row in result:
         month_data_list.append(int(row[1]))
     mysql_cn.close()
-    print month_data_list
     data_dict = {'trainings':'Number of Trainings','data_list':month_data_list}
     data = json.dumps(data_dict)
     return HttpResponse(data)    
