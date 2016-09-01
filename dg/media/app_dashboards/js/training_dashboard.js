@@ -171,7 +171,7 @@ function set_eventlistener() {
         onClose: function() {
             $(document.activeElement).blur()
         },
-        min: new Date(2014,12,31),
+        min: new Date(2015,0,1),
         max: -1,
         onSet: function(element) {
             if (element.select) {
@@ -186,7 +186,7 @@ function set_eventlistener() {
         onClose: function() {
             $(document.activeElement).blur()
         },
-        min: new Date(2014,12,31),
+        min: new Date(2015,0,1),
         max: true,
         onSet: function(element) {
             if (element.select) {

@@ -281,7 +281,8 @@ def month_wise_data(request):
     filter_args["score__in"] = [1, 0]
 
 
-
+    # month_data_list = {'Jan':0,'Feb':0,'Mar':0,'Apr':0,'May':0,'Jun':0,'Jul':0,'Aug':0,'Sept':0,'Oct':0,'Nov':0,'Dec':0}
+    month_data_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     month_list = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec']
 
     #participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
@@ -295,16 +296,12 @@ def month_wise_data(request):
     cur = mysql_cn.cursor()
     cur.execute(query)
     result = cur.fetchall()
-    month_data_list = []
-    count = 1
+    maximum = -1
     for row in result:
-        if(row[0] == count) :
-            month_data_list.append(int(row[1]))
-        else :
-            month_data_list.append(0)
-        count += 1
-
+        if row[0] > maximum:
+            maximum = row[0]
+        month_data_list[row[0]-1] = int(row[1])
     mysql_cn.close()
-    data_dict = {'trainings':'Number of Trainings','data_list':month_data_list}
+    data_dict = {'trainings':'Number of Trainings','data_list':month_data_list[:maximum-1]}
     data = json.dumps(data_dict)
     return HttpResponse(data)    
