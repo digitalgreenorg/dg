@@ -13,7 +13,7 @@ from django.forms import TextInput, Textarea
 
 from videos.models import Video
 from geographies.models import District, Block, State
-from models import QACocoUser, QAReviewer, QAReviewerName, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
+from models import QACocoUser, QAReviewerCategory, QAReviewerName, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
 from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):

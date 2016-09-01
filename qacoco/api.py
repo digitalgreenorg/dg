@@ -9,7 +9,7 @@ from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
 
-from qacoco.models import QACocoUser, VideoContentApproval, QAReviewer, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName, AdoptionNonNegotiableVerfication
+from qacoco.models import QACocoUser, VideoContentApproval, QAReviewerCategory, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName, AdoptionNonNegotiableVerfication
 from geographies.models import Block, Village, State,District
 from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
 from videos.models import Video, Category, SubCategory, NonNegotiable
@@ -203,11 +203,11 @@ class BaseResource(ModelResource):
         bundle.obj.user_created_id = bundle.request.user.id
         return self.save(bundle)
 
-class QAReviewerResource(ModelResource):    
+class QAReviewerCategoryResource(ModelResource):    
     class Meta:
         max_limit = None
-        queryset = QAReviewer.objects.all()
-        resource_name = 'qareviewer'
+        queryset = QAReviewerCategory.objects.all()
+        resource_name = 'qareviewercategory'
         authentication = SessionAuthentication()
         authorization = Authorization()
 

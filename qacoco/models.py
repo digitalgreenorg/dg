@@ -42,16 +42,16 @@ class QACocoUser(QACocoModel):
     def __unicode__(self):
         return  u'%s' % (self.user.username)
 
-class QAReviewer(models.Model):
-	reviewer_name = models.CharField(max_length=20)
+class QAReviewerCategory(models.Model):
+	category_name = models.CharField(max_length=50)
 
 	def __unicode__(self):
-		return u'%s' % (self.reviewer_name)
-post_save.connect(save_log, sender=QAReviewer)
-pre_delete.connect(delete_log, sender=QAReviewer)
+		return u'%s' % (self.category_name)
+post_save.connect(save_log, sender=QAReviewerCategory)
+pre_delete.connect(delete_log, sender=QAReviewerCategory)
 
 class QAReviewerName(models.Model):
-    reviewer_category = models.ForeignKey(QAReviewer)
+    reviewer_category = models.ForeignKey(QAReviewerCategory)
     name = models.CharField(max_length=100)
 
     def __unicode__(self):

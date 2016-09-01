@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 from tastypie.api import Api
-from qacoco.api import VideoResource, BlockResource, VillageResource, VideoContentApprovalResource, QAReviewerNameResource, QAReviewerResource, VideoQualityReviewResource, DisseminationQualityResource, MediatorResource, AdoptionVerificationResource, PersonResource, PersonGroupResource, NonNegotiableResource
+from qacoco.api import VideoResource, BlockResource, VillageResource, VideoContentApprovalResource, QAReviewerNameResource, QAReviewerCategoryResource, VideoQualityReviewResource, DisseminationQualityResource, MediatorResource, AdoptionVerificationResource, PersonResource, PersonGroupResource, NonNegotiableResource
 from views import qacoco_v1, debug, login, logout, record_full_download_time, reset_database_check
 
 qa_api = Api(api_name = "v1")
@@ -16,7 +16,7 @@ qa_api.register(VideoContentApprovalResource())
 qa_api.register(VideoQualityReviewResource())
 qa_api.register(DisseminationQualityResource())
 qa_api.register(PersonResource())
-qa_api.register(QAReviewerResource())
+qa_api.register(QAReviewerCategoryResource())
 qa_api.register(QAReviewerNameResource())
 qa_api.register(NonNegotiableResource())
 qa_api.register(AdoptionVerificationResource())
