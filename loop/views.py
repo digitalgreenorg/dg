@@ -56,14 +56,16 @@ def second_loop_page(request):
 
 
 def filter_data(request):
+    language=request.GET.get('language')
     aggregators = LoopUser.objects.all().values('user__id','name','name_en')
     villages = Village.objects.all().values('id','village_name','village_name_en')
-    crops = Crop.objects.extra(select={'crop_name':'crop_name_en'}).values('id', 'crop_name')
+    crops = Crop.objects.all().values('id', 'crop_name')
+    cropslanguage = Croplanguage.objects.filter(crop__isnull=False,language__name=language).values('id','crop_name')
     mandis = Mandi.objects.all().values('id','mandi_name','mandi_name_en')
     gaddidars = Gaddidar.objects.all().values('id','gaddidar_name','gaddidar_name_en')
     transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'transporters': list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
-                 'mandis': list(mandis), 'gaddidars': list(gaddidars)}
+                 'mandis': list(mandis), 'gaddidars': list(gaddidars),'croplanguage':list(cropslanguage)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 

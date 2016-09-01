@@ -622,18 +622,23 @@ function set_filterlistener() {
 
 //To make a call when filters are changed
 function get_filter_data(language) {
-    $.get("/loop/filter_data/", {})
+    $.get("/loop/filter_data/", {language:language})
         .done(function(data) {
             var data_json = JSON.parse(data);
             aggregators_for_filter = data_json.aggregators;
             mandis_for_filter = data_json.mandis;
             gaddidars_for_filter = data_json.gaddidars;
             crops_for_filter = data_json.crops;
+            croplanguage_for_filter =data_json.croplanguage;
             transporter_for_filter = data_json.transporters;
             fill_aggregator_filter(aggregators_for_filter,language);
-            fill_crop_filter(crops_for_filter);
             fill_mandi_filter(mandis_for_filter,language);
             fill_gaddidar_filter(gaddidars_for_filter,language);
+            if(language=='English')
+                fill_crop_filter(croplanguage_for_filter);
+            else    
+                fill_crop_filter(crops_for_filter);
+
             get_data();
         });
 }
