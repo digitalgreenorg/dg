@@ -527,7 +527,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, test) {
         var trainer_mediators_pass_dict = {};
         var trainer_pass_perc_dict = {};
 
-        avg_score_dict['name'] = 'Average Scores per Participant';
+        avg_score_dict['name'] = 'Average Scores per Participant (out of 15)';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         trainer_trainings_dict['name'] = 'Total Trainings';
         trainer_mediators_dict['name'] = 'Mediators Trained';
@@ -612,7 +612,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, test) {
         // trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
         plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "", "", "%","");
-        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Total Trainings","");
+        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Labels represent : Total Trainings","");
     }
 }
 
@@ -709,7 +709,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
             // question_dict.push(question_percent_dict);
         }
 
-        plot_multiple_axis_chart($("#question_mediator_data"), x_axis, question_dict, "No. of Mediators", "", "","","", "%", question_percent_dict, "%", "% of mediators scoring above 70%","");
+        plot_multiple_axis_chart($("#question_mediator_data"), x_axis, question_dict, "No. of Mediators", "", "","","", "%", question_percent_dict, "%", "Labels represent : % of mediators scoring above 70%","");
         // plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_pass_perc_dict);
 
     }
@@ -736,7 +736,7 @@ function plot_statewise_data(state_list, mediator_list, state_test) {
         var state_mediators_pass_dict = {};
         var state_pass_perc_dict = {};
 
-        avg_score_dict['name'] = 'Average Scores per Mediator';
+        avg_score_dict['name'] = 'Average Scores per Mediator  (out of 15)';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         state_trainings_dict['name'] = 'Total Trainings';
         state_mediators_dict['name'] = 'Mediators Trained';
@@ -807,7 +807,7 @@ function plot_statewise_data(state_list, mediator_list, state_test) {
         // state_trainings_mediators_dict.push(state_pass_perc_dict);
 
         plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "", "", "%","");
-        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "No. of total trainings","");
+        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "Labels represent : No. of total trainings","");
     }
 }
 
@@ -1187,7 +1187,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
         title:{ text: title_
         },
         subtitle: {
-            text: 'Labels represent : ' + custom_subtitle
+            text: custom_subtitle
         },
         xAxis: [{
             categories: x_axis,
