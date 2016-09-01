@@ -1,183 +1,333 @@
 {% include "includes/header.html" %}
+  
 
-        <section class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <div class="media layout-vr-xlg">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md">Training Modules</h2>
-                        <div>
-                            <ul class="h-list h-list-lg">
-                                <li>
-                                    <div class="vid-cat-selected">
-                                        <div class="vid-cat">
-                                            <a href="{% url 'picoseekho' %}">
-                                                <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
-                                            </a>
-                                            <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>6 Videos</li>
-                                                        <li>15:35</li>
-                                                    </ul>
-                                            </div>
-                                            <div class="vid-cat-inner">
-                                                <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
-                                                </div>
-                                                <div class="vid-cat-bd">
-                                                    <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                                                </div>
-                                                <div class="vid-cat-ft">
-                                                    <p>During video dissemination, a low-cost battery-operated pico projector is used to show the videos. This course comprises of a set of vide ...</p>
-                                                </div>
-                                            </div> <!-- End .vid-inner -->
-                                        </div> <!-- End .vid-cat -->
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="vid-cat-selected">
-                                        <div class="vid-cat">
-                                            <a href="{% url 'disseminationprep' %}">
-                                                <img height=124 width=217 src="{{STATIC_URL}}docs/training/disseminationprep_module.jpg" />
-                                            </a>
-                                            <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>2 Videos</li>
-                                                        <li>7:17</li>
-                                                    </ul>
-                                            </div>
-                                            <div class="vid-cat-inner">
-                                                <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
-                                                </div>
-                                                <div class="vid-cat-bd">
-                                                    <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                                                </div>
-                                                <div class="vid-cat-ft">
-                                                    <p>Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our ...</p>
-                                                </div>
-                                            </div> <!-- End .vid-inner -->
-                                        </div> <!-- End .vid-cat -->
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="vid-cat-selected">
-                                        <div class="vid-cat">
-                                            <a href="{% url 'disseminationform' %}">
-                                                <img height=124 width=217 src="{{STATIC_URL}}docs/training/disseminationform_module.png" />
-                                            </a>
-                                            <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>4 Videos</li>
-                                                        <li>10:51</li>
-                                                    </ul>
-                                            </div>
-                                            <div class="vid-cat-inner">
-                                                <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
-                                                </div>
-                                                <div class="vid-cat-bd">
-                                                    <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                                                </div>
-                                                <div class="vid-cat-ft">
-                                                    <p>We train community people in both video production and video dissemination. This course is in Hindi, on how to conduct a dissem ...</p>
-                                                </div>
-                                            </div> <!-- End .vid-inner -->
-                                        </div> <!-- End .vid-cat -->
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="vid-cat-selected">
-                                        <div class="vid-cat">
-                                            <a href="{% url 'adoptionverification' %}">
-                                                <img height=124 width=217 src="{{STATIC_URL}}docs/training/adoptionverification_module.png" />
-                                            </a>
-                                            <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>3 Videos</li>
-                                                        <li>12:31</li>
-                                                    </ul>
-                                            </div>
-                                            <div class="vid-cat-inner">
-                                                <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
-                                                </div>
-                                                <div class="vid-cat-bd">
-                                                    <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                                                </div>
-                                                <div class="vid-cat-ft">
-                                                    <p>Much of our work is centered on enhancing the capacities of our partners as well as the community. This is a course on how to conduct ...</p>
-                                                </div>
-                                            </div> <!-- End .vid-inner -->
-                                        </div> <!-- End .vid-cat -->
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="grid" id="tabs">                                 
+  <ul class="nav" style="border: 1px solid #ffffff;background: #ffffff;color: #047D0A;font-weight: bold;">
+    <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
+    <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
+  </ul>
     
-        <section class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <div class="media layout-vr-xlg">
-                        <h2 class="hdg-a hdg-source-lt layout-vr-md">Training Resources</h2>
-                        <div class="hdg-f hdg-source-reg grid">
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
-                                    </div>
-                                    <div class="centered">Dissemination Training Manual</div>
-                                </a>
-                            </div>
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/training/Video-Production-Training-Manual-2015.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/training/production_training.png" height="260" width="190" alt=""/>
-                                    </div>
-                                    <div class="centered">Video Production Training Manual</div>
-                                </a>
-                            </div>
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Training_Manual.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/pico_seekho/manual.png" height="260" width="190" alt=""/>
-                                    </div>
-                                    <div class="centered">Pico Training Manual</div>
-                                </a>
-                            </div>
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/pico_seekho/por315.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
-                                    </div>
-                                    <div class="centered">Pico POR315 Handout</div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="hdg-f hdg-source-reg grid">
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Assessment_Hindi.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/pico_seekho/assessment.png" height="260" width="190" alt=""/>
-                                    </div>
-                                    <div class="centered">Pico Game Scoresheet</div>
-                                </a>
-                            </div>
-                            <div class="grid-col grid-size1of4 layout-vr-lg">
-                                <a href="{{STATIC_URL}}docs/training/Training-App-Guide.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                                        <img src="{{STATIC_URL}}docs/training/training_app.png" height="260" width="190" alt=""/> 
-                                    </div>
-                                    <div class="centered">Training App Guide</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+  <div id="tabs-1" class="active">
+    <div class="wrapper about-bg">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
+          <div class="hdg-f hdg-source-reg grid">
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Agenda.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Agenda.png" height="260" width="190" alt=""/> 
                 </div>
+                <div class="centered">Agenda</div>
+              </a>
             </div>
-        </section>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/Handouts-VideoProductionTraining.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/VideoProductionTraining.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">Handouts-VideoProductionTraining </div>
+                </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Storyboardformat.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/storyboard.png" height="260" width="190" alt=""/>
+                </div>
+                <div class="centered">Storyboard format</div>
+              </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/VideoReviewForm.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/VideoReviewForm.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Video Review Form</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- second div  -->
+    <div class="wrapper about-bg-white">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
+          <div class="hdg-f hdg-source-reg grid">
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Samplefilledstoryboard.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Samplefilledstoryboard.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Agenda</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- third div  -->
+    <div class="wrapper about-bg">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Videos</h2>
+            <div>
+            <ul class="h-list h-list-lg">
+              <li>
+                <div class="vid-cat-selected">
+                  <div class="vid-cat">
+                    <!-- <a href="#">
+                      <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
+                    </a> -->
+                    <a href="http://www.youtube.com/watch?v=GgF__RP87rY" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/GgF__RP87rY/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/GgF__RP87rY/default.jpg" /></a>
+                    <div class="vid-flag">
+                      <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                        <li>1 Video</li>
+                        <li>7:19</li>
+                      </ul>
+                    </div>
+                      <div class="vid-cat-inner">
+                        <div class="vid-cat-hd">
+                          <h3 class="hdg-green hdg-f hdg-bold">2  Preparing for Dissemination</h3>
+                        </div>
+                        <div class="vid-cat-bd">
+                          <p class="copy copy-sm layout-vr-tiny">Bihar</p>
+                        </div>
+                        <div class="vid-cat-ft">
+                          <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                        </div>
+                      </div> <!-- End .vid-inner -->
+                  </div> <!-- End .vid-cat -->
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    {% comment %} Second tab {% endcomment %}
+    <div id="tabs-2">
+      {% comment %} Second tab 1 div {% endcomment %}
+      <div class="wrapper about-bg">
+        <div class="inner-wrapper">
+          <div class="media layout-vr-xlg">
+            <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
+            <div class="hdg-f hdg-source-reg grid">
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Dissemination and Verification Form</div>
+                </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                  <a href="{{STATIC_URL}}docs/training/POR315_English_2015-05-18.pdf" target="_blank">
+                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/training/pico_315.png" height="260" width="190" alt=""/>
+                    </div>
+                    <div class="centered">POR 315 handout</div>
+                  </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/POR_318_English_handout.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/pico_318.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">POR 318 handout</div>
+                </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/por315.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/training/pico_315.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Dissemination Checklist Translated FINAL</div>
+                </a>
+              </div>
+            </div>
+            <div class="hdg-f hdg-source-reg grid">
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Assessment_Hindi.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/pico_seekho/assessment.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">Mediation Observation Form</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% comment %} Second tab 1 div ends {% endcomment %}
+
+      {% comment %} Second tab 2 div  start {% endcomment %}
+      <div class="wrapper about-bg-white">
+        <div class="inner-wrapper">
+          <div class="media layout-vr-xlg">
+            <h2 class="hdg-a hdg-source-lt layout-vr-md">Material Required</h2>
+            <div class="hdg-f hdg-source-reg grid">
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">4 files of Moon tent activity </div>
+                </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                  <a href="{{STATIC_URL}}docs/training/Video-Production-Training-Manual-2015.pdf" target="_blank">
+                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/training/production_training.png" height="260" width="190" alt=""/>
+                    </div>
+                    <div class="centered">DG photo story</div>
+                  </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Training_Manual.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/pico_seekho/manual.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">Dharmender's story</div>
+                </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/traning/por315.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Pico Scoresheet</div>
+                </a>
+              </div>
+
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/traning/por315.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Dissemination Process Card</div>
+                </a>
+              </div>
+
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/por315.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Non-negotiable card</div>
+                </a>
+              </div>
+              <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/traning/TrainingFeedbackEnglish2015-05-14.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/training/por315.png" height="260" width="190" alt=""/> 
+                  </div>
+                  <div class="centered">Training Feedback</div>
+                </a>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      {% comment %} Second tab 2 div  end {% endcomment %}
+      <!-- third div  -->
+    <div class="wrapper about-bg">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Videos</h2>
+            <div>
+            <ul class="h-list h-list-lg">
+              <li>
+                <div class="vid-cat-selected">
+                  <div class="vid-cat">
+                    <!-- <a href="#">
+                      <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
+                    </a> -->
+                    <a href="http://www.youtube.com/watch?v=xE9qe8t_MH0" class="html5lightbox" data-width="480" data-height="320" data-thumbnail=""><img height=124 width=217 src="http://i.ytimg.com/vi/xE9qe8t_MH0/default.jpg" /></a>
+                    <div class="vid-flag">
+                      <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                        <li>1 Video</li>
+                        <li>15:06</li>
+                      </ul>
+                    </div>
+                      <div class="vid-cat-inner">
+                        <div class="vid-cat-hd">
+                          <h3 class="hdg-green hdg-f hdg-bold">1  Let's Learn Pico   POR 315 English subtitles</h3>
+                        </div>
+                        <div class="vid-cat-bd">
+                          <p class="copy copy-sm layout-vr-tiny">Bihar</p>
+                        </div>
+                        <div class="vid-cat-ft">
+                          <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                        </div>
+                      </div> <!-- End .vid-inner -->
+                  </div> <!-- End .vid-cat -->
+                </div>
+              </li>
+
+              <li>
+                <div class="vid-cat-selected">
+                  <div class="vid-cat">
+                    <!-- <a href="#">
+                      <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
+                    </a> -->
+                    <a href="http://www.youtube.com/watch?v=MnbEx3GdmJ0" class="html5lightbox" data-width="480" data-height="320" data-thumbnail=""><img height=124 width=217 src="http://i.ytimg.com/vi/MnbEx3GdmJ0/default.jpg" /></a>
+                    <div class="vid-flag">
+                      <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                        <li>1 Video</li>
+                        <li>12:35</li>
+                      </ul>
+                    </div>
+                      <div class="vid-cat-inner">
+                        <div class="vid-cat-hd">
+                          <h3 class="hdg-green hdg-f hdg-bold">2  Model Dissemination English</h3>
+                        </div>
+                        <div class="vid-cat-bd">
+                          <p class="copy copy-sm layout-vr-tiny">Bihar</p>
+                        </div>
+                        <div class="vid-cat-ft">
+                          <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                        </div>
+                      </div> <!-- End .vid-inner -->
+                  </div> <!-- End .vid-cat -->
+                </div>
+              </li>
+
+
+
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    </div>
+
+
+
+</div>
+  <script type="text/javascript">
+  $(document).ready(function () {
+    $("#tabs").tabs();
+  });
+  </script>
+  <script type="text/javascript">
+    var html5lightbox_options = {
+        watermark: "",
+        watermarklink: ""
+    };
+</script>
+
+  
 
 {% include "includes/footer.html" %}
