@@ -10,7 +10,7 @@ function initialize() {
     set_eventlistener();
     // update_charts();
     $(".button-collapse").sideNav({
-          menuWidth: 300, // Default is 240
+     // Default is 240
           edge: 'left', // Choose the horizontal origin
           closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
         }
@@ -19,6 +19,22 @@ function initialize() {
 }
 
 $('#nav_menu1').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+
+/*$('#nav_assessments').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});*/
+
+$('#nav_trainers').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+$('#nav_states').on('click', function() {
     //alert("hello");
     reset_filter_form();
 });
@@ -121,7 +137,10 @@ $("#states_table").find("tr").each(function(index) {
 // reset
 function reset_filter_form() {
     $('#search_trainers').val('');
+    $('#search_trainers').keyup();
+
      $('#search_states').val('');
+     $('#search_states').keyup();
  
 
 }
@@ -313,7 +332,7 @@ function get_bottom_boxes(){
     })
     .done(function(data) {
         data_json = JSON.parse(data);
-        fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_villages, data_json.num_beneficiaries);
+        fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass);
     });
 }
 
@@ -327,7 +346,7 @@ function get_filter_data() {
             fill_assessment_filter(data_json.assessments);
             fill_trainer_filter(data_json.trainers);
             fill_state_filter(data_json.states);
-            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_villages,data_json.num_beneficiaries);
+            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass);
 
             get_data();
         });
@@ -381,7 +400,7 @@ function gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list, data_json.test);
+            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list);
         });
 }
 
@@ -413,7 +432,7 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_statewise_data(data_json.state_list, data_json.mediator_list, data_json.state_test);
+            plot_statewise_data(data_json.state_list, data_json.mediator_list);
         });
 }
 
@@ -437,7 +456,7 @@ function getmonthdata(start_date, end_date, assessment_ids, trainer_ids, state_i
 
 /* Table Generating UI Functions - Fill data in table */
 
-function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
+function fill_top_boxes(num_trainings, num_participants, num_pass) {
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
@@ -458,11 +477,11 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages,
     document.getElementById('mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    // document.getElementById('villages_reached').innerHTML = numberWithCommas(num_villages);
-    // document.getElementById('viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
-}
+   /* document.getElementById('villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
+*/}
 
-function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
+function fill_bottom_boxes(num_trainings, num_participants, num_pass) {
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
@@ -494,18 +513,17 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villag
     document.getElementById('filtered_mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('filtered_pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
-    // document.getElementById('filtered_villages_reached').innerHTML = numberWithCommas(num_villages);
-    // document.getElementById('filtered_viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
-}
+  /*  document.getElementById('filtered_villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('filtered_viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
+*/}
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
 }
 
 /* Fill data for highcharts */
 
-function plot_trainerwise_data(trainer_list, mediator_list, test) {
+function plot_trainerwise_data(trainer_list, mediator_list) {
 
 
     if (trainer_list.length == 0) {
@@ -567,10 +585,11 @@ function plot_trainerwise_data(trainer_list, mediator_list, test) {
         trainer_mediators_dict['data'] = new Array(trainer_list.length).fill(0.0);
         trainer_mediators_pass_dict['data'] = new Array(trainer_list.length).fill(0.0);
         trainer_pass_perc_dict['data'] = new Array(trainer_list.length).fill(0.0);
+
         for (i = 0; i < trainer_list.length; i++) {
-            var trainer_name = trainer_list[i]['training__trainer__name'];
-            x_axis.push(trainer_name);
-            var avg = (test[i][trainer_name]['score_sum'] / test[i][trainer_name]['participant_count']);
+            x_axis.push(trainer_list[i]['training__trainer__name']);
+
+            var avg = (trainer_list[i]['score__sum'] / trainer_list[i]['participant__count']);
             var perc = (trainer_list[i]['score__sum'] / trainer_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
@@ -715,11 +734,10 @@ function plot_questionwise_data(data_json, assessment_ids) {
     }
 }
 
-function plot_statewise_data(state_list, mediator_list, state_test) {
-    console.log(state_test);
+function plot_statewise_data(state_list, mediator_list) {
     if (state_list.length == 0) {
         plot_dual_axis_chart($("#state_mediator_data"), [], {}, "Average Scores per Mediator", "", "", "%","");
-        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "No. of total trainings","No data for this assessment");
+        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "","No data for this assessment");
    
 /*        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
         document.getElementById('state_training_data').innerHTML = ''*/
@@ -775,10 +793,9 @@ function plot_statewise_data(state_list, mediator_list, state_test) {
         state_pass_perc_dict['data'] = new Array(state_list.length).fill(0.0);
 
         for (i = 0; i < state_list.length; i++) {
-            state_name = state_list[i]['participant__district__state__state_name']; 
-            x_axis.push(state_name);
+            x_axis.push(state_list[i]['participant__district__state__state_name']);
 
-            var avg = (state_test[i][state_name]['score_sum'] / state_test[i][state_name]['participant_count']);
+            var avg = (state_list[i]['score__sum'] / state_list[i]['participant__count']);
             var perc = (state_list[i]['score__sum'] / state_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
