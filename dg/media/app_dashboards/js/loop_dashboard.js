@@ -596,12 +596,11 @@ function set_filterlistener() {
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            if (from_date.getDate() == 16 && daysInMonth[from_date.getMonth()] != (from_date.getDate() + 15)) {
-                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 14));
+            if (from_date.getDate() >= 16 && daysInMonth[from_date.getMonth()] != (from_date.getDate() + 15)) {
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" +daysInMonth[from_date.getMonth()] );
             } else {
                 $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
             }
-            $('#payments_from_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + from_date.getDate());
         } else {
             $('#payments_to_date').val('');
         }
@@ -3042,16 +3041,14 @@ function get_payments_data() {
 //To create table for 15 elements of outliers
 function outliers_summary(aggregator_id) {
     var start_date = new Date(payments_start_date);
+    var start_date_time=new Date(start_date.getFullYear() + "-" + (start_date.getMonth() + 1) + "-" + start_date.getDate()).getTime();
+    var diff=start_date.getTime()-start_date_time;
     var end_date = new Date(payments_to_date);
     var dates = [];
-    console.log(end_date);
-    while (start_date.getTime() <= end_date.getTime()) {
-        console.log(start_date);
+    while (start_date.getTime() <= (end_date.getTime()+diff)) {
         dates.push(start_date.getTime());
         start_date.setDate(start_date.getDate() + 1);
     }
-    console.log(start_date);
-
 
     var quantites = new Array(dates.length).fill(0);
     var farmers = new Array(dates.length).fill(0);
