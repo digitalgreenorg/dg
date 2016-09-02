@@ -1,32 +1,15 @@
 {% include "includes/header.html" %}
-  
-
-<style type="text/css">
-  .form-control {
-  display: block;
-  width: 100%;
-  height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  padding: @padding-base-vertical @padding-base-horizontal;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
-  color: @input-color;
-  background-color: @input-bg;
-  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid @input-border;
-  border-radius: @input-border-radius;
-</style>
 
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #ffffff;background: #ffffff;color: #047D0A;font-weight: bold;">
+      <ul class="nav" style="border: 1px solid #EEEEEE;background: #EEEEEE;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
       </ul>
     </div>
     <div style="margin-left:200px;" class="nav">
     <select style="border: 1px solid #ffffff;background: #ffffff; height: 58px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
-      <option value="/about/training/" {% if request.get_full_path == "/about/training/" %} selected="true">{% endif %}>English</option>
-      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
+      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
       <option value="/about/training/fr/" {% if request.get_full_path == "/about/training/fr/" %} selected="true"{% endif %}>French</option>
     </select>

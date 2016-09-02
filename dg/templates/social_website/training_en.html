@@ -1,39 +1,207 @@
 {% include "includes/header.html" %}
-  
-
-<style type="text/css">
-  .form-control {
-  display: block;
-  width: 100%;
-  height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  padding: @padding-base-vertical @padding-base-horizontal;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
-  color: @input-color;
-  background-color: @input-bg;
-  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid @input-border;
-  border-radius: @input-border-radius;
-</style>
 
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #ffffff;background: #ffffff;color: #047D0A;font-weight: bold;">
+      <ul class="nav" style="border: 1px solid #EEEEEE;background: #EEEEEE;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
+        <li><a href="#tabs-3" class="selected"><span>Data Management</span></span></a></li>
       </ul>
     </div>
     <div style="margin-left:200px;" class="nav">
     <select style="border: 1px solid #ffffff;background: #ffffff; height: 58px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
-      <option value="/about/training/" {% if request.get_full_path == "/about/training/" %} selected="true">{% endif %}>English</option>
-      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
+      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
       <option value="/about/training/fr/" {% if request.get_full_path == "/about/training/fr/" %} selected="true"{% endif %}>French</option>
     </select>
     </div>
   
-    
   <div id="tabs-1" class="active">
+
+    {% comment %} Manual {% endcomment %}
+    <div class="wrapper about-bg-white">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
+          <div class="hdg-f hdg-source-reg grid">
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Manual-Video-Production-Training-2015.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Manual-Video-Production-Training-2015.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Manual-Video-Production-Training-2015</div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% comment %} End Manual {% endcomment %}
+    {% comment %} Handouts {% endcomment %}
+    <div class="wrapper about-bg">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
+          <div class="hdg-f hdg-source-reg grid">
+          
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Agenda.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Agenda.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Agenda</div>
+              </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Handouts-VideoProductionTraining.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/VideoProductionTraining.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Handouts-VideoProductionTraining</div>
+              </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/Storyboardformat.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/storyboard.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">Storyboardformat</div>
+                </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/VideoReviewForm.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/VideoReviewForm.png" height="260" width="190" alt=""/>
+                </div>
+                <div class="centered">VideoReviewForm</div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% comment %} End Handouts {% endcomment %}
+
+
+    {% comment %} Materials Required {% endcomment %}
+    <div class="wrapper about-bg-white">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
+          <div class="hdg-f hdg-source-reg grid">
+          
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Moon Tent Activity Sheet A5 Size</div>
+              </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Moon_tent_written_instruction.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">MoonTent - WrittenInstructionsEnglish</div>
+              </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+                <a href="{{STATIC_URL}}docs/training/Moon Tent - Instructions and Illustrations-English.pdf" target="_blank">
+                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <img src="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.png" height="260" width="190" alt=""/>
+                  </div>
+                  <div class="centered">Moon Tent - Instructions and Illustrations-English</div>
+                </a>
+            </div>
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Samplefilledstoryboard.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Samplefilledstoryboard.png" height="260" width="190" alt=""/>
+                </div>
+                <div class="centered">Samplefilledstoryboard</div>
+              </a>
+            </div>
+            
+          </div>
+          <div class="hdg-f hdg-source-reg grid">
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/ToT_Prep Checklist.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/ToT_Prep Checklist.png" height="260" width="190" alt=""/>
+                </div>
+                <div class="centered">ToT_Prep Checklist</div>
+              </a>
+            </div>
+
+            <div class="media layout-vr-xlg">
+            <div>
+              <ul class="h-list h-list-lg">
+                <li>
+                  <div class="vid-cat-selected">
+                    <div class="vid-cat">
+                      <a href="https://youtu.be/5BqkfVbrNro" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/5BqkfVbrNro/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/5BqkfVbrNro/default.jpg" /></a>
+                      <div class="vid-flag">
+                        <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                          <li>1 Video</li>
+                          <li>2:13</li>
+                        </ul>
+                      </div>
+                        <div class="vid-cat-inner">
+                          <div class="vid-cat-hd">
+                            <h3 class="hdg-green hdg-f hdg-bold">Moon tent</h3>
+                          </div>
+                          <div class="vid-cat-bd">
+                            <p class="copy copy-sm layout-vr-tiny">Bihar</p>
+                          </div>
+                          <div class="vid-cat-ft">
+                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                          </div>
+                        </div> <!-- End .vid-inner -->
+                    </div> <!-- End .vid-cat -->
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% comment %} Materials Required {% endcomment %}
+
+    
+  </div>
+  <div id="tabs-3" class="active">
+
+    <div class="wrapper about-bg-white">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
+          <div class="hdg-f hdg-source-reg grid">
+          
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/COCO Guide_2016.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/COCO Guide_2016.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">COCO Guide_2016</div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="tabs-2" class="active">
     <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
@@ -124,38 +292,38 @@
 
           <div class="hdg-f hdg-source-reg grid">
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Pico-Scoresheet-English-2015-05-18.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Pico-Scoresheet-English-2015-05-18.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent Activity Sheet A5 Size</div>
+                <div class="centered">Pico-Scoresheet-English-2015-05-18</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Training-Feedback-English-2015-05-14.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Training-Feedback-English-2015-05-14.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">MoonTent - WrittenInstructionsEnglish</div>
+                <div class="centered">Training-Feedback-English-2015-05-14</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/Moon Tent - Instructions and Illustrations-English.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Cue-Cards.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/moontentc.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Cue-Cards.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Instructions and Illustrations-English</div>
+                <div class="centered">Cue-Cards</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/DG photo story copy.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/dg_photo_story.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">DG photo story copy</div>
+                <div class="centered">Manual-Dissemination-Training-Mar-2016</div>
               </a>
             </div>
 
@@ -179,16 +347,16 @@
                     <!-- <a href="#">
                       <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
                     </a> -->
-                    <a href="http://www.youtube.com/watch?v=GgF__RP87rY" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/GgF__RP87rY/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/GgF__RP87rY/default.jpg" /></a>
+                    <a href="https://youtu.be/5BqkfVbrNro" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/5BqkfVbrNro/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/5BqkfVbrNro/default.jpg" /></a>
                     <div class="vid-flag">
                       <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                         <li>1 Video</li>
-                        <li>7:19</li>
+                        <li>2:13</li>
                       </ul>
                     </div>
                       <div class="vid-cat-inner">
                         <div class="vid-cat-hd">
-                          <h3 class="hdg-green hdg-f hdg-bold">2  Preparing for Dissemination</h3>
+                          <h3 class="hdg-green hdg-f hdg-bold">Moon tent video</h3>
                         </div>
                         <div class="vid-cat-bd">
                           <p class="copy copy-sm layout-vr-tiny">Bihar</p>
@@ -206,211 +374,7 @@
       </div>
     </div>
   </div>
-
-    {% comment %} Second tab {% endcomment %}
-    <div id="tabs-2">
-      {% comment %} Second tab 1 div {% endcomment %}
-      <div class="wrapper about-bg">
-        <div class="inner-wrapper">
-          <div class="media layout-vr-xlg">
-            <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
-            <div class="hdg-f hdg-source-reg grid">
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                    <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Dissemination and Verification Form</div>
-                </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                  <a href="{{STATIC_URL}}docs/training/POR315_English_2015-05-18.pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/training/pico_315.png" height="260" width="190" alt=""/>
-                    </div>
-                    <div class="centered">POR 315 handout</div>
-                  </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/POR_318_English_handout.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                    <img src="{{STATIC_URL}}docs/training/pico_318.png" height="260" width="190" alt=""/>
-                  </div>
-                  <div class="centered">POR 318 handout</div>
-                </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/por315.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/training/pico_315.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Dissemination Checklist Translated FINAL</div>
-                </a>
-              </div>
-            </div>
-            <div class="hdg-f hdg-source-reg grid">
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Assessment_Hindi.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/pico_seekho/assessment.png" height="260" width="190" alt=""/>
-                  </div>
-                  <div class="centered">Mediation Observation Form</div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% comment %} Second tab 1 div ends {% endcomment %}
-
-      {% comment %} Second tab 2 div  start {% endcomment %}
-      <div class="wrapper about-bg-white">
-        <div class="inner-wrapper">
-          <div class="media layout-vr-xlg">
-            <h2 class="hdg-a hdg-source-lt layout-vr-md">Material Required</h2>
-            <div class="hdg-f hdg-source-reg grid">
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                    <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">4 files of Moon tent activity </div>
-                </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                  <a href="{{STATIC_URL}}docs/training/Video-Production-Training-Manual-2015.pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/training/production_training.png" height="260" width="190" alt=""/>
-                    </div>
-                    <div class="centered">DG photo story</div>
-                  </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Training_Manual.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                    <img src="{{STATIC_URL}}docs/pico_seekho/manual.png" height="260" width="190" alt=""/>
-                  </div>
-                  <div class="centered">Dharmender's story</div>
-                </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/por315.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Pico Scoresheet</div>
-                </a>
-              </div>
-
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/por315.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Dissemination Process Card</div>
-                </a>
-              </div>
-
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/por315.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Non-negotiable card</div>
-                </a>
-              </div>
-              <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/TrainingFeedbackEnglish2015-05-14.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                      <img src="{{STATIC_URL}}docs/training/por315.png" height="260" width="190" alt=""/> 
-                  </div>
-                  <div class="centered">Training Feedback</div>
-                </a>
-              </div>
-
-            </div>
-
-
-          </div>
-        </div>
-      </div>
-      {% comment %} Second tab 2 div  end {% endcomment %}
-      <!-- third div  -->
-    <div class="wrapper about-bg">
-      <div class="inner-wrapper">
-        <div class="media layout-vr-xlg">
-          <h2 class="hdg-a hdg-source-lt layout-vr-md">Videos</h2>
-            <div>
-            <ul class="h-list h-list-lg">
-              <li>
-                <div class="vid-cat-selected">
-                  <div class="vid-cat">
-                    <!-- <a href="#">
-                      <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
-                    </a> -->
-                    <a href="http://www.youtube.com/watch?v=xE9qe8t_MH0" class="html5lightbox" data-width="480" data-height="320" data-thumbnail=""><img height=124 width=217 src="http://i.ytimg.com/vi/xE9qe8t_MH0/default.jpg" /></a>
-                    <div class="vid-flag">
-                      <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                        <li>1 Video</li>
-                        <li>15:06</li>
-                      </ul>
-                    </div>
-                      <div class="vid-cat-inner">
-                        <div class="vid-cat-hd">
-                          <h3 class="hdg-green hdg-f hdg-bold">1  Let's Learn Pico   POR 315 English subtitles</h3>
-                        </div>
-                        <div class="vid-cat-bd">
-                          <p class="copy copy-sm layout-vr-tiny">Bihar</p>
-                        </div>
-                        <div class="vid-cat-ft">
-                          <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
-                        </div>
-                      </div> <!-- End .vid-inner -->
-                  </div> <!-- End .vid-cat -->
-                </div>
-              </li>
-
-              <li>
-                <div class="vid-cat-selected">
-                  <div class="vid-cat">
-                    <!-- <a href="#">
-                      <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
-                    </a> -->
-                    <a href="http://www.youtube.com/watch?v=MnbEx3GdmJ0" class="html5lightbox" data-width="480" data-height="320" data-thumbnail=""><img height=124 width=217 src="http://i.ytimg.com/vi/MnbEx3GdmJ0/default.jpg" /></a>
-                    <div class="vid-flag">
-                      <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                        <li>1 Video</li>
-                        <li>12:35</li>
-                      </ul>
-                    </div>
-                      <div class="vid-cat-inner">
-                        <div class="vid-cat-hd">
-                          <h3 class="hdg-green hdg-f hdg-bold">2  Model Dissemination English</h3>
-                        </div>
-                        <div class="vid-cat-bd">
-                          <p class="copy copy-sm layout-vr-tiny">Bihar</p>
-                        </div>
-                        <div class="vid-cat-ft">
-                          <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
-                        </div>
-                      </div> <!-- End .vid-inner -->
-                  </div> <!-- End .vid-cat -->
-                </div>
-              </li>
-
-
-
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-    </div>
-
+</div>
 
 
 </div>
