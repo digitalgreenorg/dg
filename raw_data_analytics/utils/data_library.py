@@ -61,14 +61,14 @@ class data_lib():
         if self.check_valuefield_validity(options['value']):
 
             for item in options['value']:
-                if item == 'list' and options['value']['list'] != False:
+                if (item == 'list' and options['value']['list'] != False)or(item == 'numVillage' and (options['value']['numVillage']=='numVillageScreening' or options['value']['numVillage']=='numVillageAdoption'))or(item == 'numBlock' and (options['value']['numBlock']=='numBlockScreening' or options['value']['numBlock']=='numBlockAdoption')):
 
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
 
-                if options['value'][item] != False and item != 'list':
+                if options['value'][item] != False and item != 'list' and (options['value'][item]!='numVillageScreening') and (options['value'][item]!='numVillageAdoption') and (options['value'][item]!='numBlockScreening') and (options['value'][item]!='numBlockAdoption'):#or options['value'][item]!='numBlockScreening'):
                     relevantValueDictionary[item] = options['value'][item]
 
         else:
@@ -155,16 +155,16 @@ class data_lib():
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
 #        print orderbyResult
-#        print "----------------------------------SELECT PART------------------------------"
-#        print selectResult
-#        print "----------------------------------FROM PART--------------------------------"
-#        print fromResult
-#        print "----------------------------------WHERE PART-------------------------------"
-#        print whereResult
-#        print "---------------------------------GROUP_BY PART----------------------------"
-#        print groupbyResult
-#        print "--------------------------------ORDER_BY PART-----------------------------"
-#        print orderbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
+        print "--------------------------------ORDER_BY PART-----------------------------"
+        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -172,7 +172,7 @@ class data_lib():
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
-        if not partitionElements and 'list' in valueElement:
+        if (not partitionElements and 'list' in valueElement) or (not partitionElements and'numVillage' in valueElement) or (not partitionElements and'numBlock' in valueElement):
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
         else:
@@ -217,6 +217,7 @@ class data_lib():
 
     # Function to make tables by recursive calls for tables.
     def makeJoinTable(self, sourceTable, destinationTable, lookup_matrix, occuredTables, Dict):
+        print "sou",sourceTable,"des",destinationTable,"occ",occuredTables,"Dict",Dict
         if (sourceTable not in occuredTables):
             for i in lookup_matrix[sourceTable][destinationTable]:
                 if (i[2] == 'self'):

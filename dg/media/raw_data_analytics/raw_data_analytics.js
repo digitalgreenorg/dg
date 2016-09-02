@@ -137,19 +137,31 @@ function populate_video(src){
 
 function list_display() {
 
-    if ((list.checked) && (video.checked)) {
-
+    if ((list.checked) && (video.checked)) 
         listoptions.style.visibility = "visible";
-    }
     else
         listoptions.style.visibility = "hidden";
+}
+function village_number_dropdown(){
+    if((villagenum.checked) && (video.checked))
+        villagenumberoptions.style.visibility="visible";
+    else
+        villagenumberoptions.style.visibility="hidden";
+}
+function block_number_dropdown(){
+    if((blocknum.checked) && (video.checked))
+        blocknumberoptions.style.visibility="visible";
+    else
+        blocknumberoptions.style.visibility="hidden";        
+
+    
 }
 //validation check
 function validation_check() {
     var error = 0;
     var checked_partitions = [partner, country, state, district, block, village]
     var checked_partitions_restrict = [animator, group, people, video];
-    var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no]
+    var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no,blocknum,villagenum]
     var count_partition_restrict = 0;
     count_partition = 0;
     var count_values = 0;
@@ -205,8 +217,16 @@ function validation_check() {
         ((group.checked) && (animator_no.checked)) ||
         ((video.checked) && (animator_no.checked)) ||
         ((video.checked) && (video_screened_no.checked)) ||
-        ((video.checked) && (video_produced_no.checked))) {
-        alert("Invalid Combination of Partition and Value Fields!!!");
+        ((video.checked) && (video_produced_no.checked))
+        ||((village.checked)&&(villagenum.checked))||
+        ((block.checked)&&(blocknum.checked))) {
+        alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
+        error = 1;
+        event.preventDefault();
+    }
+
+    if((video.checked) && (blocknum.checked) && (blocknumber_video.selectedIndex == 0)){
+        alert("Please select number of villages for screening  or number of villages for adoption from dropdown!!!");
         error = 1;
         event.preventDefault();
     }

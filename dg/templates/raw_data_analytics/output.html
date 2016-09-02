@@ -12,7 +12,7 @@
             <div class="media layout-vr-xlg">
 
                 <form target="_blank" action="/raw_data_analytics/execute/" id="formId" method="POST"
-                      enctype="multipart/form-data" onclick="list_display(this);" style="margin-top: -5%">
+                      enctype="multipart/form-data" onclick="village_number_dropdown(this);block_number_dropdown(this);list_display(this);" style="margin-top: -5%">
                     {% csrf_token %}
 
 
@@ -192,8 +192,26 @@
                                     <li><input type="checkbox" id="video_produced_no" name="no_video_produced_chk"
                                                value="numVideoProduced">Number
                                         of Videos Produced
+                                    <li><input type="checkbox" id="blocknum" name="blocknum" value="numBlock">Number
+                                        of Blocks
+                                    <li><input type="checkbox" id="villagenum" name="villagenum" value="numVillage">Number
+                                        of Villages
                                     <li><input type="checkbox" id="list" name="list" value="list">List
                                 </ul>
+                                <div id="blocknumberoptions" name='blocknumberoptions' style='visibility:hidden;'>
+                                    <select class='select' name='blocknumber_video' id='blocknumber_video' style='width:200px;'>
+                                        <option value='0'>------Number related to------</option>
+                                        <option value='numBlockAdoption'>Adoption</option>
+                                        <option value='numBlockScreening'>Screening</option>
+                                    </select>
+                                </div>
+                                <div id="villagenumberoptions" name='villagenumberoptions' style='visibility:hidden'>
+                                    <select class='select' name='villagenumber_video' id='villagenumber_video' style='width:200px;'>
+                                        <option value='0'>------Number related to------</option>
+                                        <option value='numVillageAdoption'>Adoption</option>
+                                        <option value='numVillageScreening'>Screening</option>
+                                    </select>
+                                </div>
                                 <div id="listoptions" name='listoptions' style='visibility:hidden'>
                                     <select class='select' name='list_video' id='list_video' style='width:200px;'>
                                         <option value='0'>-----------------List of------------------</option>
@@ -204,7 +222,7 @@
                             </div>
                         </div>
                         <div name="Buttons" class="centered layout-vr-lg"
-                             style="padding-top:20px; float:left;margin-bottom: 20%;margin-top: 25%;margin-right:15%;">
+                             style="padding-top:20px; float:left;margin-bottom: 20%;margin-top: 15%;margin-right:15%;">
                             <input class="btn" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
                             <input class="btn" type="button" id="resetId" value="Reset">
                         </div>

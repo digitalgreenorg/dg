@@ -119,7 +119,10 @@ def execute(request):
     video_chk = [request.POST.get("video_chk")]
     list_combo = str(request.POST.get("list"))
     videolist = str(request.POST.get("list_video"))
-
+    number_block_combo = str(request.POST.get("blocknum"))
+    number_village_combo = str(request.POST.get("villagenum"))
+    number_block = str(request.POST.get("blocknumber_video"))
+    number_village = str(request.POST.get("villagenumber_video"))
 
 
 
@@ -229,34 +232,75 @@ def execute(request):
 
     #################################value-partion###########################
 
+    if(number_block_combo == "None"):
+
+        number_block_combo = False
+        numebr_block = False
+
+    if(number_village_combo == "None"):
+        number_village_combo = False
+        numebr_village = False
+
     if (list_combo == "None"):
         list_combo = False
         videolist = False
 
+    priority_block = {}
+    if(number_block_combo == 'numBlock'):
+        for vals in checked_list:
+            if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
+                for vals,v in orderDictionary.items():
+                    if vals in checked_list:
+                        priority_block[vals] = v
+                number_block_combo = 'numBlock' + (max(priority_block.items(),key = lambda vals: vals[1])[0]).title()
+
+            elif (vals == 'animator'):
+                number_block_combo = 'numberblockAnimator'
+            elif (vals == 'persongroup'):
+                number_block_combo = 'numberblockGroup'
+            elif (vals == 'person'):
+                number_block_combo = 'numberblockPerson'
+            elif (vals == 'video'):
+                number_block_combo = number_block
+    print number_block_combo
+    priority_village = {}
+    if(number_village_combo == 'numVillage'):
+        for vals in checked_list:
+            if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
+                for vals,v in orderDictionary.items():
+                    if vals in checked_list:
+                        priority_village[vals] = v
+                number_village_combo = 'numVillage' + (max(priority_village.items(),key = lambda vals: vals[1])[0]).title()
+
+            elif (vals == 'animator'):
+                number_village_combo = 'numVillageAnimator'
+            elif (vals == 'persongroup'):
+                number_village_combo = 'numVillageGroup'
+            elif (vals == 'person'):
+                number_village_combo = 'numVillagePerson'
+            elif (vals == 'video'):
+                number_village_combo = number_village
+
     priority = {}
     if (list_combo == 'list'):
-        for x in checked_list:
-            if ((x in categoryDictionary['geographies']) or (x == 'partner')):
-                for x, v in orderDictionary.items():
-                    if x in checked_list:
-                        priority[x] = v
-                list_combo = 'list' + (max(priority.items(), key=lambda x: x[1])[0]).title()
-
-            elif (x == "animator"):
+        for vals in checked_list:
+            if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
+                for vals, v in orderDictionary.items():
+                    if vals in checked_list:
+                        priority[vals] = v
+                list_combo = 'list' + (max(priority.items(), key=lambda vals: vals[1])[0]).title()
+            elif (vals == "animator"):
                 list_combo = 'listAnimator'
-                break;
-
-            elif (x == "persongroup"):
+                break
+            elif (vals == "persongroup"):
                 list_combo = 'listGroup'
-                break;
-
-            elif (x == "person"):
+                break
+            elif (vals == "person"):
                 list_combo = 'listPerson'
-                break;
-
-            elif (x == "video"):
+                break
+            elif (vals == "video"):
                 list_combo = videolist
-                break;
+                break
 
     ##############################Date#################################
 
@@ -291,6 +335,8 @@ def execute(request):
         'attendance': attendance,
         'numVideoScreened': video_screened_num,
         'numVideoProduced': video_produced_num,
+        'numBlock' : number_block_combo,
+        'numVillage' : number_village_combo,
         'list': list_combo
     }
 
@@ -300,7 +346,7 @@ def execute(request):
     args.append(from_date)
     args.append(to_date)
     dlib = data_lib()
-    if options['value']['list'] == 'on':
+    if options['value']['list'] == 'list':
         error = 'Output cannot be generated for this input ! Please check filters and partition field !!'
         return render_to_response("raw_data_analytics/error.html", {'error': error},
                                   context_instance=RequestContext(request))
