@@ -595,7 +595,13 @@ function set_filterlistener() {
             $('#aggregator_payment_details').hide();
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
-            $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
+            var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (from_date.getDate() == 16 && daysInMonth[from_date.getMonth()] != (from_date.getDate() + 15)) {
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 14));
+            } else {
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
+            }
+            $('#payments_from_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + from_date.getDate());
         } else {
             $('#payments_to_date').val('');
         }
@@ -950,9 +956,7 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
         }
     }
 
-
     plot_drilldown(container, series, drilldown, false);
-
 }
 
 //Recovered total graph on analytics page is being plotted from this
@@ -997,8 +1001,6 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         values_cost_recovered[index] += json_data[i]['farmer_share__sum'];
         values_cost_drilldown[index][drilldown_index] += json_data[i]['transportation_cost__sum'];
         values_cost_recovered_drilldown[index][drilldown_index] += json_data[i]['farmer_share__sum'];
-
-        console.log(axis_names[index] + " : " + values_names[drilldown_index] + " : " + json_data[i]['transportation_cost__sum'] + " : " + json_data[i]['farmer_share__sum']);
     }
 
     var data_for_sorting = [];
@@ -1039,10 +1041,6 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     //     data_for_sorting[index]['cost'] += json_data[i]['transportation_cost__sum'];
     //     data_for_sorting[index]['cost_recovered'] += json_data[i]['farmer_share__sum'];
     //
-    //     console.log(values_names[drilldown_index], data_for_sorting[index]['cost']);
-    //     console.log(values_names[drilldown_index], data_for_sorting[index]['cost_recovered']);
-    //
-    //     console.log("============================");
     // }
 
     data_for_sorting.sort(function(a, b) {
@@ -1062,16 +1060,11 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         });
     }
 
-    console.log(drilldown['series']);
-
     for (var i = 0; i < drilldown['series'].length; i++) {
-        // console.log(drilldown['series'][i]['data'][0] +" : " +drilldown['series'][i]['data'][1]);
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
     }
-    console.log(drilldown['series']);
-
 
     plot_drilldown(container, series, drilldown, false);
 }
@@ -1169,9 +1162,6 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
                 drilldown['series'][i * 2]['data'].push([values_names[j], values_cost_cpk_drilldown[i][j] / values_vol_drilldown[i][j]]);
                 drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j]]);
             }
-            // else {
-            //     console.log(values_vol_drilldown[i][j]);
-            // }
         }
     }
 
@@ -1192,13 +1182,11 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
     }
 
-    // console.log(drilldown['series']);
     for (var i = 0; i < drilldown['series'].length; i++) {
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
     }
-    // console.log(drilldown['series']);
 
     plot_drilldown(container, series, drilldown, true);
 }
@@ -1277,7 +1265,6 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
             'name': data_for_sorting[i]['name'],
             'y': data_for_sorting[i]['total_repeat_farmers']
         });
-
     }
 
     plot_drilldown(container, series, drilldown, false);
@@ -1288,16 +1275,6 @@ function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_id
 
     var json_data_crop = json_data.crop_prices;
     var json_data_mandi = json_data.mandi_crop_prices;
-    // json_data_crop.sort(function(a, b) {
-    // return (b['price__max'] - b['price__min']) - (a['price__max'] - a["price__min"]);
-    // });
-
-
-    // var x_axis = [];
-    // var series = [{
-    //     "name": "Min_Max",
-    //     "data": []
-    // }];
 
     var series = [];
     var drilldown = {};
@@ -1346,14 +1323,11 @@ function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_id
     var max_crop_price = 0;
     for (var i = 0; i < json_data_crop.length; i++) {
         var index = crop_ids.indexOf(json_data_crop[i][crop_parameter].toString());
-        // if(json_data_crop[i]['price__max']>0){
         series[0]['data'][index]['low'] = json_data_crop[i]['price__min'];
         series[0]['data'][index]['high'] = json_data_crop[i]['price__max'];
         if (max_crop_price < json_data_crop[i]['price__max']) {
             max_crop_price = json_data_crop[i]['price__max'];
         }
-        // }
-
     }
 
     for (var i = series[0]['data'].length - 1; i >= 0; i--) {
@@ -1381,12 +1355,6 @@ function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_id
     series[0]['data'].sort(function(a, b) {
         return (b['high'] - b['low']) - (a['high'] - a["low"]);
     });
-
-    // for (var i = 0; i < json_data_crop.length; i++) {
-    //     x_axis.push(json_data_crop[i]['crop__crop_name']);
-    //     series[0]['data'].push([json_data_crop[i]['price__min'], json_data_crop[i]['price__max']]);
-    // }
-
 
     plot_drilldown1(container, series, drilldown, false, max_crop_price);
 
@@ -2971,7 +2939,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Total Payment Sheet"
+                "sTitle": "Loop_Payment_Sheet_" + getFormattedDate()
             }]
         }
     });
@@ -3003,7 +2971,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Gaddidar Payment Sheet"
+                "sTitle": "Loop_Gaddidar_Pmt_" + getFormattedDate()
             }]
         }
 
@@ -3034,15 +3002,17 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Transporter Payment Sheet"
+                "sTitle": "Loop_Transporter_Pmt_" + getFormattedDate()
             }]
         }
 
     });
-    // $("#table4").hide();
-    // $("#table4").tableExport([],"transport");
+}
 
-
+function getFormattedDate() {
+    var date = new Date();
+    var str = date.getFullYear() + "" + (date.getMonth() + 1) + "" + date.getDate() + "T" + date.getHours() + "" + date.getMinutes();
+    return str;
 }
 
 //To get data for aggregator, transporter, gaddidar payment sheets from server for specified time period
@@ -3074,10 +3044,14 @@ function outliers_summary(aggregator_id) {
     var start_date = new Date(payments_start_date);
     var end_date = new Date(payments_to_date);
     var dates = [];
-    while (start_date.getDate() <= end_date.getDate()) {
+    console.log(end_date);
+    while (start_date.getTime() <= end_date.getTime()) {
+        console.log(start_date);
         dates.push(start_date.getTime());
         start_date.setDate(start_date.getDate() + 1);
     }
+    console.log(start_date);
+
 
     var quantites = new Array(dates.length).fill(0);
     var farmers = new Array(dates.length).fill(0);
@@ -3097,7 +3071,6 @@ function outliers_summary(aggregator_id) {
         if (aggregator_id == outliers_transport_data[i]['user_created__id']) {
             var index = dates.indexOf(new Date(outliers_transport_data[i]['date']).getTime());
             transport_data[index] += outliers_transport_data[i]['transportation_cost__sum'];
-
         }
     }
 
