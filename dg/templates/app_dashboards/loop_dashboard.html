@@ -267,7 +267,7 @@
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
 					<h5 id="recent_cluster_card"></h5>
-					<span id="recent_cluster_sparkline"></span>
+					<span id="recent_cluster_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 
@@ -275,28 +275,28 @@
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
 					<h5 id="recent_active_farmers_card">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-					<span id="recent_active_farmers_sparkline"></span>
+					<span id="recent_active_farmers_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
 					<h5 id="recent_volume_card"></h5>
-					<span id="recent_volume_sparkline"></span>
+					<span id="recent_volume_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
 					<h5 id="recent_revenue_card"></h5>
-					<span id="recent_revenue_sparkline"></span>
+					<span id="recent_revenue_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 			<div class="col s6 m4 l2">
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg</span>
 					<h5 id="cpk_card"></h5>
-					<span id="cpk_sparkline"></span>
+					<span id="cpk_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 
@@ -304,7 +304,7 @@
 				<div class="card-content white darken-1">
 					<span class="card-title">&nbsp;&nbsp;Sustainability(%)</span>
 					<h5 id="recent_sustainability_card"></h5>
-					<span id="recent_sustainability_sparkline"></span>
+					<span id="recent_sustainability_sparkline" class="sparkline_graph"></span>
 				</div>
 			</div>
 
@@ -320,7 +320,7 @@
 </div>
 
 
-<div id="analytics_div">
+<div id="analytics_div" hide>
 	<div class="center">
 
 		<div id="modal1" class="modal">
@@ -368,7 +368,7 @@
 
 			<div class="col s12 m6" id="aggregator_farmer_count">
 				<ul class="tabs">
-					<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume">Farmer Count</a></li>
+					<li class="tab col s6"><a class="center active blue-text" id="farmers_count_tab">Farmer Count</a></li>
 				</ul>
 				<hr>
 				<div id="farmers_count" class="col s12"></div>
@@ -385,8 +385,8 @@
 				<div class="row">
 
 					<ul class="tabs">
-						<li class="tab col s6"><a class="center active blue-text" id="aggregator_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
-						<li class="tab col s6"><a class="center blue-text" id="aggregator_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
+						<li class="tab col s6"><a class="center active blue-text" id="gaddidar_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
+						<li class="tab col s6"><a class="center blue-text" id="gaddidar_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
 					</ul>
 				</div>
 				<hr>
@@ -407,7 +407,7 @@
 </div>
 
 
-<div id="time_series_div">
+<div id="time_series_div" hide>
 	<div id="container2">
 		<div class="row">
 			<p class="col s4"></p>
@@ -443,7 +443,7 @@
 	</div>
 </div>
 
-<div id="payments_div">
+<div id="payments_div" hide>
 
 	<div class="row center">
 		<p class="col s3"></p>
