@@ -875,7 +875,7 @@ function totals() {
     }
 
     var cpk = (total_cost / total_volume).toFixed(2);
-    var spk = ((total_recovered + gaddidar_share) / total_cost).toFixed(2);
+    var spk = ((total_recovered + gaddidar_share) / total_volume).toFixed(2);
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " Kg");
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
@@ -980,61 +980,70 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     series.push(temp_cost);
     series.push(temp_cost_recovered);
 
-    // var values_cost = new Array(axis.length).fill(0.0);
-    // var values_cost_drilldown = [];
-    // var values_cost_recovered = new Array(axis.length).fill(0.0);
-    // var values_cost_recovered_drilldown = [];
+    var values_cost = new Array(axis.length).fill(0);
+    var values_cost_drilldown = [];
+    var values_cost_recovered = new Array(axis.length).fill(0);
+    var values_cost_recovered_drilldown = [];
 
-    // for (var i = 0; i < axis.length; i++) {
-    //     values_cost_drilldown.push(new Array(values.length).fill(0));
-    //     values_cost_recovered_drilldown.push(new Array(values.length).fill(0));
-    // }
-    //
-    // for (var i = 0; i < json_data.length; i++) {
-    //     var index = axis.indexOf(json_data[i][axis_parameter].toString());
-    //     var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
-    //     values_cost[index] += json_data[i]['transportation_cost__sum'];
-    //     values_cost_recovered[index] += json_data[i]['farmer_share__sum'];
-    //     values_cost_drilldown[index][drilldown_index] += json_data[i]['transportation_cost__sum'];
-    //     values_cost_recovered_drilldown[index][drilldown_index] += json_data[i]['farmer_share__sum'];
-    // }
+    for (var i = 0; i < axis.length; i++) {
+        values_cost_drilldown.push(new Array(values.length).fill(0));
+        values_cost_recovered_drilldown.push(new Array(values.length).fill(0));
+    }
+
+    for (var i = 0; i < json_data.length; i++) {
+        var index = axis.indexOf(json_data[i][axis_parameter].toString());
+        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+        values_cost[index] += json_data[i]['transportation_cost__sum'];
+        values_cost_recovered[index] += json_data[i]['farmer_share__sum'];
+        values_cost_drilldown[index][drilldown_index] += json_data[i]['transportation_cost__sum'];
+        values_cost_recovered_drilldown[index][drilldown_index] += json_data[i]['farmer_share__sum'];
+
+        console.log(axis_names[index] + " : " + values_names[drilldown_index] + " : " + json_data[i]['transportation_cost__sum'] + " : " + json_data[i]['farmer_share__sum']);
+    }
 
     var data_for_sorting = [];
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
-            'cost': 0,
-            'cost_recovered': 0
+            'cost': values_cost[i],
+            'cost_recovered': values_cost_recovered[i]
         });
         drilldown['series'].push({
             'name': axis_names[i],
             'id': axis_names[i] + "cost",
             'data': [],
-            // 'xAxis': 1,
+            'xAxis': 1,
             'pointWidth': 15
         });
         drilldown['series'].push({
             'name': axis_names[i],
             'id': axis_names[i] + "recovered",
             'data': [],
-            // 'xAxis': 1,
+            'xAxis': 1,
             'pointWidth': 15
         });
         for (var j = 0; j < values.length; j++) {
-            drilldown['series'][i * 2]['data'].push([values_names[j], 0]);
-            drilldown['series'][i * 2 + 1]['data'].push([values_names[j], 0]);
+            if (values_cost_drilldown[i][j] > 0) {
+                drilldown['series'][i * 2]['data'].push([values_names[j], values_cost_drilldown[i][j]]);
+                drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_recovered_drilldown[i][j]]);
+            }
         }
     }
 
-    var json_data_length = json_data.length;
-    for (var i = 0; i < json_data_length; i++) {
-        var index = axis.indexOf(json_data[i][axis_parameter].toString());
-        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
-        drilldown['series'][index * 2]['data'][drilldown_index][1] += json_data[i]['transportation_cost__sum'];
-        drilldown['series'][index * 2 + 1]['data'][drilldown_index][1] += json_data[i]['farmer_share__sum'];
-        data_for_sorting[index]['cost'] += json_data[i]['transportation_cost__sum'];
-        data_for_sorting[index]['cost_recovered'] += json_data[i]['farmer_share__sum'];
-    }
+    // var json_data_length = json_data.length;
+    // for (var i = 0; i < json_data_length; i++) {
+    //     var index = axis.indexOf(json_data[i][axis_parameter].toString());
+    //     var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+    //     drilldown['series'][index * 2]['data'][drilldown_index][1] += json_data[i]['transportation_cost__sum'];
+    //     drilldown['series'][index * 2 + 1]['data'][drilldown_index][1] += json_data[i]['farmer_share__sum'];
+    //     data_for_sorting[index]['cost'] += json_data[i]['transportation_cost__sum'];
+    //     data_for_sorting[index]['cost_recovered'] += json_data[i]['farmer_share__sum'];
+    //
+    //     console.log(values_names[drilldown_index], data_for_sorting[index]['cost']);
+    //     console.log(values_names[drilldown_index], data_for_sorting[index]['cost_recovered']);
+    //
+    //     console.log("============================");
+    // }
 
     data_for_sorting.sort(function(a, b) {
         return (b['cost']) - (a['cost']);
@@ -1053,12 +1062,17 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
         });
     }
 
+    console.log(drilldown['series']);
+
     for (var i = 0; i < drilldown['series'].length; i++) {
+        // console.log(drilldown['series'][i]['data'][0] +" : " +drilldown['series'][i]['data'][1]);
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
-
     }
+    console.log(drilldown['series']);
+
+
     plot_drilldown(container, series, drilldown, false);
 }
 
@@ -1134,7 +1148,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         data_for_sorting.push({
             'name': axis_names[i],
             'cpk': values_vol[i] > 0 ? values_cost_cpk[i] / values_vol[i] : 0.0,
-            'spk': values_cost_cpk[i] > 0 ? values_cost_spk[i] / values_cost_cpk[i] : 0.0
+            'spk': values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0
         });
         drilldown['series'].push({
             'name': axis_names[i],
@@ -1153,10 +1167,11 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         for (var j = 0; j < values.length; j++) {
             if (values_vol_drilldown[i][j] > 0) {
                 drilldown['series'][i * 2]['data'].push([values_names[j], values_cost_cpk_drilldown[i][j] / values_vol_drilldown[i][j]]);
+                drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j]]);
             }
-            if (values_cost_cpk_drilldown[i][j] > 0) {
-                drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_cost_cpk_drilldown[i][j]]);
-            }
+            // else {
+            //     console.log(values_vol_drilldown[i][j]);
+            // }
         }
     }
 
@@ -1164,7 +1179,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         return (b['cpk']) - (a['cpk']);
     });
 
-    for (var i = 0; i < axis_names.length; i++) {
+    for (var i = 0; i < axis.length; i++) {
         series[0]['data'].push({
             'name': data_for_sorting[i]['name'],
             'y': data_for_sorting[i]['cpk'],
@@ -1177,11 +1192,13 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
     }
 
+    // console.log(drilldown['series']);
     for (var i = 0; i < drilldown['series'].length; i++) {
         drilldown['series'][i]['data'].sort(function(a, b) {
             return b[1] - a[1];
         });
     }
+    // console.log(drilldown['series']);
 
     plot_drilldown(container, series, drilldown, true);
 }
