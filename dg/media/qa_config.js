@@ -83,7 +83,7 @@ function() {
         'edit_template_name': 'Video_Quality_Review_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoQualityReview/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'},{'header':'Approved for Dissemination','element':'approval'}],
         'entity_name': 'VideoQualityReview',
         'inc_table_name': 'videoqualityreview',
         'dashboard_display': {
@@ -147,7 +147,7 @@ function() {
         'edit_template_name': 'Dissemination_Quality_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/DisseminationQuality/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
+        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Dissemination Grade','element':'video_grade'}],
         'entity_name': 'DisseminationQuality',
         'inc_table_name': 'disseminationquality',
         'dashboard_display': {
@@ -242,7 +242,7 @@ function() {
         'edit_template_name': 'Adoption_Verification_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/AdoptionVerification/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
+        'list_elements_English': [{'header':'Person','element':'person.person_name'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
         'entity_name': 'AdoptionVerification',
         'inc_table_name': 'adoptionverification',
         'dashboard_display': {
