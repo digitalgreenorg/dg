@@ -121,7 +121,10 @@ $("#states_table").find("tr").each(function(index) {
 // reset
 function reset_filter_form() {
     $('#search_trainers').val('');
-     $('#search_states').val('');
+    $('#search_trainers').keyup();
+    $('#search_states').val('');
+    $('#search_states').keyup();
+
  
 
 }
@@ -196,8 +199,10 @@ function set_eventlistener() {
     });
 
     var today = new Date();
-    $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-    $("#from_date").val(2015 + "-" + 01 + "-" + 01);
+    var month_ = (( (today.getMonth() + 1) > 10 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
+    var date_ = (( (today.getDate() + 1) > 10 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
+    $("#to_date").val(today.getFullYear() + "-" + month_ + "-" + date_);
+    $("#from_date").val(2015 + "-0" + 1 + "-0" + 1);
 
     set_filterlistener();
 
