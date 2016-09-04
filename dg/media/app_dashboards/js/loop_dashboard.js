@@ -113,8 +113,8 @@ bullet_options = {
     height: "30",
     performanceColor: '#00bfbf',
     rangeColors: ['#a2d6d6'],
-    targetColor: '#ffffff',
-};
+    targetColor: '#ffffff'
+}
 
 sparkline_option = {
     type: 'line',
@@ -122,8 +122,8 @@ sparkline_option = {
     height: '60',
     lineColor: '#00bfbf',
     fillColor: '#dde1df',
-    lineWidth: 2,
-};
+    lineWidth: 2
+}
 
 
 //To compute data for home page overall cards
@@ -148,6 +148,10 @@ function total_static_data() {
         // TODO - DONE: # we need to calculate gaddidar contribution by WITHOUT using a for loop here
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+        // var total_gaddidar_contribution=0;
+        // for (var i = 0; i < json_data['total_gaddidar_contribution'].length; i++) {
+            // total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
+        // }
         var total_aggregator_cost = total_volume * 0.25;
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
@@ -166,7 +170,7 @@ function total_static_data() {
         plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 25000000);
         plot_solid_guage($('#total_expenditure_bullet'), -1, parseFloat(0 - total_cpk.toFixed(2)), 0);
         plot_solid_guage($('#sustainability_bullet'), 0, parseFloat(sustainability.toFixed(2)), 50);
-    })
+    });
 }
 
 
@@ -176,14 +180,11 @@ function recent_graphs_data() {
         json_data = JSON.parse(data);
 
         dates = json_data['dates'];
-        // aggregators_details = json_data.aggregators;
-        // mandis = json_data['mandis'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
-        // crops = json_data['crops'];
+        gaddiadar_contribution = json_data['gaddidar_contribution'];
 
         plot_cards_data();
-
         cummulative_farmer_and_volume();
     });
 }
@@ -191,8 +192,9 @@ function recent_graphs_data() {
 
 //To plot and show data for recents graphs on home page
 function plot_cards_data() {
-    var avg = get_average(); // Retunts [avg_volume, active_farmers, avg_amount]
+    var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
     var avg_vol = avg[0];
+    var avg_gaddidar_contribution = avg[4];
     var kg = "Kg";
     var rs = "₹";
 
@@ -211,7 +213,7 @@ function plot_cards_data() {
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
-    var data = get_cpk(avg_vol.reverse());
+    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution.reverse());
     var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(parseFloat(cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
@@ -228,6 +230,9 @@ function get_average() {
     var today = new Date();
     today.setDate(today.getDate() - days_to_average);
 
+    var gaddidar_day = new Date();
+    gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+
     var avg_vol = [];
     var avg_amt = [];
 
@@ -235,10 +240,49 @@ function get_average() {
     var active_farmers_id = [];
     var active_clusters = [];
     var active_clusters_id = [];
+    var avg_gaddidar_share = [];
 
     var j = 0,
+        k = 0,
         temp_vol = 0,
-        temp_amt = 0;
+        temp_amt = 0,
+        temp_gaddidar_share = 0;
+
+    var gaddidar_share = [];
+    var dates_of_transaction = dates.length;
+    for (var i = 0; i < dates_of_transaction; i++) {
+        gaddidar_share.push(0);
+    }
+    var gaddiadar_contribution_length = gaddiadar_contribution.length;
+    for (var i = 0; i < gaddiadar_contribution_length; i++) {
+        var index = dates.indexOf(gaddiadar_contribution[i]['date']);
+        gaddidar_share[index] += gaddiadar_contribution[i]['amount'];
+    }
+
+    while (gaddidar_day >= new Date(dates[k])) {
+        avg_gaddidar_share.push(0);
+        gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+    }
+
+    var gaddiadar_contribution_length = gaddiadar_contribution.length;
+    while (k < gaddiadar_contribution_length && gaddidar_day < new Date(dates[k])) {
+        temp_gaddidar_share += gaddidar_share[k];
+        k++;
+        if (k < gaddiadar_contribution_length && gaddidar_day >= new Date(dates[k])) {
+            avg_gaddidar_share.push(temp_gaddidar_share.toFixed(0));
+            temp_gaddidar_share = 0;
+            gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+
+            //If no data is present for a period of days_to_average
+            while (gaddidar_day >= new Date(dates[k])) {
+                avg_gaddidar_share.push(0);
+                gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+            }
+        }
+    }
+    avg_gaddidar_share.push(temp_gaddidar_share);
+
+
     //If no data is present for a period of days_to_average initially
     while (today >= new Date(stats[j]['date'])) {
         avg_vol.push(0);
@@ -292,16 +336,15 @@ function get_average() {
     active_farmers.push(active_farmers_id.length);
     active_clusters.push(active_clusters_id.length);
 
-    return [avg_vol, active_farmers, avg_amt, active_clusters];
+    return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share];
 }
 
 
 //Helper function to calculate average cpk for 7,15,30,60 days for above function
-function get_cpk(avg_vol) {
+function get_cpk(avg_vol, avg_gaddidar_contribution) {
 
     var today = new Date();
     today.setDate(today.getDate() - days_to_average);
-
     var cpk = [];
     var sustainability_per_kg = [];
 
@@ -327,7 +370,7 @@ function get_cpk(avg_vol) {
                 sustainability_per_kg.push(0);
             } else {
                 cpk.push(((temp + avg_vol[k] * 0.25) / avg_vol[k]).toFixed(2));
-                sustainability_per_kg.push((f_share / temp * 100).toFixed(2));
+                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * 0.25) * 100).toFixed(2));
             }
 
             k++;
@@ -349,7 +392,7 @@ function get_cpk(avg_vol) {
         sustainability_per_kg.push(0);
     } else {
         cpk.push(((temp + avg_vol[k] * 0.25) / avg_vol[k]).toFixed(2));
-        sustainability_per_kg.push((f_share / temp * 100).toFixed(2));
+        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * 0.25) * 100).toFixed(2));
     }
 
     //Adding 0 cost for previous data making length of both arrays same
@@ -1498,10 +1541,10 @@ function crop_prices_graph(crop_id) {
 
     var series = [{
         'name': 'Range',
-        'type': 'boxplot',
+        'type': 'boxplot'
     }, {
         'name': 'Average Price',
-        'type': 'line',
+        'type': 'line'
     }];
 
     var ranges = [];
@@ -1701,7 +1744,7 @@ function plot_stacked_chart(container_obj, dict) {
     }
     container_obj.highcharts({
         chart: {
-            height: 300,
+            height: 300
         },
         credits: {
             enabled: false
@@ -1718,14 +1761,14 @@ function plot_stacked_chart(container_obj, dict) {
             max: max
         },
         scrollbar: {
-            enabled: true,
+            enabled: true
         },
         yAxis: [{
             min: 0,
             title: {
                 text: null
             },
-            gridLineColor: 'transparent',
+            gridLineColor: 'transparent'
         }],
         legend: {
             layout: 'vertical',
@@ -1775,7 +1818,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
         chart: {
             type: 'bar',
             height: 300,
-            zoomType: 'x',
+            zoomType: 'x'
         },
         credits: {
             enabled: false
@@ -1902,7 +1945,7 @@ function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
 function createDetail(detail_container, masterChart, dict) {
 
     // prepare the detail chart
-    var myDict = []
+    var myDict = [];
     var detailData = [],
         detailStart = dict[0]['data'][0][0];
 
@@ -1949,7 +1992,7 @@ function createDetail(detail_container, masterChart, dict) {
             title: {
                 text: null
             },
-            maxZoom: 0.1,
+            maxZoom: 0.1
 
         }, {
             title: {
@@ -2183,7 +2226,7 @@ function createDetail1(detail_container, masterChart, dict) {
             enabled: false
         },
         title: {
-            text: null,
+            text: null
         },
 
         xAxis: {
@@ -2193,7 +2236,7 @@ function createDetail1(detail_container, masterChart, dict) {
             title: {
                 text: null
             },
-            maxZoom: 0.1,
+            maxZoom: 0.1
 
         }, {
             title: {
@@ -2439,7 +2482,7 @@ function createDetail2(detail_container, masterChart, dict) {
             title: {
                 text: null
             },
-            maxZoom: 0.1,
+            maxZoom: 0.1
 
         }, {
             title: {
@@ -2660,7 +2703,7 @@ function plot_area_range_graph(container, dict) {
             title: {
                 text: null
             },
-            min: 0,
+            min: 0
         },
 
         tooltip: {
@@ -3011,10 +3054,9 @@ function create_outliers_table(date, aggregator_id) {
         }, {
             title: "Farmer Share"
         }, {
-            title: "Gaddidar Commission"
+            title: "Gaddidar Discount"
         }],
-        "dom": '<"clear">',
-
+        "dom": '<"clear">'
     });
 
     $('#outliers_data tbody').on('click', 'td.details-control', function() {
@@ -3065,7 +3107,7 @@ function show_detailed_data(d, aggregator_id) {
         }, {
             title: "Commission"
         }],
-        "dom": 'T<"clear">rtip',
+        "dom": 'T<"clear">rtip'
     });
     return detailed_table;
 }
@@ -3140,7 +3182,7 @@ function plot_solid_guage(container, minimum, present, target) {
     container.highcharts(Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: minimum,
-            max: target,
+            max: target
         },
 
         credits: {
