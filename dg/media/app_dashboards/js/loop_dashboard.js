@@ -3014,7 +3014,7 @@ function create_outliers_table(date, aggregator_id) {
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
-            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'], 0, outliers_data[i]['quantity__sum'], 0, outliers_data[i]['gaddidar__commission__sum']])
+            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'],outliers_data[i]['quantity__sum'], 0,0, outliers_data[i]['gaddidar__commission__sum']])
             sno += 1;
         }
     }
@@ -3024,7 +3024,7 @@ function create_outliers_table(date, aggregator_id) {
         if (new Date(date).getTime() == new Date(outliers_transport_data[i]['date']).getTime() && aggregator_id == outliers_transport_data[i]['user_created__id']) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(outliers_transport_data[i]['mandi__mandi_name'])) {
-                    data_set[j][5] = outliers_transport_data[i]['transportation_cost__sum'];
+                    data_set[j][6] = outliers_transport_data[i]['transportation_cost__sum'];
                     data_set[j][7] = outliers_transport_data[i]['farmer_share__sum'];
                 }
             }
@@ -3048,9 +3048,9 @@ function create_outliers_table(date, aggregator_id) {
         }, {
             title: "Farmers"
         }, {
-            title: "Transport Cost"
-        }, {
             title: "Quantity"
+        }, {
+            title: "Transport Cost"
         }, {
             title: "Farmer Share"
         }, {
@@ -3085,7 +3085,7 @@ function show_detailed_data(d, aggregator_id) {
     var sno = 1;
     for (var i = 0; i < outlier_daily_data.length; i++) {
         if (new Date(d[2]).getTime() == new Date(outlier_daily_data[i]['date']).getTime() && d[3] == outlier_daily_data[i]['mandi__mandi_name'] && aggregator_id == outlier_daily_data[i]['user_created__id']) {
-            data_set.push([sno, outlier_daily_data[i]['gaddidar__gaddidar_name'], outlier_daily_data[i]['farmer__name'], outlier_daily_data[i]['quantity__sum'], outlier_daily_data[i]['crop__crop_name'], outlier_daily_data[i]['price'], outlier_daily_data[i]['gaddidar__commission']])
+            data_set.push([sno, outlier_daily_data[i]['gaddidar__gaddidar_name'], outlier_daily_data[i]['farmer__name'],  outlier_daily_data[i]['crop__crop_name'], outlier_daily_data[i]['quantity__sum'], outlier_daily_data[i]['price'], outlier_daily_data[i]['gaddidar__commission']])
             sno += 1;
         }
     }
@@ -3099,9 +3099,9 @@ function show_detailed_data(d, aggregator_id) {
         }, {
             title: "Farmers"
         }, {
-            title: "Quantity"
-        }, {
             title: "Crop"
+        }, {
+            title: "Quantity"
         }, {
             title: "Price"
         }, {
