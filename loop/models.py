@@ -338,6 +338,18 @@ class CombinedTransaction(LoopModel):
             self.farmer.name, self.crop.crop_name, self.mandi.mandi_name,
             LoopUser.objects.get(user=self.user_created).name)
 
+    def __aggregator__(self):
+        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+
+    def __farmer__(self):
+        return "%s" % (self.farmer.name)
+
+    def __crop__(self):
+        return "%s" % (self.crop.crop_name)
+
+    def __mandi__(self):
+        return "%s" % (self.mandi.mandi_name)
+
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
 
