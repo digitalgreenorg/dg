@@ -44,7 +44,7 @@
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
           <div class="hdg-f hdg-source-reg grid">
-          
+            {% comment %}
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Agenda.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="centered">Agenda</div>
               </a>
-            </div>
+            </div>{% endcomment %}
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Handouts-VideoProductionTraining.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
@@ -127,6 +127,7 @@
             
           </div>
           <div class="hdg-f hdg-source-reg grid">
+            {% comment %}
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/ToT_Prep Checklist.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
@@ -135,7 +136,7 @@
                 <div class="centered">ToT_Prep Checklist</div>
               </a>
             </div>
-
+            {% endcomment %}
             <div class="media layout-vr-xlg">
             <div>
               <ul class="h-list h-list-lg">
@@ -203,6 +204,28 @@
 
   <div id="tabs-2" class="active">
     <div class="wrapper about-bg">
+
+    {% comment %} Manual {% endcomment %}
+    <div class="wrapper about-bg-white">
+      <div class="inner-wrapper">
+        <div class="media layout-vr-xlg">
+          <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
+          <div class="hdg-f hdg-source-reg grid">
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Manual-Dissemination-Training-Mar-2016</div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% comment %} End Manual {% endcomment %}
+
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
@@ -317,16 +340,6 @@
                 <div class="centered">Cue-Cards</div>
               </a>
             </div>
-
-            <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.png" height="260" width="190" alt=""/> 
-                </div>
-                <div class="centered">Manual-Dissemination-Training-Mar-2016</div>
-              </a>
-            </div>
-
           </div>
 
 
