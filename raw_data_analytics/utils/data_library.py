@@ -217,7 +217,6 @@ class data_lib():
 
     # Function to make tables by recursive calls for tables.
     def makeJoinTable(self, sourceTable, destinationTable, lookup_matrix, occuredTables, Dict):
-        print "sou",sourceTable,"des",destinationTable,"occ",occuredTables,"Dict",Dict
         if (sourceTable not in occuredTables):
             for i in lookup_matrix[sourceTable][destinationTable]:
                 if (i[2] == 'self'):

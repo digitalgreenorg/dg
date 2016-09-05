@@ -96,7 +96,7 @@ categoryDictionary={
                           'listGroup':'persongroup', 'listVillage':'village','listBlock':'block','listDistrict':'district','listState':'state',
                           'listCountry':'country','listPartner':'partner','numScreening':'numScreening','numVillageScreening':'video',
                           'numVillagePartner':'partner','numVillageCountry':'country','numVillageGroup':'persongroup','numVillagePerson':'person',
-                          'numVillageAnimator':'animator','numVillageBlock':'block','numVillageAdoption':'','numBlockScreening':'numBlock','numBlockAdoption':''}
+                          'numVillageAnimator':'animator','numVillageBlock':'block','numVillageAdoption':'','numBlockScreening':'numBlock','numBlockAdoption':'numBlock'}
 }
 
 groupbyDictionary={

@@ -75,7 +75,6 @@ def dropdown_partner(request):
         partners = onrun_query(query)
     else:
         partners = Partner.objects.filter().values_list('partner_name')
-        print partners
     resp = json.dumps([i for i in partners])
     print resp
     return HttpResponse(resp)
