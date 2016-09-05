@@ -6,7 +6,7 @@
 		background-color: transparent;
 	}
 
-	ul.collapsible> li.active {
+	ul.collapsible>li.active {
 		background-color: transparent;
 	}
 
@@ -29,6 +29,13 @@
 					<li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
 					<li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
 				</ul>
+			</div>
+			<div class="col s2" class="initialized" style="float:right;">
+				<select id='languageID' onchange='change_language(this.value)'>
+					<option value="-1" disabled selected> Choose Language</option>>
+					<option value='Hindi' >Hindi</option>
+					<option value='English' >English</option>
+				</select>
 			</div>
 			<ul class="side-nav" id="page-navigation">
 				<li><a onclick="hide_nav()">Home</a></li>
@@ -55,13 +62,6 @@
 				<ul class="right">
 
 					<div class="row">
-						<div class="col s3" class="initialized" style="float:right;">
-							<select id='languageID' onchange='change_language(this.value)'>
-								<option value="-1" disabled selected> Choose Language</option>>
-								<option value='Hindi' >Hindi</option>
-								<option value='English' >English</option>
-							</select>
-						</div>
 						<div class="input-field col s3">
 							<label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
 						</div>
@@ -182,7 +182,51 @@
 
 {% endblock %} {% block content %}
 
-<div id="home_div">
+<div id="loader" class="center">
+	<div class="preloader-wrapper active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="home_div" hide>
 	<div class="row card white darken-1">
 		<h5>Overall</h5>
 		<hr/>

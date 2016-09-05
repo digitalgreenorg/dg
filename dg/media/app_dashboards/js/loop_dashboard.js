@@ -15,8 +15,8 @@ function initialize() {
     today.setMonth(today.getMonth() - 3);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
 
-    hide_nav('home');
-
+    // hide_nav('home');
+    showLoader();
     total_static_data();
     recent_graphs_data(language);
     days_to_average = 15;
@@ -31,7 +31,16 @@ function initialize() {
     set_filterlistener();
     $('#aggregator_payment_tab').hide();
     $("#download_payment_sheets").hide();
+}
 
+function showLoader(){
+  $("#loader").show();
+  hide_nav();
+}
+
+function hideLoader(){
+    $("#loader").hide();
+    hide_nav('home');
 }
 
 //datepicker
@@ -130,6 +139,8 @@ sparkline_option = {
 //To compute data for home page overall cards
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
+      // $("#loader").hide();
+      hideLoader();
         var json_data = JSON.parse(data);
         var total_volume = json_data['total_volume']['quantity__sum'];
 
@@ -2824,7 +2835,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < gaddidar_contribution_data_length; i++) {
         if (aggregator == payments_gaddidar_contribution[i]['user_created__id'].toString()) {
             for (var j = 0; j < gaddidar_data_set.length; j++) {
-                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date'])!=-1) {
+                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
                     gaddidar_data_set[j][4] = payments_gaddidar_contribution[i]['gaddidar_discount'];
                     gaddidar_data_set[j][5] = payments_gaddidar_contribution[i]['amount'];
                 }
@@ -2838,7 +2849,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
             mandi_index = mandis[date_index].indexOf(transport_payment[i]['mandi__mandi_name']);
             transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
             farmer_share[date_index][mandi_index] = transport_payment[i]['farmer_share'];
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum']])
+
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum']]);
         }
     }
 
@@ -2846,22 +2858,22 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = quantites[i][j] * 0.25  + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = quantites[i][j] * 0.25 + transport_cost[i][j] - farmer_share[i][j];
             //  - gaddidar_amount[i][j];
 
             data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
-            total_volume += quantites[i][j];
-            total_payment += net_payment;
+            // total_volume += quantites[i][j];
+            // total_payment += net_payment;
         }
     }
 
     for (var i = 0; i < gaddidar_contribution_data_length; i++) {
         if (aggregator == payments_gaddidar_contribution[i]['user_created__id'].toString()) {
             for (var j = 0; j < data_set.length; j++) {
-                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date'])!=-1) {
+                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
                     data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
-                    data_set[j][9] = data_set[j][9]-payments_gaddidar_contribution[i]['amount'];
+                    data_set[j][9] = data_set[j][9] - payments_gaddidar_contribution[i]['amount'];
                 }
             }
         }
