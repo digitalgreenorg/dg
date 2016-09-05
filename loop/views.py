@@ -301,7 +301,7 @@ def new_aggregator_wise_data(request):
     mandi_crop = CombinedTransaction.objects.filter(
         **filter_args).values('mandi__id', 'crop__id').annotate(Sum('quantity'), Sum('amount'))
 
-    transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values(
+    transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values('date',
         'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = CombinedTransaction.objects.filter(
