@@ -2940,6 +2940,7 @@ function get_payments_data() {
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
+            payments_gaddidar_contribution=payments_data.gaddidar_contribution;
             fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator');
 
         });
@@ -3014,7 +3015,7 @@ function create_outliers_table(date, aggregator_id) {
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
-            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'],outliers_data[i]['quantity__sum'], 0,0, outliers_data[i]['gaddidar__commission__sum']])
+            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'],outliers_data[i]['quantity__sum'], 0,0, outliers_data[i]['gaddidar__commission__sum']]);
             sno += 1;
         }
     }
@@ -3030,6 +3031,18 @@ function create_outliers_table(date, aggregator_id) {
             }
         }
     }
+
+    // var gaddidar_contribution_length=payments_gaddidar_contribution.length;
+    // for (var i = 0; i < gaddidar_contribution_length; i++) {
+    //     if (new Date(date).getTime() == new Date(payments_gaddidar_contribution[i]['date']).getTime() && aggregator_id == payments_gaddidar_contribution[i]['user_created__id']) {
+    //         for (var j = 0; j < data_set.length; j++) {
+    //             if (data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__mandi_name'])) {
+    //                 data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
+    //             }
+    //         }
+    //     }
+    // }
+    
     $("#outliers_data").html("");
     outliers_table = $('#outliers_data').DataTable({
         destroy: true,

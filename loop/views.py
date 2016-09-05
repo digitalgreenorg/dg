@@ -459,14 +459,17 @@ def payments(request):
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).values(
         'date', 'mandi__id', 'user_created__id').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
-    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en'), crop__crop_name=F('crop__crop_name_en')).values('date', 'user_created__id', 'mandi__mandi_name',
-                                                                                                                                                                                                                                          'farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
+    outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en'), crop__crop_name=F(
+        'crop__crop_name_en')).values('date', 'user_created__id', 'mandi__mandi_name', 'farmer__name', 'crop__crop_name', 'gaddidar__commission', 'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
 
     transportation_data = DayTransportation.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'), transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share').annotate(Sum('transportation_cost'))
 
     gaddidar_data = CombinedTransaction.objects.filter(**filter_args).values(
         'date', 'user_created__id', 'mandi__id', 'gaddidar__id', 'gaddidar__commission').annotate(Sum('quantity'))
+
+    # gaddidar_contribution = calculate_gaddidar_share(
+    #     start_date, end_date, None, None)
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data), 'outlier_transport_data': list(outlier_transport_data),  'gaddidar_data': list(
         gaddidar_data), 'aggregator_data': list(aggregator_data), 'transportation_data': list(transportation_data)}
