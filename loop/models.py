@@ -22,12 +22,12 @@ class LoopModel(models.Model):
     class Meta:
         abstract = True
 
-class Language(LoopModel):
+class Language(models.Model):
     id = models.AutoField(primary_key=True)
-    language_name = models.CharField(max_length=25)
+    name = models.CharField(max_length=25)
 
     def __unicode__(self):
-        return self.language_name
+        return self.name
 
 
 class Country(LoopModel):
@@ -234,11 +234,11 @@ pre_delete.connect(delete_log, sender=Crop)
 
 #############Crop name in multiple languages###############
 
-class Croplanguage(LoopModel):
-    id = models.AutoField(primary_key=True)
-    crop_id = models.ForeignKey(Crop)
+class Croplanguage(models.Model):
+    id = models.AutoField(primary_key=True)    
+    language = models.ForeignKey(Language,null=True)
+    crop = models.ForeignKey(Crop)
     crop_name = models.CharField(max_length=30)
-    language = models.ForeignKey(Language)
 
     def __unicode__(self):
         return self.crop_name
