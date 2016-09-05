@@ -71,7 +71,6 @@ def practice_options_sql(sec, subsec, top, subtop, sub):
 def get_partners_sql(geog, id):
     if geog not in [None, "COUNTRY", "STATE", "DISTRICT", "BLOCK", "VILLAGE"]:
         return ''
-
     sql_ds = get_init_sql_ds()
     sql_ds['select'].extend(["DISTINCT vcp.partner_id", "P.PARTNER_NAME"])
     sql_ds['from'].append("village_precalculation_copy vcp")

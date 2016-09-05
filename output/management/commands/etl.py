@@ -256,7 +256,7 @@ class AnalyticsSync():
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
-                VALUES "+','.join(values_list[(i-1)*5000:i*5000]))
+                VALUES +','.join(values_list[(i-1)*5000:i*5000])
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)

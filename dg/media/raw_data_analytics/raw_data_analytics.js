@@ -11,6 +11,9 @@ window.onload = date;
     $('#districtId').chosen({});$('#blockId').chosen({});
     $('#villageId').chosen({});
     $('#videoId').chosen({});
+    $('#blocknumber_video').chosen();
+    $('#villagenumber_video').chosen();
+    $('#list_video').chosen();
     $('#resetId').click(function () {
 
         $('#partnerId').val('').trigger("chosen:updated");
@@ -42,6 +45,8 @@ window.onload = date;
         $("#districtId").find('option').remove();
         $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
+        $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated');
         $("#stateId").val('').trigger("chosen:updated");
         $("#districtId").val('').trigger("chosen:updated");
         $("#blockId").val('').trigger("chosen:updated");
@@ -54,6 +59,8 @@ window.onload = date;
         $("#districtId").find('option').remove();
         $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
+        $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated');
         $("#districtId").val('').trigger("chosen:updated");
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
@@ -64,6 +71,8 @@ window.onload = date;
         $("#blockId").prop('disabled', false);
         $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
+        $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated');
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
@@ -73,6 +82,8 @@ window.onload = date;
     $("#blockId").bind("change", function () {
         $("#villageId").prop('disabled', false);
         $("#villageId").find('option').remove();
+        $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated');
         $("#villageId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
@@ -81,6 +92,10 @@ window.onload = date;
     $('villageId').bind("change",function () {
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
+    });
+    $("#partnerId").next().bind("click",function(){
+        populate_partner('partner');
+        $("#partnerId").trigger("chosen:updated");
     });
     $("#stateId").next().bind("click", function () {
         populate('state', $("#countryId").val());
@@ -107,8 +122,8 @@ window.onload = date;
 
 function populate(src, prevValue) {
     if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-    for (var values in prevValue) {
-        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue[values]})
+ //   for (var values in prevValue) {
+        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue})
             .done(function (data) {
                 data_json = JSON.parse(data);
                 for (var jsonData in data_json) {
@@ -116,12 +131,11 @@ function populate(src, prevValue) {
                         $("#" + src + "Id").append('<option value="' + data_json[jsonData] + '">' + data_json[jsonData] + '</option>');
                 }
             });
-    }
+ //   }
 }
 function populate_video(src){
   if (!(jQuery("#" + src + "Id" + " option ").length != 0))
   //for (var values in prevValue) {
-
       $.get("/raw_data_analytics/dropdown_video/", {"country[]":$("#countryId").val(),"partner[]":$("#partnerId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
           .done(function (data) {
               data_json = JSON.parse(data);
@@ -133,24 +147,65 @@ function populate_video(src){
   //}
 }
 
+function populate_partner(src){
+    if(!(jQuery("#partnerId option").length!=0))
+        $.get("/raw_data_analytics/dropdown_partner",{"country[]":$("#countryId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
+            .done(function(data){
+                console.log(data)
+                data_json =JSON.parse(data);
+                console.log(data_json)
+                for(var jsonData in data_json){
+                    console.log(data_json[jsonData][0])
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0] + '</option>');
+                }
+            });
+}
 //##################################################################################################################
 
 function list_display() {
+    if ((list.checked) && (video.checked)) {
 
-    if ((list.checked) && (video.checked)) 
-        listoptions.style.visibility = "visible";
+        if(villagenum.checked){
+            $('#villagenum').removeAttr('checked');
+        }
+        if(blocknum.checked){
+            $('#blocknum').removeAttr('checked');
+        }
+        listoptions.style.visibility = "visible";        
+        villagenumberoptions.style.visibility="hidden";
+        blocknumberoptions.style.visibility="hidden";
+    }
     else
         listoptions.style.visibility = "hidden";
 }
 function village_number_dropdown(){
-    if((villagenum.checked) && (video.checked))
+    if((villagenum.checked) && (video.checked)){
+        if(list.checked){
+            $('#list').removeAttr('checked');
+        }
+        if(blocknum.checked){
+            $('#blocknum').removeAttr('checked');
+        }
         villagenumberoptions.style.visibility="visible";
+        listoptions.style.visibility="hidden";
+        blocknumberoptions.style.visibility="hidden";
+    }
     else
         villagenumberoptions.style.visibility="hidden";
 }
 function block_number_dropdown(){
-    if((blocknum.checked) && (video.checked))
-        blocknumberoptions.style.visibility="visible";
+    if((blocknum.checked) && (video.checked)){
+        if(villagenum.checked){
+            $('#villagenum').removeAttr('checked');
+        }
+        if(list.checked){
+            $('#list').removeAttr('checked');
+        }
+        blocknumberoptions.style.visibility="visible";        
+        listoptions.style.visibility="hidden";
+        villagenumberoptions.style.visibility="hidden";
+    }
     else
         blocknumberoptions.style.visibility="hidden";        
 
@@ -170,7 +225,6 @@ function validation_check() {
     for (i = 0; i < checked_partitions.length; i++) {
 
         if (checked_partitions[i].checked) {
-            console.log(checked_partitions[i]);
             count_partition++;
         }
     }

@@ -19,7 +19,8 @@ from utils.data_library import data_lib
 from utils.configuration import categoryDictionary, orderDictionary
 from  programs import *
 
-
+import MySQLdb
+from output.database.utility import *
 @login_required()
 @user_passes_test(lambda u: u.groups.filter(name='data_extractor').count() > 0,
                   login_url=PERMISSION_DENIED_URL)
@@ -27,41 +28,85 @@ from  programs import *
 def home(request):
     countries = Country.objects.all()
 
-    partners = Partner.objects.all()
-
-    return render_to_response('raw_data_analytics/output.html', {'countries': countries, 'partners': partners},
+    return render_to_response('raw_data_analytics/output.html', {'countries': countries},
                               context_instance=RequestContext(request))
-
+def onrun_query(query):
+    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
+                                   db=dg.settings.DATABASES['default']['NAME'],
+                                    charset = 'utf8',
+                                     use_unicode = True)
+    cursor = mysql_cn.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    mysql_cn.close()
+    return result
+def dropdown_partner(request):
+    countrys= request.GET.getlist('country[]')
+    country_selected = Country.objects.filter(country_name__in=countrys).values_list('id',flat=True)
+    states = request.GET.getlist('state[]')
+    state_selected = State.objects.filter(state_name__in=states).values_list('id',flat=True)
+    districts = request.GET.getlist('district[]')
+    district_selected = District.objects.filter(district_name__in=districts).values_list('id',flat=True)
+    blocks = request.GET.getlist('block[]')
+    block_selected = Block.objects.filter(block_name__in=blocks).values_list('id',flat=True)
+    filter_dict={}
+    final_dict ={'Country':country_selected,'State':state_selected,'District':district_selected,'Block':block_selected}
+    for keys in final_dict:
+        print final_dict[keys]
+        if len(final_dict[keys]) != 0:
+            filter_dict[keys] = final_dict[keys]
+    if filter_dict:
+        sql_ds = get_init_sql_ds()
+        sql_ds['select'].extend(["DISTINCT P.PARTNER_NAME"])
+        sql_ds['from'].append("village_precalculation_copy vcp")
+        sql_ds['join'].append(["programs_partner P", "P.id = vcp.partner_id"])
+        for keys in filter_dict:
+            if(filter_dict[keys]):
+                sql_ds['where'].append('vcp.'+keys.lower()+'_id in ( '+ ' , '.join(str(n) for n in filter_dict[keys])+' )')
+        sql_ds['order by'].append("P.PARTNER_NAME")
+    
+        select_query = 'select ' + ', '.join( s for s in sql_ds['select'] ) 
+        from_query =  ' from '+ ', '.join(f for f in sql_ds['from'])
+        join_query =  ' inner join ' +' on '.join(j for j in sql_ds['join'][0])
+        where_query = ' where '+' and '.join(w for w in sql_ds['where']) 
+        order_query = ' order by '+', '.join(o for o in sql_ds['order by'])
+        query = select_query+from_query+join_query+where_query+order_query
+        partners = onrun_query(query)
+    else:
+        partners = Partner.objects.filter().values_list('partner_name')
+        print partners
+    resp = json.dumps([i for i in partners])
+    print resp
+    return HttpResponse(resp)
 
 def dropdown_state(request):
-    country_selected = request.GET.get('selected', None)
-    states = State.objects.filter(country__country_name=country_selected).values_list('state_name', flat=True)
+    country_selected = request.GET.getlist('selected[]')
+    states = State.objects.filter(country__country_name__in=country_selected).values_list('state_name', flat=True)
     resp = json.dumps([unicode(i) for i in states])
 
     return HttpResponse(resp)
 
 
 def dropdown_district(request):
-    state_selected = request.GET.get('selected', None)
-    districts = District.objects.filter(state__state_name=state_selected).values_list('district_name', flat=True)
+    state_selected = request.GET.getlist('selected[]')
+    districts = District.objects.filter(state__state_name__in=state_selected).values_list('district_name', flat=True)
     resp = json.dumps([unicode(i) for i in districts])
-
     return HttpResponse(resp)
 
 
 def dropdown_block(request):
-    district_selected = request.GET.get('selected', None)
-    blocks = Block.objects.filter(district__district_name=district_selected).values_list('block_name', flat=True)
+    district_selected = request.GET.getlist('selected[]')
+    blocks = Block.objects.filter(district__district_name__in=district_selected).values_list('block_name', flat=True)
     resp = json.dumps([unicode(i) for i in blocks])
 
     return HttpResponse(resp)
 
 
 def dropdown_village(request):
-    block_selected = request.GET.get('selected', None)
-    villages = Village.objects.filter(block__block_name=block_selected).values_list('village_name', flat=True)
+    block_selected = request.GET.getlist('selected[]')
+    villages = Village.objects.filter(block__block_name__in=block_selected).values_list('village_name', flat=True)
     resp = json.dumps([unicode(i) for i in villages])
-    print resp
     return HttpResponse(resp)
 
 
@@ -76,7 +121,6 @@ def dropdown_video(request):
     filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected}
     final_dict ={}
     videos = []
-
     if partner_selected[0]!='':
         videos = list(Video.objects.filter(partner__partner_name__in=partner_selected).values_list('title','id','youtubeid'))
         
@@ -262,7 +306,6 @@ def execute(request):
                 number_block_combo = 'numberblockPerson'
             elif (vals == 'video'):
                 number_block_combo = number_block
-    print number_block_combo
     priority_village = {}
     if(number_village_combo == 'numVillage'):
         for vals in checked_list:
