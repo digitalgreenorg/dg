@@ -13,8 +13,9 @@ define([
     'indexeddb_backbone_config',
     'configs',
     'offline_utils',
+    'models/user_model',
     'bootstrapjs'
-], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline) {
+], function(jquery, underscore, layoutmanager, indexeddb, all_configs, Offline, User) {
 
 
     var FullDownloadView = Backbone.Layout.extend({
@@ -31,7 +32,9 @@ define([
 
         //send the list of entities to the template 
         serialize: function() {
+            var language = User.get("language");
             return {
+                language: language,
                 all_configs: all_configs
             }
         },
@@ -265,10 +268,12 @@ define([
             var downloaded = this.download_status[entity_name].downloaded;
             //get the # of total objects for thi entity
             var total = this.download_status[entity_name].total;
+            //get the language chosen by user
+            var language = User.get('language');
             //set the text
-            var s_text = "In Progress";
+            var s_text = all_configs['misc']['meta_'+language]['inprogress'];
             if (downloaded >= total)
-                s_text = "Done";
+                s_text = all_configs['misc']['meta_'+language]['done'];
             //set the num
             var s_num = String(downloaded) + "/" + String(total);
             
