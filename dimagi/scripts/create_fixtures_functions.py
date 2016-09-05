@@ -196,6 +196,7 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator,
             url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
             payload = {'replace': 'false'}
             files = {'file-to-upload': open(filename, 'rb')}
+            print "Upload start" + filename
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
             print "Uploaded: "+filename
