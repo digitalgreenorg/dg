@@ -150,7 +150,7 @@ function total_static_data() {
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
         // var total_gaddidar_contribution=0;
         // for (var i = 0; i < json_data['total_gaddidar_contribution'].length; i++) {
-            // total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
+        // total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
         // }
         var total_aggregator_cost = total_volume * 0.25;
 
@@ -656,24 +656,23 @@ function get_filter_data(language) {
             gaddidars_for_filter = data_json.gaddidars;
             crops_for_filter = data_json.crops;
             transporter_for_filter = data_json.transporters;
-            fill_aggregator_filter(aggregators_for_filter,language);
+            fill_aggregator_filter(aggregators_for_filter, language);
             fill_crop_filter(crops_for_filter);
-            fill_mandi_filter(mandis_for_filter,language);
-            fill_gaddidar_filter(gaddidars_for_filter,language);
+            fill_mandi_filter(mandis_for_filter, language);
+            fill_gaddidar_filter(gaddidars_for_filter, language);
             get_data();
         });
 }
 
 
 //To make aggregators list for filter page
-function fill_aggregator_filter(data_json,language) {
+function fill_aggregator_filter(data_json, language) {
     filter_remove_elements($('#aggregators'));
-    if(language=='English'){
+    if (language == 'English') {
         $.each(data_json, function(index, data) {
             create_filter($('#aggregators'), data.user__id, data.name_en, true);
         });
-    }
-    else
+    } else
         $.each(data_json, function(index, data) {
             create_filter($('#aggregators'), data.user__id, data.name, true);
         });
@@ -688,36 +687,36 @@ function fill_crop_filter(data_json) {
 }
 
 //To make mandis list for filter page
-function fill_mandi_filter(data_json,language) {
+function fill_mandi_filter(data_json, language) {
     filter_remove_elements($('#mandis'));
-    if(language=='English')
+    if (language == 'English')
         $.each(data_json, function(index, data) {
             create_filter($('#mandis'), data.id, data.mandi_name_en, true);
-            });
+        });
     else
         $.each(data_json, function(index, data) {
             create_filter($('#mandis'), data.id, data.mandi_name, true);
-            });
-        
-    
+        });
+
+
 }
 
 //To make gaddidars list for filter page
-function fill_gaddidar_filter(data_json,language) {
+function fill_gaddidar_filter(data_json, language) {
     filter_remove_elements($('#gaddidars'));
-    if(language=='English')
+    if (language == 'English')
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name_en, true);
-        
-    });
+
+        });
     else
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
-        
-    });
+
+        });
 }
 
-function filter_remove_elements(tbody_obj){
+function filter_remove_elements(tbody_obj) {
     tbody_obj.empty();
 }
 //To enter data for aggregator, mandi,crop,gaddidar filter dynamically
@@ -2774,7 +2773,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
-    var gaddidar_payment = payments_data.gaddidar_data;
+    var gaddidar_contribution_data = payments_data.gaddidar_data;
+    // var gaddidar_payment = payments_data.gaddidar_data;
 
     var sno = 1;
     var str1 = "Rs. ";
@@ -2816,11 +2816,22 @@ function aggregator_payment_sheet(data_json, aggregator) {
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i]['quantity__sum'] * aggregator_payment[i]['gaddidar__commission'];
             farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i]['quantity__sum'], aggregator_payment[i]['gaddidar__commission'], (aggregator_payment[i]['quantity__sum'] * aggregator_payment[i]['gaddidar__commission'])]);
-
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i]['quantity__sum'], 0, 0]);
         }
+    }
 
-    };
+    var gaddidar_contribution_data_length = gaddidar_contribution_data.length;
+    for (var i = 0; i < gaddidar_contribution_data_length; i++) {
+        if (aggregator == payments_gaddidar_contribution[i]['user_created__id'].toString()) {
+            for (var j = 0; j < gaddidar_data_set.length; j++) {
+                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date'])!=-1) {
+                    gaddidar_data_set[j][4] = payments_gaddidar_contribution[i]['gaddidar_discount'];
+                    gaddidar_data_set[j][5] = payments_gaddidar_contribution[i]['amount'];
+                }
+            }
+        }
+    }
+
     for (var i = 0; i < transport_payment.length; i++) {
         if (aggregator == transport_payment[i]['user_created__id'].toString()) {
             date_index = dates.indexOf(transport_payment[i]['date']);
@@ -2835,14 +2846,27 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = quantites[i][j] * 0.25 - gaddidar_amount[i][j] + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = quantites[i][j] * 0.25  + transport_cost[i][j] - farmer_share[i][j];
+            //  - gaddidar_amount[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], (gaddidar_amount[i][j]).toFixed(0), net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
             total_volume += quantites[i][j];
             total_payment += net_payment;
         }
     }
+
+    for (var i = 0; i < gaddidar_contribution_data_length; i++) {
+        if (aggregator == payments_gaddidar_contribution[i]['user_created__id'].toString()) {
+            for (var j = 0; j < data_set.length; j++) {
+                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date'])!=-1) {
+                    data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
+                    data_set[j][9] = data_set[j][9]-payments_gaddidar_contribution[i]['amount'];
+                }
+            }
+        }
+    }
+
 
     $('#table2').DataTable({
         destroy: true,
@@ -2967,7 +2991,7 @@ function get_payments_data() {
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
-            payments_gaddidar_contribution=payments_data.gaddidar_contribution;
+            payments_gaddidar_contribution = payments_data.gaddidar_data;
             fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator');
 
         });
@@ -3042,7 +3066,8 @@ function create_outliers_table(date, aggregator_id) {
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
-            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'],outliers_data[i]['quantity__sum'], 0,0, outliers_data[i]['gaddidar__commission__sum']]);
+            data_set.push(["", sno, outliers_data[i]['date'], outliers_data[i]['mandi__mandi_name'], outliers_data[i]['farmer__count'], outliers_data[i]['quantity__sum'], 0, 0, 0]);
+            //parameters are transportation cost,farmer share and gaddidar contribution sum
             sno += 1;
         }
     }
@@ -3059,17 +3084,17 @@ function create_outliers_table(date, aggregator_id) {
         }
     }
 
-    // var gaddidar_contribution_length=payments_gaddidar_contribution.length;
-    // for (var i = 0; i < gaddidar_contribution_length; i++) {
-    //     if (new Date(date).getTime() == new Date(payments_gaddidar_contribution[i]['date']).getTime() && aggregator_id == payments_gaddidar_contribution[i]['user_created__id']) {
-    //         for (var j = 0; j < data_set.length; j++) {
-    //             if (data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__mandi_name'])) {
-    //                 data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
-    //             }
-    //         }
-    //     }
-    // }
-    
+    var gaddidar_contribution_length = payments_gaddidar_contribution.length;
+    for (var i = 0; i < gaddidar_contribution_length; i++) {
+        if (new Date(date).getTime() == new Date(payments_gaddidar_contribution[i]['date']).getTime() && aggregator_id == payments_gaddidar_contribution[i]['user_created__id']) {
+            for (var j = 0; j < data_set.length; j++) {
+                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name'])) {
+                    data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
+                }
+            }
+        }
+    }
+
     $("#outliers_data").html("");
     outliers_table = $('#outliers_data').DataTable({
         destroy: true,
@@ -3125,10 +3150,22 @@ function show_detailed_data(d, aggregator_id) {
     var sno = 1;
     for (var i = 0; i < outlier_daily_data.length; i++) {
         if (new Date(d[2]).getTime() == new Date(outlier_daily_data[i]['date']).getTime() && d[3] == outlier_daily_data[i]['mandi__mandi_name'] && aggregator_id == outlier_daily_data[i]['user_created__id']) {
-            data_set.push([sno, outlier_daily_data[i]['gaddidar__gaddidar_name'], outlier_daily_data[i]['farmer__name'],  outlier_daily_data[i]['crop__crop_name'], outlier_daily_data[i]['quantity__sum'], outlier_daily_data[i]['price'], outlier_daily_data[i]['gaddidar__commission']])
+            data_set.push([sno, outlier_daily_data[i]['gaddidar__gaddidar_name'], outlier_daily_data[i]['farmer__name'], outlier_daily_data[i]['crop__crop_name'], outlier_daily_data[i]['quantity__sum'], outlier_daily_data[i]['price'], 0]);
             sno += 1;
         }
     }
+
+    var gaddidar_contribution_length = payments_gaddidar_contribution.length;
+    for (var i = 0; i < gaddidar_contribution_length; i++) {
+        if (new Date(d[2]).getTime() == new Date(payments_gaddidar_contribution[i]['date']).getTime() && aggregator_id == payments_gaddidar_contribution[i]['user_created__id']) {
+            for (var j = 0; j < data_set.length; j++) {
+                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name'])) {
+                    data_set[j][6] = payments_gaddidar_contribution[i]['gaddidar_discount'];
+                }
+            }
+        }
+    }
+
     detailed_table.DataTable({
         destroy: true,
         data: data_set,
@@ -3145,7 +3182,7 @@ function show_detailed_data(d, aggregator_id) {
         }, {
             title: "Price"
         }, {
-            title: "Commission"
+            title: "Discount Rate"
         }],
         "dom": 'T<"clear">rtip'
     });
@@ -3247,7 +3284,7 @@ function plot_solid_guage(container, minimum, present, target) {
 }
 
 
-function change_language(language){
+function change_language(language) {
     //$.get("loop/dashboard/",{'language':language})
     recent_graphs_data(language);
     get_filter_data(language);
