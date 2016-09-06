@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from activities.models import *
 from videos.models import *
 from geographies.models import Country, State, District, Block, Village
 from programs.models import Partner
@@ -53,13 +54,12 @@ def dropdown_partner(request):
     filter_dict={}
     final_dict ={'Country':country_selected,'State':state_selected,'District':district_selected,'Block':block_selected}
     for keys in final_dict:
-        print final_dict[keys]
         if len(final_dict[keys]) != 0:
             filter_dict[keys] = final_dict[keys]
     if filter_dict:
         sql_ds = get_init_sql_ds()
         sql_ds['select'].extend(["DISTINCT P.PARTNER_NAME"])
-        sql_ds['from'].append("village_precalculation_copy vcp")
+        sql_ds['from'].append("village_partner_myisam vcp")
         sql_ds['join'].append(["programs_partner P", "P.id = vcp.partner_id"])
         for keys in filter_dict:
             if(filter_dict[keys]):
@@ -76,7 +76,6 @@ def dropdown_partner(request):
     else:
         partners = Partner.objects.filter().values_list('partner_name')
     resp = json.dumps([i for i in partners])
-    print resp
     return HttpResponse(resp)
 
 def dropdown_state(request):
@@ -117,24 +116,32 @@ def dropdown_video(request):
     block_selected = request.GET.getlist('block[]')
     village_selected = request.GET.getlist('village[]')
 
-    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected}
+    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected,'partner__partner_name__in':partner_selected}
     final_dict ={}
     videos = []
-    if partner_selected[0]!='':
-        videos = list(Video.objects.filter(partner__partner_name__in=partner_selected).values_list('title','id','youtubeid'))
-        
+    
     for keys in filter_dict:
         if filter_dict[keys][0]!='':
             final_dict[keys]=filter_dict[keys]
     if final_dict:
+            videos = list(Video.objects.filter(**final_dict).values_list('title','id'))
+            video_screened = list(Screening.objects.filter(**final_dict).distinct().values_list('videoes_screened__title','videoes_screened__id'))
+            print video_screened
+            videos.extend(video_screened)
+
+    if partner_selected[0]!='':
         if not videos:
-            videos = list(Video.objects.filter(**final_dict).values_list('title','id','youtubeid'))
+            videos = list(Video.objects.filter(partner__partner_name__in=partner_selected).values_list('title','id'))
         else:
-            video = (list(Video.objects.filter(**final_dict).values_list('title','id','youtubeid')))
+            final_dict['partner__partner_name__in']=partner_selected
+            video = (list(Video.objects.filter(**final_dict).values_list('title','id')))
+            video_screened = list(Screening.objects.filter(**final_dict).distinct().values_list('videoes_screened__title','videoes_screened__id'))
             videos.extend(video)
+            videos.extend(video_screened)
+
 
     elif not videos:
-        videos = list(Video.objects.all().values_list('title','id','youtubeid'))
+        videos = list(Video.objects.all().values_list('title','id'))
 
     resp = json.dumps([i for i in videos])
     return HttpResponse(resp)

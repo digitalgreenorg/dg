@@ -40,32 +40,37 @@ window.onload = date;
         $("#videoId").val('').trigger("chosen:updated");
     });
     $("#countryID").bind("change", function () {
+        $("#partnerId").find('option').remove();
         $('#stateId').prop('disabled', false);
         $('#stateId').find('option').remove();
         $("#districtId").find('option').remove();
         $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
-        $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#stateId").val('').trigger("chosen:updated");
-        $("#districtId").val('').trigger("chosen:updated");
-        $("#blockId").val('').trigger("chosen:updated");
-        $("#villageId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
+        $("#districtId").prop('disabled',true);
+        $("#districtId").val('').trigger("chosen:updated");
+        $("#blockId").prop('disabled',true);
+        $("#blockId").val('').trigger("chosen:updated");
+        $("#villageId").prop('disabled',true);
+        $("#villageId").val('').trigger("chosen:updated");
     });
     $("#stateId").bind("change", function () {
+        $("#partnerId").find('option').remove();
         $("#districtId").prop('disabled', false);
         $("#districtId").find('option').remove();
         $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
-        $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#districtId").val('').trigger("chosen:updated");
-        $("#blockId").val('').trigger("chosen:updated");
-        $("#villageId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
+        $("#blockId").prop('disabled',true);
+        $("#villageId").prop('disabled',true);
+        $("#blockId").val('').trigger("chosen:updated");
+        $("#villageId").val('').trigger("chosen:updated");
     });
     $("#districtId").bind("change", function () {
         $("#blockId").prop('disabled', false);
@@ -74,9 +79,10 @@ window.onload = date;
         $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#blockId").val('').trigger("chosen:updated");
-        $("#villageId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
+        $("#villageId").prop('disabled',true);
+        $("#villageId").val('').trigger("chosen:updated");
 
     });
     $("#blockId").bind("change", function () {
@@ -151,11 +157,8 @@ function populate_partner(src){
     if(!(jQuery("#partnerId option").length!=0))
         $.get("/raw_data_analytics/dropdown_partner",{"country[]":$("#countryId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
             .done(function(data){
-                console.log(data)
                 data_json =JSON.parse(data);
-                console.log(data_json)
                 for(var jsonData in data_json){
-                    console.log(data_json[jsonData][0])
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
                         $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0] + '</option>');
                 }
@@ -300,10 +303,20 @@ function validation_check() {
         }
     }
     newfrom_date = new Date($('#from_date').val())
-    newto_date  =new Date($('#to_date').val());
-    span =new Date(newto_date-newfrom_date)
+    newto_date  = new Date($('#to_date').val());
+    span =new Date(newto_date-newfrom_date);
     days = span/1000/60/60/24;
-    if(!(days>0)){
+    if(isNaN( newfrom_date.getTime() ) ){
+        alert("Please Fill 'From Date'");
+        error = 1;
+        event.preventDefault();
+    }
+    else if (isNaN( newto_date.getTime() ) ){
+        alert("Please Fill 'To Date'");
+        error = 1;
+        event.preventDefault();
+    }
+    else if(!(days>=0)){
         alert("'From Date' cannot be greater than 'To Date'");
             error = 1;
             event.preventDefault();

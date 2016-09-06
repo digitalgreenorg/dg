@@ -87,13 +87,14 @@ class data_lib():
             else:
                 final_df = pd.merge(final_df, df, how='outer')
 #                print df
-        resultant_df = self.order_data(relevantPartitionDictionary, final_df)
+        resultant_df = self.order_data(relevantPartitionDictionary,final_df)
         resultant_df.index += 1
 #        print resultant_df
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
+        # print dataframe.columns.tolist()
         arranged_columns = [None] * len(self.orderDictionary)
         bumper = 0
 
@@ -101,16 +102,16 @@ class data_lib():
             if partitionElements[items] != False:
                 for elements in self.selectDictionary[items]:
                     if self.selectDictionary[items][elements] == True and self.selectDictionary[items].values().count(True) > 1:
-                        arranged_columns[len(arranged_columns) + 1] = None
+                        #arranged_columns[len(arranged_columns) + 1] = None
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
                         bumper += 1
                     elif self.selectDictionary[items][elements] == True:
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
-
         arranged_columns = filter(lambda a: a != None, arranged_columns)
         arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
-        arranged_columns.extend(list(set(header) - set(arranged_columns)))
+        arranged_columns.extend([item for item in header if item not in arranged_columns])
         dataframe = dataframe[arranged_columns]
+        # print dataframe.columns.tolist()
         return dataframe
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
@@ -162,7 +163,7 @@ class data_lib():
 #        print "----------------------------------WHERE PART-------------------------------"
 #        print whereResult
 #        print "---------------------------------GROUP_BY PART----------------------------"
-#        print groupbyResult
+# #      print groupbyResult
 #        print "--------------------------------ORDER_BY PART-----------------------------"
 #        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
@@ -319,8 +320,7 @@ class data_lib():
                 for keys in self.selectDictionary[items]:
 
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-
-                        ordered_cols[len(ordered_cols) + 1] = None
+                        #ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
