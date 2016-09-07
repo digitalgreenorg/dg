@@ -168,10 +168,13 @@ hr {
 }
 .indicator {
     margin-left: 20px!important;
-    margin-right: 20px!important;
+    /*margin-right: 20px!important;*/
 }
 .tabs .active {
     font-weight: bold;
+    background-color: aliceblue;
+    margin-left: 20px !important;
+    /*margin-right: 20px !important;*/
 }
 .card .card-title {
     font-size: 18px;

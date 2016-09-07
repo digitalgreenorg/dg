@@ -3,7 +3,7 @@ window.onload = initialize;
 
 function initialize() {
     // initialize any library here
-    language = 'Hindi';
+    language = 'Regional Language';
     $("select").material_select();
     $(".button-collapse").sideNav({
         closeOnClick: true
@@ -818,7 +818,9 @@ function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids,
         })
         .done(function(data) {
             bar_graphs_json_data = JSON.parse(data);
-            // PlotAnalyticsGraphs();
+            if (selected_page == "analytics") {
+                PlotAnalyticsGraphs();
+            }
         });
 }
 
@@ -944,7 +946,7 @@ function totals() {
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
     $("#aggregator_visits").text("visits: " + total_visits);
     $("#aggregator_cpk").text("SPK/CPK : " + spk + "/" + cpk);
-    $("#aggregator_cost").text("Recovered/Total : " + total_recovered + "/" + total_cost);
+    $("#aggregator_cost").text("Recovered/Total : " + "₹ " + total_recovered + "/" + " ₹ " + total_cost);
 
 }
 
@@ -1427,8 +1429,7 @@ function farmer_crop_visits(container, json_data) {
 
     json_data.sort(function(a, b) {
         return (b['farmer__count']) - (a['farmer__count']);
-    })
-
+    });
     series.push(temp_repeat);
 
     for (var i = 0; i < json_data.length; i++) {
@@ -1438,7 +1439,6 @@ function farmer_crop_visits(container, json_data) {
             series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
         }
     }
-
     plot_stacked_chart(container, series);
 }
 
@@ -1454,7 +1454,9 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
         })
         .done(function(data) {
             line_json_data = JSON.parse(data);
-            // PlotTimeSeriesGraphs();
+            if (selected_page == "time_series") {
+                PlotTimeSeriesGraphs();
+            }
         });
 }
 
