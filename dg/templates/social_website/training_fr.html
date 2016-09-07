@@ -3,7 +3,8 @@
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
       <ul class="nav" style="border: 1px solid #EEEEEE;background: #EEEEEE;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
-        <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
+        <li><a href="#tabs-1" {% if class == "ui-state-active" %} style="font-weight: bold;
+  color: #057d0a;border: 1px solid #057d0a;"{% endif %}><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
       </ul>
     </div>
@@ -48,7 +49,7 @@
     {% comment %} End Manual {% endcomment %}
 
     {% comment %} Materials Required  {% endcomment %}
-    <div class="wrapper about-bg">
+    <div class="wrapper about-bg" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
@@ -193,7 +194,7 @@
 
 
     {% comment %} Material Required {% endcomment %}
-    <div class="wrapper about-bg">
+    <div class="wrapper about-bg" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
