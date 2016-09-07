@@ -615,7 +615,7 @@ function set_filterlistener() {
     });
 
     $("#time_series_frequency").change(function() {
-        time_series_frequency = $('#time_series_frequency :selected').val()
+        time_series_frequency = $('#time_series_frequency :selected').val();
         if (time_series_frequency == 1) {
             createMaster1($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers);
             createMaster2($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk);
@@ -801,9 +801,13 @@ function get_data() {
     if (Date.parse(start_date) > Date.parse(end_date)) {
         $('#modal1').openModal();
     } else {
+        // if (new Date(start_date).getTime() < new Date(end_date).getTime()) {
         $(".button-collapse1").sideNav('hide');
         get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
         get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
+        // } else {
+        // alert("Please select valid date range. \nPlease make sure that <To> date is after <From> date.");
+        // }
     }
 }
 
@@ -1199,7 +1203,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
-            'cpk': values_vol[i] > 0 ? values_cost_cpk[i] / values_vol[i] : 0.0,
+            'cpk': values_vol[i] > 0 ? ((values_cost_cpk[i] + values_vol[i] * 0.25) / values_vol[i]) : 0.0,
             'spk': values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0
         });
         drilldown['series'].push({
@@ -3003,7 +3007,7 @@ function getFormattedDate() {
 function get_payments_data() {
     payments_start_date = $("#payments_from_date").val();
     payments_to_date = $("#payments_to_date").val();
-    if (payments_start_date != "" && payments_to_date != "" && new Date(payments_start_date) < new Date(payments_to_date) && new Date(payments_to_date) - new Date(payments_start_date) <= 1296000000) {
+    if (payments_start_date != "" && payments_to_date != "" && Date.parse(payments_start_date) < Date.parse(payments_to_date) && new Date(payments_start_date) < new Date(payments_to_date) && new Date(payments_to_date) - new Date(payments_start_date) <= 1296000000) {
         $.get("/loop/payments/", {
             'start_date': payments_start_date,
             'end_date': payments_to_date
@@ -3019,7 +3023,7 @@ function get_payments_data() {
 
         });
     } else {
-        alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date.")
+        alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date.");
     }
 }
 

@@ -235,7 +235,7 @@ pre_delete.connect(delete_log, sender=Crop)
 #############Crop name in multiple languages###############
 
 class Croplanguage(models.Model):
-    id = models.AutoField(primary_key=True)    
+    id = models.AutoField(primary_key=True)
     language = models.ForeignKey(Language,null=True)
     crop = models.ForeignKey(Crop)
     crop_name = models.CharField(max_length=30)
@@ -376,6 +376,9 @@ class GaddidarCommission(LoopModel):
     start_date = models.DateField(auto_now=False)
     discount_percent = models.FloatField(validators=[MinValueValidator(0.0),
                                                      MaxValueValidator(1.0)], default=0.0)
+    def __unicode__(self):
+        return "%s (%s)" % (
+            self.gaddidar.gaddidar_name, self.mandi.mandi_name)
 
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
@@ -386,6 +389,14 @@ class GaddidarShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
+
+    def __unicode__(self):
+        return "%s (%s)" % (
+            self.gaddidar.gaddidar_name, self.mandi.mandi_name)
+
+    def __aggregator__(self):
+        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
 

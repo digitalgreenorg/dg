@@ -97,6 +97,12 @@ class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name', 'crop_name_en')
     search_fields = ['crop_name']
 
+class GaddidarCommisionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'start_date', '__unicode__','discount_percent')
+
+class GaddidarShareOutliersAdmin(admin.ModelAdmin):
+    list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -116,6 +122,6 @@ loop_admin.register(TransportationVehicle, TransportationVehicleAdmin)
 loop_admin.register(DayTransportation, DayTransportationAdmin)
 loop_admin.register(Gaddidar, GaddidarAdmin)
 loop_admin.register(Language)
-loop_admin.register(GaddidarCommission)
-loop_admin.register(GaddidarShareOutliers)
+loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
+loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
 loop_admin.register(Croplanguage)
