@@ -125,7 +125,7 @@ FACET_MAPPING = {
                                             },
                                "state" : {
                                           "fields":{
-                                                    "country":{
+                                                    "state":{
                                                              "type":"string",
                                                              "analyzer":"keyword"
                                                              },
@@ -137,9 +137,9 @@ FACET_MAPPING = {
                                                     },
                                             "type":"multi_field"
                                             },
-                               "state" : {
+                               "country" : {
                                           "fields":{
-                                                    "state":{
+                                                    "country":{
                                                              "type":"string",
                                                              "analyzer":"keyword"
                                                              },
