@@ -23,7 +23,10 @@ class LoopModel(models.Model):
 
 class Language(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return self.name
 
 class Country(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -42,6 +45,7 @@ class State(LoopModel):
     country = models.ForeignKey(Country)
     is_visible = models.BooleanField(default=True)
     state_name_en = models.CharField(max_length=100, null=True)
+
     def __unicode__(self):
         return self.state_name
 
@@ -54,7 +58,9 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
+
     district_name_en = models.CharField(max_length=100, null=True)
+
     def __unicode__(self):
         return "%s (%s)" % (self.district_name, self.state.state_name)
 
@@ -68,6 +74,7 @@ class Block(LoopModel):
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
     block_name_en = models.CharField(max_length=100, null=True)
+
     def __unicode__(self):
         return "%s (%s)" % (self.block_name, self.district.district_name)
 
@@ -164,6 +171,7 @@ class Gaddidar(LoopModel):
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
+
     def __unicode__(self):
         return self.gaddidar_name
 
@@ -216,6 +224,16 @@ class Crop(LoopModel):
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(delete_log, sender=Crop)
 
+#############Crop name in multiple languages###############
+
+class Croplanguage(models.Model):
+    id = models.AutoField(primary_key=True)    
+    language = models.ForeignKey(Language,null=True)
+    crop = models.ForeignKey(Crop)
+    crop_name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.crop_name
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -239,6 +257,7 @@ class Vehicle(LoopModel):
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
     is_visible = models.BooleanField(default=True)
     vehicle_name_en = models.CharField(max_length=100, null=True)
+
     def __unicode__(self):
         return self.vehicle_name
 

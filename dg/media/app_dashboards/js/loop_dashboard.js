@@ -3,6 +3,7 @@ window.onload = initialize;
 
 function initialize() {
     // initialize any library here
+    var language = 'Hindi'
     $("select").material_select();
     $(".button-collapse").sideNav({
         closeOnClick: true
@@ -17,7 +18,7 @@ function initialize() {
     hide_nav('home');
 
     total_static_data();
-    recent_graphs_data();
+    recent_graphs_data(language);
     days_to_average = 15;
 
     gaddidar = true;
@@ -25,7 +26,7 @@ function initialize() {
 
     time_series_frequency = 1;
 
-    get_filter_data();
+    get_filter_data(language);
     set_filterlistener();
     $('#aggregator_payment_tab').hide();
     $("#download_payment_sheets").hide();
@@ -129,7 +130,6 @@ sparkline_option = {
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         var json_data = JSON.parse(data);
-
         var total_volume = json_data['total_volume']['quantity__sum'];
 
         var total_amount = json_data['total_volume']['amount__sum'];
@@ -183,7 +183,7 @@ function total_static_data() {
 
 
 //To request data for recent graphs on home page
-function recent_graphs_data() {
+function recent_graphs_data(language) {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         json_data = JSON.parse(data);
 
@@ -193,7 +193,6 @@ function recent_graphs_data() {
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
         crops = json_data['crops'];
-
         plot_cards_data();
 
         cummulative_farmer_and_volume();
@@ -622,52 +621,84 @@ function set_filterlistener() {
 
 
 //To make a call when filters are changed
-function get_filter_data() {
-    $.get("/loop/filter_data/", {})
+function get_filter_data(language) {
+    $.get("/loop/filter_data/", {language:language})
         .done(function(data) {
             var data_json = JSON.parse(data);
             aggregators_for_filter = data_json.aggregators;
             mandis_for_filter = data_json.mandis;
             gaddidars_for_filter = data_json.gaddidars;
             crops_for_filter = data_json.crops;
+            croplanguage_for_filter =data_json.croplanguage;
             transporter_for_filter = data_json.transporters;
-            fill_aggregator_filter(aggregators_for_filter);
-            fill_crop_filter(crops_for_filter);
-            fill_mandi_filter(mandis_for_filter);
-            fill_gaddidar_filter(gaddidars_for_filter);
+            fill_aggregator_filter(aggregators_for_filter,language);
+            fill_mandi_filter(mandis_for_filter,language);
+            fill_gaddidar_filter(gaddidars_for_filter,language);
+            if(language=='English')
+                fill_crop_filter(croplanguage_for_filter);
+            else    
+                fill_crop_filter(crops_for_filter);
+
             get_data();
         });
 }
 
 
 //To make aggregators list for filter page
-function fill_aggregator_filter(data_json) {
-    $.each(data_json, function(index, data) {
-        create_filter($('#aggregators'), data.user__id, data.name, true);
-    });
+function fill_aggregator_filter(data_json,language) {
+    filter_remove_elements($('#aggregators'));
+    if(language=='English'){
+        $.each(data_json, function(index, data) {
+            create_filter($('#aggregators'), data.user__id, data.name_en, true);
+        });
+    }
+    else
+        $.each(data_json, function(index, data) {
+            create_filter($('#aggregators'), data.user__id, data.name, true);
+        });
 }
 
 //To make crops list for filter page
 function fill_crop_filter(data_json) {
+    filter_remove_elements($('#crops'));
     $.each(data_json, function(index, data) {
         create_filter($('#crops'), data.id, data.crop_name, true);
     });
 }
 
 //To make mandis list for filter page
-function fill_mandi_filter(data_json) {
-    $.each(data_json, function(index, data) {
-        create_filter($('#mandis'), data.id, data.mandi_name, true);
-    });
+function fill_mandi_filter(data_json,language) {
+    filter_remove_elements($('#mandis'));
+    if(language=='English')
+        $.each(data_json, function(index, data) {
+            create_filter($('#mandis'), data.id, data.mandi_name_en, true);
+            });
+    else
+        $.each(data_json, function(index, data) {
+            create_filter($('#mandis'), data.id, data.mandi_name, true);
+            });
+        
+    
 }
 
 //To make gaddidars list for filter page
-function fill_gaddidar_filter(data_json) {
-    $.each(data_json, function(index, data) {
-        create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
+function fill_gaddidar_filter(data_json,language) {
+    filter_remove_elements($('#gaddidars'));
+    if(language=='English')
+        $.each(data_json, function(index, data) {
+            create_filter($('#gaddidars'), data.id, data.gaddidar_name_en, true);
+        
+    });
+    else
+        $.each(data_json, function(index, data) {
+            create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
+        
     });
 }
 
+function filter_remove_elements(tbody_obj){
+    tbody_obj.empty();
+}
 //To enter data for aggregator, mandi,crop,gaddidar filter dynamically
 function create_filter(tbody_obj, id, name, checked) {
     var row = $('<tr>');
@@ -3279,6 +3310,14 @@ function plot_solid_guage(container, minimum, present, target) {
 
     }));
 }
+
+function change_language(language){
+    //$.get("loop/dashboard/",{'language':language})
+    recent_graphs_data(language);
+    get_filter_data(language);
+    set_filterlistener();
+}
+
 
 // function gaddidar_cpk_spk_graph(container, axis, axis_names, axis_parameter, values, values_names, values_parameter, json_data) {
 //     var vol_stats = json_data.aggregator_gaddidar;

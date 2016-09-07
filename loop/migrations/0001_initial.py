@@ -65,6 +65,14 @@ class Migration(migrations.Migration):
                 ('user_modified', models.ForeignKey(related_name='loop_crop_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
+
+        migrations.CreateModel(
+            name='Language',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=25)),
+            ],
+        ),
         migrations.CreateModel(
             name='DayTransportation',
             fields=[
@@ -487,5 +495,56 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='block',
             unique_together=set([('block_name', 'district')]),
+        ),
+        migrations.AddField(
+            model_name='block',
+            name='block_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='crop',
+            name='crop_name_en',
+            field=models.CharField(max_length=30, null=True),
+        ),
+        migrations.AddField(
+            model_name='district',
+            name='district_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='gaddidar',
+            name='gaddidar_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='loopuser',
+            name='name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='mandi',
+            name='mandi_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='state',
+            name='state_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='vehicle',
+            name='vehicle_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='village',
+            name='village_name_en',
+            field=models.CharField(max_length=100, null=True),
+        ),
+        
+        migrations.AddField(
+            model_name='loopuser',
+            name='preferred_language',
+            field=models.ForeignKey(to='loop.Language', null=True),
         ),
     ]
