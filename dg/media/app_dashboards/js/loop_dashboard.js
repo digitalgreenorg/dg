@@ -194,7 +194,6 @@ function total_static_data() {
 function recent_graphs_data(language) {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         json_data = JSON.parse(data);
-
         dates = json_data['dates'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
@@ -297,7 +296,6 @@ function get_average() {
         }
     }
     avg_gaddidar_share.push(temp_gaddidar_share);
-
 
     //If no data is present for a period of days_to_average initially
     while (today >= new Date(stats[j]['date'])) {
@@ -2909,7 +2907,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_Payment_Sheet_" + getFormattedDate()
+                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Payment_Sheet"
             }]
         }
     });
@@ -2941,7 +2939,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_Gaddidar_Pmt_" + getFormattedDate()
+                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Gaddidar_Details"
             }]
         }
 
@@ -2972,16 +2970,24 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_Transporter_Pmt_" + getFormattedDate()
+                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Transporter_Pmt"
             }]
         }
 
     });
 }
 
-function getFormattedDate() {
-    var date = new Date();
-    var str = date.getFullYear() + "" + (date.getMonth() + 1) + "" + date.getDate() + "T" + date.getHours() + "" + date.getMinutes();
+function getFormattedDate(aggregator_id) {
+    var date = new Date
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+        "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+    ];
+    var aggregator_index = aggregator_ids.indexOf(aggregator_id);
+    var name = aggregator_names[aggregator_index];
+    var fromDate = new Date(payments_start_date);
+    var toDate = new Date(payments_to_date);
+    var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + "_" + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+    // var str = date.getFullYear() + "" + (date.getMonth() + 1) + "" + date.getDate() + "T" + date.getHours() + "" + date.getMinutes();
     return str;
 }
 
