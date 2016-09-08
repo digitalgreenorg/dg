@@ -906,6 +906,7 @@ function totals() {
     var total_cost = 0;
     var total_recovered = 0;
     var gaddidar_share = 0;
+    var volume_without_crop_gaddidar_filter=0;
     var volume_amount_visits_data = bar_graphs_json_data.aggregator_mandi;
     var transport_data = bar_graphs_json_data.transportation_cost_mandi;
     var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
@@ -924,13 +925,14 @@ function totals() {
     var gaddidar_contribution_length = gaddidar_contribution.length;
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         gaddidar_share += gaddidar_contribution[i]['amount'];
+        volume_without_crop_gaddidar_filter+=gaddidar_contribution[i]['quantity__sum'];
     }
 
-    var cpk = ((total_cost + total_volume * 0.25) / total_volume).toFixed(2);
-    var spk = ((total_recovered + gaddidar_share) / total_volume).toFixed(2);
+    var cpk = ((total_cost + volume_without_crop_gaddidar_filter * 0.25) / volume_without_crop_gaddidar_filter).toFixed(2);
+    var spk = ((total_recovered + gaddidar_share) / volume_without_crop_gaddidar_filter).toFixed(2);
 
     total_recovered += gaddidar_share;
-    total_cost += total_volume * 0.25;
+    total_cost += volume_without_crop_gaddidar_filter * 0.25;
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " Kg");
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
