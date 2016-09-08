@@ -5,8 +5,20 @@
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
-  color: #76b16a;
+  color: #aaaaaa;
   text-decoration: none;
+  background-color: #f3f2eb
+}
+
+.ui-tabs .ui-tabs-nav li {
+  list-style: none;
+  float: left;
+  position: relative;
+  top: 0;
+  margin: 1px .2em 0 0;
+  border-width: 0;
+  padding: 0;
+  white-space: nowrap;
 }
 
 .ui-state-active a,
@@ -14,12 +26,14 @@
 .ui-state-active a:visited {
   color: #047d0a;
   text-decoration: none;
+  background-color: #f3f2eb;
+  border-bottom: 2px solid  #359123;
 }
 
 .ui-state-active,
 .ui-widget-content .ui-state-active, 
 .ui-widget-header .ui-state-active {
-    border: 1px solid #359123;
+    border: 0px  #359123;
     background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
     font-weight: bold;
     color: #359123;
@@ -31,22 +45,27 @@
 .ui-state-hover a:visited{
   color: #359123;
   text-decoration: none;
-  border: 1px solid #359123;
+  border: 0px  #359123;
   background: #d2e7be;
 }
 
-
+.ui-state-active.ui-state-hover.ui-tabs-active a:hover {
+  background: #f3f2eb;
+  border-bottom: 2px solid  #359123;
+  color: #047d0a;
+}
 
 </style>
-<!-- this is main -->
+
+
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #EEEEEE;background: #EEEEEE;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
+      <ul class="nav" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
       </ul>
     </div>
-    <div style="margin-left:200px;margin-top:4px;" class="nav">
+    <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
     <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
       <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
@@ -55,9 +74,9 @@
     </div>
   
     
-  <div id="tabs-1" class="active" style="margin-left: -21px;">
+  <div id="tabs-1" class="active" style="margin-left: -21px;background: #f3f2eb">
     <!-- second div  -->
-    <div class="wrapper about-bg-white">
+    <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
@@ -73,9 +92,9 @@
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
                 <div class="centered">Moon Tent - Written Instructions</div>
               </a>
@@ -162,7 +181,7 @@
     </div>
     {% comment %} Video Based Sessions {% endcomment %}
       
-    <div class="wrapper about-bg" style="margin-top: -57px">
+    <div class="wrapper about-bg-white" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Video Based Sessions</h2>
@@ -233,9 +252,9 @@
   </div>
 
     {% comment %} Second tab {% endcomment %}
-    <div id="tabs-2" class="active" style="margin-left: -21px;">
+    <div id="tabs-2" class="active" style="margin-left: -21px;background: #f3f2eb">
       {% comment %} Second tab 2 div  start {% endcomment %}
-      <div class="wrapper about-bg-white">
+      <div class="wrapper about-bg">
         <div class="inner-wrapper">
           <div class="media layout-vr-xlg">
             <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
@@ -251,9 +270,9 @@
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.pdf" target="_blank">
+              <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/MoonTent - WrittenInstructionsEnglish.png" height="260" width="190" alt=""/> 
+                  <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
                 <div class="centered">Moon Tent - Written Instructions</div>
               </a>
@@ -378,44 +397,128 @@
           </div>
         </div>
 
+
+
+      <div class="wrapper about-bg-white style="margin-top: -57px"">
+        <div class="inner-wrapper">
+            <div class="media layout-vr-xlg">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Training Modules</h2>
+                <div>
+                    <ul class="h-list h-list-lg">
+                        <li>
+                            <div class="vid-cat-selected">
+                                <div class="vid-cat">
+                                    <a href="{% url 'picoseekho' %}">
+                                        <img height=124 width=217 src="{{STATIC_URL}}docs/training/picoseekho_module.png" />
+                                    </a>
+                                    <div class="vid-flag">
+                                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                <li>6 Videos</li>
+                                                <li>15:35</li>
+                                            </ul>
+                                    </div>
+                                    <div class="vid-cat-inner">
+                                        <div class="vid-cat-hd">
+                                            <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
+                                        </div>
+                                        <div class="vid-cat-bd">
+                                            <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
+                                        </div>
+                                        <div class="vid-cat-ft">
+                                            <p>During video dissemination, a low-cost battery-operated pico projector is used to show the videos. This course comprises of a set of vide ...</p>
+                                        </div>
+                                    </div> <!-- End .vid-inner -->
+                                </div> <!-- End .vid-cat -->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="vid-cat-selected">
+                                <div class="vid-cat">
+                                    <a href="{% url 'disseminationprep' %}">
+                                        <img height=124 width=217 src="{{STATIC_URL}}docs/training/disseminationprep_module.jpg" />
+                                    </a>
+                                    <div class="vid-flag">
+                                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                <li>2 Videos</li>
+                                                <li>7:17</li>
+                                            </ul>
+                                    </div>
+                                    <div class="vid-cat-inner">
+                                        <div class="vid-cat-hd">
+                                            <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
+                                        </div>
+                                        <div class="vid-cat-bd">
+                                            <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
+                                        </div>
+                                        <div class="vid-cat-ft">
+                                            <p>Training is an essential element in the Digital Green approach, since much of our work is centered on enhancing the capacities of our ...</p>
+                                        </div>
+                                    </div> <!-- End .vid-inner -->
+                                </div> <!-- End .vid-cat -->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="vid-cat-selected">
+                                <div class="vid-cat">
+                                    <a href="{% url 'disseminationform' %}">
+                                        <img height=124 width=217 src="{{STATIC_URL}}docs/training/disseminationform_module.png" />
+                                    </a>
+                                    <div class="vid-flag">
+                                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                <li>4 Videos</li>
+                                                <li>10:51</li>
+                                            </ul>
+                                    </div>
+                                    <div class="vid-cat-inner">
+                                        <div class="vid-cat-hd">
+                                            <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
+                                        </div>
+                                        <div class="vid-cat-bd">
+                                            <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
+                                        </div>
+                                        <div class="vid-cat-ft">
+                                            <p>We train community people in both video production and video dissemination. This course is in Hindi, on how to conduct a dissem ...</p>
+                                        </div>
+                                    </div> <!-- End .vid-inner -->
+                                </div> <!-- End .vid-cat -->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="vid-cat-selected">
+                                <div class="vid-cat">
+                                    <a href="{% url 'adoptionverification' %}">
+                                        <img height=124 width=217 src="{{STATIC_URL}}docs/training/adoptionverification_module.png" />
+                                    </a>
+                                    <div class="vid-flag">
+                                            <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                <li>3 Videos</li>
+                                                <li>12:31</li>
+                                            </ul>
+                                    </div>
+                                    <div class="vid-cat-inner">
+                                        <div class="vid-cat-hd">
+                                            <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                        </div>
+                                        <div class="vid-cat-bd">
+                                            <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
+                                        </div>
+                                        <div class="vid-cat-ft">
+                                            <p>Much of our work is centered on enhancing the capacities of our partners as well as the community. This is a course on how to conduct ...</p>
+                                        </div>
+                                    </div> <!-- End .vid-inner -->
+                                </div> <!-- End .vid-cat -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
               {% comment %} Second tab 2 div  end {% endcomment %}
 
-
-      <div class="wrapper about-bg" style="margin-top: -57px">
-      <div class="inner-wrapper">
-        <div class="media layout-vr-xlg">
-          <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
-          <div class="hdg-f hdg-source-reg grid">
-            <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/CombinedDisseminationandAdoptionVerification_English.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/scombineddiss.png" height="260" width="190" alt=""/> 
-                </div>
-                <div class="centered">Dissemination and Adoption Verification Form</div>
-              </a>
-            </div>
-            <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/training/POR315English2015-05-18.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                    <img src="{{STATIC_URL}}docs/training/pico315.png" height="260" width="190" alt=""/>
-                  </div>
-                  <div class="centered">POR-315 Handout</div>
-                </a>
-            </div>
-            <div class="grid-col grid-size1of4 layout-vr-lg">
-              <a href="{{STATIC_URL}}docs/training/POR_318_English_handout.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
-                  <img src="{{STATIC_URL}}docs/training/pico_318.png" height="260" width="190" alt=""/>
-                </div>
-                <div class="centered">POR- 318 Handout</div>
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 

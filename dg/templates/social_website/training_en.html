@@ -5,8 +5,20 @@
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
-  color: #76b16a;
+  color: #aaaaaa;
   text-decoration: none;
+  background-color: #f3f2eb
+}
+
+.ui-tabs .ui-tabs-nav li {
+  list-style: none;
+  float: left;
+  position: relative;
+  top: 0;
+  margin: 1px .2em 0 0;
+  border-width: 0;
+  padding: 0;
+  white-space: nowrap;
 }
 
 .ui-state-active a,
@@ -14,12 +26,14 @@
 .ui-state-active a:visited {
   color: #047d0a;
   text-decoration: none;
+  background-color: #f3f2eb;
+  border-bottom: 2px solid  #359123;
 }
 
 .ui-state-active,
 .ui-widget-content .ui-state-active, 
 .ui-widget-header .ui-state-active {
-    border: 1px solid #359123;
+    border: 0px  #359123;
     background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
     font-weight: bold;
     color: #359123;
@@ -31,23 +45,27 @@
 .ui-state-hover a:visited{
   color: #359123;
   text-decoration: none;
-  border: 1px solid #359123;
+  border: 0px  #359123;
   background: #d2e7be;
 }
 
-
+.ui-state-active.ui-state-hover.ui-tabs-active a:hover {
+  background: #f3f2eb;
+  border-bottom: 2px solid  #359123;
+  color: #047d0a;
+}
 
 </style>
 
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #EEEEEE;background: #EEEEEE;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
+      <ul class="nav" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
         <li><a href="#tabs-3" class="selected"><span>Data Management</span></span></a></li>
       </ul>
     </div>
-    <div style="margin-left:200px;margin-top:4px;" class="nav">
+    <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
     <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
       <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
@@ -55,10 +73,10 @@
     </select>
     </div>
   
-  <div id="tabs-1" class="active" style="margin-left:-21px;">
+  <div id="tabs-1" class="active" style="margin-left:-21px;background: #f3f2eb">
 
     {% comment %} Production  Tab 1{% endcomment %}
-    <div class="wrapper about-bg-white">
+    <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
@@ -77,7 +95,7 @@
       </div>
     </div>
     
-    <div class="wrapper about-bg" style="margin-top: -57px">
+    <div class="wrapper about-bg-white" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
@@ -152,7 +170,7 @@
       </div>
     </div>
 
-    <div class="wrapper about-bg-white" style="margin-top: -57px">
+    <div class="wrapper about-bg" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
@@ -188,7 +206,7 @@
     </div>
 
 
-    <div class="wrapper about-bg" style="margin-top: -57px">
+    <div class="wrapper about-bg-white" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Video Based Sessions</h2>
@@ -198,7 +216,7 @@
                 <li>
                   <div class="vid-cat-selected">
                     <div class="vid-cat">
-                      <a href="http://www.youtube.com/watch?v=3x3t51I5Wos" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/3x3t51I5Wos/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/3x3t51I5Wos/default.jpg" /></a>
+                      <a href="http://www.youtube.com/watch?v=44rlOHycgyQ" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/3x3t51I5Wos/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/3x3t51I5Wos/default.jpg" /></a>
                       <div class="vid-flag">
                         <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                           <li>1 Video</li>
@@ -207,7 +225,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Types of Shots</h3>
+                            <h3 class="hdg-green hdg-f hdg-bold">Types of Shots (English subtitles)</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar</p>
@@ -222,7 +240,7 @@
                 <li>
                   <div class="vid-cat-selected">
                     <div class="vid-cat">
-                      <a href="http://www.youtube.com/watch?v=0-jUyhv5RIA" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/IuJk-Ka6tZ0/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/IuJk-Ka6tZ0/default.jpg" /></a>
+                      <a href="http://www.youtube.com/watch?v=JiB-haEie5g" class="html5lightbox" data-width="480" data-height="320" data-thumbnail="http://i.ytimg.com/vi/IuJk-Ka6tZ0/default.jpg"><img height=124 width=217 src="http://i.ytimg.com/vi/IuJk-Ka6tZ0/default.jpg" /></a>
                       <div class="vid-flag">
                         <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                           <li>1 Video</li>
@@ -231,7 +249,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">How to construct a scene</h3>
+                            <h3 class="hdg-green hdg-f hdg-bold">How to construct a scene (English subtitles)</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar</p>
@@ -256,8 +274,8 @@
 
   
   {% comment %} Data Management {% endcomment %}  
-  <div id="tabs-3" class="active" style="margin-left:-21px;">
-    <div class="wrapper about-bg-white">
+  <div id="tabs-3" class="active" style="margin-left:-21px;background: #f3f2eb">
+    <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
@@ -279,13 +297,14 @@
   {% comment %} End Data Management {% endcomment %}
 
 
-  <div id="tabs-2" class="active" style="margin-left:-21px;">
+  <div id="tabs-2" class="active" style="margin-left:-21px;background: #f3f2eb">
     {% comment %} Manual {% endcomment %}
-    <div class="wrapper about-bg-white">
+    <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Manual</h2>
           <div class="hdg-f hdg-source-reg grid">
+
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Manual-Dissemination-Training-Mar-2016.pdf" target="_blank">
                 <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
@@ -294,6 +313,34 @@
                 <div class="centered">Dissemination Training Manual - 2016</div>
               </a>
             </div>
+
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Optional Sessions.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Optional Sessions.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Optional Sessions</div>
+              </a>
+            </div>
+
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Ice-breakers and Energizers.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Ice-breakers and Energizers.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Ice-breakers and Energizers</div>
+              </a>
+            </div>
+
+            <div class="grid-col grid-size1of4 layout-vr-lg">
+              <a href="{{STATIC_URL}}docs/training/Cue Cards.pdf" target="_blank">
+                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <img src="{{STATIC_URL}}docs/training/Cue Cards.png" height="260" width="190" alt=""/> 
+                </div>
+                <div class="centered">Cue Cards</div>
+              </a>
+            </div>
+
           </div>
 
         </div>
@@ -301,7 +348,7 @@
     </div>
     {% comment %} End Manual {% endcomment %}
 
-    <div class="wrapper about-bg" style="margin-top: -57px">
+    <div class="wrapper about-bg-white" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Materials Required</h2>
@@ -405,7 +452,7 @@
       </div>
     </div>
     {% comment %} end of material required {% endcomment %}
-    <div class="wrapper about-bg-white" style="margin-top: -57px">
+    <div class="wrapper about-bg" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Handouts</h2>
@@ -450,7 +497,7 @@
       </div>
     </div>
 
-    <div class="wrapper about-bg" style="margin-top: -57px">
+    <div class="wrapper about-bg-white" style="margin-top: -57px">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
           <h2 class="hdg-a hdg-source-lt layout-vr-md">Video Based Sessions</h2>
