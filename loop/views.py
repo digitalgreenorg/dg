@@ -254,7 +254,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-                      'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum})
+                      'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum, 'quantity__sum': CT['quantity__sum']})
     return result
 
 
@@ -384,7 +384,7 @@ def data_for_line_graph(request):
         **filter_args).values('date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
 
     dates = CombinedTransaction.objects.filter(**filter_args).values(
-        'date').distinct().order_by('date').annotate(Count('farmer'))
+        'date').distinct().order_by('date').annotate(Count('farmer', distinct=True))
 
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
