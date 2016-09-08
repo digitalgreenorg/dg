@@ -27,7 +27,7 @@ from output.database.utility import *
                   login_url=PERMISSION_DENIED_URL)
 @csrf_protect
 def home(request):
-    countries = Country.objects.all()
+    countries = Country.objects.filter().values_list('country_name',flat=True)
 
     return render_to_response('raw_data_analytics/output.html', {'countries': countries},
                               context_instance=RequestContext(request))
@@ -126,7 +126,6 @@ def dropdown_video(request):
     if final_dict:
             videos = list(Video.objects.filter(**final_dict).values_list('title','id'))
             video_screened = list(Screening.objects.filter(**final_dict).distinct().values_list('videoes_screened__title','videoes_screened__id'))
-            print video_screened
             videos.extend(video_screened)
 
     if partner_selected[0]!='':
@@ -141,7 +140,7 @@ def dropdown_video(request):
 
 
     elif not videos:
-        videos = list(Video.objects.all().values_list('title','id'))
+        videos = list(Video.objects.filter().values_list('title','id'))
 
     resp = json.dumps([i for i in videos])
     return HttpResponse(resp)
@@ -217,68 +216,26 @@ def execute(request):
             dict[keys][0] = False
 
     ###############################Partition#################################
+    partdict = {
+            'animator':animator_chk,
+            'person':people_chk,
+            'group':group_chk
+    }
 
-
-    if (animator_chk[0] == None):
-        animator = False
-    elif (animator_chk[0] != None):
-        animator = True
-        checked_list.append('animator')
-
-    if (people_chk[0] == None):
-        person = False
-    elif (people_chk[0] != None):
-        person = True
-        checked_list.append('person')
-
-    if (group_chk[0] == None):
-        group = False
-    elif (group_chk[0] != None):
-        group = True
-        checked_list.append('persongroup')
-
-#    if (video_chk[0] == None):
-#        video = False
-#    elif (video_chk[0] != None):
-#        video = True
-#        checked_list.append('video')
+    for values in partdict:
+        if partdict[values][0] == None:
+            partdict[values] = False
+        else:
+            partdict[values] = True
+            checked_list.append(values)
 
     ###############################Value#################################
-
-    if (val_screening[0] != None):
-        screening = True
-    else:
-        screening = False
-
-    if (val_adoption[0] != None):
-        adoption = True
-    else:
-        adoption = False
-
-    if (val_no_animator[0] != None):
-        no_animator = True
-    else:
-        no_animator = False
-
-    if (val_attendance[0] != None):
-        attendance = True
-    else:
-        attendance = False
-
-    if (val_video_screened_num[0] != None):
-        video_screened_num = True
-    else:
-        video_screened_num = False
-
-    if (val_video_screened_num[0] != None):
-        video_screened_num = True
-    else:
-        video_screened_num = False
-
-    if (val_video_produced_num[0] != None):
-        video_produced_num = True
-    else:
-        video_produced_num = False
+    valdict={'val_screening':val_screening,'val_adoption':val_adoption,'val_no_animator':val_no_animator,'val_attendance':val_attendance,'val_video_screened_num':val_video_screened_num,'val_video_produced_num':val_video_produced_num}
+    for values in valdict:
+        if(valdict[values][0]!=None):
+            valdict[values]=True
+        else:
+            valdict[values]=False
 
     #################################value-partion###########################
 
@@ -298,35 +255,22 @@ def execute(request):
     priority_block = {}
     if(number_block_combo == 'numBlock'):
         for vals in checked_list:
-            if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
+            if ((vals in categoryDictionary['geographies'])):
                 for vals,v in orderDictionary.items():
                     if vals in checked_list:
                         priority_block[vals] = v
                 number_block_combo = 'numBlock' + (max(priority_block.items(),key = lambda vals: vals[1])[0]).title()
 
-            elif (vals == 'animator'):
-                number_block_combo = 'numberblockAnimator'
-            elif (vals == 'persongroup'):
-                number_block_combo = 'numberblockGroup'
-            elif (vals == 'person'):
-                number_block_combo = 'numberblockPerson'
             elif (vals == 'video'):
                 number_block_combo = number_block
     priority_village = {}
     if(number_village_combo == 'numVillage'):
         for vals in checked_list:
-            if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
+            if ((vals in categoryDictionary['geographies'])):
                 for vals,v in orderDictionary.items():
                     if vals in checked_list:
                         priority_village[vals] = v
                 number_village_combo = 'numVillage' + (max(priority_village.items(),key = lambda vals: vals[1])[0]).title()
-
-            elif (vals == 'animator'):
-                number_village_combo = 'numVillageAnimator'
-            elif (vals == 'persongroup'):
-                number_village_combo = 'numVillageGroup'
-            elif (vals == 'person'):
-                number_village_combo = 'numVillagePerson'
             elif (vals == 'video'):
                 number_village_combo = number_village
 
@@ -371,19 +315,19 @@ def execute(request):
         'district': dict['district'][0],
         'block': dict['block'][0],
         'village': dict['village'][0],
-        'animator': animator,
-        'person': person,
-        'persongroup': group,
+        'animator': partdict['animator'],
+        'person': partdict['person'],
+        'persongroup': partdict['group'],
         'video': dict['video'][0]
     }
 
     value = {
-        'numScreening': screening,
-        'numAdoption': adoption,
-        'numAnimator': no_animator,
-        'attendance': attendance,
-        'numVideoScreened': video_screened_num,
-        'numVideoProduced': video_produced_num,
+        'numScreening': valdict['val_screening'],
+        'numAdoption': valdict['val_adoption'],
+        'numAnimator': valdict['val_no_animator'],
+        'attendance': valdict['val_attendance'],
+        'numVideoScreened': valdict['val_video_screened_num'],
+        'numVideoProduced': valdict['val_video_produced_num'],
         'numBlock' : number_block_combo,
         'numVillage' : number_village_combo,
         'list': list_combo

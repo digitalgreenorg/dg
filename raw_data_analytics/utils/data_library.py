@@ -22,7 +22,7 @@ class data_lib():
     categoryDictionary = {}
     orderDictionary = {}
     headerDictionary = {}
-
+    valueSpecial =['list','numVillage','numBlock']
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     
@@ -32,7 +32,7 @@ class data_lib():
         return [elements for elements in ElementsList if not (elements in seen or seen_add(elements))]
 
     def handle_controller(self, args, options):
-
+        # print options
         final_df = pd.DataFrame()
 
         relevantPartitionDictionary = {}
@@ -49,7 +49,7 @@ class data_lib():
         self.categoryDictionary = ilib.initializeCategoryDict()
         self.headerDictionary = ilib.initializeHeaderDict()
         self.lookup_matrix = ilookup.read_lookup_csv()
-
+        
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
@@ -61,14 +61,15 @@ class data_lib():
         if self.check_valuefield_validity(options['value']):
 
             for item in options['value']:
-                if (item == 'list' and options['value']['list'] != False)or(item == 'numVillage' and (options['value']['numVillage']=='numVillageScreening' or options['value']['numVillage']=='numVillageAdoption'))or(item == 'numBlock' and (options['value']['numBlock']=='numBlockScreening' or options['value']['numBlock']=='numBlockAdoption')):
+
+                if (item in self.valueSpecial and options['value'][item] != False):
 
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
 
-                if options['value'][item] != False and item != 'list' and (options['value'][item]!='numVillageScreening') and (options['value'][item]!='numVillageAdoption') and (options['value'][item]!='numBlockScreening') and (options['value'][item]!='numBlockAdoption'):#or options['value'][item]!='numBlockScreening'):
+                if options['value'][item] != False and item not in self.valueSpecial:
                     relevantValueDictionary[item] = options['value'][item]
 
         else:
@@ -156,16 +157,16 @@ class data_lib():
 
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
 #        print orderbyResult
-#        print "----------------------------------SELECT PART------------------------------"
-#        print selectResult
-#        print "----------------------------------FROM PART--------------------------------"
-#        print fromResult
-#        print "----------------------------------WHERE PART-------------------------------"
-#        print whereResult
-#        print "---------------------------------GROUP_BY PART----------------------------"
-# #      print groupbyResult
-#        print "--------------------------------ORDER_BY PART-----------------------------"
-#        print orderbyResult
+        # print "----------------------------------SELECT PART------------------------------"
+        # print selectResult
+        # print "----------------------------------FROM PART--------------------------------"
+        # print fromResult
+        # print "----------------------------------WHERE PART-------------------------------"
+        # print whereResult
+        # print "---------------------------------GROUP_BY PART----------------------------"
+        # print groupbyResult
+        # print "--------------------------------ORDER_BY PART-----------------------------"
+        # print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -173,7 +174,12 @@ class data_lib():
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
-        if (not partitionElements and 'list' in valueElement) or (not partitionElements and'numVillage' in valueElement) or (not partitionElements and'numBlock' in valueElement):
+        specialcase = 0
+        for vals in self.valueSpecial:
+            if vals in valueElement:
+                specialcase = 1
+
+        if not partitionElements and specialcase == 1:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
         else:

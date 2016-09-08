@@ -129,7 +129,6 @@ window.onload = date;
 
 function populate(src, prevValue) {
     if (!(jQuery("#" + src + "Id" + " option ").length != 0))
- //   for (var values in prevValue) {
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue})
             .done(function (data) {
                 data_json = JSON.parse(data);
@@ -138,12 +137,11 @@ function populate(src, prevValue) {
                         $("#" + src + "Id").append('<option value="' + data_json[jsonData] + '">' + data_json[jsonData] + '</option>');
                 }
             });
- //   }
 }
 function populate_video(src){
+    prevValue= {"country[]":$("#countryId").val(),"partner[]":$("#partnerId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()}
   if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-  //for (var values in prevValue) {
-      $.get("/raw_data_analytics/dropdown_video/", {"country[]":$("#countryId").val(),"partner[]":$("#partnerId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
+      $.get("/raw_data_analytics/dropdown_video/", prevValue)
           .done(function (data) {
               data_json = JSON.parse(data);
               for (var jsonData in data_json) {
@@ -151,12 +149,12 @@ function populate_video(src){
                       $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' +'</option>');
               }
           });
-  //}
 }
 
 function populate_partner(src){
+    prevValue = {"country[]":$("#countryId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()}
     if(!(jQuery("#partnerId option").length!=0))
-        $.get("/raw_data_analytics/dropdown_partner",{"country[]":$("#countryId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()})
+        $.get("/raw_data_analytics/dropdown_partner",prevValue)
             .done(function(data){
                 data_json =JSON.parse(data);
                 for(var jsonData in data_json){
