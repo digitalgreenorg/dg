@@ -3,41 +3,6 @@ window.onload = date;
 
 //####################################Form Ready#######################################
 
-/*var filterdict={ 
-    'country':{
-        'disabledfalse':['video','partner','state'],
-        'disabledtrue':['district','block','village']
-    },
-    'state':{
-        'disabledfalse':['district','video','partner'],
-        'disabledtrue':['block','village']
-    },
-    'district':{
-        'disabledfalse':['block','video','partner'],
-        'disabledtrue':['village']
-    },
-    'block':{
-        'disabledfalse':['village','video','partner'],
-        'disabledtrue':[]
-    },
-    'village':{
-        'disabledfalse':['video','partner'],
-        'disabledtrue':[]
-    },
-    'partner':{
-        'disabledfalse':['video'],
-        'disabledtrue':[]
-    },
-    'video':{
-        'disabledfalse':[],
-        'disabledtrue':[]
-    }
-}*/
-
-/*var clickdict = {
-    'geography'
-}*/
-
   jQuery(document).ready(function ($) {
 
     $('#partnerId').chosen({});
@@ -160,30 +125,6 @@ window.onload = date;
 });
 //###############################Populate the dropdowns for filter######################################
 
-
-/*function change(src) {
-    for (var disableopt in filterdict[src]){
-        if(disableopt=='disabledfalse'){
-            for (var val in filterdict[src][disableopt]){                
-                $('#'+filterdict[src][disableopt][val]+'Id').prop('disabled',false);
-                $('#'+filterdict[src][disableopt][val]+'Id').find('option').remove().end().trigger('chosen:updated');
-                $('#'+filterdict[src][disableopt][val]+'Id_chosen').removeClass('chosen-disabled').trigger('chosen:updated');
-                
-                
-                
-            }
-        }
-        else{
-            for (var val in filterdict[src][disableopt]){               
-                $('#'+filterdict[src][disableopt][val]+'Id').prop('disabled',true);
-                $('#'+filterdict[src][disableopt][val]+'Id').find('option').remove().trigger('chosen:updated');
-                $('#'+filterdict[src][disableopt][val]+'Id').val('').trigger('chosen:updated');
-                
-            }
-        }
-        
-    }
-}*/
 
 
 
