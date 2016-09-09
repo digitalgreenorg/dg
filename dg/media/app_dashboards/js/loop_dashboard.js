@@ -944,8 +944,6 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
     var drilldown = {};
     drilldown['series'] = [];
 
-    // These three values are to show at top
-
     var temp = {};
     temp['name'] = "Total";
     temp['type'] = "bar";
@@ -953,10 +951,24 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
     temp['data'] = [];
     temp['pointWidth'] = 15;
 
+    var main_series=new Array(axis.length).fill(0);
+    var values_drilldown = [];
+
+    for (var i = 0; i < axis.length; i++) {
+        values_drilldown.push(new Array(values.length).fill(0));
+    }
+
+    for (var i = 0; i < json_data.length; i++) {
+        var index = axis.indexOf(json_data[i][axis_parameter].toString());
+        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+        main_series[index] += json_data[i][parameter];
+        values_drilldown[index][drilldown_index] += json_data[i][parameter];
+    }
+
     for (var i = 0; i < axis.length; i++) {
         temp['data'].push({
             'name': axis_names[i],
-            'y': 0,
+            'y': main_series[i],
             'drilldown': axis_names[i]
         });
         drilldown['series'].push({
@@ -968,37 +980,46 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
             'pointWidth': 15
         });
         for (var j = 0; j < values_names.length; j++) {
+          if(values_drilldown[i][j]>0){
             drilldown['series'][i]['data'].push({
                 "name": values_names[j],
-                "y": 0
+                "y": values_drilldown[i][j]
             });
+            }
         }
     }
+
     temp['showInLegend'] = false;
     series.push(temp);
 
-    for (var i = 0; i < json_data.length; i++) {
-        var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
-        var index = axis.indexOf(json_data[i][axis_parameter].toString());
-        drilldown['series'][index]['data'][drilldown_index]['y'] += json_data[i][parameter]
-        series[0]['data'][index]['y'] += json_data[i][parameter];
-    }
+    // for (var i = 0; i < json_data.length; i++) {
+    //     var drilldown_index = values.indexOf(json_data[i][values_parameter].toString());
+    //     var index = axis.indexOf(json_data[i][axis_parameter].toString());
+    //     drilldown['series'][index]['data'][drilldown_index]['y'] += json_data[i][parameter]
+    //     series[0]['data'][index]['y'] += json_data[i][parameter];
+    // }
 
     series[0]['data'].sort(function(a, b) {
         return b['y'] - a['y'];
     });
 
-    for (var i = 0; i < axis.length; i++) {
+    for (var i = 0; i < drilldown['series'].length; i++) {
         drilldown['series'][i]['data'].sort(function(a, b) {
-            return b['y'] - a['y']
+            return b['y'] - a['y'];
         });
-        for (var j = 0; drilldown['series'][i]['data'].length; j++) {
-            if (drilldown['series'][i]['data'][j]['y'] == 0) {
-                drilldown['series'][i]['data'] = drilldown['series'][i]['data'].slice(0, j);
-                break;
-            }
-        }
     }
+
+    // for (var i = 0; i < axis.length; i++) {
+    //     drilldown['series'][i]['data'].sort(function(a, b) {
+    //         return b['y'] - a['y'];
+    //     });
+    //     for (var j = 0; drilldown['series'][i]['data'].length; j++) {
+    //         if (drilldown['series'][i]['data'][j]['y'] == 0) {
+    //             drilldown['series'][i]['data'] = drilldown['series'][i]['data'].slice(0, j);
+    //             break;
+    //         }
+    //     }
+    // }
     plot_drilldown(container, series, drilldown, false);
 }
 

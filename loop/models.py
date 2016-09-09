@@ -363,6 +363,9 @@ class CombinedTransaction(LoopModel):
     def __mandi__(self):
         return "%s" % (self.mandi.mandi_name)
 
+    def __gaddidar__(self):
+        return "%s" % (self.gaddidar.gaddidar_name)
+
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
 

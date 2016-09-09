@@ -47,12 +47,12 @@ class FarmerAdmin(admin.ModelAdmin):
 
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__mandi__', '__aggregator__', '__farmer__', '__crop__', 'price',
+    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = ('status', 'farmer__village__village_name',
-                   'crop__crop_name', 'mandi__mandi_name')
+                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name')
 
 
 class TransporterAdmin(admin.ModelAdmin):
