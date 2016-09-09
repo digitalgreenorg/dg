@@ -718,8 +718,6 @@ function fill_mandi_filter(data_json, language) {
         $.each(data_json, function(index, data) {
             create_filter($('#mandis'), data.id, data.mandi_name, true);
         });
-
-
 }
 
 //To make gaddidars list for filter page
@@ -728,12 +726,10 @@ function fill_gaddidar_filter(data_json, language) {
     if (language == 'English')
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name_en, true);
-
         });
     else
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
-
         });
 }
 
@@ -2769,7 +2765,7 @@ function plot_area_range_graph(container, dict) {
 function fill_drop_down(container, data_json, id_parameter, name_parameter, caption) {
     var tbody_obj = container;
     tbody_obj.html("");
-    tbody_obj.append('<option value="" disabled selected> Choose a ' + caption + ' </option>');
+    tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
     $.each(data_json, function(index, data) {
         var li_item = '<option value=' + data[id_parameter] + '>' + data[name_parameter] + '</option>';
         tbody_obj.append(li_item);
