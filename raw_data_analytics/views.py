@@ -227,7 +227,7 @@ def execute(request):
             partdict[values] = False
         else:
             partdict[values] = True
-            checked_list.append(values)
+            checked_list.append(values) 
 
     ###############################Value#################################
     valdict={'val_screening':val_screening,'val_adoption':val_adoption,'val_no_animator':val_no_animator,'val_attendance':val_attendance,'val_video_screened_num':val_video_screened_num,'val_video_produced_num':val_video_produced_num}

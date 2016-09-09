@@ -17,7 +17,7 @@ class initialize_library():
     categoryDictionaryToUse = categoryDictionary
     orderDictionaryToUse = orderDictionary
     headerDictionaryToUse = headerDictionary
-    valueSpecial =  checkvalueSpecial
+    valueSpecialToUse =  checkvalueSpecial
     def __init__(self, user_input):
         self.user_input = user_input
 
@@ -50,3 +50,7 @@ class initialize_library():
     def initializeHeaderDict(self):
         self.headerDictionaryToUse = headerDictionary
         return headerDictionary
+
+    def initializevalueSpecial(self):
+        self.valueSpecialToUse = checkvalueSpecial
+        return checkvalueSpecial

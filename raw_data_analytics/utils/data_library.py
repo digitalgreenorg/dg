@@ -22,7 +22,7 @@ class data_lib():
     categoryDictionary = {}
     orderDictionary = {}
     headerDictionary = {}
-    valueSpecial =['list','numVillage','numBlock']
+    valueSpecial = []
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     
@@ -49,7 +49,8 @@ class data_lib():
         self.categoryDictionary = ilib.initializeCategoryDict()
         self.headerDictionary = ilib.initializeHeaderDict()
         self.lookup_matrix = ilookup.read_lookup_csv()
-        
+        self.valueSpecial = ilib.initializevalueSpecial()
+        print self.valueSpecial
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:

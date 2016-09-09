@@ -3,6 +3,41 @@ window.onload = date;
 
 //####################################Form Ready#######################################
 
+/*var filterdict={ 
+    'country':{
+        'disabledfalse':['video','partner','state'],
+        'disabledtrue':['district','block','village']
+    },
+    'state':{
+        'disabledfalse':['district','video','partner'],
+        'disabledtrue':['block','village']
+    },
+    'district':{
+        'disabledfalse':['block','video','partner'],
+        'disabledtrue':['village']
+    },
+    'block':{
+        'disabledfalse':['village','video','partner'],
+        'disabledtrue':[]
+    },
+    'village':{
+        'disabledfalse':['video','partner'],
+        'disabledtrue':[]
+    },
+    'partner':{
+        'disabledfalse':['video'],
+        'disabledtrue':[]
+    },
+    'video':{
+        'disabledfalse':[],
+        'disabledtrue':[]
+    }
+}*/
+
+/*var clickdict = {
+    'geography'
+}*/
+
   jQuery(document).ready(function ($) {
 
     $('#partnerId').chosen({});
@@ -15,6 +50,7 @@ window.onload = date;
     $('#blocknumber_video').chosen();
     $('#villagenumber_video').chosen();
     $('#list_video').chosen();
+
     $('#resetId').click(function () {
 
         $('#partnerId').val('').trigger("chosen:updated");
@@ -35,8 +71,8 @@ window.onload = date;
             event.preventDefault();
 
     });
+
     $("#partnerId").bind("change", function () {
-        $('#videoId').prop('disabled', false);
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
     });
@@ -59,18 +95,15 @@ window.onload = date;
         $("#villageId").val('').trigger("chosen:updated");
     });
     $("#stateId").bind("change", function () {
-        $("#partnerId").find('option').remove();
         $("#districtId").prop('disabled', false);
-        $("#districtId").find('option').remove();
-        $("#blockId").find('option').remove();
         $("#villageId").find('option').remove();
-        $("#partnerId").val('').trigger('chosen:updated');
-        $("#districtId").val('').trigger("chosen:updated");
+        $("#partnerId").find('option').remove().val('').trigger('chosen:updated');
+        $("#districtId").find('option').remove().val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
         $("#blockId").prop('disabled',true);
         $("#villageId").prop('disabled',true);
-        $("#blockId").val('').trigger("chosen:updated");
+        $("#blockId").find('option').remove().val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
     });
     $("#districtId").bind("change", function () {
@@ -127,10 +160,40 @@ window.onload = date;
 });
 //###############################Populate the dropdowns for filter######################################
 
+
+/*function change(src) {
+    for (var disableopt in filterdict[src]){
+        if(disableopt=='disabledfalse'){
+            for (var val in filterdict[src][disableopt]){                
+                $('#'+filterdict[src][disableopt][val]+'Id').prop('disabled',false);
+                $('#'+filterdict[src][disableopt][val]+'Id').find('option').remove().end().trigger('chosen:updated');
+                $('#'+filterdict[src][disableopt][val]+'Id_chosen').removeClass('chosen-disabled').trigger('chosen:updated');
+                
+                
+                
+            }
+        }
+        else{
+            for (var val in filterdict[src][disableopt]){               
+                $('#'+filterdict[src][disableopt][val]+'Id').prop('disabled',true);
+                $('#'+filterdict[src][disableopt][val]+'Id').find('option').remove().trigger('chosen:updated');
+                $('#'+filterdict[src][disableopt][val]+'Id').val('').trigger('chosen:updated');
+                
+            }
+        }
+        
+    }
+}*/
+
+
+
 function populate(src, prevValue) {
     if (!(jQuery("#" + src + "Id" + " option ").length != 0))
         $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue})
+            .always(function(){
+            })
             .done(function (data) {
+
                 data_json = JSON.parse(data);
                 for (var jsonData in data_json) {
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData] + "']").length == 0)
