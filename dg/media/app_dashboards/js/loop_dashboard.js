@@ -1564,8 +1564,9 @@ function show_line_graphs() {
             farmer_share[index] += gaddidar_contribution[i]['amount'];
         }
         for (var i = 0; i < all_dates.length; i++) {
-            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? (transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * 0.25) / time_series_volume_amount_farmers[0]['data'][i][1] : null]);
-            time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1] : null]);
+            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * 0.25) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
+
+            time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? (farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1]): null]);
         }
 
         for (var i = 0; i < dates_and_farmer_count.length; i++) {
