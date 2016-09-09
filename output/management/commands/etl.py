@@ -251,12 +251,13 @@ class AnalyticsSync():
                     
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list)/5000) + 2):
+
                 self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
                 total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
-                VALUES +','.join(values_list[(i-1)*5000:i*5000])
+                VALUES "+','.join(values_list[(i-1)*5000:i*5000]))
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)
