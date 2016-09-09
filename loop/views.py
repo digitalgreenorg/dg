@@ -378,7 +378,7 @@ def data_for_line_graph(request):
     filter_transportation["mandi__id__in"] = mandi_ids
 
     transport_data = DayTransportation.objects.filter(**filter_transportation).values(
-        'date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
+        'date').order_by('date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     aggregator_data = CombinedTransaction.objects.filter(
         **filter_args).values('date').order_by('date').annotate(Sum('quantity'), Sum('amount'))

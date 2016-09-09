@@ -36,11 +36,13 @@ function initialize() {
 
 function showLoader() {
     $("#loader").show();
+    $("#main_content").hide();
     hide_nav();
 }
 
 function hideLoader() {
     $("#loader").hide();
+    $("#main_content").show();
     hide_nav('home');
 }
 
