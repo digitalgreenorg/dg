@@ -1498,7 +1498,7 @@ function show_line_graphs() {
         var first_date = new Date(dates_and_farmer_count[0]['date']);
         while (first_date <= new Date(dates_and_farmer_count[dates_and_farmer_count.length - 1]['date'])) {
             all_dates.push(first_date.getTime());
-            first_date.setDate(first_date.getDate() + 1)
+            first_date.setDate(first_date.getDate() + 1);
         }
         time_series_volume_amount_farmers = [{
             'name': "Volume",
@@ -1549,8 +1549,8 @@ function show_line_graphs() {
             time_series_volume_amount_farmers[0]['data'][index][1] += json_data[i]['quantity__sum'];
             time_series_volume_amount_farmers[1]['data'][index][1] += json_data[i]['amount__sum'];
         }
-        transport_cost = new Array(all_dates.length).fill(null);
-        farmer_share = new Array(all_dates.length).fill(null);
+        transport_cost = new Array(all_dates.length).fill(0);
+        farmer_share = new Array(all_dates.length).fill(0);
 
         for (var i = 0; i < transport_data.length; i++) {
             var index = all_dates.indexOf(new Date(transport_data[i]['date']).getTime());
