@@ -739,11 +739,11 @@ function fill_gaddidar_filter(data_json, language) {
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name_en, true);
         });
-    } else {}
-    $.each(data_json, function(index, data) {
-        create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
-    });
-}
+    } else {
+        $.each(data_json, function(index, data) {
+            create_filter($('#gaddidars'), data.id, data.gaddidar_name, true);
+        });
+    }
 }
 
 function filter_remove_elements(tbody_obj) {
