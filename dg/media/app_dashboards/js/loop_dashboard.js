@@ -258,6 +258,7 @@ function plot_cards_data() {
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
 
     var sustainability = data[1];
+    console.log("---------->>" + sustainability);
     document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(sustainability[0]).toFixed(2) + "%";
     $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
 }
@@ -392,6 +393,9 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         k = 0, // keeping note of position in avg_vol
         f_share = 0;
 
+    console.log(avg_gaddidar_contribution);
+    console.log(avg_vol);
+
     //If no data is present for a period of days_to_average initially
     while (today >= new Date(transportation[j]['date'])) {
         cpk.push(0);
@@ -399,7 +403,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         today.setDate(today.getDate() - days_to_average);
         k++;
     }
-    while (j < transportation.length && today < new Date(transportation[j]['date'])) {
+    while (j < transportation.length && today < new Date(transportation[j]['date']) && k < avg_vol.length) {
         temp += transportation[j]['transportation_cost__sum']; // - transportation[j]['farmer_share__sum'];
         f_share += transportation[j]['farmer_share__sum'];
         j++;
@@ -409,7 +413,8 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
                 sustainability_per_kg.push(0);
             } else {
                 cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
-                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) * 100).toFixed(2));
+                console.log("LINE :" + j + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k]);
+                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + (avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE)) * 100).toFixed(2));
             }
 
             k++;
@@ -431,7 +436,8 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         sustainability_per_kg.push(0);
     } else {
         cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
-        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) * 100).toFixed(2));
+        console.log("LINE : ---> :" + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k]);
+        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + (avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE)) * 100).toFixed(2));
     }
 
     //Adding 0 cost for previous data making length of both arrays same
@@ -439,6 +445,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         cpk.push(0);
         sustainability_per_kg.push(0);
     }
+    console.log(sustainability_per_kg);
     return [cpk, sustainability_per_kg];
 }
 
@@ -953,6 +960,7 @@ function totals() {
 
     total_recovered += gaddidar_share;
     total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
+    console.log("TOTALS: " + total_recovered + " : " + gaddidar_share + " : " + total_cost + " : " + volume_without_crop_gaddidar_filter);
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " Kg");
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
