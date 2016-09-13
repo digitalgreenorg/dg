@@ -3,17 +3,32 @@ window.onload = initialize;
 
 var language, selected_tab, selected_parameter, selected_page;
 var days_to_average, time_series_frequency;
+//Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
+//Variables for second nav bar which is visible in analytics and time series tabs.
 var start_date, end_date;
+//Json for filters.
 var aggregators_for_filter, mandis_for_filter, gaddidars_for_filter, crops_for_filter, croplanguage_for_filter, transporter_for_filter;
+//Variables for capturing complete json data for analytics and time series tabs.
 var bar_graphs_json_data, line_json_data;
+//Variables for time series graphs.
 var time_series_volume_amount_farmers, time_series_cpk_spk;
+//Variables for payments tab.
 var payments_start_date, payments_to_date;
 var payments_data, outliers_data, outliers_transport_data, outlier_daily_data, payments_gaddidar_contribution;
+//GENERAL CONSTANTS
+var AGGREGATOR_INCENTIVE_PERCENTAGE = 0.25;
+var ENGLISH_LANGUAGE = "English";
+var REGIONAL_LANGUAGE = "Regional Language";
+var HOME = "home";
+var PAYMENTS_PAGE = "payments";
+var ANALYTICS_PAGE = "analytics";
+var TIME_SERIES_PAGE = "time_series";
+
 
 function initialize() {
     // initialize any library here
-    language = 'Regional Language';
+    language = REGIONAL_LANGUAGE;
     $("select").material_select();
     $(".button-collapse").sideNav({
         closeOnClick: true
@@ -34,7 +49,7 @@ function initialize() {
     gaddidar = true;
     selected_tab = "aggregator";
     selected_parameter = "volume";
-    selected_page = "home";
+    selected_page = HOME;
 
     time_series_frequency = 1;
 
@@ -51,7 +66,7 @@ function showLoader() {
 
 function hideLoader() {
     $("#loader").hide();
-    hide_nav('home');
+    hide_nav(HOME);
 }
 
 //datepicker
@@ -81,14 +96,14 @@ function hide_nav(tab) {
     $("#analytics_tab").removeClass('active');
     $("#time_series_tab").removeClass('active');
 
-    if (tab == 'home') {
+    if (tab == HOME) {
         $("#home_div").show();
         $("#home_tab").addClass('active');
-        selected_page = "home";
-    } else if (tab == 'payments') {
+        selected_page = HOME;
+    } else if (tab == PAYMENTS_PAGE) {
         $("#payments_div").show();
         $("#payments_tab").addClass('active');
-        selected_page = "payments";
+        selected_page = PAYMENTS_PAGE;
     }
 }
 
@@ -103,15 +118,15 @@ function show_nav(tab) {
     $("#home_div").hide();
     $("#payments_div").hide();
 
-    if (tab == "analytics") {
-        selected_page = "analytics";
+    if (tab == ANALYTICS_PAGE) {
+        selected_page = ANALYTICS_PAGE;
         $("#analytics_div").show();
         $("#time_series_div").hide();
         $(".analytics_tabs").show();
         $("#analytics_tab").addClass('active');
         PlotAnalyticsGraphs();
-    } else if (tab == "time_series") {
-        selected_page = "time_series";
+    } else if (tab == TIME_SERIES_PAGE) {
+        selected_page = TIME_SERIES_PAGE;
         $("#analytics_div").hide();
         $("#time_series_div").show();
         $(".analytics_tabs").hide();
@@ -171,14 +186,13 @@ function total_static_data() {
             total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
             total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
         }
-        // TODO - DONE: # we need to calculate gaddidar contribution by WITHOUT using a for loop here
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
         // var total_gaddidar_contribution=0;
         // for (var i = 0; i < json_data['total_gaddidar_contribution'].length; i++) {
         // total_gaddidar_contribution += json_data['total_gaddidar_contribution'][i]['amount'];
         // }
-        var total_aggregator_cost = total_volume * 0.25;
+        var total_aggregator_cost = total_volume * AGGREGATOR_INCENTIVE_PERCENTAGE;
 
         var total_expenditure = total_transportation_cost - total_farmer_share;
 
@@ -207,7 +221,7 @@ function recent_graphs_data(language) {
         dates = json_data['dates'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
-        gaddiadar_contribution = json_data['gaddidar_contribution'];
+        gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
 
         plot_cards_data();
         cummulative_farmer_and_volume();
@@ -278,10 +292,10 @@ function get_average() {
     for (var i = 0; i < dates_of_transaction; i++) {
         gaddidar_share.push(0);
     }
-    var gaddiadar_contribution_length = gaddiadar_contribution.length;
-    for (var i = 0; i < gaddiadar_contribution_length; i++) {
-        var index = dates.indexOf(gaddiadar_contribution[i]['date']);
-        gaddidar_share[index] += gaddiadar_contribution[i]['amount'];
+    var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
+    for (var i = 0; i < gaddidar_contribution_length; i++) {
+        var index = dates.indexOf(gaddidar_contribution_recent_graph[i]['date']);
+        gaddidar_share[index] += gaddidar_contribution_recent_graph[i]['amount'];
     }
 
     while (gaddidar_day >= new Date(dates[k])) {
@@ -289,8 +303,8 @@ function get_average() {
         gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
     }
 
-    var gaddiadar_contribution_length = gaddiadar_contribution.length;
-    while (k < gaddiadar_contribution_length && gaddidar_day < new Date(dates[k])) {
+    var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
+    while (k < gaddidar_contribution_length && gaddidar_day < new Date(dates[k])) {
         temp_gaddidar_share += gaddidar_share[k];
         k++;
         if (k < gaddiadar_contribution_length && gaddidar_day >= new Date(dates[k])) {
@@ -393,8 +407,8 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
                 cpk.push(0);
                 sustainability_per_kg.push(0);
             } else {
-                cpk.push(((temp + avg_vol[k] * 0.25) / avg_vol[k]).toFixed(2));
-                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * 0.25) * 100).toFixed(2));
+                cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
+                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) * 100).toFixed(2));
             }
 
             k++;
@@ -415,8 +429,8 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         cpk.push(0);
         sustainability_per_kg.push(0);
     } else {
-        cpk.push(((temp + avg_vol[k] * 0.25) / avg_vol[k]).toFixed(2));
-        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * 0.25) * 100).toFixed(2));
+        cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
+        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) * 100).toFixed(2));
     }
 
     //Adding 0 cost for previous data making length of both arrays same
@@ -538,7 +552,7 @@ function change_graph(parameter) {
 //To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
     $("#recent_cards_data_frequency").change(function() {
-        days_to_average = $('#recent_cards_data_frequency :selected').val()
+        days_to_average = $('#recent_cards_data_frequency :selected').val();
         plot_cards_data();
     });
 
@@ -686,7 +700,7 @@ function get_filter_data(language) {
             fill_aggregator_filter(aggregators_for_filter, language);
             fill_mandi_filter(mandis_for_filter, language);
             fill_gaddidar_filter(gaddidars_for_filter, language);
-            if (language == 'English')
+            if (language == ENGLISH_LANGUAGE)
                 fill_crop_filter(croplanguage_for_filter);
             else
                 fill_crop_filter(crops_for_filter);
@@ -699,7 +713,7 @@ function get_filter_data(language) {
 //To make aggregators list for filter page
 function fill_aggregator_filter(data_json, language) {
     filter_remove_elements($('#aggregators'));
-    if (language == 'English') {
+    if (language == ENGLISH_LANGUAGE) {
         $.each(data_json, function(index, data) {
             create_filter($('#aggregators'), data.user__id, data.name_en, true);
         });
@@ -721,7 +735,7 @@ function fill_crop_filter(data_json) {
 //To make mandis list for filter page
 function fill_mandi_filter(data_json, language) {
     filter_remove_elements($('#mandis'));
-    if (language == 'English') {
+    if (language == ENGLISH_LANGUAGE) {
         $.each(data_json, function(index, data) {
             create_filter($('#mandis'), data.id, data.mandi_name_en, true);
         });
@@ -735,7 +749,7 @@ function fill_mandi_filter(data_json, language) {
 //To make gaddidars list for filter page
 function fill_gaddidar_filter(data_json, language) {
     filter_remove_elements($('#gaddidars'));
-    if (language == 'English') {
+    if (language == ENGLISH_LANGUAGE) {
         $.each(data_json, function(index, data) {
             create_filter($('#gaddidars'), data.id, data.gaddidar_name_en, true);
         });
@@ -825,7 +839,7 @@ function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids,
         })
         .done(function(data) {
             bar_graphs_json_data = JSON.parse(data);
-            if (selected_page == "analytics") {
+            if (selected_page == ANALYTICS_PAGE) {
                 PlotAnalyticsGraphs();
             }
         });
@@ -933,11 +947,11 @@ function totals() {
         volume_without_crop_gaddidar_filter += gaddidar_contribution[i]['quantity__sum'];
     }
 
-    var cpk = ((total_cost + volume_without_crop_gaddidar_filter * 0.25) / volume_without_crop_gaddidar_filter).toFixed(2);
+    var cpk = ((total_cost + volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE) / volume_without_crop_gaddidar_filter).toFixed(2);
     var spk = ((total_recovered + gaddidar_share) / volume_without_crop_gaddidar_filter).toFixed(2);
 
     total_recovered += gaddidar_share;
-    total_cost += volume_without_crop_gaddidar_filter * 0.25;
+    total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " Kg");
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
@@ -1083,9 +1097,9 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         var index = axis.indexOf(gaddidar_contribution[i][axis_parameter].toString());
         var drilldown_index = values.indexOf(gaddidar_contribution[i][values_parameter].toString());
-        values_cost[index] += (gaddidar_contribution[i]['quantity__sum'] * 0.25);
+        values_cost[index] += (gaddidar_contribution[i]['quantity__sum'] * AGGREGATOR_INCENTIVE_PERCENTAGE);
         values_cost_recovered[index] += gaddidar_contribution[i]['amount'];
-        values_cost_drilldown[index][drilldown_index] += (gaddidar_contribution[i]['quantity__sum'] * 0.25);
+        values_cost_drilldown[index][drilldown_index] += (gaddidar_contribution[i]['quantity__sum'] * AGGREGATOR_INCENTIVE_PERCENTAGE);
         values_cost_recovered_drilldown[index][drilldown_index] += gaddidar_contribution[i]['amount'];
     }
 
@@ -1225,7 +1239,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
-            'cpk': values_vol[i] > 0 ? ((values_cost_cpk[i] + values_vol[i] * 0.25) / values_vol[i]) : 0.0,
+            'cpk': values_vol[i] > 0 ? ((values_cost_cpk[i] + values_vol[i] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol[i]) : 0.0,
             'spk': values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0
         });
         drilldown['series'].push({
@@ -1244,7 +1258,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
         for (var j = 0; j < values.length; j++) {
             if (values_vol_drilldown[i][j] > 0) {
-                drilldown['series'][i * 2]['data'].push([values_names[j], (values_cost_cpk_drilldown[i][j] + values_vol_drilldown[i][j] * 0.25) / values_vol_drilldown[i][j]]);
+                drilldown['series'][i * 2]['data'].push([values_names[j], (values_cost_cpk_drilldown[i][j] + values_vol_drilldown[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol_drilldown[i][j]]);
                 drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j]]);
             }
         }
@@ -1449,7 +1463,7 @@ function farmer_crop_visits(container, json_data) {
     series.push(temp_repeat);
 
     for (var i = 0; i < json_data.length; i++) {
-        if (language == 'English') {
+        if (language == ENGLISH_LANGUAGE) {
             series[0]['data'].push([json_data[i]['crop__crop_name_en'], json_data[i]['farmer__count']]);
         } else {
             series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
@@ -1470,7 +1484,7 @@ function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids
         })
         .done(function(data) {
             line_json_data = JSON.parse(data);
-            if (selected_page == "time_series") {
+            if (selected_page == TIME_SERIES_PAGE) {
                 PlotTimeSeriesGraphs();
             }
         });
@@ -1482,7 +1496,7 @@ function fill_crop_drop_down() {
     tbody_obj.html("");
     tbody_obj.append('<option value="" disabled selected> Choose a Crop </option>');
     var crops_names_time_series;
-    if (language == 'English')
+    if (language == ENGLISH_LANGUAGE)
         crops_names_time_series = croplanguage_for_filter;
     else
         crops_names_time_series = crops_for_filter;
@@ -1573,7 +1587,7 @@ function show_line_graphs() {
             farmer_share[index] += gaddidar_contribution[i]['amount'];
         }
         for (var i = 0; i < all_dates.length; i++) {
-            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * 0.25) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
+            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * AGGREGATOR_INCENTIVE_PERCENTAGE) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
 
             time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? (farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
         }
@@ -2869,10 +2883,10 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = quantites[i][j] * 0.25 + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE + transport_cost[i][j] - farmer_share[i][j];
             //  - gaddidar_amount[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
             // total_volume += quantites[i][j];
             // total_payment += net_payment;
@@ -3089,7 +3103,6 @@ function create_outliers_table(date, aggregator_id) {
     var data_set = [];
     var sno = 1;
 
-    // TODO : # we will have to write another function to calculate total gaddidar contribution for payments also.
     for (var i = 0; i < outliers_data.length; i++) {
         if (new Date(date).getTime() == new Date(outliers_data[i]['date']).getTime() && aggregator_id == outliers_data[i]['user_created__id']) {
 
@@ -3315,12 +3328,12 @@ function change_language(lang) {
     fill_aggregator_filter(aggregators_for_filter, language);
     fill_mandi_filter(mandis_for_filter, language);
     fill_gaddidar_filter(gaddidars_for_filter, language);
-    if (language == 'English')
+    if (language == ENGLISH_LANGUAGE)
         fill_crop_filter(croplanguage_for_filter);
     else
         fill_crop_filter(crops_for_filter);
     get_data();
-    if (selected_page == "analytics" || selected_page == "time_series") {
+    if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
         show_nav(selected_page);
     }
 }
