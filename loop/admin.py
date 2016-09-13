@@ -47,22 +47,22 @@ class FarmerAdmin(admin.ModelAdmin):
 
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__unicode__', 'price',
+    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = ('status', 'farmer__village__village_name',
-                   'crop__crop_name', 'mandi__mandi_name')
+                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name')
 
 
 class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
-                    'transporter_phone', '__unicode__')
+                    'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__unicode__',
+    list_display = ('id', 'date', '__aggregator__','__transporter__','__vehicle__',
                     'transportation_cost', 'farmer_share')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = ('user_created__username', 'mandi__mandi_name')
@@ -76,7 +76,7 @@ class GaddidarAdmin(admin.ModelAdmin):
 
 
 class TransportationVehicleAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__', 'vehicle_number')
+    list_display = ('id', '__transporter__','__vehicle__', 'vehicle_number')
     search_fields = ['transporter__transporter_name', 'vehicle__vehicle_name']
     list_filter = ['transporter__transporter_name']
 
@@ -97,6 +97,12 @@ class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name', 'crop_name_en')
     search_fields = ['crop_name']
 
+class GaddidarCommisionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'start_date', '__unicode__','discount_percent')
+
+class GaddidarShareOutliersAdmin(admin.ModelAdmin):
+    list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -116,3 +122,6 @@ loop_admin.register(TransportationVehicle, TransportationVehicleAdmin)
 loop_admin.register(DayTransportation, DayTransportationAdmin)
 loop_admin.register(Gaddidar, GaddidarAdmin)
 loop_admin.register(Language)
+loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
+loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
+loop_admin.register(Croplanguage)

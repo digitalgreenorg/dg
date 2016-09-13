@@ -168,13 +168,24 @@ hr {
 }
 .indicator {
     margin-left: 20px!important;
-    margin-right: 20px!important;
+    /*margin-right: 20px!important;*/
 }
 .tabs .active {
-    font-weight: Bold;
+    font-weight: bold;
+    background-color: aliceblue;
+    margin-left: 20px !important;
+    /*margin-right: 20px !important;*/
 }
 .card .card-title {
-    font-size: 20px;
+    font-size: 18px;
+}
+
+.sparkline_graph {
+    padding-left: 10px;
+}
+
+.card .card-content {
+      padding: 0 !important;
 }
 @media only screen and (max-width: 992px) {
     header, main, footer {
