@@ -269,8 +269,8 @@ def recent_graphs_data(request):
 
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
-    transportation_cost = DayTransportation.objects.values('date').order_by(
-        '-date').annotate(Sum('transportation_cost'), Sum('farmer_share'))
+    transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
+        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
     dates = CombinedTransaction.objects.values_list(
         'date', flat=True).distinct().order_by('-date')
 

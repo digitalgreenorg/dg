@@ -295,7 +295,9 @@ function get_average() {
     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         var index = dates.indexOf(gaddidar_contribution_recent_graph[i]['date']);
-        gaddidar_share[index] += gaddidar_contribution_recent_graph[i]['amount'];
+        if (index != -1) {
+            gaddidar_share[index] += gaddidar_contribution_recent_graph[i]['amount'];
+        }
     }
 
     while (gaddidar_day >= new Date(dates[k])) {
@@ -307,7 +309,7 @@ function get_average() {
     while (k < gaddidar_contribution_length && gaddidar_day < new Date(dates[k])) {
         temp_gaddidar_share += gaddidar_share[k];
         k++;
-        if (k < gaddiadar_contribution_length && gaddidar_day >= new Date(dates[k])) {
+        if (k < gaddidar_contribution_length && gaddidar_day >= new Date(dates[k])) {
             avg_gaddidar_share.push(temp_gaddidar_share.toFixed(0));
             temp_gaddidar_share = 0;
             gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
@@ -373,7 +375,8 @@ function get_average() {
     avg_amt.push(temp_amt);
     active_farmers.push(active_farmers_id.length);
     active_clusters.push(active_clusters_id.length);
-
+console.log(avg_gaddidar_share);
+console.log(avg_vol);
     return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share];
 }
 
@@ -957,7 +960,7 @@ function totals() {
     $("#aggregator_amount").text("amount: " + "₹ " + parseFloat(total_amount).toFixed(0));
     $("#aggregator_visits").text("visits: " + total_visits);
     $("#aggregator_cpk").text("SPK/CPK : " + spk + "/" + cpk);
-    $("#aggregator_cost").text("Recovered/Total : " + "₹ " + total_recovered + "/" + " ₹ " + total_cost);
+    $("#aggregator_cost").text("Recovered/Total : " + "₹ " + total_recovered.toFixed(2) + "/" + " ₹ " + total_cost.toFixed(2));
 
 }
 
