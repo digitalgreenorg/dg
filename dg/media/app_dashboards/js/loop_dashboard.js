@@ -252,7 +252,7 @@ function plot_cards_data() {
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
-    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution.reverse());
+    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution);
     var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + rs.concat(parseFloat(cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
@@ -375,8 +375,6 @@ function get_average() {
     avg_amt.push(temp_amt);
     active_farmers.push(active_farmers_id.length);
     active_clusters.push(active_clusters_id.length);
-console.log(avg_gaddidar_share);
-console.log(avg_vol);
     return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share];
 }
 
