@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, Croplanguage, GaddidarCommission, GaddidarShareOutliers
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers
 
 from loop_data_log import get_latest_timestamp
 
@@ -56,7 +56,7 @@ def filter_data(request):
     aggregators = LoopUser.objects.all().values('user__id', 'name', 'name_en')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
-    crops_lang = Croplanguage.objects.values('crop__id', 'crop_name')
+    crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
     crops_language = [{'id': obj['crop__id'],
                       'crop_name': obj['crop_name']} for obj in crops_lang]
     mandis = Mandi.objects.all().values('id', 'mandi_name', 'mandi_name_en')
@@ -252,7 +252,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
 
 
 def crop_language_data(request):
-    crops = Croplanguage.objects.filter(language=request.GET.get('language'))
+    crops = CropLanguage.objects.filter(language=request.GET.get('language'))
     data = json.dumps(crops)
 
     return HttpResponse(data)
@@ -323,9 +323,9 @@ def data_for_drilldown_graphs(request):
         **filter_args).values('crop__crop_name', 'crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True)))
     for i in crop_prices:
         try:
-            crop = Croplanguage.objects.get(crop=i['crop__id'])
+            crop = CropLanguage.objects.get(crop=i['crop__id'])
             i['crop__crop_name_en'] = crop.crop_name
-        except Croplanguage.DoesNotExist:
+        except CropLanguage.DoesNotExist:
             pass
 
     mandi_crop_prices = CombinedTransaction.objects.filter(

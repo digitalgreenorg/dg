@@ -220,7 +220,6 @@ class Crop(LoopModel):
     crop_name = models.CharField(max_length=30, null=False, blank=False)
     measuring_unit = models.CharField(max_length=20, default="kg")
     is_visible = models.BooleanField(default=True)
-    crop_name_en = models.CharField(max_length=30, null=True)
 
     def __unicode__(self):
         return self.crop_name
@@ -233,7 +232,7 @@ pre_delete.connect(delete_log, sender=Crop)
 
 #############Crop name in multiple languages###############
 
-class Croplanguage(models.Model):
+class CropLanguage(models.Model):
     id = models.AutoField(primary_key=True)
     language = models.ForeignKey(Language,null=True)
     crop = models.ForeignKey(Crop)

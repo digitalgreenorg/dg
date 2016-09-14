@@ -15,11 +15,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Croplanguage',
+            name='CropLanguage',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('crop_name', models.CharField(max_length=30)),
-                ('crop', models.ForeignKey(to='loop.Crop')),
             ],
         ),
         migrations.CreateModel(
@@ -42,6 +41,10 @@ class Migration(migrations.Migration):
                 ('amount', models.FloatField()),
                 ('aggregator', models.ForeignKey(to='loop.LoopUser')),
             ],
+        ),
+        migrations.RemoveField(
+            model_name='crop',
+            name='crop_name_en',
         ),
         migrations.AddField(
             model_name='gaddidar',
@@ -92,6 +95,11 @@ class Migration(migrations.Migration):
             model_name='gaddidarcommission',
             name='user_modified',
             field=models.ForeignKey(related_name='loop_gaddidarcommission_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AddField(
+            model_name='croplanguage',
+            name='crop',
+            field=models.ForeignKey(to='loop.Crop'),
         ),
         migrations.AddField(
             model_name='croplanguage',

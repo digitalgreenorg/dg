@@ -94,7 +94,7 @@ class VillageAdmin(admin.ModelAdmin):
 
 
 class CropAdmin(admin.ModelAdmin):
-    list_display = ('id', 'crop_name', 'crop_name_en')
+    list_display = ('id', 'crop_name')
     search_fields = ['crop_name']
 
 class GaddidarCommisionAdmin(admin.ModelAdmin):
@@ -124,4 +124,4 @@ loop_admin.register(Gaddidar, GaddidarAdmin)
 loop_admin.register(Language)
 loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
 loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
-loop_admin.register(Croplanguage)
+loop_admin.register(CropLanguage)
