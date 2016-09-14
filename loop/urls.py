@@ -37,10 +37,7 @@ urlpatterns = patterns('',
     url(r'^filter_data/', filter_data),
     url(r'^total_static_data/',total_static_data),
     url(r'^recent_graphs_data/',recent_graphs_data),
-    # url(r'^farmer_count_aggregator_wise/',farmer_count_aggregator_wise),
     url(r'^data_for_drilldown_graphs/',data_for_drilldown_graphs),
     url(r'^data_for_line_graph/',data_for_line_graph),
-    # url(r'^data_for_time_chart/',data_for_time_chart),
     url(r'^payments/',payments),
-
     )

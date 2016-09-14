@@ -56,15 +56,15 @@ def filter_data(request):
     aggregators = LoopUser.objects.all().values('user__id', 'name', 'name_en')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
-    cropsLang = Croplanguage.objects.values('crop__id', 'crop_name')
-    cropslanguage = [{'id': x['crop__id'],
-                      'crop_name': x['crop_name']} for x in cropsLang]
+    crops_lang = Croplanguage.objects.values('crop__id', 'crop_name')
+    crops_language = [{'id': obj['crop__id'],
+                      'crop_name': obj['crop_name']} for obj in crops_lang]
     mandis = Mandi.objects.all().values('id', 'mandi_name', 'mandi_name_en')
     gaddidars = Gaddidar.objects.all().values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'transporters': list(transporters), 'aggregators': list(aggregators), 'villages': list(villages), 'crops': list(crops),
-                 'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': list(cropslanguage)}
+                 'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': list(crops_language)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -169,22 +169,15 @@ def crop_wise_data(request):
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
     ).aggregate(Sum('quantity'), Sum('amount'))
-    # remove total_volume_for_transport after entering past data and make
-    # changes in js accordingly (filter for june dates)
-    # total_volume_for_transport = CombinedTransaction.objects.aggregate(Sum('quantity'))
     total_repeat_farmers = len(CombinedTransaction.objects.values(
         'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1))
     total_farmers_reached = len(
         CombinedTransaction.objects.values('farmer').distinct())
     total_cluster_reached = len(LoopUser.objects.all())
-
-    # remove date from filter
-    # filter(date__gte="2016-06-01")
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
-    # gaddidar_share=calculate_gaddidar_share(None, None, None, None)
 
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_repeat_farmers': total_repeat_farmers}
@@ -266,7 +259,6 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
         '-date').annotate(Sum('quantity'), Sum('amount'))
     transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
@@ -275,8 +267,6 @@ def recent_graphs_data(request):
         'date', flat=True).distinct().order_by('-date')
 
     gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)
-    # crops = Crop.objects.all().extra(
-    # select={'crop_name': 'crop_name_en'}).values('id', 'crop_name')
 
     chart_dict = {'stats': list(stats), 'transportation_cost': list(
         transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution}
@@ -337,7 +327,7 @@ def data_for_drilldown_graphs(request):
             i['crop__crop_name_en'] = crop.crop_name
         except Croplanguage.DoesNotExist:
             pass
-    # TODO:mandi_crop_prices
+
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
 

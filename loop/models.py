@@ -61,7 +61,6 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
-
     district_name_en = models.CharField(max_length=100, null=True)
 
     def __unicode__(self):
