@@ -54,9 +54,15 @@ class Training(models.Model):
 	language = models.ForeignKey(Language, null=True, blank=True)
 	participants = models.ManyToManyField(Animator)
 
+	class Meta:
+    	unique_together=("date","trainer")
+
 class Score(models.Model):
 	id = models.AutoField(primary_key=True)
-	training = models.ForeignKey(Training, null=True, blank=True)
-	participant = models.ForeignKey(Animator, null=True, blank=True)
-	question = models.ForeignKey(Question, null=True, blank=True)
+	training = models.ForeignKey(Training, null=False, blank=False)
+	participant = models.ForeignKey(Animator, null=False, blank=False)
+	question = models.ForeignKey(Question, null=False, blank=False)
 	score = models.IntegerField()
+
+	class Meta:
+		unique_together=("training", "participant", "question")

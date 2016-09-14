@@ -22,6 +22,13 @@ from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
 class MediatorNotSaved(Exception):
     pass
 
+class ScoreNotSaved(Exception):
+    pass    
+
+class TrainingNotSaved(Exception):
+    pass    
+
+
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
@@ -255,7 +262,7 @@ class MediatorResource(ModelResource):
             bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Animator.objects.filter(partner_id = bundle.data['partner']['online_id'], gender = bundle.data['gender'], district_id = bundle.data['district']['online_id'], name = bundle.data['name'])
-            raise FarmerNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
+            raise MediatorNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
         return bundle
 
 class AssessmentResource(ModelResource):
@@ -300,8 +307,8 @@ class TrainingResource(ModelResource):
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m, field_name = 'trainer', resource_name = 'trainer')
     hydrate_participants = partial(dict_to_foreign_uri_m2m, field_name = 'participants', resource_name = 'mediator')
-    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])	
-    dehydrate_assessment = 	partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
+    dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])  
+    dehydrate_assessment =  partial(foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
 
     def dehydrate_trainer(self, bundle):
             return [{'id': trainer.id, 'name':trainer.name} for trainer in bundle.obj.trainer.all() ]
@@ -312,6 +319,28 @@ class TrainingResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+
+    def obj_create(self, bundle, **kwargs):
+        trainer_list=[]
+        trainer_list.append(bundle.data['trainer'][0]['online_id'])
+        attempt = Training.objects.filter(date = bundle.data['date'],trainer__in=trainer_list)
+        if attempt.count() < 1:
+            bundle = super(TrainingResource, self).obj_create(bundle, **kwargs)
+            print "TRAINING BAN GAYE"
+        else:
+            print "HUM BAN GAYE"
+            raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(TrainingResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            trainer_list=[]
+            trainer_list.append(bundle.data['trainer'][0]['online_id'])
+            attempt = Training.objects.filter(date = bundle.data['date'], trainer_in = trainer_list)
+            raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle    
 
 	
 
@@ -353,7 +382,25 @@ class ScoreResource(ModelResource):
     dehydrate_question = partial(foreign_key_to_id, field_name='question', sub_field_names=['id','text'])
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        return bundle	
+        return bundle
+
+    def obj_create(self, bundle, **kwargs):
+        attempt = Score.objects.filter(training_id = bundle.data['training']['online_id'], participant_id = bundle.data['participant']['online_id'], 
+            question_id = bundle.data['question']['online_id'])
+        if attempt.count() < 1:
+            bundle = super(ScoreResource, self).obj_create(bundle, **kwargs)
+        else:
+            raise ScoreNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(ScoreResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Score.objects.filter(training_id = bundle.data['training']['online_id'], participant_id = bundle.data['participant']['online_id'], 
+            question_id = bundle.data['question']['online_id'])
+            raise ScoreNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
+        return bundle    	
 
 
 
