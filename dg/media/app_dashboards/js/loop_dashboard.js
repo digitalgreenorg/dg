@@ -403,18 +403,22 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         today.setDate(today.getDate() - days_to_average);
         k++;
     }
-    while (j < transportation.length && today < new Date(transportation[j]['date']) && k < avg_vol.length) {
-        temp += transportation[j]['transportation_cost__sum']; // - transportation[j]['farmer_share__sum'];
-        f_share += transportation[j]['farmer_share__sum'];
+    while (j < transportation.length && today < new Date(transportation[j]['date'])) {
+        temp += parseFloat(transportation[j]['transportation_cost__sum']); // - transportation[j]['farmer_share__sum'];
+        f_share += parseFloat(transportation[j]['farmer_share__sum']);
         j++;
         if (j < transportation.length && today >= new Date(transportation[j]['date'])) {
             if (avg_vol[k] == 0) {
                 cpk.push(0);
                 sustainability_per_kg.push(0);
             } else {
-                cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
-                console.log("LINE :" + j + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k]);
-                sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + (avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE)) * 100).toFixed(2));
+                var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
+                var cost = parseFloat(temp) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
+                var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
+                var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
+                cpk.push(cpk_value.toFixed(2));
+                console.log("LINE :" + j + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k] + " :::" + recovered + " : " + cost + " : " + spk_value);
+                sustainability_per_kg.push(spk_value.toFixed(2));
             }
 
             k++;
@@ -435,9 +439,13 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         cpk.push(0);
         sustainability_per_kg.push(0);
     } else {
-        cpk.push(((temp + avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE) / avg_vol[k]).toFixed(2));
-        console.log("LINE : ---> :" + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k]);
-        sustainability_per_kg.push(((f_share + avg_gaddidar_contribution[k]) / (temp + (avg_vol[k] * AGGREGATOR_INCENTIVE_PERCENTAGE)) * 100).toFixed(2));
+      var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
+      var cost = parseFloat(temp) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
+      var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
+      var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
+        cpk.push(cpk_value.toFixed(2));
+        console.log("LINE : ---> :" + " : " + k + " : " + f_share + " : " + avg_gaddidar_contribution[k] + " : " + temp + " : " + avg_vol[k]+ " :::" + recovered + " : " + cost + " : " + spk_value);
+        sustainability_per_kg.push(spk_value.toFixed(2));
     }
 
     //Adding 0 cost for previous data making length of both arrays same
