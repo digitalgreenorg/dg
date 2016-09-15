@@ -321,10 +321,10 @@ def data_for_drilldown_graphs(request):
 
     crop_prices = list(CombinedTransaction.objects.filter(
         **filter_args).values('crop__crop_name', 'crop__id').annotate(Min('price'), Max('price'), Count('farmer', distinct=True)))
-    for i in crop_prices:
+    for crop_obj in crop_prices:
         try:
-            crop = CropLanguage.objects.get(crop=i['crop__id'])
-            i['crop__crop_name_en'] = crop.crop_name
+            crop = CropLanguage.objects.get(crop=crop_obj['crop__id'])
+            crop_obj['crop__crop_name_en'] = crop.crop_name
         except CropLanguage.DoesNotExist:
             pass
 
@@ -360,7 +360,6 @@ def data_for_line_graph(request):
         filter_args["date__lte"] = end_date
         filter_transportation["date__lte"] = end_date
     filter_args["user_created__id__in"] = aggregator_ids
-    # filter_args["crop__id__in"] = crop_ids
     filter_args["mandi__id__in"] = mandi_ids
     filter_args["gaddidar__id__in"] = gaddidar_ids
 
