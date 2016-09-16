@@ -319,6 +319,12 @@ class TrainingResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
+    
+    # def put_detail(self, bundle, **kwargs):
+    #     print "Entered put detail"
+    #     bundle = super(TrainingResource, self).put_detail(bundle, **kwargs)
+    #     print "Worked"
+
 
     def obj_create(self, bundle, **kwargs):
         trainer_list=[]
@@ -329,17 +335,23 @@ class TrainingResource(ModelResource):
             print "TRAINING BAN GAYE"
         else:
             print "HUM BAN GAYE"
-            raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
+            print bundle.request
+            bundle.request.META['REQUEST_METHOD'] = 'PUT'
+            bundle = self.obj_update(bundle, **kwargs)
+            print "Update Chal gya"
+            # raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error":"Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
+            print bundle.request
             bundle = super(TrainingResource, self).obj_update(bundle, **kwargs)
+            print "Training updated"
         except Exception, e:
             trainer_list=[]
             trainer_list.append(bundle.data['trainer'][0]['online_id'])
-            attempt = Training.objects.filter(date = bundle.data['date'], trainer_in = trainer_list)
-            raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate"})
+            attempt = Training.objects.filter(date = bundle.data['date'], trainer__in = trainer_list)
+            raise TrainingNotSaved({"online_id" : int(attempt[0].id), "error" : "Duplicate in Update"})
         return bundle    
 
 	
