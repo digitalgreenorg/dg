@@ -1,5 +1,5 @@
 // generic list view - reads entity's objectstore and prepares table using templates declared in entity's config
-define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'models/user_model', 'indexeddb-backbone', 'TableTools'], function ($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline, User) {
 
 
     var ListView = Backbone.Layout.extend({
@@ -13,12 +13,15 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             //now context of all fuctions in this view would always be the view object
             _.bindAll(this);
             this.render();
+            User.on('change', this.render);
         },
 
         serialize: function () {
             //send these to the list page template
+            var language = User.get('language');
             return {
-                page_header: this.entity_config.page_header,
+                page_header: this.entity_config['config_'+language],
+                list_page_help: all_configs['misc']['meta_'+language]['list_page_help']
             };
         },
 
@@ -35,7 +38,8 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
         },
         
         get_row_header: function () {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var header_row = $.map(list_elements, function (column_definition) {
                 var header = "";
                 if ('header' in column_definition) {
@@ -50,13 +54,14 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                 return {sTitle: header};
             });
             if (!('dashboard_display' in this.entity_config) || (!('add' in this.entity_config.dashboard_display)) || this.entity_config['dashboard_display']['add'] != false) {
-                header_row.push({sTitle: "Edit"});
+                header_row.push({sTitle: all_configs['misc']['meta_'+language]['edit']});
             }
             return header_row;
         },
         
         get_row: function (model_object) {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var row = $.map(list_elements, function (column_definition) {
                 var cell = '';
                 if ('element' in column_definition) {
@@ -72,16 +77,16 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                         var object = model_object;
                         for (var i = 0; i < element_parts.length; i++) {
                             // To check if the entry is made online or offline. Display "Not uploaded in place of id in case of offline entry"
-                            if(element_parts.length == 1 && element_parts[i] == "id" && object.online_id == undefined){
+                            if(element_parts.length == 1 && element_parts[i] == "online_id" && object.online_id == undefined){
                                 object = "Not Uploaded"
                             }
                             else{
-                                object = object[element_parts[i]];
+                                    object = object[element_parts[i]];
                             }
                         }
-                        if (object != null) {
-                            cell = object;
-                        }
+                    }
+                    if (object != null) {
+                        cell = object;
                     }
                 }
                 else {
@@ -101,6 +106,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             // render data and call function get_row() to make array_table_values which is assigned to aaData later to
             // fill the table with the relevant values.
             var self = this;
+            var language = User.get('language');
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
@@ -114,16 +120,26 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
                     "bAutoWidth":false,
                     "aaData": array_table_values,       //aaData takes array_table_values and push data in the table.
                     "bAutoWidth":false,
+                    "bDestroy": true,
+                    "oLanguage": {
+                        "sSearch": all_configs['misc']['meta_'+language]['search'],
+                        "sLengthMenu": all_configs['misc']['meta_'+language]['enteries']+"_MENU_",
+                        "sInfo": all_configs['misc']['meta_'+language]['total_enteries']+"_TOTAL_",
+                        "oPaginate": {
+                            "sNext": all_configs['misc']['meta_'+language]['next'],
+                            "sPrevious": all_configs['misc']['meta_'+language]['previous']
+                        },
+                    },
                     "oTableTools": {
                         "sSwfPath": "/media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
                         "aButtons": [
                             {
                                 "sExtends": "copy",
-                                "sButtonText": "Copy to Clipboard"
+                                "sButtonText": all_configs['misc']['meta_'+language]['copy_clipboard']
                             },
                             {
                                 "sExtends": "xls",
-                                "sButtonText": "Download in Excel"
+                                "sButtonText": all_configs['misc']['meta_'+language]['excel_download']
                             }
                         ]
 

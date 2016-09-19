@@ -378,8 +378,6 @@ def play_video(request):
                 'language': svideo.language,
                 'state': svideo.state,
                 'date_pro': svideo.date,
-                'facillitator': video.coco_video.facilitator.name,
-                'cameraoperator': video.coco_video.cameraoperator.name,
                 'comments': comments,
                 'id': video_id,
                 'video_carousel': video_carousel,
@@ -426,8 +424,8 @@ def get_comments(request):
         list_comments.append(obj_dic)
     for obj in comments_screenings:
         obj_dic = {'text': obj.text,
-                   'imageURL': obj.person.thumbnailURL,
-                   'personName': obj.person.name,
+                   'imageURL': obj.animator.thumbnailURL,
+                   'personName': obj.animator.name,
                    }
         list_comments.append(obj_dic)
     resp = json.dumps(list_comments)

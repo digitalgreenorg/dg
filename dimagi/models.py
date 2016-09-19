@@ -8,7 +8,7 @@ from poster.streaminghttp import register_openers
 from poster.encode import multipart_encode
 
 from coco.models import CocoUser
-from people.models import Person
+from people.models import Person, Animator
 from dimagi.scripts.create_user import create_dimagi_user
 
 error_list = dict({
@@ -33,7 +33,6 @@ class XMLSubmission(models.Model):
     error_message = models.TextField(null=True)
     username = models.CharField(max_length=40, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
-    end_time = models.DateTimeField(null=True, blank=True)
     type = models.CharField(max_length=10, default='')
     app_version = models.IntegerField(default='0')
 
@@ -74,6 +73,7 @@ class CommCareUser(models.Model):
     guid = models.CharField(max_length=100)
     coco_user = models.ForeignKey(CocoUser)
     project = models.ForeignKey(CommCareProject)
+    mediator = models.ForeignKey(Animator, null=True, blank=True)
 
     class Meta:
         unique_together = ("project", "username")

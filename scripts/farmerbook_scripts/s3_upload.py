@@ -12,7 +12,7 @@ con = S3Connection(ACCESS_KEY, SECRET_KEY)
 bucket = con.get_bucket(BUCKET_NAME)
 i = 0
 # uploading thumbnails of all images in current directory
-for root, dirs, files in os.walk(r'C:\Users\Yash\Desktop\DG\scripts\village_wise\to_upload'):
+for root, dirs, files in os.walk(r'\dg\scripts\village_wise\to_upload'):
     for file_name in files:
         file_extension = os.path.splitext(file_name)
         if(file_extension[1].upper() in [".JPG", ".JPEG", ".PNG", ".BMP"]):

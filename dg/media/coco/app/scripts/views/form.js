@@ -13,11 +13,12 @@ define([
     'configs',
     'offline_utils',
     'denormalize',
+    'models/user_model',
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline, Denormalizer, User) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -36,12 +37,16 @@ define([
             // send the following info to template
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
+            var language = User.get('language');
+            this.entity_config = all_configs[this.entity_name];
             // HTML for form 
-            s_passed["form_template"] = this.form_template;
+            //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
+            s_passed["language"] = language;
+            s_passed["add_row"] = this.entity_config['labels_'+language]['add_row'];
             return s_passed;
         },
 
@@ -70,21 +75,23 @@ define([
         // Refactor possible
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
+            var language = User.get("language");
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
+            this.labels = this.entity_config['labels_'+language]
             if (this.edit_case) {
-                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
                     this.foreign_entities = this.entity_config.edit.foreign_entities;
                     this.inline = this.entity_config.edit.inline;
                     this.bulk = this.entity_config.edit.bulk;
                 }
             } else {
-                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                this.form_template = _.template($('#' + this.entity_config.add_template_name).html());
                 if (this.entity_config.add) {
                     this.foreign_entities = this.entity_config.add.foreign_entities;
                     this.inline = this.entity_config.add.inline;
@@ -104,6 +111,8 @@ define([
             this.f_index = []; 
             //stores the dependency mapping between form elements
             this.source_dependents_map = {}; 
+            //stores maping between filters and their dependent elements
+            this.source_filter_dependent_map = {};
             //stores the mapping between foreign element and their entity
             this.element_entity_map = {}; 
             //stores whether a foreign element has been rendered
@@ -126,6 +135,7 @@ define([
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
+                    var filter_dependency = this.foreign_entities[f_entity][element]["filter_dependency"];
                     if (dependency)
                         this.num_sources[element] = dependency.length;
                     else
@@ -143,6 +153,21 @@ define([
                             }
                         });
                         console.log("source_dependents_map = " + JSON.stringify(this.source_dependents_map));
+                    }
+
+                    if (filter_dependency) {
+                        var f_ens = this.foreign_entities;
+                        var that = this;
+                        $.each(filter_dependency, function(index, dep) {
+                            var source_elm = dep.source_form_element;
+                            if (source_elm in that.source_filter_dependent_map)
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            else {
+                                that.source_filter_dependent_map[source_elm] = [];
+                                that.source_filter_dependent_map[source_elm].push(element);
+                            }
+                        });
+                        console.log("source_filter_dependent_map = " + JSON.stringify(this.source_filter_dependent_map)); 
                     }
 
                 }
@@ -183,7 +208,9 @@ define([
 
         afterRender: function() {
             var that = this;
-
+            
+            //rendering labels
+            this.render_labels();
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -207,6 +234,16 @@ define([
             this.initiate_form_widgets();
         },
 
+        render_labels: function(){
+            $f_el = this.$("#form_template_render");
+            $f_el.append(this.form_template(this.labels));
+            var partner_name = User.get('partner_name');
+            var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
+            if (partner_check < 0){
+                $f_el.find("#is_modelfarmer").addClass('hidden');
+            }
+        },
+        
         //fetches all foreign collections and renders them when all are fetched
         fetch_and_render_foreign_entities: function() {
             var for_entities_fetch_dfds = []
@@ -276,7 +313,9 @@ define([
         //render header, empty inlines if add case, fetch and render related inlines if edit case
         render_inlines: function() {
             var that = this;
-            this.$('#inline_header').html($('#' + this.inline.header).html());
+            var temp = _.template($('#' + this.inline.header).html());
+            $f_el = this.$('#inline_header');
+            $f_el.append(temp(this.labels));
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -328,7 +367,7 @@ define([
             // compile the template of inline
             var inline_t = _.template($('#' + this.inline.template).html());
             if (typeof(num_rows) != "number")
-                num_rows = 5;
+                num_rows = this.inline.add_row;
             var start_index = get_index_to_start_from();
             // append the new inlines
             for (var i = start_index; i < start_index + num_rows; i++) {
@@ -344,7 +383,7 @@ define([
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
                 if (!all_present_inlines.length)
-                    return 1
+                    return 0
                 var max_index = $(_.last(all_present_inlines)).attr("index");
                 return parseInt(max_index) + 1;
             }
@@ -398,6 +437,11 @@ define([
         // start listening to in-form events
         start_change_events: function() {
             for (element in this.source_dependents_map) {
+                console.log("creating changeevent for - " + element);
+                // put change-event listeners on source elements
+                this.$('[name=' + element + ']').change(this.render_dep_for_elements);
+            }
+            for (element in this.source_filter_dependent_map) {
                 console.log("creating changeevent for - " + element);
                 // put change-event listeners on source elements
                 this.$('[name=' + element + ']').change(this.render_dep_for_elements);
@@ -466,6 +510,11 @@ define([
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
+                var filtered_models = this.filter_dep_for_element(dep_el);
+                this.render_foreign_element(dep_el, filtered_models);
+            }, this);
+
+            _.each(this.source_filter_dependent_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
             }, this);
@@ -557,6 +606,61 @@ define([
             return filtered;
         },
 
+        filter_dependent_model_array: function(model_array, filter) {
+            if(model_array.length == 0) return model_array;
+            var that = this;
+            var source_form_element = filter['source_form_element'];
+            var source_curr_value = that.get_curr_value_of_element(source_form_element);
+            var dep_attr = filter['dep_attr'];
+            filtered = [];
+            if (!source_curr_value)
+                return;
+            else if (!(source_curr_value instanceof Array)) {
+                //if source is single select - convert its value to array -make it like a multiselect
+                var temp = source_curr_value;
+                source_curr_value = [];
+                source_curr_value.push(temp);
+            }
+            if(model_array[0].get(dep_attr) instanceof Array) {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                    $.each(model.get(filter.dep_attr), function(index, object) {
+                        if ($.inArray(String(object.id), source_curr_value) > -1)
+                            exists = true;
+                    });
+                    return exists;
+                });
+            } else {
+                model_array = model_array.filter(function(model) {
+                    var exists = false;
+                    var compare = null;
+                    if (typeof model.get(filter.dep_attr) == "object")
+                        compare = model.get(filter.dep_attr).id;
+                    else
+                        compare = model.get(filter.dep_attr);
+
+                    if (filter.src_attr && filter.src_attr != "id") {
+                        var s_collection = that.get_collection_of_element(source_form_element);
+                        var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                        if (s_model.get(filter.src_attr) instanceof Array) {
+                            //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                            $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                if (compare == src_compare.id)
+                                    exists = true;
+                            });
+                        }
+                        return exists;
+                    } else {
+                        if ($.inArray(String(compare), source_curr_value) > -1)
+                            exists = true;
+                        return exists;
+                    }
+                });
+            }
+            return model_array;
+        },
+
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
@@ -567,7 +671,12 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-
+            //for filtering based on dependent fields
+            if (f_entity_desc.filter_dependency)
+                for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
+                   model_array = this.filter_dependent_model_array(model_array, f_entity_desc.filter_dependency[i]);
+                }
+    
             if (f_entity_desc.expanded) {
                 // get the expanded template
                 var expanded_template = _.template($('#' + f_entity_desc.expanded.template).html());
@@ -620,13 +729,21 @@ define([
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info = "";
-                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail] != null) {
-                            extra_info = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_detail];
+                        var extra_info_group_name = "";
+                        var extra_info_person_id = "";
+                        var extra_info_father_name = "";
+                        if(f_json[f_entity_desc.name_field_father_name] != null){
+                            extra_info_father_name = f_json[f_entity_desc.name_field_father_name]
+                        }
+                        if (f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name] != null) {
+                            extra_info_group_name = f_json[f_entity_desc.name_field_extra_info][f_entity_desc.name_field_group_name];
+                        }
+                        if (f_json[f_entity_desc.name_field_person_id] != null) {
+                            extra_info_person_id = f_json[f_entity_desc.name_field_person_id]
                         }
                         $f_el.append(that.options_inner_template({
                             id: parseInt(f_json["id"]),
-                            name: f_json[f_entity_desc.name_field] + (extra_info != "" ? ' (' + extra_info + ')' : "")
+                            name: f_json[f_entity_desc.name_field] + (extra_info_father_name != "" ? ' (' + extra_info_father_name + ')' : "") + (extra_info_group_name != "" ? ' (' + extra_info_group_name + ')' : "") + (extra_info_person_id !="" ? ' (' + extra_info_person_id + ')' : "")
                         }));
                     }
                     else {

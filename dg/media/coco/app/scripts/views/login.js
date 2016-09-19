@@ -6,9 +6,12 @@ define([
     'layoutmanager',
     'models/user_model',
     'auth',
-	'offline_utils'
-], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline){
-    
+	  'offline_utils', 
+	  'configs',
+    'collections/upload_collection'
+
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline, all_configs, upload_collection){
+
     var LoginView = Backbone.Layout.extend({
       template: "#login",
       events:{
@@ -24,8 +27,14 @@ define([
       },
       
       serialize: function(){
+          var s_passed = {};
+          
+          // name of the entity bieng added/edited
+          
           // send the user info to the template
-          return User.toJSON();
+          s_passed["user"] = User.toJSON();
+          s_passed["configs"] = all_configs;
+          return s_passed;
       },
       
       scrap_view: function(){
@@ -61,24 +70,31 @@ define([
           this.set_login_button_state('loading');
           var username = this.$('#username').val();
           var password = this.$('#password').val();
+          var language = this.$('#language').val();
           var that = this;
           // use the auth module to authenticate
-          Auth.login(username, password)
-              .done(function(){
-                  //login successfull - route to the home view
-                  that.scrap_view();
-                  window.Router.navigate("", {
-                      trigger:true
+          if (language != ''){
+              Auth.login(username, password, language)
+                  .done(function(){
+                      //login successfull - route to the home view
+                      that.scrap_view();
+                      window.Router.navigate("", {
+                          trigger:true
+                      });
+                  })
+                  .fail(function(error){
+                      // authentication failed
+                      // clear the password
+    			      $("#password").val('');
+                      // show the error
+    				  that.$('#error_msg').html(error);
+                      that.set_login_button_state('reset');
                   });
-              })
-              .fail(function(error){
-                  // authentication failed
-                  // clear the password
-			      $("#password").val('');
-                  // show the error
-				  that.$('#error_msg').html(error);
-                  that.set_login_button_state('reset');
-              });
+          }
+          else{
+              that.$('#error_msg').html("Language not Selected");
+              that.set_login_button_state('reset');
+          }
       },
       
       // set state of login button - disable while authentication request is under process
@@ -91,13 +107,22 @@ define([
 	  
       // to login with different user - clear the offline db of existing user
 	  change_user: function(){
-		var val = confirm("Your current database will be deleted and a new database will be downloaded");
-		if (val==true){
-			Offline.reset_database();
-		}
-	  }
+      // check if user has unsynced data in upload queue
+      if(upload_collection.length > 0){
+        var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+        if (val == true) {
+            Offline.reset_database();
+        }    
+      }
+      else{
+    		var val = confirm("Your current database will be deleted and a new database will be downloaded");
+    		if (val==true){
+    			Offline.reset_database();
+    		}
+  	  }
+    }
       
-    });
+  });
     
   // Our module now returns our view
   return LoginView;
