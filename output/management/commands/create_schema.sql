@@ -162,6 +162,7 @@ CREATE TABLE `activities_screeningwisedata` (
   `video_id` INT(11),
   `video_title` VARCHAR(200) not null,
   `persongroup_id` INT(11),
+  `video_youtubeid` VARCHAR(20),
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -194,3 +195,21 @@ CREATE TABLE `people_animatorwisedata` (
 
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
+
+DROP TABLE IF EXISTS `village_partner_myisam`;
+CREATE TABLE `village_partner_myisam` (
+  `id` int(11) not null AUTO_INCREMENT,
+  `village_id` int unsigned DEFAULT NULL,
+  `block_id` int unsigned DEFAULT NULL,
+  `district_id` int unsigned DEFAULT NULL,
+  `state_id` int unsigned DEFAULT NULL,
+  `country_id` int unsigned DEFAULT NULL,
+  `partner_id` int unsigned DEFAULT NULL,
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE INDEX index2 ON village_partner_myisam(village_id,block_id,district_id,state_id,country_id,partner_id);
+CREATE INDEX index3 ON village_partner_myisam(village_id,partner_id);
+CREATE INDEX index4 ON village_partner_myisam(block_id,partner_id);
+CREATE INDEX index5 ON village_partner_myisam(district_id,partner_id);
+CREATE INDEX index6 ON village_partner_myisam(state_id,partner_id);
+CREATE INDEX index7 ON village_partner_myisam(country_id,partner_id);
