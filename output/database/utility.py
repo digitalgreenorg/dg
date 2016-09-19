@@ -27,7 +27,6 @@ def run_query(query_string, *query_args):
     rows = cursor.fetchall()
     for row in rows:
         return_list.append(dict(zip(col_names,row)))
-    print return_list
     return return_list
 
 #this returns

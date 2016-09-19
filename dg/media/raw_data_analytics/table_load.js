@@ -10,10 +10,6 @@ function table_load()
 	var keyset = Object.keys(json);
 	var interkeys = Object.keys(json[keyset[0]]);
 	var customTitle='rawdata_'
-	for(var key in json){
-		customTitle=customTitle + key + '_';
-		
-	}
 	var d = new Date();
 	customTitle= customTitle + d.getFullYear()+d.getMonth()+d.getDay()+'T'+d.getHours()+d.getMinutes();
 	for (var i=0; i<interkeys.length; i++){

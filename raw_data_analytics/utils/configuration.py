@@ -69,7 +69,6 @@ whereDictionary={
     'numVillageScreening':'activities_screeningwisedata.screening_date',
     'numBlockScreening':'activities_screeningwisedata.screening_date',
     'numBlockAdoption':'activities_personadoptpractice.date_of_adoption', 
-    'numBlockScreening':'activities_screeningwisedata.screening_date',
     'numVideoScreened':'activities_screeningwisedata.screening_date',
     'listVideoProduced':'production_date',
     'numVideoProduced':'production_date',
@@ -118,8 +117,8 @@ groupbyDictionary={
     'numAnimator':False,
     'numBlockScreening':False,
     'numVillageScreening':False,
-    'numBlock':False,   #TODO:
-    'numVillage':False, #TODO:
+    'numBlock':False,   
+    'numVillage':False, 
     'listPerson':'id',
     'listAnimator':'animator_id',
     'numVideoScreened':False,
@@ -235,7 +234,7 @@ orderDictionary = {
 }
 
 
-checkvalueSpecial =[
+checkValueSpecial =[
     'list',
     'numVillage',
     'numBlock'
