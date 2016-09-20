@@ -2808,7 +2808,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
             data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
@@ -2820,7 +2820,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
                     data_set[j][8] = payments_gaddidar_contribution[i]['amount'].toFixed(2);
-                    data_set[j][9] = (data_set[j][9] - payments_gaddidar_contribution[i]['amount']).toFixed(2);
+                    data_set[j][9] = (data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
                 }
             }
         }
