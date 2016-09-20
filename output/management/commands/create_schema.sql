@@ -196,15 +196,17 @@ CREATE TABLE `people_animatorwisedata` (
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
 
+-- Geographies-Partner Added for raw_data_analytics --
 DROP TABLE IF EXISTS `village_partner_myisam`;
 CREATE TABLE `village_partner_myisam` (
   `id` int(11) not null AUTO_INCREMENT,
-  `village_id` int unsigned DEFAULT NULL,
-  `block_id` int unsigned DEFAULT NULL,
-  `district_id` int unsigned DEFAULT NULL,
-  `state_id` int unsigned DEFAULT NULL,
-  `country_id` int unsigned DEFAULT NULL,
-  `partner_id` int unsigned DEFAULT NULL,
+  `village_id` int(11) DEFAULT NULL,
+  `block_id` int(11) DEFAULT NULL,
+  `district_id` int(11) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  `country_id` int(11) DEFAULT NULL,
+  `partner_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX index2 ON village_partner_myisam(village_id,block_id,district_id,state_id,country_id,partner_id);

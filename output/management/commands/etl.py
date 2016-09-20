@@ -42,6 +42,8 @@ class AnalyticsSync():
         
         #Fill Data
         try:
+            
+
             #screening_myisam
             self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -116,12 +118,13 @@ class AnalyticsSync():
                                         from people_animator A 
                                         join people_animatorassignedvillage B on A.id=B.animator_id""")
             print "Finished insert into people_animatorwisedata"
-
-            self.db_cursor.execute("""INSERT INTO village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,
-                                        country_id)
+            
+            #village_partner_myisam
+            self.db_cursor.execute("""INSERT INTO village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,country_id)
                                         SELECT distinct(pp.partner_id),gv.id ,gb.id ,gd.id ,gs.id ,gc.id
                                         FROM people_person pp INNER JOIN programs_partner ppa ON pp.partner_id = ppa.id INNER JOIN geographies_village gv ON pp.village_id = gv.id INNER JOIN geographies_block gb on gv.block_id = gb.id INNER JOIN geographies_district gd on gb.district_id=gd.id INNER JOIN geographies_state gs on gd.state_id =  gs.id INNER JOIN geographies_country gc on gs.country_id=gc.id""")
             print "Finished insert into village_partner_myisam"
+            
             # main_data_dst stores all the counts for every date , every village and every partner                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0,
                 tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
