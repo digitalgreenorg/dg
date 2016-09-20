@@ -19,7 +19,7 @@ var payments_data, outliers_data, outliers_transport_data, outlier_daily_data, p
 //GENERAL CONSTANTS
 var AGGREGATOR_INCENTIVE_PERCENTAGE = 0.25;
 var ENGLISH_LANGUAGE = "English";
-var REGIONAL_LANGUAGE = "Regional Language";
+var REGIONAL_LANGUAGE = "Regional";
 var HOME = "home";
 var PAYMENTS_PAGE = "payments";
 var ANALYTICS_PAGE = "analytics";
