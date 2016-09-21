@@ -1,80 +1,5 @@
 define([],
 function() {
-	var VideoContentApproval_configs = {
-		'page_header': 'Video Content Approval',
-        'config_English': 'Video Content Approval',
-		'add_template_name': 'video_content_approval_add_edit_template',
-        'edit_template_name': 'video_content_approval_add_edit_template',
-        'rest_api_url': '/qacoco/api/v1/VideoContentApproval/',
-        'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'}],
-        'entity_name': 'VideoContentApproval',
-        'inc_table_name': 'videocontentapproval',
-        'dashboard_display': {
-            listing: true,
-            add: true
-        },
-    
-        'foreign_entities':{
-            'video':{
-                "video":{
-                    'placeholder': 'id_video',
-                    'name_field': 'title'
-                },
-            },
-            'qareviewername':{
-            	"qareviewername":{
-            		'placeholder': 'id_qareviewername',
-            		'name_field': 'name'
-
-            	},
-            },
-            'nonnegotiable': {
-                "nonnegotiable":{
-                        dependency: [{
-                            'source_form_element': 'video',
-                            'dep_attr': 'video'
-                        }],
-                        id_field: "id",
-                        'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
-                            template: 'nn_template',
-                            placeholder: 'nns_verification',
-                            extra_fields: ["physically_verifiable"]
-                        }
-                }
-            }     
-        },
-
-        'form_field_validation': {
-            ignore: [],
-            rules: {
-                qareviewername: "required",
-                video: "required"    
-            },
-            messages: {
-                video: "Video name is required",
-                qareviewername: "Reviewer name is required"      
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element)
-                    .parent('div')
-                    .parent('div')
-                    .addClass("error");
-
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element)
-                    .parent('div')
-                    .parent('div')
-                    .removeClass("error");
-            },
-            errorElement: "span",
-            errorClass: "help-inline red-color",
-            errorPlacement: function(label, element) {
-                element.parent().append(label);
-            }
-        }
-    };
 
     var VideoQualityReview_configs = {
         'page_header': 'Video Quality Review',
@@ -531,7 +456,6 @@ function() {
         }
     };
     return {
-        VideoContentApproval : VideoContentApproval_configs,
         VideoQualityReview   : VideoQualityReview_configs,
         DisseminationQuality : DisseminationQuality_configs,
         AdoptionVerification : AdoptionVerification_configs,

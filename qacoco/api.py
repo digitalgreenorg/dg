@@ -9,11 +9,11 @@ from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
 
-from qacoco.models import QACocoUser, VideoContentApproval, QAReviewerCategory, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName, AdoptionNonNegotiableVerfication
+from qacoco.models import QACocoUser, QAReviewerCategory, VideoQualityReview, DisseminationQuality, AdoptionVerification, QAReviewerName, AdoptionNonNegotiableVerfication
 from geographies.models import Block, Village, State,District
 from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
 from videos.models import Video, Category, SubCategory, NonNegotiable
-from qacoco.forms import VideoContentApprovalForm, VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
+from qacoco.forms import VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
 from people.models import Animator, Person, PersonGroup
 
 class AdoptionVerificationNotSaved(Exception):
@@ -303,36 +303,6 @@ class NonNegotiableResource(BaseResource):
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
 
-class VideoContentApprovalResource(BaseResource):
-        video = fields.ForeignKey(VideoResource, 'video')
-        qareviewername = fields.ForeignKey(QAReviewerNameResource, 'qareviewername')
-        class Meta:
-                queryset = VideoContentApproval.objects.all()
-                always_return_data = True
-                resource_name = 'VideoContentApproval'
-                authorization = Authorization()
-                authentication = SessionAuthentication()
-                validation = ModelFormValidation(form_class=VideoContentApprovalForm)
-        
-        def get_list(self, request, **kwargs):
-            resp = super(VideoContentApprovalResource, self).get_list(request, **kwargs)
-            import json
-            from django.http import HttpResponse
-            data = json.loads(resp.content)
-            all_nonnego = NonNegotiable.objects.all()
-            for entry in data['objects']:
-                #print entry
-                video_id = entry['video']['id']
-                video_non_nego = all_nonnego.filter(video_id=video_id).values('non_negotiable', 'physically_verifiable','id')
-                entry['nonnegotiable'] = list(video_non_nego)
-            data = json.dumps(data)
-            return HttpResponse(data, content_type='application/json', status=200)
-
-
-        dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
-        hydrate_video = partial(dict_to_foreign_uri, field_name ='video')
-        dehydrate_qareviewername = partial(foreign_key_to_id, field_name = 'qareviewername', sub_field_names=['id','name'])
-        hydrate_qareviewername = partial(dict_to_foreign_uri, field_name ='qareviewername')
 
 class VideoQualityReviewResource(BaseResource):
         video = fields.ForeignKey(VideoResource, 'video')

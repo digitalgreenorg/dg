@@ -13,17 +13,13 @@ from django.forms import TextInput, Textarea
 
 from videos.models import Video
 from geographies.models import District, Block, State
-from models import QACocoUser, QAReviewerCategory, QAReviewerName, VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
+from models import QACocoUser, QAReviewerCategory, QAReviewerName, VideoQualityReview, DisseminationQuality, AdoptionVerification
 from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
     list_display = ('user', 'partner', 'get_districts')
     search_fields = ['user__username']
-
-class VideoContentApprovalAdmin(admin.ModelAdmin):
-    list_display = ('video', 'qareviewername')
-    search_fields = ['video']
 
 class VideoQualityReviewAdmin(admin.ModelAdmin):
     list_display=('video','qareviewername', 'total_score', 'video_grade')

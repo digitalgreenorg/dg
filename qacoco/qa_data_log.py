@@ -26,14 +26,14 @@ def save_log(sender, **kwargs ):
     
     model_id = instance.id
 
-    if sender in ['VideoContentApproval', 'VideoQualityReview']:
+    if sender in ['VideoQualityReview']:
         district_id = instance.video.village.block.district_id
     elif sender in ['DisseminationQuality', 'AdoptionVerification']:
         district_id = instance.village.block.district_id
     else:
         district_id = None
 
-    if sender in ['VideoContentApproval', 'VideoQualityReview']:
+    if sender in ['VideoQualityReview']:
         partner_id = instance.video.partner_id
     elif sender in ['DisseminationQuality', 'AdoptionVerification']:
         partner_id = instance.mediator.partner_id

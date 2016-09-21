@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 from base_models import QACocoModel
-from models import VideoContentApproval, VideoQualityReview, DisseminationQuality, AdoptionVerification
+from models import VideoQualityReview, DisseminationQuality, AdoptionVerification
 
 from geographies.models import District
 from videos.models import Video, Category, SubCategory, NonNegotiable
@@ -59,11 +59,6 @@ class QACocoModelForm(ModelForm):
     class Meta:
         model = QACocoModel
         exclude = ('user_modified',)
-
-class VideoContentApprovalForm(QACocoModelForm):
-    class Meta:
-        model = VideoContentApproval
-        exclude = ()
 
 class VideoQualityReviewForm(QACocoModelForm):
     class Meta:
