@@ -2785,7 +2785,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < gaddidar_contribution_data_length; i++) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < gaddidar_data_set.length; j++) {
-                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
+                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 &&
+                    gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
                     gaddidar_data_set[j][4] = payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2);
                     gaddidar_data_set[j][5] = payments_gaddidar_contribution[i]['amount'].toFixed(2);
                 }
@@ -2819,8 +2820,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
-                    data_set[j][8] = payments_gaddidar_contribution[i]['amount'].toFixed(2);
+                    data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
                     data_set[j][9] = (data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
+                    break;
                 }
             }
         }
