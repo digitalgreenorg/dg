@@ -8,7 +8,7 @@ function() {
         'edit_template_name': 'Video_Quality_Review_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/VideoQualityReview/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'},{'header':'Approved for Dissemination','element':'approval'}],
+        'list_elements_English': [{'header':'Video Id','element':'video.id'}, {'header':'Title','element':'video.title'},{'header':'1','element':'storystructure'},{'header':'2','element':'framing'},{'header':'3','element':'continuity'},{'header':'4','element':'camera_angles'},{'header':'5','element':'camera_movement'},{'header':'6','element':'light'},{'header':'7','element':'audio_sound'},{'header':'8','element':'interview'},{'header':'9','element':'technical'},{'header':'10','element':'style_guide'},{'header':'Total Score','element':'total_score'},{'header':'Video Grade','element':'video_grade'}],
         'entity_name': 'VideoQualityReview',
         'inc_table_name': 'videoqualityreview',
         'dashboard_display': {
@@ -72,7 +72,7 @@ function() {
         'edit_template_name': 'Dissemination_Quality_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/DisseminationQuality/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Video','element':'video.title'},{'header':'Date','element':'date'}, {'header':'Total Score','element':'total_score'},{'header':'Dissemination Grade','element':'video_grade'}],
+        'list_elements_English': [{'header':'Block','element':'block.block_name'}, {'header':'Village','element':'village.village_name'},{'header':'Mediator','element':'mediator.name'},{'header':'1','element':'equipments_setup_handling'},{'header':'2','element':'context_setting'},{'header':'3','element':'introduce_topic'},{'header':'4','element':'paused_video'},{'header':'5','element':'encouraged_adoption'},{'header':'6','element':'summarized_video'},{'header':'7','element':'subject_knowledge'},{'header':'8','element':'filled_dissemination'}, {'header':'Total Score','element':'total_score'},{'header':'Diss. Grade','element':'video_grade'}],
         'entity_name': 'DisseminationQuality',
         'inc_table_name': 'disseminationquality',
         'dashboard_display': {
@@ -167,7 +167,7 @@ function() {
         'edit_template_name': 'Adoption_Verification_add_edit_template',
         'rest_api_url': '/qacoco/api/v1/AdoptionVerification/',
         'labels_English': {add_row:"Add Empty Rows"},
-        'list_elements_English': [{'header':'Person','element':'person.person_name'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Video','element':'video.title'},{'header':'Village','element':'village.village_name'},{'header':'Block','element':'block.block_name'}],
+        'list_elements_English': [{'header':'Block','element':'block.block_name'}, {'header':'Village','element':'village.village_name'}, {'header':'Mediator','element':'mediator.name'}, {'header':'Person','element':'person.person_name'},{'header':'Reviewer','element':'qareviewername.name'},{'header':'Video','element':'video.title'}],
         'entity_name': 'AdoptionVerification',
         'inc_table_name': 'adoptionverification',
         'dashboard_display': {
