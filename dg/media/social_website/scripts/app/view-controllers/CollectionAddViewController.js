@@ -135,7 +135,6 @@ define(function(require) {
             var videos_collection = references.$videoDropDownContainer.data('videos');
             var a;
             for (a in videos_collection){
-                console.log(videos_collection[a]);
                 references.$vidList.val(videos_collection[a]).change();
             }
             
@@ -293,7 +292,6 @@ define(function(require) {
         
         _onDropDownChosen: function(){
         	var references = this._references;
-        	
         	if( references.$partnerList.val()!="" && references.$countryList.val()!="" && references.$stateList.val()!="" && references.$langList.val()!=""){
         		references.videodataFeed.addInputParam('limit', false, 0);
         		references.videodataFeed.setInputParam('limit', 0, false);

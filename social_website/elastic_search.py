@@ -126,6 +126,7 @@ def get_collections_from_elasticsearch(request):
                   },
         "size" : MAX_RESULT_SIZE
         }
+
     result_list = []
     try :
         query = json.dumps(q)
@@ -141,7 +142,6 @@ def get_collections_from_elasticsearch(request):
             resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": "1"},"objects": [{'Message': 'No Collections Found', 'error': "1"}], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
-        print ex
         return HttpResponse(str(ex))
     
 def searchCompletions(request):
