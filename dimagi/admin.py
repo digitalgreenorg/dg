@@ -8,15 +8,15 @@ class CommCareProjectAdmin(admin.ModelAdmin):
     fieldsets = [(None,  {'fields': ['name', 'group_name', 'group_id']
                           }
                   )]
-    list_display = ('name',)
+    list_display = ('name', 'group_name')
     search_fields = ['name']
 
 
 class CommCareUserAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['project', 'coco_user']
+    fieldsets = [(None,  {'fields': ['username', 'guid', 'coco_user', 'project', 'mediator']
                           }
                   )]
-    list_display = ('username', 'project', 'guid')
+    list_display = ('username', 'coco_user', 'project', 'mediator')
     search_fields = ['username']
 
 

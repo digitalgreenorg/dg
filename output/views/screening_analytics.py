@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.db.models import Count, Min, Max
 from django.http import Http404, HttpResponse
 import datetime,json
-from output.database.SQL  import screening_analytics_sql, shared_sql
+from output.database.SQL import screening_analytics_sql, shared_sql
 from output import views
 from output.views.common import get_geog_id
 from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
@@ -48,15 +48,15 @@ def screening_tot_lines(request):
     return_val = []
     for row in rows:
         if row[-1] == 0:
-            return_val.append([str(row[0])] + [0.0, 0.0, 0.0, 0.0]) #when total screening = 0. Division by zero will raise exception
+            return_val.append([str(row[0])] + [0.0, 0.0]) #when total screening = 0. Division by zero will raise exception
         else:
             return_val.append([str(row[0])] + map(lambda x: round(x/row[-1], 2), list(row)[1:-1])) #dividing by tot_screening to average out
 
-    return_val.insert(0,["Date","Total Attendance","Total Expressed Interest","Total Expressed Adoption","Total Expressed Question"])
+    return_val.insert(0,["Date","Total Attendance","Total Expressed Question"])
     if(return_val):
         return HttpResponse(json.dumps(return_val))
 
-    return HttpResponse(';;;;')
+    return HttpResponse(';;')
 
 def screening_percent_lines(request):
     geog, id = get_geog_id(request);
@@ -66,20 +66,21 @@ def screening_percent_lines(request):
     return_val = []
     for row in rows:
         if row['tot_exp_att'] == 0:
-            rel_att = rel_exp_ado = 0
+            rel_att = 0
         else:
             rel_att = (row['tot_per'] * 100)/row['tot_exp_att']
-            rel_exp_ado = (row['tot_ado'] * 100)/row['tot_exp_att']
         if row['tot_per'] == 0:
-            rel_exp_int = rel_exp_ques = 0
+            rel_exp_ques = 0
         else:
-            rel_exp_int = (row['tot_int'] * 100)/row['tot_per']
             rel_exp_ques = (row['tot_que'] * 100)/row['tot_per']
-        return_val.append([str(row['date'])]+ map(lambda x: round(x, 2) ,[rel_att, rel_exp_int, rel_exp_ado, rel_exp_ques]))
+        return_val.append([str(row['date'])]+ map(lambda x: round(x, 2) ,[rel_att, rel_exp_ques]))
 
-    return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
+    return_val.insert(0,["Date","Relative Attendance","Relative Expressed Question"])
     
-    return HttpResponse(json.dumps(return_val))
+    if(return_val):
+        return HttpResponse(json.dumps(return_val))
+
+    return HttpResponse(';;')
 
 def screening_per_day_line(request):
     geog, id = get_geog_id(request);
@@ -197,7 +198,7 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
         else:
             from_date = run_query_raw(shared_sql.get_start_date(geog, id))[0][0]
             if not from_date:
-                from_date = run_query_raw(shared_sql.caculate_start_date(geog, id))[0][0]
+                from_date = run_query_raw(shared_sql.calculate_start_date(geog, id))[0][0]
             if not from_date:
                 from_date = datetime.date.today()
             tot_days = (datetime.date.today() - from_date).days + 1

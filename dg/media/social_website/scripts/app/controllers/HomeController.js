@@ -73,6 +73,14 @@ define(function(require) {
             
             // play button 
             references.$playButton = jQuery('.play-button');
+
+            // awards ticker
+            references.$awardsTicker = jQuery('.js-awards-ticker');
+            references.$awardsTickerLeftArrow =jQuery('.js-awards-left-arrow');
+            references.$awardsTickerRightArrow =jQuery('.js-awards-right-arrow');
+            references.$awardsElements = jQuery('.js-description');
+            references.$investorTicker = jQuery('.js-investor-ticker');
+
         },
 
         _initEvents: function() {
@@ -89,6 +97,19 @@ define(function(require) {
             
             boundFunctions.onPlayButtonClick = this._onVideoPlayButtonClick.bind(this);
             references.$playButton.on('click', boundFunctions.onPlayButtonClick);
+
+            boundFunctions.onAwardsLeftClick = this._onAwardsLeftClick.bind(this);
+            references.$awardsTickerLeftArrow.on('click', boundFunctions.onAwardsLeftClick)
+
+            boundFunctions.onAwardsRightClick = this._onAwardsRightClick.bind(this);
+            references.$awardsTickerRightArrow.on('click', boundFunctions.onAwardsRightClick)
+
+            boundFunctions.onAwardsElementClick = this._onAwardsElementClick.bind(this);
+            references.$awardsElements.on('click', boundFunctions.onAwardsElementClick);
+
+            //boundFunctions.playInvestorTicker = this._playInvestorTicker.bind(this);
+            //references.$investorTicker.on('load', boundFunctions.playInvestorTicker);
+            this._playInvestorTicker();
         },
 
         _onOrderChanged: function(orderCriteria) {
@@ -122,7 +143,7 @@ define(function(require) {
             		    };
             
             swfobject.embedSWF(
-                'http://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
+                'https://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
                 'player',
                 '1024',
                 '424',
@@ -165,6 +186,56 @@ define(function(require) {
         
         _onVideoPlayButtonClick: function(e) {
         	this._initVideoPlayer();
+        },
+
+        _onAwardsLeftClick: function(e){
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                var lastChild = that._references.$awardsTicker.children().last();
+                that._references.$awardsTicker.prepend(lastChild);
+                that._references.$awardsTicker.css({'left': '-'+width+'px'});
+                that._references.$awardsTicker.animate({left: '+'+0+'px'},400,'swing', function(){
+                    $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
+                });
+        },
+
+        _onAwardsRightClick: function(e){
+            var that=this
+                var width = that._references.$awardsTicker.children().first().width() + 16; // compensate for margins
+                that._references.$awardsTicker.animate({left:'-'+width+'px'},400,'swing', function(){
+                    that._references.$awardsTicker.append(that._references.$awardsTicker.children().first());
+                    that._references.$awardsTicker.css({'left':'0px'});
+                    $('.js-awards-description-show').removeClass('js-awards-description-show');
+                    var data = that._references.$awardsTicker.children().first().attr('data');
+                    $('.js-awards-description').each(function(index, element) {
+                        if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+                    });
+                });
+        },
+
+        _onAwardsElementClick: function(e){
+            var element = e.currentTarget;
+            var data = element.getAttribute('data');
+            $('.js-awards-description-show').removeClass('js-awards-description-show');
+            $('.js-awards-description').each(function(index, element) {
+                if($(this).attr('data') == data) $(this).addClass('js-awards-description-show');
+            });
+        },
+
+        _playInvestorTicker: function(){
+            var that=this;
+            console.log("here");
+            setInterval(function(){
+                var width = that._references.$investorTicker.children().first().width() + 26; // compensate for margins
+                that._references.$investorTicker.animate({left:'-'+width+'px'},3000,'linear', function() {
+                    that._references.$investorTicker.append(that._references.$investorTicker.children().first());
+                    that._references.$investorTicker.css({'left':'0px'});
+                });
+            }, 3000);
         },
 
         /**

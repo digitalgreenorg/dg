@@ -10,17 +10,18 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
+from coco.base_models import NONNEGOTIABLE_OPTION
 
-
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, AdoptionCheckComment
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-
+from videos.models import  NonNegotiable
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
     class Meta:
         model = PersonMeetingAttendance
+        exclude = ()
 
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
@@ -46,40 +47,58 @@ class ScreeningForm(forms.ModelForm):
     #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroup.objects.none())
     #animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
     animator = forms.ModelChoiceField(Animator.objects)
-
+    #screening_grade = forms.ChoiceField(widget=forms.RadioSelect(), choices=SCREENING_GRADE)
     #farmers_groups_targeted = forms.ModelChoiceField(PersonGroup.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
-
 
     class Meta:
         model = Screening
+        exclude = ()
 
 class ScreeningAdmin(admin.ModelAdmin):
-    inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
-    list_display = ('date', 'location')
-    search_fields = ['village__village_name']
-    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened',)
+    list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade', 'observer')
+    search_fields = ['user_created__username', 'id', 'village__village_name', 'partner__partner_name','animator__name', 'videoes_screened__title', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name']
+    raw_id_fields = ('village', 'animator', 'farmer_groups_targeted', 'videoes_screened')
+    list_filter = ('date', 'observation_status', 'screening_grade', 'village__block__district__state__state_name',  'partner__partner_name', 'observer')
+    list_editable = ('observation_status', 'screening_grade', 'observer')
+    class Media:
+        js = (
+                settings.STATIC_URL + "js/qa_screening.js",
+        )
+
+class NonNegotiablesInline(admin.TabularInline):
+    model =  NonNegotiable
+    raw_id_fields = ("video",)
+    extra = 10
 
 
 class VideoAdmin(admin.ModelAdmin):
+    inlines = [NonNegotiablesInline,]
     fieldsets = [
-                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','summary', 'partner', 'related_practice']}),
-                (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
-                ('Review', {'fields': ['approval_date','video_suitable_for','youtubeid']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice']}),
+                (None,{'fields':['village','production_team']}),
+                ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
-    list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
-    search_fields = ['title', 'village__village_name']
-    raw_id_fields = ('village', 'facilitator', 'cameraoperator', 'farmers_shown', 'related_practice')
-
+    list_display = ('id', 'title', 'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
+    search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
+    list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
+    list_editable = ('review_status', 'video_grade', 'reviewer')
+    raw_id_fields = ('village', 'production_team', 'related_practice')
+    class Media:
+        js = (
+                settings.STATIC_URL + "js/qa_video.js",
+        )
 
 class AnimatorAssignedVillages(admin.StackedInline):
     model = AnimatorAssignedVillage
 
+
 class AnimatorAdmin(admin.ModelAdmin):
-    fields = ('name','gender','phone_no','partner','district')
+    fields = ('name','gender','phone_no','partner','district','role')
     inlines = [AnimatorAssignedVillages]
-    list_display = ('name', 'partner', 'district',)
-    search_fields = ['name', 'partner__partner_name']
+    list_display = ('name', 'partner', 'district', 'role',)
+    search_fields = ['name', 'partner__partner_name', 'role',]
+    
 
 class PersonGroupInline(admin.TabularInline):
     model = PersonGroup
@@ -104,6 +123,7 @@ class PersonInline(admin.TabularInline):
 class PersonGroupForm(forms.ModelForm):
     class Meta:
         model = PersonGroup
+        exclude = ()
 
     class Media:
         js = (
@@ -136,32 +156,27 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
-class AdoptionCheckCommentInline(admin.StackedInline):
-    model = AdoptionCheckComment
-    extra = 1
-
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':40})},
+        models.CharField: {'widget': forms.CheckboxSelectMultiple(choices=NONNEGOTIABLE_OPTION)},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
-    inlines = [AdoptionCheckCommentInline]
-    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status')
-    list_editable = ('verification_status',)
-    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name')
-    search_fields = ['id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
+    list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check', 'verified_by')
+    list_editable = ('verification_status','non_negotiable_check', 'verified_by')
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name', 'verified_by')
+    search_fields = ['user_created__username', 'id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
     class Media:
         js = (
-                settings.STATIC_URL + "js/qaverification.js",
+                settings.STATIC_URL + "js/qa_verification.js",
         )
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__')
+    list_display = ('id', '__unicode__', 'partner', 'is_modelfarmer')
     search_fields = ['person_name','village__village_name','group__group_name']
-
+    raw_id_fields = ('village','group')
 
 class BlockAdmin(admin.ModelAdmin):
     list_display = ('block_name', 'district')
@@ -174,6 +189,14 @@ class DistrictAdmin(admin.ModelAdmin):
 class StateAdmin(admin.ModelAdmin):
     list_display = ('state_name',)
     search_fields = ['state_name', 'country__country_name']
+
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('subcategory_name', 'category')
+    search_fields = ['subcategory_name', 'category__category_name']
+
+class VideoPracticeAdmin(admin.ModelAdmin):
+    list_display = ('videopractice_name', 'subcategory')
+    search_fields = ['videopractice_name', 'subcategory__subcategory_name']
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
@@ -198,4 +221,3 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
     search_fields = ['user__username']
-

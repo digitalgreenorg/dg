@@ -9,7 +9,7 @@
 
 {% block videobreadcrums %}
 	<a href='/analytics/video_search'>Search Videos</a> / 
-	<span style="font-weight: bold;"> Video Page</span>			
+	<span style="font-weight: bold;">Video Page</span>			
 {% endblock videobreadcrums %}	
 
 {% block title %} DigitalGreen - Video Page{% endblock title%}
@@ -46,7 +46,7 @@
 				</div>				
 				{% endif %}
 				<div id='videodatadiv0'>
-					<span class='smallfont'>{{vid.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_end_date|date:"d M Y" }} </span>
+					<span class='smallfont'>{{vid.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.production_date|date:"d M Y" }} </span>
 				</div>
 				
 				<table id='videodatadiv1' cellspacing='0px' cellpadding='0'>
@@ -122,22 +122,15 @@
 										var villagename = "{{vid.village.village_name}}";
 										var distname = "{{vid.village.block.district.district_name}}";
 										var statename = "{{vid.village.block.district.state.state_name}}";
-										var prodtime = "{{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}}";
-										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";
-										var farmerquant = "Farmer" + "{{actors.tot_actors|pluralize}}";
-										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}";	
+										var proddate = "{{ vid.production_date|date:"d M Y" }}";
 										var practiceshown = "{{vid.related_practice.practice_name|default:'NA'}}";
-										var summary = "{{vid.summary|escapejs}}"; 	
-										displaynumstat(farmerquant,languagename,villagename,distname,statename,prodtime,prodenddate,farmeractor,practiceshown,summary);	
-																																					
+										var summary = "{{vid.benefit}}";
+										displaynumstat(languagename, villagename, distname, statename, proddate, practiceshown, summary);
 									}								
 								</script>
 								
 								<div id='videodatadiv2divdesctop'></div>	
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
-									<tr>
-										<td class='videoinfotd1span' colspan='2'> Featuring: {% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}      </td>										
-									</tr>
 									<tr>
 										<td class='videoinfotd1span' colspan='2'> Practices Shown: {{vid.related_practice.practice_name|default:'NA'}}</td>
 									</tr>
@@ -150,17 +143,8 @@
 										<td class='videoinfotd2'> State: {{vid.village.block.district.state.state_name}} </td>
 									</tr>
 									<tr>
-
-										<td class='videoinfotd1'> Production Duration: {{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}} </td>
-
-										<td class='videoinfotd2'> Produced On: {{ vid.video_production_end_date|date:"d M Y" }} </td>
-									</tr>
-									<tr>
-
-										<td class='videoinfotd1'> Camera Operator: {{vid.cameraoperator.name}} </td>
-
-										<td class='videoinfotd2'> Facilitator: {{vid.facilitator.name}} </td>
-									</tr>																		
+										<td class='videoinfotd1'> Produced On: {{vid.production_date|date:"d M Y"}} </td>
+									</tr>																	
 								</table>															
 							</div>													
 						</td>
@@ -208,16 +192,10 @@
 									{% for que in ques %}									 
 										<tr class="{% cycle row1,row2 %}">
 											<td id='questiontabletd1'>	
-												{{que.1.person__person_name.upper}} &nbsp;|&nbsp; {{que.1.screening__date|date:"d M Y"}}																		
+												{{que.1.animator__name.upper}} &nbsp;|&nbsp; {{que.1.date|date:"d M Y"}}																		
 											</td>
 											<td id='questiontabletd2' rowspan='2'>												
-												{{que.1.expressed_question}}																					
-											</td>
-										</tr>
-										<tr class="{% cycle row1,row2 %}">
-											<td id='questiontabletd1'>																								
-												<span class='smallfont'> {{que.1.person__village__block__district__district_name}}, {{que.1.person__village__block__district__state__state_name}} </span>
-																									
+												{{que.1.text}}																					
 											</td>
 										</tr>
 										<tr class="{% cycle row1,row2 %}">
@@ -284,7 +262,6 @@
 					}
     		});
     	}
-
     </script>
     
 {% endblock videobodycontent%}

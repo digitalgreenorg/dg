@@ -164,7 +164,7 @@ def get_villages_with_images(request):
 def get_videos_produced(request):
     village_id = int(request.GET['village_id'])
     #return title, duration, youtube thumbnail, production date, viewers, adoptions
-    vids_details = Video.objects.filter(village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'video_production_end_date').annotate(adoptions=Count('personadoptpractice'))
+    vids_details = Video.objects.filter(village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'production_date').annotate(adoptions=Count('personadoptpractice'))
     videos_produced_stats = []
     for obj in vids_details:
         videos_produced_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 'productiondate':obj[3], 'adopters': obj[4]})
@@ -183,7 +183,7 @@ def get_village_page(request):
     left_panel_stats = {}
     farmerbook_farmers = Person.farmerbook_objects.all().values_list('id', flat=True)
     tot_farmers = PersonMeetingAttendance.objects.filter(person__village__id = village_id).values_list('person', flat = True).distinct().count()
-    print tot_farmers
+    # print tot_farmers
     if tot_farmers:
         left_panel_stats['tot_farmers'] = tot_farmers
     else:
@@ -204,33 +204,33 @@ def get_village_page(request):
 
     #rightpanel top contents
     vids_details = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id','title', 'youtubeid')
-    print vids_details
+    # print vids_details
     vids_id = set(i[0] for i in vids_details)
     left_panel_stats['tot_videos'] = len(vids_id)
     vid_adoptions = PersonAdoptPractice.objects.filter(person__village__id = village_id).values('video__id').annotate(
                                         num_of_adoptions = Count('id')).values_list('video__id', 'num_of_adoptions')
-    pma = PersonMeetingAttendance.objects.filter(screening__village__id = village_id).values_list('screening__videoes_screened__id','interested', 'expressed_question')   
+    scr = Screening.objects.filter(village__id = village_id).values_list('videoes_screened__id', 'questions_asked')
+    #pma = PersonMeetingAttendance.objects.filter(screening__village__id = village_id).values_list('screening__videoes_screened__id')   
     vid_scr_atten = Screening.objects.filter(village__id = village_id).values('videoes_screened').annotate(num_scr = Count('id', distinct=True),
                                                                                                          atten=Count('farmers_attendance'),
                                                                                                          last_seen_date = Max('date'))
     question_count = 0
     vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
-    for l, m, n in pma:
-        if(m):
+    for l, m in scr:
+        if(m != ""):
             vids_stats_dict[l][0] += 1
-        if(n != ""):
-            vids_stats_dict[l][1] += 1
             question_count += 1
     left_panel_stats['tot_questions'] = question_count
+
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     for vid_id in vid_scr_atten:
-        vids_stats_dict[vid_id['videoes_screened']][3] =  vid_id['atten']
-        vids_stats_dict[vid_id['videoes_screened']][4] =  vid_id['num_scr']
-        vids_stats_dict[vid_id['videoes_screened']][5] =  vid_id['last_seen_date']
+        vids_stats_dict[vid_id['videoes_screened']][2] =  vid_id['atten']
+        vids_stats_dict[vid_id['videoes_screened']][3] =  vid_id['num_scr']
+        vids_stats_dict[vid_id['videoes_screened']][4] =  vid_id['last_seen_date']
     
     total_adopt = 0
     for vid_id,num_adopt in vid_adoptions:
-        vids_stats_dict[vid_id][2] = num_adopt
+        vids_stats_dict[vid_id][1] = num_adopt
         total_adopt = total_adopt + num_adopt
         
     left_panel_stats['tot_adoptions'] = total_adopt
@@ -247,8 +247,8 @@ def get_village_page(request):
     for obj in vids_details:
         stat_text = make_text_from_stats(obj,vids_stats_dict)
         videos_watched_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 
-                                     'adopters':vids_stats_dict[obj[0]][2],'interested':vids_stats_dict[obj[0]][0], 'last_seen_date':vids_stats_dict[obj[0]][5], 
-                                     'questioners': vids_stats_dict[obj[0]][1], 'atten':vids_stats_dict[obj[0]][3], 'disseminations': vids_stats_dict[obj[0]][4],
+                                     'adopters':vids_stats_dict[obj[0]][1], 'last_seen_date':vids_stats_dict[obj[0]][4], 
+                                     'questioners': vids_stats_dict[obj[0]][0], 'atten':vids_stats_dict[obj[0]][2], 'disseminations': vids_stats_dict[obj[0]][3],
                                      'fulltext': stat_text})
     sorted_list = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     #right panel bottom contents. Leader boards of related villages
@@ -300,8 +300,7 @@ def get_person_page(request):
         adoption_rate = 0
     left_panel_stats['views_adoptions'] = [person_views, person_adoptions, adoption_rate]
     left_panel_stats['videos_watched'] = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().count()
-    left_panel_stats['questions_asked'] = PersonMeetingAttendance.objects.filter(person__id = person_id).exclude(expressed_question = '').count()
-    left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__id = person_id).distinct().count()
+    left_panel_stats['questions_asked'] = Screening.objects.filter(personmeetingattendance__person__id = person_id).exclude(questions_asked = '').count()
     left_panel_stats['partner'] = Partner.objects.filter(person__id = person_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
     #For FBConnect to check if user already subscribed to the farmer
@@ -316,32 +315,31 @@ def get_person_page(request):
     vids_id = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().values_list('id', flat = True)
     vids_id = list(vids_id)
     
-    pma = PersonMeetingAttendance.objects.filter(person__id = person_id).values_list('screening__videoes_screened__id',
-                                                                                           'interested', 
-                                                                                           'expressed_question')   
+    # pma = PersonMeetingAttendance.objects.filter(person__id = person_id).values_list('screening__videoes_screened__id',
+    #                                                                                        'interested', 
+    #                                                                                        'expressed_question')   
+    scr = Screening.objects.filter(personmeetingattendance__person__id = person_id).values_list('videoes_screened__id', 'questions_asked')
     vids_details = Video.objects.filter(id__in = vids_id).values_list('id', 'title', 'youtubeid')
     farmer_att = Screening.objects.filter(personmeetingattendance__person__id = person_id).values('videoes_screened__id').annotate(screening_per_vid = Count('id', distinct=True),
                                                                                                          fcount=Count('farmers_attendance__id'),
                                                                                                          last_seen_date = Max('date'))
     vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
     
-    for id,interest,question in pma:
-        if(interest):
-            vids_stats_dict[id][0] += 1
+    for id, question in scr:
         if(question != ""):
-            vids_stats_dict[id][1] = question
+            vids_stats_dict[id][0] = question
       
     if person_adoptions == None:
         per_vid_adoption = []
     else:    
         per_vid_adoption = PersonAdoptPractice.objects.filter(person__id = person_id).values('video__id').annotate(adopt_count=Count('id'))
     for vid_id in per_vid_adoption:
-        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        vids_stats_dict[vid_id['video__id']][1] = vid_id['adopt_count']
         
     for vid_id in farmer_att:
-        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['fcount']
-        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['screening_per_vid']
-        vids_stats_dict[vid_id['videoes_screened__id']][5] =  vid_id['last_seen_date']
+        vids_stats_dict[vid_id['videoes_screened__id']][2] =  vid_id['fcount']
+        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['screening_per_vid']
+        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['last_seen_date']
         
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
@@ -350,12 +348,11 @@ def get_person_page(request):
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
-                                    'adopted':vids_stats_dict[obj[0]][2],
-                                    'interested':vids_stats_dict[obj[0]][0], 
-                                    'last_seen_date':vids_stats_dict[obj[0]][5], 
-                                    'question': vids_stats_dict[obj[0]][1],
-                                    'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'adopted':vids_stats_dict[obj[0]][1], 
+                                    'last_seen_date':vids_stats_dict[obj[0]][4], 
+                                    'question': vids_stats_dict[obj[0]][0],
+                                    'farmers_attended': vids_stats_dict[obj[0]][2],
+                                    'screenings':vids_stats_dict[obj[0]][3],
                                     'fulltext':stat_text})
 
     newlist = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
@@ -429,19 +426,21 @@ def get_group_page(request):
     
     left_panel_stats['members_count'] = Person.objects.filter(group = group_id).count()
     left_panel_stats['screenings'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).distinct().count()
-    left_panel_stats['questions'] = PersonMeetingAttendance.objects.filter(person__group__id = group_id).exclude(expressed_question = "").count()
+    left_panel_stats['questions'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).exclude(questions_asked = "").count()
     left_panel_stats['adoptions'] = PersonAdoptPractice.objects.filter(person__group__id = group_id).count()
     left_panel_stats['adoption_rate'] = float(left_panel_stats['adoptions']) /left_panel_stats['screenings']
     left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/5.0 
-    min_joining = Person.objects.filter(group__id = group_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat =True)
+    min_joining = Person.objects.filter(group__id = group_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat = True)
     left_panel_stats['start_date'] = min_joining[0]
     if not left_panel_stats['start_date']:
         left_panel_stats['start_date'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).annotate(mindate = Min('date')).values_list('mindate', flat=True)[0]
         
-    pma = PersonMeetingAttendance.objects.filter(person__group__id = group_id).values_list('screening__videoes_screened__id',
-                                                                                           'interested', 
-                                                                                           'expressed_question')   
-    vids_id= set(i[0] for i in pma)
+    # pma = PersonMeetingAttendance.objects.filter(person__group__id = group_id).values_list('screening__videoes_screened__id',
+    #                                                                                        'interested', 
+    #                                                                                        'expressed_question')   
+    scr = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).values_list('videoes_screened__id', 'questions_asked')
+
+    vids_id = set(i[0] for i in scr)
     vids_details = Video.objects.filter(id__in = vids_id).values_list('id', 'title', 'youtubeid')
     left_panel_stats['videos_disseminated'] = len(vids_details)
     farmer_att = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).values('videoes_screened__id').annotate(screening_per_vid = Count('id', distinct=True),
@@ -449,26 +448,21 @@ def get_group_page(request):
                                                                                                          last_seen_date = Max('date'))
     vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
     
-    for id,interest,question in pma:
-        if(interest):
-            vids_stats_dict[id][0] += 1
+    for id, question in scr:
         if(question != ""):
-            vids_stats_dict[id][1] += 1
+            vids_stats_dict[id][0] += 1
     
-  
     if left_panel_stats['adoptions'] == None:
         per_vid_adoption = []
     else:    
         per_vid_adoption = PersonAdoptPractice.objects.filter(person__group__id = group_id).values('video__id').annotate(adopt_count=Count('person__id')) 
     for vid_id in per_vid_adoption:
-        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        vids_stats_dict[vid_id['video__id']][1] = vid_id['adopt_count']
         
     for vid_id in farmer_att:
-        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['fcount']
-        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['screening_per_vid']
-        vids_stats_dict[vid_id['videoes_screened__id']][5] =  vid_id['last_seen_date']
-        
-   
+        vids_stats_dict[vid_id['videoes_screened__id']][2] =  vid_id['fcount']
+        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['screening_per_vid']
+        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['last_seen_date']
         
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
@@ -477,12 +471,11 @@ def get_group_page(request):
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
-                                    'adopters':vids_stats_dict[obj[0]][2],
-                                    'interested':vids_stats_dict[obj[0]][0], 
-                                    'last_seen_date':vids_stats_dict[obj[0]][5], 
-                                    'questioners': vids_stats_dict[obj[0]][1],
-                                    'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'adopters':vids_stats_dict[obj[0]][1],
+                                    'last_seen_date':vids_stats_dict[obj[0]][4], 
+                                    'questioners': vids_stats_dict[obj[0]][0],
+                                    'farmers_attended': vids_stats_dict[obj[0]][2],
+                                    'screenings':vids_stats_dict[obj[0]][3],
                                     'fulltext': stat_text})
       
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
@@ -559,10 +552,12 @@ def get_csp_page(request):
         left_panel_stats['adoption_rate'] = 0 
     left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate']/20.0) * 100
     
-    pma = PersonMeetingAttendance.objects.filter(screening__animator = csp_id).values_list('screening__videoes_screened__id',
-                                                                                           'interested', 
-                                                                                           'expressed_question')   
-    vids_id= set(i[0] for i in pma)
+    # pma = PersonMeetingAttendance.objects.filter(screening__animator = csp_id).values_list('screening__videoes_screened__id',
+    #                                                                                        'interested', 
+    #                                                                                        'expressed_question')   
+    scr = Screening.objects.filter(animator__id = csp_id).values_list('videoes_screened__id', 'questions_asked')
+
+    vids_id= set(i[0] for i in scr)
     vids_details = Video.objects.filter(id__in = vids_id).values_list('id', 'title', 'youtubeid')
     left_panel_stats['videos_disseminated'] = len(vids_details)
     farmer_att = Screening.objects.filter(animator__id = csp_id).values('videoes_screened__id').annotate(screening_per_vid = Count('id', distinct=True),
@@ -570,11 +565,9 @@ def get_csp_page(request):
                                                                                                          last_seen_date = Max('date'))
     vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
     
-    for id,interest,question in pma:
-        if(interest):
-            vids_stats_dict[id][0] += 1
+    for id,question in scr:
         if(question != ""):
-            vids_stats_dict[id][1] += 1
+            vids_stats_dict[id][0] += 1
     
   
     if left_panel_stats['start_date'] == None:
@@ -584,15 +577,14 @@ def get_csp_page(request):
                                                            person__village__in = assigned_vill_id,
                                                            date_of_adoption__gte = left_panel_stats['start_date']).values('video__id').annotate(adopt_count=Count('person__id')) 
     for vid_id in per_vid_adoption:
-        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        vids_stats_dict[vid_id['video__id']][1] = vid_id['adopt_count']
         
     for vid_id in farmer_att:
-        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['fcount']
-        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['screening_per_vid']
-        vids_stats_dict[vid_id['videoes_screened__id']][5] =  vid_id['last_seen_date']
+        vids_stats_dict[vid_id['videoes_screened__id']][2] =  vid_id['fcount']
+        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['screening_per_vid']
+        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['last_seen_date']
         
    
-        
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
     for obj in vids_details:
@@ -600,12 +592,11 @@ def get_csp_page(request):
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
-                                    'adopters':vids_stats_dict[obj[0]][2],
-                                    'interested':vids_stats_dict[obj[0]][0], 
-                                    'last_seen_date':vids_stats_dict[obj[0]][5], 
-                                    'questioners': vids_stats_dict[obj[0]][1],
-                                    'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'adopters':vids_stats_dict[obj[0]][1],
+                                    'last_seen_date':vids_stats_dict[obj[0]][4], 
+                                    'questioners': vids_stats_dict[obj[0]][0],
+                                    'farmers_attended': vids_stats_dict[obj[0]][2],
+                                    'screenings':vids_stats_dict[obj[0]][3],
                                     'fulltext': stat_text})
 
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
@@ -754,24 +745,20 @@ def get_partner_page(request):
 
 def make_text_from_stats(obj,vids_stats_dict):
     text_to_return = ""
-    if(vids_stats_dict[obj[0]][4]):
-        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][4])+ "</b>" + " Disseminations <br />"
     if(vids_stats_dict[obj[0]][3]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][4])+ "</b>" + " Disseminations <br />"
+    if(vids_stats_dict[obj[0]][2]):
         text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][3])+ "</b>" +  " Farmers Attended <br />"
     if(vids_stats_dict[obj[0]][0]):
-        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][0]) + "</b>" +  " Interested <br />"
-    if(vids_stats_dict[obj[0]][1]):
         text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][1]) + "</b>" + " Questioners <br />"
-    if(vids_stats_dict[obj[0]][2]):
+    if(vids_stats_dict[obj[0]][1]):
         text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][2])+ "</b>"  + " Adopters <br />"
     return text_to_return
     
 def make_text_from_person_stats(obj,vids_stats_dict):
     text_to_return = ""
     if(vids_stats_dict[obj[0]][0]):
-        text_to_return = text_to_return + " Interested <br />"
-    if(vids_stats_dict[obj[0]][1]):
         text_to_return = text_to_return + " Question asked <br />"
-    if(vids_stats_dict[obj[0]][2]):
+    if(vids_stats_dict[obj[0]][1]):
         text_to_return = text_to_return + " Adopted <br />"
     return text_to_return

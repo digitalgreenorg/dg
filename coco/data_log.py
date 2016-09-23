@@ -28,22 +28,22 @@ def save_log(sender, **kwargs ):
     model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
     if sender == "Village":
         village_id = instance.id
-    elif sender == "Animator" or sender == 'Language':
+    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable' or sender == 'Category' or sender == 'SubCategory'or sender == 'VideoPractice':
         village_id = None
     elif sender == "PersonAdoptPractice":
         village_id = instance.person.village.id
     else:
         village_id = instance.village.id
-    partner_id = None if sender is "Village" or 'Language' else instance.partner.id
+    partner_id = None if sender in ["Village", 'Language', 'NonNegotiable', 'Category', 'SubCategory', 'VideoPractice'] else instance.partner.id
     ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-    if previous_time_stamp:
-        if previous_time_stamp.timestamp > log.timestamp:
-            raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-#    
+#     if previous_time_stamp:
+#         if previous_time_stamp.timestamp > log.timestamp:
+#             raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
+# #    
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request
@@ -74,14 +74,14 @@ def send_updated_log(request):
         partner_id = coco_user.partner_id
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
         ServerLog = get_model('coco', 'ServerLog')
-        rows = ServerLog.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Animator', 'Video'])
+        rows = ServerLog.objects.filter(timestamp__gte = timestamp, entry_table__in = ['Animator', 'Video', 'NonNegotiable'])
         if partner_id:
             rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
         else:
             rows = rows | ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
         if rows:
             data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-            return HttpResponse(data, mimetype="application/json")
+            return HttpResponse(data, content_type="application/json")
     return HttpResponse("0")
 
 def get_latest_timestamp():

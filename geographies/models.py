@@ -96,5 +96,22 @@ class Village(CocoModel):
 post_save.connect(save_log, sender = Village)
 pre_delete.connect(delete_log, sender = Village)
 
+class JSLPS_District(CocoModel):
+    id = models.AutoField(primary_key=True)
+    district_code = models.CharField(max_length=100)
+    district_name = models.CharField(max_length=100)
+    district = models.ForeignKey(District, null=True, blank=True)
 
+class JSLPS_Block(CocoModel):
+    id = models.AutoField(primary_key=True)
+    block_code = models.CharField(max_length=100)
+    block_name = models.CharField(max_length=100)
+    district_code = models.CharField(max_length=100)
+    block = models.ForeignKey(Block, null=True, blank=True)
 
+class JSLPS_Village(CocoModel):
+    id = models.AutoField(primary_key=True)
+    village_code = models.CharField(max_length=100)
+    village_name = models.CharField(max_length=100)
+    block_code = models.CharField(max_length=100)
+    Village = models.ForeignKey(Village, null=True, blank=True)
