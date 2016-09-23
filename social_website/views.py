@@ -304,13 +304,13 @@ def searchFilters(request):
     country = params.getlist('filters[country][]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
-
     filters = {}
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
     filters['partner']['options'] = []
+    facet_dict = {k.lower():v for k,v in facet_dict.items()}
     for obj in Partner.objects.all().order_by('name'):
-        facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
+        facet_count = facet_dict[obj.name.lower()] if facet_dict.has_key(obj.name.lower()) else 0
         if facet_count or facet_dict == {}:
             filters['partner']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in partner, "count" : facet_count })
 
@@ -411,7 +411,7 @@ def collection_edit_view(request, collection):
     state = sorted(set(state))
     country = video.values_list('country',flat=True)
     country = sorted(set(country))
-
+    
     context= {
               'header': {
                          'jsController':'CollectionAdd',
