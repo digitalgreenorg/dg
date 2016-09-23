@@ -36,10 +36,10 @@ def save_screening_data(xml_tree):
                     screening_data['question_asked'] = record.getElementsByTagName('Feedback')[0].firstChild.data
                 else:
                     screening_data['question_asked'] = ""
-                
+
                 #Check if 'attendance_record' or 'attended' tag
                 pma_record =[]
-                if record.getElementsByTagName('attendance_record'):                
+                if record.getElementsByTagName('attendance_record'):
                     screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
                     for person in screening_data['attendance_record']:
                         if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
@@ -57,7 +57,7 @@ def save_screening_data(xml_tree):
                         pma_record.append(pma)
                     error_msg = 'Successful'
 
-                # time is returned as string, doing funky things to retrieve it in time format  
+                # time is returned as string, doing funky things to retrieve it in time format
                 temp_time = screening_data['time'].split('.')
                 temp_time = time.strptime(temp_time[0], "%H:%M:%S")
                 temp_time = datetime(*temp_time[:6])
@@ -83,7 +83,7 @@ def save_screening_data(xml_tree):
                     if status['pma'] == error_list['PMA_SAVE_ERROR']:
                         status['screening'] = error_list['PMA_SAVE_ERROR']
                         error_msg = 'pma_save_error'
-                
+
                 except Screening.DoesNotExist as e:
                     screening = Screening(date=screening_data['date'],
                                           start_time=screening_data['start_time'],
@@ -98,15 +98,15 @@ def save_screening_data(xml_tree):
                         screening.full_clean()
                         screening.save()
                         status['screening'] = 1
-   
+
                         try:
-                            screening.farmer_groups_targeted = screening_data['selected_group'].split(" ") 
+                            screening.farmer_groups_targeted = screening_data['selected_group'].split(" ")
                             screening.videoes_screened = screening_data['selected_video'].split(" ")
                             screening.save()
-                     
+
                         except Exception as e:
                             error = "Error in Saving Groups and Videos : " + str(e)
-                            status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                            status['screening'] = error_list['SCREENING_SAVE_ERROR']
                             error_msg = 'screening_save_error'
                             sendmail("Exception in Mobile COCO. Error in saving groups and videos (Line 120)", error)
 
@@ -116,7 +116,7 @@ def save_screening_data(xml_tree):
                             error_msg = 'pma_save_error'
 
                     except ValidationError as err:
-                        status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                        status['screening'] = error_list['SCREENING_SAVE_ERROR']
                         error_msg = 'screening_save_error'
                         error = "Error in Saving Screening : " + str(err)
                         sendmail("Exception in Mobile COCO. Screening save error (Line 114)", error)
@@ -147,7 +147,7 @@ def save_pma(pma_record, Sid, status):
                 pma.save()
                 status = 1
         except ValidationError, e:
-            status = error_list['PMA_SAVE_ERROR'] 
+            status = error_list['PMA_SAVE_ERROR']
             error = "Error in Saving PMA : " + str(e)
             sendmail("Exception in Mobile COCO. Error in Saving PMA {Line 164)", error)
     return status
@@ -165,6 +165,7 @@ def save_adoption_data(xml_tree):
                 adoption_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
                 adoption_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
                 adoption_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
+                adoption_data['verification_date']=record.getElementsByTagName('verification_date')[0].firstChild.data
                 try:
                     AdoptionExisting = PersonAdoptPractice.objects.filter(person_id=adoption_data['selected_person'], video_id=adoption_data['selected_video'], date_of_adoption=adoption_data['date'])
                     status = error_list['DUPLICATE_ADOPTION']
@@ -174,7 +175,8 @@ def save_adoption_data(xml_tree):
                                                   date_of_adoption=adoption_data['date'],
                                                   video_id=adoption_data['selected_video'],
                                                   partner=cocouser.partner,
-                                                  user_created=cocouser.user)
+                                                  user_created=cocouser.user,
+                                                  date_of_verification=adoption_data['verification_date'])
 
                         pap.full_clean()
                         pap.save()
@@ -189,7 +191,7 @@ def save_adoption_data(xml_tree):
                 status = error_list['ADOPTION_READ_ERROR']
                 error_msg = 'adoption_read_error'
                 error = "Error in Reading Adoption : " + str(ex)
-                sendmail("Exception in Mobile COCO. Adoption read error (Line 152)", error) 
+                sendmail("Exception in Mobile COCO. Adoption read error (Line 152)", error)
 
     except Exception as e:
         status = error_list['USER_NOT_FOUND']
