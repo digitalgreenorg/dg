@@ -237,6 +237,11 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var partner_name = User.get('partner_name');
+            var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
+            if (partner_check < 0){
+                $f_el.find("#is_modelfarmer").addClass('hidden');
+            }
         },
         
         //fetches all foreign collections and renders them when all are fetched

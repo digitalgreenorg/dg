@@ -26,13 +26,13 @@ define([
   }
   
   // if u, p matches that in user table, sets login state = true 
-  var login = function(username, password, language){
+  var login = function(username, password, language, partner_name){
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, language, true)
+                  save_login_state(username, password, language, partner_name, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -47,7 +47,7 @@ define([
           },
           error: function(){
               // No user has been found in the database. This is probably a new login, and database is yet to be created.
-               save_login_state(username, password, language, true)
+               save_login_state(username, password, language, partner_name, true)
                .done(function (){
                    return dfd.resolve("New user registered in offline database.");
                })
@@ -60,9 +60,9 @@ define([
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, language, loggedin){
+  var save_login_state = function(username, password, language, partner_name, loggedin){
       var dfd = new $.Deferred();
-      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language},{
+      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name},{
           success: function(){
               console.log("user state saved in offline");
               dfd.resolve();
