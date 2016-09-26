@@ -90,7 +90,7 @@ categoryDictionary={
     'partitionCumValues':{'listAnimator':'animator','listVideoScreened':'video','listVideoProduced':'video','listPerson':'person',
                           'listGroup':'persongroup', 'listVillage':'village','listBlock':'block','listDistrict':'district','listState':'state',
                           'listCountry':'country','listPartner':'partner','numScreening':'numScreening','numVillageScreening':'video',
-                          'numVillageAdoption':'','numBlockScreening':'numBlock','numBlockAdoption':'numBlock','numVillage':'numVillage','numBlock':'numBlock'}
+                          'numVillageAdoption':'numVillage','numBlockScreening':'numBlock','numBlockAdoption':'numBlock','numVillage':'numVillage','numBlock':'numBlock'}
 }
 
 groupbyDictionary={
