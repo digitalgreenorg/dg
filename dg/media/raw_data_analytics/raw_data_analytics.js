@@ -169,7 +169,7 @@ function populate_partner(src){
         "district[]":$("#districtId").val(),
         "block[]":$("#blockId").val(),
         "village[]":$("#villageId").val()
-    }
+}
     if(!(jQuery("#partnerId option").length!=0))
         $.get("/raw_data_analytics/dropdown_partner",prevValue)
             .done(function(data){
@@ -192,6 +192,9 @@ function dropdown_control(src){
             if(dropdown!=src)
                 dropdown_list[dropdown].style.visibility="hidden";
         }
+    }
+    else {
+        dropdown_list[src].style.visibility ="hidden";
     }
 
 }
