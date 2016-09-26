@@ -60,6 +60,7 @@ class Video(models.Model):
     partner = models.ForeignKey(Partner)
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=100)
+    country = models.CharField(max_length=100,null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.title, self.coco_id)
@@ -108,6 +109,7 @@ class Collection(models.Model):
     title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
+    country = models.CharField(max_length=100,null=True)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
     language = models.CharField(max_length=20)
     videos = models.ManyToManyField(Video, through='VideoinCollection')
@@ -123,15 +125,15 @@ class Collection(models.Model):
     description = models.TextField(null=True, blank=True)
     
     def __unicode__(self):
-        return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.state, self.language))
+        return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.country, self.state, self.language))
     
     def get_absolute_url(self):
         return reverse('collection_page', 
-                       args=[str(self.partner.name), str(self.state), str(self.language), str(self.title)])
+                       args=[str(self.partner.name), str(self.country), str(self.state), str(self.language), str(self.title)])
     
     def get_absolute_url_for_video(self, video_index = 1):
         return reverse('collection_video_page', 
-                       args=[str(self.partner.name), str(self.state), str(self.language), str(self.title), str(video_index)])
+                       args=[str(self.partner.name), str(self.country), str(self.state), str(self.language), str(self.title), str(video_index)])
     
     def increase_likes(self):
         self.likes += 1
