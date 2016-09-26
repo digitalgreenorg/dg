@@ -62,7 +62,7 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
-            
+
          // filters changed
             boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
             references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
@@ -143,7 +143,7 @@ define(function(require) {
             this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true);
             this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None');
             this._references.collectionViewController._references.dataFeed._fetch();
-            this._references.collectionViewController.clearFilters();           
+            this._references.collectionViewController.clearFilters();
         },
 
         _getCollections: function() {

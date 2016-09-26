@@ -8,7 +8,6 @@ from views import social_home, collection_view, partner_view, search_view, colle
 
 class DirectTemplateView(TemplateView):
     extra_context = None
-
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
         if self.extra_context is not None:

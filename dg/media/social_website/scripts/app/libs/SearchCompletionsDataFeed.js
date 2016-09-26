@@ -27,7 +27,6 @@ define(function(require) {
 
         constructor: function() {
             this.base('api/searchCompletions');
-
             // prepare data model
             this._dataModel.addSubModel('searchCompletions', true);
 
@@ -53,7 +52,6 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
-            
             // local references
             var dataModel = this._dataModel;
             var searchCompletionsModel = dataModel.get('searchCompletions');
