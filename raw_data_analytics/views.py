@@ -254,28 +254,20 @@ def execute(request):
     priority_block = {}
     if(number_block_combo == 'numBlock'):
         for vals in checked_list:
-            if ((vals in categoryDictionary['geographies'])):
-                for vals,v in orderDictionary.items():
-                        priority_block[vals] = v
-                number_block_combo = 'numBlock' + (max(priority_block.items(),key = lambda vals: vals[1])[0]).title()
-
-            elif (vals == 'video'):
+            if (vals == 'video'):
                 number_block_combo = number_block
     priority_village = {}
     if(number_village_combo == 'numVillage'):
         for vals in checked_list:
-            if ((vals in categoryDictionary['geographies'])):
-                for vals,v in orderDictionary.items():
-                        priority_village[vals] = v
-                number_village_combo = 'numVillage' + (max(priority_village.items(),key = lambda vals: vals[1])[0]).title()
-            elif (vals == 'video'):
+            if (vals == 'video'):
                 number_village_combo = number_village
-
+    print priority_village, ' ',number_village_combo
     priority = {}
     if (list_combo == 'list'):
         for vals in checked_list:
             if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
                 for vals, v in orderDictionary.items():
+                    if vals in checked_list:
                         priority[vals] = v
                 list_combo = 'list' + (max(priority.items(), key=lambda vals: vals[1])[0]).title()
             elif (vals == "animator"):
@@ -290,7 +282,6 @@ def execute(request):
             elif (vals == "video"):
                 list_combo = videolist
                 break
-
     ##############################Date#################################
 
     if (from_date[0] != ''):
