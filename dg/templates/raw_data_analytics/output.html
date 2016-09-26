@@ -191,11 +191,11 @@
                                     <li><input type="checkbox" id="video_produced_no" name="no_video_produced_chk"
                                                value="numVideoProduced">Number
                                         of Videos Produced
-                                    <li><input type="checkbox" id="blocknum" name="blocknum" value="numBlock" onchange="block_number_dropdown()">Number
+                                    <li><input type="checkbox" id="blocknum" name="blocknum" value="numBlock" onchange="dropdown_control($(this).attr('id'))">Number
                                         of Blocks
-                                    <li><input type="checkbox" id="villagenum" name="villagenum" value="numVillage" onchange="village_number_dropdown()">Number
+                                    <li><input type="checkbox" id="villagenum" name="villagenum" value="numVillage" onchange="dropdown_control($(this).attr('id'))">Number
                                         of Villages
-                                    <li><input type="checkbox" id="list" name="list" value="list" onchange="list_display()">List
+                                    <li><input type="checkbox" id="list" name="list" value="list" onchange="dropdown_control($(this).attr('id'))">List
                                 </ul>
                                 <div>
                                 <div id="blocknumberoptions" name='blocknumberoptions' style='visibility:hidden;position: absolute;' >

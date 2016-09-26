@@ -143,7 +143,14 @@ function populate(src, prevValue) {
             });
 }
 function populate_video(src){
-    prevValue= {"country[]":$("#countryId").val(),"partner[]":$("#partnerId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()}
+    prevValue= {
+        "country[]":$("#countryId").val(),
+        "partner[]":$("#partnerId").val(),
+        "state[]":$("#stateId").val(),
+        "district[]":$("#districtId").val(),
+        "block[]":$("#blockId").val(),
+        "village[]":$("#villageId").val()
+    }
   if (!(jQuery("#" + src + "Id" + " option ").length != 0))
       $.get("/raw_data_analytics/dropdown_video/", prevValue)
           .done(function (data) {
@@ -156,7 +163,13 @@ function populate_video(src){
 }
 
 function populate_partner(src){
-    prevValue = {"country[]":$("#countryId").val(),"state[]":$("#stateId").val(),"district[]":$("#districtId").val(),"block[]":$("#blockId").val(),"village[]":$("#villageId").val()}
+    prevValue = {
+        "country[]":$("#countryId").val(),
+        "state[]":$("#stateId").val(),
+        "district[]":$("#districtId").val(),
+        "block[]":$("#blockId").val(),
+        "village[]":$("#villageId").val()
+    }
     if(!(jQuery("#partnerId option").length!=0))
         $.get("/raw_data_analytics/dropdown_partner",prevValue)
             .done(function(data){
@@ -169,54 +182,20 @@ function populate_partner(src){
 }
 //##################################################################################################################
 
-function list_display() {
-    if ((list.checked) && (video.checked)) {
 
-        if(villagenum.checked){
-            $('#villagenum').removeAttr('checked');
+function dropdown_control(src){
+    var dropdown_list = {"list":listoptions,"villagenum":villagenumberoptions,"blocknum":blocknumberoptions}
+    if(('#'+src.checked) && (video.checked)) {
+        $('#'+src).parent().siblings().children().attr('checked',false);
+        dropdown_list[src].style.visibility ="visible";
+        for (dropdown in dropdown_list){
+            if(dropdown!=src)
+                dropdown_list[dropdown].style.visibility="hidden";
         }
-        if(blocknum.checked){
-            $('#blocknum').removeAttr('checked');
-        }
-        listoptions.style.visibility = "visible";        
-        villagenumberoptions.style.visibility="hidden";
-        blocknumberoptions.style.visibility="hidden";
     }
-    else
-        listoptions.style.visibility = "hidden";
-}
-function village_number_dropdown(){
-    if((villagenum.checked) && (video.checked)){
-        if(list.checked){
-            $('#list').removeAttr('checked');
-        }
-        if(blocknum.checked){
-            $('#blocknum').removeAttr('checked');
-        }
-        villagenumberoptions.style.visibility="visible";
-        listoptions.style.visibility="hidden";
-        blocknumberoptions.style.visibility="hidden";
-    }
-    else
-        villagenumberoptions.style.visibility="hidden";
-}
-function block_number_dropdown(){
-    if((blocknum.checked) && (video.checked)){
-        if(villagenum.checked){
-            $('#villagenum').removeAttr('checked');
-        }
-        if(list.checked){
-            $('#list').removeAttr('checked');
-        }
-        blocknumberoptions.style.visibility="visible";        
-        listoptions.style.visibility="hidden";
-        villagenumberoptions.style.visibility="hidden";
-    }
-    else
-        blocknumberoptions.style.visibility="hidden";        
 
-    
 }
+
 //validation check
 function validation_check() {
     var error = 0;
