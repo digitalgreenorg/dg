@@ -199,7 +199,6 @@ function dropdown_control(src){
         }
     }
     else {
-        console.log('a');
         dropdown_list[src][1].style.visibility ="hidden";
     }
 

@@ -97,14 +97,13 @@ def dropdown_block(request):
     district_selected = request.GET.getlist('selected[]')
     blocks = Block.objects.filter(district__district_name__in=district_selected).values_list('block_name', flat=True)
     resp = json.dumps([unicode(block) for block in blocks])
-
     return HttpResponse(resp)
 
 
 def dropdown_village(request):
     block_selected = request.GET.getlist('selected[]')
     villages = Village.objects.filter(block__block_name__in=block_selected).values_list('village_name', flat=True)
-    resp = json.dumps([unicode(Village) for village in villages])
+    resp = json.dumps([unicode(village) for village in villages])
     return HttpResponse(resp)
 
 
@@ -261,7 +260,6 @@ def execute(request):
         for vals in checked_list:
             if (vals == 'video'):
                 number_village_combo = number_village
-    print priority_village, ' ',number_village_combo
     priority = {}
     if (list_combo == 'list'):
         for vals in checked_list:
