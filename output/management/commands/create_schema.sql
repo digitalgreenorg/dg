@@ -209,9 +209,9 @@ CREATE TABLE `village_partner_myisam` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE INDEX index2 ON village_partner_myisam(village_id,block_id,district_id,state_id,country_id,partner_id);
-CREATE INDEX index3 ON village_partner_myisam(village_id,partner_id);
-CREATE INDEX index4 ON village_partner_myisam(block_id,partner_id);
-CREATE INDEX index5 ON village_partner_myisam(district_id,partner_id);
-CREATE INDEX index6 ON village_partner_myisam(state_id,partner_id);
-CREATE INDEX index7 ON village_partner_myisam(country_id,partner_id);
+CREATE INDEX village_partner_myisam_geographies_partner ON village_partner_myisam(village_id,block_id,district_id,state_id,country_id,partner_id);
+CREATE INDEX village_partner_myisam_village_partner ON village_partner_myisam(village_id,partner_id);
+CREATE INDEX village_partner_myisam_block_partner ON village_partner_myisam(block_id,partner_id);
+CREATE INDEX village_partner_myisam_district_partner ON village_partner_myisam(district_id,partner_id);
+CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(state_id,partner_id);
+CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);

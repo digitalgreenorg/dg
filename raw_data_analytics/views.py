@@ -63,25 +63,25 @@ def dropdown_partner(request):
         sql_ds['join'].append(["programs_partner P", "P.id = vcp.partner_id"])
         for keys in filter_dict:
             if(filter_dict[keys]):
-                sql_ds['where'].append('vcp.'+keys.lower()+'_id in ( '+ ' , '.join(str(n) for n in filter_dict[keys])+' )')
+                sql_ds['where'].append('vcp.'+keys.lower()+'_id in ( '+ ' , '.join(str(dictVal) for dictVal in filter_dict[keys])+' )')
         sql_ds['order by'].append("P.PARTNER_NAME")
     
-        select_query = 'select ' + ', '.join( s for s in sql_ds['select'] ) 
-        from_query =  ' from '+ ', '.join(f for f in sql_ds['from'])
-        join_query =  ' inner join ' +' on '.join(j for j in sql_ds['join'][0])
-        where_query = ' where '+' and '.join(w for w in sql_ds['where']) 
-        order_query = ' order by '+', '.join(o for o in sql_ds['order by'])
+        select_query = 'select ' + ', '.join( selectVal for selectVal in sql_ds['select'] ) 
+        from_query =  ' from '+ ', '.join(fromVal for fromVal in sql_ds['from'])
+        join_query =  ' inner join ' +' on '.join(joinVal for joinVal in sql_ds['join'][0])
+        where_query = ' where '+' and '.join(whereVal for whereVal in sql_ds['where']) 
+        order_query = ' order by '+', '.join(orderVal for orderVal in sql_ds['order by'])
         query = select_query+from_query+join_query+where_query+order_query
         partners = onrun_query(query)
     else:
         partners = Partner.objects.filter().values_list('partner_name')
-    resp = json.dumps([i for i in partners])
+    resp = json.dumps([partner for partner in partners])
     return HttpResponse(resp)
 
 def dropdown_state(request):
     country_selected = request.GET.getlist('selected[]')
     states = State.objects.filter(country__country_name__in=country_selected).values_list('state_name', flat=True)
-    resp = json.dumps([unicode(i) for i in states])
+    resp = json.dumps([unicode(state) for state in states])
 
     return HttpResponse(resp)
 
@@ -89,14 +89,14 @@ def dropdown_state(request):
 def dropdown_district(request):
     state_selected = request.GET.getlist('selected[]')
     districts = District.objects.filter(state__state_name__in=state_selected).values_list('district_name', flat=True)
-    resp = json.dumps([unicode(i) for i in districts])
+    resp = json.dumps([unicode(district) for district in districts])
     return HttpResponse(resp)
 
 
 def dropdown_block(request):
     district_selected = request.GET.getlist('selected[]')
     blocks = Block.objects.filter(district__district_name__in=district_selected).values_list('block_name', flat=True)
-    resp = json.dumps([unicode(i) for i in blocks])
+    resp = json.dumps([unicode(block) for block in blocks])
 
     return HttpResponse(resp)
 
@@ -104,7 +104,7 @@ def dropdown_block(request):
 def dropdown_village(request):
     block_selected = request.GET.getlist('selected[]')
     villages = Village.objects.filter(block__block_name__in=block_selected).values_list('village_name', flat=True)
-    resp = json.dumps([unicode(i) for i in villages])
+    resp = json.dumps([unicode(Village) for village in villages])
     return HttpResponse(resp)
 
 
@@ -142,7 +142,7 @@ def dropdown_video(request):
     elif not videos:
         videos = list(Video.objects.filter().values_list('title','id'))
 
-    resp = json.dumps([i for i in videos])
+    resp = json.dumps([video for video in videos])
     return HttpResponse(resp)
 
 
@@ -240,13 +240,12 @@ def execute(request):
     #################################value-partion###########################
 
     if(number_block_combo == "None"):
-
         number_block_combo = False
-        numebr_block = False
+        number_block = False
 
     if(number_village_combo == "None"):
         number_village_combo = False
-        numebr_village = False
+        number_village = False
 
     if (list_combo == "None"):
         list_combo = False
@@ -257,7 +256,6 @@ def execute(request):
         for vals in checked_list:
             if ((vals in categoryDictionary['geographies'])):
                 for vals,v in orderDictionary.items():
-                    if vals in checked_list:
                         priority_block[vals] = v
                 number_block_combo = 'numBlock' + (max(priority_block.items(),key = lambda vals: vals[1])[0]).title()
 
@@ -268,7 +266,6 @@ def execute(request):
         for vals in checked_list:
             if ((vals in categoryDictionary['geographies'])):
                 for vals,v in orderDictionary.items():
-                    if vals in checked_list:
                         priority_village[vals] = v
                 number_village_combo = 'numVillage' + (max(priority_village.items(),key = lambda vals: vals[1])[0]).title()
             elif (vals == 'video'):
@@ -279,7 +276,6 @@ def execute(request):
         for vals in checked_list:
             if ((vals in categoryDictionary['geographies']) or (vals == 'partner')):
                 for vals, v in orderDictionary.items():
-                    if vals in checked_list:
                         priority[vals] = v
                 list_combo = 'list' + (max(priority.items(), key=lambda vals: vals[1])[0]).title()
             elif (vals == "animator"):

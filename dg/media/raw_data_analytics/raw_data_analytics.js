@@ -298,12 +298,10 @@ function validation_check() {
 
     }
 
-    if (list.checked) {
-        if (count_values > 0) {
+    if (list.checked && count_values > 0) {
             alert("No other value fields can be selected along with list!!");
             error = 1;
             event.preventDefault();
-        }
     }
     newfrom_date = new Date($('#from_date').val())
     newto_date  = new Date($('#to_date').val());

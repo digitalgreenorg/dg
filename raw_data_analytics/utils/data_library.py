@@ -27,12 +27,11 @@ class data_lib():
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     
     def uniqueList(self,ElementsList):
-        seen = set()
-        seen_add = seen.add
-        return [elements for elements in ElementsList if not (elements in seen or seen_add(elements))]
+        seenValues = set()
+        seenValues_add = seenValues.add
+        return [elements for elements in ElementsList if not (elements in seenValues or seenValues_add(elements))]
 
     def handle_controller(self, args, options):
-        # print options
         final_df = pd.DataFrame()
 
         relevantPartitionDictionary = {}
@@ -50,7 +49,6 @@ class data_lib():
         self.headerDictionary = ilib.initializeHeaderDict()
         self.lookup_matrix = ilookup.read_lookup_csv()
         self.valueSpecial = ilib.initializevalueSpecial()
-        print self.valueSpecial
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
@@ -60,11 +58,8 @@ class data_lib():
             print "Warning - Invalid input for partition fields"
 
         if self.check_valuefield_validity(options['value']):
-
             for item in options['value']:
-
                 if (item in self.valueSpecial and options['value'][item] != False):
-
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
@@ -81,22 +76,18 @@ class data_lib():
 #            print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
                                       queryComponents[4])
-#            print query
 #            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-#                print df
         resultant_df = self.order_data(relevantPartitionDictionary,final_df)
         resultant_df.index += 1
-#        print resultant_df
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
-        # print dataframe.columns.tolist()
         arranged_columns = [None] * len(self.orderDictionary)
         bumper = 0
 
@@ -104,7 +95,6 @@ class data_lib():
             if partitionElements[items] != False:
                 for elements in self.selectDictionary[items]:
                     if self.selectDictionary[items][elements] == True and self.selectDictionary[items].values().count(True) > 1:
-                        #arranged_columns[len(arranged_columns) + 1] = None
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
                         bumper += 1
                     elif self.selectDictionary[items][elements] == True:
@@ -113,7 +103,6 @@ class data_lib():
         arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
         arranged_columns.extend([item for item in header if item not in arranged_columns])
         dataframe = dataframe[arranged_columns]
-        # print dataframe.columns.tolist()
         return dataframe
 
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
@@ -175,12 +164,12 @@ class data_lib():
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
-        specialcase = 0
+        specialCase = 0
         for vals in self.valueSpecial:
             if vals in valueElement:
-                specialcase = 1
+                specialCase = 1
 
-        if not partitionElements and specialcase == 1:
+        if not partitionElements and specialCase == 1:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
         else:
@@ -281,14 +270,10 @@ class data_lib():
     def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
-#        print partitionElements
 
         for items in partitionElements:
             ll=[]
             if partitionElements[items] != True:
-
-#                for elements in partitionElements[items]:
-#
                 whereComponentList.append(
                 self.tableDictionary[items] + '.' + self.whereDictionary[items] + ' in (' + ','.join(str(n) for n in partitionElements[items])+')')
 
