@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.contrib import auth
 from django.core import urlresolvers
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
 from models import CocoUser
@@ -10,17 +10,21 @@ def coco_v2(request):
     return render(request,'dashboard.html')
     
 def login(request):
+    partner_name = None
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth.login(request, user)
+            coco_user_obj = CocoUser.objects.filter(user_id=request.user.id)
+            if len(coco_user_obj):
+                partner_name = coco_user_obj[0].partner.partner_name.lower()
         else:
             return HttpResponse("0")
     else:
         return HttpResponse("0")
-    return HttpResponse("1")
+    return JsonResponse({'success': '1', 'partner_name': partner_name})
     
 def logout(request):
     auth.logout(request)    
@@ -34,7 +38,7 @@ def record_full_download_time(request):
     return HttpResponse("1")
        
 def reset_database_check(request):
-    if not(request.user):
+    if not request.user.is_authenticated():
         return HttpResponse("0")
     cocouser = CocoUser.objects.get(user = request.user)
     if not(cocouser and cocouser.time_modified):
