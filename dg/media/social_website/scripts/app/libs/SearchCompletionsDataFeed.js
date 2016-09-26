@@ -84,7 +84,6 @@ define(function(require) {
             var maxCount = this.getInputParam('maxCount');
 
             var searchCompletions = this._dataModel.get('searchCompletions').getSubset(0, maxCount);
-
             if (!searchCompletions) {
                 this.fetch(searchString, maxCount);
                 return false;

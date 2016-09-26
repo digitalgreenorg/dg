@@ -24,7 +24,6 @@ define(function(require) {
          */
         constructor: function(bootstrapConfig, globalHelpers) {
             this.base(bootstrapConfig, globalHelpers);
-
             var references = this._references;
 
             references.collectionViewController
@@ -144,8 +143,7 @@ define(function(require) {
             this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true);
             this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None');
             this._references.collectionViewController._references.dataFeed._fetch();
-            this._references.collectionViewController.clearFilters();
-            
+            this._references.collectionViewController.clearFilters();           
         },
 
         _getCollections: function() {
