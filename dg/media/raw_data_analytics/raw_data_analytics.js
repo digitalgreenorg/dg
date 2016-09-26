@@ -184,17 +184,23 @@ function populate_partner(src){
 
 
 function dropdown_control(src){
-    var dropdown_list = {"list":listoptions,"villagenum":villagenumberoptions,"blocknum":blocknumberoptions}
-    if(('#'+src.checked) && (video.checked)) {
+    var dropdown_list = {
+        "list":[list,listoptions],
+        "villagenum":[villagenum,villagenumberoptions],
+        "blocknum":[blocknum,blocknumberoptions]
+    }
+
+    if(src!='None' && dropdown_list[src][0].checked && (video.checked)) {
         $('#'+src).parent().siblings().children().attr('checked',false);
-        dropdown_list[src].style.visibility ="visible";
+        dropdown_list[src][1].style.visibility ="visible";
         for (dropdown in dropdown_list){
             if(dropdown!=src)
-                dropdown_list[dropdown].style.visibility="hidden";
+                dropdown_list[dropdown][1].style.visibility="hidden";
         }
     }
     else {
-        dropdown_list[src].style.visibility ="hidden";
+        console.log('a');
+        dropdown_list[src][1].style.visibility ="hidden";
     }
 
 }
