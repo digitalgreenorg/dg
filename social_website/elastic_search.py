@@ -51,7 +51,6 @@ def create_query(params, language_name):
     category = params.getlist('filters[category][]', None)
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
-    country = params.getlist('filters[country][]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
     query = []
@@ -67,8 +66,6 @@ def create_query(params, language_name):
         query.append({"terms":{"partner" : partner}})
     if state:
         query.append({"terms":{"state" : state}})
-    if country:
-        query.append({"terms":{"country" : country}})
     if topic:
         query.append({"terms":{"topic" : topic}})
     if subject:
@@ -84,7 +81,7 @@ def get_collections_from_elasticsearch(request):
     featured = params.get('featured', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "country.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "category.partial", "subcategory.partial" , "topic.partial"],
                                 "like_text" : searchString
                                 }
                        }
@@ -116,7 +113,7 @@ def get_collections_from_elasticsearch(request):
         "facets" : {
                     "facet" :{
                               "terms": {
-                                        "fields" : ["language", "partner", "state", "country","category", "subcategory" , "topic", "subject"], 
+                                        "fields" : ["language", "partner", "state", "category", "subcategory" , "topic", "subject"], 
                                         "size" : MAX_RESULT_SIZE
                                         }
                               }
@@ -126,7 +123,6 @@ def get_collections_from_elasticsearch(request):
                   },
         "size" : MAX_RESULT_SIZE
         }
-
     result_list = []
     try :
         query = json.dumps(q)
@@ -142,6 +138,7 @@ def get_collections_from_elasticsearch(request):
             resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": "1"},"objects": [{'Message': 'No Collections Found', 'error': "1"}], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
+        print ex
         return HttpResponse(str(ex))
     
 def searchCompletions(request):

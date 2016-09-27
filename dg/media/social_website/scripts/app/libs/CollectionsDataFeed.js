@@ -66,6 +66,7 @@ define(function(require) {
 
 				_processData : function(unprocessedData) {
 					this.base(unprocessedData);
+
 					// local references
 					var dataModel = this._dataModel;
 					var collectionsModel = dataModel.get('collections');

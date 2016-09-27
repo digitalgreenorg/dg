@@ -31,7 +31,7 @@ def add_collection(collection):
     title = "%s shared a new collection" % (collection.partner.name)
     collection_name = (collection.title)
     state_name = collection.state
-    country_name = collection.country
+    country_name = (geographies.models.State.objects.get(state_name=state_name)).country.country_name
     textContent = "Watch our new collection on %s, produced in %s, %s." % (collection_name, state_name, country_name)
     date = datetime.utcnow().strftime("%Y-%m-%d")
     newsFeed = 0

@@ -24,6 +24,7 @@ define(function(require) {
          */
         constructor: function(bootstrapConfig, globalHelpers) {
             this.base(bootstrapConfig, globalHelpers);
+
             var references = this._references;
 
             references.collectionViewController
@@ -62,7 +63,7 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
-
+            
          // filters changed
             boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
             references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
@@ -100,9 +101,6 @@ define(function(require) {
                 if ($(".js-collections-wrapper").attr('data-title') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true);
                     this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true);
-                }
-                if ($(".js-collections-wrapper").attr('data-country') != 'None'){
-                    this._references.collectionFiltersViewController._setFilterStatus('country', $(".js-collections-wrapper").attr('data-country'), true);
                 }
                 if ($(".js-collections-wrapper").attr('data-state') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('state', $(".js-collections-wrapper").attr('data-state'), true);
@@ -144,6 +142,7 @@ define(function(require) {
             this._references.collectionViewController._references.dataFeed.setInputParam('searchString','None');
             this._references.collectionViewController._references.dataFeed._fetch();
             this._references.collectionViewController.clearFilters();
+            
         },
 
         _getCollections: function() {
