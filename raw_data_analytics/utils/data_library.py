@@ -48,7 +48,7 @@ class data_lib():
         self.categoryDictionary = ilib.initializeCategoryDict()
         self.headerDictionary = ilib.initializeHeaderDict()
         self.lookup_matrix = ilookup.read_lookup_csv()
-        self.valueSpecial = ilib.initializevalueSpecial()
+        self.valueSpecial = ilib.initializeValueSpecial()
         # --- checking validity of the partition fields and value fields entered by user ---
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
@@ -156,7 +156,7 @@ class data_lib():
         # print "---------------------------------GROUP_BY PART----------------------------"
         # print groupbyResult
         # print "--------------------------------ORDER_BY PART-----------------------------"
-        print orderbyResult
+        # print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):

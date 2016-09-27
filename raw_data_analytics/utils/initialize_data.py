@@ -51,6 +51,6 @@ class initialize_library():
         self.headerDictionaryToUse = headerDictionary
         return headerDictionary
 
-    def initializevalueSpecial(self):
+    def initializeValueSpecial(self):
         self.valueSpecialToUse = checkValueSpecial
         return checkValueSpecial

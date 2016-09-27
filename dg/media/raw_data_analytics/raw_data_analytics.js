@@ -227,17 +227,16 @@ function validation_check() {
         }
     }
 
-    if ((count_partition == 0) && (count_values == 0) && (count_partition_restrict == 0) && (!list.checked)) {
-        alert("Please select some fields !!");
-        event.preventDefault();
+    if((!list.checked) && (count_values ==0)){
+        if(count_partition==0 && count_partition_restrict==0){
+            alert("Please select some fields !!");
+            event.preventDefault();    
+        }
+        else if(count_partition!=0){
+            alert("Please select atleast one value field!!");
+            event.preventDefault();
+        }
     }
-
-    else if ((count_partition != 0) && (count_values == 0) && (!list.checked)) {
-        alert("Please select atleast one value field!!");
-        event.preventDefault();
-    }
-
-
     if (list.checked) {
         for (i = 0; i < checked_partitions_restrict.length; i++) {
             if (checked_partitions_restrict[i].checked) {
