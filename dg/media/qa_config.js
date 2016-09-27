@@ -37,12 +37,32 @@ function() {
             rules: {
                 qareviewername: "required",
                 video: "required",
-                approval: "required"   
+                approval: "required",   
+                storystructure: "required",
+                framing: "required",
+                camera_angles: "required",
+                camera_movement: "required",
+                light: "required",
+                audio_sound: "required",
+                continuity: "required",
+                interview: "required",
+                technical: "required",
+                style_guide: "required"
             },
             messages: {
                 video: "Video name is required",
                 qareviewername: "Reviewer name is required",
-                approval: "Approval is required"      
+                approval: "Approval is required",
+                storystructure: "Required",
+                framing: "Required",
+                camera_angles: "Required",
+                camera_movement: "Required",
+                light: "Required",
+                audio_sound: "Required",
+                continuity: "Required",
+                interview: "Required",
+                technical: "Required",
+                style_guide: "Required"    
             },
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -129,7 +149,15 @@ function() {
                 mediator: "required",
                 qareviewername: "required",
                 date: "required",
-                video: "required"    
+                video: "required",
+                equipments_setup_handling: "required",
+                context_setting: "required",
+                introduce_topic: "required",
+                paused_video: "required",
+                encouraged_adoption: "required",
+                summarized_video: "required",
+                subject_knowledge: "required",
+                filled_dissemination: "required"   
             },
             messages: {
                 video: "Video name is required",
@@ -137,7 +165,15 @@ function() {
                 village: "Village name is required",
                 mediator: "Mediator name is required",
                 date: "Date is required",
-                qareviewername: "Reviewer name is required"      
+                qareviewername: "Reviewer name is required",
+                equipments_setup_handling: "Required",
+                context_setting: "Required",
+                introduce_topic: "Required",
+                paused_video: "Required",
+                encouraged_adoption: "Required",
+                summarized_video: "Required",
+                subject_knowledge: "Required",
+                filled_dissemination: "Required"       
             },
             highlight: function(element, errorClass, validClass) {
                 $(element)
