@@ -363,21 +363,15 @@ class AdoptionVerificationResource(BaseResource):
                 validation = ModelFormValidation(form_class=AdoptionVerificationForm)
 
         def obj_create(self, bundle, **kwargs):
-            print "here 1"
             nonnego_list = bundle.data.get('nonnegotiable')
-            print nonnego_list
             if nonnego_list:
-                print "here2"
                 bundle = super(AdoptionVerificationResource, self).obj_create(bundle, **kwargs)
-                print "here3"
                 user_id = None
                 if bundle.request.user:
                     user_id =  bundle.request.user.id
                 adoptionverification_id  = getattr(bundle.obj,'id')
                 for pma in nonnego_list:
                     try:
-                        print "print pma"
-                        print pma
                         attendance = AdoptionNonNegotiableVerfication(adoptionverification_id=adoptionverification_id, nonnegotiable_id=pma['nonnegotiable_id'], adopted=pma['adopted'],
                                                     user_created_id = user_id)
                         attendance.save()
