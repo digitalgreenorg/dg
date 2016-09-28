@@ -165,7 +165,10 @@ def save_adoption_data(xml_tree):
                 adoption_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
                 adoption_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
                 adoption_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
-                adoption_data['verification_date']=record.getElementsByTagName('verification_date')[0].firstChild.data
+                try:
+                    adoption_data['verification_date']=record.getElementsByTagName('verification_date')[0].firstChild.data
+                except Exception:
+                    adoption_data['verification_date']=None
                 try:
                     AdoptionExisting = PersonAdoptPractice.objects.filter(person_id=adoption_data['selected_person'], video_id=adoption_data['selected_video'], date_of_adoption=adoption_data['date'])
                     status = error_list['DUPLICATE_ADOPTION']
