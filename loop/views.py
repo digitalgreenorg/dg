@@ -398,7 +398,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
     gc_queryset = GaddidarCommission.objects.all()
     gso_queryset = GaddidarShareOutliers.objects.all()
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'gaddidar', 'gaddidar__gaddidar_name', 'mandi', 'mandi__mandi_name', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
+        'date', 'user_created_id', 'gaddidar', 'gaddidar__gaddidar_name_en', 'mandi', 'mandi__mandi_name', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
     result = []
     for CT in combined_ct_queryset:
         sum = 0
@@ -431,7 +431,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
-                      'gaddidar__gaddidar_name'], 'mandi__name': CT['mandi__mandi_name'], 'amount': sum, 'gaddidar_discount': gc_discount})
+                      'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name'], 'amount': sum, 'gaddidar_discount': gc_discount})
     return result
 
 
