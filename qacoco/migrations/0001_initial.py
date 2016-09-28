@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('programs', '0001_initial'),
-        ('people', '0006_person_is_modelfarmer'),
+        ('people', '0005_auto_20160708_1744'),
         ('geographies', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('videos', '0004_remove_video_farmers_shown'),
