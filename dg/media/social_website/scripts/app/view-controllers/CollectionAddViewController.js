@@ -53,7 +53,6 @@ define(function(require) {
             references.$collectionTitle = $referenceBase.find('.js-collection-title');
             references.$dropDown = $referenceBase.find('.js-video-criteria');
             references.$partnerList = $referenceBase.find('.js-partnerlist');
-            references.$countryList = $referenceBase.find('.js-countrylist');
             references.$stateList = $referenceBase.find('.js-statelist');
             references.$langList = $referenceBase.find('.js-langlist');
         },
@@ -86,7 +85,6 @@ define(function(require) {
             var references = this._references;
             if (references.$collectionUid){
                 references.$partnerList.val(references.$metaInformationContainer.data('collectionpartner')).change();
-                references.$countryList.val(references.$metaInformationContainer.data('collectioncountry')).change();
                 references.$stateList.val(references.$metaInformationContainer.data('collectionstate')).change();
                 references.$langList.val(references.$metaInformationContainer.data('collectionlanguage')).change();
             }
@@ -127,7 +125,6 @@ define(function(require) {
             this._renderVideoCollectionDropDown(collectionvideodropdownData);
             
             references.$partnerList.prop("disabled", true);
-            references.$countryList.prop("disabled", true);
             references.$stateList.prop("disabled", true);
             references.$langList.prop("disabled", true);
             
@@ -135,6 +132,7 @@ define(function(require) {
             var videos_collection = references.$videoDropDownContainer.data('videos');
             var a;
             for (a in videos_collection){
+                console.log(videos_collection[a]);
                 references.$vidList.val(videos_collection[a]).change();
             }
             
@@ -151,7 +149,7 @@ define(function(require) {
 
         afterCollectionAdd: function(){
             var references = this._references;
-            var url = "/discover" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$countryList.val() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
+            var url = "/discover" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
             window.location.assign(url)
         },
         
@@ -171,7 +169,6 @@ define(function(require) {
         	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
             references.addDataFeed.addInputParam('partner', false, references.$partnerList.val());
             references.addDataFeed.addInputParam('language', false, references.$langList.val());
-            references.addDataFeed.addInputParam('country', false, references.$countryList.val());
             references.addDataFeed.addInputParam('state', false, references.$stateList.val());
             references.addDataFeed.addInputParam('videos', false, order);
             references.addDataFeed.addInputParam('category', false, references.$catList.val());
@@ -184,7 +181,6 @@ define(function(require) {
             references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
             references.addDataFeed.setInputParam('partner', references.$partnerList.val(), true);
             references.addDataFeed.setInputParam('language', references.$langList.val(), true);
-            references.addDataFeed.setInputParam('country', references.$countryList.val(), true);
             references.addDataFeed.setInputParam('state', references.$stateList.val(), true);
             references.addDataFeed.setInputParam('videos', order, true);
             references.addDataFeed.setInputParam('category', references.$catList.val(), true);
@@ -210,11 +206,9 @@ define(function(require) {
             references.$videoContainer.empty();
             references.$videoDropDownContainer.empty();
             references.$partnerList.prop("disabled", false);
-            references.$countryList.prop("disabled", false);
             references.$stateList.prop("disabled", false);
             references.$langList.prop("disabled", false);
             references.$partnerList.val("").change();
-            references.$countryList.val("").change();
             references.$stateList.val("").change();
             references.$langList.val("").change();
             references.$catList.val("");
@@ -292,11 +286,10 @@ define(function(require) {
         
         _onDropDownChosen: function(){
         	var references = this._references;
-        	if( references.$partnerList.val()!="" && references.$countryList.val()!="" && references.$stateList.val()!="" && references.$langList.val()!=""){
+        	
+        	if( references.$partnerList.val()!="" && references.$stateList.val()!="" && references.$langList.val()!=""){
         		references.videodataFeed.addInputParam('limit', false, 0);
         		references.videodataFeed.setInputParam('limit', 0, false);
-                references.videodataFeed.addInputParam('country', false, references.$countryList.val());
-                references.videodataFeed.setInputParam('country', references.$countryList.val(), false);
         		references.videodataFeed.addInputParam('state', false, references.$stateList.val());
         		references.videodataFeed.setInputParam('state', references.$stateList.val(), false);
         		references.videodataFeed.addInputParam('partner', false, references.$partnerList.val());

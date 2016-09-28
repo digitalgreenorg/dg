@@ -179,7 +179,6 @@ class VideoResource(BaseResource):
                    'partner':ALL_WITH_RELATIONS,
                    'language':ALL,
                    'state':ALL,
-                   'country': ALL,
                    }
 
     def dehydrate(self, bundle):

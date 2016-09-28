@@ -137,20 +137,6 @@ FACET_MAPPING = {
                                                     },
                                             "type":"multi_field"
                                             },
-                               "country" : {
-                                          "fields":{
-                                                    "country":{
-                                                             "type":"string",
-                                                             "analyzer":"keyword"
-                                                             },
-                                                    "partial":{
-                                                               "search_analyzer":"full_name",
-                                                                "index_analyzer":"partial_name",
-                                                                "type":"string"
-                                                                }
-                                                    },
-                                            "type":"multi_field"
-                                            },
                                "videos" : {
                                             "type" : "nested",
                                             },
