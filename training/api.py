@@ -235,6 +235,7 @@ class TrainerResource(ModelResource):
         authentication = ApiKeyAuthentication()
         always_return_data = True
         authorization = Authorization()
+        excludes = ('resource_uri')
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
@@ -251,6 +252,7 @@ class LanguageResource(ModelResource):
         queryset = Language.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
+        excludes = ('resource_uri', 'time_created', 'time_modified')
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -272,7 +274,7 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ('resource_uri', 'time_created', 'time_modified')
     dehydrate_partner = partial(
         foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
     dehydrate_district = partial(
@@ -326,6 +328,7 @@ class AssessmentResource(ModelResource):
         queryset = Assessment.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
+        excludes = ('resource_uri')
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -342,6 +345,7 @@ class QuestionResource(ModelResource):
         queryset = Question.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
+        excludes = ('resource_uri')
     dehydrate_assessment = partial(
         foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
@@ -368,6 +372,7 @@ class TrainingResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
         always_return_data = True
+        excludes = ('resource_uri')
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
@@ -403,7 +408,7 @@ class TrainingResource(ModelResource):
         if attempt.count() < 1:
             bundle = super(TrainingResource, self).obj_create(bundle, **kwargs)
         else:
-        print bundle.request
+            print bundle.request
             bundle.request.method = 'PUT'
             bundle.request.path = bundle.request.path + \
                 str(attempt[0].id) + "/"
@@ -456,6 +461,7 @@ class ScoreResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
         always_return_data = True
+        excludes = ('resource_uri')
     hydrate_participant = partial(
         dict_to_foreign_uri, field_name='participant', resource_name='mediator')
     hydrate_training = partial(dict_to_foreign_uri, field_name='training')
