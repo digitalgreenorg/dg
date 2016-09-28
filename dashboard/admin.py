@@ -176,7 +176,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__', 'partner', 'is_modelfarmer')
+    list_display = ('id', '__unicode__')
     search_fields = ['person_name','village__village_name','group__group_name']
     raw_id_fields = ('village','group')
 

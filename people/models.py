@@ -70,10 +70,8 @@ class Person(CocoModel):
     date_of_joining = models.DateField(null=True, blank=True)
     image_exists = models.BooleanField(default=False)
     partner = models.ForeignKey(Partner)
-    is_modelfarmer = models.BooleanField(default=False)
     objects = models.Manager() #The default manager
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook
-
 
     class Meta:
         unique_together = ("person_name", "father_name", "village")

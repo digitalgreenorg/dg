@@ -3368,13 +3368,13 @@ define('auth_offline_backend',[
   }
   
   // if u, p matches that in user table, sets login state = true 
-  var login = function(username, password, language, partner_name){
+  var login = function(username, password, language){
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, language, partner_name, true)
+                  save_login_state(username, password, language, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -3389,7 +3389,7 @@ define('auth_offline_backend',[
           },
           error: function(){
               // No user has been found in the database. This is probably a new login, and database is yet to be created.
-               save_login_state(username, password, language, partner_name, true)
+               save_login_state(username, password, language, true)
                .done(function (){
                    return dfd.resolve("New user registered in offline database.");
                })
@@ -3402,9 +3402,9 @@ define('auth_offline_backend',[
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, language, partner_name, loggedin){
+  var save_login_state = function(username, password, language, loggedin){
       var dfd = new $.Deferred();
-      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name},{
+      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language},{
           success: function(){
               console.log("user state saved in offline");
               dfd.resolve();
@@ -5272,11 +5272,6 @@ define('views/form',[
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
-            var partner_name = User.get('partner_name');
-            var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
-            if (partner_check < 0){
-                $f_el.find("#is_modelfarmer").addClass('hidden');
-            }
         },
         
         //fetches all foreign collections and renders them when all are fetched
@@ -6634,44 +6629,28 @@ define('auth',[
         // internet accessible - login to server backend - when successfull - login to offline backend
         if (internet_connected()) {
             // try server backend login
-            // online_login(username, password)
-
-          $.post("/coco/login/", {
-              "username": username,
-              "password": password
-          })
-                
-          .fail(function(error) {
-              console.log("Online login failed - " + error);
-              dfd.reject(error);
-          })
-
-          .done(function(resp) {
-              // online login successful, try offline backend login
-              if (resp.success == "1"){
-
-                OfflineAuthBackend.login(username, password, language, resp.partner_name)
-                  .done(function() {
-                      // login successful
-                      console.log("Login Successful");
-                      post_login_success();
-                      dfd.resolve();
-                  })
-                  .fail(function (error){
-                      console.log("Offline login failed - " + error);
-                      dfd.reject(error);
-                  });
-
-              }else{
-                return dfd.reject("Username or password is incorrect (Server)");
-              }
-
-              
-          });
+            online_login(username, password)
+                .fail(function(error) {
+                    console.log("Online login failed - " + error);
+                    dfd.reject(error);
+                })
+                .done(function() {
+                    // online login successful, try offline backend login
+                    OfflineAuthBackend.login(username, password, language)
+                        .done(function() {
+                            // login successful
+                            console.log("Login Successful");
+                            post_login_success();
+                            dfd.resolve();
+                        })
+                        .fail(function (error){
+                            console.log("Offline login failed - " + error);
+                            dfd.reject(error);
+                        });
+                });
         } else {
             // internet not accessible - only try logging into offline backend
-            var partner_name = User.get('partner_name')
-            OfflineAuthBackend.login(username, password, language, partner_name)
+            OfflineAuthBackend.login(username, password, language)
                 .done(function() {
                     console.log("Login Successful");
                     post_login_success();

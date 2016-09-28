@@ -168,35 +168,19 @@ hr {
 }
 .indicator {
     margin-left: 20px!important;
-    /*margin-right: 20px!important;*/
+    margin-right: 20px!important;
 }
 .tabs .active {
-    font-weight: bold;
-    background-color: aliceblue;
-    margin-left: 20px !important;
-    /*margin-right: 20px !important;*/
+    font-weight: Bold;
 }
 .card .card-title {
-    font-size: 18px;
-}
-
-.sparkline_graph {
-    padding-left: 10px;
-}
-
-.card .card-content {
-      padding: 0 !important;
+    font-size: 20px;
 }
 @media only screen and (max-width: 992px) {
     header, main, footer {
         padding-left: 0;
     }
 }
-
-.a-customfont{
-    font-size: 12px;
-}
-
 .row.vdivide [class*='col']:not(:last-child):after {
     background: #e0e0e0;
     width: 1px;
