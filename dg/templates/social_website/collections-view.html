@@ -7,7 +7,7 @@
                 <div class="inner-wrapper" id="collection-view">
                     <div class="grid layout-vr-sm">
                         <div class="grid-col grid-size2of3">
-                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
+                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}} ({{ object.country}}) </h1>
                         </div>
                         {% if is_collection %}
                         
@@ -143,7 +143,7 @@
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
                                                 <div class="vidDrawer-image">
                                                     {% if is_collection %}
-                                                    <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                                    <a href="{% url 'collection_video_page' object.partner.name object.country object.state object.language object.title forloop.counter %}" >
                                                     {% else %}
                                                     <a href="{{carousel_video.url}}" >
                                                     {% endif %}

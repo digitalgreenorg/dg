@@ -7,7 +7,7 @@
         <div class="inner-wrapper layout-vr-md" id="collection-view">
             <div class="grid layout-vr-sm">
                 <div class="grid-col grid-size4of5">
-                    <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
+                    <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}} ({{ object.country}}) </h1>
                 </div>
                 <div class="grid-col grid-size1of5">
                     {% for group in user.groups.all %}
