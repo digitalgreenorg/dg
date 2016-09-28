@@ -9,9 +9,12 @@ from initialize_lookup_matrix import initialize_lookup
 
 class data_lib():
     Dict = {}
+
     lookup_matrix = {}
+
     idElementKey = ''
     idElementValue = -1
+
     tableDictionary = {}
     whereDictionary = {}
     selectDictionary = {}
@@ -22,13 +25,22 @@ class data_lib():
 
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
+    
+    def uniqueList(self,ElementsList):
+        seen = set()
+        seen_add = seen.add
+        return [elements for elements in ElementsList if not (elements in seen or seen_add(elements))]
+
     def handle_controller(self, args, options):
-#        print options
+
         final_df = pd.DataFrame()
+
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
+
         ilib = initialize_library(options)
         ilookup = initialize_lookup()
+
         self.tableDictionary = ilib.initializeTableDict()
         self.whereDictionary = ilib.initializeWhereDict()
         self.selectDictionary = ilib.initializeSelectDict()
@@ -47,14 +59,18 @@ class data_lib():
             print "Warning - Invalid input for partition fields"
 
         if self.check_valuefield_validity(options['value']):
+
             for item in options['value']:
                 if item == 'list' and options['value']['list'] != False:
+
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
+
                 if options['value'][item] != False and item != 'list':
                     relevantValueDictionary[item] = options['value'][item]
+
         else:
             print "Warning - Invalid input for Value fields"
 
@@ -100,6 +116,7 @@ class data_lib():
     # Function to check validity of the partition field inputs by user by comparing with the generalPartitionList
     def check_partitionfield_validity(self, partitionField):
         if set(partitionField.keys()).issubset(self.tableDictionary.keys()):
+
             return True
         else:
             return False
@@ -135,7 +152,9 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
+
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
+#        print orderbyResult
 #        print "----------------------------------SELECT PART------------------------------"
 #        print selectResult
 #        print "----------------------------------FROM PART--------------------------------"
@@ -156,7 +175,6 @@ class data_lib():
         if not partitionElements and 'list' in valueElement:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
-
         else:
             for items in partitionElements:
                 for i in self.selectDictionary[items]:
@@ -171,11 +189,9 @@ class data_lib():
 
         self.idElementKey = idElementKey
         self.idElementValue = idElementVal
-
         selectComponentList.append(
             self.tableDictionary[self.idElementKey] + '.' + self.groupbyDictionary[self.idElementKey] + ' AS \'' + self.headerDictionary[self.idElementKey][
                 self.groupbyDictionary[self.idElementKey]] + '\'')
-
         for i in self.selectDictionary[valueElement]:
             if (self.selectDictionary[valueElement][i] == True):
                 x = ['count(', 'distinct']
@@ -196,6 +212,7 @@ class data_lib():
                     selectComponentList.append(
                         str(self.tableDictionary[valueElement]) + '.' + i + ' AS \'' + self.headerDictionary[valueElement][
                             i] + '\'')
+        selectComponentList = self.uniqueList(selectComponentList)
         return ','.join(selectComponentList)
 
     # Function to make tables by recursive calls for tables.
@@ -248,6 +265,7 @@ class data_lib():
         if not partitionElements:
             if valueElement in self.categoryDictionary['partitionCumValues'].keys():
                 majorTablesList.append(self.tableDictionary[valueElement])
+        majorTablesList = self.uniqueList(majorTablesList)
         return ' , '.join(majorTablesList)
 
 
@@ -255,10 +273,17 @@ class data_lib():
     def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
+#        print partitionElements
+
         for items in partitionElements:
+            ll=[]
             if partitionElements[items] != True:
+
+#                for elements in partitionElements[items]:
+#
                 whereComponentList.append(
-                    self.tableDictionary[items] + '.' + self.whereDictionary[items] + '=' + partitionElements[items])
+                self.tableDictionary[items] + '.' + self.whereDictionary[items] + ' in (' + ','.join(str(n) for n in partitionElements[items])+')')
+
         for i in Dictionary:
             for j in Dictionary[i]:
                 for k in range(0, len(lookup_matrix[i][j])):
@@ -287,11 +312,14 @@ class data_lib():
     def getOrderByComponent(self, partitionElements, valueElements):
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
+
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
+
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
+
                         ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1

@@ -4,9 +4,12 @@ from configuration import tableDictionary, whereDictionary, selectDictionary, gr
 
 class initialize_library():
     Dict = {}
+
     lookup_matrix = {}
+
     idElementKey = ''
     idElementValue = -1
+
     tableDictionaryToUse = tableDictionary
     whereDictionaryToUse = whereDictionary
     selectDictionaryToUse = selectDictionary
