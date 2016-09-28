@@ -61,7 +61,6 @@ pre_delete.connect(delete_log, sender=QAReviewerName)
 
 class VideoQualityReview(QACocoModel):
     video = models.ForeignKey(Video)
-    youtubeid = models.CharField(max_length=100,blank=True,null=True)
     storystructure = models.CharField(max_length=1,choices=SCORE_CHOICES,blank=True)
     framing = models.CharField(max_length=1,choices=SCORE_CHOICES,blank=True)
     camera_angles = models.CharField(max_length=1,choices=SCORE_CHOICES,blank=True)
