@@ -103,6 +103,9 @@ class PartnerResource(ModelResource):
         resource_name = 'partner'
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
+        excludes = ('time_created', 'time_modified',
+                    'old_coco_id', 'date_of_association')
+        include_resource_uri = False
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -116,6 +119,7 @@ class VillageResource(ModelResource):
         resource_name = 'village'
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
+        include_resource_uri = False
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -151,6 +155,9 @@ class DistrictResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = DistrictAuthorization()
         max_limit = None
+        excludes = ('time_created',
+                    'time_modified', 'old_coco_id', 'start_date')
+        include_resource_uri = False
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -235,7 +242,7 @@ class TrainerResource(ModelResource):
         authentication = ApiKeyAuthentication()
         always_return_data = True
         authorization = Authorization()
-        excludes = ('resource_uri')
+        include_resource_uri = False
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
@@ -252,7 +259,10 @@ class LanguageResource(ModelResource):
         queryset = Language.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created',
+                    'time_modified', 'old_coco_id')
+        include_resource_uri = False
+
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -274,7 +284,8 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
     dehydrate_partner = partial(
         foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
     dehydrate_district = partial(
@@ -328,7 +339,7 @@ class AssessmentResource(ModelResource):
         queryset = Assessment.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
-        excludes = ('resource_uri')
+        include_resource_uri = False
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -345,7 +356,7 @@ class QuestionResource(ModelResource):
         queryset = Question.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
-        excludes = ('resource_uri')
+        include_resource_uri = False
     dehydrate_assessment = partial(
         foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
@@ -372,7 +383,7 @@ class TrainingResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
         always_return_data = True
-        excludes = ('resource_uri')
+        include_resource_uri = False
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
@@ -461,7 +472,7 @@ class ScoreResource(ModelResource):
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
         always_return_data = True
-        excludes = ('resource_uri')
+        include_resource_uri = False
     hydrate_participant = partial(
         dict_to_foreign_uri, field_name='participant', resource_name='mediator')
     hydrate_training = partial(dict_to_foreign_uri, field_name='training')
