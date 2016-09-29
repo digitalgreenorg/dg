@@ -294,17 +294,7 @@ function validation_check() {
     newto_date  = new Date($('#to_date').val());
     span =new Date(newto_date-newfrom_date);
     days = span/1000/60/60/24;
-    if(isNaN( newfrom_date.getTime() ) ){
-        alert("Please Fill 'From Date'");
-        error = 1;
-        event.preventDefault();
-    }
-    else if (isNaN( newto_date.getTime() ) ){
-        alert("Please Fill 'To Date'");
-        error = 1;
-        event.preventDefault();
-    }
-    else if(!(days>=0)){
+     if(!(days>=0) && !isNaN( newfrom_date.getTime() ) && !isNaN( newto_date.getTime() )){
         alert("'From Date' cannot be greater than 'To Date'");
             error = 1;
             event.preventDefault();

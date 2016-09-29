@@ -35,21 +35,28 @@
                             var d = new Date();
                             d.setMonth(d.getMonth() - 1);
                             jQuery(function ($) { //on document.ready
-                                $('#to_date').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate", new Date());
-                                $('#from_date').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate", d);
+                                $('#to_date').datepicker({dateFormat: 'yy-mm-dd',minDate: -0,maxDate: new Date()}).datepicker("setDate", new Date());
+                                $('#from_date').datepicker({dateFormat: 'yy-mm-dd',minDate: -0,maxDate: new Date()}).datepicker("setDate", d);
+                                $('#to_date').attr('max',new Date());
+                                $('#from_date').attr('max',new Date());
                             })
                         }
                     </script>
 
-
-
+                    <script type="text/javascript">
+                        jQuery(function($){
+                            $('#from_date').click(function(){
+                                $('#from_date').attr('value','2008-01-01');
+                            })
+                        })
+                    </script>>
                     <div id="date" name="Date">
                         <p class="copy">
                         <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Date:
                         </h3>
                         <h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">From:
-                            &nbsp;<input type="date" id="from_date" name="from_date" size="20">&nbsp;&nbsp;
-                            To: &nbsp; <input type="date" id="to_date" name="to_date" size="20">
+                            &nbsp;<input type="date" id="from_date" name="from_date" size="20" min="2000-01-01" >&nbsp;&nbsp;
+                            To: &nbsp; <input type="date" id="to_date" name="to_date" size="20" min="2000-01-01">
                         </h3>
                         </p>
                     </div>
