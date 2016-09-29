@@ -5,7 +5,7 @@ from django.forms.extras.widgets import *
 from base_models import QACocoModel
 from models import VideoQualityReview, DisseminationQuality, AdoptionVerification
 
-from geographies.models import District
+from geographies.models import District, Block
 from videos.models import Video, Category, SubCategory, NonNegotiable
 
 
@@ -19,28 +19,28 @@ def save_all(instances, user, id):
             instance.user_created_id = user
         instance.save()
 
-class UserModelDistrictMultipleChoiceField(forms.ModelMultipleChoiceField):
+class UserModelBlockMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return "%s" % (obj.district_name)
+        return "%s" % (obj.block_name)
 
 class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return "%s (%s) (%s)" % (obj.title, obj.village.block.district.district_name, obj.language.language_name)
+        return "%s (%s) (%s)" % (obj.title, obj.village.block.block_name, obj.language.language_name)
 
 class QACocoUserForm(forms.ModelForm):
-    districts = UserModelDistrictMultipleChoiceField(
+    blocks = UserModelBlockMultipleChoiceField(
         widget=FilteredSelectMultiple(
-                                      verbose_name='districts',
+                                      verbose_name='blocks',
                                       is_stacked=False
                                      ),
-        queryset=District.objects.all()
+        queryset=Block.objects.all()
         )
     videos = UserModelVideoMultipleChoiceField(
         widget=FilteredSelectMultiple(
                                       verbose_name='videos',
                                       is_stacked=False
                                      ),
-        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
+        queryset=Video.objects.all().prefetch_related('language', 'village__block'),
         required=False
         )
 

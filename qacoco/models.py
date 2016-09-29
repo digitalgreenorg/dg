@@ -21,7 +21,7 @@ class ServerLog(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, related_name="qacocoserverlog_user", null=True)
-    district = models.IntegerField(null=True)
+    block = models.IntegerField(null=True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
@@ -30,14 +30,14 @@ class ServerLog(models.Model):
 class QACocoUser(QACocoModel):
     user = models.OneToOneField(User)
     partner = models.ForeignKey(Partner)
-    districts = models.ManyToManyField(District)
+    blocks = models.ManyToManyField(Block)
     videos = models.ManyToManyField(Video)
 
     def get_videos(self):
         return self.videos.all()
 
-    def get_districts(self):
-        return self.districts.all()
+    def get_blocks(self):
+        return self.blocks.all()
 
     def __unicode__(self):
         return  u'%s' % (self.user.username)

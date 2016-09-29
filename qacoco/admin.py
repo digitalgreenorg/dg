@@ -19,7 +19,7 @@ from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
-    list_display = ('user', 'partner', 'get_districts')
+    list_display = ('user', 'partner', 'get_blocks')
     search_fields = ['user__username']
 
 class VideoQualityReviewAdmin(admin.ModelAdmin):

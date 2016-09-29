@@ -127,19 +127,38 @@ def get_user_partner_id(user_id):
 def get_user_videos(user_id):
     ###Videos produced by partner with in the same state
     qacoco_user = QACocoUser.objects.get(user_id = user_id)
-    districts = qacoco_user.get_districts()
+    blocks = qacoco_user.get_blocks()
     #user_states = State.objects.filter(district__in = districts).distinct().values_list('id', flat=True)
     user_videos = qacoco_user.get_videos().values_list('id', flat = True)
-    videos = Video.objects.filter(village__block__district__in = districts).values_list('id', flat = True)
+    videos = Video.objects.filter(village__block__in = blocks).values_list('id', flat = True)
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
     #videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = qacoco_user.partner_id).values_list('id', flat = True)
     ###Get videos screened to allow inter partner sharing of videos
     #videos_seen = set(Person.objects.filter(village__block__district__in = districts, partner_id = qacoco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(user_videos))
 
+def get_user_mediators(user_id):
+    qacoco_user = QACocoUser.objects.get(user_id = user_id)
+    blocks = qacoco_user.get_blocks()
+    partner = get_user_partner_id(user_id)
+    user_districts = District.objects.filter(block__in = blocks).distinct().values_list('id', flat=True)
+    mediators_from_same_district = Animator.objects.filter(district__in = user_districts).distinct().values_list('id', flat = True)
+    return mediators_from_same_district
+
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
     return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
+class MediatorAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_mediators(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_mediators(bundle.request.user.id):
+            return True
+        # Is the requested object owned by the user?
+        else:
+            raise NotFound( "Not allowed to download Mediator")
 
 class DistrictAuthorization(Authorization):
     def __init__(self, field):
@@ -160,6 +179,54 @@ class DistrictAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download District" )
+
+class BlockAuthorization(Authorization):
+    def __init__(self, field):
+        self.filter_keyword = field
+    
+    def read_list(self, object_list, bundle):
+        blocks = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        kwargs = {}
+        kwargs[self.filter_keyword] = blocks
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.filter_keyword] = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Block" )
+
+class BlockVideoAuthorization(Authorization):
+    def __init__(self, field):
+        self.filter_keyword = field
+    
+    def read_list(self, object_list, bundle):
+        blocks = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        videos1 = list(Video.objects.filter(village__block__in = blocks))
+        videos2 = list(QACocoUser.objects.get(user_id= bundle.request.user.id).get_videos())
+        videos = videos1 + videos2 
+        kwargs = {}
+        kwargs[self.filter_keyword] = videos
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        blocks = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        videos1 = list(Video.objects.filter(village__block__in = blocks))
+        videos2 = list(QACocoUser.objects.get(user_id= bundle.request.user.id).get_videos())
+        videos = videos1 + videos2 
+        kwargs = {}
+        kwargs[self.filter_keyword] = videos
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Video Quality Review" )
+
 
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -230,12 +297,11 @@ class VideoResource(BaseResource):
 
 class BlockResource(BaseResource):
     class Meta:
-                
                 max_limit = None
                 queryset = Block.objects.all()
                 resource_name = 'block'
                 authentication = SessionAuthentication()
-                authorization = DistrictAuthorization('district_id__in')
+                authorization = BlockAuthorization('id__in')
 
 class VillageResource(BaseResource):
     block= fields.ForeignKey(BlockResource, 'block')
@@ -244,7 +310,7 @@ class VillageResource(BaseResource):
                 queryset = Village.objects.all()
                 resource_name = 'village'
                 authentication = SessionAuthentication()
-                authorization = DistrictAuthorization('block__district_id__in')
+                authorization = BlockAuthorization('block_id__in')
     dehydrate_block = partial(foreign_key_to_id, field_name = 'block', sub_field_names=['id','block_name'])
     hydrate_block = partial(dict_to_foreign_uri, field_name ='block', resource_name = 'block')
 
@@ -253,9 +319,10 @@ class MediatorResource(BaseResource):
     class Meta:
                 max_limit = None
                 queryset = Animator.objects.all()
+                #queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
                 resource_name = 'mediator'
                 authentication = Authentication()
-                authorization = DistrictAuthorization('district_id__in')
+                authorization = MediatorAuthorization()
     hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
 
     def dehydrate_assigned_villages(self, bundle):
@@ -272,7 +339,7 @@ class PersonGroupResource(BaseResource):
                 queryset = PersonGroup.objects.all()
                 resource_name = 'group'
                 authentication = Authentication()
-                authorization = DistrictAuthorization('village__block__district_id__in')
+                authorization = BlockAuthorization('village__block_id__in')
     dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
@@ -284,7 +351,7 @@ class PersonResource(BaseResource):
                 queryset = Person.objects.all()
                 resource_name = 'person'
                 authentication = Authentication()
-                authorization = DistrictAuthorization('village__block__district_id__in')
+                authorization = BlockAuthorization('village__block_id__in')
     dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
@@ -311,7 +378,7 @@ class VideoQualityReviewResource(BaseResource):
                 queryset = VideoQualityReview.objects.all()
                 always_return_data = True
                 resource_name = 'VideoQualityReview'
-                authorization = Authorization()
+                authorization = BlockVideoAuthorization('video__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=VideoQualityReviewForm)
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
@@ -330,7 +397,7 @@ class DisseminationQualityResource(BaseResource):
                 queryset = DisseminationQuality.objects.all()
                 always_return_data = True
                 resource_name = 'DisseminationQuality'
-                authorization = Authorization()
+                authorization = BlockAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=DisseminationQualityForm)
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
@@ -358,7 +425,7 @@ class AdoptionVerificationResource(BaseResource):
                 queryset = AdoptionVerification.objects.all()
                 always_return_data = True
                 resource_name = 'AdoptionVerification'
-                authorization = Authorization()
+                authorization = BlockAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=AdoptionVerificationForm)
 
