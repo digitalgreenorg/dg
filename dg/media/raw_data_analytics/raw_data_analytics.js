@@ -211,7 +211,7 @@ function validation_check() {
     var checked_partitions_restrict = [animator, group, people, video];
     var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no,blocknum,villagenum]
     var count_partition_restrict = 0;
-    count_partition = 0;
+    var count_partition = 0;
     var count_values = 0;
     var i;
 
