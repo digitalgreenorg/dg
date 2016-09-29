@@ -263,7 +263,6 @@ class LanguageResource(ModelResource):
                     'time_modified', 'old_coco_id')
         include_resource_uri = False
 
-
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
@@ -403,6 +402,10 @@ class TrainingResource(ModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method == 'POST':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     # def put_detail(self, bundle, **kwargs):
@@ -415,11 +418,9 @@ class TrainingResource(ModelResource):
         trainer_list.append(bundle.data['trainer'][0]['online_id'])
         attempt = Training.objects.filter(
             date=bundle.data['date'], trainer__in=trainer_list)
-        print attempt
         if attempt.count() < 1:
             bundle = super(TrainingResource, self).obj_create(bundle, **kwargs)
         else:
-            print bundle.request
             bundle.request.method = 'PUT'
             bundle.request.path = bundle.request.path + \
                 str(attempt[0].id) + "/"
@@ -487,6 +488,10 @@ class ScoreResource(ModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        online_id = bundle.data['id']
+        if bundle.request.method == 'POST' or bundle.request.method == 'PUT':
+            bundle.data.clear()
+            bundle.data['online_id'] = online_id
         return bundle
 
     def obj_create(self, bundle, **kwargs):
