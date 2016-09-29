@@ -28,7 +28,7 @@ window.onload = date;
         $("#formId").each(function () {
             this.reset();
         });
-
+        
     });
     $('#formId').keypress(function (event) {
 
@@ -60,10 +60,11 @@ window.onload = date;
         $("#villageId").val('').trigger("chosen:updated");
     });
     $("#stateId").bind("change", function () {
+        $("#districtId").find('option').remove();
         $("#districtId").prop('disabled', false);
+        $("#districtId").val('').trigger("chosen:updated");
         $("#villageId").find('option').remove();
-        $("#partnerId").find('option').remove().val('').trigger('chosen:updated');
-        $("#districtId").find('option').remove().val('').trigger("chosen:updated");
+        $("#partnerId").find('option').remove().val('').trigger('chosen:updated'); 
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
         $("#blockId").prop('disabled',true);
