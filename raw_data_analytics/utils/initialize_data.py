@@ -1,6 +1,6 @@
 __author__ = 'Lokesh'
 
-from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary, headerDictionary
+from configuration import tableDictionary, whereDictionary, selectDictionary, groupbyDictionary, categoryDictionary, orderDictionary, headerDictionary,checkValueSpecial
 
 class initialize_library():
     Dict = {}
@@ -17,7 +17,7 @@ class initialize_library():
     categoryDictionaryToUse = categoryDictionary
     orderDictionaryToUse = orderDictionary
     headerDictionaryToUse = headerDictionary
-
+    valueSpecialToUse =  checkValueSpecial
     def __init__(self, user_input):
         self.user_input = user_input
 
@@ -50,3 +50,7 @@ class initialize_library():
     def initializeHeaderDict(self):
         self.headerDictionaryToUse = headerDictionary
         return headerDictionary
+
+    def initializeValueSpecial(self):
+        self.valueSpecialToUse = checkValueSpecial
+        return checkValueSpecial
