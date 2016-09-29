@@ -22,6 +22,11 @@ class QACocoUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'partner', 'get_blocks')
     search_fields = ['user__username']
 
+    def get_queryset(self, request):
+        if request.user.is_superuser:
+            return QACocoUser.objects.all()
+        return QACocoUser.objects.filter(user=request.user)
+
 class VideoQualityReviewAdmin(admin.ModelAdmin):
     list_display=('video','qareviewername', 'total_score', 'video_grade')
     raw_id_fields = ('video')
