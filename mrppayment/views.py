@@ -124,7 +124,7 @@ def getreport(request):
             mrp_screening_amount = per_dissemination_rate * succ_diss
             mrp_adoption_amount = per_adoption_rate * succ_vid_adoption
             tot_amount = mrp_screening_amount + mrp_adoption_amount
-            mrp_final_result_arr = [j, mrp, tot_diss, succ_diss, mrp_screening_amount, succ_vid_adoption, mrp_adoption_amount,
+            mrp_final_result_arr = [j, mrp[0], tot_diss, succ_diss, mrp_screening_amount, succ_vid_adoption, mrp_adoption_amount,
                      tot_amount]
             mrp_output_array.append(mrp_final_result_arr)
 
