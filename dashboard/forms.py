@@ -162,4 +162,3 @@ class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
         exclude = ()
-        
