@@ -79,44 +79,28 @@ define([
         // internet accessible - login to server backend - when successfull - login to offline backend
         if (internet_connected()) {
             // try server backend login
-            // online_login(username, password)
-
-          $.post("/coco/login/", {
-              "username": username,
-              "password": password
-          })
-                
-          .fail(function(error) {
-              console.log("Online login failed - " + error);
-              dfd.reject(error);
-          })
-
-          .done(function(resp) {
-              // online login successful, try offline backend login
-              if (resp.success == "1"){
-
-                OfflineAuthBackend.login(username, password, language, resp.partner_name)
-                  .done(function() {
-                      // login successful
-                      console.log("Login Successful");
-                      post_login_success();
-                      dfd.resolve();
-                  })
-                  .fail(function (error){
-                      console.log("Offline login failed - " + error);
-                      dfd.reject(error);
-                  });
-
-              }else{
-                return dfd.reject("Username or password is incorrect (Server)");
-              }
-
-              
-          });
+            online_login(username, password)
+                .fail(function(error) {
+                    console.log("Online login failed - " + error);
+                    dfd.reject(error);
+                })
+                .done(function() {
+                    // online login successful, try offline backend login
+                    OfflineAuthBackend.login(username, password, language)
+                        .done(function() {
+                            // login successful
+                            console.log("Login Successful");
+                            post_login_success();
+                            dfd.resolve();
+                        })
+                        .fail(function (error){
+                            console.log("Offline login failed - " + error);
+                            dfd.reject(error);
+                        });
+                });
         } else {
             // internet not accessible - only try logging into offline backend
-            var partner_name = User.get('partner_name')
-            OfflineAuthBackend.login(username, password, language, partner_name)
+            OfflineAuthBackend.login(username, password, language)
                 .done(function() {
                     console.log("Login Successful");
                     post_login_success();

@@ -14,6 +14,7 @@ class FullDownloadStats(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
+
 class ServerLog(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(default=datetime.datetime.utcnow)

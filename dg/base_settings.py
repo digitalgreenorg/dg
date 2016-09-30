@@ -201,6 +201,7 @@ INSTALLED_APPS = (
     'ivr',
     'training',
     'loop',
+    'qacoco',
     'mrppayment',
 )
 

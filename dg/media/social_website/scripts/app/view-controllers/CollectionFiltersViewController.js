@@ -147,6 +147,7 @@ define(function(require) {
 
             // update data
             var newValue = !oldValue;
+
             this._setFilterStatus(categoryId, optionId, newValue);
             this._renderFilters();
         },
@@ -159,12 +160,14 @@ define(function(require) {
 
             var categoryId = $breadcrumbItem.data('categoryId');
             var optionId = $breadcrumbItem.data('optionId');
+
             this._setFilterStatus(categoryId, optionId, false);
             this._renderFilters();
         },
 
         _onClearAllFiltersClick: function(e) {
             e.preventDefault();
+
             this._clearFilters();
             this._references.$filtersContainer.find('.js-filter-option.enabled').removeClass('enabled');
             this._updateBreadcrumbs();
@@ -270,13 +273,13 @@ define(function(require) {
         			filterOptionData = this._state.filterData.categories[categoryId].options[i];
         		}
         	}
-
+        	
             if (filterOptionData == undefined){
             	return;
             }
             // update value
             filterOptionData.filterActive = value;
-
+            
             this._updateBreadcrumbs();
 
             // alert a value change
@@ -290,7 +293,7 @@ define(function(require) {
         			return this._state.filterData.categories[categoryId].options[i].filterActive
         		}
         	}
-
+            
         },
 
         _findFilterElementById: function(categoryId, optionId) {
@@ -304,13 +307,11 @@ define(function(require) {
 
         _fetchFilters: function(type) {
             this._references.dataFeed.fetch(null, this._onDataProcessed.bind(this), type);
-
-        }, 
+        },
 
         _onDataProcessed: function() {
             this._state.filterData = this._references.dataFeed.getSearchFilters();
             //this._indicateCurrentLanguageSelection();
-
             this._renderFilters();
         },
 
@@ -323,24 +324,27 @@ define(function(require) {
             var currentActiveFilters = this._getActiveFilters();
 
             var categories = filterData.categories;
-
+            
             var i;
-
-            var filterorder = ['country','state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject'];
-
+            
+            var filterorder = ['state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject'];
+            
             var index;
+            
             for (index in filterorder) {
                 var categoryId = filterorder[index];
+                
                 var currentCategory = Util.Object.clone(categories[categoryId], true);
                 currentCategory._categoryId = categoryId;
 
                 var options = currentCategory.options;
+
                 for (i = 0; i < options.length; i++) {
                     var currentOption = options[i];
                     
                     if (currentOption.dependencies) {
                         var dependenciesMet = this._checkFilterDependcies(currentOption.dependencies);
-
+                        
                         if (!dependenciesMet) {
                             options.splice(i, 1);
                             // we removed an option from the array which will decrease the length of the array
@@ -352,7 +356,7 @@ define(function(require) {
 
                     currentCategory.options[i]._optionId = i;
                 }
-
+                
                 categoriesForRender.push(currentCategory);
             }
 
@@ -361,6 +365,7 @@ define(function(require) {
             var filterDataForRender = {
                 categories: categoriesForRender
             };
+
             return filterDataForRender;
         },
 
@@ -492,7 +497,7 @@ define(function(require) {
             }
 
             var categories = filterData.categories;
-
+            
             var categoryId;
             var optionId;
             var optionsLength;

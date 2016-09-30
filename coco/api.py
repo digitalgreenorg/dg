@@ -241,18 +241,9 @@ class NonNegotiableAuthorization(Authorization):
 
 class BaseResource(ModelResource):
     
-    # override for update to save Empty data
-    def update_obj(self, bundle):
-        empty_field_dict = {k: v for k, v in bundle.data.items() if not v}
-        for k, v in empty_field_dict.items():
-            if k == "is_modelfarmer":
-                bundle.obj.is_modelfarmer = False
-        return bundle
-
     def full_hydrate(self, bundle):
         bundle = super(BaseResource, self).full_hydrate(bundle)
         bundle.obj.user_modified_id = bundle.request.user.id
-        self.update_obj(bundle)
         return bundle
     
     def obj_create(self, bundle, **kwargs):

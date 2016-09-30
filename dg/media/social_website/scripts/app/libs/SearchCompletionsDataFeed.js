@@ -27,6 +27,7 @@ define(function(require) {
 
         constructor: function() {
             this.base('api/searchCompletions');
+
             // prepare data model
             this._dataModel.addSubModel('searchCompletions', true);
 
@@ -52,6 +53,7 @@ define(function(require) {
 
         _processData: function(unprocessedData) {
             this.base(unprocessedData);
+            
             // local references
             var dataModel = this._dataModel;
             var searchCompletionsModel = dataModel.get('searchCompletions');
@@ -82,6 +84,7 @@ define(function(require) {
             var maxCount = this.getInputParam('maxCount');
 
             var searchCompletions = this._dataModel.get('searchCompletions').getSubset(0, maxCount);
+
             if (!searchCompletions) {
                 this.fetch(searchString, maxCount);
                 return false;
