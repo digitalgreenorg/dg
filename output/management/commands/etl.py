@@ -10,8 +10,9 @@ from django.db.models import Min, Count
 
 from people.models import Person, Animator, AnimatorAssignedVillage
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
-from geographies.models import Village
+from geographies.models import Village,Block,District,State,Country
 from videos.models import Video
+from programs.models import Partner
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,6 +43,12 @@ class AnalyticsSync():
         
         #Fill Data
         try:
+            #village_partner_myisam
+            self.db_cursor.execute("""INSERT INTO village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,country_id)
+                                        SELECT distinct pp.partner_id, gv.id ,gb.id ,gd.id ,gs.id ,gc.id
+                                        FROM people_person pp INNER JOIN programs_partner ppa ON pp.partner_id = ppa.id INNER JOIN geographies_village gv ON pp.village_id = gv.id INNER JOIN geographies_block gb on gv.block_id = gb.id INNER JOIN geographies_district gd on gb.district_id=gd.id INNER JOIN geographies_state gs on gd.state_id =  gs.id INNER JOIN geographies_country gc on gs.country_id=gc.id""")
+            print "Finished insert into village_partner_myisam"
+
             #screening_myisam
             self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -100,9 +107,9 @@ class AnalyticsSync():
             #activities_screeningwisedata
             self.db_cursor.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
                                         screening_id, old_coco_id, screening_date, start_time, location, village_id, animator_id, 
-                                        partner_id, video_id, video_title, persongroup_id) 
+                                        partner_id, video_id, video_title, persongroup_id,video_youtubeid) 
                                         SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
-                                        A.old_coco_id, A.date, A.start_time, A.location, A.village_id, A.animator_id, A.partner_id, B.video_id, D.title, C.PERSONGROUP_ID 
+                                        A.old_coco_id, A.date, A.start_time, A.location, A.village_id, A.animator_id, A.partner_id, B.video_id, D.title, C.PERSONGROUP_ID,D.youtubeid
                                         from activities_screening A join activities_screening_videoes_screened B on B.screening_id=A.id join videos_video D on B.video_id=D.id 
                                         join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
             print "Finished insert into activities_screeningwisedata"
@@ -116,7 +123,8 @@ class AnalyticsSync():
                                         from people_animator A 
                                         join people_animatorassignedvillage B on A.id=B.animator_id""")
             print "Finished insert into people_animatorwisedata"
-
+            
+            
 
             # main_data_dst stores all the counts for every date , every village and every partner                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0,
@@ -251,6 +259,7 @@ class AnalyticsSync():
                     
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list)/5000) + 2):
+
                 self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
                 total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
