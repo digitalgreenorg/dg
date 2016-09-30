@@ -160,6 +160,8 @@ class MediatorAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Mediator")
 
+# Usable in case of QACOCO User data according to district
+'''
 class DistrictAuthorization(Authorization):
     def __init__(self, field):
         self.filter_keyword = field
@@ -179,6 +181,7 @@ class DistrictAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download District" )
+'''
 
 class BlockAuthorization(Authorization):
     def __init__(self, field):
