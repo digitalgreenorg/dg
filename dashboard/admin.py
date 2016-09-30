@@ -15,7 +15,9 @@ from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
-from videos.models import  NonNegotiable
+from qacoco.forms import QACocoUserForm
+from qacoco.admin import QACocoUserAdmin
+from videos.models import  NonNegotiable, Category, SubCategory
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -174,7 +176,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__', 'partner', 'is_modelfarmer')
+    list_display = ('id', '__unicode__')
     search_fields = ['person_name','village__village_name','group__group_name']
     raw_id_fields = ('village','group')
 
@@ -217,7 +219,16 @@ class PracticeSubtopicAdmin(admin.ModelAdmin):
 class PracticeSubjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name','category')
+    search_fields = ['name']
+
 class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
+    search_fields = ['user__username']
+
+class QACocoUserAdmin(admin.ModelAdmin):
+    form = QACocoUserForm
+    list_display = ('user','partner','get_districts')
     search_fields = ['user__username']
