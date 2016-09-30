@@ -8,7 +8,6 @@ from models import VideoQualityReview, DisseminationQuality, AdoptionVerificatio
 from geographies.models import District, Block
 from videos.models import Video, Category, SubCategory, NonNegotiable
 
-
 def save_all(instances, user, id):
     for instance in instances:
         if(id):

@@ -20,10 +20,10 @@ qa_api.register(QAReviewerNameResource())
 qa_api.register(NonNegotiableResource())
 qa_api.register(AdoptionVerificationResource())
 urlpatterns = patterns('',
-	(r'^api/', include(qa_api.urls)),
-	(r'^$', qacoco_v1),
-	(r'^login/', login),
+    (r'^api/', include(qa_api.urls)),
+    (r'^$', qacoco_v1),
+    (r'^login/', login),
     (r'^logout/', logout),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
-	)
+    )

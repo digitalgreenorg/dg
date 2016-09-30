@@ -230,7 +230,6 @@ class BlockVideoAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Video Quality Review" )
 
-
 class VideoAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
         return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
@@ -250,7 +249,6 @@ class NonNegotiableAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download Non-Negotiable")
-
 
 class BaseResource(ModelResource):
     
@@ -346,7 +344,6 @@ class PersonGroupResource(BaseResource):
     dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
-
 class PersonResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     class Meta:
@@ -358,7 +355,6 @@ class PersonResource(BaseResource):
     dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
     
-
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
     class Meta:
@@ -372,7 +368,6 @@ class NonNegotiableResource(BaseResource):
         always_return_data = True
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
-
 
 class VideoQualityReviewResource(BaseResource):
         video = fields.ForeignKey(VideoResource, 'video')

@@ -43,8 +43,7 @@ def reset_database_check(request):
     if lastdownloadtimestamp <= cocouser.time_modified:
         return HttpResponse("1")
     return HttpResponse("0")
-    
-               
+         
 def html_decorator(func):
     """
     This decorator wraps the output in html.

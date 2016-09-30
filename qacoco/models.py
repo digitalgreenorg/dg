@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 
 from qacoco.qa_data_log import delete_log, save_log
-from base_models import QACocoModel, TYPE_CHOICES, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED, EQUIPMENT_WORK
+from base_models import QACocoModel, SCORE_CHOICES, VIDEO_GRADE, APPROVAL, ADOPTED, EQUIPMENT_WORK
 
 from geographies.models import District,Block,Village
 from programs.models import Partner
@@ -138,5 +138,3 @@ class AdoptionNonNegotiableVerfication(QACocoModel):
 
     def __unicode__(self):
         return  u'%s' % (self.id)
-
-

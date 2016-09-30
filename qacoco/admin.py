@@ -33,21 +33,21 @@ class VideoQualityReviewAdmin(admin.ModelAdmin):
 
 class DisseminationQualityAdmin(admin.ModelAdmin):
     list_display = ('date', 'mediator','village', 'total_score', 'video_grade')
-    search_fields = ['mediator']
+    search_fields = ['mediator', 'village', 'total_score', 'video_grade']
     raw_id_fields = ('block', 'village', 'mediator', 'video')
 
 class AdoptionNonNegotiableVerfication(admin.StackedInline):
     model = AdoptionNonNegotiableVerfication
 
 class AdoptionVerificationAdmin(admin.ModelAdmin):
-    list_display = ('verification_date','person','village', 'mediator')
-    search_fields = ['verification_date']
+    list_display = ('verification_date', 'person', 'village', 'mediator')
+    search_fields = ['verification_date', 'person', 'village', 'mediator']
     raw_id_fields = ('block', 'village', 'mediator', 'person', 'group', 'video')
     inlines = [AdoptionNonNegotiableVerfication]
     
 class QAReviewerNameAdmin(admin.ModelAdmin):
     list_display = ('reviewer_category', 'name')
-    search_fields = ['name']
+    search_fields = ['reviewer_category', 'name']
 
 class VideoAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):

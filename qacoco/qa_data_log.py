@@ -59,10 +59,10 @@ def delete_log(sender, **kwargs ):
         else:
             user = User.objects.get(id = instance.user_created_id)
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
-    model_id = instance.person.id if sender is "PersonMeetingAttendance" else instance.id
-    ServerLog = get_model('coco', 'ServerLog')
+    model_id = instance.id
+    ServerLog = get_model('qacoco', 'ServerLog')
     try:
-        log = ServerLog(village = instance.village.id, user = user, action = -1, entry_table = sender, model_id = instance.id, partner = instance.partner.id)
+        log = ServerLog(block = instance.block.id, user = user, action = -1, entry_table = sender, model_id = instance.id, partner = instance.partner.id)
         log.save()
     except Exception as ex:
         pass

@@ -1,11 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-TYPE_CHOICES = (
-			('0', 'Not For Adoption'),
-			('1', 'For Adoption'),
-	)
-
 SCORE_CHOICES = (
 	('0','0'),
 	('1','1'),
