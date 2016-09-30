@@ -18,7 +18,9 @@ CACHE:
 /media/coco/app/styles/css/tabletools_custom.css
 
 /media/configs.js
+/media/qa_config.js
 /media/coco/dist/scripts/main.js
+/media/coco/dist/scripts/qa_main.js
 /media/coco/app/scripts/libs/require.js
 
 /media/coco/app/scripts/libs/datatablejs_media/images/back_disabled.png
