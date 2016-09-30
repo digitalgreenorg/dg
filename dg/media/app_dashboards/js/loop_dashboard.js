@@ -2853,6 +2853,16 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
             gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i]['quantity__sum'], aggregator_payment[i]['gaddidar__commission'], (aggregator_payment[i]['quantity__sum'] * aggregator_payment[i]['gaddidar__commission'])]);
 
+    var gaddidar_contribution_data_length = gaddidar_contribution_data.length;
+    for (var i = 0; i < gaddidar_contribution_data_length; i++) {
+        if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
+            for (var j = 0; j < gaddidar_data_set.length; j++) {
+                if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 &&
+                    gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
+                    gaddidar_data_set[j][4] = payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2);
+                    gaddidar_data_set[j][5] = payments_gaddidar_contribution[i]['amount'].toFixed(2);
+                }
+            }
         }
 
     };
@@ -2870,12 +2880,22 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = quantites[i][j] * 0.25 - gaddidar_amount[i][j] + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
             data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(" Kg"), farmers[i][j], (quantites[i][j] * 0.25).toFixed(2), transport_cost[i][j], farmer_share[i][j], (gaddidar_amount[i][j]).toFixed(0), net_payment]);
             sno += 1;
-            total_volume += quantites[i][j];
-            total_payment += net_payment;
+        }
+    }
+
+    for (var i = 0; i < gaddidar_contribution_data_length; i++) {
+        if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
+            for (var j = 0; j < data_set.length; j++) {
+                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1) {
+                    data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    data_set[j][9] = (data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
+                    break;
+                }
+            }
         }
     }
 

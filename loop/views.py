@@ -349,34 +349,53 @@ def data_for_line_graph(request):
 
     return HttpResponse(data)
 
+def calculate_gaddidar_share_payments(start_date, end_date):
 
-def data_for_time_chart(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    filter_args["gaddidar__id__in"] = gaddidar_ids
+    parameters_dictionary_for_ct = {
+        'date__gte': start_date, 'date__lte': end_date}
+    arguments_for_ct = {}
+    for k, v in parameters_dictionary_for_ct.items():
+        if v:
+            arguments_for_ct[k] = v
 
-    total_data = CombinedTransaction.objects.filter(
-        **filter_args).values('date').order_by('date').annotate(Sum('quantity'), Sum('amount'))
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list(
-        'date', flat=True).distinct().order_by('date')
-    chart_dict = {'total_data': list(total_data), 'dates': list(dates)}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-    return HttpResponse(data)
+    gc_queryset = GaddidarCommission.objects.all()
+    gso_queryset = GaddidarShareOutliers.objects.all()
+    combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
+        'date', 'user_created_id', 'gaddidar', 'gaddidar__gaddidar_name_en', 'mandi', 'mandi__mandi_name', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
+    result = []
+    for CT in combined_ct_queryset:
+        sum = 0
+        gc_discount = 0
+        user = LoopUser.objects.get(user_id=CT['user_created_id'])
+        if CT['date'] not in [x.date for x in gso_queryset]:
+            try:
+                gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
+                                                 'gaddidar']).order_by('-start_date')
+                if CT['gaddidar__discount_criteria'] == 0 and len(gc_list_set) > 0:
+                    sum += CT['quantity__sum'] * \
+                        gc_list_set[0].discount_percent
+                    gc_discount = sum / CT['quantity__sum']
+                elif len(gc_list_set) > 0:
+                    sum += CT['amount__sum'] * gc_list_set[0].discount_percent
+                    gc_discount = sum / CT['amount__sum']
 
+            except GaddidarCommission.DoesNotExist:
+                pass
+        else:
+            try:
+                gso_gaddidar_date_aggregator = gso_queryset.filter(
+                    date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
+                if len(gso_gaddidar_date_aggregator):
+                    sum += gso_gaddidar_date_aggregator[0]
+                    if CT['gaddidar__discount_criteria'] == 0:
+                        gc_discount = sum / CT['quantity__sum']
+                    else:
+                        gc_discount = sum / CT['amount__sum']
+            except GaddidarShareOutliers.DoesNotExist:
+                pass
+        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
+                      'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name'], 'amount': sum, 'gaddidar_discount': gc_discount})
+    return result
 
 def payments(request):
     start_date = request.GET['start_date']
