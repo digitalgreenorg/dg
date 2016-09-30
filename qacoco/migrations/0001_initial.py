@@ -32,9 +32,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AdoptionVerification',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('verification_date', models.DateField()),
                 ('adopt_nonnegotiable', models.ManyToManyField(to='videos.NonNegotiable', through='qacoco.AdoptionNonNegotiableVerfication', blank=True)),
                 ('block', models.ForeignKey(to='geographies.Block')),
@@ -49,9 +49,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DisseminationQuality',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('date', models.DateField()),
                 ('equipments_setup_handling', models.CharField(blank=True, max_length=1, choices=[(b'0', b'0'), (b'1', b'1'), (b'2', b'2'), (b'3', b'3')])),
                 ('context_setting', models.CharField(blank=True, max_length=1, choices=[(b'0', b'0'), (b'1', b'1'), (b'2', b'2'), (b'3', b'3')])),
@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FullDownloadStats',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('start_time', models.DateTimeField()),
                 ('end_time', models.DateTimeField()),
                 ('user', models.ForeignKey(related_name='qacoco_user', to=settings.AUTH_USER_MODEL)),
@@ -85,10 +85,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='QACocoUser',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
-                ('districts', models.ManyToManyField(to='geographies.District')),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('blocks', models.ManyToManyField(to='geographies.Block')),
                 ('partner', models.ForeignKey(to='programs.Partner')),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
                 ('user_created', models.ForeignKey(related_name='qacoco_qacocouser_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
@@ -102,24 +102,38 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='QAReviewerCategory',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('category_name', models.CharField(max_length=50)),
+                ('user_created', models.ForeignKey(related_name='qacoco_qareviewercategory_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='qacoco_qareviewercategory_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
+            options={
+                'abstract': False,
+            },
         ),
         migrations.CreateModel(
             name='QAReviewerName',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
                 ('reviewer_category', models.ForeignKey(to='qacoco.QAReviewerCategory')),
+                ('user_created', models.ForeignKey(related_name='qacoco_qareviewername_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='qacoco_qareviewername_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
+            options={
+                'abstract': False,
+            },
         ),
         migrations.CreateModel(
             name='ServerLog',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('timestamp', models.DateTimeField(default=datetime.datetime.utcnow)),
-                ('district', models.IntegerField(null=True)),
+                ('block', models.IntegerField(null=True)),
                 ('action', models.IntegerField()),
                 ('entry_table', models.CharField(max_length=100)),
                 ('model_id', models.IntegerField(null=True)),
@@ -130,9 +144,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VideoQualityReview',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('storystructure', models.CharField(blank=True, max_length=1, choices=[(b'0', b'0'), (b'1', b'1'), (b'2', b'2'), (b'3', b'3')])),
                 ('framing', models.CharField(blank=True, max_length=1, choices=[(b'0', b'0'), (b'1', b'1'), (b'2', b'2'), (b'3', b'3')])),
                 ('camera_angles', models.CharField(blank=True, max_length=1, choices=[(b'0', b'0'), (b'1', b'1'), (b'2', b'2'), (b'3', b'3')])),

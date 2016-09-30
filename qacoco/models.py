@@ -13,6 +13,7 @@ from videos.models import Category, SubCategory, Video, NonNegotiable
 from people.models import Animator, Person, PersonGroup
 
 class FullDownloadStats(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, related_name="qacoco_user",)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -28,6 +29,7 @@ class ServerLog(models.Model):
     partner = models.IntegerField(null=True)
 
 class QACocoUser(QACocoModel):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User)
     partner = models.ForeignKey(Partner)
     blocks = models.ManyToManyField(Block)
@@ -43,14 +45,16 @@ class QACocoUser(QACocoModel):
         return  u'%s' % (self.user.username)
 
 class QAReviewerCategory(QACocoModel):
-	category_name = models.CharField(max_length=50)
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=50)
 
-	def __unicode__(self):
-		return u'%s' % (self.category_name)
+    def __unicode__(self):
+        return u'%s' % (self.category_name)
 post_save.connect(save_log, sender=QAReviewerCategory)
 pre_delete.connect(delete_log, sender=QAReviewerCategory)
 
 class QAReviewerName(QACocoModel):
+    id = models.AutoField(primary_key=True)
     reviewer_category = models.ForeignKey(QAReviewerCategory)
     name = models.CharField(max_length=100)
 
@@ -60,6 +64,7 @@ post_save.connect(save_log, sender=QAReviewerName)
 pre_delete.connect(delete_log, sender=QAReviewerName)
 
 class VideoQualityReview(QACocoModel):
+    id = models.AutoField(primary_key=True)
     video = models.ForeignKey(Video)
     storystructure = models.CharField(max_length=1,choices=SCORE_CHOICES,blank=True)
     framing = models.CharField(max_length=1,choices=SCORE_CHOICES,blank=True)
@@ -85,6 +90,7 @@ post_save.connect(save_log, sender=VideoQualityReview)
 pre_delete.connect(delete_log, sender=VideoQualityReview)
 
 class DisseminationQuality(QACocoModel):
+    id = models.AutoField(primary_key=True)
     block = models.ForeignKey(Block)
     village = models.ForeignKey(Village)
     mediator = models.ForeignKey(Animator)
@@ -110,7 +116,8 @@ class DisseminationQuality(QACocoModel):
 post_save.connect(save_log, sender=DisseminationQuality)
 pre_delete.connect(delete_log, sender=DisseminationQuality)
 
-class AdoptionVerification(QACocoModel):   
+class AdoptionVerification(QACocoModel):
+    id = models.AutoField(primary_key=True)   
     block = models.ForeignKey(Block)
     mediator = models.ForeignKey(Animator)
     village = models.ForeignKey(Village)
