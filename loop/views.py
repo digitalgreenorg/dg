@@ -404,8 +404,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
         sum = 0
         gc_discount = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
-        if CT['date'] not in [gso_obj.date for gso_obj in gso_queryset]:
-            #  and user.id not in [gso_obj.aggregator.id for gso_obj in gso_queryset]:
+        if CT['date'] not in [gso_obj.date for gso_obj in gso_queryset] or user.id not in [gso_obj.aggregator.id for gso_obj in gso_queryset]:
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                                                  'gaddidar']).order_by('-start_date')
