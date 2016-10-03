@@ -144,7 +144,6 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
 #        print orderbyResult
         # print "----------------------------------SELECT PART------------------------------"
@@ -303,16 +302,15 @@ class data_lib():
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
+
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
-
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
-
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-                        #ordered_cols[len(ordered_cols) + 1] = None
+                        # ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
