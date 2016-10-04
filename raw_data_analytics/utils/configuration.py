@@ -151,7 +151,7 @@ selectDictionary={
     'practice':{'id':False,'practice_name':True},
     'topic':{'id':False,'name':True},
     'numScreening':{'count(screening_id)':False,'count(distinct screening_id)':True,'video_youtubeid':False},
-    'numAdoption':{'count(person_id)':True,'count(distinct person_id)':True},
+    'numAdoption':{'count(distinct person_id)':True,'count(person_id)':True},
     'attendance':{'count(person_id)':False,'count(distinct person_id)':True},
 #    'numPeople':{'count(id)':True,'count(distinct id)':False},
     'numBlockAdoption':{'count(id)':False,'count(distinct id)':True},

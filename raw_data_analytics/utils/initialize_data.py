@@ -23,8 +23,8 @@ class initialize_library():
 
     def initializeSelectDict(self):
         self.selectDictionaryToUse = selectDictionary
-        if self.user_input['value']['numAdoption'] == True and self.user_input['partition']['animator'] == True:
-            self.selectDictionaryToUse['numAdoption']['count(person_id)'] = False
+        #if self.user_input['value']['numAdoption'] == True and self.user_input['partition']['animator'] == True:
+        #    self.selectDictionaryToUse['numAdoption']['count(person_id)'] = False
         return self.selectDictionaryToUse
 
     def initializeWhereDict(self):
