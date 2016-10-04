@@ -22,6 +22,7 @@ from  programs import *
 
 import MySQLdb
 from output.database.utility import *
+dlib = None
 @login_required()
 @user_passes_test(lambda u: u.groups.filter(name='data_extractor').count() > 0,
                   login_url=PERMISSION_DENIED_URL)
@@ -143,7 +144,6 @@ def dropdown_video(request):
 
     resp = json.dumps([video for video in videos])
     return HttpResponse(resp)
-
 
 def execute(request):
     partner = request.POST.getlist("partner")
@@ -323,7 +323,10 @@ def execute(request):
     args = []
     args.append(from_date)
     args.append(to_date)
-    dlib = data_lib()
+    global dlib
+    if not dlib:
+        dlib = data_lib()
+        dlib.fill_data(options)
     if options['value']['list'] == 'list':
         error = 'Output cannot be generated for this input ! Please check filters and partition field !!'
         return render_to_response("raw_data_analytics/error.html", {'error': error},
