@@ -3,34 +3,47 @@ from django.core.management.base import BaseCommand
 from django.core.paginator import Paginator
 from datetime import datetime
 from bulk_update.helper import bulk_update
+import csv
+from dg.base_settings import STATIC_URL
+from dg.settings import MEDIA_ROOT
+
 
 class Command(BaseCommand):
     def handle(self,*args,**options):
         print datetime.now()
         pap_query=Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True),5000)
 #        print pap_query.num_pages
+        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         for page in range(1, 2):
             count = 0
-            print len(pap_query.page(page+11).object_list)
+            adoption_list = pap_query.page(page+15).object_list
+            print len(adoption_list)
 #        for page in range(1, pap_query.num_pages + 1):
             # print "----------------------------------------------------------------------------------------------------"
-            for row in pap_query.page(page+10).object_list:
+            for row in adoption_list:
 #                print row.video
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person = row.person).values_list('screening', flat=True)
                     try:
-                        screening = Screening.objects.filter(date__lte=row.date_of_adoption, id__in=screenings_list, videoes_screened = row.video ).order_by('-date')[0]
+                        screening = Screening.objects.filter(date__lte=row.date_of_adoption, id__in=screenings_list, videoes_screened = row.video ).order_by('-date')
+                        if len(screening) == 0:
+                            with open(filename,'ab') as csvfile:
+                                fileWrite = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
+                                fileWrite.writerow(row.id)
+                                count+=1
+                        else:
+                            screening = screening[0]
+                            row.animator = screening.animator
                     except Exception as e:
                         count+=1
+                        with open(filename,'ab') as csvfile:
+                            fileWrite = csv.writer(csvfile, quoting= csv.QUOTE_ALL)
+                            fileWrite.writerow(row.id)
                         print "Internal Exception" + str(e)
-#                  print str(screening.animator) + str(screening.date) + str(screening.village)
-                    row.animator = screening.animator
-#                    print str(row.id) + '##' + str(row.person.id) + "##" + str(row.person) + str(row.date_of_adoption)
-#                    row.save()
                 except Exception as e:
                     count+=1
                     print "Exception" + str(e)
-            bulk_update(pap_query)
+            bulk_update(adoption_list)
 #                    print '##################################################################################################'
             print "Done Successful"
             print "Failed : "+str(count)
