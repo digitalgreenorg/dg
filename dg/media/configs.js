@@ -131,7 +131,11 @@ function() {
             listing: true,
             add: false
         },
-        'sort_field': 'village_name'
+        'sort_field': 'village_name',
+        'xaxis' : 'Blocks',
+        'yaxis' : 'Number of villages',
+        'key' : 2,
+        'graph_type' : 'column'                
     };
 
     var mediator_configs = {
@@ -245,6 +249,11 @@ function() {
         'entity_name': 'video',
         'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of videos produced',
+        'key' : 2,
+        'graph_type' : 'column',
+                
         'foreign_entities': {
             'mediator': {
                 "production_team": {
@@ -627,6 +636,11 @@ function() {
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of screenings',
+        'key' : 3,
+        'graph_type' : 'column',
+            
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
@@ -832,6 +846,11 @@ function() {
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of adoptions',
+        'key' : 4,
+        'graph_type' : 'column',
+                
         form_field_validation: {
             ignore: [],
 			rules: {
@@ -1138,6 +1157,7 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
+        analytics_entities : ["village","video","screening","adoption"],
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         meta_default: 'English',

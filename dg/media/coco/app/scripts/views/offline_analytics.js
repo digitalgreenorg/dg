@@ -4,11 +4,12 @@ define([
     'backbone',
     'indexeddb_backbone_config',
     'configs',
+    'models/user_model',
     'indexeddb-backbone',
     'layoutmanager',
     'libs/highcharts',
   	'offline_utils'],
-  	function($, underscore, backbone, idb, all_configs, indexeddb, layoutmanager,highcharts, Offline){
+  	function($, underscore, backbone, idb, all_configs, User, indexeddb, layoutmanager,highcharts, Offline){
   		
         var AnalyticsView = Backbone.Layout.extend({
 
@@ -45,7 +46,8 @@ define([
         },
 
         get_row: function (model_object) {
-            var list_elements = this.entity_config.list_elements;
+            var language = User.get('language');
+            var list_elements = this.entity_config['list_elements_'+language];
             var row = $.map(list_elements, function (column_definition) {
                 var cell = '';
                 if ('element' in column_definition) {
