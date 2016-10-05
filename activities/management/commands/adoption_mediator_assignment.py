@@ -8,7 +8,7 @@ import unicodecsv as csv
 class Command(BaseCommand):
     def handle(self,*args,**options):
         print datetime.now()
-        pap_query=Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True),100000)
+        pap_query=Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True),20000)
 #        print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = '/home/ubuntu/code/dg_test/activities/management/exceptions.csv'
