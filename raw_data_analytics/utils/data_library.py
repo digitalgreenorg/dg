@@ -23,6 +23,8 @@ class data_lib():
     orderDictionary = {}
     headerDictionary = {}
     valueSpecial = []
+    ilib=None
+    ilookup=None
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     
@@ -30,26 +32,33 @@ class data_lib():
         seenValues = set()
         seenValues_add = seenValues.add
         return [elements for elements in ElementsList if not (elements in seenValues or seenValues_add(elements))]
+    
+    def fill_data(self,options):
+        if self.ilookup is None:
+            self.ilookup = initialize_lookup()
+            self.lookup_matrix = self.ilookup.read_lookup_csv()
+        if self.ilib is None:
+            self.ilib = initialize_library(options)
+            self.tableDictionary = self.ilib.initializeTableDict()
+            self.whereDictionary = self.ilib.initializeWhereDict()
+            self.selectDictionary = self.ilib.initializeSelectDict()
+            self.groupbyDictionary = self.ilib.initializeGroupByDict()
+            self.orderDictionary = self.ilib.initializeOrderDict()
+            self.categoryDictionary = self.ilib.initializeCategoryDict()
+            self.headerDictionary = self.ilib.initializeHeaderDict()
+            self.valueSpecial = self.ilib.initializeValueSpecial()
+
 
     def handle_controller(self, args, options):
         final_df = pd.DataFrame()
 
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
-
-        ilib = initialize_library(options)
-        ilookup = initialize_lookup()
-
-        self.tableDictionary = ilib.initializeTableDict()
-        self.whereDictionary = ilib.initializeWhereDict()
-        self.selectDictionary = ilib.initializeSelectDict()
-        self.groupbyDictionary = ilib.initializeGroupByDict()
-        self.orderDictionary = ilib.initializeOrderDict()
-        self.categoryDictionary = ilib.initializeCategoryDict()
-        self.headerDictionary = ilib.initializeHeaderDict()
-        self.lookup_matrix = ilookup.read_lookup_csv()
-        self.valueSpecial = ilib.initializeValueSpecial()
         # --- checking validity of the partition fields and value fields entered by user ---
+        if(options['partition']['animator']==True and options['value']['numAdoption']==True):
+            self.selectDictionary['numAdoption']['count(person_id)']=False
+        else:
+            self.selectDictionary['numAdoption']['count(person_id)']=True
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
                 if options['partition'][item] != False:
@@ -144,9 +153,7 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-#        print orderbyResult
         # print "----------------------------------SELECT PART------------------------------"
         # print selectResult
         # print "----------------------------------FROM PART--------------------------------"
@@ -303,16 +310,15 @@ class data_lib():
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
+
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
-
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
-
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-                        #ordered_cols[len(ordered_cols) + 1] = None
+                        # ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
