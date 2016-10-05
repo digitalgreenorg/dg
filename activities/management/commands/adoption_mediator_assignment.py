@@ -9,10 +9,10 @@ class Command(BaseCommand):
     def handle(self,*args,**options):
         print datetime.now()
         pap_query=Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True),20000)
-#        print pap_query.num_pages
+        print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = '/home/ubuntu/code/dg_test/activities/management/exceptions.csv'
-        for page in range(1, 2):
+        for page in range(1, ((pap_query.num_pages)/20)+1):
             count = 0
             adoption_list = pap_query.page(page).object_list
             print len(adoption_list)
