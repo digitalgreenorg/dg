@@ -1019,20 +1019,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block control-label col-sm-2 notbold"><%= approval_date %></label>
-                <div class="col-sm-4">
-                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
-                    <input name="youtubeid" type="text" class="form-control"><br>
+                    <input name="youtubeid" type="text" class="form-control">
                 </div>
             </div>
-
             <div class="form-group">
-                <label class="col-sm-2 control-label"><%= reviewer %></label>
+                <label class="dis-block col-sm-2 control-label bold"><%= reviewed_by %></label>
+                <div class="col-sm-4">
+                    <input name="reviewed_by" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold"><%= reviewer %></label>
                 <div class="col-sm-4">
                     <select name="reviewer" class="form-control">
                         <option value="" selected="selected">
@@ -1048,9 +1047,9 @@
                 </div>
             </div> 
             <div class="form-group">
-                <label class="dis-block col-sm-2 control-label notbold"><%= reviewed_by %></label>
+                <label class="dis-block control-label col-sm-2 bold"><%= approval_date %></label>
                 <div class="col-sm-4">
-                    <input name="reviewed_by" type="text" class="form-control"><br>
+                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
         </fieldset>
