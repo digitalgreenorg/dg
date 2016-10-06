@@ -11,8 +11,8 @@ class Command(BaseCommand):
         pap_query=Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True),20000)
         print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
-        filename = '/home/ubuntu/code/dg_test/activities/management/exceptions.csv'
-        for page in range(1, ((pap_query.num_pages)/20)+1):
+        filename = '/home/ubuntu/code/dg_git/activities/management/exceptions.csv'
+        for page in range(1, pap_query.num_pages+1):
             count = 0
             adoption_list = pap_query.page(page).object_list
             print len(adoption_list)
