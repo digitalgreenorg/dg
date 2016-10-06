@@ -15,8 +15,7 @@ require.config({
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
-        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
-        'configs': '../../../configs'
+        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools'
     },
 
     //specifying dependencies of non-amd libraries

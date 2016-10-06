@@ -8,7 +8,6 @@ from views import social_home, collection_view, partner_view, search_view, colle
 
 class DirectTemplateView(TemplateView):
     extra_context = None
-
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
         if self.extra_context is not None:
@@ -27,6 +26,9 @@ urlpatterns = patterns('',
     url(r'^about/ourwork/$', TemplateView.as_view(template_name='our_work.html'), name='ourwork'),
     url(r'^about/press/$', media_view, name='press'),
     url(r'^about/training/$', TemplateView.as_view(template_name='training.html'), name='training'),
+    url(r'^about/training/en/$', TemplateView.as_view(template_name='training_en.html'), name='training-el'),
+    url(r'^about/training/hi/$', TemplateView.as_view(template_name='training_hi.html'), name='training-hi'),
+    url(r'^about/training/fr/$', TemplateView.as_view(template_name='training_fr.html'), name='training-fr'),
     url(r'^about/technology/$', TemplateView.as_view(template_name='technology.html'), name='technology'),
     url(r'^about/training/picoseekho/(?P<uid>.+)/$', picoseekho_view, name='picoseekho'),
     url(r'^about/training/picoseekho/$', picoseekho_view, name='picoseekho'),
@@ -51,8 +53,8 @@ urlpatterns = patterns('',
     url(r'^connect/$', DirectTemplateView.as_view(template_name='connect.html', extra_context={'header': {'currentPage':'Connect', 'jsController':'Connect'}}), name='connect'),
     url(r'^contact/$', TemplateView.as_view(template_name='contact.html'), name='contact'),
     url(r'^discover/video/(?P<uid>.+)/$', video_view, name="video_page"),
-    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
-    url(r'^discover/(?P<partner>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"), 
+    url(r'^discover/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
+    url(r'^discover/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"),     
     url(r'^discover/?$', search_view, name='search'),
     url(r'^discover/$', DirectTemplateView.as_view(template_name='collections.html', extra_context={'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}), name='discover'),
     url(r'^donate/$', TemplateView.as_view(template_name='donate.html'), name='donate'),

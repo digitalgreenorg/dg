@@ -6,7 +6,7 @@ from videos.models import Language
 from people.models import Animator
 
 # Create your models here.
-    
+
 class TrainingUser(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="training_user")

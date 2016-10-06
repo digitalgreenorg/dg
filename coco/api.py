@@ -241,9 +241,18 @@ class NonNegotiableAuthorization(Authorization):
 
 class BaseResource(ModelResource):
     
+    # override for update to save Empty data
+    def update_obj(self, bundle):
+        empty_field_dict = {k: v for k, v in bundle.data.items() if not v}
+        for k, v in empty_field_dict.items():
+            if k == "is_modelfarmer":
+                bundle.obj.is_modelfarmer = False
+        return bundle
+
     def full_hydrate(self, bundle):
         bundle = super(BaseResource, self).full_hydrate(bundle)
         bundle.obj.user_modified_id = bundle.request.user.id
+        self.update_obj(bundle)
         return bundle
     
     def obj_create(self, bundle, **kwargs):
@@ -553,7 +562,7 @@ class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     partner = fields.ForeignKey(PartnerResource, 'partner')
-    animator = fields.ForeignKey(MediatorResource, 'mediator', null=True)
+    animator = fields.ForeignKey(MediatorResource, 'animator', null=True)
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
