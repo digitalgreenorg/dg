@@ -64,5 +64,5 @@ class Score(models.Model):
 	question = models.ForeignKey(Question, null=False, blank=False)
 	score = models.IntegerField()
 
-	# class Meta:
-	# 	unique_together=("training", "participant", "question")
+	class Meta:
+		unique_together=("training", "participant", "question")
