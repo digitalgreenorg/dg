@@ -562,7 +562,7 @@ class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     partner = fields.ForeignKey(PartnerResource, 'partner')
-    animator = fields.ForeignKey(MediatorResource, 'mediator', null=True)
+    animator = fields.ForeignKey(MediatorResource, 'animator', null=True)
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
