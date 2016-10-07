@@ -57,6 +57,7 @@ STATICFILES_FINDERS = (
 )
 
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL='/'
 LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
@@ -223,7 +224,6 @@ SESSION_COOKIE_HTTPONLY = False
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social.backends.facebook.FacebookOAuth2',
-    'social.backends.google.GoogleOAuth',
     'social.backends.google.GoogleOAuth2',
 )
 
