@@ -70,7 +70,7 @@ define(function(require) {
 		    			};
             
             swfobject.embedSWF(
-                'http://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
+                'https://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
                 'player',
                 '1024',
                 '424',

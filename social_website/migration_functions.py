@@ -95,6 +95,7 @@ def update_website_video(vid):
         except Partner.DoesNotExist:
             return
         language  = vid.language.language_name
+        country = vid.village.block.district.state.country.country_name
         state = vid.village.block.district.state.state_name
         date = vid.production_date
         offline_stats = get_offline_stats(vid.id)
@@ -117,7 +118,7 @@ def update_website_video(vid):
             website_vid = Video.objects.filter(coco_id = str(vid.id))
             website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
+                                language = language, partner = partner, state = state, country = country,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
@@ -125,7 +126,7 @@ def update_website_video(vid):
         except Video.DoesNotExist:
             website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
+                                language = language, partner = partner, state = state, country = country,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
@@ -143,11 +144,11 @@ def get_collection_pracs(videos,field1,field2,field3,field4,field5):
         
 def create_collections():
     ####### COLLECTIONS BASED ON TOPIC ##############################
-    collection_combinations = Video.objects.exclude(topic = '').values_list('partner_id','language','topic','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
-    for partner, language, topic, state, count in collection_combinations:
-        videos = Video.objects.filter(partner_id = partner, language = language ,topic = topic, state = state)
+    collection_combinations = Video.objects.exclude(topic = '').values_list('partner_id','language','topic','state','country').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
+    for partner, language, topic, state, country, count in collection_combinations:
+        videos = Video.objects.filter(partner_id = partner, language = language ,topic = topic, state = state, country = country)
         collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
-        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+        website_collection = Collection(country = country, state = state, partner = Partner.objects.get(uid=partner), language = language,
                                         category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = topic, 
                                         subtopic = collection_pracs['subtopic'],  subject = collection_pracs['subject'],
                                         title = videos[0].topic, thumbnailURL = '') # update thumbnail with Aadish's migration
@@ -156,11 +157,11 @@ def create_collections():
             website_collection.videos.add(video)
     
     ####### COLLECTIONS BASED ON SUBJECT #############################    
-    collection_combinations = Video.objects.exclude(subject = '').values_list('partner_id','language','subject','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
-    for partner, language, subject, state, count in collection_combinations:
-        videos = Video.objects.filter(partner_id = partner, language = language, subject = subject, state = state)
+    collection_combinations = Video.objects.exclude(subject = '').values_list('partner_id','language','subject','state', 'country').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
+    for partner, language, subject, state, country, count in collection_combinations:
+        videos = Video.objects.filter(partner_id = partner, language = language, subject = subject, state = state, country=country)
         collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
-        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+        website_collection = Collection( country=country, state = state, partner = Partner.objects.get(uid=partner), language = language,
                                         category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = collection_pracs['topic'], 
                                         subtopic = collection_pracs['subtopic'],  subject = subject,
                                         title = videos[0].subject, thumbnailURL = '') # update thumbnail with Aadish's migration

@@ -648,6 +648,15 @@ h1 small{
     .videoadd_français td:nth-of-type(1):before { content: "Serie de Numéro"; }
     .videoadd_français td:nth-of-type(2):before { content: "Non négociables"; }
     .videoadd_français td:nth-of-type(3):before { content: "Physiquement vérifiable"; }
+
+    .contentapprovaladd td:nth-of-type(1):before { content: "Sr. No"; }
+    .contentapprovaladd td:nth-of-type(2):before { content: "Non Negotiable"; }
+    .contentapprovaladd td:nth-of-type(3):before { content: "Physically Verifiable"; }
+
+    .adoptionverificationadd td:nth-of-type(1):before { content: "Sr. No"; }
+    .adoptionverificationadd td:nth-of-type(2):before { content: "Non Negotiable"; }
+    .adoptionverificationadd td:nth-of-type(3):before { content: "Physically Verifiable"; }
+    .adoptionverificationadd td:nth-of-type(4):before { content: "Adopted?"; }
     }
 
 @media(max-width:1200px){
