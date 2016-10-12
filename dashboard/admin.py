@@ -15,6 +15,8 @@ from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
+from qacoco.forms import QACocoUserForm
+from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
@@ -174,7 +176,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__', 'partner', 'is_modelfarmer')
+    list_display = ('id', '__unicode__' , 'partner', 'is_modelfarmer')
     search_fields = ['person_name','village__village_name','group__group_name']
     raw_id_fields = ('village','group')
 
@@ -220,4 +222,9 @@ class PracticeSubjectAdmin(admin.ModelAdmin):
 class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user','partner','get_villages')
+    search_fields = ['user__username']
+
+class QACocoUserAdmin(admin.ModelAdmin):
+    form = QACocoUserForm
+    list_display = ('user','partner','get_blocks')
     search_fields = ['user__username']
