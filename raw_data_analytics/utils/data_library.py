@@ -22,35 +22,43 @@ class data_lib():
     categoryDictionary = {}
     orderDictionary = {}
     headerDictionary = {}
-
+    valueSpecial = []
+    ilib=None
+    ilookup=None
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
     
     def uniqueList(self,ElementsList):
-        seen = set()
-        seen_add = seen.add
-        return [elements for elements in ElementsList if not (elements in seen or seen_add(elements))]
+        seenValues = set()
+        seenValues_add = seenValues.add
+        return [elements for elements in ElementsList if not (elements in seenValues or seenValues_add(elements))]
+    
+    def fill_data(self,options):
+        if self.ilookup is None:
+            self.ilookup = initialize_lookup()
+            self.lookup_matrix = self.ilookup.read_lookup_csv()
+        if self.ilib is None:
+            self.ilib = initialize_library(options)
+            self.tableDictionary = self.ilib.initializeTableDict()
+            self.whereDictionary = self.ilib.initializeWhereDict()
+            self.selectDictionary = self.ilib.initializeSelectDict()
+            self.groupbyDictionary = self.ilib.initializeGroupByDict()
+            self.orderDictionary = self.ilib.initializeOrderDict()
+            self.categoryDictionary = self.ilib.initializeCategoryDict()
+            self.headerDictionary = self.ilib.initializeHeaderDict()
+            self.valueSpecial = self.ilib.initializeValueSpecial()
+
 
     def handle_controller(self, args, options):
-
         final_df = pd.DataFrame()
 
         relevantPartitionDictionary = {}
         relevantValueDictionary = {}
-
-        ilib = initialize_library(options)
-        ilookup = initialize_lookup()
-
-        self.tableDictionary = ilib.initializeTableDict()
-        self.whereDictionary = ilib.initializeWhereDict()
-        self.selectDictionary = ilib.initializeSelectDict()
-        self.groupbyDictionary = ilib.initializeGroupByDict()
-        self.orderDictionary = ilib.initializeOrderDict()
-        self.categoryDictionary = ilib.initializeCategoryDict()
-        self.headerDictionary = ilib.initializeHeaderDict()
-        self.lookup_matrix = ilookup.read_lookup_csv()
-
         # --- checking validity of the partition fields and value fields entered by user ---
+        if(options['partition']['animator']==True and options['value']['numAdoption']==True):
+            self.selectDictionary['numAdoption']['count(person_id)']=False
+        else:
+            self.selectDictionary['numAdoption']['count(person_id)']=True
         if self.check_partitionfield_validity(options['partition']):
             for item in options['partition']:
                 if options['partition'][item] != False:
@@ -59,16 +67,14 @@ class data_lib():
             print "Warning - Invalid input for partition fields"
 
         if self.check_valuefield_validity(options['value']):
-
             for item in options['value']:
-                if item == 'list' and options['value']['list'] != False:
-
+                if (item in self.valueSpecial and options['value'][item] != False):
                     relevantValueDictionary[options['value'][item]] = True
                     relevantPartitionDictionary[
                         self.categoryDictionary['partitionCumValues'][options['value'][item]]] = False
                     del relevantPartitionDictionary[self.categoryDictionary['partitionCumValues'][options['value'][item]]]
 
-                if options['value'][item] != False and item != 'list':
+                if options['value'][item] != False and item not in self.valueSpecial:
                     relevantValueDictionary[item] = options['value'][item]
 
         else:
@@ -79,17 +85,14 @@ class data_lib():
 #            print "----------------------------------Full SQL Query---------------------------"
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
                                       queryComponents[4])
-#            print query
 #            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
             if final_df.empty:
                 final_df = df
             else:
                 final_df = pd.merge(final_df, df, how='outer')
-#                print df
-        resultant_df = self.order_data(relevantPartitionDictionary, final_df)
+        resultant_df = self.order_data(relevantPartitionDictionary,final_df)
         resultant_df.index += 1
-#        print resultant_df
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
@@ -101,15 +104,13 @@ class data_lib():
             if partitionElements[items] != False:
                 for elements in self.selectDictionary[items]:
                     if self.selectDictionary[items][elements] == True and self.selectDictionary[items].values().count(True) > 1:
-                        arranged_columns[len(arranged_columns) + 1] = None
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
                         bumper += 1
                     elif self.selectDictionary[items][elements] == True:
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
-
         arranged_columns = filter(lambda a: a != None, arranged_columns)
         arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
-        arranged_columns.extend(list(set(header) - set(arranged_columns)))
+        arranged_columns.extend([item for item in header if item not in arranged_columns])
         dataframe = dataframe[arranged_columns]
         return dataframe
 
@@ -152,19 +153,17 @@ class data_lib():
         fromResult = self.getFromComponent(partitionDict, valueDictElement, lookup_matrix)
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
-
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-#        print orderbyResult
-#        print "----------------------------------SELECT PART------------------------------"
-#        print selectResult
-#        print "----------------------------------FROM PART--------------------------------"
-#        print fromResult
-#        print "----------------------------------WHERE PART-------------------------------"
-#        print whereResult
-#        print "---------------------------------GROUP_BY PART----------------------------"
-#        print groupbyResult
-#        print "--------------------------------ORDER_BY PART-----------------------------"
-#        print orderbyResult
+        # print "----------------------------------SELECT PART------------------------------"
+        # print selectResult
+        # print "----------------------------------FROM PART--------------------------------"
+        # print fromResult
+        # print "----------------------------------WHERE PART-------------------------------"
+        # print whereResult
+        # print "---------------------------------GROUP_BY PART----------------------------"
+        # print groupbyResult
+        # print "--------------------------------ORDER_BY PART-----------------------------"
+        # print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -172,7 +171,12 @@ class data_lib():
         selectComponentKeysList = []
         idElementVal = -1
         idElementKey = ''
-        if not partitionElements and 'list' in valueElement:
+        specialCase = 0
+        for vals in self.valueSpecial:
+            if vals in valueElement:
+                specialCase = 1
+
+        if not partitionElements and specialCase == 1:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
         else:
@@ -273,14 +277,10 @@ class data_lib():
     def getWhereComponent(self, partitionElements, valueElement, Dictionary, args, lookup_matrix):
         whereString = '1=1'
         whereComponentList = [whereString]
-#        print partitionElements
 
         for items in partitionElements:
             ll=[]
             if partitionElements[items] != True:
-
-#                for elements in partitionElements[items]:
-#
                 whereComponentList.append(
                 self.tableDictionary[items] + '.' + self.whereDictionary[items] + ' in (' + ','.join(str(n) for n in partitionElements[items])+')')
 
@@ -310,17 +310,15 @@ class data_lib():
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
+
         orderbyComponentList = ['1']
         ordered_cols = [None] * len(self.orderDictionary)
-
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
-
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-
-                        ordered_cols[len(ordered_cols) + 1] = None
+                        # ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
