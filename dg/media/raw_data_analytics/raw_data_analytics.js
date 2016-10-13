@@ -64,12 +64,14 @@ window.onload = date;
         $("#districtId").prop('disabled', false);
         $("#districtId").val('').trigger("chosen:updated");
         $("#villageId").find('option').remove();
-        $("#partnerId").find('option').remove().val('').trigger('chosen:updated'); 
+        $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated'); 
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
         $("#blockId").prop('disabled',true);
         $("#villageId").prop('disabled',true);
-        $("#blockId").find('option').remove().val('').trigger("chosen:updated");
+        $("#blockId").find('option').remove();
+        $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").val('').trigger("chosen:updated");
     });
     $("#districtId").bind("change", function () {
