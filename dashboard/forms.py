@@ -65,7 +65,8 @@ class CocoUserForm(forms.ModelForm):
                                       is_stacked=False
                                      ),
         # queryset=Village.objects.all().prefetch_related('block', 'block__district')
-        queryset=Village.objects.none()
+        # queryset=Village.objects.filter(id__in=[1,2,3,4,5,6])
+        queryset=Village.objects.all()
         )
     videos = UserModelVideoMultipleChoiceField(
         widget=FilteredSelectMultiple(

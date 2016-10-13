@@ -793,15 +793,15 @@ class CombinedTransactionResource(BaseResource):
     gaddidar = fields.ForeignKey(GaddidarResource, 'gaddidar')
 
     class Meta:
-        limit = 0
-        max_limit = 0
+        max_limit = None
         detail_allowed_methods = ["get", "post", "put", "delete"]
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
         authorization = CombinedTransactionAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_farmer = partial(
         foreign_key_to_id, field_name='farmer', sub_field_names=['id'])
