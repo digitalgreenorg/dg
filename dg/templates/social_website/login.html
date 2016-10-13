@@ -11,8 +11,6 @@
                         In your html page, add the snippet and call
                         goog_report_conversion when someone clicks on the
                         chosen link or button. -->
-                        <!-- <meta name="google-signin-client_id" content="679192854070-q2e5dqp6v1fj9v4k50q4d3lqd7t4s8rd.apps.googleusercontent.com"> -->
-                        <script src="https://apis.google.com/js/platform.js" async defer></script>
                         <script src="https://apis.google.com/js/api:client.js"></script>
                         <script type="text/javascript">
                         /* <![CDATA[ */
@@ -30,7 +28,6 @@
                             var opt = new Object();
                             opt.onload_callback = function() {
                                 if (typeof(url) != 'undefined') {
-                                    console.log(url)
                                     window.location = url;
                                 }
                             }
