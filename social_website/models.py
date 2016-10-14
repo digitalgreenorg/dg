@@ -125,7 +125,7 @@ class Collection(models.Model):
     description = models.TextField(null=True, blank=True)
     
     def __unicode__(self):
-        return ("%s (%s, %s, %s)" % (self.title, str(self.partner.name), self.country, self.state, self.language))
+        return ("%s (%s,%s, %s, %s)" % (self.title, str(self.partner.name), self.country, self.state, self.language))
     
     def get_absolute_url(self):
         return reverse('collection_page', 
