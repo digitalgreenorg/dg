@@ -478,8 +478,7 @@ def mapping(request):
 
     resp = json.dumps({"mapping_dropdown": practice_dictionary})
     return HttpResponse(resp)
-
-
+  
 def login_view(request, template_name='registration/login.html',
                       redirect_field_name=REDIRECT_FIELD_NAME,
                       authentication_form=AuthenticationForm,
@@ -490,18 +489,17 @@ def login_view(request, template_name='registration/login.html',
     else:
         return django_login_view(request, template_name, redirect_field_name, authentication_form, current_app, extra_context)
 
-
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,
                 signup_form=CustomUserCreationForm,
                 current_app=None, extra_context=None):
-
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
 
     redirect_to = request.REQUEST.get(redirect_field_name, '')
 
     if request.method == "POST":
+
         form = signup_form(data=request.POST)
         if form.is_valid():
             a = form.save()
