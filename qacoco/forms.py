@@ -32,7 +32,8 @@ class QACocoUserForm(forms.ModelForm):
                                       verbose_name='blocks',
                                       is_stacked=False
                                      ),
-        queryset=Block.objects.all()
+        queryset=Block.objects.all(),
+        required=False
         )
     videos = UserModelVideoMultipleChoiceField(
         widget=FilteredSelectMultiple(

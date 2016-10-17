@@ -165,8 +165,8 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     }
     list_display = ('id', 'date_of_adoption', '__unicode__', 'verification_status', 'non_negotiable_check', 'verified_by')
     list_editable = ('verification_status','non_negotiable_check', 'verified_by')
-    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'partner__partner_name', 'verified_by')
-    search_fields = ['user_created__username', 'id', 'person__person_name', 'person__father_name', 'person__village__village_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
+    list_filter = ('date_of_adoption', 'verification_status','person__village__block__district__state__state_name', 'person__village__block__district__district_name','person__village__block__block_name','person__village__block__village__village_name','partner__partner_name', 'verified_by')
+    search_fields = ['user_created__username', 'id', 'person__person_name', 'person__father_name', 'person__village__block__block_name', 'video__title', 'person__group__group_name','person__village__block__block_name','person__village__block__district__district_name','person__village__block__district__state__state_name']
     raw_id_fields = ('person', 'video')
 
     class Media:
