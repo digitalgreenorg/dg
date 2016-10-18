@@ -159,8 +159,9 @@ class Video(CocoModel):
     partner = models.ForeignKey(Partner)
     review_status = models.IntegerField(choices=VIDEO_REVIEW,default=0, validators=[MaxValueValidator(1)])
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
-    reviewer = models.IntegerField(choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
-
+    reviewer = models.IntegerField(verbose_name="Organisation", choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
+    reviewed_by = models.CharField(max_length=80, null=True, blank=True)
+    
     class Meta:
         unique_together = ("title", "production_date", "language", "village")
 
