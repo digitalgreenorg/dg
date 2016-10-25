@@ -11,18 +11,19 @@ class Command(BaseCommand):
 		#read xml from url
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/person.xml", 'w')
+		xml_file = open("jslps_data_integration_files/person.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/people_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/person_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/person.xml')
+		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
+			if c.find('FatherName') 
 			if c.find('FatherName') is not None:
 				pfn = unicode(c.find('FatherName').text)
 			else:

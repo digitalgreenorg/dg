@@ -14,13 +14,13 @@ class Command(BaseCommand):
 		partner = Partner.objects.get(id = 24)
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAdoptionData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/adoption.xml", 'w')
+		xml_file = open("jslps_data_integration_files/adoption.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/adoption_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/adoption_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/adoption.xml')
+		tree = ET.parse('jslps_data_integration_files/adoption.xml')
 		root = tree.getroot()
 		for c in root.findall('AdoptionData'):
 			pc = c.find('MemberCode').text
