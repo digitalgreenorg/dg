@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 
 from django.db import models
-from geographies.models import State
+from geographies.models import State, District
 from videos.models import Language
 from people.models import Animator
+from programs.models import Partner
 
 # Create your models here.
 
@@ -53,6 +54,9 @@ class Training(models.Model):
 	trainer = models.ManyToManyField(Trainer, blank=True)
 	language = models.ForeignKey(Language, null=True, blank=True)
 	participants = models.ManyToManyField(Animator)
+	district = models.ForeignKey(District, null = True, blank = True)
+	trainingType = models.BooleanField(default=True)
+	partner = models.ForeignKey(Partner, null=True, blank = True)
 
 	# class Meta:
  #    	unique_together=("date","trainer")

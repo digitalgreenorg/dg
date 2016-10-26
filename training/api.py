@@ -375,6 +375,11 @@ class TrainingResource(ModelResource):
     trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
     participants = fields.ToManyField(
         'training.api.MediatorResource', 'participants')
+    district = fields.ForeignKey(
+        'training.api.DistrictResource', 'district', null=True)
+    partner = fields.ForeignKey(
+        'training.api.PartnerResource', 'partner', null=True)
+
 
     class Meta:
         resource_name = 'training'
@@ -389,10 +394,17 @@ class TrainingResource(ModelResource):
                               field_name='trainer', resource_name='trainer')
     hydrate_participants = partial(
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
+    
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
     dehydrate_assessment = partial(
         foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+    dehydrate_partner = partial(
+        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
+    dehydrate_district = partial(
+        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
 
     def dehydrate_trainer(self, bundle):
         return [{'id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
