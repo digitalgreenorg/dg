@@ -64,9 +64,9 @@ class CocoUserForm(forms.ModelForm):
                                       verbose_name='villages',
                                       is_stacked=False
                                      ),
-        # queryset=Village.objects.all().prefetch_related('block', 'block__district')
+        queryset=Village.objects.all().prefetch_related('block', 'block__district')
         # queryset=Village.objects.filter(id__in=[1,2,3,4,5,6])
-        queryset=Village.objects.all()
+        # queryset=Village.objects.all()
         )
     videos = UserModelVideoMultipleChoiceField(
         widget=FilteredSelectMultiple(
@@ -76,6 +76,9 @@ class CocoUserForm(forms.ModelForm):
         queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
         required=False
         )
+    def __init__(self,*args,**kwargs):
+        super(CocoUserForm,self).__init__(*args,**kwargs)
+        self.fields.KeyOrder=['user','partner','district','villages','videos']
 
 
 class LanguageForm(CocoModelForm):

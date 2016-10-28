@@ -23,6 +23,7 @@ function filter_villages_from_selected_districct() {
 
           // SelectFilter.init("id_villages_from", "Villages", 1, "/media/admin/");
           SelectBox.init("id_villages_from");
+          jQuery('#id_villages_add_link').mousedown();
       });
 
 
