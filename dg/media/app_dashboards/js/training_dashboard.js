@@ -199,8 +199,8 @@ function set_eventlistener() {
     });
 
     var today = new Date();
-    var month_ = (( (today.getMonth() + 1) > 10 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
-    var date_ = (( (today.getDate() + 1) > 10 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
+    var month_ = (( (today.getMonth() + 1) > 9 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
+    var date_ = (( (today.getDate() + 1) > 9 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
     $("#to_date").val(today.getFullYear() + "-" + month_ + "-" + date_);
     $("#from_date").val(2015 + "-0" + 1 + "-0" + 1);
 
