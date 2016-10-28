@@ -557,7 +557,7 @@
         <div class="form-group" style="display:none;">
             <label class="control-label col-sm-2 notbold">Role</label>
             <div class="col-sm-4">
-                <input name="role" value='1' class="form-control">
+                <input name="role" value='0' class="form-control">
             </div>
         </div>
     </fieldset>
@@ -1019,15 +1019,37 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block control-label col-sm-2 notbold"><%= approval_date %></label>
+                <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
-                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
+                    <input name="youtubeid" type="text" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-                <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
+                <label class="dis-block col-sm-2 control-label bold"><%= reviewed_by %></label>
                 <div class="col-sm-4">
-                    <input name="youtubeid" type="text" class="form-control"><br>
+                    <input name="reviewed_by" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label bold"><%= reviewer %></label>
+                <div class="col-sm-4">
+                    <select name="reviewer" class="form-control">
+                        <option value="" selected="selected">
+                            ------------
+                        </option>
+                        <option value="0">
+                            Digital Green
+                        </option>
+                        <option value="1">
+                            Partner
+                        </option>
+                    </select>
+                </div>
+            </div> 
+            <div class="form-group">
+                <label class="dis-block control-label col-sm-2 bold"><%= approval_date %></label>
+                <div class="col-sm-4">
+                    <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
         </fieldset>
@@ -1118,6 +1140,12 @@
                     <select id = "id_group" name="group" class="chosen-select form-control">
                     
                     </select>
+                </div>
+            </div>
+            <div class="form-group" id="is_modelfarmer">
+                <label class="col-sm-2 control-label notbold"><%= is_modelfarmer %></label>
+                <div class="col-sm-4">
+                    <input type="checkbox" name="is_modelfarmer">
                 </div>
             </div>
         </fieldset>

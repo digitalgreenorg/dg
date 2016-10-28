@@ -7,10 +7,11 @@ function table_load()
 	
 	var formated_json = [];
 	var full_data = [];
-	
 	var keyset = Object.keys(json);
 	var interkeys = Object.keys(json[keyset[0]]);
-
+	var customTitle='rawdata_'
+	var d = new Date();
+	customTitle= customTitle + d.getFullYear()+d.getMonth()+d.getDay()+'T'+d.getHours()+d.getMinutes();
 	for (var i=0; i<interkeys.length; i++){
 		var obj=[];
 		for (var j=0; j<keyset.length;j++){
@@ -41,11 +42,13 @@ function table_load()
 			"aButtons": [
 	                           {
 	                               "sExtends": "copy",
-	                               "sButtonText": "Copy to Clipboard"
+	                               "sButtonText": "Copy to Clipboard",
+	                               "sTitle":customTitle
 	                           },
 	                           {
 	                               "sExtends": "xls",
-	                               "sButtonText": "Download in Excel"
+	                               "sButtonText": "Download in Excel",
+	                               "sTitle":customTitle
 	                           }
 	                       ]
                     }

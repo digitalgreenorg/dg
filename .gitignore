@@ -317,3 +317,5 @@
 *.prefs
 .DS_Store
 /apache/*
+py_env/*
+.idea/
