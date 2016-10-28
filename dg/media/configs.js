@@ -229,13 +229,13 @@ function() {
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
                             village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
-                            approval_date: "स्वीकृति तिथि", youtubeid: "यूट्यूब आईडी", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
+                            youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
                             village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
-                            approval_date: "Date de validation", youtubeid: "Identité Youtube", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
+                            youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", 
-                           youtubeid: "Youtube Id", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID",
+                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'शीर्षक', 'element':'title'},{'header':'गाँव','element':'village.village_name'},{'header':'उत्पादन की तिथि','element':'production_date'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Titre', 'element':'title'},{'header':'Villages','element':'village.village_name'},{'header':'Date de production','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
@@ -329,6 +329,8 @@ function() {
                     required: true,
                     // validateDate: true
                 },
+                reviewer: "required",
+                reviewed_by: "required",
                 language: "required",
                 benefit: {
                     minlength: 2,
@@ -341,8 +343,8 @@ function() {
                 subcategory: "required",
                 videopractice: "required",
                 approval_date: {
-					dateOrder: {production_date : "production_date"}
-                    // validateDate: true
+					dateOrder: {production_date : "production_date"},
+                    validateDate: true
                 },
                 youtubeid: {
                     maxlength: 20
@@ -1023,9 +1025,9 @@ function() {
         'config_English': 'Persons',
         'config_हिन्दी': "सदस्य",
         'config_Français': 'Personnes',
-        'labels_हिन्दी': {person:"सदस्य", name:"नाम", father_name:"पिता/पति का नाम", village: "गाँव", gender:"लिंग", age:"आयु", phone_no:"फ़ोन नंबर",group:"ग्राम संगठन का नाम"},
-        'labels_Français': {person:"Personnes", name:"Nom de la personne", father_name:"Nom du père", village: "Nom du village", gender:"Genre", age:"Age", phone_no:"Numéro de téléphone",group:"Groupe"},
-        'labels_English': {person: "Person", name:"Name", father_name:"Father Name", village: "Village", gender:"Gender", age:"Age", phone_no:"Phone Number",group:"Group"},
+        'labels_हिन्दी': {person:"सदस्य", name:"नाम", father_name:"पिता/पति का नाम", village: "गाँव", gender:"लिंग", age:"आयु", phone_no:"फ़ोन नंबर",group:"ग्राम संगठन का नाम", is_modelfarmer: "मॉडल किसान"},
+        'labels_Français': {person:"Personnes", name:"Nom de la personne", father_name:"Nom du père", village: "Nom du village", gender:"Genre", age:"Age", phone_no:"Numéro de téléphone",group:"Groupe", is_modelfarmer: "Modèle Agriculteur"},
+        'labels_English': {person: "Person", name:"Name", father_name:"Father Name", village: "Village", gender:"Gender", age:"Age", phone_no:"Phone Number",group:"Group", is_modelfarmer: "Model Farmer"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'सदस्य का नाम','element':'person_name'},{'header':'पिता/पति का नाम','element':'father_name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Nom de la personne','element':'person_name'},{'header':'Nom du père','element':'father_name'},{'header':'Nom du village','element':'village.village_name'},{'header':'Groupe','element':'group.group_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
@@ -1139,6 +1141,7 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         languages: ['हिन्दी', 'English', 'Français'],
+        ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         meta_default: 'English',
         meta_English: {stop: "Stop",close:"close", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
                        delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",

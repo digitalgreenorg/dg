@@ -11,6 +11,7 @@
                         In your html page, add the snippet and call
                         goog_report_conversion when someone clicks on the
                         chosen link or button. -->
+                        <script src="https://apis.google.com/js/api:client.js"></script>
                         <script type="text/javascript">
                         /* <![CDATA[ */
                         goog_snippet_vars = function() {
@@ -37,6 +38,7 @@
                         }
                         /* ]]> */
                         </script>
+        
                         <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js">
                         </script>
                         <!-- End Google Code for Sign Up Tracker Conversion Page -->
@@ -46,8 +48,10 @@
                                 <a href="#">
                                     <button class="facebook" onClick="goog_report_conversion({% url 'social:begin' 'facebook' %}?next={{next}})">Sign in with Facebook</button>
                                 </a>
-                                <a href="#">
-                                    <button class="googleplus" onClick="goog_report_conversion({% url 'social:begin' 'google-oauth2' %}?next={{next}})">Sign in with Google</button>
+                                
+                                <br>
+                                <a href="{%url 'social:begin' 'google-oauth2' %}?next={{next}}">
+                                    <button class="googleplus">Sign in with Google</button>
                                 </a>
                             </div>
                             
