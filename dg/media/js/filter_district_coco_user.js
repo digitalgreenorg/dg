@@ -3,6 +3,10 @@
  */
 
 function filter_villages_from_selected_districct() {
+  // Sele
+  // SelectBox.move("id_villages_from","id_villages_to");
+  // SelectFilter.refresh_icons("id_villages");
+
   jQuery.get("/coco/filter_villages/", {
           'district_id': 41265757
       })
@@ -23,9 +27,8 @@ function filter_villages_from_selected_districct() {
 
           // SelectFilter.init("id_villages_from", "Villages", 1, "/media/admin/");
           SelectBox.init("id_villages_from");
-          jQuery('#id_villages_add_link').mousedown();
-      });
 
+      });
 
 
     jQuery("#id_district").change(function() {
