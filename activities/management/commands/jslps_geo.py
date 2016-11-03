@@ -52,7 +52,7 @@ class Command(BaseCommand):
 					print dc, "District Saved in new"
 			except Exception as e:
 				print dc, e
-				wtr.writerow(['district',dc, e])
+				wtr.writerow(['JSLPS district',dc, e])
 
 			#Block
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
@@ -79,6 +79,7 @@ class Command(BaseCommand):
 					print bc, "block saved in new"
 			except Exception as e:
 				print bc, e
+				wtr.writerow(['JSLPS block',bc, e])
 
 			#village
 			village_set = dict(Village.objects.filter(block_id = block.id).values_list('id', 'village_name'))
@@ -104,4 +105,4 @@ class Command(BaseCommand):
 					jv.save()
 					print vc, "village saved in new"
 			except Exception as e:
-				print vc, e
+				wtr.writerow(['JSLPS village',vc, e])

@@ -37,11 +37,11 @@ class Command(BaseCommand):
 						gp.save()
 						print "Group saved in old"
 					except Exception as e:
-						wtr.writerow(['group', gc, e])
+						wtr.writerow(['group save', gc, e])
 				try:			
 					group = PersonGroup.objects.filter(group_name = gn, village_id = village.Village.id).get()
 				except PersonGroup.DoesNotExist as e:
-					wtr.writerow(['group', gc, e])
+					wtr.writerow(['group exist', gc, e])
 
 				try:
 					group_added = JSLPS_Persongroup.objects.values_list('group_code',flat=True)
@@ -52,6 +52,7 @@ class Command(BaseCommand):
 						jg.save()
 				except Exception as e:
 					print gc, e
+					wtr.writerow(['JSLPS group', gc, e])
 			except Village.DoesNotExist as e:
-				wtr.writerow(['group',vc, e])
+				wtr.writerow(['village',vc, e])
 			

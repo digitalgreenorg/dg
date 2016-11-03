@@ -32,15 +32,15 @@ class Command(BaseCommand):
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
 			except JSLPS_Video.DoesNotExist as e:
-				wtr.writerow(['video', vc, e])
+				wtr.writerow(['video not exist', vc, e])
 				error = 1
 			try:
 				person = JSLPS_Person.objects.get(person_code = pc)
 			except (JSLPS_Video.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				wtr.writerow(['person', pc, e])
+				wtr.writerow(['person not exist', pc, e])
 				error = 1
 
-			if(error==0):
+			if error==0:
 				try:
 					pap = PersonAdoptPractice(person = person.person,
 											video = video.video,

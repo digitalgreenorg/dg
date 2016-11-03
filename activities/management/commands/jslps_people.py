@@ -23,7 +23,6 @@ class Command(BaseCommand):
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
-			if c.find('FatherName') 
 			if c.find('FatherName') is not None:
 				pfn = unicode(c.find('FatherName').text)
 			else:
@@ -47,7 +46,7 @@ class Command(BaseCommand):
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 			except JSLPS_Village.DoesNotExist as e:
-				wtr.writerow(['village', gc, e])
+				wtr.writerow(['JSLPS village not EXIST', gc, e])
 				error = 1
 			
 			#TODO: Code clean up
@@ -65,11 +64,11 @@ class Command(BaseCommand):
 									partner = partner)
 					person.save()
 				except Exception as e:
-					wtr.writerow(['village', gc, e])
+					wtr.writerow(['village group not exist', gc, e])
 				try:
 					person = Person.objects.filter(person_name = pn, father_name = pfn, village_id = village.Village.id).get()
-					person_added = list(JSLPS_Person.objects.values_list('person_code'))
-					person_added = [i[0] for i in person_added]
+					person_added = JSLPS_Person.objects.values_list('person_code',flat=True)
+					#person_added = [i[0] for i in person_added]
 				except Exception as e:
 					print e
 				if pc not in person_added:
@@ -80,6 +79,7 @@ class Command(BaseCommand):
 						print pc, "saved in new"
 					except Exception as e:
 						print pc, e
+						wtr.writerow(['JSLPS person error 1 save', pc, e])
 			
 			if (error == 0):
 				full_name_xml = pn+' '+pfn
@@ -103,13 +103,14 @@ class Command(BaseCommand):
 						print pc,"person saved in old"
 					except Exception as e:
 						print pc, e
-						wtr.writerow(['person', pc, e])
+						wtr.writerow(['person save', pc, e])
 					try:
 						person = Person.objects.filter(person_name = pn, father_name = pfn, group_id = group.group.id, village_id = village.Village.id).get()
-						person_added = list(JSLPS_Person.objects.values_list('person_code'))
-						person_added = [i[0] for i in person_added]
+						person_added = JSLPS_Person.objects.values_list('person_code',flat=True)
+						#person_added = [i[0] for i in person_added]
 					except Exception as e:
 						print e
+						wtr.writerow(['person exist', pc, e])
 					if pc not in person_added:
 						try:
 							jp = JSLPS_Person(person_code = pc,
@@ -118,3 +119,4 @@ class Command(BaseCommand):
 							print pc, "saved in new"
 						except Exception as e:
 							print pc, e
+							wtr.writerow(['JSLPS person error 0 save', pc, e])
