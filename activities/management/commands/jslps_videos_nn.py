@@ -146,8 +146,9 @@ class Command(BaseCommand):
 						print "farmer shown saved"
 					except Exception as e:
 						wtr.writerow(['production team save', e])
-					
 
+					video_added = []
+					video = None
 					try:
 						video = Video.objects.filter(title = vn, village_id = village.Village.id, partner_id=partner.id).get()
 						video_added = JSLPS_Video.objects.values_list('vc', flat= True)
@@ -161,6 +162,7 @@ class Command(BaseCommand):
 							vj.save()
 					except Exception as e:
 						print vdc, e
+						wtr.writerow(['JSLPS Video save', vdc, e])
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
@@ -195,3 +197,4 @@ class Command(BaseCommand):
 					nn.save()
 				except Exception as e:
 					print e
+					wtr.writerow(['Non nego', nn_c,'video',vdc, e])
