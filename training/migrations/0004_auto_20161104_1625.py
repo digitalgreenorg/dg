@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('programs', '0001_initial'),
+        ('geographies', '0001_initial'),
+        ('training', '0003_auto_20161006_0539'),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name='training',
+            name='district',
+            field=models.ForeignKey(default=None, to='geographies.District'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='training',
+            name='partner',
+            field=models.ForeignKey(default=None, to='programs.Partner'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='training',
+            name='trainingType',
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AlterField(
+            model_name='training',
+            name='assessment',
+            field=models.ForeignKey(default=None, to='training.Assessment'),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='training',
+            name='language',
+            field=models.ForeignKey(default=None, to='videos.Language'),
+            preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='training',
+            name='trainer',
+            field=models.ManyToManyField(to='training.Trainer'),
+        ),
+    ]

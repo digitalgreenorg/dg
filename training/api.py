@@ -512,8 +512,11 @@ class ScoreResource(ModelResource):
         if attempt.count() < 1:
             bundle = super(ScoreResource, self).obj_create(bundle, **kwargs)
         else:
-            raise ScoreNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = self.obj_update(bundle, **kwargs)
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):

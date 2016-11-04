@@ -50,22 +50,22 @@ class Training(models.Model):
 	id = models.AutoField(primary_key=True)
 	date = models.DateField()
 	place = models.CharField(max_length=200)
-	assessment = models.ForeignKey(Assessment, null=True, blank=True)
-	trainer = models.ManyToManyField(Trainer, blank=True)
-	language = models.ForeignKey(Language, null=True, blank=True)
+	assessment = models.ForeignKey(Assessment)
+	trainer = models.ManyToManyField(Trainer)
+	language = models.ForeignKey(Language)
 	participants = models.ManyToManyField(Animator)
-	district = models.ForeignKey(District, null = True, blank = True)
+	district = models.ForeignKey(District)
 	trainingType = models.BooleanField(default=True)
-	partner = models.ForeignKey(Partner, null=True, blank = True)
+	partner = models.ForeignKey(Partner)
 
 	# class Meta:
  #    	unique_together=("date","trainer")
 
 class Score(models.Model):
 	id = models.AutoField(primary_key=True)
-	training = models.ForeignKey(Training, null=False, blank=False)
-	participant = models.ForeignKey(Animator, null=False, blank=False)
-	question = models.ForeignKey(Question, null=False, blank=False)
+	training = models.ForeignKey(Training)
+	participant = models.ForeignKey(Animator)
+	question = models.ForeignKey(Question)
 	score = models.IntegerField()
 
 	class Meta:
