@@ -3046,7 +3046,7 @@ function create_outliers_table(date, aggregator_id) {
         if (new Date(date).getTime() == new Date(payments_gaddidar_contribution[i]['date']).getTime() && aggregator_id == payments_gaddidar_contribution[i][USER_CREATED__ID]) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    data_set[j][8] = payments_gaddidar_contribution[i]['amount'];
+                    data_set[j][8] += payments_gaddidar_contribution[i]['amount'];
                 }
             }
         }
