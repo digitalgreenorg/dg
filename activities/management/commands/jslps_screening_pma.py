@@ -30,8 +30,14 @@ class Command(BaseCommand):
 			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
 			st = datetime.datetime.strptime(c.find('start_time').text, '%H:%M:%S')
 			#et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
-			vdc = map(int, c.find('Video').text.split(','))
-			gc = map(int, c.find('GroupCode').text.split(','))
+			try:
+				vdc = map(int, c.find('Video').text.split(','))
+			except Exception as e:
+				vdc = []
+			try:
+				gc = map(int, c.find('GroupCode').text.split(','))
+			except Exception as e:
+				gc = []
 			error = 0
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
@@ -70,7 +76,9 @@ class Command(BaseCommand):
 					print e
 					wtr.writerow(['Screening save',sc,e])
 				try:
-					screening = Screening.objects.filter(date = sd,start_time = st, village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id).get()
+					screening = Screening.objects.filter(date = sd,start_time = st, village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id)
+					if len(screening) > 1:
+						screening = screening[0]
 					for i in groups:
 						screening.farmer_groups_targeted.add(i)
 						screening.save()
@@ -84,7 +92,9 @@ class Command(BaseCommand):
 					wtr.writerow(['Groups save',gc,'video save',vc])
 
 				try:
-					screening = Screening.objects.filter(date = sd,start_time = st,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id).get()
+					screening = Screening.objects.filter(date = sd,start_time = st,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id)
+					if len(screening) > 1:
+						screening = screening[0]
 					sc_added = JSLPS_Screening.objects.values_list('screenig_code',flat = True)
 					#sc_added = [i[0] for i in sc_added]
 					if sc not in sc_added:
