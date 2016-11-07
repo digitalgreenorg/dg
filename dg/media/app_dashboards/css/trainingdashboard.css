@@ -37,7 +37,7 @@ a.button-collapse.top-nav {
 a.button-collapse.top-nav.full {
     line-height: 122px;
 }
-main, footer {
+footer {
     padding-left: 240px;
 }
 html {
