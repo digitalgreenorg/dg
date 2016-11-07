@@ -54,9 +54,9 @@ class Training(models.Model):
 	trainer = models.ManyToManyField(Trainer)
 	language = models.ForeignKey(Language)
 	participants = models.ManyToManyField(Animator)
-	district = models.ForeignKey(District)
+	district = models.ForeignKey(District, null=True, blank=True)
 	trainingType = models.BooleanField(default=True)
-	partner = models.ForeignKey(Partner)
+	partner = models.ForeignKey(Partner, null=True, blank=True)
 
 	# class Meta:
  #    	unique_together=("date","trainer")
