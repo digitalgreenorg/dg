@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
+from django.db.models import Q
 from tastypie import fields
 from tastypie.authentication import SessionAuthentication, Authentication
 from tastypie.authorization import Authorization
@@ -128,9 +129,9 @@ def get_user_videos(user_id):
     ###Videos produced by partner with in the same state
     qacoco_user = QACocoUser.objects.get(user_id = user_id)
     blocks = qacoco_user.get_blocks()
-    #user_states = State.objects.filter(district__in = districts).distinct().values_list('id', flat=True)
+    user_states = State.objects.filter(district__block__in = blocks).distinct().values_list('id', flat=True)
     user_videos = qacoco_user.get_videos().values_list('id', flat = True)
-    videos = Video.objects.filter(village__block__in = blocks).values_list('id', flat = True)
+    videos = Video.objects.filter(village__block__district__state__in = user_states).values_list('id', flat = True)
     ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
     #videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = qacoco_user.partner_id).values_list('id', flat = True)
     ###Get videos screened to allow inter partner sharing of videos
@@ -203,6 +204,26 @@ class BlockAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download Block" )
 
+class BlockUserAuthorization(Authorization):
+    def __init__(self, field):
+        self.filter_keyword = field
+    
+    def read_list(self, object_list, bundle):
+        blocks = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        kwargs = {}
+        kwargs[self.filter_keyword] = blocks
+        return object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        kwargs[self.filter_keyword] = QACocoUser.objects.get(user_id= bundle.request.user.id).get_blocks()
+        obj = object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound( "Not allowed to download Block" )
+
 class BlockVideoAuthorization(Authorization):
     def __init__(self, field):
         self.filter_keyword = field
@@ -213,8 +234,8 @@ class BlockVideoAuthorization(Authorization):
         videos2 = list(QACocoUser.objects.get(user_id= bundle.request.user.id).get_videos())
         videos = videos1 + videos2 
         kwargs = {}
-        kwargs[self.filter_keyword] = videos
-        return object_list.filter(**kwargs).distinct()
+        kwargs[self.filter_keyword] = videos1
+        return object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
@@ -223,8 +244,8 @@ class BlockVideoAuthorization(Authorization):
         videos2 = list(QACocoUser.objects.get(user_id= bundle.request.user.id).get_videos())
         videos = videos1 + videos2 
         kwargs = {}
-        kwargs[self.filter_keyword] = videos
-        obj = object_list.filter(**kwargs).distinct()
+        kwargs[self.filter_keyword] = videos1
+        obj = object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
         if obj:
             return True
         else:
@@ -395,7 +416,7 @@ class DisseminationQualityResource(BaseResource):
                 queryset = DisseminationQuality.objects.all()
                 always_return_data = True
                 resource_name = 'DisseminationQuality'
-                authorization = BlockAuthorization('block_id__in')
+                authorization = BlockUserAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=DisseminationQualityForm)
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
@@ -423,7 +444,7 @@ class AdoptionVerificationResource(BaseResource):
                 queryset = AdoptionVerification.objects.all()
                 always_return_data = True
                 resource_name = 'AdoptionVerification'
-                authorization = BlockAuthorization('block_id__in')
+                authorization = BlockUserAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=AdoptionVerificationForm)
 
