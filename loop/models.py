@@ -7,7 +7,7 @@ from loop_data_log import save_log, delete_log
 
 RoleChoice = ((1, "Admin"), (2, "Aggregator"))
 ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
-DISCOUNT_CRITERIA = ((1, "Volume"), (2, "Amount"))
+DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 
 
 class LoopModel(models.Model):
