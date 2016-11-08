@@ -11,13 +11,13 @@ class Command(BaseCommand):
 
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/geo.xml", 'w')
+		xml_file = open("jslps_data_integration_files/geo.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/geo_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/geo_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/geo.xml')
+		tree = ET.parse('jslps_data_integration_files/geo.xml')
 		root = tree.getroot()
 		state = State.objects.get(id = 2)
 		for c in root.findall('MasterData'):
@@ -41,8 +41,8 @@ class Command(BaseCommand):
 					wtr.writerow(['district',dc, e])
 			try:
 				district = District.objects.filter(state_id = 2).get(district_name = dn)
-				district_added = list(JSLPS_District.objects.values_list('district_code'))
-				district_added = [i[0] for i in district_added]
+				district_added = JSLPS_District.objects.values_list('district_code',flat=True)
+				#district_added = [i[0] for i in district_added]
 				
 				if dc not in district_added:
 					jd = JSLPS_District(district_code = dc,
@@ -52,7 +52,7 @@ class Command(BaseCommand):
 					print dc, "District Saved in new"
 			except Exception as e:
 				print dc, e
-				wtr.writerow(['district',dc, e])
+				wtr.writerow(['JSLPS district',dc, e])
 
 			#Block
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
@@ -68,8 +68,8 @@ class Command(BaseCommand):
 			
 			try:
 				block = Block.objects.get(block_name = bn)
-				block_added = list(JSLPS_Block.objects.values_list('block_code'))
-				block_added = [i[0] for i in block_added]
+				block_added = JSLPS_Block.objects.values_list('block_code',flat=True)
+				#block_added = [i[0] for i in block_added]
 
 				if bc not in block_added:
 					jb = JSLPS_Block(block_code = bc,
@@ -79,6 +79,7 @@ class Command(BaseCommand):
 					print bc, "block saved in new"
 			except Exception as e:
 				print bc, e
+				wtr.writerow(['JSLPS block',bc, e])
 
 			#village
 			village_set = dict(Village.objects.filter(block_id = block.id).values_list('id', 'village_name'))
@@ -94,8 +95,8 @@ class Command(BaseCommand):
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
-				village_added = list(JSLPS_Village.objects.values_list('village_code'))
-				village_added = [i[0] for i in village_added]
+				village_added = JSLPS_Village.objects.values_list('village_code',flat=True)
+				#village_added = [i[0] for i in village_added]
 
 				if vc not in village_added:
 					jv = JSLPS_Village(village_code = vc,
@@ -104,4 +105,4 @@ class Command(BaseCommand):
 					jv.save()
 					print vc, "village saved in new"
 			except Exception as e:
-				print vc, e
+				wtr.writerow(['JSLPS village',vc, e])
