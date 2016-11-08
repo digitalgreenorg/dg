@@ -416,7 +416,7 @@ class DisseminationQualityResource(BaseResource):
                 queryset = DisseminationQuality.objects.all()
                 always_return_data = True
                 resource_name = 'DisseminationQuality'
-                authorization = BlockUserAuthorization('block_id__in')
+                authorization = BlockAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=DisseminationQualityForm)
         dehydrate_video = partial(foreign_key_to_id, field_name = 'video', sub_field_names=['id','title'])
@@ -444,7 +444,7 @@ class AdoptionVerificationResource(BaseResource):
                 queryset = AdoptionVerification.objects.all()
                 always_return_data = True
                 resource_name = 'AdoptionVerification'
-                authorization = BlockUserAuthorization('block_id__in')
+                authorization = BlockAuthorization('block_id__in')
                 authentication = Authentication()
                 validation = ModelFormValidation(form_class=AdoptionVerificationForm)
 
