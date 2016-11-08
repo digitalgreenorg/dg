@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def send_mail(self):
         subject = "JSLPS data entry status"
         from_email = dg.settings.EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']#, 'joshin@digitalgreen.org', 'shetty@digitalgreen.org']
+        to_email = ['aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org', 'joshin@digitalgreen.org', 'shetty@digitalgreen.org']
         body = "Hi Everyone,\nThis is a automated email after data entry of JSLPS data in database.\nPFA the error files."
         body = "JSLPS data has been inserted in database.\nPFA error files."
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
@@ -21,7 +21,7 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options): 
-    
+
         print "Geography,jslps_geo"
         call_command('jslps_geo')
 
