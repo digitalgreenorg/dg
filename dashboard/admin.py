@@ -77,7 +77,7 @@ class NonNegotiablesInline(admin.TabularInline):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline,]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice','category','subcategory','videopractice']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
