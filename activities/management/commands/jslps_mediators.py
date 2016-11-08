@@ -58,7 +58,7 @@ class Command(BaseCommand):
 						except Exception as e:
 							wtr.writerow(['AKM save', ac, e])
 				except Exception as e:
-					wtr.writerow(['AKM save2', ac, e])
+					wtr.writerow(['AKM exists', ac, e])
 				try:
 					animator = Animator.objects.filter(name = an, gender = gender, district_id= district.district_id , partner_id = partner.id).get()
 					village_list = AnimatorAssignedVillage.objects.values_list('village_id', flat=True)

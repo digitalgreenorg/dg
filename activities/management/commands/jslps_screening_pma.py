@@ -34,6 +34,8 @@ class Command(BaseCommand):
 				vdc = map(int, c.find('Video').text.split(','))
 			except Exception as e:
 				vdc = []
+				wtr.writerow(['scr id',sc,'Can not save screening without video'])
+				continue
 			try:
 				gc = map(int, c.find('GroupCode').text.split(','))
 			except Exception as e:

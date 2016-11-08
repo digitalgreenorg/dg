@@ -79,7 +79,7 @@ class Command(BaseCommand):
 						print pc, "saved in new"
 					except Exception as e:
 						print pc, e
-						wtr.writerow(['JSLPS person error 1 save', pc, e])
+						wtr.writerow(['JSLPS person error save', pc, e])
 			
 			if (error == 0):
 				full_name_xml = pn+' '+pfn
@@ -119,4 +119,4 @@ class Command(BaseCommand):
 							print pc, "saved in new"
 						except Exception as e:
 							print pc, e
-							wtr.writerow(['JSLPS person error 0 save', pc, e])
+							wtr.writerow(['JSLPS person save error', pc, e])

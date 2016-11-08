@@ -30,14 +30,20 @@ class Command(BaseCommand):
 				cg = int(c.find('Category').text)
 			else:
 				cg = None
+				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
+				continue
 			if c.find('SubCategory') is not None: 
 				scg = int(c.find('SubCategory').text)
 			else:
 				scg = None
+				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
+				continue
 			if c.find('Practice') is not None: 
 				vp = int(c.find('Practice').text)
 			else:
 				vp = None
+				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
+				continue
 			if c.find('YouTubeID') is not None: 
 				yid = c.find('YouTubeID').text
 			else:
@@ -60,13 +66,6 @@ class Command(BaseCommand):
 				benefit = ''
 			vc = c.find('VillageCode').text
 			pro_team = c.find('ProductionTeam').text.split(',')
-			#dc = c.find('DistrictCode').text
-			#bc = c.find('BlockCode').text
-			#fc = int(c.find('Facililator').text)
-			#co = int(c.find('Camera_Operator').text)
-			#fr = map(int, c.find('MemberIDList').text.split(','))
-			#act= c.find('Actors').text
-			#sf = int(c.find('Suitable_For').text)
 			
 			error = 0
 			try:
@@ -84,24 +83,20 @@ class Command(BaseCommand):
 					category = Category.objects.get(id = cg)
 				except Category.DoesNotExist as e:
 					category = None
+					wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
+					continue
 				try:
 					subcategory = SubCategory.objects.get(id = scg)
 				except SubCategory.DoesNotExist as e:
 					subcategory = None
+					wtr.writerow(['Can not save video without subcategory',vdc,'title', vn, e])
+					continue
 				try:
 					videopractice = VideoPractice.objects.get(id = vp)
 				except VideoPractice.DoesNotExist as e:
 					videopractice = None
-				'''
-				farmer_list = []
-				for i in fr:
-					try:
-						fr = JSLPS_Person.objects.get(person_code = str(i))
-						farmer_list.append(fr.person)
-					except JSLPS_Person.DoesNotExist as e:
-						fr = JSLPS_Person.objects.get(person_code = str(630))
-						farmer_list.append(fr.person)
-				'''
+					wtr.writerow(['Can not save video without practice',vdc,'title', vn, e])
+					continue
 
 			except (JSLPS_Village.DoesNotExist, Language.DoesNotExist) as e:
 				print e
