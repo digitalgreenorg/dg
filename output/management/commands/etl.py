@@ -151,7 +151,7 @@ class AnalyticsSync():
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
             print "4"
-            for pma in pmas:
+            for pma in pmas.iteritems():
                 per = pma['person']
                 dt = pma['screening__date']
                 person_video_seen_date_dict[per].append(dt)
