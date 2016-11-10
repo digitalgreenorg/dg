@@ -144,7 +144,7 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            pmas = PersonMeetingAttendance.objects.filter(screening__date__gte = '2012-01-01').values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
             'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
@@ -178,7 +178,7 @@ class AnalyticsSync():
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
 
-            scr = Screening.objects.values('questions_asked')
+            scr = Screening.objects.filter(date__gte = '2012-01-01').values('questions_asked')
             for s in scr:
                 counts['tot_ques'] = counts['tot_ques'] + 1
                      
@@ -192,7 +192,7 @@ class AnalyticsSync():
  
              
             #Total adoption calculation and gender wise adoption totals    
-            paps = PersonAdoptPractice.objects.values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
+            paps = PersonAdoptPractice.objects.filter(date_of_adoption__gte = '2012-01-01').values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
             pap_dict = defaultdict(list) #For counting total adoption by active attendees
             for person_id, dt, vil, gender, partner in paps:
                 pap_dict[person_id].append(dt)
@@ -229,7 +229,7 @@ class AnalyticsSync():
             print "Finished active attendance counts"
  
             #tot sc calculations
-            scs = Screening.objects.annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
+            scs = Screening.objects.filter(date__gte = '2012-01-01').annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
             for dt, vil, gr_size, partner in scs:
                 main_data_dst[dt][vil][partner]['tot_sc'] = main_data_dst[dt][vil][partner]['tot_sc'] + 1
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
