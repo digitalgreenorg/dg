@@ -36,12 +36,13 @@ class AnalyticsSync():
         start_time = time.time()
         import subprocess
         import MySQLdb
-        #Create schema
         database = DATABASES['default']['NAME']
-        print "Database Name:", database
-        # ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
-        # if ret_val != 0:
-        #     raise Exception("Could not recreate schema")
+        print "Database:", database
+
+        #Create schema
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        if ret_val != 0:
+            raise Exception("Could not recreate schema")
         print "Recreated schema"
         
         #Fill Data
