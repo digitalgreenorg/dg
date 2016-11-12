@@ -145,8 +145,10 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
+            # pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            # 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
             pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
-            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
+            'screening__village__id', 'screening__partner__id')
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
