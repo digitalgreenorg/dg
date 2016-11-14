@@ -136,7 +136,7 @@ class AnalyticsSync():
                 tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
                 tot_exp_att=0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
                 tot_active_vid_seen=0))))
-            
+            print "main data set created"
             sixty_days = datetime.timedelta(days=60)
  
             person_village_qs = Person.objects.values_list('id','village','partner')
@@ -145,18 +145,22 @@ class AnalyticsSync():
             for id, village, partner in person_village_qs:
                 person_village[id] = village
                 person_partner[id] = partner
+            print "Person Village Iteration done"
             
             # pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
             # 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
             pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
             'screening__village__id', 'screening__partner__id')
+            print "PMA fetched"
             pmas_df = DataFrame.from_records(pmas)
+            print "DF created"
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
             curr_count = 1000000
             print "Entering for loop for PMA"
             for index, pma in pmas_df.iterrows():
+                per = pma['person']
                 dt = pma['screening__date']
                 person_video_seen_date_dict[per].append(dt)
                 curr_count += 1
