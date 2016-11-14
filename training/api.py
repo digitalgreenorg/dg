@@ -307,7 +307,7 @@ class MediatorResource(ModelResource):
 
     def obj_create(self, bundle, **kwargs):
         attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
-                                          'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'])
+                                          'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no=bundle.data['phone_no'])
         if attempt.count() < 1:
             bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
             vil_list = bundle.data.get('assigned_villages')
@@ -325,7 +325,7 @@ class MediatorResource(ModelResource):
             bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
-                                              'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'])
+                                              'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no = bundle.data['phone_no'])
             raise MediatorNotSaved(
                 {"online_id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
