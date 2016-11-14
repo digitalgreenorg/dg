@@ -8,6 +8,7 @@ from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Min, Count
 from dg.settings import DATABASES
+from pandas import DataFrame
 
 from people.models import Person, Animator, AnimatorAssignedVillage
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
@@ -147,12 +148,15 @@ class AnalyticsSync():
             
             # pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
             # 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
+            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            'screening__village__id', 'screening__partner__id')
+            pmas_df = DataFrame.from_records(pmas)
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
             curr_count = 1000000
             print "Entering for loop for PMA"
-            for pma in PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id'):
+            for index, pma in pmas_df.iterrows():
                 dt = pma['screening__date']
                 person_video_seen_date_dict[per].append(dt)
                 curr_count += 1
