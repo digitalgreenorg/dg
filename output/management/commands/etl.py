@@ -149,14 +149,10 @@ class AnalyticsSync():
             
             # pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
             # 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
-            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
-            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
-            print "PMA fetched"
-            pmas_df = DataFrame.from_records(pmas)
+            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
             print "DF created"
 
-            del pmas
-            print "PMAS Deleted"
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
