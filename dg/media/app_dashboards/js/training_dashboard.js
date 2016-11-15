@@ -1,6 +1,7 @@
 /* This file should contain all the JS for Training dashboard */
 window.onload = initialize;
-
+language_hindi = 1;
+language_english = 2;
 function initialize() {
     // initialize any library here
 
@@ -8,7 +9,6 @@ function initialize() {
     $('select').material_select();
     get_filter_data();
     set_eventlistener();
-    // update_charts();
     $(".button-collapse").sideNav({
           // Default is 240
           edge: 'left', // Choose the horizontal origin
@@ -52,8 +52,6 @@ $('#state_tab_link').on('click', function () {
 $("#search_trainers").keyup(function() {
 
     var index_map = {};
-
-    //$("#trainer_all").prop("disabled",true);    
     var value = this.value.trim();
     if(value.length != 0)
         $("#trainer_all").prop("disabled",true);
@@ -82,7 +80,7 @@ $("#search_trainers").keyup(function() {
 
 //Search States in Side Nav
 $("#search_states").keyup(function() {
-    var value = this.value;
+    var value = this.value.trim();
 
     if(value.length != 0)
         $("#state_all").prop("disabled",true);
@@ -163,9 +161,9 @@ function set_eventlistener() {
     });
 
     var today = new Date();
-    var month_ = (( (today.getMonth() + 1) > 9 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
-    var date_ = (( (today.getDate() + 1) > 9 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
-    $("#to_date").val(today.getFullYear() + "-" + month_ + "-" + date_);
+    var _month = (( (today.getMonth() + 1) > 9 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
+    var _date = (( (today.getDate() + 1) > 9 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
+    $("#to_date").val(today.getFullYear() + "-" + _month + "-" + _date);
     $("#from_date").val("2015-01-01");
 
     set_filterlistener();
@@ -218,12 +216,9 @@ function set_filterlistener() {
 function get_data() {
     var start_date = $('#from_date').val();
     var end_date = $('#to_date').val();
-    if(start_date === '' || end_date === '')
-    {
+    if(start_date === '' || end_date === '' || (Date.parse(start_date) > Date.parse(end_date))) {
         $('#invalid_date_modal').openModal();
-    }
-    else
-    {
+    } else {
         var assessment_ids = [];
         var trainer_ids = [];
         var state_ids = [];
@@ -246,22 +241,17 @@ function get_data() {
                 state_ids.push(state_div.getAttribute('data'));
         });
 
-        if (Date.parse(start_date) > Date.parse(end_date)) {
-            $('#invalid_date_modal').openModal();
-        } else {
-            gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-            getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-            getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-            getmonthdata(start_date,end_date,assessment_ids,trainer_ids,state_ids);
-            get_bottom_boxes();
-        }
+        
+        get_trainer_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        get_question_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        get_state_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        get_month_data(start_date,end_date,assessment_ids,trainer_ids,state_ids);
+        get_bottom_boxes(start_date, end_date);
     }
 }
 
-function get_bottom_boxes(){
+function get_bottom_boxes(start_date, end_date){
 
-    var start_date = $('#from_date').val();
-    var end_date = $('#to_date').val();
     $.get("/training/date_filter_data/", {
         'start_date': start_date,
         'end_date': end_date
@@ -324,7 +314,7 @@ function create_filter(tbody_obj, id, name, type) {
 
 /* ajax to get json */
 
-function gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+function get_trainer_data(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
     show_progress_bar();
     $.get("/training/trainer_wise_data/", {
             'start_date': start_date,
@@ -336,11 +326,11 @@ function gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list, data_json.test);
+            plot_trainerwise_data(data_json.trainer_list, data_json.mediator_list, data_json.trainer_wise_average_score_data);
         });
 }
 
-function getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+function get_question_data(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
     show_progress_bar();
     $.get("/training/question_wise_data/", {
             'start_date': start_date,
@@ -356,7 +346,7 @@ function getquestiondata(start_date, end_date, assessment_ids, trainer_ids, stat
         });
 }
 
-function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+function get_state_data(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
     show_progress_bar();
     $.get("/training/state_wise_data/", {
             'start_date': start_date,
@@ -368,11 +358,11 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
         .done(function(data) {
             data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_statewise_data(data_json.state_list, data_json.mediator_list, data_json.state_test);
+            plot_statewise_data(data_json.state_list, data_json.mediator_list, data_json.state_wise_avg_score_data);
         });
 }
 
-function getmonthdata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+function get_month_data(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
     show_progress_bar();
     $.get("/training/month_wise_data/", {
             'start_date': start_date,
@@ -391,12 +381,12 @@ function getmonthdata(start_date, end_date, assessment_ids, trainer_ids, state_i
 
 
 /* Table Generating UI Functions - Fill data in table */
-
 function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages, num_beneficiaries) {
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
-    for (i = 0; i < num_pass.length; i++) {
+    var num_pass_length = num_pass.length;
+    for (i = 0; i < num_pass_length; i++) {
         total_score = total_score + num_pass[i]['score__sum'];
         if (num_pass[i]['score__count'] != 0) {
             if (num_pass[i]['score__sum'] / num_pass[i]['score__count'] >= 0.7) {
@@ -407,7 +397,7 @@ function fill_top_boxes(num_trainings, num_participants, num_pass, num_villages,
         }
     }
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
-    var avg_score = total_score / num_pass.length;
+    var avg_score = total_score / num_pass_length;
 
     document.getElementById('num_trainings').innerHTML = numberWithCommas(num_trainings);
     document.getElementById('mediators_trained').innerHTML = numberWithCommas(num_participants);
@@ -419,7 +409,8 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villag
     var num_passed = 0;
     var num_failed = 0;
     var total_score = 0;
-    for (i = 0; i < num_pass.length; i++) {
+    var num_pass_length = num_pass.length;
+    for (i = 0; i < num_pass_length; i++) {
         total_score = total_score + num_pass[i]['score__sum'];
         if (num_pass[i]['score__count'] != 0) {
             if (num_pass[i]['score__sum'] / num_pass[i]['score__count'] >= 0.7) {
@@ -431,7 +422,7 @@ function fill_bottom_boxes(num_trainings, num_participants, num_pass, num_villag
     }
 
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
-    var avg_score = total_score / num_pass.length;
+    var avg_score = total_score / num_pass_length;
 
     if(isNaN(avg_score))
     {
@@ -455,7 +446,7 @@ function numberWithCommas(x) {
 
 /* Fill data for highcharts */
 
-function plot_trainerwise_data(trainer_list, mediator_list, test) {
+function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average_score_data) {
 
     if (trainer_list.length == 0) {
 
@@ -507,7 +498,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, test) {
         for (i = 0; i < trainer_list.length; i++) {
             var trainer_name = trainer_list[i]['training__trainer__name'];
             x_axis.push(trainer_name);
-            var avg = (test[i][trainer_name]['score_sum'] / test[i][trainer_name]['participant_count']);
+            var avg = (trainer_wise_average_score_data[i][trainer_name]['score_sum'] / trainer_wise_average_score_data[i][trainer_name]['participant_count']);
             var perc = (trainer_list[i]['score__sum'] / trainer_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
@@ -524,7 +515,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, test) {
                 }
             }
 
-            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100; //todo
+            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100;
             trainer_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
@@ -588,7 +579,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_percent_dict['data'] = new Array(question_array_length).fill(0.0);
 
             for (i = 0; i < question_array_length; i++) {
-                if (data_json[i]['question__language__id'] == 2) {
+                if (data_json[i]['question__language__id'] == language_english) {
                     x_axis.push(data_json[i]['question__text']);
                     var total_score = data_json[i]['score__sum'] + (question_offset == 0 ? 0 : data_json[i + question_offset]['score__sum']);
                     var total_count = data_json[i]['score__count'] + (question_offset == 0 ? 0 : data_json[i + question_offset]['score__count']);
@@ -603,7 +594,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_dict.push(question_mediators_passed_dict);
 
         } else {
-            console.log("length2 = " + data_json.length);
+            // For documentation Assessment;
             question_mediators_dict['name'] = 'Total Mediators';
             question_mediators_passed_dict['name'] = "Mediators Answered Correctly"
             question_percent_dict['name'] = 'Percentage Answered Correctly';
@@ -636,7 +627,7 @@ function plot_questionwise_data(data_json, assessment_ids) {
     }
 }
 
-function plot_statewise_data(state_list, mediator_list, state_test) {
+function plot_statewise_data(state_list, mediator_list, state_wise_avg_score_data) {
     if (state_list.length == 0) {
         plot_dual_axis_chart($("#state_mediator_data"), [], {}, "Average Scores per Mediator", "", "", "%","");
         plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "","No data for this assessment");
@@ -691,7 +682,7 @@ function plot_statewise_data(state_list, mediator_list, state_test) {
             state_name = state_list[i]['participant__district__state__state_name']; 
             x_axis.push(state_name);
 
-            var avg = (state_test[i][state_name]['score_sum'] / state_test[i][state_name]['participant_count']);
+            var avg = (state_wise_avg_score_data[i][state_name]['score_sum'] / state_wise_avg_score_data[i][state_name]['participant_count']);
             var perc = (state_list[i]['score__sum'] / state_list[i]['score__count']) * 100;
 
             avg_score_dict['data'][i] = parseFloat(avg.toFixed(2));
@@ -813,127 +804,6 @@ function plot_multiline_chart(container_obj, x_axis, dict, y_axis_text) {
     });
 }
 
-function plot_stacked_chart(container_obj, x_axis, dict, y_axis_text, unit, prefix_or_suffix, farmer_counts) {
-
-    if (farmer_counts) {
-        var data_dict = {};
-        data_dict["name"] = "Farmer Count";
-        data_dict["type"] = "line";
-        data_dict["yAxis"] = 1;
-        data_dict["data"] = farmer_counts;
-        dict.push(data_dict);
-    }
-
-    container_obj.highcharts({
-        chart: {
-            type: 'column'
-        },
-        xAxis: {
-            categories: x_axis,
-            labels: {
-                rotation: -90
-            }
-        },
-        yAxis: [{
-            min: 0,
-            title: {
-                text: y_axis_text
-            },
-            stackLabels: {
-                enabled: true,
-                format: '<b>' + ((prefix_or_suffix) ? unit + ' ' : '') + '{total:.0f}' + ((prefix_or_suffix) ? '' : ' ' + unit) + '</b>',
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        }, {
-            title: {
-                text: "Farmer Count",
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            opposite: true
-        }],
-        legend: {
-            align: 'right',
-            x: 0,
-            verticalAlign: 'top',
-            y: 0,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-        },
-        tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            shared: true
-        },
-        plotOptions: {
-            column: {
-                showCheckbox: true,
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true,
-                    format: ' ',
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black'
-                    }
-                }
-            }
-        },
-        series: dict
-    });
-}
-
-function plot_single_axis_chart(container_obj, x_axis, data_dict, y_axis_text, unit) {
-    container_obj.highcharts({
-        chart: {
-            zoomType: 'xy'
-        },
-        title: '',
-        xAxis: [{
-            categories: x_axis,
-            crosshair: true
-        }],
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value} ' + unit,
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            title: {
-                text: y_axis_text,
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            }
-        }],
-        tooltip: {
-            shared: true
-        },
-        legend: {
-            align: 'center',
-            verticalAlign: 'top',
-            layout: 'horizontal',
-            x: 0,
-            y: 0,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-        },
-        series: data_dict
-    });
-}
-
 function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2, title_) {
 
     var width_ = $('.container').width();
@@ -949,7 +819,6 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
     container_obj.highcharts({
         chart: {
             zoomType: '',
-            /*width:width_*/
         },
 
         credits:{enabled : false},
@@ -1085,8 +954,6 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
             },
             opposite: true
         }],
-
-
         tooltip: {
             shared: true
         },
