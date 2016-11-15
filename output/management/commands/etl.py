@@ -202,7 +202,9 @@ class AnalyticsSync():
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
                  
-            #del pmas #Free memory
+            #del pmas 
+            del pmas_df
+            #Free memory
             del scr
 
             print "Finished date calculations"
