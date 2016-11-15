@@ -15,13 +15,13 @@ class Command(BaseCommand):
 		partner = Partner.objects.get(id = 24)
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/screening.xml", 'w')
+		xml_file = open("jslps_data_integration_files/screening.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/screening_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/screening_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/screening.xml')
+		tree = ET.parse('jslps_data_integration_files/screening.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioScreeingMasterData'):
 			sc = c.find('VDO_ID').text
@@ -29,9 +29,17 @@ class Command(BaseCommand):
 			ac = c.find('AKMCode').text
 			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
 			st = datetime.datetime.strptime(c.find('start_time').text, '%H:%M:%S')
-			et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
-			vdc = map(int, c.find('Video').text.split(','))
-			gc = map(int, c.find('GroupCode').text.split(','))
+			#et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
+			try:
+				vdc = map(int, c.find('Video').text.split(','))
+			except Exception as e:
+				vdc = []
+				wtr.writerow(['scr id',sc,'Can not save screening without video'])
+				continue
+			try:
+				gc = map(int, c.find('GroupCode').text.split(','))
+			except Exception as e:
+				gc = []
 			error = 0
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
@@ -44,24 +52,23 @@ class Command(BaseCommand):
 						videos.append(vid.video)
 					except JSLPS_Video.DoesNotExist as e:
 						print v, e
-						wtr.writerow(['video',vc, e])
+						wtr.writerow(['scr id',sc,'video not exist',v, e])
 				for g in gc:
 					try:
 						grp = JSLPS_Persongroup.objects.get(group_code = g)
 						groups.append(grp.group)
 					except JSLPS_Persongroup.DoesNotExist as e:
 						print g, e
-						wtr.writerow(['group',gc, e])
+						wtr.writerow(['scr id',sc,'group not exist',g, e])
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist) as e:
 				print e
-				wtr.writerow(['village',vc,'akm',ac,'video',vc, e])
+				wtr.writerow(['village',vc,'akm',ac,'scr id',sc, e])
 				error = 1
 
 			if (error==0):				
 				try:
 					scr = Screening(date = sd,
 									start_time = st,
-									end_time = et,
 									village = village.Village,
 									animator = animator.animator,
 									partner = partner)
@@ -69,9 +76,11 @@ class Command(BaseCommand):
 					print "Screening saved in old"
 				except Exception as e:
 					print e
-					wtr.writerow(['Screening',sc,e])
+					wtr.writerow(['Screening save',sc,e])
 				try:
-					screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id).get()
+					screening = Screening.objects.filter(date = sd,start_time = st, village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id)
+					if len(screening) > 1:
+						screening = screening[0]
 					for i in groups:
 						screening.farmer_groups_targeted.add(i)
 						screening.save()
@@ -82,12 +91,14 @@ class Command(BaseCommand):
 						print "Videos saved in old"
 				except Exception as e:
 					print e
-					wtr.writerow(['Groups',gc,'video',vc])
+					wtr.writerow(['Groups save',gc,'video save',vc])
 
 				try:
-					screening = Screening.objects.filter(date = sd,start_time = st,end_time = et,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id).get()
-					sc_added = JSLPS_Screening.objects.values_list('screenig_code')
-					sc_added = [i[0] for i in sc_added]
+					screening = Screening.objects.filter(date = sd,start_time = st,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id)
+					if len(screening) > 1:
+						screening = screening[0]
+					sc_added = JSLPS_Screening.objects.values_list('screenig_code',flat = True)
+					#sc_added = [i[0] for i in sc_added]
 					if sc not in sc_added:
 						try:
 							sj = JSLPS_Screening(screenig_code = sc,
@@ -96,6 +107,7 @@ class Command(BaseCommand):
 							print "Screening saved in new"
 						except Exception as e:
 							print sc, e
+							wtr.writerow(['JSLPS screening save',sc])
 				except Screening.DoesNotExist as e:
 					print e
 
@@ -103,13 +115,13 @@ class Command(BaseCommand):
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/pma.xml", 'w')
+		xml_file = open("jslps_data_integration_files/pma.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/pma_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/pma_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/pma.xml')
+		tree = ET.parse('jslps_data_integration_files/pma.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioScreeingMemberData'):
@@ -122,7 +134,7 @@ class Command(BaseCommand):
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
 				#print e
-				wtrr.writerow(['Screening', sc, 'Person', pc, e])
+				wtrr.writerow(['pma Screening', sc, 'pma Person', pc, e])
 				error = 1
 
 			if (error == 0):
@@ -132,5 +144,5 @@ class Command(BaseCommand):
 					pma.save()
 					print "PMA saved in old"
 				except Exception as e:
-					wtrr.writerow(['Attendence', sc, e])
+					wtrr.writerow(['pma Attendence save', sc, e])
 					print e
