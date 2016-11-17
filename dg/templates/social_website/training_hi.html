@@ -161,8 +161,8 @@
     </div>
     <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
     <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
-      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
+      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/fr/" {% if request.get_full_path == "/about/training/fr/" %} selected="true"{% endif %}>French</option>
     </select>
     </div>
