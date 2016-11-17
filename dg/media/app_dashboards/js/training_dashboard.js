@@ -240,8 +240,7 @@ function get_data() {
             if (state_div.checked)
                 state_ids.push(state_div.getAttribute('data'));
         });
-
-        console.log("Assessment id = " + assessment_ids);
+        
         get_trainer_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_question_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_state_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
@@ -503,6 +502,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average
 
 function plot_questionwise_data(question_list, question_language_list, assessment_ids) {
     var question_data_length = question_list.length;
+    console.log(question_language_list);
     var question_language_count  = question_language_list.length;
     //Question Array length to store Distinct question : whether it is available in different languages.
     var question_array_length = 0;
@@ -511,7 +511,8 @@ function plot_questionwise_data(question_list, question_language_list, assessmen
     if (question_data_length == 0) {
         plot_multiple_axis_chart($("#question_mediator_data"), [], {}, "No. of Mediators", "", "","","", "%", {}, "%", "","No data for this assessment");
     } else {
-
+        console.log(question_list);
+        console.log(question_language_list);
         var x_axis = [];
         var question_dict = [];
         var question_mediators_dict = {};
