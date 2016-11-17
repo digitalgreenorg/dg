@@ -42,10 +42,12 @@ def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')
     trainers = Trainer.objects.values('id', 'name')
     states = State.objects.values('id','state_name')
-    participants = Score.objects.filter(training__assessment__id=1).values('participant__id').distinct()
-    num_trainings = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('training_id').distinct().count()
+    filter_args = {}
+    filter_args['score__in'] = [0, 1]
+    participants = Score.objects.filter(**filter_args).values('participant__id').distinct()
+    num_trainings = Score.objects.filter(**filter_args).values('training_id').distinct().count()
     num_participants = len(participants)
-    num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1).values('participant').annotate(Sum('score'), Count('score'))
+    num_pass = Score.objects.filter(**filter_args).values('participant').annotate(Sum('score'), Count('score'))
     data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
@@ -54,15 +56,20 @@ def date_filter_data(request):
 
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    assessments = Assessment.objects.values('id', 'name')
-    trainers = Trainer.objects.values('id', 'name')
-    states = State.objects.values('id','state_name')
-    participants = Score.objects.filter(training__assessment__id=1, training__date__gte=start_date, training__date__lte=end_date).values_list('participant__id', flat=True).distinct()
-    num_trainings = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('training_id').distinct().count()
+    assessment_ids = request.GET.getlist('assessment_ids[]')
+    filter_args = {}
+    if(start_date !=""):
+        filter_args["training__date__gte"] = start_date
+    if(end_date != ""):
+        filter_args["training__date__lte"] = end_date
+    filter_args['training__assessment__id__in'] = assessment_ids
+    filter_args['score__in'] = [0, 1]
+    participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
+    num_trainings = Score.objects.filter(**filter_args).values('training_id').distinct().count()
     num_participants = len(participants)
-    num_pass = Score.objects.filter(score__in=[0,1], training__assessment__id=1, training__date__gte = start_date, training__date__lte = end_date).values('participant').annotate(Sum('score'), Count('score'))
+    num_pass = Score.objects.filter(**filter_args).values('participant').annotate(Sum('score'), Count('score'))
 
-    data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
+    data_dict = {'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
@@ -113,6 +120,9 @@ def question_wise_data(request):
     assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
+    question_data_dict = {}
+    language_count = 0
+    question_language_list = []
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
@@ -123,7 +133,12 @@ def question_wise_data(request):
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id').order_by('-question__id').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
-    data = json.dumps(list(question_list))
+    language_count = question_list.values('question__language__id').distinct()
+    
+    question_language_list.append(language_count)
+    question_data_dict = {'question_list' : list(question_list), 'question_language_list' : question_language_list}
+
+    data = json.dumps(question_data_dict)
     return HttpResponse(data)
 
 def state_wise_data(request):
