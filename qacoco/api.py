@@ -235,7 +235,7 @@ class BlockVideoAuthorization(Authorization):
         videos = videos1 + videos2 
         kwargs = {}
         kwargs[self.filter_keyword] = videos1
-        return object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
+        return object_list.filter(user_created_id = bundle.request.user.id).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
@@ -245,7 +245,7 @@ class BlockVideoAuthorization(Authorization):
         videos = videos1 + videos2 
         kwargs = {}
         kwargs[self.filter_keyword] = videos1
-        obj = object_list.filter(Q(**kwargs) | Q(user_created_id = bundle.request.user.id)).distinct()
+        obj = object_list.filter(user_created_id = bundle.request.user.id).distinct()
         if obj:
             return True
         else:
