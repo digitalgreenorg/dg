@@ -201,8 +201,8 @@ class VideoPracticeAdmin(admin.ModelAdmin):
     search_fields = ['videopractice_name', 'subcategory__subcategory_name']
 
 class PracticesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
-    search_fields = ['id', 'practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
+    list_display = ('id', 'practice_name', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
+    search_fields = ['id', 'practice_name', 'practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
 
 class PracticeSectorAdmin(admin.ModelAdmin):
     search_fields = ['name']
