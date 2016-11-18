@@ -19,10 +19,10 @@ from forms import QACocoUserForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
     # For use custom QACocoUserForm 
-    #form = QACocoUserForm
+    form = QACocoUserForm
     list_display = ('user', 'partner', 'get_blocks')
     search_fields = ['user__username']
-    filter_horizontal = ('blocks','videos') 
+    #filter_horizontal = ('blocks','videos') 
 
     def get_queryset(self, request):
         if request.user.is_superuser:
