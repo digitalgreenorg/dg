@@ -122,6 +122,7 @@ def question_wise_data(request):
     state_ids = request.GET.getlist('state_ids[]')
     question_data_dict = {}
     language_count = 0
+    language_eng_id = 2
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
@@ -132,8 +133,8 @@ def question_wise_data(request):
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
     question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id').order_by('-question__id').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
-    language_count = Question.objects.filter(assessment_id__in = [1]).values_list('language_id', flat = True).distinct()
-    question_data_dict = {'question_list' : list(question_list), 'question_language_list' : list(language_count)}
+    language_text_eng = Question.objects.filter(language_id = language_eng_id, assessment_id__in=assessment_ids).values('text')
+    question_data_dict = {'question_list' : list(question_list), 'question_language_text_eng':list(language_text_eng)}
     data = json.dumps(question_data_dict)
     return HttpResponse(data)
 
