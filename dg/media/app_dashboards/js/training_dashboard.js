@@ -501,8 +501,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average
 }
 
 function plot_questionwise_data(question_list, question_language_text_eng) {
-    console.log(question_list);
-    var question_data_length = question_list.length;
+    var question_list_length = question_list.length;
     var  question_distinct_count = question_language_text_eng.length;
     var question_language_count  = question_data_length / question_distinct_count;
     var question_offset = question_distinct_count;
@@ -510,7 +509,7 @@ function plot_questionwise_data(question_list, question_language_text_eng) {
     var question_array_length = 0;
     // offset represent for same Questions in different Languages : 15, if data available in both english and hindi.
     question_offset = 0;
-    if (question_data_length == 0) {
+    if (question_list_length == 0) {
         plot_multiple_axis_chart($("#question_mediator_data"), [], {}, "No. of Mediators", "", "","","", "%", {}, "%", "","No data for this assessment");
     } else {
 
@@ -542,22 +541,32 @@ function plot_questionwise_data(question_list, question_language_text_eng) {
 
         //Calculation  question wise;
 
-        for (i = 0; i < question_distinct_count; i++) {
-            x_axis.push(question_language_text_eng[i]['text']);
+        for (question_distinct_iter = 0, question_list_iter = 0; question_distinct_iter < question_distinct_count && question_list_iter < question_distinct_count; question_distinct_iter++, question_list_iter++) {
+            x_axis.push(question_language_text_eng[question_distinct_iter]['text']);
             var total_score = 0;
             var total_count = 0;
             var participant_count = 0;
             var perc = 0;
-            var count = 0;
-            while(count < question_language_count && (i + count * question_offset) < question_data_length) {
-                total_score = total_score + question_list[i + count * question_offset]['score__sum'];
-                total_count = total_count + question_list[i + count * question_offset]['score__count'];
-                participant_count = participant_count + question_list[i + count * question_offset]['participant__count']
-                count = count + 1;
+            var counter = 0;
+            while(counter < question_language_count && (question_list_iter + counter * question_offset) < question_list_length) {
+                index_question_list = (question_list_iter + counter * question_offset);
+                index_question_distinct = (question_distinct_iter + counter * question_offset);
+                if((index_question_distinct + 1) != question_list[index_question_list]['question_id']) {
+                    question_list_iter--;
+                    break;
+                }
+                total_score = total_score + question_list[index_question_list]['score__sum'];
+                total_count = total_count + question_list[index_question_list]['score__count'];
+                participant_count = participant_count + question_list[index_question_list]['participant__count']
+                counter = counter + 1;
             }
+
             perc = total_score / total_count * 100;
-            question_percent_dict['data'][i] = parseFloat(perc.toFixed(2));
-            question_mediators_passed_dict['data'][i] = parseInt(participant_count);
+            if(isNaN(perc)){
+                perc = 0;
+            }
+            question_percent_dict['data'][question_distinct_iter] = parseFloat(perc.toFixed(2));
+            question_mediators_passed_dict['data'][question_distinct_iter] = parseInt(participant_count);
         }
         question_dict.push(question_mediators_passed_dict);
 
