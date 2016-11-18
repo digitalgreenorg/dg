@@ -14,13 +14,13 @@ class Command(BaseCommand):
 		partner = Partner.objects.get(id = 24)
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAdoptionData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/adoption.xml", 'w')
+		xml_file = open("jslps_data_integration_files/adoption.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/adoption_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/adoption_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/adoption.xml')
+		tree = ET.parse('jslps_data_integration_files/adoption.xml')
 		root = tree.getroot()
 		for c in root.findall('AdoptionData'):
 			pc = c.find('MemberCode').text
@@ -32,15 +32,15 @@ class Command(BaseCommand):
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
 			except JSLPS_Video.DoesNotExist as e:
-				wtr.writerow(['video', vc, e])
+				wtr.writerow(['video not exist', vc, e])
 				error = 1
 			try:
 				person = JSLPS_Person.objects.get(person_code = pc)
 			except (JSLPS_Video.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				wtr.writerow(['person', pc, e])
+				wtr.writerow(['person not exist', pc, e])
 				error = 1
 
-			if(error==0):
+			if error==0:
 				try:
 					pap = PersonAdoptPractice(person = person.person,
 											video = video.video,
