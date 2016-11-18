@@ -502,6 +502,8 @@ class MandiResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district')
 
     class Meta:
+        limit = 0
+        max_limit = 0
         allowed_methods = ['post', 'get']
         always_return_data = True
         queryset = Mandi.objects.all()
@@ -560,6 +562,8 @@ class TransporterResource(BaseResource):
     block = fields.ForeignKey(BlockResource, 'block', full=True)
 
     class Meta:
+        limit = 0
+        max_limit = 0
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = BlockAuthorization('block')
@@ -612,6 +616,8 @@ class TransportationVehicleResource(BaseResource):
     vehicle = fields.ForeignKey(VehicleResource, 'vehicle')
 
     class Meta:
+        limit = 0
+        max_limit = 0
         queryset = TransportationVehicle.objects.all()
         resource_name = 'transportationvehicle'
         authorization = BlockAuthorization('transporter__block')
