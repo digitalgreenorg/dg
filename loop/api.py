@@ -805,7 +805,6 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
-numberOfTimesToReject=0
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
@@ -848,15 +847,8 @@ class CombinedTransactionResource(BaseResource):
         user = LoopUser.objects.get(user__username=bundle.request.user)
         attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                      "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-        global numberOfTimesToReject
         if attempt.count() < 1:
-            if numberOfTimesToReject>=3:
-                bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
-            else:
-                numberOfTimesToReject=numberOfTimesToReject+1
-                raise TransactionNotSaved(
-                    {"idddd": numberOfTimesToReject, "error": "Duplicate"})
-
+            bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
             raise TransactionNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
