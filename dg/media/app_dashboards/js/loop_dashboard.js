@@ -540,6 +540,33 @@ function change_graph(parameter) {
     }
 }
 
+
+$(".dump").on("click", function(data) {
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        var a, today;
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            a = document.createElement('a');
+            a.href = window.URL.createObjectURL(xhttp.response);
+            a.download = "Loop_India_Bihar_Aggregator Payment_Devendra Singh_Sept1_Sept14_Payment_Summary" + ".xls";
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            return a.click();
+        }
+    };
+    xhttp.open("POST", "/loop/get_payment_sheet/", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.responseType = 'blob';
+    // data = [[1,"2016-10-07","Bihar Sharif",3424,6,856.00,2600,1600,0,1856.00],
+    // [2,"2016-10-09","Tajpur Mandi",476,3,119.00,175,0,13.75,280.25],
+    // [3,"2016-10-10","Tajpur Mandi",172,3,43.00,150,0,43,150.00],
+    // [4,"2016-10-12","Tajpur Mandi",445,4,111.25,150,0,52.5,208.75],
+    // [5,"2016-10-13","Tajpur Mandi",196,5,49.00,150,0,49,150.00]];
+    xhttp.send(JSON.stringify(data));
+});
+
+
+
 //To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
     $("#recent_cards_data_frequency").change(function() {
@@ -2811,7 +2838,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], quantites[i][j], farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
         }
     }
@@ -2828,29 +2855,66 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
     }
 
+
+    
+
+    var formatVal = function (yourNumber) {
+    //Seperates the components of the number
+        var n= yourNumber.toString().split(".");
+    //Comma-fies the first part
+        if(n[0])
+            {
+                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                console.log(n[0]);
+            }
+            if(n[1] != null)
+            {
+                var a = n[1].toString();
+                n[1] = parseInt(a.charAt(0));
+            }
+            return n.join(".");
+        }
+
+
+    var isInt = function(value) {
+
+        var er = /^-?[0-9]+$/;
+        return er.test(value);
+    }
+
+    var finalFormat = function (value){
+        if(value.indexOf('.') === -1)
+            return value + '.0';
+        else
+            return value;
+    }
+  
+
+
     $('#table2').DataTable({
         destroy: true,
         data: data_set,
         columns: [{
             title: "S No"
         }, {
-            title: "Date"
+            title: "Date",
         }, {
-            title: "Mandi"
+            title: "Market"
         }, {
-            title: "Volume"
+            title: "Quantity[Q] (in Kg)"
         }, {
-            title: "Farmers"
+            title: "Farmers",
+            visible: false
         }, {
-            title: "Aggregator Payment"
+            title: "Aggregator Payment[AP] (in Rs) (Rs 0.25*Q)"
         }, {
-            title: "Transport Cost"
+            title: "Transport Cost[TC] (in Rs)"
         }, {
-            title: "Farmer Share"
+            title: "Farmers' Contribution[FC] (in Rs)"
         }, {
-            title: "Gaddidar Commission"
+            title: "Commision Agent Contribution[CAC] (in Rs)"
         }, {
-            title: "Payment"
+            title: "Total Payment(in Rs) (AP + TC - FC - CAC)"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
@@ -2859,11 +2923,158 @@ function aggregator_payment_sheet(data_json, aggregator) {
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
+                "mColumns" :[0,1,2,3,5,6,7,8,9],
                 "bBomInc": true,
-                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Payment_Sheet"
+                "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"
             }]
+        },
+       
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+
+            var formatVal = function (yourNumber) {
+    //Seperates the components of the number
+                var n= yourNumber.toString().split(".");
+    //Comma-fies the first part
+                if(n[0])
+                {
+                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                if(n[1] != null)
+                {
+                var a = n[1].toString();
+                n[1] = parseInt(a.charAt(0));
+            }
+
+    //Combines the two sections
+                return n.join(".");
+            }
+ 
+            // Total over all pages
+            total3 = api
+                .column( 3 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(parseInt(a)) + intVal(parseInt(b));
+                }, 0 );
+
+            total3 = finalFormat(formatVal(total3));
+
+
+
+            total5 = api
+                .column( 5 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            total5 = finalFormat(formatVal(total5));    
+
+            total6 = api
+                .column( 6 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            total6 = finalFormat(formatVal(total6));    
+    
+
+            total7 = api
+                .column( 7 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            
+            total7 = finalFormat(formatVal(total7));    
+        
+
+            total8 = api
+                .column( 8 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+
+            total8 = finalFormat(formatVal(total8));
+                
+            total9 = api
+                .column( 9)
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );    
+
+            
+            total9 = finalFormat(formatVal(total9));    
+                       
+ 
+            // Total over this page
+            // pageTotal = api
+            //     .column( 3, { page: 'current'} )
+            //     .data()
+            //     .reduce( function (a, b) {
+            //         return intVal(a) + intVal(b);
+            //     }, 0 );
+
+            // pageTotal2 = api
+            //     .column( 5, { page: 'current'} )
+            //     .data()
+            //     .reduce( function (a, b) {
+            //         return intVal(a) + intVal(b);
+            //     }, 0 );    
+ 
+            // Update footer'
+
+            $( api.column( 3 ).footer() ).html(
+                total3
+            );
+
+            $( api.column( 5 ).footer() ).html(
+                total5
+            );
+
+            $( api.column( 6 ).footer() ).html(
+                total6
+            );
+
+            $( api.column( 7 ).footer() ).html(
+                total7
+            );
+
+            $( api.column( 8 ).footer() ).html(
+                total8
+            );
+
+            $( api.column( 9 ).footer() ).html(
+                total9
+            );
+
+            // $( api.column( 10 ).footer() ).html(
+            //     'Rs ' + total10
+            // );
         }
     });
+
+    
+
+
+
+
+
+//     //$('#table2caption').html('<h5>' +'Loop_' + getFormattedDate(aggregator) + 'Payment_Sheet</h5>');
 
     $('#table3').DataTable({
         destroy: true,
@@ -2871,15 +3082,15 @@ function aggregator_payment_sheet(data_json, aggregator) {
         columns: [{
             title: "Date"
         }, {
-            title: "Gaddidar"
+            title: "Commision Agent"
         }, {
             title: "Market"
         }, {
-            title: "Quantity"
+            title: "Quantity[Q] (in Kg)"
         }, {
-            title: "Gaddidar Commission"
+            title: "Commision Agent Discount[CAD] (in Rs/Kg)"
         }, {
-            title: "Share"
+            title: "Commision Agent Contribution[CAC] (in Rs) (Q*CAD)"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
@@ -2889,8 +3100,50 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Gaddidar_Details"
+                "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details"
             }]
+        },
+        
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            total3 = api
+                .column( 3 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            total3 =  finalFormat(formatVal(total3));    
+
+            total5 = api
+                .column( 5 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ); 
+
+            total5 = finalFormat(formatVal(total5));    
+ 
+            // Update footer
+            $( api.column( 3 ).footer() ).html(
+                total3
+            );
+
+
+            $( api.column( 5 ).footer() ).html(
+                total5
+            );
+
         }
 
     });
@@ -2904,11 +3157,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Transporter"
         }, {
-            title: "Vehicle"
+            title: "Vehicle Type"
         }, {
             title: "Vehicle Number"
         }, {
-            title: "Transport Cost"
+            title: "Transport Cost (in Rs)"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
@@ -2918,11 +3171,79 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_" + getFormattedDate(aggregator) + "Transporter_Pmt"
+                "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details"
             }]
+        },
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            total5 = api
+                .column( 5 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            total5 = finalFormat(formatVal(total5));     
+ 
+            // Update footer
+
+            $( api.column( 5 ).footer() ).html(
+                total5
+            );
+
         }
 
     });
+
+
+
+    data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"]);
+    gaddidar_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details"]);
+    transporter_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details"]);
+
+    // console.log(data_set);
+    // console.log(gaddidar_data_set);
+    // console.log(transporter_data_set);
+
+    //$('.dump').trigger('click',data_set);
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        var a, today;
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            a = document.createElement('a');
+            a.href = window.URL.createObjectURL(xhttp.response);
+            a.download = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary" + ".xlsx";
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            return a.click();
+        }
+    };
+    xhttp.open("POST", "/loop/get_payment_sheet/", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.responseType = 'blob';
+    var data = [];
+    data.push(data_set);
+    data.push(gaddidar_data_set);
+    data.push(transporter_data_set);
+    console.log(JSON.stringify(data));
+    // data = [[1,"2016-10-07","Bihar Sharif",3424,6,856.00,2600,1600,0,1856.00],
+    // [2,"2016-10-09","Tajpur Mandi",476,3,119.00,175,0,13.75,280.25],
+    // [3,"2016-10-10","Tajpur Mandi",172,3,43.00,150,0,43,150.00],
+    // [4,"2016-10-12","Tajpur Mandi",445,4,111.25,150,0,52.5,208.75],
+    // [5,"2016-10-13","Tajpur Mandi",196,5,49.00,150,0,49,150.00]];
+    xhttp.send(JSON.stringify(data));
+
+
 }
 
 function getFormattedDate(aggregator_id) {

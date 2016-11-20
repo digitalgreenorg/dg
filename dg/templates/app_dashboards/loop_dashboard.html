@@ -481,6 +481,9 @@
 			<input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
 		</div>
 		<a class="col s2 waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+
+		<a href="#" class="col s2 waves-effect waves-light grey darken-3 white-text btn modal-trigger dump" 
+		style="display:none;">Download Payment Sheet</a>
 		<p class="col s3"></p>
 	</div>
 
@@ -506,17 +509,60 @@
 			</div>
 			<div class="row center">
 					<table id="table2" class="stripe">
+				<!-- 	<thead>
+						<th id="table2head" colspan="12">Hello</th>
+					</thead> -->
+
+					<tfoot>
+            <tr>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+               	<th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
 					</table>
 					<br>
 					<hr/>
-						<table id="table3" class="stripe"></table>
+						<table id="table3" class="stripe">
+							<tfoot>
+            <tr>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+               	<th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+						</table>
 						<br>
 						<hr/>
-							<table id="table4" class="stripe"></table>
+							<table id="table4" class="stripe">
+								<tfoot>
+            <tr>
+                <th>Total:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+               	<th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+							</table>
 							<br>
 							<hr/>
 			</div>
-		</div>
+		</div>		
+
 	</div>
 </div>
 {% endblock %} {% block script %}
