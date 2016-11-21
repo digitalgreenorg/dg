@@ -265,7 +265,8 @@ class StateResource(BaseResource):
         resource_name = 'state'
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_country = partial(
         foreign_key_to_id, field_name='country', sub_field_names=['id'])
@@ -284,7 +285,8 @@ class DistrictResource(BaseResource):
         resource_name = 'district'
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_state = partial(
         foreign_key_to_id, field_name='state', sub_field_names=['id'])
@@ -302,7 +304,8 @@ class BlockResource(BaseResource):
         resource_name = 'block'
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_district = partial(
         foreign_key_to_id, field_name='district', sub_field_names=['id'])
@@ -316,13 +319,16 @@ class VillageResource(BaseResource):
     block = fields.ForeignKey(BlockResource, 'block', full=True)
 
     class Meta:
+        limit = 0
+        max_limit = 0
         allowed_methods = ['post', 'get']
         always_return_data = True
         queryset = Village.objects.all()
         resource_name = 'village'
         authorization = VillageAuthorization('id__in')
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_block = partial(
         foreign_key_to_id, field_name='block', sub_field_names=['id'])
@@ -345,7 +351,8 @@ class FarmerResource(BaseResource):
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id'])
@@ -472,7 +479,8 @@ class CropResource(BaseResource):
         resource_name = 'crop'
         authorization = Authorization()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
@@ -510,7 +518,8 @@ class MandiResource(BaseResource):
         resource_name = 'mandi'
         authorization = MandiAuthorization('id__in')
         authentication = ApiKeyAuthentication()
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_district = partial(
         foreign_key_to_id, field_name='district', sub_field_names=['id'])
@@ -532,7 +541,8 @@ class GaddidarResource(BaseResource):
         authorization = MandiAuthorization('mandi_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
         dehydrate_mandi = partial(
             foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
@@ -551,7 +561,8 @@ class VehicleResource(BaseResource):
         resource_name = 'vehicle'
         authorization = Authorization()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -569,7 +580,8 @@ class TransporterResource(BaseResource):
         authorization = BlockAuthorization('block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_block = partial(
         foreign_key_to_id, field_name='block', sub_field_names=['id'])
@@ -623,7 +635,8 @@ class TransportationVehicleResource(BaseResource):
         authorization = BlockAuthorization('transporter__block')
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_transporter = partial(foreign_key_to_id, field_name='transporter',
                                     sub_field_names=['id'])
@@ -716,7 +729,8 @@ class DayTransportationResource(BaseResource):
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_transportation_vehicle = partial(foreign_key_to_id, field_name='transportation_vehicle', sub_field_names=[
         'id'])
@@ -807,7 +821,8 @@ class CombinedTransactionResource(BaseResource):
         authorization = CombinedTransactionAuthorization()
         authentication = ApiKeyAuthentication()
         always_return_data = True
-        excludes = ('resource_uri', 'time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
     dehydrate_farmer = partial(
         foreign_key_to_id, field_name='farmer', sub_field_names=['id'])
@@ -832,10 +847,8 @@ class CombinedTransactionResource(BaseResource):
         user = LoopUser.objects.get(user__username=bundle.request.user)
         attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                      "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-
         if attempt.count() < 1:
-            bundle = super(CombinedTransactionResource,
-                           self).obj_create(bundle, **kwargs)
+            bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
             raise TransactionNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
