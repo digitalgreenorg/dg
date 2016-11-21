@@ -346,6 +346,7 @@ class FarmerResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
         queryset = Farmer.objects.all()
         resource_name = 'farmer'
         always_return_data = True
@@ -575,6 +576,7 @@ class TransporterResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = BlockAuthorization('block')
@@ -631,6 +633,7 @@ class TransportationVehicleResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = TransportationVehicle.objects.all()
+        allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'transportationvehicle'
         authorization = BlockAuthorization('transporter__block')
         authentication = ApiKeyAuthentication()
