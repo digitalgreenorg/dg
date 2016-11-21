@@ -134,9 +134,9 @@ class Command(BaseCommand):
 					
 					try:
 						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
-						vid.production_team.add(facililator)
+						vid.production_team.add(facililator.animator)
 						vid.save()
-						vid.production_team.add(camera_operator)
+						vid.production_team.add(camera_operator.animator)
 						vid.save()
 						print "farmer shown saved"
 					except Exception as e:
