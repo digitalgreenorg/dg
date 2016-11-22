@@ -642,16 +642,22 @@ function set_filterlistener() {
         crop_prices_graph(crop_id);
     });
 
-    // $("#aggregator_payments").change(function() {
-    //     var aggregator_id = $('#aggregator_payments :selected').val();
-    //     if (table_created) {
-    //         $('#outliers_data').html("");
-    //     }
-    //     aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
-    //     $("#download_payment_sheets").show();
-    //     $('#aggregator_payment_details').show();
-    //     outliers_summary(aggregator_id);
-    // });
+    $("#dowonload-payment-sheet").click(function() {
+        if ($('#aggregator_payments :selected').val() != '') {
+            var aggregator_id = $('#aggregator_payments :selected').val();
+            if (table_created) {
+                $('#outliers_data').html("");
+            }
+            aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+            $("#download_payment_sheets").show();
+            $('#aggregator_payment_details').show();
+            outliers_summary(aggregator_id);   
+            }
+        else{
+            alert("Please select atleast one value");
+        }
+        
+    });
 
     $("#time_series_frequency").change(function() {
         time_series_frequency = $('#time_series_frequency :selected').val();
