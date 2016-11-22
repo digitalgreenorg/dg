@@ -16,6 +16,7 @@ import json
 from django.contrib.auth.models import User
 from models import *
 import sys
+import logging
 
 
 class FarmerNotSaved(Exception):
@@ -361,16 +362,17 @@ class FarmerResource(BaseResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        logging.info("HIII LOOP")
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'])
-        print sys.stderr, 'LOOP Farmer attempt count : '+str(attempt.count())
+        logging.info("LOOP FARMER attempt count : "+str(attempt.count()))
         if attempt.count() < 1:
-            print sys.stderr, 'LOOP farmer bundle data : '+str(bundle.data)
-            print sys.stderr, 'LOOP Farmer bundle request : '+str(bundle.request)
+            logging.info("LOOP FARMER bundle data : "+str(bundle.data))
+            logging.info("LOOP FARMER bundle request : "+str(bundle.request))
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
 
         else:
-            print sys.stderr, 'LOOP farmer error : '+str(attempt[0].id)
+            logging.info("LOOP FARMER error : "+str(attempt[0].id))
             raise FarmerNotSaved(
                 {"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
