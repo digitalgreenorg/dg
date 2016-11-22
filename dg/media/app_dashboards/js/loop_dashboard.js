@@ -2865,6 +2865,26 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
     });
 
+        $('#table3').on( 'click', 'tbody td', function (e) {
+        
+            var $this = $(this);
+            if($this.context.cellIndex == 5){
+                $this.attr('contentEditable',true);
+                $this.keypress(function (event) {
+
+                if (event.keyCode === 13){
+                    $this.attr('contentEditable',false);
+                    var $par = $this.parent();
+                    var $childthird = $par[0].childNodes[3];
+                    var $childfourth = $par[0].childNodes[4];
+                    var $childfifth = $par[0].childNodes[5];
+                    $childfourth.innerHTML=$childfifth.innerHTML/$childthird.innerHTML;
+                    
+                }
+    });
+            }
+    } );
+
     $('#table3').DataTable({
         destroy: true,
         data: gaddidar_data_set,
