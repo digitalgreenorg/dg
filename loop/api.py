@@ -374,7 +374,11 @@ class FarmerResource(BaseResource):
             logging.info("LOOP FARMER error : "+str(attempt[0].id))
             logging.info("LOOP FARMER  error bundle data :" +str(bundle.data))
             logging.info("LOOP FARMER error bundle request :"+str(bundle.request))
-            raise FarmerNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            try:
+                raise FarmerNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+                logging.info("done")
+            except Exception as e:
+                logging.info("error:" + str(e))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
