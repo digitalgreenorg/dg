@@ -1,19 +1,22 @@
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.core.mail import EmailMultiAlternatives
-
 import dg.settings
-
 import glob
+
+new_count = 0
+duplicate_count = 0
+other_error_count = 0
 
 class Command(BaseCommand):
 
     def send_mail(self):
         subject = "JSLPS data entry status"
         from_email = dg.settings.EMAIL_HOST_USER
-        to_email = ['aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org', 'joshin@digitalgreen.org', 'shetty@digitalgreen.org']
+        to_email = ['vikas@digitalgreen.org']#['aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org', 'joshin@digitalgreen.org', 'shetty@digitalgreen.org']
         body = "Hi Everyone,\nThis is a automated email after data entry of JSLPS data in database.\nPFA the error files."
-        body = "JSLPS data has been inserted in database.\nPFA error files."
+        body = "JSLPS data has been inserted in database.\nPFA error files.\n"
+        body += "new_count = " + str(new_count) + "\n" + "duplicate_count = " + str(duplicate_count) + "\n" + "other_error_count = " + str(other_error_count) + "\n" 
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         for files in glob.glob("jslps_data_integration_files/*"):
             if files.endswith('.csv'):
@@ -21,7 +24,7 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options): 
-
+        
         print "Geography,jslps_geo"
         call_command('jslps_geo')
 

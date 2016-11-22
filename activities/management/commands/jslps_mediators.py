@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from geographies.models import *
 from people.models import *
 from programs.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -35,13 +36,17 @@ class Command(BaseCommand):
 				district = JSLPS_District.objects.get(district_code = dc)
 			except JSLPS_District.DoesNotExist as e:
 				error = 1
-				wtr.writerow(['district not exist', dc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['district not exist', dc, e])
 			
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 			except (JSLPS_District.DoesNotExist, JSLPS_Village.DoesNotExist) as e:
 				error = 1
-				wtr.writerow(['village not exist', vc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['village not exist', vc, e])
 
 			if(error == 0):
 				try:
@@ -54,11 +59,20 @@ class Command(BaseCommand):
 											district = district.district,
 											phone_no = phone)
 							anim.save()
+							jslps.new_count += 1
 							print an, "Animator saved in old"
 						except Exception as e:
-							wtr.writerow(['AKM save', ac, e])
+							if "Duplicate entry" in str(e):
+								jslps.duplicate_count += 1
+							else:
+								jslps.other_error_count += 1
+								wtr.writerow(['AKM save', ac, e])
 				except Exception as e:
-					wtr.writerow(['AKM exists', ac, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['AKM exists', ac, e])
 				try:
 					animator = Animator.objects.filter(name = an, gender = gender, district_id= district.district_id , partner_id = partner.id).get()
 					village_list = AnimatorAssignedVillage.objects.values_list('village_id', flat=True)
@@ -67,11 +81,15 @@ class Command(BaseCommand):
 						anim_assigned = AnimatorAssignedVillage(animator = animator,
 																village = village.Village)
 						anim_assigned.save()
+						jslps.new_count += 1
 						print an, "Animator village saved"
 				except Exception as e:
 					print ac, an, e
-					wtr.writerow(['Assigned Village save', ac, vc, e])
-
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Assigned Village save', ac, vc, e])
 				try:
 					animator = Animator.objects.filter(name = an, gender = gender,district_id= district.district_id , partner_id = partner.id).get()	
 					animator_added = JSLPS_Animator.objects.values_list('animator_code', flat=True)
@@ -83,7 +101,9 @@ class Command(BaseCommand):
 						print an, "Animator saved in new"
 				except Exception as e:
 					print ac, "jslps", e
-					wtr.writerow(['jslps AKM', ac, e])
+					if "Duplicate entry" not in str(e):
+						jslps.other_error_count += 1
+						wtr.writerow(['jslps AKM', ac, e])
 
 		#add camera operator to mediator table
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
@@ -113,8 +133,13 @@ class Command(BaseCommand):
 									district = district.district
 									)
 					anim.save()
+					jslps.new_count += 1
 			except Exception as e:
-				wtrr.writerow(['camera operator',ac, e])
+				if "Duplicate entry" in str(e):
+					jslps.duplicate_count += 1
+				else:
+					jslps.other_error_count += 1
+					wtrr.writerow(['camera operator',ac, e])
 				print ac, "Camera operator saved"
 
 			try:
@@ -128,4 +153,6 @@ class Command(BaseCommand):
 					print an, "Camera operator saved in new"
 			except Exception as e:
 				print ac, "jslps", e
-				wtrr.writerow(['JSLPS camera operator',ac, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtrr.writerow(['JSLPS camera operator',ac, e])
