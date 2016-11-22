@@ -362,6 +362,7 @@ class FarmerResource(BaseResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        logging.info("HIII LOOP")
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'])
         logging.info("LOOP FARMER attempt count : "+str(attempt.count()))
