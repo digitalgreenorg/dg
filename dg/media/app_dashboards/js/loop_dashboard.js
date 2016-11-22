@@ -2875,11 +2875,24 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 if (event.keyCode === 13){
                     $this.attr('contentEditable',false);
                     var $par = $this.parent();
+                    var $childzeroth = $par[0].childNodes[0];
+                    var $childfirst = $par[0].childNodes[1];
+                    var $childsecond = $par[0].childNodes[2];
                     var $childthird = $par[0].childNodes[3];
                     var $childfourth = $par[0].childNodes[4];
                     var $childfifth = $par[0].childNodes[5];
                     $childfourth.innerHTML=$childfifth.innerHTML/$childthird.innerHTML;
-                    
+                    $.ajax({url:'http://localhost:4001/loop/api/v1/gaddidarsharedoutliers/',
+                        type:'post',
+                        dataType:'json',
+                        contentType: "application/json; charset=utf-8",
+                        data:{
+                        date: 10-11-2017,
+                        mandi:{id:1},
+                        gaddidar:{id:1},
+                        loopuser:{id:11},
+                        amount:500000
+                    }});
                 }
     });
             }

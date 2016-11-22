@@ -808,6 +808,42 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
+class GaddidarSharedOutlierResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        allowed_methods = ["post","get"]
+        queryset = GaddidarShareOutliers.objects.all()
+        authorization = Authorization()
+        always_return_data = True
+        resource_name = 'gaddidarsharedoutliers'
+
+
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
+    hydrate_loopuser = partial(dict_to_foreign_uri,field_name='loopuser')
+    def obj_create(self, bundle, request=None, **kwargs):
+        
+        Omandi = Mandi.objects.get(id=bundle.data["mandi"]["id"])
+        Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["id"])
+        Ouser = LoopUser.objects.get(id=bundle.data["loopuser"]["id"])
+        print Ouser.name_en
+        print Ogaddidar.gaddidar_name_en
+        print Omandi.mandi_name_en
+        attempt = GaddidarShareOutliers.objects.filter(date=bundle.data[
+                                                     "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
+        print attempt
+        if attempt.count() < 1:
+            print "YOYO"
+            gaddidarobj = GaddidarShareOutliers(mandi=Omandi,aggregator=Ouser,gaddidar=Ogaddidar,amount=bundle.data["amount"],date = bundle.data["date"])
+            gaddidarobj.save()
+            print "NONO"
+        else:
+            print "ALREADY EXISTS"
+        #     bundle = super(GaddidarSharedOutlierResource,self).obj_update(bundle, **kwargs)
+            # raise TransactionNotSaved(
+            #     {"id": int(attempt[0].id), "error": "Duplicate"})
+        return bundle
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
