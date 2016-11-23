@@ -28,9 +28,4 @@ class Migration(migrations.Migration):
             name='trainingType',
             field=models.BooleanField(default=True),
         ),
-        migrations.AlterField(
-            model_name='training',
-            name='trainer',
-            field=models.ManyToManyField(to='training.Trainer'),
-        ),
     ]

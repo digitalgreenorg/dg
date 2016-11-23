@@ -51,7 +51,7 @@ class Training(models.Model):
 	date = models.DateField()
 	place = models.CharField(max_length=200)
 	assessment = models.ForeignKey(Assessment, null=True, blank=True)
-	trainer = models.ManyToManyField(Trainer)
+	trainer = models.ManyToManyField(Trainer, blank=True)
 	language = models.ForeignKey(Language, null=True, blank=True)
 	participants = models.ManyToManyField(Animator)
 	district = models.ForeignKey(District, null=True, blank=True)
