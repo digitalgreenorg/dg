@@ -42,13 +42,13 @@ class AnalyticsSync():
         database = DATABASES['default']['NAME']
         print "Database:", database
 
-        Create schema
+        # Create schema
         ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_tables.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not recreate schema")
         print "Recreated schema"
         
-        Fill Data
+        # Fill Data
         try:
             print time.time()
             #village_partner_myisam
