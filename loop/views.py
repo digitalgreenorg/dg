@@ -15,7 +15,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers
 
 from loop_data_log import get_latest_timestamp
-
+from loop.payment_template import *
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
 
@@ -52,6 +52,44 @@ def home(request):
 
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
+
+
+@csrf_exempt
+def write_data_in_workbook(request):
+    if request.method == 'POST':
+        # this will prepare the data
+        formatted_post_data = prepare_value_data(request.body)
+        # this will indicate number of sheets
+        name_of_sheets = formatted_post_data.get('name_of_sheets')
+        combined_data = formatted_post_data.get('combined_data')
+        # except wrting begins
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        # selecting a general font
+        bold = set_format_for_heading(workbook=workbook,
+                                      format_str={'bold':1, 'font_size': 12, 'align': 'center', 'text_wrap': True})
+        # for developing exceptions
+        try:
+            for idx, item in enumerate(name_of_sheets):
+                ws = workbook.add_worksheet('Sheet'+ str(idx+1))
+                # setting the col width
+                align_col_row_width_for_heading(ws_obj=ws, row_number=0, merge_col_width=140, merge_row_width=30)
+                # finally merge for heading.At this point headng should be ok
+                merge_column_in_excel(ws_obj=ws, first_cell="A1",
+                                      second_cell="E2",
+                                      heading=name_of_sheets[idx],
+                                      format_str=bold)
+                # getting the cell value so that we will write values of columns
+                cell_value_from_headers = get_headers_from_template_dict(ws, idx, header_dict, bold)
+                # finally writing in process
+                write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers)
+        except Exception as e:
+            print e
+        workbook.close()
+        output.seek(0)
+        response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        return response
+
 
 @csrf_exempt
 def download_payment_sheet(request):
