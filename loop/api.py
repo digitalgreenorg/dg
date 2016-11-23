@@ -827,18 +827,16 @@ class GaddidarSharedOutlierResource(BaseResource):
         Omandi = Mandi.objects.get(id=bundle.data["mandi"]["id"])
         Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["id"])
         Ouser = LoopUser.objects.get(id=bundle.data["loopuser"]["id"])
-        print Ouser.name_en
-        print Ogaddidar.gaddidar_name_en
-        print Omandi.mandi_name_en
         attempt = GaddidarShareOutliers.objects.filter(date=bundle.data[
                                                      "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
-        print attempt
         if attempt.count() < 1:
-            print "YOYO"
             gaddidarobj = GaddidarShareOutliers(mandi=Omandi,aggregator=Ouser,gaddidar=Ogaddidar,amount=bundle.data["amount"],date = bundle.data["date"])
             gaddidarobj.save()
-            print "NONO"
         else:
+            gaddidarobj = GaddidarShareOutliers.objects.filter(date=bundle.data[
+                                                     "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
+            gaddidarobj.amount = bundle.data["amount"]
+            gaddidarobj.save()
             print "ALREADY EXISTS"
         #     bundle = super(GaddidarSharedOutlierResource,self).obj_update(bundle, **kwargs)
             # raise TransactionNotSaved(
