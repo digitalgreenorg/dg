@@ -240,6 +240,8 @@ class CropLanguage(models.Model):
 
     def __unicode__(self):
         return self.crop_name
+    def __crop__(self):
+        return "%s" % (self.crop.crop_name)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -321,6 +323,9 @@ class DayTransportation(LoopModel):
 
     def __vehicle__(self):
         return "%s (%s)" % (self.transportation_vehicle.vehicle.vehicle_name, self.transportation_vehicle.vehicle_number)
+
+    def __mandi__(self):
+        return "%s" % (self.mandi.mandi_name)
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")

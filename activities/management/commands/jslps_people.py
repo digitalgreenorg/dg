@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from geographies.models import *
 from people.models import *
 from programs.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -46,7 +47,9 @@ class Command(BaseCommand):
 			try:
 				village = JSLPS_Village.objects.get(village_code = vc)
 			except JSLPS_Village.DoesNotExist as e:
-				wtr.writerow(['JSLPS village not EXIST', gc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['JSLPS village not EXIST', gc, e])
 				error = 1
 			
 			#TODO: Code clean up
@@ -63,8 +66,13 @@ class Command(BaseCommand):
 									village = village.Village,
 									partner = partner)
 					person.save()
+					jslps.new_count += 1
 				except Exception as e:
-					wtr.writerow(['village group not exist', gc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['village group not exist', gc, e])
 				try:
 					person = Person.objects.filter(person_name = pn, father_name = pfn, village_id = village.Village.id).get()
 					person_added = JSLPS_Person.objects.values_list('person_code',flat=True)
@@ -79,7 +87,9 @@ class Command(BaseCommand):
 						print pc, "saved in new"
 					except Exception as e:
 						print pc, e
-						wtr.writerow(['JSLPS person error save', pc, e])
+						if "Duplicate entry" not in str(e):
+							jslps.other_error_count += 1
+							wtr.writerow(['JSLPS person error save', pc, e])
 			
 			if (error == 0):
 				full_name_xml = pn+' '+pfn
@@ -100,17 +110,24 @@ class Command(BaseCommand):
 										group = group.group,
 										partner = partner)
 						person.save()
+						jslps.new_count += 1
 						print pc,"person saved in old"
 					except Exception as e:
 						print pc, e
-						wtr.writerow(['person save', pc, e])
+						if "Duplicate entry" in str(e):
+							jslps.duplicate_count += 1
+						else:
+							jslps.other_error_count += 1
+							wtr.writerow(['person save', pc, e])
 					try:
 						person = Person.objects.filter(person_name = pn, father_name = pfn, group_id = group.group.id, village_id = village.Village.id).get()
 						person_added = JSLPS_Person.objects.values_list('person_code',flat=True)
 						#person_added = [i[0] for i in person_added]
 					except Exception as e:
 						print e
-						wtr.writerow(['person exist', pc, e])
+						if "Duplicate entry" not in str(e):
+							jslps.other_error_count += 1
+							wtr.writerow(['person exist', pc, e])
 					if pc not in person_added:
 						try:
 							jp = JSLPS_Person(person_code = pc,
@@ -119,4 +136,6 @@ class Command(BaseCommand):
 							print pc, "saved in new"
 						except Exception as e:
 							print pc, e
-							wtr.writerow(['JSLPS person save error', pc, e])
+							if "Duplicate entry" not in str(e):
+								jslps.other_error_count += 1
+								wtr.writerow(['JSLPS person save error', pc, e])
