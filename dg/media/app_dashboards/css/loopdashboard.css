@@ -289,3 +289,10 @@ hr {
         opacity: 100%;
     }
 }
+
+.select-wrapper span.caret{
+  top: 8px !important;
+}
+.select-wrapper input.select-dropdown{
+  border-bottom: none !important;
+}
