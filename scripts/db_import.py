@@ -6,7 +6,7 @@ import django
 import glob
 
 
-sys.path.append(os.path.abspath(os.getcwd()))
+sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
 django.setup()
 from dg.settings import DATABASES

@@ -316,3 +316,5 @@
 /gwt/DashboardGwt/war/dashboardgwt/*
 *.prefs
 .DS_Store
+/scripts/*.sql
+/scripts/*.gz

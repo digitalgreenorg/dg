@@ -2,7 +2,7 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from datetime import datetime
 import os, sys
-
+import django
 
 
 sys.path.append(os.path.abspath(os.path.realpath('..')))
@@ -18,7 +18,8 @@ def show_status(received, total):
 ACCESS_KEY = dg.settings.ACCESS_KEY
 SECRET_KEY = dg.settings.SECRET_KEY
 BUCKET_NAME = 'dgbackups'
-DOWNLOAD_FOLDER = os.getcwd()
+DOWNLOAD_FOLDER = os.path.abspath(os.getcwd())
+print DOWNLOAD_FOLDER
 
 con = S3Connection(ACCESS_KEY, SECRET_KEY)
 dg_bk = con.get_bucket(BUCKET_NAME)
