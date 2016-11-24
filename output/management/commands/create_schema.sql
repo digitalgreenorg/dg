@@ -1,4 +1,3 @@
--- Normalized version of digitalgreen.SCREENING
 DROP TABLE IF EXISTS `screening_myisam`;
 CREATE TABLE `screening_myisam` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
