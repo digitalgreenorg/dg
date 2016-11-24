@@ -7,6 +7,7 @@ from people.models import *
 from programs.models import *
 from videos.models import *
 from activities.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -14,13 +15,13 @@ class Command(BaseCommand):
 		partner = Partner.objects.get(id = 24)
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAdoptionData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("/home/ubuntu/code/dg_git/activities/management/adoption.xml", 'w')
+		xml_file = open("jslps_data_integration_files/adoption.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('/home/ubuntu/code/dg_git/activities/management/adoption_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/adoption_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('/home/ubuntu/code/dg_git/activities/management/adoption.xml')
+		tree = ET.parse('jslps_data_integration_files/adoption.xml')
 		root = tree.getroot()
 		for c in root.findall('AdoptionData'):
 			pc = c.find('MemberCode').text
@@ -32,15 +33,19 @@ class Command(BaseCommand):
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
 			except JSLPS_Video.DoesNotExist as e:
-				wtr.writerow(['video', vc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['video not exist', vc, e])
 				error = 1
 			try:
 				person = JSLPS_Person.objects.get(person_code = pc)
 			except (JSLPS_Video.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				wtr.writerow(['person', pc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['person not exist', pc, e])
 				error = 1
 
-			if(error==0):
+			if error==0:
 				try:
 					pap = PersonAdoptPractice(person = person.person,
 											video = video.video,
@@ -48,7 +53,12 @@ class Command(BaseCommand):
 											time_created = de,
 											partner = partner)
 					pap.save()
+					jslps.new_count += 1
 					print "pap saved"
 				except Exception as e:
 					print vc, pc, e
-					wtr.writerow(['Adoption', 'Person', pc, 'Video', vc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Adoption', 'Person', pc, 'Video', vc, e])

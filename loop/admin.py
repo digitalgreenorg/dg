@@ -1,7 +1,37 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
+from django.contrib.admin import SimpleListFilter
 
 from models import *
+
+class UserListFilter(SimpleListFilter):
+    title = ('aggregators')
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'aggregator'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        list_tuple = []
+        for user in LoopUser.objects.all():
+            list_tuple.append((user.user_id, user.name))
+        return list_tuple
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value():
+            return queryset.filter(user_created__id=self.value())
+        else:
+            return queryset
 
 
 class LoopAdmin(AdminSite):
@@ -51,8 +81,10 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
-    list_filter = ('status', 'farmer__village__village_name',
-                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name')
+    list_filter = (UserListFilter,'status',
+                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name')
+    date_hierarchy = 'date'
+
 
 
 class TransporterAdmin(admin.ModelAdmin):
@@ -62,10 +94,11 @@ class TransporterAdmin(admin.ModelAdmin):
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__aggregator__','__transporter__','__vehicle__',
+    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
                     'transportation_cost', 'farmer_share')
     search_fields = ['user_created__username', 'mandi__mandi_name']
-    list_filter = ('user_created__username', 'mandi__mandi_name')
+    list_filter = (UserListFilter, 'mandi__mandi_name')
+    date_hierarchy = 'date'
 
 
 class GaddidarAdmin(admin.ModelAdmin):
@@ -103,6 +136,9 @@ class GaddidarCommisionAdmin(admin.ModelAdmin):
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
 
+class CropLanguageAdmin(admin.ModelAdmin):
+    list_display = ('__crop__','crop_name')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -124,4 +160,4 @@ loop_admin.register(Gaddidar, GaddidarAdmin)
 loop_admin.register(Language)
 loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
 loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
-loop_admin.register(CropLanguage)
+loop_admin.register(CropLanguage,CropLanguageAdmin)

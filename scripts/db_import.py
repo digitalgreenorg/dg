@@ -5,7 +5,8 @@ import datetime
 import django
 import glob
 
-sys.path.append(os.path.abspath("/home/trionfo/dg"))
+
+sys.path.append(os.path.abspath("/home/ubuntu/"))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
 django.setup()
 from dg.settings import DATABASES
