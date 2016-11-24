@@ -13,10 +13,8 @@ class Command(BaseCommand):
     def send_mail(self):
         subject = "JSLPS data entry status"
         from_email = dg.settings.EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']#['aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org', 'joshin@digitalgreen.org', 'shetty@digitalgreen.org']
-        body = "Hi Everyone,\nThis is a automated email after data entry of JSLPS data in database.\nPFA the error files."
-        body = "JSLPS data has been inserted in database.\nPFA error files.\n"
-        body += "new_count = " + str(new_count) + "\n" + "duplicate_count = " + str(duplicate_count) + "\n" + "other_error_count = " + str(other_error_count) + "\n" 
+        to_email = ['aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org', 'joshin@digitalgreen.org', 'shetty@digitalgreen.org', 'ritesh@digitalgreen.org', 'charu@digitalgreen.org']
+        body = "Dear Team,\n\n" + "JSLPS data has been successfully updated in COCO.\n\n" + "Here are the details of this update:\n\n" + "Total entries sent by JSLPS (A): " + str(new_count+duplicate_count+other_error_count) + "\nEntries with errors (B): " + str(other_error_count) + "  *e.g. missing video category, missing video in screening, etc. error files are attached.\nEntries we already had (C): " + str(duplicate_count) + "\nEntries successfully updated in COCO (A-(B+C)): " + str(new_count) + "\n\nPlease contact system@digitalgreen.org for any clarification.\n\nThank you.\n"
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         for files in glob.glob("jslps_data_integration_files/*"):
             if files.endswith('.csv'):
@@ -24,7 +22,7 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options): 
-        
+
         print "Geography,jslps_geo"
         call_command('jslps_geo')
 
