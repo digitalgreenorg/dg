@@ -5,7 +5,7 @@ import os, sys
 
 
 
-sys.path.append(os.path.abspath("/home/ubuntu/"))
+sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
 django.setup()
 import dg.settings
@@ -18,7 +18,7 @@ def show_status(received, total):
 ACCESS_KEY = dg.settings.ACCESS_KEY
 SECRET_KEY = dg.settings.SECRET_KEY
 BUCKET_NAME = 'dgbackups'
-DOWNLOAD_FOLDER = "/home/"
+DOWNLOAD_FOLDER = os.getcwd()
 
 con = S3Connection(ACCESS_KEY, SECRET_KEY)
 dg_bk = con.get_bucket(BUCKET_NAME)
