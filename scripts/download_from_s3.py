@@ -18,8 +18,7 @@ def show_status(received, total):
 ACCESS_KEY = dg.settings.ACCESS_KEY
 SECRET_KEY = dg.settings.SECRET_KEY
 BUCKET_NAME = 'dgbackups'
-DOWNLOAD_FOLDER = os.path.abspath(os.getcwd())
-print DOWNLOAD_FOLDER
+DOWNLOAD_FOLDER = os.path.abspath(os.getcwd()) + '/'
 
 con = S3Connection(ACCESS_KEY, SECRET_KEY)
 dg_bk = con.get_bucket(BUCKET_NAME)
