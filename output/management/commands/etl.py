@@ -242,7 +242,7 @@ class AnalyticsSync():
                             video_seen_count = video_seen_count + 1
                         counts['tot_active_vid_seen'] = counts['tot_active_vid_seen'] + video_seen_count
                         counts['tot_active'] = counts['tot_active'] + 1
-                     
+
             del person_att_dict, person_video_seen_date_dict, pap_dict
             print "Finished active attendance counts"
             print time.time()
@@ -253,7 +253,7 @@ class AnalyticsSync():
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_type=1).values_list('id','production_date', 'village', 'partner').order_by('id')
+            vids = Video.objects.filter(video_type=1, production_date__gt=previous_year_date).values_list('id','production_date', 'village', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
