@@ -2868,7 +2868,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         $('#table3').on( 'click', 'tbody td', function (e) {
         
             var $this = $(this);
-            if($this.context.cellIndex == 5){
+            if($this.context.cellIndex == 5 || $this.context.cellIndex == 4){
                 $this.attr('contentEditable',true);
                 $this.keypress(function (event) {
 
@@ -2881,7 +2881,10 @@ function aggregator_payment_sheet(data_json, aggregator) {
                     var $childthird = $par[0].childNodes[3];
                     var $childfourth = $par[0].childNodes[4];
                     var $childfifth = $par[0].childNodes[5];
-                    $childfourth.innerHTML=$childfifth.innerHTML/$childthird.innerHTML;
+                    if($this.context.cellIndex == 5)
+                        $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
+                    else
+                        $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
                     $.ajax({url:'http://localhost:4001/loop/api/v1/gaddidarsharedoutliers/',
                         type:'post',
                         dataType:'json',
