@@ -1,11 +1,29 @@
-# python imports 
 import json
+import xlsxwriter
+from django.http import JsonResponse
+from io import BytesIO
 import re
+
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib import auth
+from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.db.models import Count, Min, Sum, Avg, Max, F
+
+from tastypie.models import ApiKey, create_api_key
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers
+
+from loop_data_log import get_latest_timestamp
+from loop.payment_template import *
+# Create your views here.
+HELPLINE_NUMBER = "09891256494"
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
 NUMBER_OF_SHEETS = 3
 NAME_OF_SHEETS = ['Sheet1, Sheet2', 'Sheet3', 'Sheet4']
-
+CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
     ws_obj.set_column('A:E', 200)
@@ -46,6 +64,36 @@ def write_headers_for_sheet(ws_obj, row_index, col_index, label, format_str):
     return
 
 
+# def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
+#     """
+#     Fetch Headers from Variable Dict in the Excel sheets
+#     """
+#     cell_value = None
+#     column_formula_list = []
+#     total_value_in_column = []
+#     header_dict = header_dict
+#     for item in header_dict.values():
+#         for i in item[idx].values():
+#             for k in i.values():
+#                 for c, j in enumerate(k):
+#                     if not isinstance(j, list):
+#                         try:
+#                             write_headers_for_sheet(ws_obj=ws_obj,
+#                                                     row_index=j.get('cell_index')[0],
+#                                                     col_index=j.get('cell_index')[1],
+#                                                     label=j.get('label'), format_str=bold)
+#                             cell_value = [j.get('cell_index')[0], j.get('cell_index')[1]]
+#                             if j.get('total'):
+#                                 total_value_in_column.append(j.get('cell_index')[1])
+#                             if j.get('formula') is not None:
+#                                 column_formula_list.append({'formula': j.get('formula'),
+#                                                             'col_index': j.get('cell_index')[1]})
+#                         except Exception as e:
+#                             print e
+#     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
+#                  'formula_list': column_formula_list}
+#     return data_dict
+
 def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
     """
     Fetch Headers from Variable Dict in the Excel sheets
@@ -61,15 +109,15 @@ def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
                     if not isinstance(j, list):
                         try:
                             write_headers_for_sheet(ws_obj=ws_obj,
-                                                    row_index=j.get('cell_index')[0],
-                                                    col_index=j.get('cell_index')[1],
+                                                    row_index=CELL_ROW_VALUE,
+                                                    col_index=c,
                                                     label=j.get('label'), format_str=bold)
-                            cell_value = [j.get('cell_index')[0], j.get('cell_index')[1]]
-                            if j.get('total'):
-                                total_value_in_column.append(j.get('cell_index')[1])
+                            cell_value = [CELL_ROW_VALUE, c]
+                            if j.get('total') != False:
+                                total_value_in_column.append(c)
                             if j.get('formula') is not None:
                                 column_formula_list.append({'formula': j.get('formula'),
-                                                            'col_index': j.get('cell_index')[1]})
+                                                            'col_index': c})
                         except Exception as e:
                             print e
     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
@@ -130,6 +178,69 @@ def write_total_in_excel_sheet(ws_obj, start, end, formulacolumn_dict, format_st
         ws_obj.write(end+2, item, '=SUM('+column_map.get(str(item))+str(start)+':'+column_map.get(str(item))+str(end)+')', format_str)
     return
 
+def format_web_request(request):
+    formatted_post_data = prepare_value_data(request.body)
+    return formatted_post_data
+
+
+def get_combined_data_and_sheets_formats(formatted_post_data):
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    # selecting a general font
+    heading_format = set_format_for_heading(workbook=workbook,
+                                           format_str={'bold':1, 'font_size': 15,
+                                                       # 'align': 'center',
+                                                       'text_wrap': False})
+    header_format = set_format_for_heading(workbook=workbook,
+                                           format_str={'bold':1, 'font_size': 12,
+                                                       'text_wrap': True})
+    row_format = set_format_for_heading(workbook=workbook,
+                                        format_str={'bold':0, 'font_size': 10,
+                                                    'align': 'center',
+                                                    'text_wrap': True})
+    total_cell_format = set_format_for_heading(workbook=workbook,
+                                              format_str={'bold':1, 
+                                                          'font_size': 15,
+                                                          'num_format':'#,##0.0',
+                                                          'align':'center'})
+    name_of_sheets = formatted_post_data.get('name_of_sheets')
+    combined_data = formatted_post_data.get('combined_data')
+    data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data,
+                 'workbook': workbook, 'header_format': header_format,
+                 'header_format': header_format, 'row_format': row_format,
+                 'total_cell_format': total_cell_format, 
+                 'output': output}
+    return data_dict
+
+
+def excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data):
+    # for developing exceptions
+    try:
+        for idx, item in enumerate(name_of_sheets):
+            ws = workbook.add_worksheet('Sheet'+ str(idx+1))
+            # setting the col width
+            write_heading_in_sheet(ws_obj=ws,
+                                   heading_str=name_of_sheets[idx],
+                                   format_str=heading_format)
+            # getting the cell value so that we will write values of columns
+            cell_value_from_headers = \
+                get_headers_from_template_dict(ws, idx, header_dict, header_format)
+            # finally writing in process
+            write_values = \
+                write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers.get('cell_value'), row_format)
+            write_total_in_excel_sheet(ws, write_values.get('start'),
+                                       write_values.get('end'),
+                                       cell_value_from_headers.get('formulacolumn_dict'),
+                                       total_cell_format)
+            write_formula_in_values(ws,
+                                    combined_data[idx],
+                                    cell_value_from_headers.get('cell_value'),
+                                    cell_value_from_headers.get('formula_list'))
+            
+    except Exception as e:
+        print e
+    return workbook
+
 def prepare_value_data(data):
     """
     Process the post data request and breaking into individual sheet data
@@ -150,151 +261,113 @@ def prepare_value_data(data):
                       'name_of_sheets': name_of_sheets}
     return combined_dict
 
-header_dict = {'headers': [{'Sheet1':{'columns': [ {'cell_index': [2,0],
-                                                    'format': {'bold':1, 'align':'center'},
+header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                                     'label': 'S No',
                                                     'formula': None,
+                                                    'total': False,
                                                     },
-                                                    {'cell_index': [2,1],
-                                                     'total': '',
-                                                      'format': {'bold':1, 'align':'center'},
-                                                      'label': 'Date',
-                                                      'formula': None,
+                                                    {
+                                                     'label': 'Date',
+                                                     'total': False, 
+                                                     'formula': None,
                                                     },
-                                                    {'cell_index': [2,2],
-                                                      'total': '',
-                                                      'format': {'bold':1, 'align':'center'},
-                                                      'label': 'Market Value',
-                                                      'formula': None,
+                                                    {
+                                                     'label': 'Market Value',
+                                                     'total': False, 
+                                                     'formula': None,
                                                     },
-                                                    {'cell_index': [2,3],
-                                                     'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
+                                                    {
                                                      'label': 'Quantity [Q] (in Kg)',
+                                                     'total': False, 
                                                      'formula': None,
                                                     },
-                                                    {'cell_index': [2,4],
-                                                     'total': '',
-                                                     'format': {'bold':1, 'align':'center'},
+                                                    {
                                                      'label': 'Farmers',
+                                                     'total': False, 
                                                      'formula': None,
                                                     },
-                                                    {'cell_index': [2,5],
+                                                    {'label': 'Aggregator Payment [AP] (in Rs) (Rs 0.25*Q)',
                                                      'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
-                                                     'label': 'Aggregator Payment [AP] (in Rs) (Rs 0.25*Q)',
                                                      'formula': '0.25 * D',
                                                     },
 
-                                                    {'cell_index': [2,6],
+                                                    {'label': 'Transport Cost [TC] (in Rs)',
                                                      'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
-                                                     'label': 'Transport Cost [TC] (in Rs)'
+                                                     'formula': None
+                                                     
                                                     },
-                                                    {'cell_index': [2,7],
+                                                    {'label': 'Farmers\''' Contribution [FC] (in Rs)',
                                                      'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
-                                                     'label': 'Farmers\''' Contribution [FC] (in Rs)'
+                                                     'formula': None
+                                                     
                                                     },
-                                                    {'cell_index': [2,8],
+                                                    {'label': 'Commision Agent Contribution [CAC] (in Rs)',
                                                      'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
-                                                     'label': 'Commision Agent Contribution [CAC] (in Rs)'
+                                                     'formula': None
                                                     },
-                                                    {'cell_index': [2,9],
+                                                    {'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
                                                      'total': True,
-                                                     'format': {'bold':1, 'align':'center'},
-                                                     'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
                                                      'formula': 'F + G - H - I'
                                                     }],
-                                            'data': [['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], ['11', '21', '31', '41', '51', '61', '71', '8', '9', '10']]
+                                            'data': [[], []]
                                             }},
 
-                        {'Sheet2':{'columns': [{'cell_index': [2,0],
-                                               'total': '',
-                                               'format': {'bold':1, 'align':'center'},
-                                               'label': 'Date',
-                                               'formula': None,
-                                               },
-                                                {'cell_index': [2,1],
-                                                 'total': '',
-                                                  'format': {'bold':1, 'align':'center'},
-                                                  'label': 'Commision Agent',
-                                                  'formula': None,
+                        {'Sheet2':{'columns': [ {'label': 'Date',
+                                                'total': False, 
+                                                'formula': None,
                                                 },
-                                                {'cell_index': [2,2],
-                                                  'total': '',
-                                                  'format': {'bold':1, 'align':'center'},
-                                                  'label': 'Market',
-                                                  'formula': None,
-                                                },
-                                                {'cell_index': [2,3],
-                                                 'total': True,
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Quantity [Q] (in Kg)',
+                                                {'label': 'Commision Agent',
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'cell_index': [2,4],
-                                                 'total': '',
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Comission Agent Discount[cad] (in Rs/Kg)',
+                                                { 'label': 'Market',
+                                                  'total': False,  
+                                                  'formula': None,
+                                                },
+                                                {'label': 'Quantity [Q] (in Kg)',
+                                                 'total': True,
                                                  'formula': None,
                                                 },
-                                                {'cell_index': [2,5],
+                                                {'label': 'Comission Agent Discount[cad] (in Rs/Kg)',
+                                                 'total': False, 
+                                                 'formula': None,
+                                                },
+                                                {'label': 'Commision Agent Contribution[CAC] (in Rs) (Q*CAD)',
                                                  'total': True,
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Commision Agent Contribution[CAC] (in Rs) (Q*CAD)',
                                                  'formula': 'D * E'
                                                 }],
-                                   'data': [['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], ['11', '21', '31', '41', '51', '61', '71', '8', '9', '10']]
+                                   'data': [[], []]
                                     }
                         },
-                        {'Sheet3':{'columns': [{'cell_index': [2,0],
-                                               'total': '',
-                                               'format': {'bold':1, 'align':'center'},
-                                               'label': 'Date',
-                                               'formula': None,
-                                               },
-                                                {'cell_index': [2,1],
-                                                 'total': '',
-                                                  'format': {'bold':1, 'align':'center'},
-                                                  'label': 'Market',
-                                                  'formula': None,
+                        {'Sheet3':{'columns': [ {'label': 'Date',
+                                                'total': False, 
+                                                'formula': None,
                                                 },
-                                                {'cell_index': [2,2],
-                                                  'total': '',
-                                                  'format': {'bold':1, 'align':'center'},
-                                                  'label': 'Tranporter',
-                                                  'formula': None,
-                                                },
-                                                {'cell_index': [2,3],
-                                                 'total': '',
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Vechile Type',
+                                                {'label': 'Market',
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'cell_index': [2,4],
-                                                 'total': '',
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Vechile Number',
+                                                {'label': 'Tranporter',
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'cell_index': [2,5],
+                                                {'label': 'Vechile Type',
+                                                 'total': False,
+                                                 'formula': None,
+                                                },
+                                                {'label': 'Vechile Number',
+                                                 'total': False, 
+                                                 'formula': None,
+                                                },
+                                                {'label': 'Tranport Cost in Rs',
                                                  'total': True,
-                                                 'format': {'bold':1, 'align':'center'},
-                                                 'label': 'Tranport Cost in Rs',
                                                  'formula': None,
                                                 }],
-                                   'data': [['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], ['11', '21', '31', '41', '51', '61', '71', '8', '9', '10']]
+                                   'data': [[], []]
                                     }
                         }],
 
 }
-
-operation_dict = {'+': '+',
-                  '-': '-',
-                  '*': '*',
-                  '/': '/'}
 
 
 column_map = {

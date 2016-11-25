@@ -53,67 +53,25 @@ def home(request):
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
 
-
 @csrf_exempt
-def write_data_in_workbook(request):
+def download_data_workbook(request):
     if request.method == 'POST':
         # this will prepare the data
-        formatted_post_data = prepare_value_data(request.body)
-        # this will indicate number of sheets
-        name_of_sheets = formatted_post_data.get('name_of_sheets')
-        combined_data = formatted_post_data.get('combined_data')
-        # except wrting begins
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        # selecting a general font
-        heading_format = set_format_for_heading(workbook=workbook,
-                                               format_str={'bold':1, 'font_size': 15,
-                                                           # 'align': 'center',
-                                                           'text_wrap': False})
-        header_format = set_format_for_heading(workbook=workbook,
-                                               format_str={'bold':1, 'font_size': 12,
-                                                           'text_wrap': True})
-        row_format = set_format_for_heading(workbook=workbook,
-                                            format_str={'bold':0, 'font_size': 10,
-                                                        'align': 'center',
-                                                        'text_wrap': True})
-        total_cell_fomat = set_format_for_heading(workbook=workbook,
-                                                  format_str={'bold':1, 
-                                                              'font_size': 15,
-                                                              'num_format':'#,##0.0',
-                                                              'align':'center'})
-        # for developing exceptions
-        try:
-            for idx, item in enumerate(name_of_sheets):
-                ws = workbook.add_worksheet('Sheet'+ str(idx+1))
-                # setting the col width
-                write_heading_in_sheet(ws_obj=ws,
-                                       heading_str=name_of_sheets[idx],
-                                       format_str=heading_format)
-                # align_col_row_width_for_heading(ws_obj=ws, row_number=0,
-                #                                 merge_col_width=140,
-                #                                 merge_row_width=30)
-                # finally merge for heading.At this point headng should be ok
-                # merge_column_in_excel(ws_obj=ws, first_cell="A",
-                #                       second_cell="A",
-                #                       heading=name_of_sheets[idx],
-                #                       format_str=header_format)
-                # getting the cell value so that we will write values of columns
-                cell_value_from_headers = \
-                    get_headers_from_template_dict(ws, idx, header_dict, header_format)
-                # finally writing in process
-                write_values = \
-                    write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers.get('cell_value'), row_format)
-                write_formula_in_values(ws,
-                                        combined_data[idx],
-                                        cell_value_from_headers.get('cell_value'),
-                                        cell_value_from_headers.get('formula_list'))
-                write_total_in_excel_sheet(ws, write_values.get('start'),
-                                           write_values.get('end'),
-                                           cell_value_from_headers.get('formulacolumn_dict'),
-                                           total_cell_fomat)
-        except Exception as e:
-            print e
+        formatted_post_data = format_web_request(request)
+        # this will get combined web data and various formats
+        data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
+        # accessing basic variables
+        workbook = data_dict.get('workbook')
+        name_of_sheets = data_dict.get('name_of_sheets')
+        heading_format = data_dict.get('heading_format')
+        header_format = data_dict.get('header_format')
+        row_format = data_dict.get('row_format')
+        total_cell_format = data_dict.get('total_cell_format')
+        output = data_dict.get('output')
+        combined_data = data_dict.get('combined_data')
+        # now the sheet processes
+        workbook = excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data)
+        # final closing the working
         workbook.close()
         output.seek(0)
         response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
