@@ -75,14 +75,20 @@ class Command(BaseCommand):
 
 			if (error==0):				
 				try:
-					scr = Screening(date = sd,
+					scr_already_exist = Screening.objects.filter(date = sd,
 									start_time = st,
 									village = village.Village,
 									animator = animator.animator,
 									partner = partner)
-					scr.save()
-					jslps.new_count += 1
-					print "Screening saved in old"
+					if len(scr_already_exist) == 0:
+						scr = Screening(date = sd,
+										start_time = st,
+										village = village.Village,
+										animator = animator.animator,
+										partner = partner)
+						scr.save()
+						jslps.new_count += 1
+						print "Screening saved in old"
 				except Exception as e:
 					print e
 					if "Duplicate entry" in str(e):
