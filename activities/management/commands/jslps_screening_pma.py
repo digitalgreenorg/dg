@@ -101,14 +101,16 @@ class Command(BaseCommand):
 					if len(screening) > 1:
 						screening = screening[0]
 					for i in groups:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
 						screening.farmer_groups_targeted.add(i)
 						screening.save()
-						jslps.new_count += 1
 						print "Groups saved in old"
 					for i in videos:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
 						screening.videoes_screened.add(i)
 						screening.save()
-						jslps.new_count += 1
 						print "Videos saved in old"
 				except Exception as e:
 					print e
