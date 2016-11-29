@@ -26,8 +26,8 @@ NAME_OF_SHEETS = ['Sheet1, Sheet2', 'Sheet3', 'Sheet4']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
-    ws_obj.set_column('A:F', 200)
-    ws_obj.merge_range('A1:F1', heading_str, format_str)
+    ws_obj.set_column('A:H', 200)
+    ws_obj.merge_range('A1:H1', heading_str, format_str)
     # ws_obj.write('A1', heading_str, format_str)
     return ws_obj
 
