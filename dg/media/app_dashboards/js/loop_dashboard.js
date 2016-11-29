@@ -2783,7 +2783,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
         }
     }
 
@@ -2808,7 +2808,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
             farmer_share[date_index][mandi_index] = transport_payment[i]['farmer_share'];
 
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2),transport_payment[i]['id']]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2)]);
         }
     }
 
@@ -2893,6 +2893,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
           title: "Gaddidar Id"
         },{
           title: "Aggregator Id"
+        }, {
+          title: "Comment"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
@@ -2922,8 +2924,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             title: "Vehicle Number"
         }, {
             title: "Transport Cost"
-        },{
-          title: "DT Id"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
