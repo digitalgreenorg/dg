@@ -36,6 +36,7 @@ class AnalyticsSync():
     def refresh_build(self):
         start_time = time.time()
         current_date = datetime.date.today()
+        dummy_date = datetime.date(2016, 10, 01)
         previous_year_date = date(current_date.year - 1, current_date.month, current_date.day)
         import subprocess
         import MySQLdb
@@ -65,7 +66,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, sc.partner_id
                                         FROM activities_screening sc
                                         JOIN activities_screening_videoes_screened svs on svs.screening_id = sc.id
-                                        and sc.date between DATE_ADD(Now(), Interval -1 year) and Now()
+                                        and sc.date >= 20161001
                                         JOIN activities_screening_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
                                         JOIN videos_video vid on vid.id = svs.video_id
                                         JOIN geographies_village v on v.id = sc.village_id
@@ -82,7 +83,7 @@ class AnalyticsSync():
                                         state_id, country_id, vid.partner_id
                                         FROM videos_video vid
                                         JOIN geographies_village v on v.id = vid.village_id
-                                        and vid.production_date between DATE_ADD(Now(), interval -1 year) and Now()
+                                        and vid.production_date >= 20161001
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id
@@ -96,7 +97,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, sc.partner_id
                                         FROM activities_personmeetingattendance pma 
                                         JOIN activities_screening sc on sc.id = pma.screening_id
-                                        and sc.date between DATE_ADD(Now(), Interval -1 year)  and Now()
+                                        and sc.date >= 20161001
                                         JOIN people_person p on p.id = pma.person_id
                                         JOIN geographies_village v on v.id = sc.village_id
                                         JOIN geographies_block b on b.id = v.block_id
@@ -111,7 +112,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, pap.partner_id
                                         FROM activities_personadoptpractice pap
                                         JOIN people_person p on p.id = pap.person_id
-                                        and pap.date_of_adoption between DATE_ADD(Now(), Interval -1 year)  and Now()
+                                        and pap.date_of_adoption >= 20161001
                                         JOIN geographies_village v on v.id = p.village_id
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
@@ -127,7 +128,7 @@ class AnalyticsSync():
                                         B.video_id, D.title, C.PERSONGROUP_ID,D.youtubeid
                                         from activities_screening A
                                         join activities_screening_videoes_screened B on B.screening_id=A.id
-                                        and A.date between DATE_ADD(Now(), Interval -1  year) and Now()
+                                        and A.date >= 20161001
                                         join videos_video D on B.video_id=D.id 
                                         join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
             print "Finished insert into activities_screeningwisedata"
@@ -140,7 +141,7 @@ class AnalyticsSync():
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date 
                                         from people_animator A 
                                         join people_animatorassignedvillage B on A.id=B.animator_id
-                                        and A.time_created between DATE_ADD(Now(), Interval -1 year) and Now()""")
+                                        and A.time_created >= 20161001""")
             print "Finished insert into people_animatorwisedata"
             
             
@@ -158,7 +159,7 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.filter(screening__date__gt=previous_year_date).values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
+            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.filter(screening__date__gt=dummy_date).values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
             print 'PersonMeetingAttendance calcualted'
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
@@ -195,7 +196,7 @@ class AnalyticsSync():
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
 
             print 'Querying on screening'
-            scr = Screening.objects.filter(date__gt=previous_year_date).values('questions_asked')
+            scr = Screening.objects.filter(date__gt=dummy_date).values('questions_asked')
             print 'Screening query end'
             for s in scr:
                 counts['tot_ques'] = counts['tot_ques'] + 1
@@ -211,7 +212,7 @@ class AnalyticsSync():
             print time.time()
              
             #Total adoption calculation and gender wise adoption totals    
-            paps = PersonAdoptPractice.objects.filter(date_of_adoption__gt=previous_year_date).values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
+            paps = PersonAdoptPractice.objects.filter(date_of_adoption__gt=dummy_date).values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
             pap_dict = defaultdict(list) #For counting total adoption by active attendees
             for person_id, dt, vil, gender, partner in paps:
                 pap_dict[person_id].append(dt)
@@ -247,13 +248,13 @@ class AnalyticsSync():
             print "Finished active attendance counts"
             print time.time()
             #tot sc calculations
-            scs = Screening.objects.filter(date__gt=previous_year_date).annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
+            scs = Screening.objects.filter(date__gt=dummy_date).annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
             for dt, vil, gr_size, partner in scs:
                 main_data_dst[dt][vil][partner]['tot_sc'] = main_data_dst[dt][vil][partner]['tot_sc'] + 1
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_type=1, production_date__gt=previous_year_date).values_list('id','production_date', 'village', 'partner').order_by('id')
+            vids = Video.objects.filter(video_type=1, production_date__gt=dummy_date).values_list('id','production_date', 'village', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
@@ -261,7 +262,7 @@ class AnalyticsSync():
                     cur_id = id
                     counts['tot_vid'] = counts['tot_vid'] + 1
             del vids
-            
+                
             vils = Village.objects.values_list('id', 'block', 'block__district' , 'block__district__state', 'block__district__state__country')
             vil_dict = dict()
             for vil in vils:
@@ -270,7 +271,6 @@ class AnalyticsSync():
             values_list= []
             for dt, village_dict in main_data_dst.iteritems():
                 for vil_id, partner_dict in village_dict.iteritems():
-        
                     for partner_id, counts in partner_dict.iteritems():
                         values_list.append(("('%s',"+','.join(["%d"] * 20)+ ")" )% 
                                            (str(dt), counts['tot_sc'], counts['tot_vid'],
