@@ -1,0 +1,101 @@
+{% include "includes/header.html" %}
+
+        <section id="logos" class="about-bg">
+            <div class="inner-wrapper">
+                <div class="grid">
+                     <div class="grid-col grid-size2of4">
+                        <a href="https://www.usaid.gov/" target="_blank">
+                            <div class="img-usaid-left layout-vr-md">
+                                <img src="{{STATIC_URL}}social_website/content/usaid/usaid.png" alt=""/>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="grid-col grid-size2of4">
+                        <a href="{% url 'home' %}">
+                            <div class="img-usaid-right">
+                                <img src="{{STATIC_URL}}social_website/content/usaid/dg.png" alt=""/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="digitalintegration" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <div class="grid">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md"><b>Feed the Future Developing Local Extension Capacity</b></h2>
+                            <p class="copy layout-vr-sm">USAID’s Bureau for Food Security (BFS) and Digital Green have launched the five-year <i style="font-style: italic">Feed the Future Developing Local Extension Capacity (DLEC)</i> project, in partnership with the International Food Policy Research Institute (IFPRI), CARE International, and multiple resource partners. DLEC operates under a five-year Leader with Associates Cooperative Agreement. </p>
+                            <p class="copy layout-vr-sm">DLEC will partner with country stakeholders and USAID missions to raise incomes and increase resilience of smallholder farmers and their families by scaling and improving locally-relevant, cost-effective, and pluralistic agricultural extension systems that bring together information technologies and community-based organizations. By collaborating with USAID missions, host country governments, public and private extension advisory service (EAS) providers, rural civil society organizations, and host country research institutes, DLEC will help host-country extension systems become more effective, accountable, scalable, and sustainable.</p>
+	                    </div>
+                        <div class="grid-col grid-size2of4">
+                            <div class="imgExt img-marginLg-lt img-effects img-size-usaid grid-pad-rt-md">
+                                <img src="{{STATIC_URL}}social_website/content/usaid/DLEC_page.jpg" alt="" />
+                            </div>
+                        <div>
+                            <a href="https://flic.kr/s/aHskMadwb9" target="_blank" style="margin-left: 45px;">
+                            Join our Community of Practice (CoP) sign up now and get connected!
+                            
+                                <img src="/media/social_website/content/usaid/submit.png" style="margin-top: 10px;margin-left: 45px;">
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+        
+        <section id="resources" class="about-bg">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <div class="grid">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-sm">Resources</h2>
+                            <div class="grid">
+                                <div class="grid-col grid-size2of4 img-size-logo">
+                                    <a href="{% url 'resources' %}"><img src="{{STATIC_URL}}social_website/content/usaid/reports.jpg" alt="Reports" /></a>
+                                    <p class="hdg-bold">Reports</p>
+                                </div>
+                                <div class="grid-col grid-size2of4 img-size-logo">
+                                    <a href="https://flic.kr/s/aHskMadwb9" target="_blank"><img src="{{STATIC_URL}}social_website/content/usaid/Photo_Gallery_DLEC.jpg" alt="Image Gallery" />
+                                    </a>
+                                    <p class="hdg-bold">Photo Gallery</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-sm">Events</h2>
+                                <ul class="link-list">
+                                    <li><a href="https://agrilinks.org/events/climate-smart-agriculture-global-learning-and-evidence-exchange-csa-glee-cambodia-1?amp;elqTrack=true&utm_campaign=BFS%202016_11_15%20GLEE%20Reminder&utm_medium=email&utm_source=Eloqua" class="link2" target="_blank" class="link2">Climate-Smart Agriculture Global Learning and Evidence Exchange (CSA-GLEE), </a></li>
+                                    <li><a href="http://ingenaes.illinois.edu/2017symposium/" target="_blank">INGENAES Global Symposium and Learning Exchange</a></li>
+                                    <li><a href="https://agrf.org/" target="_blank"> African Green Revolution Forum 2016</a></li>
+                                    
+
+                                </ul>
+                        </div>
+                        
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+        <section id="aboutusaid" class="about-bg about-bg-white">
+            <div class="wrapper">
+                <div class="inner-wrapper media">
+                    <div class="grid">
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md">About USAID</h2>
+                            <p class="copy layout-vr-sm grid-pad-rt-sm">The United States Agency for International Development (USAID) works to end extreme poverty and promote resilient, democratic societies. USAID partners with the Government of India and the private sector to eliminate preventable child and maternal deaths, create an AIDS- and tuberculosis(TB)-free generation, and achieve universal health coverage.</p>
+                        </div>
+                        <div class="grid-col grid-size2of4">
+                            <h2 class="hdg-e hdg-source-reg layout-vr-md">About DG</h2>
+                            <p class="copy layout-vr-sm">Digital Green (DG) is a not for profit international development organization that uses an innovative digital platform for community engagement to improve livelihoods, health and nutrition of rural communities across South Asia and Sub-Saharan Africa.</p>
+                        </div>
+                    </div>
+                </div> <!-- End .inner-wrapper -->
+            </div> <!-- End .wrapper -->
+        </section>
+
+{% include "includes/footer.html" %}
