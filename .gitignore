@@ -318,4 +318,5 @@
 .DS_Store
 /apache/*
 py_env/*
+training_env/*
 .idea/

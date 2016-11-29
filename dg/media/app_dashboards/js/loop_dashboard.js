@@ -35,7 +35,9 @@ var VOLUME = "volume",
 var QUANTITY__SUM = "quantity__sum",
     AMOUNT__SUM = "amount__sum",
     MANDI__ID = "mandi__id",
-    USER_CREATED__ID = "user_created__id";
+    USER_CREATED__ID = "user_created__id",
+    MANDI__ID = "mandi__id",
+    GADDIDAR__ID = "gaddidar__id";
 
 
 function initialize() {
@@ -2747,37 +2749,38 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var mandis = [];
     var quantites = [];
     var gaddidar_amount = [];
-    var farmers = [];
+    // var farmers = [];
     var transport_cost = [];
     var farmer_share = [];
-    for (var i = 0; i < aggregator_payment.length; i++) {
+    var aggregator_payment_length = aggregator_payment.length;
+    for (var i = 0; i < aggregator_payment_length; i++) {
         if (aggregator == aggregator_payment[i][USER_CREATED__ID].toString()) {
-            var date_index = dates.indexOf(aggregator_payment[i]['date'])
+            var date_index = dates.indexOf(aggregator_payment[i]['date']);
             if (date_index == -1) {
                 dates.push(aggregator_payment[i]['date']);
                 mandis.push([]);
                 quantites.push([]);
                 gaddidar_amount.push([]);
-                farmers.push([]);
+                // farmers.push([]);
                 transport_cost.push([]);
                 farmer_share.push([]);
-                date_index = dates.indexOf(aggregator_payment[i]['date'])
+                date_index = dates.indexOf(aggregator_payment[i]['date']);
             }
-            var mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name'])
+            var mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
             if (mandi_index == -1) {
                 mandis[date_index].push(aggregator_payment[i]['mandi__mandi_name']);
                 quantites[date_index].push(0);
                 gaddidar_amount[date_index].push(0);
-                farmers[date_index].push(0);
+                // farmers[date_index].push(0);
                 transport_cost[date_index].push(0);
                 farmer_share[date_index].push(0);
-                mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name'])
+                mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
             }
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
-            farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
+            // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID]]);
         }
     }
 
@@ -2794,14 +2797,15 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
     }
 
-    for (var i = 0; i < transport_payment.length; i++) {
+    var transport_payment_length = transport_payment.length;
+    for (var i = 0; i < transport_payment_length; i++) {
         if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
             date_index = dates.indexOf(transport_payment[i]['date']);
             mandi_index = mandis[date_index].indexOf(transport_payment[i]['mandi__mandi_name']);
             transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
             farmer_share[date_index][mandi_index] = transport_payment[i]['farmer_share'];
 
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2)]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2),transport_payment[i]['id']]);
         }
     }
 
@@ -2811,7 +2815,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
             sno += 1;
         }
     }
@@ -2878,8 +2882,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Volume"
         }, {
-            title: "Farmers"
-        }, {
             title: "Aggregator Payment"
         }, {
             title: "Transport Cost"
@@ -2891,7 +2893,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Payment"
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 2,
+        "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -2991,10 +2993,16 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Gaddidar Commission"
         }, {
             title: "Share"
+        },{
+          title: "Mandi Id"
+        },{
+          title: "Gaddidar Id"
         }],
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
-        "pageLength": 2,
+
+        "pageLength": 10,
+
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -3094,9 +3102,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Vehicle Number"
         }, {
             title: "Transport Cost"
+        },{
+          title: "DT Id"
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 2,
+        "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
