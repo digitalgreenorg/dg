@@ -619,10 +619,11 @@ function set_filterlistener() {
 
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
+        var agg_id = $(this).children(":selected").attr("id");
         if (table_created) {
             $('#outliers_data').html("");
         }
-        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id);
         $("#download_payment_sheets").show();
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
@@ -2723,23 +2724,25 @@ function plot_area_range_graph(container, dict) {
 
 
 // To fill aggregator drop down on Payment page
-function fill_drop_down(container, data_json, id_parameter, name_parameter, caption) {
+function fill_drop_down(container, data_json, id_parameter, name_parameter, caption, id) {
     var tbody_obj = container;
     tbody_obj.html("");
     tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
     $.each(data_json, function(index, data) {
-        var li_item = '<option value=' + data[id_parameter] + '>' + data[name_parameter] + '</option>';
+      console.log(data[id] + " : "+ data[id_parameter]);
+        var li_item = '<option value = ' + data[id_parameter] + ' id = '+ data[id]+'>' + data[name_parameter] + '</option>';
         tbody_obj.append(li_item);
     });
     $('select').material_select();
 }
 
 //To compute aggregator, transporter, gaddidar payments table
-function aggregator_payment_sheet(data_json, aggregator) {
+function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
     var gaddidar_contribution_data = payments_data.gaddidar_data;
     // var gaddidar_payment = payments_data.gaddidar_data;
+    console.log(agg_id);
 
     var sno = 1;
     data_set = [];
@@ -2780,7 +2783,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID]]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id]);
         }
     }
 
@@ -2886,6 +2889,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
           title: "Mandi Id"
         },{
           title: "Gaddidar Id"
+        },{
+          title: "Aggregator Id"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
@@ -2961,7 +2966,7 @@ function get_payments_data() {
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
             payments_gaddidar_contribution = payments_data.gaddidar_data;
-            fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator');
+            fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator', 'id');
 
         });
     } else {

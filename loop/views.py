@@ -53,7 +53,7 @@ def dashboard(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    aggregators = LoopUser.objects.all().values('user__id', 'name', 'name_en')
+    aggregators = LoopUser.objects.all().values('user__id', 'name', 'name_en','id')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
