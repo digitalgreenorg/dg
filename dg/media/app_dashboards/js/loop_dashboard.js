@@ -2818,7 +2818,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment,agg_id]);
             sno += 1;
         }
     }
@@ -2827,8 +2827,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    data_set[j][9] = (data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
+                    data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    data_set[j][8] = (data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
                     break;
                 }
             }
@@ -2856,6 +2856,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             title: "Gaddidar Commission"
         }, {
             title: "Payment"
+        }, {
+            title: "Aggregator Id"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
