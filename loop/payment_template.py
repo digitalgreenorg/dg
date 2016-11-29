@@ -26,8 +26,8 @@ NAME_OF_SHEETS = ['Sheet1, Sheet2', 'Sheet3', 'Sheet4']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
-    ws_obj.set_column('A:E', 200)
-    ws_obj.merge_range('A1:E1', heading_str, format_str)
+    ws_obj.set_column('A:F', 200)
+    ws_obj.merge_range('A1:F1', heading_str, format_str)
     # ws_obj.write('A1', heading_str, format_str)
     return ws_obj
 
@@ -59,7 +59,7 @@ def write_headers_for_sheet(ws_obj, row_index, col_index, label, format_str):
     """
     Writes headers in the Excel sheets
     """
-    ws_obj.set_column(col_index, col_index, 30)
+    ws_obj.set_column(col_index, col_index, 9)
     ws_obj.write(row_index, col_index, label, format_str)
     return
 
@@ -141,7 +141,7 @@ def write_values_to_sheet(ws_obj, sheet_data_list, cell_value, format_str):
     return data_dict
 
 
-def read_formula_and_write_to_excel(ws_obj, formula, start, end):
+def read_formula_and_write_to_excel(ws_obj, formula, start, end, format_str):
     col_index = column_map.get(str(formula.get('col_index')))
     actual_formula = formula.get('formula')
     final_str = '='
@@ -156,11 +156,11 @@ def read_formula_and_write_to_excel(ws_obj, formula, start, end):
             print "NOT    MTCHED CHARS"
             final_str += iter_formula[i]    
         i += 1
-    ws_obj.write(col_index+str(start) , final_str)
+    ws_obj.write(col_index+str(start) , final_str, format_str)
     return
 
 
-def write_formula_in_values(ws_obj, sheet_data_list, cell_value, formula_list):
+def write_formula_in_values(ws_obj, sheet_data_list, cell_value, formula_list, format_str):
     # write the forumla in cell
     start = cell_value[0] + 2
     end = start + len(sheet_data_list) - 1
@@ -168,8 +168,7 @@ def write_formula_in_values(ws_obj, sheet_data_list, cell_value, formula_list):
     for item in formula_list:
         start = temp_start
         while start <= end:
-            print "FORMULAAAA   :::", item
-            read_formula_and_write_to_excel(ws_obj, item, start, end)
+            read_formula_and_write_to_excel(ws_obj, item, start, end, format_str)
             start += 1
     return
 
@@ -192,17 +191,19 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
                                                        # 'align': 'center',
                                                        'text_wrap': False})
     header_format = set_format_for_heading(workbook=workbook,
-                                           format_str={'bold':1, 'font_size': 12,
+                                           format_str={'bold':1, 'font_size': 10,
                                                        'text_wrap': True})
     row_format = set_format_for_heading(workbook=workbook,
                                         format_str={'bold':0, 'font_size': 10,
-                                                    'align': 'center',
+                                                    # 'align': 'left',
+                                                    'num_format':'#,##0.00',
                                                     'text_wrap': True})
     total_cell_format = set_format_for_heading(workbook=workbook,
                                               format_str={'bold':1, 
-                                                          'font_size': 15,
-                                                          'num_format':'#,##0.0',
-                                                          'align':'center'})
+                                                          'font_size': 10,
+                                                          'num_format':'#,##0.00',
+                                                          'align':'right',
+                                                          'text_wrap': True})
     name_of_sheets = formatted_post_data.get('name_of_sheets')
     combined_data = formatted_post_data.get('combined_data')
     data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data,
@@ -235,7 +236,8 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
             write_formula_in_values(ws,
                                     combined_data[idx],
                                     cell_value_from_headers.get('cell_value'),
-                                    cell_value_from_headers.get('formula_list'))
+                                    cell_value_from_headers.get('formula_list'),
+                                    row_format)
             
     except Exception as e:
         print e
@@ -261,7 +263,7 @@ def prepare_value_data(data):
                       'name_of_sheets': name_of_sheets}
     return combined_dict
 
-header_dict = {'headers': [{'Sheet1':{'columns': [ {
+header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     'label': 'S No',
                                                     'formula': None,
                                                     'total': False,
@@ -278,7 +280,7 @@ header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                                     },
                                                     {
                                                      'label': 'Quantity [Q] (in Kg)',
-                                                     'total': False, 
+                                                     'total': True, 
                                                      'formula': None,
                                                     },
                                                     {
@@ -301,7 +303,7 @@ header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                                      'formula': None
                                                      
                                                     },
-                                                    {'label': 'Commision Agent Contribution [CAC] (in Rs)',
+                                                    {'label': 'Commission Agent Contribution [CAC] (in Rs)',
                                                      'total': True,
                                                      'formula': None
                                                     },
@@ -312,11 +314,11 @@ header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                             'data': [[], []]
                                             }},
 
-                        {'Sheet2':{'columns': [ {'label': 'Date',
+                        {'gaddidar':{'columns': [ {'label': 'Date',
                                                 'total': False, 
                                                 'formula': None,
                                                 },
-                                                {'label': 'Commision Agent',
+                                                {'label': 'Commission Agent',
                                                  'total': False, 
                                                  'formula': None,
                                                 },
@@ -328,18 +330,18 @@ header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                                  'total': True,
                                                  'formula': None,
                                                 },
-                                                {'label': 'Comission Agent Discount[cad] (in Rs/Kg)',
+                                                {'label': 'Commission Agent Discount[CAD] (in Rs/Kg)',
                                                  'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'label': 'Commision Agent Contribution[CAC] (in Rs) (Q*CAD)',
+                                                {'label': 'Commission Agent Contribution[CAC] (in Rs) (Q*CAD)',
                                                  'total': True,
                                                  'formula': 'D * E'
                                                 }],
                                    'data': [[], []]
                                     }
                         },
-                        {'Sheet3':{'columns': [ {'label': 'Date',
+                        {'transporter':{'columns': [ {'label': 'Date',
                                                 'total': False, 
                                                 'formula': None,
                                                 },
@@ -347,15 +349,15 @@ header_dict = {'headers': [{'Sheet1':{'columns': [ {
                                                  'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'label': 'Tranporter',
+                                                {'label': 'Transporter',
                                                  'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'label': 'Vechile Type',
+                                                {'label': 'Vehicle Type',
                                                  'total': False,
                                                  'formula': None,
                                                 },
-                                                {'label': 'Vechile Number',
+                                                {'label': 'Vehicle Number',
                                                  'total': False, 
                                                  'formula': None,
                                                 },

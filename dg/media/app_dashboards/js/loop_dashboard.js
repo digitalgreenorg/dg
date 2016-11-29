@@ -2810,7 +2810,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM]).toFixed(2), 0, 0]);
         }
     }
 
@@ -2843,7 +2843,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
-            data_set.push([sno, dates[i], mandis[i][j], quantites[i][j], farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
+            data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j]).toFixed(2), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
             sno += 1;
         }
     }
@@ -3573,3 +3573,7 @@ function change_language(lang) {
         show_nav(selected_page);
     }
 }
+
+$('#aggregator_payments').change(function() {
+  $('#aggregator_payment_details').hide();
+});
