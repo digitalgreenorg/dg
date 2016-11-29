@@ -58,7 +58,6 @@ class AnalyticsSync():
                                         FROM people_person pp INNER JOIN programs_partner ppa ON pp.partner_id = ppa.id INNER JOIN geographies_village gv ON pp.village_id = gv.id INNER JOIN geographies_block gb on gv.block_id = gb.id INNER JOIN geographies_district gd on gb.district_id=gd.id INNER JOIN geographies_state gs on gd.state_id =  gs.id INNER JOIN geographies_country gc on gs.country_id=gc.id""")
             print "Finished insert into village_partner_myisam"
 
-            print time.time()
             #screening_myisam
             self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -74,7 +73,7 @@ class AnalyticsSync():
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into screening_myisam"
-            print time.time()
+            
             #video_myisam
             self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
                                         language_id, village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -89,7 +88,7 @@ class AnalyticsSync():
                                         JOIN geographies_state s on s.id = d.state_id
                                         WHERE vid.video_type = 1""")
             print "Finished insert into video_myisam"
-            print time.time()          
+            
             #person_meeting_attendance_myisam
             self.db_cursor.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -104,7 +103,7 @@ class AnalyticsSync():
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into person_meeting_attendance_myisam"
-            print time.time()  
+            
             #person_adopt_practice_myisam
             self.db_cursor.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, gender, date_of_adoption, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
@@ -118,7 +117,7 @@ class AnalyticsSync():
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
             print "Finished insert into person_adopt_practice_myisam"
-            print time.time()
+            
             #activities_screeningwisedata
             self.db_cursor.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
                                         screening_id, old_coco_id, screening_date, start_time, location, village_id, animator_id, 
@@ -132,7 +131,7 @@ class AnalyticsSync():
                                         join videos_video D on B.video_id=D.id 
                                         join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
             print "Finished insert into activities_screeningwisedata"
-            print time.time()
+            
             #people_animatorwisedata
             self.db_cursor.execute("""INSERT INTO people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified, 
                                         animator_id, old_coco_id, animator_name, gender, phone_no, partner_id, district_id, total_adoptions, 
@@ -144,8 +143,6 @@ class AnalyticsSync():
                                         and A.time_created >= 20161001""")
             print "Finished insert into people_animatorwisedata"
             
-            
-            print time.time()
             # main_data_dst stores all the counts for every date , every village and every partner                                        
             main_data_dst = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: dict(tot_sc = 0, tot_vid = 0,
                 tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
@@ -160,7 +157,7 @@ class AnalyticsSync():
                 person_partner[id] = partner
             
             pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.filter(screening__date__gt=dummy_date).values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
-            print 'PersonMeetingAttendance calcualted'
+            
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
@@ -195,9 +192,7 @@ class AnalyticsSync():
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
 
-            print 'Querying on screening'
             scr = Screening.objects.filter(date__gt=dummy_date).values('questions_asked')
-            print 'Screening query end'
             for s in scr:
                 counts['tot_ques'] = counts['tot_ques'] + 1
             
@@ -209,7 +204,6 @@ class AnalyticsSync():
             #Free memory
             del scr
             print "Finished date calculations"
-            print time.time()
              
             #Total adoption calculation and gender wise adoption totals    
             paps = PersonAdoptPractice.objects.filter(date_of_adoption__gt=dummy_date).values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
@@ -224,7 +218,7 @@ class AnalyticsSync():
              
             del paps
             print "Finished adoption counts"
-            print time.time()
+            
             for per, date_list in person_att_dict.iteritems():
                 has_adopted = per in pap_dict
                 adopt_count = 0
@@ -246,7 +240,7 @@ class AnalyticsSync():
 
             del person_att_dict, person_video_seen_date_dict, pap_dict
             print "Finished active attendance counts"
-            print time.time()
+            
             #tot sc calculations
             scs = Screening.objects.filter(date__gt=dummy_date).annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
             for dt, vil, gr_size, partner in scs:
