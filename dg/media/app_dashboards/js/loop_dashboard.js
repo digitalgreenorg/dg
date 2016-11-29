@@ -2827,6 +2827,44 @@ function aggregator_payment_sheet(data_json, aggregator) {
             }
         }
     }
+    var rows_table2=[]
+    var index_table2=0;
+
+    $('#table2').on( 'click', 'tbody td', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            if($this.context.cellIndex == 5 || $this.context.cellIndex == 4){
+                $this.attr('contentEditable',true);
+                $this.keypress(function (event) {
+
+                    if (event.keyCode === 13){
+                        $this.attr('contentEditable',false);
+                        var $par = $this.parent();
+                        var $childzeroth = $par[0].childNodes[0];
+                        var $childfirst = $par[0].childNodes[1];
+                        var $childsecond = $par[0].childNodes[2];
+                        var $childthird = $par[0].childNodes[3];
+                        var $childfourth = $par[0].childNodes[4];
+                        var $childfifth = $par[0].childNodes[5];
+                        if($this.context.cellIndex == 5){
+                            $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
+                        }
+                        else
+                            $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
+
+                        $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        $row = $this.parent().children('td');
+                        console.log($row.length);
+                        rows_table2[index_table2]={}
+                        for(i=0;i<$row.length;i++){
+                            rows_table2[index_table2][i] = $row[i].innerHTML;
+                        }
+                        index_table2=index_table2+1;
+                    }
+                });
+            }
+        });
+
 
     $('#table2').DataTable({
         destroy: true,
@@ -2861,46 +2899,83 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sButtonText": "Download",
                 "bBomInc": true,
                 "sTitle": "Loop_" + getFormattedDate(aggregator) + "Payment_Sheet"
-            }]
+            },
+            {
+                    "sExtends":"ajax",
+                    "sButtonText":"Submit",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/farmersharedoutliers/",
+                    "fnClick": function( nButton, oConfig ) {
+
+                    var sData = this.fnGetTableData(oConfig);
+                    var JObj={
+                        "mrow":rows_table2
+                    };
+                    alert(JSON.stringify(JObj));
+                    /*$.ajax({
+                        url: oConfig.sAjaxUrl,
+                        type:'post',
+                        dataType:'json',
+                        contentType: "application/json; charset=utf-8",
+                        data:{
+                            date: 10-11-2017,
+                            mandi:{id:1},
+                            gaddidar:{id:1},
+                            loopuser:{id:11},
+                            amount:500000,
+                            comment:"Yo!"
+                        },
+                        success:function () {
+                            alert( "success" );
+                        },
+                        error: function () {
+                           alert( "Error" );
+                        }
+        });*/
+    }
+                }]
         }
     });
-
+    var rows_table3=[];
+    index_table3=0;
         $('#table3').on( 'click', 'tbody td', function (e) {
-        
+            e.preventDefault();
             var $this = $(this);
             if($this.context.cellIndex == 5 || $this.context.cellIndex == 4){
                 $this.attr('contentEditable',true);
                 $this.keypress(function (event) {
 
-                if (event.keyCode === 13){
-                    $this.attr('contentEditable',false);
-                    var $par = $this.parent();
-                    var $childzeroth = $par[0].childNodes[0];
-                    var $childfirst = $par[0].childNodes[1];
-                    var $childsecond = $par[0].childNodes[2];
-                    var $childthird = $par[0].childNodes[3];
-                    var $childfourth = $par[0].childNodes[4];
-                    var $childfifth = $par[0].childNodes[5];
-                    if($this.context.cellIndex == 5)
-                        $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
-                    else
-                        $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
-                    $.ajax({url:'http://localhost:4001/loop/api/v1/gaddidarsharedoutliers/',
-                        type:'post',
-                        dataType:'json',
-                        contentType: "application/json; charset=utf-8",
-                        data:{
-                        date: 10-11-2017,
-                        mandi:{id:1},
-                        gaddidar:{id:1},
-                        loopuser:{id:11},
-                        amount:500000
-                    }});
-                }
-    });
+                    if (event.keyCode === 13){
+                        $this.attr('contentEditable',false);
+                        var $par = $this.parent();
+                        var $childzeroth = $par[0].childNodes[0];
+                        var $childfirst = $par[0].childNodes[1];
+                        var $childsecond = $par[0].childNodes[2];
+                        var $childthird = $par[0].childNodes[3];
+                        var $childfourth = $par[0].childNodes[4];
+                        var $childfifth = $par[0].childNodes[5];
+                        if($this.context.cellIndex == 5){
+                            $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
+                        }
+                        else
+                            $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
+                        $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        $row = $this.parent().children('td');
+                        console.log($row.length);
+                        rows[index]={}
+                        for(i=0;i<$row.length;i++){
+                            rows_table3[index_table3][i] = $row[i].innerHTML;
+                        }
+                        index_table3=index_table3+1;
+                    }
+                });
             }
-    } );
-
+        });
+    /*$.fn.dataTable.ext.buttons.alert = {
+    className: 'buttons-alert',
+    
+    
+};*/
+    
     $('#table3').DataTable({
         destroy: true,
         data: gaddidar_data_set,
@@ -2918,6 +2993,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Share"
         }],
         "dom": 'T<"clear">rtip',
+        //"dom":'Bfrtip',
         "pageLength": 2,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
@@ -2926,10 +3002,83 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sButtonText": "Download",
                 "bBomInc": true,
                 "sTitle": "Loop_" + getFormattedDate(aggregator) + "Gaddidar_Details"
-            }]
-        }
+            },
+            
+                {
+                    "sExtends":"ajax",
+                    "sButtonText":"Submit",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarsharedoutliers/",
+                    "fnClick": function( nButton, oConfig ) {
 
+                    var sData = this.fnGetTableData(oConfig);
+                    var JObj={
+                        "mrow":rows_table3
+                    };
+                    alert(JSON.stringify(JObj));
+                    /*$.ajax({
+                        url: oConfig.sAjaxUrl,
+                        type:'post',
+                        dataType:'json',
+                        contentType: "application/json; charset=utf-8",
+                        data:{
+                            date: 10-11-2017,
+                            mandi:{id:1},
+                            gaddidar:{id:1},
+                            loopuser:{id:11},
+                            amount:500000,
+                            comment:"Yo!"
+                        },
+                        success:function () {
+                            alert( "success" );
+                        },
+                        error: function () {
+                           alert( "Error" );
+                        }
+        });*/
+    }
+                }
+            
+            ]
+             
+        },
     });
+
+    var rows_table4=[];
+    index_table4=0;
+        $('#table3').on( 'click', 'tbody td', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            if($this.context.cellIndex == 5 || $this.context.cellIndex == 4){
+                $this.attr('contentEditable',true);
+                $this.keypress(function (event) {
+
+                    if (event.keyCode === 13){
+                        $this.attr('contentEditable',false);
+                        var $par = $this.parent();
+                        var $childzeroth = $par[0].childNodes[0];
+                        var $childfirst = $par[0].childNodes[1];
+                        var $childsecond = $par[0].childNodes[2];
+                        var $childthird = $par[0].childNodes[3];
+                        var $childfourth = $par[0].childNodes[4];
+                        var $childfifth = $par[0].childNodes[5];
+                        if($this.context.cellIndex == 5){
+                            $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
+                        }
+                        else
+                            $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
+                        $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        $row = $this.parent().children('td');
+                        console.log($row.length);
+                        rows[index]={}
+                        for(i=0;i<$row.length;i++){
+                            rows_table4[index_table4][i] = $row[i].innerHTML;
+                        }
+                        index_table4=index_table4+1;
+                    }
+                });
+            }
+        });
+
     $('#table4').DataTable({
         destroy: true,
         data: transporter_data_set,
@@ -2955,7 +3104,40 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sButtonText": "Download",
                 "bBomInc": true,
                 "sTitle": "Loop_" + getFormattedDate(aggregator) + "Transporter_Pmt"
-            }]
+            },
+            {
+                    "sExtends":"ajax",
+                    "sButtonText":"Submit",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/transportersharedoutliers/",
+                    "fnClick": function( nButton, oConfig ) {
+
+                    var sData = this.fnGetTableData(oConfig);
+                    var JObj={
+                        "mrow":rows_table4
+                    };
+                    alert(JSON.stringify(JObj));
+                    /*$.ajax({
+                        url: oConfig.sAjaxUrl,
+                        type:'post',
+                        dataType:'json',
+                        contentType: "application/json; charset=utf-8",
+                        data:{
+                            date: 10-11-2017,
+                            mandi:{id:1},
+                            gaddidar:{id:1},
+                            loopuser:{id:11},
+                            amount:500000,
+                            comment:"Yo!"
+                        },
+                        success:function () {
+                            alert( "success" );
+                        },
+                        error: function () {
+                           alert( "Error" );
+                        }
+        });*/
+    }
+                }]
         }
 
     });
