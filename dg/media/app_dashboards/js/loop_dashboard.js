@@ -2913,26 +2913,19 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         "mrow":rows_table2
                     };
                     alert(JSON.stringify(JObj));
-                    /*$.ajax({
+                    $.ajax({
                         url: oConfig.sAjaxUrl,
                         type:'post',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
-                        data:{
-                            date: 10-11-2017,
-                            mandi:{id:1},
-                            gaddidar:{id:1},
-                            loopuser:{id:11},
-                            amount:500000,
-                            comment:"Yo!"
-                        },
+                        data:JObj,
                         success:function () {
                             alert( "success" );
                         },
                         error: function () {
                            alert( "Error" );
                         }
-        });*/
+        });
     }
                 }]
         }
@@ -2955,11 +2948,13 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         var $childthird = $par[0].childNodes[3];
                         var $childfourth = $par[0].childNodes[4];
                         var $childfifth = $par[0].childNodes[5];
-                        if($this.context.cellIndex == 5){
-                            $childfourth.innerHTML=$childfifth.innerHTML / $childthird.innerHTML;
-                        }
+                        var $childsixth = $par[0].childNodes[6];
+                        var $childseventh = $par[0].childNodes[7];
+
+                        if($this.context.cellIndex == 5)
+                            $childfourth.innerHTML = $childfifth.innerHTML / $childthird.innerHTML;
                         else
-                            $childfifth.innerHTML=$childfourth.innerHTML * $childthird.innerHTML;
+                            $childfifth.innerHTML = $childfourth.innerHTML * $childthird.innerHTML;
                         $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
                         $row = $this.parent().children('td');
                         console.log($row.length);
@@ -3023,27 +3018,20 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         "mrow":rows_table3
                     };
                     alert(JSON.stringify(JObj));
-                    /*$.ajax({
+                    $.ajax({
                         url: oConfig.sAjaxUrl,
                         type:'post',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
-                        data:{
-                            date: 10-11-2017,
-                            mandi:{id:1},
-                            gaddidar:{id:1},
-                            loopuser:{id:11},
-                            amount:500000,
-                            comment:"Yo!"
-                        },
+                        data:JObj,
                         success:function () {
                             alert( "success" );
                         },
                         error: function () {
                            alert( "Error" );
                         }
-        });*/
-    }
+                    });
+                    }
                 }
             
             ]
@@ -3053,7 +3041,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     var rows_table4=[];
     index_table4=0;
-        $('#table3').on( 'click', 'tbody td', function (e) {
+        $('#table4').on( 'click', 'tbody td', function (e) {
             e.preventDefault();
             var $this = $(this);
             if($this.context.cellIndex == 5 || $this.context.cellIndex == 4){
@@ -3126,26 +3114,19 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         "mrow":rows_table4
                     };
                     alert(JSON.stringify(JObj));
-                    /*$.ajax({
+                    $.ajax({
                         url: oConfig.sAjaxUrl,
                         type:'post',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
-                        data:{
-                            date: 10-11-2017,
-                            mandi:{id:1},
-                            gaddidar:{id:1},
-                            loopuser:{id:11},
-                            amount:500000,
-                            comment:"Yo!"
-                        },
+                        data:JObj,
                         success:function () {
                             alert( "success" );
                         },
                         error: function () {
                            alert( "Error" );
                         }
-        });*/
+        });
     }
                 }]
         }
