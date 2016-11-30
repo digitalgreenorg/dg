@@ -2,34 +2,34 @@
 DELETE 
 FROM 
 	`screening_myisam` 
-WHERE date >= 20161001;
+WHERE date > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`video_myisam`
-WHERE `video_production_date` >= 20161001;
+WHERE `video_production_date` > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`person_meeting_attendance_myisam`
-WHERE `date` >= 20161001;
+WHERE `date` > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`person_adopt_practice_myisam`
-WHERE  `date_of_adoption` >= 20161001;
+WHERE  `date_of_adoption` > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`activities_screeningwisedata`
-WHERE `screening_date`  >= 20161001;
+WHERE `screening_date`  > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`people_animatorwisedata`
-WHERE `time_created`  >= 20161001;
+WHERE `time_created`  > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
 	`village_precalculation_copy`
-WHERE `date` >= 20161001;
+WHERE `date` > DATE_ADD(Now(), Interval -1 year);
