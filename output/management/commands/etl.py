@@ -159,7 +159,7 @@ class AnalyticsSync():
             
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
-            max_date = min_date = cur_person = prev_pma_id = None
+            0 = min_date = cur_person = prev_pma_id = None
             curr_count = 0
             for index, pma in pmas_df.iterrows():
                 per = pma['person']
@@ -218,12 +218,13 @@ class AnalyticsSync():
             del paps
             print "Finished adoption counts"
             
+            today = datetime.date.today()
             for per, date_list in person_att_dict.iteritems():
                 has_adopted = per in pap_dict
                 adopt_count = 0
                 video_seen_count = 0
                 for min_date, max_date in date_list:
-                    max_date = min(max_date, current_date)
+                    max_date = min(max_date, today)
                     for i in range((max_date - min_date).days + 1):
                         cur_date = min_date + datetime.timedelta(days=i)
                         counts = main_data_dst[cur_date][person_village[per]][person_partner[per]]
@@ -297,7 +298,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("Log")
-        print()
+        print(datetime.date.today())
         mysql_root_username = options['username']
         mysql_root_password = options['password']
         an_sync_obj = AnalyticsSync(mysql_root_username, mysql_root_password)
