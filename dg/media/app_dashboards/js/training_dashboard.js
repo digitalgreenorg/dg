@@ -9,8 +9,144 @@ function initialize() {
     get_filter_data();
     set_eventlistener();
     // update_charts();
-    $(".button-collapse").sideNav();
+    $(".button-collapse").sideNav({
+     // Default is 240
+          edge: 'left', // Choose the horizontal origin
+          closeOnClick: true  // Closes side-nav on <a> clicks, useful for Angular/Meteor
+        }
+      );
+
 }
+
+$('#nav_menu1').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+
+/*$('#nav_assessments').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});*/
+
+$('#nav_trainers').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+$('#nav_states').on('click', function() {
+    //alert("hello");
+    reset_filter_form();
+});
+
+$('#link4').on('click', function () {
+    setTimeout(function () {
+        $('#month_training_data').highcharts().reflow();
+    }, 2);
+});
+
+$('#link3').on('click', function () {
+    setTimeout(function () {
+        $('#question_mediator_data').highcharts().reflow();
+    }, 2);
+});
+
+$('#link1').on('click', function () {
+    setTimeout(function () {
+        $('#state_training_data').highcharts().reflow();
+    }, 2);
+
+    setTimeout(function () {
+        $('#state_mediator_data').highcharts().reflow();
+    }, 2);
+});
+
+$('#link2').on('click', function () {
+    setTimeout(function () {
+        $('#trainer_training_data').highcharts().reflow();
+    }, 2);
+
+    setTimeout(function () {
+        $('#trainer_mediator_data').highcharts().reflow();
+    }, 2);
+});
+
+
+//Search Trainers in SideNav
+
+$("#search_trainers").keyup(function() {
+
+    var index_map = {};
+
+//$("#trainer_all").prop("disabled",true);    
+var value = this.value.trim();
+if(value.length != 0)
+    $("#trainer_all").prop("disabled",true);
+else
+    $("#trainer_all").prop("disabled",false);
+
+$("#trainers_table").find("tr").each(function(index) {
+    if (index === -1) return;
+
+    trainer_name_array = $(this).text().toLowerCase().split(" ");
+    var if_td_has = false; //boolean value to track if td had the entered key
+    $(this).find('td').each(function () {
+        for(var i = 0; i < trainer_name_array.length; i++){
+            if(trainer_name_array[i].indexOf(value.toLowerCase()) == 0) {
+                    if_td_has = true; 
+                    break;
+            }
+        }//Check if td's text matches key and then use OR to check it for all td's
+    });
+
+    $(this).toggle(if_td_has);
+
+});
+});
+
+
+//Search States in Side Nav
+$("#search_states").keyup(function() {
+var value = this.value;
+
+if(value.length != 0)
+    $("#state_all").prop("disabled",true);
+else
+    $("#state_all").prop("disabled",false);
+$("#states_table").find("tr").each(function(index) {
+    if (index === -1) return;
+
+    state_name_array = $(this).text().toLowerCase().split(" ");
+    var if_td_has = false; //boolean value to track if td had the entered key
+    $(this).find('td').each(function () {
+        for(var i = 0; i < state_name_array.length; i++){
+            if(state_name_array[i].indexOf(value.toLowerCase()) == 0) {
+                    if_td_has = true;
+                    break;
+            }
+        }//Check if td's text matches key and then use OR to check it for all td's
+    });
+
+
+    $(this).toggle(if_td_has);
+
+});
+});
+
+
+// reset
+function reset_filter_form() {
+    $('#search_trainers').val('');
+    $('#search_trainers').keyup();
+
+     $('#search_states').val('');
+     $('#search_states').keyup();
+ 
+
+}
+/*$( window ).resize(function() {
+  get_data();
+});*/
 
 /* Progress Bar functions */
 
@@ -18,7 +154,12 @@ function hide_progress_bar() {
     $('#progress_bar').hide()
 }
 
-function show_progress_bar() {
+function divFunction(){
+    //Some code
+    alert("i will disappoint you");
+}
+
+function show_progress_bar() { 
     $('#progress_bar').show();
 }
 
@@ -46,6 +187,10 @@ function set_eventlistener() {
         selectMonths: true,
         selectYears: 15,
         format: "yyyy-mm-dd",
+        onClose: function() {
+            $(document.activeElement).blur()
+        },
+        min: new Date(2015,01,01),
         max: -1,
         onSet: function(element) {
             if (element.select) {
@@ -57,6 +202,9 @@ function set_eventlistener() {
         selectMonths: true,
         selectYears: 15,
         format: "yyyy-mm-dd",
+        onClose: function() {
+            $(document.activeElement).blur()
+        },
         max: true,
         onSet: function(element) {
             if (element.select) {
@@ -133,38 +281,61 @@ function set_filterlistener() {
 function get_data() {
     var start_date = $('#from_date').val();
     var end_date = $('#to_date').val();
+    if(start_date === '' || end_date === '')
+    {
+        alert("Please fill date");
+    }
+    else
+    {
+        var assessment_ids = [];
+        var trainer_ids = [];
+        var state_ids = [];
 
-    var assessment_ids = [];
-    var trainer_ids = [];
-    var state_ids = [];
+        $('#assessments').children().each(function() {
+            var assessment_div = $(this).children()[1].firstChild;
+            if (assessment_div.checked)
+                assessment_ids.push(assessment_div.getAttribute('data'));
+        });
 
-    $('#assessments').children().each(function() {
-        var assessment_div = $(this).children()[1].firstChild;
-        if (assessment_div.checked)
-            assessment_ids.push(assessment_div.getAttribute('data'));
-    });
+        $('#trainers').children().each(function() {
+            var trainer_div = $(this).children()[1].firstChild;
+            if (trainer_div.checked)
+                trainer_ids.push(trainer_div.getAttribute('data'));
+        });
 
-    $('#trainers').children().each(function() {
-        var trainer_div = $(this).children()[1].firstChild;
-        if (trainer_div.checked)
-            trainer_ids.push(trainer_div.getAttribute('data'));
-    });
+        $('#states').children().each(function() {
+            var state_div = $(this).children()[1].firstChild;
+            if (state_div.checked)
+                state_ids.push(state_div.getAttribute('data'));
+        });
 
-    $('#states').children().each(function() {
-        var state_div = $(this).children()[1].firstChild;
-        if (state_div.checked)
-            state_ids.push(state_div.getAttribute('data'));
-    });
-
-    if (Date.parse(start_date) > Date.parse(end_date)) {
-        //$('.modal-trigger').leanModal();
-        $('#modal1').openModal();
-    } else {
-        gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-        getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
-        getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+        if (Date.parse(start_date) > Date.parse(end_date)) {
+            //$('.modal-trigger').leanModal();
+            $('#modal1').openModal();
+        } else {
+            gettrainerdata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getquestiondata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_ids);
+            getmonthdata(start_date,end_date,assessment_ids,trainer_ids,state_ids);
+            get_bottom_boxes();
+                }
     }
 }
+
+function get_bottom_boxes(){
+
+    var start_date = $('#from_date').val();
+    var end_date = $('#to_date').val();
+    $.get("/training/date_filter_data/", {
+        'start_date': start_date,
+        'end_date': end_date
+    })
+    .done(function(data) {
+        data_json = JSON.parse(data);
+        fill_bottom_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass);
+    });
+}
+
 
 /* Initializing filters */
 
@@ -175,7 +346,8 @@ function get_filter_data() {
             fill_assessment_filter(data_json.assessments);
             fill_trainer_filter(data_json.trainers);
             fill_state_filter(data_json.states);
-            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass, data_json.num_farmers);
+            fill_top_boxes(data_json.num_trainings, data_json.num_participants, data_json.num_pass);
+
             get_data();
         });
 }
@@ -264,6 +436,24 @@ function getstatedata(start_date, end_date, assessment_ids, trainer_ids, state_i
         });
 }
 
+function getmonthdata(start_date, end_date, assessment_ids, trainer_ids, state_ids) {
+    show_progress_bar();
+    $.get("/training/month_wise_data/", {
+            'start_date': start_date,
+            'end_date': end_date,
+            'assessment_ids[]': assessment_ids,
+            'trainer_ids[]': trainer_ids,
+            'state_ids[]': state_ids
+        })
+        .done(function(data) {
+            data_json = JSON.parse(data);
+            hide_progress_bar();
+            plot_monthwise_data(data_json.trainings, data_json.data_list);
+        });
+}
+
+
+
 /* Table Generating UI Functions - Fill data in table */
 
 function fill_top_boxes(num_trainings, num_participants, num_pass) {
@@ -283,23 +473,71 @@ function fill_top_boxes(num_trainings, num_participants, num_pass) {
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
     var avg_score = total_score / num_pass.length;
 
-    document.getElementById('num_trainings').innerHTML = num_trainings;
-    document.getElementById('mediators_trained').innerHTML = num_participants;
+    document.getElementById('num_trainings').innerHTML = numberWithCommas(num_trainings);
+    document.getElementById('mediators_trained').innerHTML = numberWithCommas(num_participants);
     document.getElementById('average_score').innerHTML = parseFloat(avg_score.toFixed(2));
     document.getElementById('pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
+   /* document.getElementById('villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
+*/}
+
+function fill_bottom_boxes(num_trainings, num_participants, num_pass) {
+    var num_passed = 0;
+    var num_failed = 0;
+    var total_score = 0;
+    for (i = 0; i < num_pass.length; i++) {
+        total_score = total_score + num_pass[i]['score__sum'];
+        if (num_pass[i]['score__count'] != 0) {
+            if (num_pass[i]['score__sum'] / num_pass[i]['score__count'] >= 0.7) {
+                num_passed += 1;
+            } else {
+                num_failed += 1;
+            }
+        }
+    }
+
+    var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
+    var avg_score = total_score / num_pass.length;
+
+    if(isNaN(avg_score))
+    {
+        avg_score = 0;
+    }
+
+    if(isNaN(num_pass_percent))
+    {
+        num_pass_percent = 0;
+    }
+
+    document.getElementById('filtered_num_trainings').innerHTML = numberWithCommas(num_trainings);
+    document.getElementById('filtered_mediators_trained').innerHTML = numberWithCommas(num_participants);
+    document.getElementById('filtered_average_score').innerHTML = parseFloat(avg_score.toFixed(2));
+    document.getElementById('filtered_pass_percent').innerHTML = parseFloat(num_pass_percent.toFixed(2));
+  /*  document.getElementById('filtered_villages_reached').innerHTML = numberWithCommas(num_villages);
+    document.getElementById('filtered_viewers_reached').innerHTML = numberWithCommas(num_beneficiaries);
+*/}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 /* Fill data for highcharts */
 
 function plot_trainerwise_data(trainer_list, mediator_list) {
+
+
     if (trainer_list.length == 0) {
-        document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
-        document.getElementById('trainer_training_data').innerHTML = ''
+
+        plot_dual_axis_chart($("#trainer_mediator_data"), [], {}, "Average Scores per Participant", "", "", "%","");
+        plot_multiple_axis_chart($("#trainer_training_data"), [], {}, "Mediators Trained", "", "", "", "", "%", {}, "", "","No data for this assessment");
+    
+        /*document.getElementById('trainer_mediator_data').innerHTML = 'No data for this Assessment!'
+        document.getElementById('trainer_training_data').innerHTML = ''*/
     } else {
         var x_axis = [];
         var trainer_scores_dict = [];
         var trainer_trainings_mediators_dict = [];
-
+      
         var avg_score_dict = {};
         var perc_score_dict = {};
         var trainer_trainings_dict = {};
@@ -307,25 +545,40 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
         var trainer_mediators_pass_dict = {};
         var trainer_pass_perc_dict = {};
 
-        avg_score_dict['name'] = 'Average Scores per Participant';
+        avg_score_dict['name'] = 'Average Scores per Participant (out of 15)';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         trainer_trainings_dict['name'] = 'Total Trainings';
         trainer_mediators_dict['name'] = 'Mediators Trained';
         trainer_mediators_pass_dict['name'] = 'Mediator scores above 70%';
-        trainer_pass_perc_dict['name'] = 'Percentage scores above 70%';
+        // trainer_pass_perc_dict['name'] = 'Percentage scores above 70%';
+
+        /*trainer_trainings_dict['pointPadding'] = 0.3;
+        trainer_trainings_dict['pointPlacement'] = 0.05;*/
+
+        trainer_mediators_dict['pointPadding'] = -0.2;
+        trainer_mediators_dict['pointPlacement'] = 0.125;
+
+        trainer_mediators_pass_dict['pointPadding'] = 0.2;
+        trainer_mediators_pass_dict['pointPlacement'] = -0.168;
+
+        trainer_mediators_dict['color'] = 'rgba(248,161,63,1)';
+        trainer_trainings_dict['color'] = '#000000';
+        trainer_mediators_pass_dict['color'] = 'rgba(186,60,61,.9)';
 
         avg_score_dict['type'] = 'column';
         perc_score_dict['type'] = 'spline';
-        trainer_trainings_dict['type'] = 'column';
+        trainer_trainings_dict['type'] = 'spline';
         trainer_mediators_dict['type'] = 'column';
         trainer_mediators_pass_dict['type'] = 'column';
-        trainer_pass_perc_dict['type'] = 'spline';
+        // trainer_pass_perc_dict['type'] = 'spline';
 
+    
         perc_score_dict['yAxis'] = 1;
-        trainer_mediators_dict['yAxis'] = 1;
-        trainer_mediators_pass_dict['yAxis'] = 1;
-        trainer_pass_perc_dict['yAxis'] = 2;
+        trainer_mediators_dict['yAxis'] = 0;
+        // trainer_mediators_pass_dict['yAxis'] = 1;
+        // trainer_pass_perc_dict['yAxis'] = 2;
 
+         
         avg_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
         perc_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
         trainer_trainings_dict['data'] = new Array(trainer_list.length).fill(0.0);
@@ -353,33 +606,59 @@ function plot_trainerwise_data(trainer_list, mediator_list) {
                 }
             }
 
-            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100;
+            var pass_perc = trainer_mediators_pass_dict['data'][i]/trainer_mediators_dict['data'][i]*100; //todo
             trainer_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
-        trainer_scores_dict.push(perc_score_dict);
+       /* var i = 0;
+        var dataLabels = {
+            enabled :true,
+            formatter: function() {
+                while(i<trainer_pass_perc_dict['data'].length){
+                    i++;
+                    return trainer_pass_perc_dict['data'][i-1] + "%";}
+            }
+        };
+*/
+        //trainer_mediators_dict['dataLabels'] = dataLabels;
+
         trainer_scores_dict.push(avg_score_dict);
-        trainer_trainings_mediators_dict.push(trainer_trainings_dict);
+        // trainer_scores_dict.push(perc_score_dict);
+        
         trainer_trainings_mediators_dict.push(trainer_mediators_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_pass_dict);
-        trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
+    //    trainer_trainings_mediators_dict.push(trainer_trainings_dict);
+        // trainer_trainings_mediators_dict.push(trainer_pass_perc_dict);
 
-        plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "Percent Answered Correctly", "", "%");
-        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
+        plot_dual_axis_chart($("#trainer_mediator_data"), x_axis, trainer_scores_dict, "Average Scores per Participant", "", "", "%","");
+        plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_trainings_dict, "", "Labels represent : Total Trainings","");
     }
 }
 
 function plot_questionwise_data(data_json, assessment_ids) {
     if (data_json.length == 0) {
-        document.getElementById('question_mediator_data').innerHTML = 'No data for this Assessment!'
+        plot_multiple_axis_chart($("#question_mediator_data"), [], {}, "No. of Mediators", "", "","","", "%", {}, "%", "","No data for this assessment");
+
+       /* document.getElementById('question_mediator_data').innerHTML = 'No data for this Assessment!'*/
     } else {
         var x_axis = [];
         var question_dict = [];
+        var question_mediators_dict = {};
+        var question_mediators_passed_dict = {};
+        var question_percent_dict = {};
+
+        question_mediators_dict['pointPadding'] = -0.2;
+        question_mediators_dict['pointPlacement'] = 0.125;
+
+        question_mediators_passed_dict['pointPadding'] = 0.2;
+        question_mediators_passed_dict['pointPlacement'] = -0.168;
+
+        question_mediators_dict['color'] = 'rgba(248,161,63,1)';
+        question_percent_dict['color'] = '#000000';
+        question_mediators_passed_dict['color'] = 'rgba(186,60,61,.9)';
 
         if (assessment_ids[0] == 1) {
-            var question_mediators_dict = {};
-            var question_mediators_passed_dict = {};
-            var question_percent_dict = {};
+            
 
             question_mediators_dict['name'] = 'Total Mediators';
             question_mediators_passed_dict['name'] = "Mediators Answered Correctly"
@@ -389,8 +668,8 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_mediators_passed_dict['type'] = 'column';
             question_percent_dict['type'] = 'spline';
 
-            question_percent_dict['yAxis'] = 1;
-
+            // question_percent_dict['yAxis'] = 0;
+            question_mediators_passed_dict['yAxis'] = 0;
             // question_mediators_dict['stacking'] = 'normal'
             // question_mediators_passed_dict['stacking'] = 'normal'
 
@@ -413,14 +692,11 @@ function plot_questionwise_data(data_json, assessment_ids) {
                 }
             }
 
-            question_dict.push(question_mediators_dict);
+            // question_dict.push(question_mediators_dict);
             question_dict.push(question_mediators_passed_dict);
-            question_dict.push(question_percent_dict);
+            // question_dict.push(question_percent_dict);
 
         } else {
-            var question_mediators_dict = {};
-            var question_mediators_passed_dict = {};
-            var question_percent_dict = {};
 
             question_mediators_dict['name'] = 'Total Mediators';
             question_mediators_passed_dict['name'] = "Mediators Answered Correctly"
@@ -430,8 +706,8 @@ function plot_questionwise_data(data_json, assessment_ids) {
             question_mediators_passed_dict['type'] = 'column';
             question_percent_dict['type'] = 'spline';
 
-            question_percent_dict['yAxis'] = 1;
-
+            // question_percent_dict['yAxis'] = 0;
+            question_mediators_passed_dict['yAxis'] = 0;
             question_mediators_dict['data'] = new Array(data_json.length).fill(0.0);
             question_mediators_passed_dict['data'] = new Array(data_json.length).fill(0.0);
             question_percent_dict['data'] = new Array(data_json.length).fill(0.0);
@@ -447,19 +723,24 @@ function plot_questionwise_data(data_json, assessment_ids) {
                 question_mediators_passed_dict['data'][i] = parseInt(med_pass);
             }
 
-            question_dict.push(question_mediators_dict);
+            // question_dict.push(question_mediators_dict);
             question_dict.push(question_mediators_passed_dict);
-            question_dict.push(question_percent_dict);
+            // question_dict.push(question_percent_dict);
         }
 
-        plot_dual_axis_chart($("#question_mediator_data"), x_axis, question_dict, "Mediators Answered Correctly", "Percentage Answered Correctly", "", "%");
+        plot_multiple_axis_chart($("#question_mediator_data"), x_axis, question_dict, "No. of Mediators", "", "","","", "%", question_percent_dict, "%", "Labels represent : % of mediators scoring above 70%","");
+        // plot_multiple_axis_chart($("#trainer_training_data"), x_axis, trainer_trainings_mediators_dict, "Mediators Trained", "", "", "", "", "%", trainer_pass_perc_dict);
+
     }
 }
 
 function plot_statewise_data(state_list, mediator_list) {
     if (state_list.length == 0) {
-        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
-        document.getElementById('state_training_data').innerHTML = ''
+        plot_dual_axis_chart($("#state_mediator_data"), [], {}, "Average Scores per Mediator", "", "", "%","");
+        plot_multiple_axis_chart($("#state_training_data"), [], {}, "No. of Mediators", "", "", "", "", "%", {}, "", "","No data for this assessment");
+   
+/*        document.getElementById('state_mediator_data').innerHTML = 'No data for this Assessment!'
+        document.getElementById('state_training_data').innerHTML = ''*/
     }
     else {
         var x_axis = [];
@@ -473,7 +754,7 @@ function plot_statewise_data(state_list, mediator_list) {
         var state_mediators_pass_dict = {};
         var state_pass_perc_dict = {};
 
-        avg_score_dict['name'] = 'Average Scores per Mediator';
+        avg_score_dict['name'] = 'Average Scores per Mediator  (out of 15)';
         perc_score_dict['name'] = 'Percent Answered Correctly';
         state_trainings_dict['name'] = 'Total Trainings';
         state_mediators_dict['name'] = 'Mediators Trained';
@@ -487,10 +768,22 @@ function plot_statewise_data(state_list, mediator_list) {
         state_mediators_pass_dict['type'] = 'column';
         state_pass_perc_dict['type'] = 'spline';
 
-        perc_score_dict['yAxis'] = 1;
-        state_mediators_dict['yAxis'] = 1;
-        state_mediators_pass_dict['yAxis'] = 1;
-        state_pass_perc_dict['yAxis'] = 2;
+
+        state_mediators_dict['pointPadding'] = -0.2;
+        state_mediators_dict['pointPlacement'] = 0.125;
+
+        state_mediators_pass_dict['pointPadding'] = 0.2;
+        state_mediators_pass_dict['pointPlacement'] = -0.168;
+
+        state_mediators_dict['color'] = 'rgba(248,161,63,1)';
+        state_trainings_dict['color'] = '#000000';
+        state_mediators_pass_dict['color'] = 'rgba(186,60,61,.9)';
+
+        
+        // perc_score_dict['yAxis'] = 1;
+        state_mediators_dict['yAxis'] = 0;
+        // state_mediators_pass_dict['yAxis'] = 1;
+        // state_pass_perc_dict['yAxis'] = 2;
 
         avg_score_dict['data'] = new Array(state_list.length).fill(0.0);
         perc_score_dict['data'] = new Array(state_list.length).fill(0.0);
@@ -523,16 +816,75 @@ function plot_statewise_data(state_list, mediator_list) {
             state_pass_perc_dict['data'][i] = parseFloat(perc.toFixed(2));
         }
 
-        state_scores_dict.push(perc_score_dict);
         state_scores_dict.push(avg_score_dict);
-        state_trainings_mediators_dict.push(state_trainings_dict);
+        // state_scores_dict.push(perc_score_dict);
+        // state_trainings_mediators_dict.push(state_trainings_dict);
         state_trainings_mediators_dict.push(state_mediators_dict);
         state_trainings_mediators_dict.push(state_mediators_pass_dict);
-        state_trainings_mediators_dict.push(state_pass_perc_dict);
+        // state_trainings_mediators_dict.push(state_pass_perc_dict);
 
-        plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "Percent Answered Correctly", "", "%");
-        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "Trainings", "Mediators", "% Mediators above 70%", "", "", "%");
+        plot_dual_axis_chart($("#state_mediator_data"), x_axis, state_scores_dict, "Average Scores per Mediator", "", "", "%","");
+        plot_multiple_axis_chart($("#state_training_data"), x_axis, state_trainings_mediators_dict, "No. of Mediators", "", "", "", "", "%", state_trainings_dict, "", "Labels represent : No. of total trainings","");
     }
+}
+
+
+
+function plot_monthwise_data(series_name, series_data_list) {
+
+        $('#month_training_data').highcharts({
+        chart: {
+            type: 'column'
+        },
+        credits:{enabled :false},
+        title: {
+            text: 'No. Of Trainings Per Month'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'No. of trainings'
+            }
+        },
+        tooltip: {
+            shared: true,
+        },
+
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0,
+                dataLabels: {
+                enabled: true,
+                format:'{point.y}'
+            }
+            }
+        },
+        series: [{
+            name: series_name,
+            data: series_data_list
+       
+            }]
+    });
+
+  
 }
 
 /* plot highcharts data */
@@ -739,12 +1091,28 @@ function plot_single_axis_chart(container_obj, x_axis, data_dict, y_axis_text, u
     });
 }
 
-function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2) {
+function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, unit_1, unit_2, title_) {
+
+    var width_ = $('.container').width();
+    console.log(width_);
+
+    var dataLabels = {
+        enabled:true,
+        formatter:function (){return this.y;}
+    };
+
+    var len = Object.keys(data_dict).length
+    if(len != 0)
+        data_dict[0]['dataLabels'] = dataLabels;
+
     container_obj.highcharts({
         chart: {
-            zoomType: 'xy'
+            zoomType: '',
+            /*width:width_*/
         },
-        title: '',
+
+        credits:{enabled : false},
+        title:{text: title_},
         xAxis: [{
             categories: x_axis,
             crosshair: true
@@ -788,8 +1156,8 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
             // y: 100,
             // floating: true,
             align: 'center',
-            verticalAlign: 'top',
             layout: 'horizontal',
+        
             x: 0,
             y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -797,13 +1165,47 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
         series: data_dict
     });
 }
+function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3, datalablels_dict, label_type, custom_subtitle, title_) {
 
-function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y_axis_2_text, y_axis_3_text, unit_1, unit_2, unit_3) {
+    var i = 0;
+    var len = Object.keys(datalablels_dict).length
+
+    console.log(width_);
+    var width_ = $('.container').width();
+    if(len > 0) {
+        console.log(typeof datalablels_dict);
+        len =Object.keys(datalablels_dict['data']).length;
+        var dataLabels = {
+            enabled :true,
+            // format:'25',
+            formatter: function() {
+                if(i >= len) {
+                    i = 0;
+                }
+                while(i < len){
+                    i++;
+                    return (datalablels_dict['data'][i-1] + label_type);
+                }
+            },
+            allowOverlap : true
+        }; 
+        data_dict[0]['dataLabels'] = dataLabels;  
+    }
+    
+
+    
     container_obj.highcharts({
         chart: {
-            zoomType: 'xy'
+            zoomType: '',
+            spacingRight : 30,
+            /*width: width_*/
         },
-        title: '',
+        credits:{enabled :false},
+        title:{ text: title_
+        },
+        subtitle: {
+            text: custom_subtitle
+        },
         xAxis: [{
             categories: x_axis,
             crosshair: true
@@ -815,6 +1217,7 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
                     color: Highcharts.getOptions().colors[1]
                 }
             },
+
             title: {
                 text: y_axis_1_text,
                 style: {
@@ -850,17 +1253,20 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
             },
             opposite: true
         }],
+
+
         tooltip: {
             shared: true
         },
         legend: {
           align: 'center',
-          verticalAlign: 'top',
           layout: 'horizontal',
+
           x: 0,
           y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
-        series: data_dict
+        series:  data_dict
     });
+
 }

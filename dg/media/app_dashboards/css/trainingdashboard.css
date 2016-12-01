@@ -15,8 +15,7 @@
     margin-bottom: 32px;
 }
 nav.top-nav {
-    height: 80px;
-    box-shadow: none;
+    height: 65px;
 }
 nav.top-nav a.page-title {
     line-height: 80px;
@@ -38,7 +37,7 @@ a.button-collapse.top-nav {
 a.button-collapse.top-nav.full {
     line-height: 122px;
 }
-@media only screen and (max-width: 600px) {
+/*@media only screen and (max-width: 600px) {
     a.button-collapse.top-nav {
     left: 5%}
 }@media only screen and (max-width: 992px) {
@@ -51,7 +50,7 @@ nav .nav-wrapper a.page-title {
 }@media only screen and (min-width: 993px) {
     .container {
     width: 85%}
-}ul.side-nav.fixed li.logo {
+*/}/*ul.side-nav.fixed li.logo {
     text-align: center;
     margin-top: 32px;
     margin-bottom: 80px;
@@ -78,8 +77,8 @@ ul.side-nav.fixed ul.collapsible-accordion {
 }
 ul.side-nav.fixed:hover {
     overflow-y: auto;
-}
-#nav-mobile li.search {
+}*/
+/*#nav-mobile li.search {
     position: absolute;
     left: 0;
     right: 0;
@@ -129,11 +128,44 @@ ul.side-nav.fixed:hover {
 #nav-mobile li.search .search-results a:hover, #nav-mobile li.search .search-results a.focused {
     background-color: #eee;
     outline: none;
-}
-header, main, footer {
+}*/
+main, footer {
     padding-left: 240px;
 }
+html {
+    background-color: #efefef;
+}
+.row {
+  background-color: #ffffff;
+}
+
+#box-1.row {
+  background-color: #ffffff;
+  padding-top:1.5%;
+
+}
+#box-2.row {
+    margin-top: -1%;
+
+}
+#num_trainings, #mediators_trained, #average_score, #pass_percent, #pass_perce,#pass_perc,#villages_reached,#viewers_reached{
+    font-weight: bold;
+    font-size: 200%;
+}
+
+#filtered_num_trainings,#filtered_mediators_trained, #filtered_average_score, #filtered_pass_percent,#filtered_villages_reached, #filtered_viewers_reached
+{
+    font-weight: bold;
+    font-size: 150%;
+}
+
+
 @media only screen and (max-width: 992px) {
-    header, main, footer {
+    main, footer {
     padding-left: 0;
+}
+
+#get_data
+{
+    margin-top: 10%;
 }

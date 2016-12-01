@@ -1,5 +1,5 @@
 
-{% extends "app_dashboards/training_base.html" %}
+<div class="navbar-fixed">{% extends "app_dashboards/training_base.html" %}
 	{% load static %}
 
 	{% block title %}Dashboard | Home {% endblock %}
@@ -31,39 +31,29 @@
 		</div>
 		<div class="navbar-fixed">
 			<nav class="top-nav">
-				
+				<div class="container">
 					<div class="nav-wrapper grey darken-3">
 						<!-- <a href="#" class="page-title">Training Dashboard</a> -->
 						 <a href="#" class="brand-logo center" style="font-size:175%;">Training Dashboard</a>
-						<a id = "nav_menu1" href="#" data-activates="mobile-demo" class="button-collapse" style="display:block;margin-left:3%;"><i class="material-icons">menu</i></a>
+						<!--  <ul id="nav-mobile" style="margin-left:-12%;">
+							<li><a href="#" data-activates="slide-out" class="button-collapse" style="display:block;"><i class="material-icons show-on-large">menu</i></a></li>
+						</ul> -->
 						<!-- <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a> -->
 					</div>
-				
+				</div>
 			</nav>
 		</div>
 
-		
 
-		
+
+		<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
 	</header>
 
-	
-
-	<!-- <a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a> -->
-	{% endblock %}
-
-
-	{% block content %}
-	<br>
-	<!-- <blockquote style = "margin-top:3%">
-	      <h4>Total Data</h4>
-	</blockquote> -->
-
-	<ul id="mobile-demo" class="side-nav">
+	<ul id="nav-mobile" class="side-nav fixed">
 		<li class="no-padding not-hoverable">
 		<ul class="collapsible collapsible-accordion">
-			<li class="bold not-hoverable" style="line-height:130%; padding-top:10%;">
-				<a id="nav_assessments" class="collapsible-header waves-effect waves-teal">Assessments</a>
+			<li class="bold not-hoverable">
+				<a class="collapsible-header waves-effect waves-teal">Assessments</a>
 				<div class="collapsible-body container" style="display: none;">
 					<table class="filter-table centered">
 						<tbody id="assessments">
@@ -71,23 +61,18 @@
 					</table>
 				</div>
 			</li>
-			<li class="bold not-hoverable" style="line-height:130%;padding-top:5%; max-height:60vh;overflow-y:auto;">
-				<a id="nav_trainers" class="collapsible-header waves-effect waves-teal">Trainers</a>
+			<li class="bold not-hoverable">
+				<a class="collapsible-header waves-effect waves-teal">Trainers</a>
 				<div class="collapsible-body container" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
-								<th><input placeholder="Search" id="search_trainers" type="text" class="validate"></th>
+								<th class="center grey-text text-lighten-1">Select/Unselect All</th>
 								<th>
 									<input type="checkbox" class="teal" id="trainer_all" checked="checked"/>
 									<label for="trainer_all"></label>
 								</th>
 							</tr>
-						</thead>
-					</table>
-					
-					<table class="filter-table centered" id="trainers_table">
-						<thead>
 						</thead>
 						<tbody id="trainers">
 						</tbody>
@@ -112,24 +97,18 @@
 					</table>
 				</div>
 			</li> -->
-			<li class="bold not-hoverable" style="line-height:130%;padding-top:4%;max-height:60vh;overflow-y:auto;">
-				<a id="nav_states" class="collapsible-header waves-effect waves-teal">States</a>
+			<li class="bold not-hoverable">
+				<a class="collapsible-header waves-effect waves-teal">States</a>
 				<div class="collapsible-body container" style="display: none;">
-
 					<table class="filter-table centered">
 						<thead>
 							<tr>
-								<th><input placeholder="Search" id="search_states" type="text" class="validate"></th>
+								<th class="center grey-text text-lighten-1">Select/Unselect All</th>
 								<th>
 									<input type="checkbox" class="teal" id="state_all" checked="checked"/>
 									<label for="state_all"></label>
 								</th>
 							</tr>
-						</thead>
-					</table>
-
-					<table class="filter-table centered" id="states_table">
-						<thead>
 						</thead>
 						<tbody id="states">
 						</tbody>
@@ -137,8 +116,8 @@
 				</div>
 			</li>
 			<li class="no-padding not-hoverable">
-				
-				<div class="container" style="padding-top:6%;">
+				<br>
+				<div class="container">
 					<a id="apply_filter" class="waves-effect waves-light teal lighten-2 white-text btn">APPLY FILTERS</a>
 				</div>
 			</li>
@@ -146,8 +125,18 @@
 		</ul>
 	</ul>
 
-	<div id = "box-1" class="row col s12 m12" style="margin-left:-22%;margin-right:-22%;padding-top:2.5;padding-bottom:2.5%; padding-left:4%;padding-right:4%;">
-		<div class="col s10 m4 l3 offset-s1 offset-m1" >
+	<!-- <a href="#" data-activates="slide-out" class="button-collapse top-nav" style = "margin-left: 4%; padding-right:4%;"><i class="mdi-navigation-menu"></i></a> -->
+	{% endblock %}
+
+
+	{% block content %}
+	<br>
+	<!-- <blockquote style = "margin-top:3%">
+	      <h4>Total Data</h4>
+	</blockquote> -->
+
+	<div id = "box-1" class="row">
+		<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="">
 				<div class="card-content teal white-text">
@@ -159,7 +148,7 @@
 			</div>
 			</div>
 		</div>
-		<div class="col s10 m4 l3 offset-s1 offset-m1" >
+		<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
@@ -169,17 +158,17 @@
 				</div>
 			</div>
 		</div>
-		<div class="col s10 m4 l3 offset-s1 offset-m1" >
+		<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-subject"></i> Average Score (out of 15):<br/>
+						<i class="mdi-action-subject"></i> Average Score:<br/>
 						<i id="average_score"> </i>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col s10 m4 l3 offset-s1 offset-m1" >
+		<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
 					<div class="card-stats-title" style="font-size:80%;">
@@ -189,28 +178,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- <div class="col s12 m6 l2" >
-			<div class="card teal darken-1">
-				<div class="card-content teal white-text">
-					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-spellcheck"></i> Villages<br/> Reached:<br/>
-						<i id="villages_reached"> </i>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col s12 m6 l2" >
-			<div class="card teal darken-1">
-				<div class="card-content teal white-text">
-					<div class="card-stats-title" style="font-size:80%;">
-						<i class="mdi-action-spellcheck"></i> Viewers<br/> Reached:<br/>
-						<i id="viewers_reached"> </i>
-					</div>
-				</div>
-			</div>
-		</div> -->
 	<!-- 	<div class="col s12 m6 l3">
 			<div class="card teal darken-1">
 				<div class="card-content teal white-text">
@@ -291,23 +258,23 @@
 			
 		</div> -->
 
-		<div class="input-field col s12 m6 l2">
+		<div class="input-field col s12 m4 l1">
 
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="from_date" placeholder="Start Date" type="text" class="datepicker" style="font-size:90%;font-weight:bold;"> 
+			<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
 			<label for="from_date">From:</label>
 		</div>
 
-		<div class="input-field col s12 m6 l2 ">
+		<div class="input-field col s12 m4 l1 ">
 			<!-- <i class="material-icons teal-text text-lighten-2 prefix">today</i> -->
-			<input id="to_date" placeholder="End Date" type="text" class="datepicker" style="font-size:90%; font-weight:bold;">
+			<input id="to_date" placeholder="End Date" type="text" class="datepicker">
 			<label for="to_date" class="active">To:</label>
 		</div>
 
-		<div class = "col s3 m3 l1 offset-s5 offset-m5">
-				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:40%;margin-bottom:40%; background-color:rgba(0,0,0,0.7);">GET</a>
+		<div class = "col s12 m4 l1">
+				<a id="get_data" href="#modal1" class="waves-effect waves-teal btn modal-trigger" style="font-size:100%; margin-top:15%;">GET</a>
 
-				<div id="modal1" class="modal" style = "width:20%; height:25%">
+				<div id="modal1" class="modal">
 					<div class="modal-content">
 						<p>Invalid Date Range</p>
 					</div>
@@ -318,116 +285,63 @@
 
 		</div>
 
-		<div class="col s4 m4 l1 offset-l2 offset-s3 offset-m2" style="font-size:80%;">
+		<div class="col s6 m6 l2 offset-l1" style="font-size:80%;">
 			
 		
-			 No. of<br/> Trainings:<br/>
+			 No. of Trainings:<br/>
 			<i id="filtered_num_trainings"> </i>
 			
 		</div>
-		<div class="col s4 m4 l1" style="font-size:80%;">
+		<div class="col s6 m6 l2" style="font-size:80%;">
 			
 			
-			Mediators<br/> Trained:<br/>
+			Mediators Trained:<br/>
 			<i id="filtered_mediators_trained"> </i>
 			
 		</div>
-		<div class="col s4 m4 l1 offset-s3 offset-m2" style="font-size:80%;">
+		<div class="col s6 m6 l2" style="font-size:80%;">
 			
 			
-			Average<br/> Score:<br/>
+			Average Score:<br/>
 			<i id="filtered_average_score"> </i>
 			
 		</div>
-		<div class="col s4 m4 l1" style="font-size:80%;">
+		<div class="col s6 m6 l2" style="font-size:80%;">
 			
 		
-			Pass<br/> Percentage:<br/>
+			Pass Percentage:<br/>
 			<i id="filtered_pass_percent"> </i>
 			
 		</div>
 
-		<!-- <div class="col s6 m6 l1" style="font-size:80%;">
-			
-		
-			Villages<br/> Reached:<br/>
-			<i id="filtered_villages_reached"> </i>
-			
-		</div>
-
-		<div class="col s6 m6 l1" style="font-size:80%;">
-			
-		
-			Viewers<br/> Reached:<br/>
-			<i id="filtered_viewers_reached"> </i>
-			
-		</div> -->
-
-	</div>
-
-
-<!-- End  of Code for filtered data -->
-<div  class="container col s12 m12 l12" style="margin-top:-0.5%;width:100%;">
-	<div class="row" style="">
-		
-		  <ul class="tabs" style="overflow-x: hidden;">
-		    <li class="tab col s12"><a id="link1" class="active" href="#tab1" >State</a></li>
-		    <li class="tab col s12"><a id="link2" href="#tab2">Trainer</a></li>
-		    <li class="tab col s12"><a id="link3" href="#tab3">Question</a></li>
-		    <li class="tab col s12"><a id="link4" href="#tab4">Month</a></li>
-		    
-		  </ul>
-
-		<div id="tab1" class="tab col s12">
-			<div  id="state_training_data" style="margin-top:2%"></div>
-			<br>
-			<div id="state_mediator_data" style="padding-top:7%" ></div>
-		</div>
-
-		<div id="tab2" class="tab col s12">
-			<div id="trainer_training_data" style="margin-top:2%"></div>
-			<br>
-			<div id="trainer_mediator_data" style="padding-top:7%"></div>
-		</div>
-
-		<div id="tab3" class="tab col s12">
-			
-			<div id="question_mediator_data" style="margin-top:2%"></div>
-		</div>
-
-		<div id="tab4" class="tab col s12">
-			
-			<div id="month_training_data" style="margin-top:2%"></div>
-		</div>
-
-		
-		
 	</div>
 </div>
 
-<!-- <div class="container" style="margin-top:5%;">
-	<br>
+<!-- End  of Code for filtered data -->
+<div  class="container col s12" style="margin-top:-0.5%;">
 	<div class="row">
-		<h5 class="center-align" >Trainer Mediator Data</h5>
-		<div id="trainer_training_data" style="margin-top:2%"></div>
-		<br>
-		<div id="trainer_mediator_data"></div>
+		
+		  <ul class="tabs">
+		    <li class="tab col s12"><a class="active" href="#tab1" >Trainer-Wise</a></li>
+		    <li class="tab col s12"><a  href="#tab2">Question-Wise</a></li>
+		    <li class="tab col s12"><a href="#tab3">State-Wise</a></li>
+		  </ul>
+		
+		<div id="tab1" class="col s12">
+			<div id="trainer_training_data" style="margin-top:2%"></div>
+			<br>
+			<div id="trainer_mediator_data" ></div>
+		</div>
+		<div id="tab2" class="tab col s12">
+			
+			<div id="question_mediator_data" style="margin-top:2%"></div>
+		</div>
+		<div id="tab3">
+			<div  id="state_training_data" style="margin-top:2%"></div>
+			<br>
+			<div id="state_mediator_data"  ></div>
+		</div>
 	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row" style="margin-top:30px">
-		<h5 class="center-align">Question Mediator Data</h5>
-		<div id="question_mediator_data"></div>
-	</div>
-	<div class="divider"></div>
-	<br>
-	<div class="row" style="margin-top:30px">
-		<h5 class="center-align">State Mediator Data</h5>
-		<div id="state_training_data" style="margin-top:30px"></div>
-		<br>
-		<div id="state_mediator_data"></div>
-	</div>
-	<div class="divider"></div>
-</div> -->
+</div>
 
 {% endblock %}
