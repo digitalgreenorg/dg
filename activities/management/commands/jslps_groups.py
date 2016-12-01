@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from geographies.models import *
 from people.models import *
 from programs.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -35,12 +36,18 @@ class Command(BaseCommand):
 									village = village.Village,
 									partner = partner)
 						gp.save()
+						jslps.new_count += 1
 						print "Group saved in old"
 					except Exception as e:
-						wtr.writerow(['group save', gc, e])
+						if "Duplicate entry" in str(e):
+							jslps.duplicate_count += 1
+						else:
+							jslps.other_error_count += 1
+							wtr.writerow(['group save', gc, e])
 				try:			
 					group = PersonGroup.objects.filter(group_name = gn, village_id = village.Village.id).get()
 				except PersonGroup.DoesNotExist as e:
+					jslps.other_error_count += 1
 					wtr.writerow(['group exist', gc, e])
 
 				try:
@@ -52,7 +59,11 @@ class Command(BaseCommand):
 						jg.save()
 				except Exception as e:
 					print gc, e
-					wtr.writerow(['JSLPS group', gc, e])
+					if "Duplicate entry" not in str(e):
+						jslps.other_error_count += 1
+						wtr.writerow(['JSLPS group', gc, e])
 			except Village.DoesNotExist as e:
-				wtr.writerow(['village',vc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['village',vc, e])
 			

@@ -7,6 +7,7 @@ from people.models import *
 from programs.models import *
 from videos.models import *
 from activities.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -32,12 +33,16 @@ class Command(BaseCommand):
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
 			except JSLPS_Video.DoesNotExist as e:
-				wtr.writerow(['video not exist', vc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['video not exist', vc, e])
 				error = 1
 			try:
 				person = JSLPS_Person.objects.get(person_code = pc)
 			except (JSLPS_Video.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				wtr.writerow(['person not exist', pc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['person not exist', pc, e])
 				error = 1
 
 			if error==0:
@@ -48,7 +53,12 @@ class Command(BaseCommand):
 											time_created = de,
 											partner = partner)
 					pap.save()
+					jslps.new_count += 1
 					print "pap saved"
 				except Exception as e:
 					print vc, pc, e
-					wtr.writerow(['Adoption', 'Person', pc, 'Video', vc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Adoption', 'Person', pc, 'Video', vc, e])
