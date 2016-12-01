@@ -320,7 +320,5 @@
 py_env/*
 training_env/*
 .idea/
-/scripts/db_import.py
-/scripts/download_from_s3.py
 /scripts/*.sql
 /scripts/*.gz
