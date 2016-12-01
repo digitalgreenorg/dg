@@ -51,9 +51,10 @@ function initialize() {
 
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
+    $("#to_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     today.setMonth(today.getMonth() - 1);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-
+    $("#from_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     showLoader();
     total_static_data();
     recent_graphs_data(language);
@@ -768,10 +769,19 @@ function create_filter(tbody_obj, id, name, checked) {
 }
 
 //To get data after filters are aplied
-function get_data() {
+function get_data(location) {
+  if(location == 'drawer'){
+    start_date = $('#from_date_drawer').val();
+    end_date = $('#to_date_drawer').val();
+  }
+  else {
     start_date = $('#from_date').val();
     end_date = $('#to_date').val();
+  }
     // Get rest of the filters
+    if (Date.parse(start_date) > Date.parse(end_date)) {
+        $('#modal1').openModal();
+    } else {
     aggregator_ids = [];
     aggregator_names = [];
     crop_ids = [];
@@ -811,11 +821,7 @@ function get_data() {
             gaddidar_names.push(gaddidar_div.getAttribute('value'));
         }
     });
-
-    if (Date.parse(start_date) > Date.parse(end_date)) {
-        $('#modal1').openModal();
-    } else {
-        $(".button-collapse1").sideNav('hide');
+        // $(".button-collapse1").sideNav('hide');
         get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
         get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
     }
@@ -2017,17 +2023,24 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
         },
         yAxis: [{
             title: {
-                text: null
+                text: "Volume"
             },
             maxZoom: 0.1
         }, {
             title: {
-                text: null
+                text: "Farmers"
             },
             opposite: true
         }],
         tooltip: {
-            shared: true
+          formatter: function () {
+            var vol = this.points[0];
+            var farmer = this.points[1];
+            return '<b>' + vol.series.name + '</b> : ' +
+                Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
+                Highcharts.numberFormat(farmer.y, 0);
+          },
+          shared: true
         },
         legend: {
             enabled: false

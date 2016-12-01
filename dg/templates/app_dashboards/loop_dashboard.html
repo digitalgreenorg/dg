@@ -44,7 +44,7 @@
 			</ul>
 		</div>
 
-		<div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
+		<div class="nav-wrapper grey lighten-2 hide" id="filters_nav">
 			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
 			<ul class="hide-on-med-and-down">
 				<ul class="left">
@@ -77,20 +77,20 @@
 				</ul>
 			</ul>
 			<ul class="side-nav" id="mobile-demo1">
-				<ul class="left">
+				<ul>
 					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
 					<li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
 					<li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
 					<li><a class="" onclick="change_tab('crop')">Crop</a></li>
 					<div class="input-field">
 						<i class="material-icons black-text text-lighten-2 prefix">today</i>
-						<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+						<input id="from_date_drawer" placeholder="Start Date" type="text" class="datepicker black-text text-lighten-2">
 					</div>
 					<div class="input-field">
 						<i class="material-icons black-text text-lighten-2 prefix">today</i>
-						<input id="to_date" placeholder="End Date" type="text" class="datepicker">
+						<input id="to_date_drawer" placeholder="End Date" type="text" class="datepicker black-text text-lighten-2">
 					</div>
-					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+					<ul><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="get_data('drawer')">GET DATA</a></ul>
 				</ul>
 			</ul>
 		</div>
@@ -104,7 +104,7 @@
 		<ul class="collapsible collapsible-accordion">
 
 			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -121,7 +121,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -138,7 +138,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -155,7 +155,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -171,7 +171,7 @@
 					</table>
 				</div>
 			</li>
-			<li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">APPLY FILTERS</a></li>
+			<li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger">APPLY FILTERS</a></li>
 		</ul>
 	</li>
 </ul>
