@@ -48,8 +48,8 @@ db.close()
 dbName = glob.glob("*.sql")
 
 # delete previous sql leaving one
-for i in range(len(dbName) - 1) :
-	os.remove(dbName[i])
+#for i in range(len(dbName) - 1) :
+#	os.remove(dbName[i])
 
 user_name = DATABASES['default']['USER']
 password = DATABASES['default']['PASSWORD']
