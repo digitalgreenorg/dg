@@ -4,10 +4,8 @@ from datetime import datetime
 import os, sys
 import django
 
-
 sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
-django.setup()
 import dg.settings
 
 def show_status(received, total):
