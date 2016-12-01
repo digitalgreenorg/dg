@@ -1,5 +1,4 @@
-# To Automate Download and import Database :
-# This script will download 
+# Script to download and import database from S3
 import gzip
 import os, sys
 import MySQLdb
