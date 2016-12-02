@@ -2889,11 +2889,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
     }
 
         // Remove the formatting to get integer data for summation
-    var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
+    var intVal = function ( column_value ) {
+                return typeof column_value === 'string' ?
+                    column_value.replace(/[\$,]/g, '')*1 :
+                    typeof column_value === 'number' ?
+                        column_value : 0;
     };
   
 
