@@ -320,3 +320,5 @@
 py_env/*
 training_env/*
 .idea/
+/scripts/*.sql
+/scripts/*.gz
