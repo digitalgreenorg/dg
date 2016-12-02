@@ -40,7 +40,7 @@ var QUANTITY__SUM = "quantity__sum",
 
 function initialize() {
     // initialize any library here
-    language = REGIONAL_LANGUAGE;
+    language = ENGLISH_LANGUAGE;
     $("select").material_select();
     $(".button-collapse").sideNav({
         closeOnClick: true
