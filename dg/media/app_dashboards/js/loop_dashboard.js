@@ -2870,7 +2870,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     //Comma-fies the first part
         if(n[0])
             {
-                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); //convert numbers of the form 1156 -> 1,156
             }
             if(n[1] != null)
             {
