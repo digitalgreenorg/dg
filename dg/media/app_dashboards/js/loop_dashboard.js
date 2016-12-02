@@ -540,9 +540,6 @@ function change_graph(parameter) {
     }
 }
 
-
-
-
 //To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
     $("#recent_cards_data_frequency").change(function() {
@@ -618,7 +615,7 @@ function set_filterlistener() {
         crop_prices_graph(crop_id);
     });
 
-    $("#dowonload-payment-sheet").click(function() {
+    $("#download-payment-sheet").click(function() {
         if ($('#aggregator_payments :selected').val() == '') {
                 alert("Please select an aggregator to download the payment sheet");
              }
