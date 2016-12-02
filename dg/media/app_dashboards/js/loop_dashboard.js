@@ -3377,6 +3377,4 @@ function change_language(lang) {
     }
 }
 
-$('#aggregator_payments').change(function() {
-  $('#aggregator_payment_details').hide();
-});
+
