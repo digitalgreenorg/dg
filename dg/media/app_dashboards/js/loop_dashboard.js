@@ -664,21 +664,22 @@ function set_filterlistener() {
     data.push(transporter_data_set);
     console.log(JSON.stringify(data));
     xhttp.send(JSON.stringify(data));
-        // if ($('#aggregator_payments :selected').val() != '') {
-        //     var aggregator_id = $('#aggregator_payments :selected').val();
-        //     if (table_created) {
-        //         $('#outliers_data').html("");
-        //     }
-        //     aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
-        //     $("#download_payment_sheets").show();
-        //     $('#aggregator_payment_details').show();
-        //     outliers_summary(aggregator_id);   
-        //     }
-        // else{
-        //     alert("Please select atleast one value");
-        // }
-        
+
+});
+
+
+    $("#aggregator_payments").change(function() {
+        var aggregator_id = $('#aggregator_payments :selected').val();
+        if (table_created) {
+            $('#outliers_data').html("");
+        }
+        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+        $("#download_payment_sheets").show();
+        $('#aggregator_payment_details').show();
+        outliers_summary(aggregator_id);
     });
+
+
 
     $("#time_series_frequency").change(function() {
         time_series_frequency = $('#time_series_frequency :selected').val();
@@ -2831,7 +2832,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM]).toFixed(2), 0, 0]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0]);
         }
     }
 
@@ -2864,7 +2865,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
-            data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j]).toFixed(2), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
+            data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
             sno += 1;
         }
     }
@@ -3045,22 +3046,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
             
             total9 = finalFormat(formatVal(total9));    
-                       
- 
-            // Total over this page
-            // pageTotal = api
-            //     .column( 3, { page: 'current'} )
-            //     .data()
-            //     .reduce( function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0 );
-
-            // pageTotal2 = api
-            //     .column( 5, { page: 'current'} )
-            //     .data()
-            //     .reduce( function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0 );    
+                        
  
             // Update footer'
 
@@ -3088,19 +3074,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 total9
             );
 
-            // $( api.column( 10 ).footer() ).html(
-            //     'Rs ' + total10
-            // );
+
         }
     });
 
     
-
-
-
-
-
-//     //$('#table2caption').html('<h5>' +'Loop_' + getFormattedDate(aggregator) + 'Payment_Sheet</h5>');
 
     $('#table3').DataTable({
         destroy: true,
@@ -3236,38 +3214,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
     data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"]);
     gaddidar_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details"]);
     transporter_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details"]);
-
-    // console.log(data_set);
-    // console.log(gaddidar_data_set);
-    // console.log(transporter_data_set);
-
-    //$('.dump').trigger('click',data_set);
-    // xhttp = new XMLHttpRequest();
-    // xhttp.onreadystatechange = function() {
-    //     var a, today;
-    //     if (xhttp.readyState === 4 && xhttp.status === 200) {
-    //         a = document.createElement('a');
-    //         a.href = window.URL.createObjectURL(xhttp.response);
-    //         a.download = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary" + ".xlsx";
-    //         a.style.display = 'none';
-    //         document.body.appendChild(a);
-    //         return a.click();
-    //     }
-    // };
-    // xhttp.open("POST", "/loop/get_payment_sheet/", true);
-    // xhttp.setRequestHeader("Content-Type", "application/json");
-    // xhttp.responseType = 'blob';
-    // var data = [];
-    // data.push(data_set);
-    // data.push(gaddidar_data_set);
-    // data.push(transporter_data_set);
-    // console.log(JSON.stringify(data));
-    // // data = [[1,"2016-10-07","Bihar Sharif",3424,6,856.00,2600,1600,0,1856.00],
-    // // [2,"2016-10-09","Tajpur Mandi",476,3,119.00,175,0,13.75,280.25],
-    // // [3,"2016-10-10","Tajpur Mandi",172,3,43.00,150,0,43,150.00],
-    // // [4,"2016-10-12","Tajpur Mandi",445,4,111.25,150,0,52.5,208.75],
-    // // [5,"2016-10-13","Tajpur Mandi",196,5,49.00,150,0,49,150.00]];
-    // xhttp.send(JSON.stringify(data));
 
 
 }
