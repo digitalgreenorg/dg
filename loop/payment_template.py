@@ -1,4 +1,12 @@
 # Create your views here.
+import json
+import xlsxwriter
+from django.http import JsonResponse
+from io import BytesIO
+import re
+
+from config import *
+from django.http import HttpResponse
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
 NUMBER_OF_SHEETS = 3
@@ -92,7 +100,7 @@ def write_values_to_sheet(ws_obj, sheet_data_list, cell_value, format_str):
 
 
 def read_formula_and_write_to_excel(ws_obj, formula, start, end, format_str):
-    col_index = column_map.get(str(formula.get('col_index')))
+    col_index = chr(formula.get('col_index') + 65)
     actual_formula = formula.get('formula')
     final_str = '='
     i = 0
@@ -122,7 +130,7 @@ def write_formula_in_values(ws_obj, sheet_data_list, cell_value, formula_list, f
 
 def write_total_in_excel_sheet(ws_obj, start, end, formulacolumn_dict, format_str):
     for item in formulacolumn_dict:
-        ws_obj.write(end+2, item, '=SUM('+column_map.get(str(item))+str(start)+':'+column_map.get(str(item))+str(end)+')', format_str)
+        ws_obj.write(end+2, item, '=SUM('+chr(item + 65)+str(start)+':'+chr(item + 65)+str(end)+')', format_str)
     return
 
 def format_web_request(request):
@@ -197,154 +205,18 @@ def prepare_value_data(data):
     """
     data = json.loads(data)
     aggregator_data = data[0]
-    commision_data = data[1]
+    commission_data = data[1]
     transport_data = data[2]
     sheet1_file_name = u''+aggregator_data[-1][0]
-    sheet2_file_name = u''+commision_data[-1][0]
+    sheet2_file_name = u''+commission_data[-1][0]
     sheet3_file_name = u''+transport_data[-1][0]
     aggregator_data = aggregator_data[:len(aggregator_data)-1]
-    commision_data = commision_data[:len(commision_data)-1]
+    commission_data = commission_data[:len(commission_data)-1]
     transport_data = transport_data[:len(transport_data)-1]
     name_of_sheets=[sheet1_file_name, sheet2_file_name, sheet3_file_name]
-    combined_data = [aggregator_data, commision_data, transport_data]
+    combined_data = [aggregator_data, commission_data, transport_data]
     combined_dict =  {'combined_data': combined_data,
                       'name_of_sheets': name_of_sheets}
     return combined_dict
 
-header_dict = {'headers': [{'aggregator':{'columns': [ {
-                                                    'label': 'S No',
-                                                    'formula': None,
-                                                    'total': False,
-                                                    },
-                                                    {
-                                                     'label': 'Date',
-                                                     'total': False, 
-                                                     'formula': None,
-                                                    },
-                                                    {
-                                                     'label': 'Market Value',
-                                                     'total': False, 
-                                                     'formula': None,
-                                                    },
-                                                    {
-                                                     'label': 'Quantity [Q] (in Kg)',
-                                                     'total': True, 
-                                                     'formula': None,
-                                                    },
-                                                    {
-                                                     'label': 'Farmers',
-                                                     'total': False, 
-                                                     'formula': None,
-                                                    },
-                                                    {'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
-                                                     'total': True,
-                                                     'formula': '0.25 * D',
-                                                    },
 
-                                                    {'label': 'Transport Cost [TC] (in Rs)',
-                                                     'total': True,
-                                                     'formula': None
-                                                     
-                                                    },
-                                                    {'label': 'Farmers\''' Contribution [FC] (in Rs)',
-                                                     'total': True,
-                                                     'formula': None
-                                                     
-                                                    },
-                                                    {'label': 'Commission Agent Contribution [CAC] (in Rs)',
-                                                     'total': True,
-                                                     'formula': None
-                                                    },
-                                                    {'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
-                                                     'total': True,
-                                                     'formula': 'F + G - H - I'
-                                                    }],
-                                            'data': [[], []]
-                                            }},
-
-                        {'gaddidar':{'columns': [ {'label': 'Date',
-                                                'total': False, 
-                                                'formula': None,
-                                                },
-                                                {'label': 'Commission Agent',
-                                                 'total': False, 
-                                                 'formula': None,
-                                                },
-                                                { 'label': 'Market',
-                                                  'total': False,  
-                                                  'formula': None,
-                                                },
-                                                {'label': 'Quantity [Q] (in Kg)',
-                                                 'total': True,
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Commission Agent Discount[CAD] (in Rs/Kg)',
-                                                 'total': False, 
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Commission Agent Contribution[CAC] (in Rs) (Q*CAD)',
-                                                 'total': True,
-                                                 'formula': 'D * E'
-                                                }],
-                                   'data': [[], []]
-                                    }
-                        },
-                        {'transporter':{'columns': [ {'label': 'Date',
-                                                'total': False, 
-                                                'formula': None,
-                                                },
-                                                {'label': 'Market',
-                                                 'total': False, 
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Transporter',
-                                                 'total': False, 
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Vehicle Type',
-                                                 'total': False,
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Vehicle Number',
-                                                 'total': False, 
-                                                 'formula': None,
-                                                },
-                                                {'label': 'Tranport Cost in Rs',
-                                                 'total': True,
-                                                 'formula': None,
-                                                }],
-                                   'data': [[], []]
-                                    }
-                        }],
-
-}
-
-
-column_map = {
-                '0':'A', 
-                '1':'B',
-                '2':'C',  
-                '3':'D', 
-                '4':'E', 
-                '5':'F', 
-                '6':'G', 
-                '7':'H', 
-                '8':'I',
-                '9':'J', 
-                '10':'K', 
-                '11':'L', 
-                '12':'M', 
-                '13':'N', 
-                '14':'O', 
-                '15':'P', 
-                '16':'Q', 
-                '17':'R', 
-                '18':'S', 
-                '19':'T', 
-                '20':'U',                        
-                '21':'V', 
-                '22':'W', 
-                '23':'X', 
-                '24':'Y', 
-                '25':'Z' 
-              }
