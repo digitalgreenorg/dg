@@ -622,7 +622,9 @@ function set_filterlistener() {
         if ($('#aggregator_payments :selected').val() == '') {
                 alert("Please select an aggregator to download the payment sheet");
              }
-        else{
+        else
+        {
+
             xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
             var a;
@@ -633,8 +635,8 @@ function set_filterlistener() {
             a.style.display = 'none';
             document.body.appendChild(a);
             return a.click();
-            }
-        };
+                }
+            };
             xhttp.open("POST", "/loop/get_payment_sheet/", true);
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
@@ -643,7 +645,7 @@ function set_filterlistener() {
             data.push(gaddidar_data_set);
             data.push(transporter_data_set);
             xhttp.send(JSON.stringify(data));
-            }
+        }
 
 });
 
@@ -2882,12 +2884,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
 
 
-    var isInt = function(value) {
-
-        var er = /^-?[0-9]+$/;
-        return er.test(value);
-    }
-
     var finalFormat = function (value){
         if(value.indexOf('.') === -1)
             return value + '.0';
@@ -2912,7 +2908,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Farmers",
             visible: false
         }, {
-            title: "Aggregator Payment[AP] (in Rs) (Rs 0.25*Q)"
+            title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
         }, {
             title: "Transport Cost[TC] (in Rs)"
         }, {
@@ -2946,113 +2942,17 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         i : 0;
             };
 
-            var formatVal = function (yourNumber) {
-    //Seperates the components of the number
-                var n= yourNumber.toString().split(".");
-    //Comma-fies the first part
-                if(n[0])
-                {
-                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                }
-                if(n[1] != null)
-                {
-                var a = n[1].toString();
-                n[1] = parseInt(a.charAt(0));
+
+            //Total of every column    
+            column_set = [3,5,6,7,8,9];
+            for(var i=0; i<column_set.length; i++)
+            {
+                total = api.column( column_set[i]).data().reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                total = finalFormat(formatVal(total));
+                $( api.column( column_set[i]).footer() ).html(total);
             }
-
-    //Combines the two sections
-                return n.join(".");
-            }
- 
-            // Total over all pages
-            total3 = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(parseInt(a)) + intVal(parseInt(b));
-                }, 0 );
-
-            total3 = finalFormat(formatVal(total3));
-
-
-
-            total5 = api
-                .column( 5 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-            total5 = finalFormat(formatVal(total5));    
-
-            total6 = api
-                .column( 6 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-            total6 = finalFormat(formatVal(total6));    
-    
-
-            total7 = api
-                .column( 7 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-            
-            total7 = finalFormat(formatVal(total7));    
-        
-
-            total8 = api
-                .column( 8 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-
-            total8 = finalFormat(formatVal(total8));
-                
-            total9 = api
-                .column( 9)
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );    
-
-            
-            total9 = finalFormat(formatVal(total9));    
-                        
- 
-            // Update footer'
-
-            $( api.column( 3 ).footer() ).html(
-                total3
-            );
-
-            $( api.column( 5 ).footer() ).html(
-                total5
-            );
-
-            $( api.column( 6 ).footer() ).html(
-                total6
-            );
-
-            $( api.column( 7 ).footer() ).html(
-                total7
-            );
-
-            $( api.column( 8 ).footer() ).html(
-                total8
-            );
-
-            $( api.column( 9 ).footer() ).html(
-                total9
-            );
-
 
         }
     });
@@ -3098,34 +2998,16 @@ function aggregator_payment_sheet(data_json, aggregator) {
                         i : 0;
             };
  
-            // Total over all pages
-            total3 = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-
-            total3 =  finalFormat(formatVal(total3));    
-
-            total5 = api
-                .column( 5 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 ); 
-
-            total5 = finalFormat(formatVal(total5));    
- 
-            // Update footer
-            $( api.column( 3 ).footer() ).html(
-                total3
-            );
-
-
-            $( api.column( 5 ).footer() ).html(
-                total5
-            );
+            //Total of every column    
+            column_set = [3,5];
+            for(var i=0; i<column_set.length; i++)
+            {
+                total = api.column( column_set[i]).data().reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                total = finalFormat(formatVal(total));
+                $( api.column( column_set[i]).footer() ).html(total);
+            }
 
         }
 
