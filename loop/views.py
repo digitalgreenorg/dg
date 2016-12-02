@@ -15,6 +15,7 @@ from loop_data_log import get_latest_timestamp
 
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
+ROLE_AGGREGATOR = 2
 
 
 @csrf_exempt
@@ -53,7 +54,7 @@ def dashboard(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    aggregators = LoopUser.objects.all().values('user__id', 'name', 'name_en')
+    aggregators = LoopUser.objects.filter(role=ROLE_AGGREGATOR).values('user__id', 'name', 'name_en')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')

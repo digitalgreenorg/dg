@@ -5,7 +5,7 @@ from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
 
-RoleChoice = ((1, "Admin"), (2, "Aggregator"))
+RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
 ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 
