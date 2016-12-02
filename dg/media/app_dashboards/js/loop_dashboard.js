@@ -541,30 +541,6 @@ function change_graph(parameter) {
 }
 
 
-$(".dump").on("click", function(data) {
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        var a, today;
-        if (xhttp.readyState === 4 && xhttp.status === 200) {
-            a = document.createElement('a');
-            a.href = window.URL.createObjectURL(xhttp.response);
-            a.download = "Loop_India_Bihar_Aggregator Payment_Devendra Singh_Sept1_Sept14_Payment_Summary" + ".xls";
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            return a.click();
-        }
-    };
-    xhttp.open("POST", "/loop/get_payment_sheet/", true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    xhttp.responseType = 'blob';
-    // data = [[1,"2016-10-07","Bihar Sharif",3424,6,856.00,2600,1600,0,1856.00],
-    // [2,"2016-10-09","Tajpur Mandi",476,3,119.00,175,0,13.75,280.25],
-    // [3,"2016-10-10","Tajpur Mandi",172,3,43.00,150,0,43,150.00],
-    // [4,"2016-10-12","Tajpur Mandi",445,4,111.25,150,0,52.5,208.75],
-    // [5,"2016-10-13","Tajpur Mandi",196,5,49.00,150,0,49,150.00]];
-    xhttp.send(JSON.stringify(data));
-});
-
 
 
 //To check for any items data change (textview, drop downs, button click)
@@ -662,7 +638,6 @@ function set_filterlistener() {
     data.push(data_set);
     data.push(gaddidar_data_set);
     data.push(transporter_data_set);
-    console.log(JSON.stringify(data));
     xhttp.send(JSON.stringify(data));
 
 });
