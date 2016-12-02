@@ -619,26 +619,31 @@ function set_filterlistener() {
     });
 
     $("#dowonload-payment-sheet").click(function() {
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-        var a;
-        if (xhttp.readyState === 4 && xhttp.status === 200) {
+        if ($('#aggregator_payments :selected').val() == '') {
+                alert("Please select an aggregator to download the payment sheet");
+             }
+        else{
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+            var a;
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
             a = document.createElement('a');
             a.href = window.URL.createObjectURL(xhttp.response);
             a.download = data_set[data_set.length - 1];
             a.style.display = 'none';
             document.body.appendChild(a);
             return a.click();
-        }
-    };
-    xhttp.open("POST", "/loop/get_payment_sheet/", true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    xhttp.responseType = 'blob';
-    var data = [];
-    data.push(data_set);
-    data.push(gaddidar_data_set);
-    data.push(transporter_data_set);
-    xhttp.send(JSON.stringify(data));
+            }
+        };
+            xhttp.open("POST", "/loop/get_payment_sheet/", true);
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.responseType = 'blob';
+            var data = [];
+            data.push(data_set);
+            data.push(gaddidar_data_set);
+            data.push(transporter_data_set);
+            xhttp.send(JSON.stringify(data));
+            }
 
 });
 
@@ -2867,7 +2872,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
         if(n[0])
             {
                 n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                console.log(n[0]);
             }
             if(n[1] != null)
             {

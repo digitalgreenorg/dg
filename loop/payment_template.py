@@ -288,7 +288,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'total': False, 
                                                      'formula': None,
                                                     },
-                                                    {'label': 'Aggregator Payment [AP] (in Rs) (Rs 0.25*Q)',
+                                                    {'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                                                      'total': True,
                                                      'formula': '0.25 * D',
                                                     },
