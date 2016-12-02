@@ -2887,6 +2887,14 @@ function aggregator_payment_sheet(data_json, aggregator) {
         else
             return value;
     }
+
+        // Remove the formatting to get integer data for summation
+    var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+    };
   
 
 
@@ -2930,15 +2938,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
        
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-
 
             //Total of every column    
             column_set = [3,5,6,7,8,9];
@@ -2947,8 +2946,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-                total = finalFormat(formatVal(total));
-                $( api.column( column_set[i]).footer() ).html(total);
+                $( api.column( column_set[i]).footer() ).html(finalFormat(formatVal(total)));
             }
 
         }
@@ -2986,15 +2984,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
- 
+        
             //Total of every column    
             column_set = [3,5];
             for(var i=0; i<column_set.length; i++)
@@ -3002,8 +2992,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-                total = finalFormat(formatVal(total));
-                $( api.column( column_set[i]).footer() ).html(total);
+                $( api.column( column_set[i]).footer() ).html(finalFormat(formatVal(total)));
             }
 
         }
@@ -3038,15 +3027,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         },
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
- 
+
             // Total over all pages
             total5 = api
                 .column( 5 )
@@ -3054,13 +3035,10 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
-            total5 = finalFormat(formatVal(total5));     
- 
+           
             // Update footer
-
             $( api.column( 5 ).footer() ).html(
-                total5
+                finalFormat(formatVal(total5))
             );
 
         }
