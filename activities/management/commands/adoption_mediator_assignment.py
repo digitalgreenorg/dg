@@ -21,7 +21,7 @@ class Command(BaseCommand):
             #        for page in range(1, pap_query.num_pages + 1):
             # print "----------------------------------------------------------------------------------------------------"
             for row in adoption_list:
-                print row.id
+#                print row.id
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
                                                                                                             flat=True)
