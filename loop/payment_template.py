@@ -1,28 +1,8 @@
-import json
-import xlsxwriter
-from django.http import JsonResponse
-from io import BytesIO
-import re
-
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-from django.core.serializers.json import DjangoJSONEncoder
-from django.contrib import auth
-from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
-from django.db.models import Count, Min, Sum, Avg, Max, F
-
-from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers
-
-from loop_data_log import get_latest_timestamp
-from loop.payment_template import *
 # Create your views here.
-HELPLINE_NUMBER = "09891256494"
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
 NUMBER_OF_SHEETS = 3
-NAME_OF_SHEETS = ['Sheet1, Sheet2', 'Sheet3', 'Sheet4']
+NAME_OF_SHEETS = ['Sheet1', 'Sheet2', 'Sheet3', 'Sheet4']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
@@ -63,36 +43,6 @@ def write_headers_for_sheet(ws_obj, row_index, col_index, label, format_str):
     ws_obj.write(row_index, col_index, label, format_str)
     return
 
-
-# def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
-#     """
-#     Fetch Headers from Variable Dict in the Excel sheets
-#     """
-#     cell_value = None
-#     column_formula_list = []
-#     total_value_in_column = []
-#     header_dict = header_dict
-#     for item in header_dict.values():
-#         for i in item[idx].values():
-#             for k in i.values():
-#                 for c, j in enumerate(k):
-#                     if not isinstance(j, list):
-#                         try:
-#                             write_headers_for_sheet(ws_obj=ws_obj,
-#                                                     row_index=j.get('cell_index')[0],
-#                                                     col_index=j.get('cell_index')[1],
-#                                                     label=j.get('label'), format_str=bold)
-#                             cell_value = [j.get('cell_index')[0], j.get('cell_index')[1]]
-#                             if j.get('total'):
-#                                 total_value_in_column.append(j.get('cell_index')[1])
-#                             if j.get('formula') is not None:
-#                                 column_formula_list.append({'formula': j.get('formula'),
-#                                                             'col_index': j.get('cell_index')[1]})
-#                         except Exception as e:
-#                             print e
-#     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
-#                  'formula_list': column_formula_list}
-#     return data_dict
 
 def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
     """
@@ -150,10 +100,8 @@ def read_formula_and_write_to_excel(ws_obj, formula, start, end, format_str):
     while i < len(iter_formula):
         #regex matching
         if re.match('[a-zA-Z]+', iter_formula[i]) is not None:
-            print "MTCHED CHARS"
             final_str += iter_formula[i] + str(start)
         else:
-            print "NOT    MTCHED CHARS"
             final_str += iter_formula[i]    
         i += 1
     ws_obj.write(col_index+str(start) , final_str, format_str)
