@@ -9,7 +9,6 @@ from config import *
 from django.http import HttpResponse
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
-NUMBER_OF_SHEETS = 3
 NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
 CELL_ROW_VALUE = 2
 
@@ -172,11 +171,11 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
     # for developing exceptions
     try:
         for idx, item in enumerate(name_of_sheets):
-            ws = workbook.add_worksheet('Sheet'+ str(idx+1))
+            ws = workbook.add_worksheet(NAME_OF_SHEETS[idx])
             # setting the col width
             write_heading_in_sheet(ws_obj=ws,
                                    heading_str=name_of_sheets[idx],
-                                   format_str=heading_format)
+                                   format_str=header_format)
             # getting the cell value so that we will write values of columns
             cell_value_from_headers = \
                 get_headers_from_template_dict(ws, idx, header_dict, header_format)
