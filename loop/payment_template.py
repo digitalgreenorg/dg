@@ -10,7 +10,7 @@ from django.http import HttpResponse
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
 NUMBER_OF_SHEETS = 3
-NAME_OF_SHEETS = ['Sheet1', 'Sheet2', 'Sheet3', 'Sheet4']
+NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
@@ -139,19 +139,17 @@ def format_web_request(request):
 
 
 def get_combined_data_and_sheets_formats(formatted_post_data):
-    output = BytesIO()
-    workbook = xlsxwriter.Workbook(output)
+    excel_output = BytesIO()
+    workbook = xlsxwriter.Workbook(excel_output)
     # selecting a general font
     heading_format = set_format_for_heading(workbook=workbook,
                                            format_str={'bold':1, 'font_size': 15,
-                                                       # 'align': 'center',
                                                        'text_wrap': False})
     header_format = set_format_for_heading(workbook=workbook,
                                            format_str={'bold':1, 'font_size': 10,
                                                        'text_wrap': True})
     row_format = set_format_for_heading(workbook=workbook,
                                         format_str={'bold':0, 'font_size': 10,
-                                                    # 'align': 'left',
                                                     'num_format':'#,##0.00',
                                                     'text_wrap': True})
     total_cell_format = set_format_for_heading(workbook=workbook,
@@ -163,10 +161,10 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
     name_of_sheets = formatted_post_data.get('name_of_sheets')
     combined_data = formatted_post_data.get('combined_data')
     data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data,
-                 'workbook': workbook, 'header_format': header_format,
+                 'workbook': workbook, 'heading_format': heading_format,
                  'header_format': header_format, 'row_format': row_format,
                  'total_cell_format': total_cell_format, 
-                 'output': output}
+                 'excel_output': excel_output}
     return data_dict
 
 

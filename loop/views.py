@@ -67,14 +67,14 @@ def download_data_workbook(request):
         header_format = data_dict.get('header_format')
         row_format = data_dict.get('row_format')
         total_cell_format = data_dict.get('total_cell_format')
-        output = data_dict.get('output')
+        excel_output = data_dict.get('excel_output')
         combined_data = data_dict.get('combined_data')
         # now the sheet processes
         workbook = excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data)
         # final closing the working
         workbook.close()
-        output.seek(0)
-        response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        excel_output.seek(0)
+        response = HttpResponse(excel_output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
 
