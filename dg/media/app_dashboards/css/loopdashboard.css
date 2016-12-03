@@ -296,3 +296,8 @@ hr {
 .select-wrapper input.select-dropdown{
   border-bottom: none !important;
 }
+
+.disable-button {
+    pointer-events: none;
+    cursor: default;
+}

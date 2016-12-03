@@ -811,7 +811,7 @@ class GaddidarSharedOutlierResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
-        allowed_methods = ["post","get"]
+        allowed_methods = ["post"]
         queryset = GaddidarShareOutliers.objects.all()
         authorization = Authorization()
         always_return_data = True
@@ -823,18 +823,19 @@ class GaddidarSharedOutlierResource(BaseResource):
     hydrate_loopuser = partial(dict_to_foreign_uri,field_name='loopuser')
     def obj_create(self, bundle, request=None, **kwargs):
         
-        Omandi = Mandi.objects.get(id=bundle.data["mandi"]["id"])
-        Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["id"])
-        Ouser = LoopUser.objects.get(id=bundle.data["loopuser"]["id"])
+        Omandi = Mandi.objects.get(id=bundle.data["mandi"])
+        Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"])
+        Ouser = LoopUser.objects.get(id=bundle.data["loopuser"])
         attempt = GaddidarShareOutliers.objects.filter(date=bundle.data[
                                                      "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
         if attempt.count() < 1:
-            gaddidarobj = GaddidarShareOutliers(mandi=Omandi,aggregator=Ouser,gaddidar=Ogaddidar,amount=bundle.data["amount"],date = bundle.data["date"])
+            gaddidarobj = GaddidarShareOutliers(mandi=Omandi,aggregator=Ouser,gaddidar=Ogaddidar,amount=bundle.data["amount"],date = bundle.data["date"],comment=bundle.data["comment"])
             gaddidarobj.save()
         else:
             gaddidarobj = GaddidarShareOutliers.objects.filter(date=bundle.data[
                                                      "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
             gaddidarobj.amount = bundle.data["amount"]
+            gaddidarobj.comment = bundle.data["comment"]
             gaddidarobj.save()
             print "ALREADY EXISTS"
         #     bundle = super(GaddidarSharedOutlierResource,self).obj_update(bundle, **kwargs)
