@@ -18,21 +18,35 @@ class Command(BaseCommand):
             count = 0
             adoption_list = pap_query.page(page).object_list
             print len(adoption_list)
-            #        for page in range(1, pap_query.num_pages + 1):
+            # for page in range(1, pap_query.num_pages + 1):
             # print "----------------------------------------------------------------------------------------------------"
             for row in adoption_list:
-#                print row.id
+#                print row.id #273164
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
                                                                                                             flat=True)
                     try:
                         screening = Screening.objects.filter(
-                            (Q(date__lte=row.date_of_adoption) | Q(date__lte=row.time_modified.date())),
+                            date__lte=row.date_of_adoption,
                             id__in=screenings_list, videoes_screened=row.video).order_by('-date')
                         if len(screening) == 0:
-                            with open(filename, 'ab') as csvfile:
-                                fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                fileWrite.writerow(['ID', row.id])
+                            try:
+                                if row.time_created:
+                                    screening = Screening.objects.filter(
+                                    date__lte=row.time_created.date(),
+                                    id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+                                if len(screening) == 0 or not row.time_created:
+                                    screening = Screening.objects.filter(date__lte=row.time_modified.date(),
+                                    id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+#                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                                screening = screening[0]
+#                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                                row.animator = screening.animator
+                            except Exception as e:
+#                                print "Main Exception" + str(e)
+                                with open(filename, 'ab') as csvfile:
+                                    fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                    fileWrite.writerow(['ID', row.id])
                                 count += 1
                         else:
                             screening = screening[0]
@@ -42,16 +56,16 @@ class Command(BaseCommand):
                         with open(filename, 'ab') as csvfile:
                             fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
                             fileWrite.writerow(['HELLO', row.id])
-                        print "Internal Exception" + str(e)
+#                        print "Internal Exception" + str(e)
                 except Exception as e:
                     count += 1
-                    print "Exception" + str(e)
+#                    print "Exception" + str(e)
                     with open(filename, 'ab') as csvfile:
                         fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
                         fileWrite.writerow(['THIRD', row.id])
-                    print row.id
-            bulk_update(adoption_list)
+#                    print row.id
             #                    print '##################################################################################################'
+            bulk_update(adoption_list)
             print "Done Successful"
             print "Failed : " + str(count)
             print datetime.now()
