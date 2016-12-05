@@ -22,3 +22,4 @@ class Migration(migrations.Migration):
             field=models.IntegerField(choices=[(1, b'Admin'), (2, b'Aggregator'), (3, b'Testing')]),
         ),
     ]
+
