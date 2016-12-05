@@ -174,7 +174,7 @@ def total_static_data(request):
         'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1))
     total_farmers_reached = len(
         CombinedTransaction.objects.values('farmer').distinct())
-    total_cluster_reached = len(LoopUser.objects.all())
+    total_cluster_reached = len(LoopUser.objects.filter(role=ROLE_AGGREGATOR))
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
