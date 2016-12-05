@@ -516,9 +516,94 @@
 							<br>
 							<hr/>
 			</div>
+
 		</div>
 	</div>
 </div>
+<!-- Modal Structure -->
+			<div id="modal2" class="modal">
+  				<div class="modal-content">
+    				<h4>Gaddidar Share Outlier</h4>
+    					<form >
+    						<!-- <div id="date_modal" class="input-field inline">
+    						Date &nbsp;:&nbsp; 
+    						<input id="date_row" type="text" readonly>	
+    						</div>
+    						<div id="mandi_modal" class="input-field inline">
+    						Mandi &nbsp;:&nbsp; 
+    						<input id="mandi_row" type="text" readonly>	
+    						</div>
+    						<div id="gaddidar_modal" class="input-field inline">
+    						Gaddidar &nbsp;:&nbsp; 
+    						<input id="gaddidar_row" type="text" readonly>	
+    						</div>
+    						<div id="commission_modal" class="input-field inline">
+    						Gaddidar Commission &nbsp;:&nbsp; 
+    						<input id="commission_row" type="text" >	
+    						</div>
+    						<div id="share_modal" class="input-field inline">
+    						Share &nbsp;:&nbsp; 
+    						<input id="share_row" type="text">	
+    						</div>
+    						<div id="comment_modal" class="input-field inline"	\>
+    						Comment &nbsp;:&nbsp; 
+    						<textarea id="comment_row"></textarea> 
+    						</div> -->
+
+          					<div class="row ">
+            				<div class="col s4">
+            				
+            				<div class="input-field inline" >
+              				<input id="date_row" value="00-00-00" type="text" disabled>
+              				<label for="date_row">Date</label>
+                			</div>
+            				</div>
+            				<div class="col s4">
+            				<div class="input-field inline" >
+              				<input id="mandi_row" value="mandi" type="text" disabled>
+              				<label for="mandi_row">Mandi</label>
+              				</div>
+            				</div>
+            				<div class="col s4">
+            				<div class="input-field inline" >
+              				<input id="gaddidar_row" value="gaddidar" type="text" disabled>
+              				<label for="gaddidar_row">Gaddidar</label>
+              				</div>
+          				  	</div>
+          					</div>             
+          					<div class="row">
+            				<div class="col s5">
+            				<div class="input-field inline" >
+              				<input id="gaddidar_commission_row" value="commission" type="text">
+              				<label for="gaddidar_commission_row">Gaddidar Commission</label>
+              				</div>
+          				  	</div>
+          				  	<div class="col s2">
+          				  	OR
+          				  	</div>
+            				<div class="col s5">
+            				<div class="input-field inline">
+              				<input id="share_row" value="share" type="text" >
+              				<label for="share_row">Share</label>
+              				</div>
+          				  	</div>
+          					</div>
+          					<div class="row">
+          					<div class="col s12">
+          						<div class="input-field inline" >
+          							<textarea id="comment_row" value='' type="text"
+          							class="materialize-textarea"></textarea>
+          							<label for="comment_row">Comment</label>
+          						</div>
+          					</div>	
+          					</div>
+        		</form>
+  				</div>
+  				<div class="modal-footer">
+    				<a id="submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    				<a id="cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+  				</div>
+			</div>
 {% endblock %} {% block script %}
 <script src="{% static 'app_dashboards/js/loop_dashboard.js' %}"></script>
 {% endblock %}
