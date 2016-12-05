@@ -15,6 +15,8 @@ from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Scre
 from geographies.models import Village,Block,District,State,Country
 from videos.models import Video
 from programs.models import Partner
+import subprocess
+import MySQLdb
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -37,16 +39,14 @@ class AnalyticsSync():
         start_time = time.time()
         current_date = datetime.date.today()
         previous_year_date = date(current_date.year - 1, current_date.month, current_date.day)
-        import subprocess
-        import MySQLdb
-        database = DATABASES['default']['NAME']
+        database = 'digitalgreen_clone'
         print "Database:", database
 
         # Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_tables.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_table.sql')), shell=True)
         if ret_val != 0:
-            raise Exception("Could not delete rows")
-        print "Rows deleted"
+            raise Exception("Could not create schema")
+        print "Schema Created"
         
         # Fill Data
         try:
@@ -155,7 +155,7 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.filter(screening__date__gt=previous_year_date).values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
+            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
             
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
@@ -191,7 +191,7 @@ class AnalyticsSync():
                 else:
                     counts['tot_fem_att'] = counts['tot_fem_att'] + 1
 
-            scr = Screening.objects.filter(date__gt=previous_year_date).values('questions_asked')
+            scr = Screening.objects.values('questions_asked')
             for s in scr:
                 counts['tot_ques'] = counts['tot_ques'] + 1
             
@@ -205,7 +205,7 @@ class AnalyticsSync():
             print "Finished date calculations"
              
             #Total adoption calculation and gender wise adoption totals    
-            paps = PersonAdoptPractice.objects.filter(date_of_adoption__gt=previous_year_date).values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
+            paps = PersonAdoptPractice.objects.values_list('person', 'date_of_adoption', 'person__village', 'person__gender', 'partner').order_by('person', 'date_of_adoption')
             pap_dict = defaultdict(list) #For counting total adoption by active attendees
             for person_id, dt, vil, gender, partner in paps:
                 pap_dict[person_id].append(dt)
@@ -242,13 +242,13 @@ class AnalyticsSync():
             print "Finished active attendance counts"
             
             #tot sc calculations
-            scs = Screening.objects.filter(date__gt=previous_year_date).annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
+            scs = Screening.objects.annotate(gr_size=Count('farmer_groups_targeted__person')).values_list('date', 'village', 'gr_size', 'partner')
             for dt, vil, gr_size, partner in scs:
                 main_data_dst[dt][vil][partner]['tot_sc'] = main_data_dst[dt][vil][partner]['tot_sc'] + 1
                 main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
                  
-            vids = Video.objects.filter(video_type=1, production_date__gt=previous_year_date).values_list('id','production_date', 'village', 'partner').order_by('id')
+            vids = Video.objects.filter(video_type=1).values_list('id','production_date', 'village', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
@@ -287,6 +287,26 @@ class AnalyticsSync():
             sys.exit(1)
         
         print "Total Time = ", time.time() - start_time
+        self.copy_myisam_main()
+
+    def copy_myisam_main(self) :
+        start_time = time.time()
+        database = DATABASES['default']['NAME']
+        print "Database:", database
+
+        # Create schema
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        if ret_val != 0:
+            raise Exception("Could not create schema")
+        print "Schema created"
+
+        # Copy Data into main tables :
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
+        if ret_val != 0:
+            raise Exception("Could not Copied tables")
+        print "Tables Copied"
+        print "Total Time = ", time.time() - start_time
+
 
 class Command(BaseCommand):
     help = '''This command updates statistics displayed on Analytics dashboards.
