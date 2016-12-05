@@ -2,11 +2,10 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from datetime import datetime
 import os, sys
+import django
 
-
-sys.path.append(os.path.abspath("/home/ubuntu/"))
+sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
-django.setup()
 import dg.settings
 
 def show_status(received, total):
@@ -17,7 +16,7 @@ def show_status(received, total):
 ACCESS_KEY = dg.settings.ACCESS_KEY
 SECRET_KEY = dg.settings.SECRET_KEY
 BUCKET_NAME = 'dgbackups'
-DOWNLOAD_FOLDER = "/home/"
+DOWNLOAD_FOLDER = os.path.abspath(os.getcwd()) + '/'
 
 con = S3Connection(ACCESS_KEY, SECRET_KEY)
 dg_bk = con.get_bucket(BUCKET_NAME)
