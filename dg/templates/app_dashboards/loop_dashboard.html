@@ -104,7 +104,7 @@
 		<ul class="collapsible collapsible-accordion">
 
 			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -121,7 +121,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -138,7 +138,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -155,7 +155,7 @@
 				</div>
 			</li>
 			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
-				<div class="collapsible-body container" style="display: none;">
+				<div class="collapsible-body" style="display: none;">
 					<table class="filter-table centered">
 						<thead>
 							<tr>
@@ -523,29 +523,21 @@
 
 <div id="login_modal" class="modal">
 	<div class="modal-content">
-		<h5>User Login</h5>
-		<form id="loginform" name="loginform" method="post" action="index.html">
+		<h5 class="row center">User Login</h5>
+		<div class="row">
 			<label for="username">Username:</label>
 			<input type="text" name="username" id="username" class="txtfield" tabindex="1">
+		</div>
+		<div class="row">
 			<label for="password">Password:</label>
 			<input type="password" name="password" id="password" class="txtfield" tabindex="2">
-
-			<div class="center"><input type="submit" name="loginbtn" id="loginbtn" class="modal-action waves-effect waves-black btn-flat" value="Log In" tabindex="3"></div>
-		</form>
+		</div>
+		<div class="row center">
+				<a id="loginbtn" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" tabindex="3">LOG IN</a>
+		</div>
 	</div>
 </div>
 
-<!-- <div id="loginmodal" hide>
-	<h5>User Login</h5>
-	<form id="loginform" name="loginform" method="post" action="index.html">
-		<label for="username">Username:</label>
-		<input type="text" name="username" id="username" class="txtfield" tabindex="1">
-		<label for="password">Password:</label>
-		<input type="password" name="password" id="password" class="txtfield" tabindex="2">
-
-		<div class="center"><input type="submit" name="loginbtn" id="loginbtn" value="Log In" tabindex="3"></div>
-	</form>
-</div> -->
 {% endblock %} {% block script %}
 <script src="{% static 'app_dashboards/js/loop_dashboard.js' %}"></script>
 {% endblock %}

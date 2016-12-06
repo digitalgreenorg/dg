@@ -108,17 +108,40 @@ function hide_nav(tab) {
     $("#time_series_tab").removeClass('active');
 
     if (tab == HOME) {
+        $('#login_modal').closeModal();
         $("#home_div").show();
         $("#home_tab").addClass('active');
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE) {
-        $('#login_modal').openModal();
-        $('#loginbtn').click(function(){
-            $('#login_modal').closeModal();
+
+        $('#login_modal').openModal({
+          dismissible:false
         });
-        $("#payments_div").show();
-        $("#payments_tab").addClass('active');
-        selected_page = PAYMENTS_PAGE;
+        $('#loginbtn').click(function(){
+            // $('#login_modal').closeModal();
+            $.post("/loop/login/",{
+              'username':$('#username').val(),
+              'password':$('#password').val()
+            }).done(function(data){
+                var login_data = JSON.parse(data);
+                window.localStorage.name= login_data['full_name'];
+                window.localStorage.akey=login_data['key'];
+                if(localStorage.akey!=null){
+                  console.log(login_data);
+                  console.log(localStorage.akey);
+                  $('#login_modal').closeModal();
+                  $("#payments_div").show();
+                  $("#payments_tab").addClass('active');
+                  selected_page = PAYMENTS_PAGE;
+                }
+            });
+        });
+      // } else {
+      //   $('#login_modal').closeModal();
+      //   $("#payments_div").show();
+      //   $("#payments_tab").addClass('active');
+      //   selected_page = PAYMENTS_PAGE;
+      // }
     }
 }
 
@@ -132,6 +155,8 @@ function show_nav(tab) {
     $("#filters_nav").addClass('show');
     $("#home_div").hide();
     $("#payments_div").hide();
+    //if login modal is being shown disable it.
+    $('#login_modal').closeModal();
 
     if (tab == ANALYTICS_PAGE) {
         selected_page = ANALYTICS_PAGE;
