@@ -42,6 +42,7 @@ class AnalyticsSync():
         database = 'digitalgreen_clone'
         print "Database:", database
 
+        print time.time()
         # Create schema
         ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_table.sql')), shell=True)
         if ret_val != 0:
@@ -50,11 +51,15 @@ class AnalyticsSync():
         
         # Fill Data
         try:
-            print time.time()
             #village_partner_myisam
             self.db_cursor.execute("""INSERT INTO village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,country_id)
                                         SELECT distinct pp.partner_id, gv.id ,gb.id ,gd.id ,gs.id ,gc.id
-                                        FROM people_person pp INNER JOIN programs_partner ppa ON pp.partner_id = ppa.id INNER JOIN geographies_village gv ON pp.village_id = gv.id INNER JOIN geographies_block gb on gv.block_id = gb.id INNER JOIN geographies_district gd on gb.district_id=gd.id INNER JOIN geographies_state gs on gd.state_id =  gs.id INNER JOIN geographies_country gc on gs.country_id=gc.id""")
+                                        FROM people_person pp JOIN programs_partner ppa ON pp.partner_id = ppa.id 
+                                        JOIN geographies_village gv ON pp.village_id = gv.id
+                                        JOIN geographies_block gb on gv.block_id = gb.id 
+                                        JOIN geographies_district gd on gb.district_id=gd.id
+                                        JOIN geographies_state gs on gd.state_id =  gs.id 
+                                        JOIN geographies_country gc on gs.country_id=gc.id""")
             print "Finished insert into village_partner_myisam"
 
             #screening_myisam
@@ -155,7 +160,8 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
+            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.values('id', 'person','screening__date', 
+                'person__gender', 'screening__questions_asked', 'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
             
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
@@ -282,31 +288,33 @@ class AnalyticsSync():
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
                 VALUES "+','.join(values_list[(i-1)*5000:i*5000]))
+            print "Total Time On Clone DB= ", time.time() - start_time
+            self.copy_myisam_main()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)
-        
-        print "Total Time = ", time.time() - start_time
-        self.copy_myisam_main()
 
     def copy_myisam_main(self) :
         start_time = time.time()
         database = DATABASES['default']['NAME']
         print "Database:", database
+        
+        try:
+            # Create schema
+            ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+            if ret_val != 0:
+                raise Exception("Could not create schema")
+            print "Schema created"
 
-        # Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
-        if ret_val != 0:
-            raise Exception("Could not create schema")
-        print "Schema created"
-
-        # Copy Data into main tables :
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
-        if ret_val != 0:
-            raise Exception("Could not Copied tables")
-        print "Tables Copied"
-        print "Total Time = ", time.time() - start_time
-
+            # Copy Data into main tables :
+            ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
+            if ret_val != 0:
+                raise Exception("Could not Copied tables")
+            print "Tables Copied"
+            print "Total Time On Main DB = ", time.time() - start_time
+        except MySQLdb.Error, e:
+            print "Error %d: %s" % (e.args[0], e.args[1])
+            sys.exit(1)
 
 class Command(BaseCommand):
     help = '''This command updates statistics displayed on Analytics dashboards.

@@ -1,4 +1,8 @@
 /* Deleting data from past one year from all myisam tables*/
+DELETE
+FROM
+	`village_partner_myisam`;
+
 DELETE 
 FROM 
 	`screening_myisam` 
