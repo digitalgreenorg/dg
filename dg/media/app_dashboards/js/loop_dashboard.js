@@ -37,6 +37,9 @@ var QUANTITY__SUM = "quantity__sum",
     MANDI__ID = "mandi__id",
     USER_CREATED__ID = "user_created__id";
 
+var aggregator_sheet_name = "", gaddidar_sheet_name = "", transporter_sheet_name = "" ;
+
+
 
 function initialize() {
     // initialize any library here
@@ -628,7 +631,7 @@ function set_filterlistener() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
             a = document.createElement('a');
             a.href = window.URL.createObjectURL(xhttp.response);
-            a.download = data_set[data_set.length - 1];
+            a.download = aggregator_sheet_name;
             a.style.display = 'none';
             document.body.appendChild(a);
             return a.click();
@@ -637,11 +640,23 @@ function set_filterlistener() {
             xhttp.open("POST", "/loop/get_payment_sheet/", true);
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
-            var data = [];
-            data.push(data_set);
-            data.push(gaddidar_data_set);
-            data.push(transporter_data_set);
-            xhttp.send(JSON.stringify(data));
+            var data_json = {
+                aggregator_data:{
+                    name: aggregator_sheet_name,
+                    data : data_set     
+                },
+
+                gaddidar_data: {
+                    name : gaddidar_sheet_name,
+                    data : gaddidar_data_set    
+                },
+
+                transporter_data:{
+                    name : transporter_sheet_name,
+                    data : transporter_data_set
+                 }
+            };
+            xhttp.send(JSON.stringify(data_json));
         }
 
 });
@@ -3045,12 +3060,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     });
 
-
-
-    data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"]);
-    gaddidar_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details"]);
-    transporter_data_set.push(["Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details"]);
-
+    aggregator_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
+    gaddidar_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details";
+    transporter_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
 
 }
 

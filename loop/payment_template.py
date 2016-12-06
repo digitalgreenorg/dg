@@ -201,15 +201,18 @@ def prepare_value_data(data):
     Process the post data request and breaking into individual sheet data
     """
     data = json.loads(data)
-    aggregator_data = data[0]
-    commission_data = data[1]
-    transport_data = data[2]
-    sheet1_file_name = u''+aggregator_data[-1][0]
-    sheet2_file_name = u''+commission_data[-1][0]
-    sheet3_file_name = u''+transport_data[-1][0]
-    aggregator_data = aggregator_data[:len(aggregator_data)-1]
-    commission_data = commission_data[:len(commission_data)-1]
-    transport_data = transport_data[:len(transport_data)-1]
+    aggregator_data = data.get('aggregator_data')
+    commission_data = data.get('gaddidar_data')
+    transport_data = data.get('transporter_data')
+
+    sheet1_file_name = u''+aggregator_data.get('name')
+    sheet2_file_name = u''+commission_data.get('name')
+    sheet3_file_name = u''+transport_data.get('name')
+
+    aggregator_data = aggregator_data.get('data')
+    commission_data = commission_data.get('data')
+    transport_data = transport_data.get('data')
+
     name_of_sheets=[sheet1_file_name, sheet2_file_name, sheet3_file_name]
     combined_data = [aggregator_data, commission_data, transport_data]
     combined_dict =  {'combined_data': combined_data,
