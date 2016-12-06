@@ -22,7 +22,7 @@ class Call(models.Model):
     state = models.CharField(max_length=100)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
-        
+
     def attempt(self, call_dict):
         # call data to be initialized when a call is attmepted
         # self.duration = call_dict['Duration']
@@ -33,7 +33,7 @@ class Call(models.Model):
             #startTime
             #endTime
         return None
-    
+
     def end(self, response):
         # arguments are a dictionary of relevant data
         # this function adds the information and saves it in the db
@@ -56,9 +56,13 @@ class Audio(models.Model):
     channels = models.ManyToManyField(Channel)
     description = models.TextField(max_length=1000, null=True, blank=True)
     audio_status = models.CharField(max_length=20, choices=AUDIO_STATUS)
+    # MEDIA_ROOT for every machine is changing, hence django is creating migration every time makemigration command is executed
+    # To change any field, toggle managed field and proceed.
+    class Meta:
+        managed = False
 
 class Broadcast(models.Model):
     service = models.CharField(max_length=20, choices=IVR_SERVICE)
     audio_file = models.ForeignKey(Audio)
     channels = models.ManyToManyField(Channel)
-    schedule_call = models.DateTimeField()    
+    schedule_call = models.DateTimeField()
