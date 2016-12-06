@@ -27,7 +27,7 @@
 					<li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
 					<li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
 					<li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
-					<li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
+					<li id="payments_tab"><a href="#loginmodal" class="white-text" onclick="hide_nav('payments')">Payments</a></li>
 				</ul>
 			</div>
 			<div class="col s2" class="initialized" style="float:right;">
@@ -519,6 +519,33 @@
 		</div>
 	</div>
 </div>
+
+
+<div id="login_modal" class="modal">
+	<div class="modal-content">
+		<h5>User Login</h5>
+		<form id="loginform" name="loginform" method="post" action="index.html">
+			<label for="username">Username:</label>
+			<input type="text" name="username" id="username" class="txtfield" tabindex="1">
+			<label for="password">Password:</label>
+			<input type="password" name="password" id="password" class="txtfield" tabindex="2">
+
+			<div class="center"><input type="submit" name="loginbtn" id="loginbtn" class="modal-action waves-effect waves-black btn-flat" value="Log In" tabindex="3"></div>
+		</form>
+	</div>
+</div>
+
+<!-- <div id="loginmodal" hide>
+	<h5>User Login</h5>
+	<form id="loginform" name="loginform" method="post" action="index.html">
+		<label for="username">Username:</label>
+		<input type="text" name="username" id="username" class="txtfield" tabindex="1">
+		<label for="password">Password:</label>
+		<input type="password" name="password" id="password" class="txtfield" tabindex="2">
+
+		<div class="center"><input type="submit" name="loginbtn" id="loginbtn" value="Log In" tabindex="3"></div>
+	</form>
+</div> -->
 {% endblock %} {% block script %}
 <script src="{% static 'app_dashboards/js/loop_dashboard.js' %}"></script>
 {% endblock %}

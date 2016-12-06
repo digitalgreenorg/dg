@@ -112,6 +112,10 @@ function hide_nav(tab) {
         $("#home_tab").addClass('active');
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE) {
+        $('#login_modal').openModal();
+        $('#loginbtn').click(function(){
+            $('#login_modal').closeModal();
+        });
         $("#payments_div").show();
         $("#payments_tab").addClass('active');
         selected_page = PAYMENTS_PAGE;
