@@ -3039,7 +3039,7 @@ var rows_table2={};
                         alert('Please fill Share Correctly');
                         }
                     else {
-                        console.log($this.parent()[0]);
+                        //console.log($this.parent()[0]);
                         $('#modal3').closeModal();
                         $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
                         $this.parent()[0].childNodes[5].innerHTML = $('#share_row').val();
@@ -3110,12 +3110,13 @@ var rows_table2={};
                         $('#table3').find('tr :nth-child(7)').removeAttr("style");
                         for(var keys in rows_table3){
                             var row_data = {}
-                            row_data['date']=$('#table3').DataTable().rows(keys-1).data()[0];
-                            row_data['share']=$('#table3').DataTable().rows(keys-1).data()[5];
-                            row_data['mandi']=$('#table3').DataTable().rows(keys-1).data()[6];
-                            row_data['gaddidar']=$('#table3').DataTable().rows(keys-1).data()[7];
-                            row_data['aggregator']=$('#table3').DataTable().rows(keys-1).data()[8];
-                            row_data['comment']=$('#table3').DataTable().rows(keys-1).data()[9];
+                            row_data['date']=$('#table3').DataTable().cell(keys-1,0).data();
+                            row_data['share']=$('#table3 tr').eq(keys)[0].childNodes[5].innerHTML;
+                            row_data['mandi']=$('#table3').DataTable().cell(keys-1,6).data();
+                            row_data['gaddidar']=$('#table3').DataTable().cell(keys-1,7).data();
+                            row_data['aggregator']=$('#table3').DataTable().cell(keys-1,8).data();
+                            row_data['comment']=$('#table3 tr').eq(keys)[0].childNodes[6].innerHTML;
+                            
                             finalData.push(row_data);
                         }
                     editTable3=0;
@@ -3123,17 +3124,19 @@ var rows_table2={};
                     var sData = this.fnGetTableData(oConfig);
                     var JObj={
                         "mrow":finalData
-                    };
 
-                    alert(JSON.stringify(JObj));
+                    }
+                    ;
+
+                    console.log(JSON.stringify(JObj));
                     $.ajax({
                         url: oConfig.sAjaxUrl,
-                        type:'post',
+                        type:'PATCH',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
-                        data:JObj,
+                        data:JSON.stringify(JObj),
                         success:function () {
-                            alert( "success" , finalData );
+                            alert( "success" );
                         },
                         error: function () {
                            alert( "Error" );
