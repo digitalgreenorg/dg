@@ -11,9 +11,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='audio',
-            name='audio_file',
-            field=models.FileField(upload_to=b'/Users/darthvader/dgcode/dg/dg/media/social_website/uploadsivrs/'),
+        migrations.AlterModelOptions(
+            name='audio',
+            options={'managed': False},
         ),
     ]

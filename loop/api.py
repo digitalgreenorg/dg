@@ -346,6 +346,7 @@ class FarmerResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
         queryset = Farmer.objects.all()
         resource_name = 'farmer'
         always_return_data = True
@@ -364,8 +365,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            raise FarmerNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -575,6 +575,7 @@ class TransporterResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = BlockAuthorization('block')
@@ -631,6 +632,7 @@ class TransportationVehicleResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = TransportationVehicle.objects.all()
+        allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'transportationvehicle'
         authorization = BlockAuthorization('transporter__block')
         authentication = ApiKeyAuthentication()

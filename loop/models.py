@@ -5,8 +5,8 @@ from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
 
-RoleChoice = ((1, "Admin"), (2, "Aggregator"))
-ModelChoice = ((1, "Direct Sell"), (2, "Aggregate"))
+RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
+ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 
 
@@ -240,6 +240,8 @@ class CropLanguage(models.Model):
 
     def __unicode__(self):
         return self.crop_name
+    def __crop__(self):
+        return "%s" % (self.crop.crop_name)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -321,6 +323,9 @@ class DayTransportation(LoopModel):
 
     def __vehicle__(self):
         return "%s (%s)" % (self.transportation_vehicle.vehicle.vehicle_name, self.transportation_vehicle.vehicle_number)
+
+    def __mandi__(self):
+        return "%s" % (self.mandi.mandi_name)
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
