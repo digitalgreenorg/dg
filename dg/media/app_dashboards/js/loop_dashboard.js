@@ -136,6 +136,9 @@ function hide_nav(tab) {
                 }
             });
         });
+        $('#goToHome').click(function(){
+          hide_nav(HOME);
+        });
       // } else {
       //   $('#login_modal').closeModal();
       //   $("#payments_div").show();
