@@ -296,67 +296,6 @@ hr {
 .select-wrapper input.select-dropdown{
   border-bottom: none !important;
 }
-
-#lean_overlay {
-    position: fixed;
-    z-index:100;
-    top: 0px;
-    left: 0px;
-    height:100%;
-    width:100%;
-    background: #000;
-    display: none;
-}
-#loginmodal {
-  width: 200px;
-  padding: 15px 20px;
-  background: #f3f6fa;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-}
-
-#loginform { /* no default styles */ }
-
-#loginform label { display: block; font-size: 1.1em; font-weight: bold; color: #7c8291; margin-bottom: 3px; }
-
-.txtfield {
-  display: block;
-  width: 100%;
-  padding: 6px 5px;
-  margin-bottom: 15px;
-  font-family: 'Helvetica Neue', Helvetica, Verdana, sans-serif;
-  color: #7988a3;
-  font-size: 1.4em;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
-  background-color: #fff;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#edf3f9), to(#fff));
-  background-image: -webkit-linear-gradient(top, #edf3f9, #fff);
-  background-image: -moz-linear-gradient(top, #edf3f9, #fff);
-  background-image: -ms-linear-gradient(top, #edf3f9, #fff);
-  background-image: -o-linear-gradient(top, #edf3f9, #fff);
-  background-image: linear-gradient(top, #edf3f9, #fff);
-  border: 1px solid;
-  border-color: #abbce8 #c3cae0 #b9c8ef;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.4);
-  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.4);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.4);
-  -webkit-transition: all 0.25s linear;
-  -moz-transition: all 0.25s linear;
-  transition: all 0.25s linear;
-}
-
-.txtfield:focus {
-  outline: none;
-  color: #525864;
-  border-color: #84c0ee;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 7px #96c7ec;
-  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 7px #96c7ec;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 7px #96c7ec;
+.modal {
+  width: 30%;
 }

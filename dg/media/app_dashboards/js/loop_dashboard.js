@@ -115,39 +115,41 @@ function hide_nav(tab) {
     } else if (tab == PAYMENTS_PAGE) {
 
         $('#login_modal').openModal({
-          dismissible:false
+            dismissible: false
         });
-        $('#loginbtn').click(function(){
-            // $('#login_modal').closeModal();
-            $.post("/loop/login/",{
-              'username':$('#username').val(),
-              'password':$('#password').val()
-            }).done(function(data){
-                var login_data = JSON.parse(data);
-                window.localStorage.name= login_data['full_name'];
-                window.localStorage.akey=login_data['key'];
-                if(localStorage.akey!=null){
-                  console.log(login_data);
-                  console.log(localStorage.akey);
-                  $('#login_modal').closeModal();
-                  $("#payments_div").show();
-                  $("#payments_tab").addClass('active');
-                  selected_page = PAYMENTS_PAGE;
-                }
-            });
+        $('#loginbtn').click(function() {
+            var username = $('#username').val().trim();
+            var password = $('#password').val().trim();
+            if (username.length == 0 || password.length == 0) {
+                $('#error_div').show();
+                document.getElementById('error_message').innerHTML = "* Username and password are required fields.";
+            } else {
+                $.post("/loop/login/", {
+                    'username': username,
+                    'password': password
+                }).done(function(data) {
+                    var login_data = JSON.parse(data);
+                    window.localStorage.name = login_data['full_name'];
+                    window.localStorage.akey = login_data['key'];
+                    if (localStorage.akey != null) {
+                        console.log(login_data);
+                        console.log(localStorage.akey);
+                        $('#login_modal').closeModal();
+                        $("#payments_div").show();
+                        $("#payments_tab").addClass('active');
+                        selected_page = PAYMENTS_PAGE;
+                    }
+                }).fail(function() {
+                    $('#error_div').show();
+                    document.getElementById('error_message').innerHTML = "Incorrect username or password.";
+                });
+            }
         });
-        $('#goToHome').click(function(){
-          hide_nav(HOME);
+        $('#goto_home').click(function() {
+            hide_nav(HOME);
         });
-      // } else {
-      //   $('#login_modal').closeModal();
-      //   $("#payments_div").show();
-      //   $("#payments_tab").addClass('active');
-      //   selected_page = PAYMENTS_PAGE;
-      // }
     }
 }
-
 //To show the second navigation bar that comes on analytics and time series page only
 function show_nav(tab) {
     $("#home_tab").removeClass('active');
@@ -2260,7 +2262,6 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
             if (this.x >= detailStart) {
                 temp['data'].push(this.y);
             }
-
         });
         myDict.push(temp);
 
@@ -2953,7 +2954,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sTitle": "Loop_" + getFormattedDate(aggregator) + "Transporter_Pmt"
             }]
         }
-
     });
 }
 
@@ -2986,7 +2986,6 @@ function get_payments_data() {
             outlier_daily_data = payments_data.outlier_daily_data;
             payments_gaddidar_contribution = payments_data.gaddidar_data;
             fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator');
-
         });
     } else {
         alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date.");
