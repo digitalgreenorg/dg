@@ -113,41 +113,46 @@ function hide_nav(tab) {
         $("#home_tab").addClass('active');
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE) {
-
-        $('#login_modal').openModal({
-            dismissible: false
-        });
-        $('#loginbtn').click(function() {
-            var username = $('#username').val().trim();
-            var password = $('#password').val().trim();
-            if (username.length == 0 || password.length == 0) {
-                $('#error_div').show();
-                document.getElementById('error_message').innerHTML = "* Username and password are required fields.";
-            } else {
-                $.post("/loop/login/", {
-                    'username': username,
-                    'password': password
-                }).done(function(data) {
-                    var login_data = JSON.parse(data);
-                    window.localStorage.name = login_data['full_name'];
-                    window.localStorage.akey = login_data['key'];
-                    if (localStorage.akey != null) {
-                        console.log(login_data);
-                        console.log(localStorage.akey);
-                        $('#login_modal').closeModal();
-                        $("#payments_div").show();
-                        $("#payments_tab").addClass('active');
-                        selected_page = PAYMENTS_PAGE;
-                    }
-                }).fail(function() {
+        if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp + 1).getTime() <= new Date().getTime()) {
+            $("#payments_div").show();
+            $("#payments_tab").addClass('active');
+            selected_page = PAYMENTS_PAGE;
+        } else {
+            window.localStorage.clear();
+            $('#login_modal').openModal({
+                dismissible: false
+            });
+            $('#loginbtn').click(function() {
+                var username = $('#username').val().trim();
+                var password = $('#password').val().trim();
+                if (username.length == 0 || password.length == 0) {
                     $('#error_div').show();
-                    document.getElementById('error_message').innerHTML = "Incorrect username or password.";
-                });
-            }
-        });
-        $('#goto_home').click(function() {
-            hide_nav(HOME);
-        });
+                    document.getElementById('error_message').innerHTML = "* Username and password are required fields.";
+                } else {
+                    $.post("/loop/login/", {
+                        'username': username,
+                        'password': password
+                    }).done(function(data) {
+                        var login_data = JSON.parse(data);
+                        window.localStorage.name = login_data['full_name'];
+                        window.localStorage.akey = login_data['key'];
+                        window.localStorage.login_timestamp = new Date();
+                        if (localStorage.akey != null) {
+                            $('#login_modal').closeModal();
+                            $("#payments_div").show();
+                            $("#payments_tab").addClass('active');
+                            selected_page = PAYMENTS_PAGE;
+                        }
+                    }).fail(function() {
+                        $('#error_div').show();
+                        document.getElementById('error_message').innerHTML = "Incorrect username or password.";
+                    });
+                }
+            });
+            $('#goto_home').click(function() {
+                hide_nav(HOME);
+            });
+        }
     }
 }
 //To show the second navigation bar that comes on analytics and time series page only
