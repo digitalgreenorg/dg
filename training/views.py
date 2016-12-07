@@ -132,8 +132,8 @@ def question_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id').order_by('-question__id').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
-    language_text_eng = Question.objects.filter(language_id = language_eng_id, assessment_id__in=assessment_ids).values('text')
+    question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id', 'question__section', 'question__serial').order_by('question__language_id', 'question__section', 'question__serial').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
+    language_text_eng = Question.objects.filter(language_id = language_eng_id, assessment_id__in=assessment_ids).values('text', 'section', 'serial').order_by('section', 'serial')
     question_data_dict = {'question_list' : list(question_list), 'question_language_text_eng':list(language_text_eng)}
     data = json.dumps(question_data_dict)
     return HttpResponse(data)
