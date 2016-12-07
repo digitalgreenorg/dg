@@ -3,30 +3,30 @@
 <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/coco-offline.appcache" >
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="robots" content="NONE,NOARCHIVE">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+    <meta name="robots" content="NONE,NOARCHIVE">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <TITLE>Dashboard</TITLE>
-	
+    
     <LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css">
-	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
-	<LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen-select/chosen.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/chosen-magic.css">
-	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css">
+    <LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
+    <LINK REL="stylesheet" HREF="/media/coco/app/scripts/libs/chosen-select/chosen.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/coco.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/chosen-magic.css">
+    <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
     
     <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
-	  require.config({
-	    paths: {
-	        "configs": "/media/configs"
-	    },
-	  });
-	</script>
+      require.config({
+        paths: {
+            "configs": "/media/configs"
+        },
+      });
+    </script>
 
     <script language="JavaScript">
     select_unselect_all = function (select_all) {
@@ -315,52 +315,52 @@
 
 <script type="text/template" id="status">
     <div id="modal"></div>
-	<div class="page-header mrg-top-0">
-	    <h1 style = "color:#047d0a;"> <%= configs['misc']['meta_'+language]['line_1'] %>
+    <div class="page-header mrg-top-0">
+        <h1 style = "color:#047d0a;"> <%= configs['misc']['meta_'+language]['line_1'] %>
             <br>
                 <small><%= configs['misc']['meta_'+language]['line_2'] %></small>
             </br>
         </h1>
-	</div>
-	<div class="media">
-		<a class="pull-left hide-media" >
-		<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
-		</a>
-		<div class="media-body">
-		<h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_3'] %></h5>
-		<%= configs['misc']['meta_'+language]['line_4'] %>
-		</div>
-	</div>
+    </div>
+    <div class="media">
+        <a class="pull-left hide-media" >
+        <img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
+        </a>
+        <div class="media-body">
+        <h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_3'] %></h5>
+        <%= configs['misc']['meta_'+language]['line_4'] %>
+        </div>
+    </div>
 
-	<div class="media">
-		<a class="pull-left hide-media">
-		<img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
-		</a>
-		<div class="media-body">
-		<h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_5'] %></h5>
-		<%= configs['misc']['meta_'+language]['line_6'] %>
-		</div>
-	</div>
+    <div class="media">
+        <a class="pull-left hide-media">
+        <img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
+        </a>
+        <div class="media-body">
+        <h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_5'] %></h5>
+        <%= configs['misc']['meta_'+language]['line_6'] %>
+        </div>
+    </div>
 
-	<div class="media">
-		<a class="pull-left hide-media">
-		<img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
-		</a>
-		<div class="media-body">
-		<h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_7'] %></h5>
+    <div class="media">
+        <a class="pull-left hide-media">
+        <img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
+        </a>
+        <div class="media-body">
+        <h5 class="media-heading"><%= configs['misc']['meta_'+language]['line_7'] %></h5>
         <%= configs['misc']['meta_'+language]['line_8'] %>
-		</div>
-	</div>
+        </div>
+    </div>
 
-	<div class="media">
-		<a class="pull-left hide-media">
-		<img class="media-object" src="/media/coco/app/images/feedback.png" style = "width:70px;">
-		</a>
-		<div class="media-body">
-		<h5 class="media-heading"> <%= configs['misc']['meta_'+language]['line_9'] %></h5>
-		<%= configs['misc']['meta_'+language]['line_10'] %>
-		</div>
-	</div>
+    <div class="media">
+        <a class="pull-left hide-media">
+        <img class="media-object" src="/media/coco/app/images/feedback.png" style = "width:70px;">
+        </a>
+        <div class="media-body">
+        <h5 class="media-heading"> <%= configs['misc']['meta_'+language]['line_9'] %></h5>
+        <%= configs['misc']['meta_'+language]['line_10'] %>
+        </div>
+    </div>
 
     <div style = "color:#999999; margin-top:25px;">
         <b><%= configs['misc']['meta_'+language]['line_11'] %></b><%=full_d_timestamp%>
@@ -380,13 +380,13 @@
         <div id="collapseOne" class="accordion-body collapse" >
             <div class="accordion-inner" style="height:300px;overflow-y:auto">
                 <table class="table">
-        		    <th> Id </th>
+                    <th> Id </th>
                     <th> Type</th>
-        			<th> Add/Edit </th>
-        			<th> Data </th>
+                    <th> Add/Edit </th>
+                    <th> Data </th>
                     <tbody>
                         <% $.each(upload_collection, function(index, obj){%>
-                			<tr>
+                            <tr>
                                 <td>
                                     <%=obj.id%>
                                 </td>
@@ -401,8 +401,8 @@
                                 </td>
                             </tr>    
                         <%})%>
-        			</tbody>
-        		</table>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -434,16 +434,16 @@
                 <%}%>
             </div>
         </form>
-	
+    
     </div>
 </script>
 
 <script type="text/template" id="dashboard_breadcrumb">
-	<li class='active' >Dashboard</li>
+    <li class='active' >Dashboard</li>
 </script>
 
 <script type="text/template" id="list_breadcrumb">
-	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
+    <li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
 </script>
 
 <script type="text/template" id="add_edit_breadcrumb">
@@ -453,15 +453,15 @@
 </script>
 <script  type="text/template" id="list_view_template">
     <div id="legend">
-    	<legend class=""><%= page_header %></legend>
+        <legend class=""><%= page_header %></legend>
     </div>
-	<div class="table-responsive">
+    <div class="table-responsive">
        <table id= "list_table" class="table table-striped display">
        </table>
-	</div>
-	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
+    </div>
+    <div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
 
-	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;"><%= list_page_help %>
+    <p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;"><%= list_page_help %>
 </script>
 
 <script type="text/template" id="options_template">
@@ -515,7 +515,7 @@
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset class="form-horizontal">
         <legend><%= mediator %></legend>
-		
+        
         <div class="form-group">
             <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
@@ -569,39 +569,39 @@
 <script type="text/template" id="screening_add_edit_template">
             <fieldset class="form-horizontal">
                 <legend><%= screening %></legend>
-				
+                
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
-                	<div class="col-sm-4">
+                    <div class="col-sm-4">
                         <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
-                 	</div>
+                    </div>
                 </div>
                 <div class="form-group ">
                     <label class="control-label col-sm-2"><%= start_time %></label>
-                 	<div class="controls bootstrap-timepicker col-sm-4">
+                    <div class="controls bootstrap-timepicker col-sm-4">
                         <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
-                 	</div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= village %></label>
-                	<div class="col-sm-4"> 
+                    <div class="col-sm-4"> 
                         <select name="village" id="id_village" class="chosen-select form-control" placeholder="Enter animator to enable">
                         <option value='' selected='selected'>---------</option> 
                         </select>
-                	</div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= mediator %></label>
-                 	<div class="col-sm-4"> 
+                    <div class="col-sm-4"> 
                         <select name="animator" id="id_animator" class="chosen-select form-control">
                             <option value='' selected='selected'>---------</option> 
                         </select > 
-               	    </div>
+                    </div>
                 </div>
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= videos_screened %></label>
-                	<div class="col-sm-4"> 
-                	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
+                    <div class="col-sm-4"> 
+                    <select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
                         </select> 
                     </div>
                 </div>
@@ -612,8 +612,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                	<label class="control-label col-sm-2 notbold"><%= person %></label>
-                	<div class="col-sm-4">
+                    <label class="control-label col-sm-2 notbold"><%= person %></label>
+                    <div class="col-sm-4">
                         <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
                     </div>
                 </div>
@@ -697,7 +697,7 @@
                 <legend><%= adoption %></legend>
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
-                	<div class="col-sm-4"> 
+                    <div class="col-sm-4"> 
                         <select name="person" id="id_person" class="chosen-select form-control">
                         <option value="">---------- </option>
                         </select>
@@ -720,7 +720,7 @@
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%=date_of_verification%></label>
                     <div class="col-sm-4">
-                        <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_verification">  
+                        <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_adoption">  
                     </div>
                 </div>
         </fieldset>
@@ -840,11 +840,10 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_verification<%=index%>" name="date_of_verification<%=index%>" required>
+                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required>
                 </div>
             </div>
         </td>
-        
     </tr>
 </script>
 
@@ -1075,12 +1074,12 @@
 <script type="text/template" id="person_add_edit_template">
         <fieldset class="form-horizontal">
             <legend><%= person %></legend>
-			
+            
             <div class="form-group"> 
                 <label class="control-label col-sm-2"><%= name %></label>
-            	<div class="col-sm-4">
+                <div class="col-sm-4">
                     <input type="text" name="person_name" class="form-control">
-             	</div>
+                </div>
             </div>
             <div class="form-group"> 
                 <label class="control-label col-sm-2"><%= father_name %></label>
@@ -1107,10 +1106,10 @@
                 </div>
             </div> 
             <div class="form-group">
-            	<label class="control-label col-sm-2 notbold"><%= age %></label>
-            	<div class="col-sm-4"> 
+                <label class="control-label col-sm-2 notbold"><%= age %></label>
+                <div class="col-sm-4"> 
                     <input class="input-mini form-control" name="age" type="text">
-            	</div>
+                </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2 notbold"><%= phone_no %></label>
@@ -1118,7 +1117,7 @@
                     <input name="phone_no" type="text" class="form-control">
                 </div>
             </div>
-			<div class="form-group"> 
+            <div class="form-group"> 
                 <label class="control-label col-sm-2 notbold"><%= group %></label> 
                 <div class="col-sm-4">
                     <select id = "id_group" name="group" class="chosen-select form-control">
@@ -1139,7 +1138,7 @@
 </head>
 
 <body>
-	
+    
     {% csrf_token %}
    
     <div id="app" class='container-fluid'>
@@ -1148,7 +1147,7 @@
     <div id = "notifications" class = "col-xs-10 col-xs-push-1 col-sm-3 col-sm-push-8">
         
     </div>
-	
+    
 </body>
 
 </html>

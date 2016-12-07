@@ -822,18 +822,18 @@ function() {
         'config_English': 'Adoptions',
         'config_हिन्दी': 'अपनाए हुए विधि',
         'config_Français': 'Adoptions',
-        'labels_हिन्दी': {adoption:"अपनाए हुए विधि", village: "गाँव", mediator: "मध्यस्थ", video: "वीडियो", groups_attended: "ग्राम संगठन जिन्होने भाग लिया ", person: "सदस्य", del: "हटाओ", sr_no: "क्रम संख्या", date_of_verification: "अपनाने की तारीख"},
-        'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_verification: "Date d'adoption"},
-        'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_verification: "Date of Adoption"},
-        'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'अपनाने की तारीख','element':'date_of_verification'},{'header':'सदस्य कि आईडी','element':'person.online_id'},{'header':'सदस्य','element':'person.person_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'},{'header':'गाँव','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
-        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date d'adoption",'element':'date_of_verification'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
-        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Adoption Date','element':'date_of_verification'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
+        'labels_हिन्दी': {adoption:"अपनाए हुए विधि", village: "गाँव", mediator: "मध्यस्थ", video: "वीडियो", groups_attended: "ग्राम संगठन जिन्होने भाग लिया ", person: "सदस्य", del: "हटाओ", sr_no: "क्रम संख्या", date_of_adoption: "अपनाने की तारीख", date_of_verification: "अपनाने के जाँच की तारीख"},
+        'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_adoption: "Date d'adoption", date_of_verification: "Date de vérification"},
+        'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification"},
+        'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'अपनाने की तारीख','element':'date_of_adoption'},{'header':'सदस्य कि आईडी','element':'person.online_id'},{'header':'सदस्य','element':'person.person_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'},{'header':'गाँव','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
+        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date de vérification",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
+        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Verification Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'unique_together_fields': ['person.id', 'video.id', 'date_of_verification'],
+        'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
             ignore: [],
 			rules: {
@@ -847,8 +847,8 @@ function() {
                 animator: {
                     required: true,
                 },                
-                date_of_verification: {
-                    required: false,
+                date_of_adoption: {
+                    required: true,
 					validateDate: true,
                 }
             },
@@ -862,6 +862,9 @@ function() {
                 animator: {
                     required: "Mediator is required"
                 },
+				date_of_adoption: {
+					required: "Date of Adoption is required"
+				}
 			},
             highlight: function(element, errorClass, validClass) {
                 $(element)
