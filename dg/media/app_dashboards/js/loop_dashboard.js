@@ -643,7 +643,7 @@ function set_filterlistener() {
             var data_json = {
                 aggregator_data:{
                     name: aggregator_sheet_name,
-                    data : data_set     
+                    data : aggregator_data_set     
                 },
 
                 gaddidar_data: {
@@ -2789,7 +2789,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     // var gaddidar_payment = payments_data.gaddidar_data;
 
     var sno = 1;
-    data_set = [];
+    aggregator_data_set = [];
     gaddidar_data_set = [];
     transporter_data_set = [];
     var dates = [];
@@ -2859,17 +2859,17 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
-            data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
+            aggregator_data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
             sno += 1;
         }
     }
 
     for (var i = 0; i < gaddidar_contribution_data_length; i++) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
-            for (var j = 0; j < data_set.length; j++) {
-                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    data_set[j][9] = parseFloat((data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
+            for (var j = 0; j < aggregator_data_set.length; j++) {
+                if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
+                    aggregator_data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    aggregator_data_set[j][9] = parseFloat((aggregator_data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
                     break;
                 }
             }
@@ -2898,24 +2898,15 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     var finalFormat = function (value){
         if(value.indexOf('.') === -1)
-            return value + '.0';
+            return parseFloat(value).toLocaleString() + '.00';
         else
-            return value;
+            return parseFloat(parseFloat(value).toFixed(2)).toLocaleString();
     }
 
-        // Remove the formatting to get integer data for summation
-    var intVal = function ( column_value ) {
-                return typeof column_value === 'string' ?
-                    column_value.replace(/[\$,]/g, '')*1 :
-                    typeof column_value === 'number' ?
-                        column_value : 0;
-    };
-  
 
-
-    $('#table2').DataTable({
+      $('#table2').DataTable({
         destroy: true,
-        data: data_set,
+        data: aggregator_data_set,
         columns: [{
             title: "S No"
         }, {
@@ -2934,7 +2925,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Farmers' Contribution[FC] (in Rs)"
         }, {
-            title: "Commision Agent Contribution[CAC] (in Rs)"
+            title: "Commission Agent Contribution[CAC] (in Rs)"
         }, {
             title: "Total Payment(in Rs) (AP + TC - FC - CAC)"
         }],
@@ -2959,9 +2950,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
             for(var i=0; i<column_set.length; i++)
             {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return a + b;
                         }, 0 );
-                $( api.column( column_set[i]).footer() ).html(finalFormat(formatVal(total)));
+                $( api.column( column_set[i]).footer() ).html(finalFormat(total+""));
             }
 
         }
@@ -2975,7 +2966,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         columns: [{
             title: "Date"
         }, {
-            title: "Commision Agent"
+            title: "Commission Agent"
         }, {
             title: "Market"
         }, {
@@ -2983,7 +2974,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Commision Agent Discount[CAD] (in Rs/Kg)"
         }, {
-            title: "Commision Agent Contribution[CAC] (in Rs) (Q*CAD)"
+            title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 2,
@@ -2993,7 +2984,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "sExtends": "csv",
                 "sButtonText": "Download",
                 "bBomInc": true,
-                "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details"
+                "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details"
             }]
         },
         
@@ -3005,9 +2996,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
             for(var i=0; i<column_set.length; i++)
             {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return a + b;
                         }, 0 );
-                $( api.column( column_set[i]).footer() ).html(finalFormat(formatVal(total)));
+                $( api.column( column_set[i]).footer() ).html(finalFormat(total+""));
             }
 
         }
@@ -3048,12 +3039,12 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 .column( 5 )
                 .data()
                 .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
+                    return a + b;
                 }, 0 );
            
             // Update footer
             $( api.column( 5 ).footer() ).html(
-                finalFormat(formatVal(total5))
+                finalFormat(total5+"")
             );
 
         }
@@ -3061,7 +3052,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     });
 
     aggregator_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
-    gaddidar_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commision Agent Details";
+    gaddidar_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
     transporter_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
 
 }
