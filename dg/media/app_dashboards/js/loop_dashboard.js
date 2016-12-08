@@ -3102,7 +3102,7 @@ var rows_table2={};
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarsharedoutliers/",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarshareoutliers/",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table3').find('tr :nth-child(5)').removeAttr("style");
@@ -3123,7 +3123,7 @@ var rows_table2={};
                     $('#ToolTables_table3_1').addClass('disable-button');
                     var sData = this.fnGetTableData(oConfig);
                     var JObj={
-                        "mrow":finalData
+                        "gaddidarshareoutliers":finalData
 
                     }
                     ;
@@ -3131,7 +3131,7 @@ var rows_table2={};
                     console.log(JSON.stringify(JObj));
                     $.ajax({
                         url: oConfig.sAjaxUrl,
-                        type:'PATCH',
+                        type:'POST',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
                         data:JSON.stringify(JObj),

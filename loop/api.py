@@ -807,18 +807,20 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
-class GaddidarSharedOutlierResource(BaseResource):
+class GaddidarShareOutliersResource(BaseResource):
     class Meta:
-        allowed_methods = ["post"]
-        queryset = GaddidarShareOutliers.objects.all()
+        allowed_methods = ['post']
         authorization = Authorization()
-        resource_name = 'gaddidarsharedoutliers'
-    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
-    print hydrate_mandi
+        resource_name = 'gaddidarshareoutliers'
+        
+    # hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    # print hydrate_mandi
     # hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
     # hydrate_loopuser = partial(dict_to_foreign_uri,field_name='loopuser')
-    def obj_create(self, bundle, request, **kwargs):      
-        print request.POST
+    print "yoyo"
+    def obj_create(self, bundle, request=None, **kwargs):      
+        print "howdy"
+        print bundle.data
         Omandi = Mandi.objects.get(id=bundle.data["mandi"])
         Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"])
         Ouser = LoopUser.objects.get(id=bundle.data["loopuser"])
