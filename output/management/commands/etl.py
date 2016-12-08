@@ -43,7 +43,7 @@ class AnalyticsSync():
         print "Database:", database
 
         # Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_table.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_tables.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not create schema")
         print "Schema Created"
