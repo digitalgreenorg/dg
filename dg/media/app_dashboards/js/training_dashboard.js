@@ -375,7 +375,7 @@ function get_month_data(start_date, end_date, assessment_ids, trainer_ids, state
         .done(function(data) {
             var data_json = JSON.parse(data);
             hide_progress_bar();
-            plot_monthwise_data(data_json.trainings, data_json.data_list);
+            plot_monthwise_data(data_json.trainings, data_json.month_training_list);
         });
 }
 
