@@ -127,7 +127,7 @@ function hide_nav(tab) {
                 var password = $('#password').val().trim();
                 if (username.length == 0 || password.length == 0) {
                     $('#error_div').show();
-                    document.getElementById('error_message').innerHTML = "* Username and password are required fields.";
+                    document.getElementById('error_message').innerHTML = "* Username and Password are required fields.";
                 } else {
                     $.post("/loop/login/", {
                         'username': username,
