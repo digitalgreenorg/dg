@@ -245,16 +245,18 @@ function get_data() {
         get_question_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_state_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_month_data(start_date,end_date, assessment_ids, trainer_ids, state_ids);
-        get_bottom_boxes(start_date, end_date, assessment_ids);
+        get_bottom_boxes(start_date, end_date, assessment_ids, trainer_ids,  state_ids);
     }
 }
 
-function get_bottom_boxes(start_date, end_date,assessment_ids){
+function get_bottom_boxes(start_date, end_date,assessment_ids, trainer_ids, state_ids){
 
     $.get("/training/date_filter_data/", {
         'start_date': start_date,
         'end_date': end_date,
-        'assessment_ids[]': assessment_ids
+        'assessment_ids[]': assessment_ids,
+        'trainer_ids[]': trainer_ids,
+        'state_ids[]': state_ids
     })
     .done(function(data) {
         var data_json = JSON.parse(data);
@@ -404,6 +406,13 @@ function fill_boxes(data_json, num_trainings_id, mediators_trained_id, average_s
     }
     var num_pass_percent = num_passed / (num_passed + num_failed) * 100;
     var avg_score = total_score / num_pass_length;
+
+    if(isNaN(num_pass_percent)) {
+        num_pass_percent = 0;
+    }
+    if(isNaN(avg_score)) {
+        avg_score = 0;
+    }
 
     document.getElementById(num_trainings_id).innerHTML = numberWithCommas(num_trainings);
     document.getElementById(mediators_trained_id).innerHTML = numberWithCommas(num_participants);

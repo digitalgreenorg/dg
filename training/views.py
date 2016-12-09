@@ -57,12 +57,16 @@ def date_filter_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     assessment_ids = request.GET.getlist('assessment_ids[]')
+    trainer_ids = request.GET.getlist('trainer_ids[]') 
+    state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
         filter_args["training__date__gte"] = start_date
     if(end_date != ""):
         filter_args["training__date__lte"] = end_date
     filter_args['training__assessment__id__in'] = assessment_ids
+    filter_args["training__trainer__id__in"] = trainer_ids
+    filter_args["participant__district__state__id__in"] = state_ids
     filter_args['score__in'] = [0, 1]
     participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
     num_trainings = Score.objects.filter(**filter_args).values('training_id').distinct().count()
