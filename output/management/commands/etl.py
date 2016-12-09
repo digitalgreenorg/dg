@@ -39,7 +39,7 @@ class AnalyticsSync():
         start_time = time.time()
         current_date = datetime.date.today()
         previous_year_date = date(current_date.year - 1, current_date.month, current_date.day)
-        database = 'digitalgreen_clone'
+        database = 'dg_04_dec'
         print "Database:", database
 
         print time.time()
@@ -51,8 +51,13 @@ class AnalyticsSync():
         
         # Fill Data
         try:
+            self.db_connection = MySQLdb.connect(host='localhost', user=DATABASES['default']['USER'],
+                                    passwd=DATABASES['default']['PASSWORD'],
+                                    db=database,
+                                    charset='utf8',
+                                    use_unicode=True).cursor()
             #village_partner_myisam
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,country_id)
+            self.db_connection.execute("""INSERT INTO village_partner_myisam (partner_id,village_id,block_id,district_id,state_id,country_id)
                                         SELECT distinct pp.partner_id, gv.id ,gb.id ,gd.id ,gs.id ,gc.id
                                         FROM people_person pp JOIN programs_partner ppa ON pp.partner_id = ppa.id 
                                         JOIN geographies_village gv ON pp.village_id = gv.id
@@ -63,7 +68,7 @@ class AnalyticsSync():
             print "Finished insert into village_partner_myisam"
 
             #screening_myisam
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.screening_myisam (screening_id, date, video_id, practice_id, group_id,
+            self.db_connection.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
                                         SELECT sc.id, date, svs.video_id, vid.related_practice_id, persongroup_id, sc.village_id, block_id,
                                         district_id, state_id, country_id, sc.partner_id
@@ -79,7 +84,7 @@ class AnalyticsSync():
             print "Finished insert into screening_myisam"
             
             #video_myisam
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.video_myisam (video_id, video_production_date, practice_id, video_type,
+            self.db_connection.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
                                         language_id, village_id, block_id, district_id, state_id, country_id, partner_id)
                                         select vid.id, production_date, related_practice_id, video_type, 
                                         language_id, vid.village_id, block_id, district_id,
@@ -94,7 +99,7 @@ class AnalyticsSync():
             print "Finished insert into video_myisam"
             
             #person_meeting_attendance_myisam
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
+            self.db_connection.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
                                         SELECT pma.id, pma.person_id, sc.id, GENDER, date, sc.village_id, block_id,
                                         district_id, state_id, country_id, sc.partner_id
@@ -109,7 +114,7 @@ class AnalyticsSync():
             print "Finished insert into person_meeting_attendance_myisam"
             
             #person_adopt_practice_myisam
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.person_adopt_practice_myisam (adoption_id, person_id, video_id, gender, date_of_adoption, 
+            self.db_connection.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, gender, date_of_adoption, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
                                         SELECT pap.id, pap.person_id, video_id, GENDER, date_of_adoption, p.village_id, block_id,
                                         district_id, state_id, country_id, pap.partner_id
@@ -123,7 +128,7 @@ class AnalyticsSync():
             print "Finished insert into person_adopt_practice_myisam"
             
             #activities_screeningwisedata
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
+            self.db_connection.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
                                         screening_id, old_coco_id, screening_date, start_time, location, village_id, animator_id, 
                                         partner_id, video_id, video_title, persongroup_id,video_youtubeid) 
                                         SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
@@ -137,7 +142,7 @@ class AnalyticsSync():
             print "Finished insert into activities_screeningwisedata"
             
             #people_animatorwisedata
-            self.db_cursor.execute("""INSERT INTO digitalgreen_clone.people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified, 
+            self.db_connection.execute("""INSERT INTO people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified, 
                                         animator_id, old_coco_id, animator_name, gender, phone_no, partner_id, district_id, total_adoptions, 
                                         assignedvillage_id, start_date )
                                         SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
@@ -282,7 +287,7 @@ class AnalyticsSync():
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list)/5000) + 2):
 
-                self.db_cursor.execute("INSERT INTO digitalgreen_clone.village_precalculation_copy(date, total_screening, total_videos_produced,\
+                self.db_connection.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
                 total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
@@ -310,7 +315,7 @@ class AnalyticsSync():
             ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
             if ret_val != 0:
                 raise Exception("Could not Copied tables")
-            print "Tables Copied"
+            
             print "Total Time On Main DB = ", time.time() - start_time
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
