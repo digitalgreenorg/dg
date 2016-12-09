@@ -54,7 +54,7 @@ def dashboard(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    aggregators = LoopUser.objects.filter(role=ROLE_AGGREGATOR).values('user__id', 'name', 'name_en')
+    aggregators = LoopUser.objects.filter(role=ROLE_AGGREGATOR).values('user__id', 'name', 'name_en', 'id')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
@@ -446,7 +446,7 @@ def payments(request):
         filter_args["date__lte"] = end_date
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
-        'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name').annotate(Sum('quantity'), Count('farmer', distinct=True))
+        'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name','mandi__id','gaddidar__id').annotate(Sum('quantity'))
 
     outlier_data = CombinedTransaction.objects.filter(
         **filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en')).values('date', 'user_created__id', 'mandi__mandi_name').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))

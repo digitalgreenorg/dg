@@ -35,7 +35,9 @@ var VOLUME = "volume",
 var QUANTITY__SUM = "quantity__sum",
     AMOUNT__SUM = "amount__sum",
     MANDI__ID = "mandi__id",
-    USER_CREATED__ID = "user_created__id";
+    USER_CREATED__ID = "user_created__id",
+    MANDI__ID = "mandi__id",
+    GADDIDAR__ID = "gaddidar__id";
 
 
 function initialize() {
@@ -49,9 +51,10 @@ function initialize() {
 
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
+    $("#to_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     today.setMonth(today.getMonth() - 1);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-
+    $("#from_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     showLoader();
     total_static_data();
     recent_graphs_data(language);
@@ -655,10 +658,11 @@ function set_filterlistener() {
 
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
+        var agg_id = $(this).children(":selected").attr("id");
         if (table_created) {
             $('#outliers_data').html("");
         }
-        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id);
         $("#download_payment_sheets").show();
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
@@ -803,10 +807,19 @@ function create_filter(tbody_obj, id, name, checked) {
 }
 
 //To get data after filters are aplied
-function get_data() {
+function get_data(location) {
+  if(location == 'drawer'){
+    start_date = $('#from_date_drawer').val();
+    end_date = $('#to_date_drawer').val();
+  }
+  else {
     start_date = $('#from_date').val();
     end_date = $('#to_date').val();
+  }
     // Get rest of the filters
+    if (Date.parse(start_date) > Date.parse(end_date)) {
+        $('#modal1').openModal();
+    } else {
     aggregator_ids = [];
     aggregator_names = [];
     crop_ids = [];
@@ -846,11 +859,7 @@ function get_data() {
             gaddidar_names.push(gaddidar_div.getAttribute('value'));
         }
     });
-
-    if (Date.parse(start_date) > Date.parse(end_date)) {
-        $('#modal1').openModal();
-    } else {
-        $(".button-collapse1").sideNav('hide');
+        // $(".button-collapse1").sideNav('hide');
         get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
         get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
     }
@@ -2052,17 +2061,24 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
         },
         yAxis: [{
             title: {
-                text: null
+                text: "Volume"
             },
             maxZoom: 0.1
         }, {
             title: {
-                text: null
+                text: "Farmers"
             },
             opposite: true
         }],
         tooltip: {
-            shared: true
+          formatter: function () {
+            var vol = this.points[0];
+            var farmer = this.points[1];
+            return '<b>' + vol.series.name + '</b> : ' +
+                Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
+                Highcharts.numberFormat(farmer.y, 0);
+          },
+          shared: true
         },
         legend: {
             enabled: false
@@ -2758,19 +2774,19 @@ function plot_area_range_graph(container, dict) {
 
 
 // To fill aggregator drop down on Payment page
-function fill_drop_down(container, data_json, id_parameter, name_parameter, caption) {
+function fill_drop_down(container, data_json, id_parameter, name_parameter, caption, id) {
     var tbody_obj = container;
     tbody_obj.html("");
     tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
     $.each(data_json, function(index, data) {
-        var li_item = '<option value=' + data[id_parameter] + '>' + data[name_parameter] + '</option>';
+        var li_item = '<option value = ' + data[id_parameter] + ' id = '+ data[id]+'>' + data[name_parameter] + '</option>';
         tbody_obj.append(li_item);
     });
     $('select').material_select();
 }
 
 //To compute aggregator, transporter, gaddidar payments table
-function aggregator_payment_sheet(data_json, aggregator) {
+function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
     var gaddidar_contribution_data = payments_data.gaddidar_data;
@@ -2784,37 +2800,38 @@ function aggregator_payment_sheet(data_json, aggregator) {
     var mandis = [];
     var quantites = [];
     var gaddidar_amount = [];
-    var farmers = [];
+    // var farmers = [];
     var transport_cost = [];
     var farmer_share = [];
-    for (var i = 0; i < aggregator_payment.length; i++) {
+    var aggregator_payment_length = aggregator_payment.length;
+    for (var i = 0; i < aggregator_payment_length; i++) {
         if (aggregator == aggregator_payment[i][USER_CREATED__ID].toString()) {
-            var date_index = dates.indexOf(aggregator_payment[i]['date'])
+            var date_index = dates.indexOf(aggregator_payment[i]['date']);
             if (date_index == -1) {
                 dates.push(aggregator_payment[i]['date']);
                 mandis.push([]);
                 quantites.push([]);
                 gaddidar_amount.push([]);
-                farmers.push([]);
+                // farmers.push([]);
                 transport_cost.push([]);
                 farmer_share.push([]);
-                date_index = dates.indexOf(aggregator_payment[i]['date'])
+                date_index = dates.indexOf(aggregator_payment[i]['date']);
             }
-            var mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name'])
+            var mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
             if (mandi_index == -1) {
                 mandis[date_index].push(aggregator_payment[i]['mandi__mandi_name']);
                 quantites[date_index].push(0);
                 gaddidar_amount[date_index].push(0);
-                farmers[date_index].push(0);
+                // farmers[date_index].push(0);
                 transport_cost[date_index].push(0);
                 farmer_share[date_index].push(0);
-                mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name'])
+                mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
             }
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
-            farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
+            // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
         }
     }
 
@@ -2831,7 +2848,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
     }
 
-    for (var i = 0; i < transport_payment.length; i++) {
+    var transport_payment_length = transport_payment.length;
+    for (var i = 0; i < transport_payment_length; i++) {
         if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
             date_index = dates.indexOf(transport_payment[i]['date']);
             mandi_index = mandis[date_index].indexOf(transport_payment[i]['mandi__mandi_name']);
@@ -2848,7 +2866,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), farmers[i][j], (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment]);
+            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment,agg_id]);
             sno += 1;
         }
     }
@@ -2857,8 +2875,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < data_set.length; j++) {
                 if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    data_set[j][9] = (data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
+                    data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    data_set[j][8] = (data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
                     break;
                 }
             }
@@ -2877,8 +2895,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Volume"
         }, {
-            title: "Farmers"
-        }, {
             title: "Aggregator Payment"
         }, {
             title: "Transport Cost"
@@ -2888,9 +2904,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Gaddidar Commission"
         }, {
             title: "Payment"
+        }, {
+            title: "Aggregator Id"
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 2,
+        "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -2917,9 +2935,17 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Gaddidar Commission"
         }, {
             title: "Share"
+        },{
+          title: "Mandi Id"
+        },{
+          title: "Gaddidar Id"
+        },{
+          title: "Aggregator Id"
+        }, {
+          title: "Comment"
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 2,
+        "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -2948,7 +2974,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             title: "Transport Cost"
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 2,
+        "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -2983,13 +3009,12 @@ function get_payments_data() {
             'end_date': payments_to_date
         }).done(function(data) {
             $('#aggregator_payment_tab').show();
-
             payments_data = JSON.parse(data);
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
             payments_gaddidar_contribution = payments_data.gaddidar_data;
-            fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator');
+            fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator', 'id');
         });
     } else {
         alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date.");
