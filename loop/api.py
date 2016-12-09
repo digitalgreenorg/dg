@@ -808,40 +808,51 @@ class DayTransportationResource(BaseResource):
             return http.Http404()
 
 class GaddidarShareOutliersResource(BaseResource):
+    # mandi = fields.ForeignKey(MandiResource,'mandi')
+    # gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
+    # aggregator = fields.ForeignKey(LoopUserResource,'loopuser')
     class Meta:
-        allowed_methods = ['post']
+        queryset = GaddidarShareOutliers.objects.filter()
+        allowed_methods = ['post','put','patch','get']
         authorization = Authorization()
+        authentication = Authentication()
         resource_name = 'gaddidarshareoutliers'
-        
-    # hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
-    # print hydrate_mandi
-    # hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
-    # hydrate_loopuser = partial(dict_to_foreign_uri,field_name='loopuser')
-    print "yoyo"
-    def obj_create(self, bundle, request=None, **kwargs):      
-        print "howdy"
+        always_return_data = True
+
+    # dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=["id"])
+    # dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=["id"])
+    # dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=["id"])
+    # hydrate_mandi = partial(id_to_foreign_uri,field_name='mandi')
+    # hydrate_gaddidar = partial(id_to_foreign_uri,field_name='gaddidar')
+    # hydrate_aggregator = partial(id_to_foreign_uri,field_name='loopuser')
+    def obj_create(self, bundle, request=None, **kwargs):
         print bundle.data
         Omandi = Mandi.objects.get(id=bundle.data["mandi"])
         Ogaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"])
         Ouser = LoopUser.objects.get(id=bundle.data["loopuser"])
         attempt = GaddidarShareOutliers.objects.filter(date=bundle.data[
-                                                     "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
+                                                 "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
+
+        print Ouser.name,Ogaddidar.gaddidar_name,Omandi.mandi_name
         if attempt.count() < 1:
+            # bundle = super(GaddidarShareOutliers,self).obj_create(bundle, **kwargs)
+            print Ogaddidar.gaddidar_name,Ogaddidar.id
             gaddidarobj = GaddidarShareOutliers(mandi=Omandi,aggregator=Ouser,gaddidar=Ogaddidar,amount=bundle.data["amount"],date = bundle.data["date"],comment=bundle.data["comment"])
+            print gaddidarobj.gaddidar, gaddidarobj.aggregator, gaddidarobj.mandi,gaddidarobj.comment,gaddidarobj.amount,gaddidarobj.date
             gaddidarobj.save()
         else:
-            gaddidarobj = GaddidarShareOutliers.objects.filter(date=bundle.data[
-                                                     "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
-            gaddidarobj.amount = bundle.data["amount"]
-            gaddidarobj.comment = bundle.data["comment"]
-            gaddidarobj.save()
+            #bundle = super(GaddidarShareOutliers,self).obj_update(bundle, **kwargs)
+            #gaddidarobj = GaddidarShareOutliers.objects.filter(date=bundle.data[
+            #                                     "date"], mandi=Omandi,gaddidar=Ogaddidar,aggregator=Ouser)
+            #gaddidarobj.amount = bundle.data["amount"]
+            #gaddidarobj.comment = bundle.data["comment"]
+            #gaddidarobj.save()
             print "ALREADY EXISTS"
-            # bundle = super(GaddidarSharedOutlierResource,self).obj_update(bundle, **kwargs)
-            # raise TransactionNotSaved(
-            #     {"id": int(attempt[0].id), "error": "Duplicate"})
-        return bundle
+#         # bundle = super(GaddidarSharedOutlierResource,self).obj_update(bundle, **kwargs)
+#         # raise TransactionNotSaved(
+#         #     {"id": int(attempt[0].id), "error": "Duplicate"})
+        return None
 
-    #def hydrate(self,bundle):
 
 
 class CombinedTransactionResource(BaseResource):

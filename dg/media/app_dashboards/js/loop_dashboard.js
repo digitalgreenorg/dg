@@ -3111,7 +3111,7 @@ var rows_table2={};
                         for(var keys in rows_table3){
                             var row_data = {}
                             row_data['date']=$('#table3').DataTable().cell(keys-1,0).data();
-                            row_data['share']=$('#table3 tr').eq(keys)[0].childNodes[5].innerHTML;
+                            row_data['amount']=$('#table3 tr').eq(keys)[0].childNodes[5].innerHTML;
                             row_data['mandi']=$('#table3').DataTable().cell(keys-1,6).data();
                             row_data['gaddidar']=$('#table3').DataTable().cell(keys-1,7).data();
                             row_data['aggregator']=$('#table3').DataTable().cell(keys-1,8).data();
@@ -3123,7 +3123,7 @@ var rows_table2={};
                     $('#ToolTables_table3_1').addClass('disable-button');
                     var sData = this.fnGetTableData(oConfig);
                     var JObj={
-                        "gaddidarshareoutliers":finalData
+                        "objects":finalData
 
                     }
                     ;
@@ -3131,7 +3131,7 @@ var rows_table2={};
                     console.log(JSON.stringify(JObj));
                     $.ajax({
                         url: oConfig.sAjaxUrl,
-                        type:'POST',
+                        type:'patch',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
                         data:JSON.stringify(JObj),
