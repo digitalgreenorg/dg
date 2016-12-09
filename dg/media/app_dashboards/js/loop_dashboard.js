@@ -113,10 +113,10 @@ function hide_nav(tab) {
         $("#home_tab").addClass('active');
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE) {
+        selected_page = PAYMENTS_PAGE;
         if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp + 1).getTime() <= new Date().getTime()) {
             $("#payments_div").show();
             $("#payments_tab").addClass('active');
-            selected_page = PAYMENTS_PAGE;
         } else {
             window.localStorage.clear();
             $('#login_modal').openModal({
@@ -141,7 +141,6 @@ function hide_nav(tab) {
                             $('#login_modal').closeModal();
                             $("#payments_div").show();
                             $("#payments_tab").addClass('active');
-                            selected_page = PAYMENTS_PAGE;
                         }
                     }).fail(function() {
                         $('#error_div').show();
