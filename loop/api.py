@@ -827,6 +827,22 @@ class GaddidarShareOutliersResource(BaseResource):
     hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
     hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
 
+    def obj_create(self,bundle,request=None,**kwargs):
+        mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+        gaddidarObject = Gaddidar.objects.get(id = bundle.data['gaddidar']['online_id'])
+        aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
+
+        attempt = GaddidarShareOutliers.objects.filter(date=bundle.data['date'],mandi=mandiObject,gaddidar=gaddidarObject,aggregator=aggregatorObject)
+        if attempt.count() < 1:
+            bundle = super(GaddidarShareOutliersResource,self).obj_create(bundle,**kwargs)
+        else:
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(GaddidarShareOutliersResource,self).obj_update(bundle, **kwargs)
+        return bundle
+
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
     farmer = fields.ForeignKey(FarmerResource, 'farmer')
