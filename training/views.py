@@ -13,6 +13,9 @@ from tastypie.models import ApiKey, create_api_key
 from models import Training, Score, Trainer, Question, Assessment
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
 from geographies.models import State
+from django.db import connection
+import datetime
+from datetime import date
 
 # Create your views here.
 @csrf_exempt
@@ -188,6 +191,9 @@ def state_wise_data(request):
 def month_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    current_year = datetime.date.today().year
+    start_date = datetime.date(current_year, 01, 01)
+    end_date = datetime.date(current_year, 12, 31)
     assessment_ids = request.GET.getlist('assessment_ids[]')
     trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
@@ -202,22 +208,18 @@ def month_wise_data(request):
     filter_args["score__in"] = [1, 0]
 
     month_data_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    truncate_date = connection.ops.date_trunc_sql('month', 'date')
+    training_month_data = Training.objects.extra({'month':truncate_date})
+    training_list = list(Score.objects.values_list('training_id', flat=True).distinct())
+    month_wise_training_data = training_month_data.filter(id__in=training_list, date__gte=start_date, date__lte=end_date).values('month').annotate(Count('id')).order_by('month')
 
-    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                                   passwd=dg.settings.DATABASES['default']['PASSWORD'],
-                                   db=dg.settings.DATABASES['default']['NAME'],
-                                    charset = 'utf8',
-                                     use_unicode = True)
-    query = '''SELECT MONTH(tt.date) as \'Month\',count(distinct tt.id) \'Number of Training\' FROM training_score ts join training_training tt on tt.id = ts.training_id and tt.date >= 20160101 AND tt.date <= 20161231 GROUP BY  MONTH(tt.date) order by MONTH(tt.date)'''
-    cur = mysql_cn.cursor()
-    cur.execute(query)
-    result = cur.fetchall()
     maximum = -1
-    for row in result:
-        if row[0] > maximum:
-            maximum = row[0]
-        month_data_list[row[0]-1] = int(row[1])
-    mysql_cn.close()
-    data_dict = {'trainings':'Number of Trainings','data_list':month_data_list[:maximum-1]}
+    for training_data in month_wise_training_data:
+        month = training_data['month'].month
+        training_count = training_data['id__count']
+        month_data_list[month - 1] = training_count
+        maximum = max(maximum, month)
+
+    data_dict = {'trainings':'Number of Trainings','month_training_list':month_data_list[:maximum]}
     data = json.dumps(data_dict)
     return HttpResponse(data)
