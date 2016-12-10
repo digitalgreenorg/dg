@@ -39,7 +39,7 @@ class AnalyticsSync():
         start_time = time.time()
         current_date = datetime.date.today()
         previous_year_date = date(current_date.year - 1, current_date.month, current_date.day)
-        database = 'dg_04_dec'
+        database = 'digitalgreen_clone'
         print "Database:", database
 
         print time.time()
