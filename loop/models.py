@@ -176,7 +176,7 @@ class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
     gaddidar_name = models.CharField(max_length=100)
     gaddidar_phone = models.CharField(max_length=13)
-    commission = models.FloatField(default=1.0)
+    commission = models.FloatField("Discount",default=1.0)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
@@ -382,7 +382,7 @@ class GaddidarCommission(LoopModel):
     mandi = models.ForeignKey(Mandi)
     gaddidar = ChainedForeignKey(Gaddidar, chained_field="mandi", chained_model_field="mandi")
     start_date = models.DateField(auto_now=False)
-    discount_percent = models.FloatField(validators=[MinValueValidator(0.0),
+    discount_percent = models.FloatField(verbose_name="Discount",validators=[MinValueValidator(0.0),
                                                      MaxValueValidator(1.0)], default=0.0)
     def __unicode__(self):
         return "%s (%s)" % (
@@ -408,12 +408,26 @@ class GaddidarShareOutliers(LoopModel):
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
 
+class IncentiveParameter(models.Model):
+    notation = models.CharField(max_length=3)
+    parameter_name = models.CharField(max_length=25)
+
+class IncentiveModel(models.Model):
+    postfix_expression = models.CharField(max_length=100)
+    infix_expression = models.CharField(max_length=100)
+    def __unicode__(self):
+        return "%s" % (self.infix_expression)
+
+class Slab(models.Model):
+    lower_band = models.IntegerField()
+    upper_band = models.IntegerField()
+
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     start_date = models.DateField(auto_now=False)
     model_type = models.IntegerField(choices=MODEL_TYPES, default=0)
     incentive_model = models.ForeignKey(IncentiveModel)
-    slab = model.ForeignKey(Slab)
+    slab = models.ForeignKey(Slab)
 
     class Meta:
         unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
@@ -426,18 +440,6 @@ class AggregatorIncentive(LoopModel):
 
     def __slab__(self):
         return "%s - %s" % (self.slab.lower_band, self.slab.upper_band)
-
-class IncentiveParameter(models.Model):
-    notation = models.CharField(max_length=3)
-    parameter_name = models.CharField(max_length=25)
-
-class IncentiveModel(model.Model):
-    postfix_expression = model.CharField(max_length=100)
-    infix_expression = model.CharField(max_length=100)
-
-class Slab(model.Model):
-    lower_band = model.IntegerField()
-    upper_band = model.IntegerField()
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)

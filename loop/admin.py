@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
+from django.forms import TextInput, Textarea
 
 from models import *
 
@@ -42,39 +43,32 @@ class LoopAdmin(AdminSite):
 
 class LoopUserAssignedMandis(admin.StackedInline):
     model = LoopUserAssignedMandi
-
+    extra = 4
 
 class LoopUserAssignedVillages(admin.StackedInline):
     model = LoopUserAssignedVillage
-
+    extra = 4
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
+    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
     list_display = ('name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
+    # formfield_overrides = {
+    #     models.CharField: {'widget': TextInput(attrs={'size':'50'})},
+    # }
 
 
-class LoopUserInline(admin.TabularInline):
-    model = LoopUser
-    extra = 5
-    exclude = ('assigned_mandis', 'assigned_villages')
+# class LoopUserInline(admin.TabularInline):
+#     model = LoopUser
+#     extra = 5
+#     exclude = ('assigned_mandis', 'assigned_villages')
 
 
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'phone', '__village__')
     search_fields = ['name', 'phone', 'village__village_name']
     list_filter = ['village__village_name']
-
-
-# class LoopUserAssignedVillageAdmin(admin.ModelAdmin):
-#     list_display = ('loop_user', 'village')
-#     search_fields = ['loop_user__name', 'village__village_name']
-#
-#
-# class LoopUserAssignedMandiAdmin(admin.ModelAdmin):
-#     list_display = ('loop_user', 'mandi')
-#     search_fields = ['loop_user__name', 'mandi__mandi_name']
-
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
@@ -102,8 +96,9 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
+    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','commission','is_visible')
     list_display = ('id', 'gaddidar_name',
-                    'gaddidar_phone', 'mandi', 'commission', 'gaddidar_name_en')
+                    'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
     list_filter = ['mandi__mandi_name']
 
@@ -115,12 +110,14 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
+    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
     search_fields = ['mandi_name', 'district__district_name']
     list_filter = ['district__district_name']
 
 
 class VillageAdmin(admin.ModelAdmin):
+    fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'village_name', 'block', 'village_name_en')
     search_fields = ['village_name', 'block__block_name']
     list_filter = ['block__block_name']
@@ -131,13 +128,24 @@ class CropAdmin(admin.ModelAdmin):
     search_fields = ['crop_name']
 
 class GaddidarCommisionAdmin(admin.ModelAdmin):
+    fields = ('start_date','mandi','gaddidar','discount_percent')
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
+    fields = ('date','aggregator','mandi','gaddidar','amount')
     list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
+
+class AggregatorIncentiveAdmin(admin.ModelAdmin):
+    list_display = ('start_date','__unicode__','__incentive_model__','__slab__')
+
+class IncentiveModelAdmin(admin.ModelAdmin):
+    list_display = ['infix_expression']
+
+class SlabAdmin(admin.ModelAdmin):
+    list_display = ['lower_band','upper_band']
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
@@ -161,3 +169,7 @@ loop_admin.register(Language)
 loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
 loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
 loop_admin.register(CropLanguage,CropLanguageAdmin)
+loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
+loop_admin.register(IncentiveModel,IncentiveModelAdmin)
+loop_admin.register(Slab,SlabAdmin)
+loop_admin.register(IncentiveParameter)
