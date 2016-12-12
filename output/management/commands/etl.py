@@ -46,8 +46,8 @@ class AnalyticsSync():
         # Create schema
         ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'delete_myisam_tables.sql')), shell=True)
         if ret_val != 0:
-            raise Exception("Could not create schema")
-        print "Schema Created"
+            raise Exception("Could not create schema on clone DB")
+        print "Schema Created on clone DB"
         
         # Fill Data
         try:
@@ -293,7 +293,7 @@ class AnalyticsSync():
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
                 VILLAGE_ID, BLOCK_ID, DISTRICT_ID, STATE_ID, COUNTRY_ID, partner_id)\
                 VALUES "+','.join(values_list[(i-1)*5000:i*5000]))
-            print "Total Time On Clone DB= ", time.time() - start_time
+            print "Total time on clone DB = ", time.time() - start_time
             self.copy_myisam_main()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
@@ -306,16 +306,16 @@ class AnalyticsSync():
         
         try:
             # Create schema
-            ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
-            if ret_val != 0:
-                raise Exception("Could not create schema")
-            print "Schema created"
+            drop_create = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+            if drop_create != 0:
+                raise Exception("Could not create schema on main DB")
+            print "Schema created on main DB"
 
             # Copy Data into main tables :
-            ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
-            if ret_val != 0:
-                raise Exception("Could not Copied tables")
-            
+            copy_tables = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
+            if copy_tables != 0:
+                raise Exception("Could not copy tables to main DB")
+            print "Tables copied to main DB"
             print "Total Time On Main DB = ", time.time() - start_time
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
