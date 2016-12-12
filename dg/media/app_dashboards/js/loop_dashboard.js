@@ -2910,7 +2910,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         columns: [{
             title: "S No"
         }, {
-            title: "Date",
+            title: "Date"
         }, {
             title: "Market"
         }, {
