@@ -23,11 +23,6 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'total': True,
                                                      'formula': '0.25 * D',
                                                     },
-                                                    {
-                                                        'label':'Farmers',
-                                                        'total':False,
-                                                        'formula':None,
-                                                    },
                                                     {'label': 'Transport Cost [TC] (in Rs)',
                                                      'total': True,
                                                      'formula': None
