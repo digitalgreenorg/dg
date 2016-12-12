@@ -20,7 +20,7 @@
 		{% block navbar %}{% endblock %}
 	</div>
 	<main>
-		<div id="content" class="container">
+		<div id="content" class="container" style="margin-top:-1%;">
 			{% block content %}{% endblock %}
 		</div>
 	</main>
@@ -32,4 +32,5 @@
 <script src="{% static 'app_dashboards/js/materialize.min.js' %}"></script>
 <script src="{% static 'app_dashboards/js/training_dashboard.js' %}"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
+
 </html>
