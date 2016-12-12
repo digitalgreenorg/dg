@@ -2868,8 +2868,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < aggregator_data_set.length; j++) {
                 if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    aggregator_data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    aggregator_data_set[j][9] = parseFloat((aggregator_data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
+                    aggregator_data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    aggregator_data_set[j][8] = parseFloat((aggregator_data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
                     break;
                 }
             }
