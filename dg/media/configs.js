@@ -430,6 +430,19 @@ function() {
         }
     };
 
+    var parent_category_configs = {
+        'config_English': 'ParentCategory',
+        'config_हिन्दी': 'श्रेणी',
+        'config_Français': 'Catégorie',
+        'rest_api_url': '/coco/api/v2/parentcategory/',
+        'entity_name': 'parentcategory',
+        'sort_field': 'parent_category_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var subcategory_configs = {
         'config_English': 'Sub Categories',
         'config_हिन्दी': 'उप श्रेणी',
@@ -615,13 +628,14 @@ function() {
         'config_Français': 'Projections',
         'labels_हिन्दी': {screening:"दिखाए गए वीडियो", date: "विडियो दिखने की तिथि", start_time: "आरंभ करने की तिथि", village: "गाँव", mediator: "मध्यस्थ",
             videos_screened: "वीडियो जो दिखाया गया", groups_attended: "ग्राम संगठन जिन्होने भाग लिया", person: "सदस्य", questions_asked: "पूछे गये सवाल",
-            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया"},
+            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'प्रपत्र प्रकार', age: 'आयु', gender: 'लिंग'},
         'labels_Français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
-            del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne"},
+            del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", parentcategory: 'Type de formulaire', age: 'Âge', gender: 'Le genre',
+            category: "Catégorie",},
         'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
-            del: "Delete", sr_no: "Sr. No.", person_attended: "Person"},
+            del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Form Type', age: 'Age', gender: 'Gender', category: "Category"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Date de projection','element':'date'},{'header':'Disséminateur','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groupe concerné','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Vidéo projectée','subelement':'title','element':'videoes_screened'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
@@ -629,6 +643,9 @@ function() {
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
+        'fields_to_hide': 'input#age input#gender div#category_chosen',
+        'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
+        'parent_id_for_inline': 'row7',
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         afterSave: function(off_json, Offline){
@@ -693,10 +710,23 @@ function() {
                     'name_field': 'village_name'
                 },
             },
+
+            'parentcategory': {
+                'parentcategory': {
+                    'placeholder': 'id_parentcategory',
+                    'name_field': 'parent_category_name'
+                },
+            },
+
             'video': {
                 'videoes_screened': {
                     'placeholder': 'id_videoes_screened',
-                    'name_field': 'title'
+                    'name_field': 'title',
+                    'dependency': [{
+                        'source_form_element': 'parentcategory',
+                        'dep_attr': 'parent_category',
+                        'parent_attr': 'category'
+                    }]
                 },
             },
             'mediator': {
@@ -758,7 +788,7 @@ function() {
                                 }
                             }
                         },
-                        extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                        extra_fields: ["category", "expressed_question", "interested", "expressed_adoption_video"]
                     }
                 }
             }
@@ -1233,6 +1263,7 @@ function() {
         adoption: adoption_configs,
         language: language_configs,
         category: category_configs,
+        parentcategory: parent_category_configs,
         subcategory: subcategory_configs,
         videopractice: videopractice_configs,
         district: district_configs,

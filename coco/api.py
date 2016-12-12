@@ -13,7 +13,7 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
-from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice
+from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice, ParentCategory
 from models import CocoUser
 
 # Will need to changed when the location of forms.py is changed
@@ -269,6 +269,16 @@ class BaseResource(ModelResource):
         bundle.obj.user_created_id = bundle.request.user.id
         return self.save(bundle)
 
+
+class ParentCategoryResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = ParentCategory.objects.all()
+        resource_name = 'parentcategory'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
 class PartnerResource(ModelResource):    
     class Meta:
         max_limit = None
@@ -375,7 +385,7 @@ class VideoResource(BaseResource):
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
-    dehydrate_category = partial(foreign_key_to_id, field_name='category', sub_field_names=['id','category_name'])
+    dehydrate_category = partial(foreign_key_to_id, field_name='category', sub_field_names=['id','category_name', 'parent_category'])
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory', sub_field_names=['id','subcategory_name'])
     dehydrate_videopractice = partial(foreign_key_to_id, field_name='videopractice', sub_field_names=['id','videopractice_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
@@ -400,6 +410,7 @@ class VideoResource(BaseResource):
     
     def dehydrate_production_team(self, bundle):
         return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all() ]
+
 
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
@@ -453,16 +464,19 @@ class ScreeningResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
     partner = fields.ForeignKey(PartnerResource, 'partner')
+    parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
     farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
+    dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_farmer_groups_targeted = partial(dict_to_foreign_uri_m2m, field_name = 'farmer_groups_targeted', resource_name='group')
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
     hydrate_partner = partial(assign_partner)
+    hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
     
     # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
     class Meta:
@@ -486,8 +500,10 @@ class ScreeningResource(BaseResource):
             screening_id  = getattr(bundle.obj,'id')
             for pma in pma_list:
                 try:
-                    attendance = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'],
-                                                    user_created_id = user_id)
+                    attendance = PersonMeetingAttendance(screening_id=screening_id,
+                                                         person_id=pma['person_id'],
+                                                         user_created_id = user_id,
+                                                         category=pma['category'])
                     attendance.save()
                 except Exception, e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
@@ -507,8 +523,10 @@ class ScreeningResource(BaseResource):
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
-            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'],
-                                          user_created_id = user_id)
+            pma = PersonMeetingAttendance(screening_id=screening_id,
+                                          person_id=pma['person_id'],
+                                          user_created_id = user_id,
+                                          category=pma['category'])
             pma.save()    
         return bundle
     
@@ -521,6 +539,7 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmers_attendance(self, bundle):
         return [{'person_id':pma.person.id, 
                  'person_name': pma.person.person_name, 
+                 'category': pma.category
                  }  
                  for pma in bundle.obj.personmeetingattendance_set.all()]
     
@@ -529,6 +548,7 @@ class PersonResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
+    pma_direct_beneficiariescategory = fields.DictField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     
     class Meta:
@@ -554,8 +574,12 @@ class PersonResource(BaseResource):
         return p_field+"("+v_field+","+f_field+")"
     
     def dehydrate_videos_seen(self, bundle):
-        videos_seen = [{'id': video.id, 'title': video.title} for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
+        videos_seen = [{'id': video.id, 'title': video.title, } for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
+
+    def dehydrate_pma_direct_beneficiariescategory(self, bundle):
+        pma_cat = [{'id': pma.id, 'category': pma.category} for pma in bundle.obj.personmeetingattendance_set.all()]
+        return pma_cat
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
 class PersonAdoptVideoResource(BaseResource):
@@ -606,6 +630,8 @@ class CategoryResource(ModelResource):
         resource_name = 'category'
         authentication = SessionAuthentication()
         authorization = Authorization()
+    dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
+    hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
 
 class SubCategoryResource(ModelResource):  
     category = fields.ForeignKey(CategoryResource, 'category')

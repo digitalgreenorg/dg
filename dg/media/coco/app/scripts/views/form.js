@@ -242,6 +242,7 @@ define([
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
             }
+
         },
         
         //fetches all foreign collections and renders them when all are fetched
@@ -267,7 +268,17 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
+                    if (this.$el.find('#id_parentcategory').val() == "2"){
+                        // hide the headers
+                        this.$el.find('th#id_age').addClass('hidden');
+                        this.$el.find('th#id_gender').addClass('hidden');
+                        this.$el.find('th#id_category').addClass('hidden');
+                        this.$el.find('input#age_row7').addClass('hidden');
+                        this.$el.find('input#gender_row7').addClass('hidden');
+                        this.$el.find('div#category_row7_chosen').addClass('hidden');
+                    }
             }, this);
+
         },
 
         // fetch edit object and render it into form
@@ -561,29 +572,37 @@ define([
                         return exists;
                     });
                 } else {
+
                     filtered_models = dep_collection.filter(function(model) {
+                        var d = dep_desc;
                         var exists = false;
                         var compare = null;
                         if (typeof model.get(dep_desc.dep_attr) == "object")
                             compare = model.get(dep_desc.dep_attr).id;
                         else
-                            compare = model.get(dep_desc.dep_attr)
-
-                        if (dep_desc.src_attr && dep_desc.src_attr != "id") {
-                            var s_collection = that.get_collection_of_element(source_form_element);
-                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
-                            if (s_model.get(dep_desc.src_attr) instanceof Array) {
-                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
-                                    if (compare == src_compare.id)
-                                        exists = true;
-                                });
+                            if (dep_desc.parent_attr){
+                                compare = model.get(dep_desc.parent_attr)[dep_desc.dep_attr];
+                            }else{
+                                compare = model.get(dep_desc.dep_attr)
                             }
-                            return exists;
-                        } else {
-                            if (!($.inArray(String(compare), source_curr_value) == -1))
-                                exists = true;
-                            return exists;
+
+                        if (compare != null) {
+                            if (dep_desc.src_attr && dep_desc.src_attr != "id") {
+                                var s_collection = that.get_collection_of_element(source_form_element);
+                                var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                                if (s_model.get(dep_desc.src_attr) instanceof Array) {
+                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                    $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                        if (compare == src_compare.id)
+                                            exists = true;
+                                    });
+                                }
+                                return exists;
+                            } else {
+                                if (!($.inArray(String(compare), source_curr_value) == -1))
+                                    exists = true;
+                                return exists;
+                            }
                         }
                     });
                 }
@@ -700,8 +719,8 @@ define([
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
+
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
@@ -714,8 +733,39 @@ define([
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+                if (this.$el.find('#id_parentcategory').val() == "2"){
+                    this.$el.find('th#id_age').addClass('hidden');
+                    this.$el.find('th#id_gender').addClass('hidden');
+                    this.$el.find('th#id_category').addClass('hidden');
+                    this.$el.find('input#age_row7').addClass('hidden');
+                    this.$el.find('input#gender_row7').addClass('hidden');
+                    this.$el.find('div#category_row7_chosen').addClass('hidden');
+                }
+                // if (this.$el.find('#id_parentcategory').val() != '1'|this.$el.find('#id_parentcategory').val() != '2'){
+                //     this.$el.find('th#id_age').addClass('hidden');
+                //     this.$el.find('th#id_gender').addClass('hidden');
+                //     this.$el.find('th#id_category').addClass('hidden');
+                //     this.$el.find('input#age_row7').addClass('hidden');
+                //     this.$el.find('input#gender_row7').addClass('hidden');
+                //     this.$el.find('div#category_row7_chosen').addClass('hidden');
+                // }
+
             } else {
                 console.log("NOT EXPANDED");
+                if (!this.edit_case && !this.foreign_elements_rendered[element]){
+                    $("#id_parentcategory").on('change', function(){
+                    if ($('#id_group').val() != ''){
+                            $('.search-choice-close').click();
+                            $('#id_group').trigger("chosen:updated");
+                        }
+                    })
+                }
+                if (this.edit_case && this.foreign_elements_rendered[element]){
+                    $("#id_parentcategory_chosen").on('click', function(){
+                            $('.search-choice-close').click();
+                            $('#id_group').trigger("chosen:updated");
+                    })
+                }
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if ($f_el.is('select[multiple]'))
                     $f_el.html('');

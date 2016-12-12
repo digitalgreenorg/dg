@@ -598,6 +598,16 @@
                         </select > 
                	    </div>
                 </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2"><%= parentcategory %></label>
+                    <div class="col-sm-4"> 
+                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
+                        <option value='0' selected='selected'>---------</option> 
+                        </select> 
+                    </div>
+                </div>
+                
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= videos_screened %></label>
                 	<div class="col-sm-4"> 
@@ -629,14 +639,23 @@
                 <table id="pma_table" class="table">
                     <thead class="hide-header">
                         <tr>
-                            <th class="notbold">
+                            <th id="del" class="notbold">
                                 <%= del %>?
                             </th>
-                            <th class="notbold">
+                            <th id="id_sr_no" class="notbold">
                                 <%= sr_no %>
                             </th>
-                            <th class="notbold">
+                            <th id="id_person_label" class="notbold">
                                 <%= person %>
+                            </th>
+                            <th id="id_age" class="notbold">
+                                <%= age %>
+                            </th>
+                            <th id="id_gender" class="notbold">
+                                <%= gender %>
+                            </th>
+                            <th id="id_category" class="notbold">
+                                <%= category %>
                             </th>
                         </tr>
                     </thead>
@@ -684,6 +703,50 @@
                         }
                     %>
                     <input type="text" class="input-sm form-control" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                <input type="text"  class="form-control" style="width: 50px;"  id="age_row7" name="age" value="<%=age%>">
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                <input type="text"  class="form-control" style="width: 50px;"  id="gender_row7" name="gender" value="<%=gender%>">
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <div class="controls">
+                    <%
+                        var category_label = "";
+                        if(typeof(online_id)!="undefined"){
+                            if (pma_direct_beneficiariescategory.length > 0){
+                                category_label = pma_direct_beneficiariescategory[0].category
+                            }    
+                            else{
+                                category_label = category;
+                            }
+                        }else{
+                            category_label = category
+                        }
+                    %>
+                    <select required name="category<%=index%>" id="category_row7" class="chosen-select form-control">
+                        <option value='' selected='selected'>-----------</option>
+
+
+                        <option value='0' <% if (category_label == "0") { %> selected='selected' <% }else{} %>>Pregnant Woman</option>
+                        <option value='1' <% if (category_label == "1") { %> selected='selected' <% } %>>Mother of a child up to 6 months</option>
+                        <option value='2' <% if (category_label == "2") { %> selected='selected' <% } %>>Mother of a child 6 months to 2 years</option>
+                        <option value='3' <% if (category_label == "3") { %> selected='selected' <% } %>>Mother of a child  2 to 5 years')</option>
+                        <option value='4' <% if (category_label == "4") { %> selected='selected' <% } %>>Adolescent girl (10-19 years)</option>
+                        <option value='5' <% if (category_label == "5") { %> selected='selected' <% } %>>Woman of reproductive age (15-49 years)</option>
+                    </select>
                 </div>
             </div>
         </td>

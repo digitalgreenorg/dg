@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MaxValueValidator
 
 from coco.data_log import delete_log, save_log
-from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
+from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY, PARENT_CATEGORY
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person
@@ -75,9 +75,22 @@ class Practice(CocoModel):
         practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
         return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
+
+class ParentCategory(CocoModel):
+    id = models.AutoField(primary_key=True)
+    parent_category_name = models.CharField(max_length=100, unique='True')
+
+    class Meta:
+        verbose_name_plural = "ParentCategory"
+
+    def __unicode__(self):
+        return self.parent_category_name
+
+
 class Category(CocoModel):
     id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=100, unique='True')
+    parent_category = models.ForeignKey(ParentCategory, null=True, blank=True)
 
     def get_village(self):
         return None

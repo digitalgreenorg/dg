@@ -9,8 +9,18 @@ from coco.base_models import CocoModel
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, Person, PersonGroup
-from videos.models import Video
-from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY
+from videos.models import Video, ParentCategory
+from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY, ATTENDED_PERSON_CATEGORY
+
+
+# class DirectBeneficiaries(models.Model):
+#     """
+#     Describes the direct beneficiaries
+#     """
+#     member_title = models.CharField(max_length=80, null=True)
+
+#     def __unicode__(self):
+#         return self.member_title
 
 
 class VRPpayment(models.Manager):
@@ -76,6 +86,7 @@ class Screening(CocoModel):
     start_time = models.TimeField()
     end_time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
+    parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
     village = models.ForeignKey(Village)
     animator = models.ForeignKey(Animator)
     farmer_groups_targeted = models.ManyToManyField(PersonGroup)
@@ -105,6 +116,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
+    category = models.CharField(max_length=1, choices=ATTENDED_PERSON_CATEGORY, null=True)
     
     def __unicode__(self):
         return  u'%s' % (self.id)

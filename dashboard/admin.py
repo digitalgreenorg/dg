@@ -17,7 +17,7 @@ from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
-from videos.models import  NonNegotiable
+from videos.models import  NonNegotiable, ParentCategory
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -74,16 +74,20 @@ class NonNegotiablesInline(admin.TabularInline):
     extra = 10
 
 
+class ParentCategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'parent_category_name']
+    search_fields = ['parent_category_name']
+
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline,]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice','category','subcategory','videopractice']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
-    list_display = ('id', 'title', 'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
-    search_fields = ['id', 'title', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
-    list_filter = ('review_status', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
+    list_display = ('id', 'title', 'category',  'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
+    search_fields = ['id', 'title', 'category', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
+    list_filter = ('review_status', 'category', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
     list_editable = ('review_status', 'video_grade', 'reviewer')
     raw_id_fields = ('village', 'production_team', 'related_practice')
     class Media:
@@ -176,7 +180,7 @@ class PersonAdoptPracticeAdmin(admin.ModelAdmin):
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', '__unicode__' , 'partner', 'is_modelfarmer')
+    list_display = ('id', '__unicode__' , 'age', 'gender' ,'partner', 'is_modelfarmer')
     search_fields = ['person_name','village__village_name','group__group_name']
     raw_id_fields = ('village','group')
 
