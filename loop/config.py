@@ -24,7 +24,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'formula': '0.25 * D',
                                                     },
                                                     {
-                                                        'label':'Farmer',
+                                                        'label':'Farmers',
                                                         'total':False,
                                                         'formula':None,
                                                     },
