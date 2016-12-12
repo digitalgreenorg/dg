@@ -139,6 +139,7 @@ class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
+    fields = ('start_date','aggregator','model_type','incentive_model','slab')
     list_display = ('start_date','__unicode__','__incentive_model__','__slab__')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
