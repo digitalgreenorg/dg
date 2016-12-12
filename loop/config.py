@@ -1,4 +1,3 @@
-
 header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     'label': 'S No',
                                                     'formula': None,
@@ -6,37 +5,33 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     },
                                                     {
                                                      'label': 'Date',
-                                                     'total': False,
+                                                     'total': False, 
                                                      'formula': None,
                                                     },
                                                     {
                                                      'label': 'Market Value',
-                                                     'total': False,
+                                                     'total': False, 
                                                      'formula': None,
                                                     },
                                                     {
                                                      'label': 'Quantity [Q] (in Kg)',
-                                                     'total': True,
+                                                     'total': True, 
                                                      'formula': None,
                                                     },
+
                                                     {'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                                                      'total': True,
                                                      'formula': '0.25 * D',
                                                     },
-                                                    {
-                                                        'label':'Farmers',
-                                                        'total':False,
-                                                        'formula':None,
-                                                    },
                                                     {'label': 'Transport Cost [TC] (in Rs)',
                                                      'total': True,
                                                      'formula': None
-
+                                                     
                                                     },
                                                     {'label': 'Farmers\''' Contribution [FC] (in Rs)',
                                                      'total': True,
                                                      'formula': None
-
+                                                     
                                                     },
                                                     {'label': 'Commission Agent Contribution [CAC] (in Rs)',
                                                      'total': True,
@@ -44,21 +39,21 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     },
                                                     {'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
                                                      'total': True,
-                                                     'formula': 'F + G - H - I'
+                                                     'formula': 'E + F - G - H'
                                                     }],
-                                            'data': [[],[]]  }
-                           },
+                                            'data': [[], []]
+                                            }},
 
                         {'gaddidar':{'columns': [ {'label': 'Date',
-                                                'total': False,
+                                                'total': False, 
                                                 'formula': None,
                                                 },
                                                 {'label': 'Commission Agent',
-                                                 'total': False,
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
                                                 { 'label': 'Market',
-                                                  'total': False,
+                                                  'total': False,  
                                                   'formula': None,
                                                 },
                                                 {'label': 'Quantity [Q] (in Kg)',
@@ -66,7 +61,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                  'formula': None,
                                                 },
                                                 {'label': 'Commission Agent Discount[CAD] (in Rs/Kg)',
-                                                 'total': False,
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
                                                 {'label': 'Commission Agent Contribution[CAC] (in Rs) (Q*CAD)',
@@ -77,15 +72,15 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                     }
                         },
                         {'transporter':{'columns': [ {'label': 'Date',
-                                                'total': False,
+                                                'total': False, 
                                                 'formula': None,
                                                 },
                                                 {'label': 'Market',
-                                                 'total': False,
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
                                                 {'label': 'Transporter',
-                                                 'total': False,
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
                                                 {'label': 'Vehicle Type',
@@ -93,7 +88,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                  'formula': None,
                                                 },
                                                 {'label': 'Vehicle Number',
-                                                 'total': False,
+                                                 'total': False, 
                                                  'formula': None,
                                                 },
                                                 {'label': 'Tranport Cost in Rs',
