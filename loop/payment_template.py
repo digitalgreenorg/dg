@@ -13,7 +13,7 @@ NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
-    ws_obj.set_column('A:H', 200)
+    ws_obj.set_column('A:H', 10)
     ws_obj.merge_range('A1:H1', heading_str, format_str)
     # ws_obj.write('A1', heading_str, format_str)
     return ws_obj
@@ -142,8 +142,8 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
     workbook = xlsxwriter.Workbook(excel_output)
     # selecting a general font
     heading_format = set_format_for_heading(workbook=workbook,
-                                           format_str={'bold':1, 'font_size': 15,
-                                                       'text_wrap': False})
+                                           format_str={'bold':1, 'font_size': 9,
+                                                       'text_wrap': True})
     header_format = set_format_for_heading(workbook=workbook,
                                            format_str={'bold':1, 'font_size': 10,
                                                        'text_wrap': True})
@@ -175,7 +175,7 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
             # setting the col width
             write_heading_in_sheet(ws_obj=ws,
                                    heading_str=name_of_sheets[idx],
-                                   format_str=header_format)
+                                   format_str=heading_format)
             # getting the cell value so that we will write values of columns
             cell_value_from_headers = \
                 get_headers_from_template_dict(ws, idx, header_dict, header_format)
