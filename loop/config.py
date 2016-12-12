@@ -1,3 +1,6 @@
+data_set = [[]];
+
+
 header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     'label': 'S No',
                                                     'formula': None,
@@ -16,11 +19,6 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     {
                                                      'label': 'Quantity [Q] (in Kg)',
                                                      'total': True, 
-                                                     'formula': None,
-                                                    },
-                                                    {
-                                                     'label': 'Farmers',
-                                                     'total': False, 
                                                      'formula': None,
                                                     },
                                                     {'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
@@ -46,8 +44,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'total': True,
                                                      'formula': 'F + G - H - I'
                                                     }],
-                                            'data': [[], []]
-                                            }},
+                                            'data': [[]]  },                                         }},
 
                         {'gaddidar':{'columns': [ {'label': 'Date',
                                                 'total': False, 
