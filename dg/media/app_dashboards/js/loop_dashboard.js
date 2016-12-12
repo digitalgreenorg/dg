@@ -2859,7 +2859,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
-            aggregator_data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), farmers[i][j], parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
+            aggregator_data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
             sno += 1;
         }
     }
@@ -2868,8 +2868,8 @@ function aggregator_payment_sheet(data_json, aggregator) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < aggregator_data_set.length; j++) {
                 if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    aggregator_data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    aggregator_data_set[j][9] = parseFloat((aggregator_data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
+                    aggregator_data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    aggregator_data_set[j][8] = parseFloat((aggregator_data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
                     break;
                 }
             }
@@ -2916,9 +2916,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Quantity[Q] (in Kg)"
         }, {
-            title: "Farmers",
-            visible: false
-        }, {
             title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
         }, {
             title: "Transport Cost[TC] (in Rs)"
@@ -2936,7 +2933,6 @@ function aggregator_payment_sheet(data_json, aggregator) {
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
-                "mColumns" :[0,1,2,3,5,6,7,8,9],
                 "bBomInc": true,
                 "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"
             }]
@@ -2946,7 +2942,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             var api = this.api(), data;
 
             //Total of every column    
-            column_set = [3,5,6,7,8,9];
+            column_set = [3,4,5,6,7,8];
             for(var i=0; i<column_set.length; i++)
             {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
