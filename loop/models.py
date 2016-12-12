@@ -401,7 +401,7 @@ class GaddidarShareOutliers(LoopModel):
             self.gaddidar.gaddidar_name, self.mandi.mandi_name)
 
     def __aggregator__(self):
-        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+        return "%s" % (self.aggregator.name)
 
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")

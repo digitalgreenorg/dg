@@ -3203,7 +3203,8 @@ function show_detailed_data(d, aggregator_id) {
         }, {
             title: "Discount Rate"
         }],
-        "dom": 'T<"clear">rtip'
+        "dom": 'T<"clear">rtip',
+        "pageLength": 20
     });
     return detailed_table;
 }
