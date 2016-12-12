@@ -2910,14 +2910,11 @@ function aggregator_payment_sheet(data_json, aggregator) {
         columns: [{
             title: "S No"
         }, {
-            title: "Date",
+            title: "Date"
         }, {
             title: "Market"
         }, {
             title: "Quantity[Q] (in Kg)"
-        }, {
-            title: "Farmers",
-            visible: false
         }, {
             title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
         }, {
@@ -2936,7 +2933,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             "aButtons": [{
                 "sExtends": "csv",
                 "sButtonText": "Download",
-                "mColumns" :[0,1,2,3,5,6,7,8,9],
+                "mColumns" :[0,1,2,3,4,5,6,7,8],
                 "bBomInc": true,
                 "sTitle": "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary"
             }]
@@ -2946,7 +2943,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             var api = this.api(), data;
 
             //Total of every column    
-            column_set = [3,5,6,7,8,9];
+            column_set = [3,4,5,6,7,8];
             for(var i=0; i<column_set.length; i++)
             {
                 total = api.column( column_set[i]).data().reduce( function (a, b) {
