@@ -39,7 +39,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                     },
                                                     {'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
                                                      'total': True,
-                                                     'formula': 'F + G - H - I'
+                                                     'formula': 'E + F - G - H'
                                                     }],
                                             'data': [[], []]
                                             }},
