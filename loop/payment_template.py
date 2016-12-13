@@ -129,7 +129,7 @@ def write_formula_in_values(ws_obj, sheet_data_list, cell_value, formula_list, f
 
 def write_total_in_excel_sheet(ws_obj, start, end, formulacolumn_dict, format_str):
     for item in formulacolumn_dict:
-        ws_obj.write(end+2, item, '=SUM('+chr(item + 65)+str(start)+':'+chr(item + 65)+str(end)+')', format_str)
+        ws_obj.write(end, item, '=SUM('+chr(item + 65)+str(start)+':'+chr(item + 65)+str(end)+')', format_str)
     return
 
 def format_web_request(request):
@@ -177,8 +177,10 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
                                    heading_str=name_of_sheets[idx],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
+            write_header_in_excel = ws.set_header("&CLoop India Bihar")
             cell_value_from_headers = \
                 get_headers_from_template_dict(ws, idx, header_dict, header_format)
+            write_footer_in_excel = ws.set_footer("&CThis is an automated generated sheet")
             # finally writing in process
             write_values = \
                 write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers.get('cell_value'), row_format)
@@ -191,6 +193,7 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
                                     cell_value_from_headers.get('cell_value'),
                                     cell_value_from_headers.get('formula_list'),
                                     row_format)
+
             
     except Exception as e:
         print e

@@ -9,7 +9,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'formula': None,
                                                     },
                                                     {
-                                                     'label': 'Market Value',
+                                                     'label': 'Market',
                                                      'total': False, 
                                                      'formula': None,
                                                     },
@@ -37,7 +37,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                      'total': True,
                                                      'formula': None
                                                     },
-                                                    {'label': 'Total Payment(in Rs) (AP + TC - FC - CAC)',
+                                                    {'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
                                                      'total': True,
                                                      'formula': 'E + F - G - H'
                                                     }],
@@ -91,7 +91,7 @@ header_dict = {'headers': [{'aggregator':{'columns': [ {
                                                  'total': False, 
                                                  'formula': None,
                                                 },
-                                                {'label': 'Tranport Cost in Rs',
+                                                {'label': 'Tranport Cost (in Rs)',
                                                  'total': True,
                                                  'formula': None,
                                                 }],

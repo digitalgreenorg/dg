@@ -2859,7 +2859,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
-            aggregator_data_set.push([sno, dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
+            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j], parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j], 0, parseFloat(net_payment.toFixed(2))]);
             sno += 1;
         }
     }
@@ -3047,9 +3047,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
 
     });
 
-    aggregator_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
-    gaddidar_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
-    transporter_sheet_name = "Loop_India_Bihar_Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
+    aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
+    gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
+    transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
 
 }
 
@@ -3061,7 +3061,7 @@ function getFormattedDate(aggregator_id) {
     var name = aggregator_names[aggregator_index];
     var fromDate = new Date(payments_start_date);
     var toDate = new Date(payments_to_date);
-    var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + "_" + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+    var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
     return str;
 }
 
