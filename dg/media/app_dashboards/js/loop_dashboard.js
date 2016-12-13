@@ -2797,6 +2797,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     gaddidar_data_set = [];
     transporter_data_set = [];
     var dates = [];
+    //TODO : make this a dictionary with date and mandi name/ mandi id
     var mandis = [];
     var quantites = [];
     var gaddidar_amount = [];
@@ -2817,15 +2818,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 farmer_share.push([]);
                 date_index = dates.indexOf(aggregator_payment[i]['date']);
             }
-            var mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
+            var mandi_index = mandis[date_index].map(function(e){return e.mandi_name;}).indexOf(aggregator_payment[i]['mandi__mandi_name']);
             if (mandi_index == -1) {
-                mandis[date_index].push(aggregator_payment[i]['mandi__mandi_name']);
+                mandis[date_index].push({mandi_name:aggregator_payment[i]['mandi__mandi_name'], mandi_id:aggregator_payment[i][MANDI__ID]});
                 quantites[date_index].push(0);
                 gaddidar_amount[date_index].push(0);
                 // farmers[date_index].push(0);
                 transport_cost[date_index].push(0);
                 farmer_share[date_index].push(0);
-                mandi_index = mandis[date_index].indexOf(aggregator_payment[i]['mandi__mandi_name']);
+                mandi_index = mandis[date_index].map(function(e){return e.mandi_name;}).indexOf(aggregator_payment[i]['mandi__mandi_name']);
             }
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
@@ -2852,7 +2853,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     for (var i = 0; i < transport_payment_length; i++) {
         if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
             date_index = dates.indexOf(transport_payment[i]['date']);
-            mandi_index = mandis[date_index].indexOf(transport_payment[i]['mandi__mandi_name']);
+            mandi_index = mandis[date_index].map(function(e){return e.mandi_name;}).indexOf(transport_payment[i]['mandi__mandi_name']);
             transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
             farmer_share[date_index][mandi_index] = transport_payment[i]['farmer_share'];
 
@@ -2866,7 +2867,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         for (var j = 0; j < mandis[i].length; j++) {
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
 
-            data_set.push([sno, dates[i], mandis[i][j], (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment,agg_id]);
+            data_set.push([sno, dates[i], mandis[i][j].mandi_name, (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment,agg_id,mandis[i][j].mandi_id]);
             sno += 1;
         }
     }
@@ -2906,6 +2907,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             title: "Payment"
         }, {
             title: "Aggregator Id"
+        }, {
+            title: "Mandi Id"
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
