@@ -409,6 +409,7 @@ class GaddidarShareOutliers(LoopModel):
 
 class AggregatorShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
+    mandi = models.ForeignKey(Mandi)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
     comment = models.CharField(max_length=200, null=True, blank=True)
@@ -417,7 +418,7 @@ class AggregatorShareOutliers(LoopModel):
         return "%s" % (LoopUser.objects.get(user=self.user_created).name)
 
     class Meta:
-        unique_together =("date","aggregator")
+        unique_together =("date","aggregator","mandi")
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
