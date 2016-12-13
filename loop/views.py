@@ -197,10 +197,8 @@ def gaddidar_contribution_for_totat_static_data():
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
 
     parameters_dictionary = {'mandi__in': mandi_list}
-    parameters_dictionary_for_outliers = {
-        'mandi__in': mandi_list, 'aggregator__user__in': aggregator_list}
-    parameters_dictionary_for_ct = {'date__gte': start_date, 'date__lte': end_date,
-                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list}
+    parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list,'mandi__in': mandi_list}
+    parameters_dictionary_for_ct = {'user_created__id__in': aggregator_list,'mandi__in': mandi_list,'date__gte': start_date, 'date__lte': end_date}
 
     arguments_for_ct = {}
     arguments_for_gaddidar_commision = {}
@@ -225,17 +223,18 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
         'date', 'user_created_id', 'gaddidar', 'mandi', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
     result = []
+    gso_list = [gso.date for gso in gso_queryset]
     for CT in combined_ct_queryset:
         sum = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
-        if CT['date'] not in [x.date for x in gso_queryset]:
+        if CT['date'] not in gso_list:
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                                                  'gaddidar']).order_by('-start_date')
-                if CT['gaddidar__discount_criteria'] == 0 and len(gc_list_set) > 0:
+                if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
                     sum += CT['quantity__sum'] * \
                         gc_list_set[0].discount_percent
-                elif len(gc_list_set) > 0:
+                elif gc_list_set.count() > 0:
                     sum += CT['amount__sum'] * gc_list_set[0].discount_percent
             except GaddidarCommission.DoesNotExist:
                 pass
@@ -243,7 +242,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
             try:
                 gso_gaddidar_date_aggregator = gso_queryset.filter(
                     date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
-                if len(gso_gaddidar_date_aggregator):
+                if gso_gaddidar_date_aggregator.count():
                     sum += gso_gaddidar_date_aggregator[0]
             except GaddidarShareOutliers.DoesNotExist:
                 pass
@@ -401,19 +400,20 @@ def calculate_gaddidar_share_payments(start_date, end_date):
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
         'date', 'user_created_id', 'gaddidar', 'gaddidar__gaddidar_name_en', 'mandi', 'mandi__mandi_name_en', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
     result = []
+    gso_list = [gso.date for gso in gso_queryset]
     for CT in combined_ct_queryset:
         sum = 0
         gc_discount = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
-        if CT['date'] not in [gso_obj.date for gso_obj in gso_queryset] or user.id not in [gso_obj.aggregator.id for gso_obj in gso_queryset]:
+        if CT['date'] not in gso_list or user.id not in [gso_obj.aggregator.id for gso_obj in gso_queryset]:
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                                                  'gaddidar']).order_by('-start_date')
-                if CT['gaddidar__discount_criteria'] == 0 and len(gc_list_set) > 0:
+                if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
                     sum += CT['quantity__sum'] * \
                         gc_list_set[0].discount_percent
                     gc_discount = sum / CT['quantity__sum']
-                elif len(gc_list_set) > 0:
+                elif gc_list_set.count() > 0:
                     sum += CT['amount__sum'] * gc_list_set[0].discount_percent
                     gc_discount = sum / CT['amount__sum']
 
@@ -423,7 +423,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
             try:
                 gso_gaddidar_date_aggregator = gso_queryset.filter(
                     date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
-                if len(gso_gaddidar_date_aggregator):
+                if gso_gaddidar_date_aggregator.count():
                     sum += gso_gaddidar_date_aggregator[0]
                     if CT['gaddidar__discount_criteria'] == 0:
                         gc_discount = sum / CT['quantity__sum']
