@@ -60,26 +60,23 @@ def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
     column_formula_list = []
     total_value_in_column = []
     header_dict = header_dict
-    for item in header_dict.values():
-        for i in item[idx].values():
-            for k in i.values():
-                for c, j in enumerate(k):
-                    if not isinstance(j, list):
-                        try:
-                            write_headers_for_sheet(ws_obj=ws_obj,
-                                                    row_index=CELL_ROW_VALUE,
-                                                    col_index=c,
-                                                    label=j.get('label'),
-                                                    coloumn_width=j.get('coloumn_width'),
-                                                    format_str=bold)
-                            cell_value = [CELL_ROW_VALUE, c]
-                            if j.get('total') != False:
-                                total_value_in_column.append(c)
-                            if j.get('formula') is not None:
-                                column_formula_list.append({'formula': j.get('formula'),
-                                                            'col_index': c})
-                        except Exception as e:
-                            print e
+    for col_idx, col in enumerate(header_dict.values()[idx]):
+        if not isinstance(col, list):
+            try:
+                write_headers_for_sheet(ws_obj=ws_obj,
+                                        row_index=CELL_ROW_VALUE,
+                                        col_index=col_idx,
+                                        label=col.get('label'),
+                                        coloumn_width=col.get('coloumn_width'),
+                                        format_str=bold)
+                cell_value = [CELL_ROW_VALUE, col_idx]
+                if col.get('total') != False:
+                    total_value_in_column.append(int(col_idx))
+                if col.get('formula') is not None:
+                    column_formula_list.append({'formula': col.get('formula'),
+                                                'col_index': col_idx})
+            except Exception as e:
+                print e
     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
                  'formula_list': column_formula_list}
     return data_dict
