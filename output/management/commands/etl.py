@@ -7,6 +7,8 @@ import time
 from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Min, Count
+from dg.settings import DATABASES
+from pandas import DataFrame
 
 from people.models import Person, Animator, AnimatorAssignedVillage
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
@@ -35,8 +37,11 @@ class AnalyticsSync():
         start_time = time.time()
         import subprocess
         import MySQLdb
+        database = DATABASES['default']['NAME']
+        print "Database:", database
+
         #Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'digitalgreen', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not recreate schema")
         print "Recreated schema"
@@ -131,7 +136,6 @@ class AnalyticsSync():
                 tot_ado=0, tot_male_ado=0, tot_fem_ado=0, tot_att=0, tot_male_att=0, tot_fem_att=0, 
                 tot_exp_att=0, tot_ques=0, tot_adopted_att=0, tot_active=0, tot_ado_by_act=0,
                 tot_active_vid_seen=0))))
-            
             sixty_days = datetime.timedelta(days=60)
  
             person_village_qs = Person.objects.values_list('id','village','partner')
@@ -141,15 +145,18 @@ class AnalyticsSync():
                 person_village[id] = village
                 person_partner[id] = partner
             
-            pmas = PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
-            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date')
+            pmas_df = DataFrame.from_records(PersonMeetingAttendance.objects.values('id', 'person','screening__date', 'person__gender', 'screening__questions_asked', 
+            'screening__village__id', 'screening__partner__id').order_by('person', 'screening__date').iterator())
+            
             person_att_dict = defaultdict(list) #Stores the active period of farmers in tuples (from_date, to_date)
             person_video_seen_date_dict = defaultdict(list) # For calculating total videos seen
             max_date = min_date = cur_person = prev_pma_id = None
-            for pma in pmas:
+            curr_count = 0
+            for index, pma in pmas_df.iterrows():
                 per = pma['person']
                 dt = pma['screening__date']
                 person_video_seen_date_dict[per].append(dt)
+                curr_count += 1
                 #Screening videos is many-to-many. Don't repeat calculation for 2 videos but same attendance
                 if prev_pma_id is not None and prev_pma_id == pma['id']:
                     continue
@@ -182,9 +189,10 @@ class AnalyticsSync():
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
                  
-            del pmas #Free memory
+            #del pmas_df
+            del pmas_df
+            #Free memory
             del scr
-
             print "Finished date calculations"
  
              
