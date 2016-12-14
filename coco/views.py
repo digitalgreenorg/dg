@@ -99,12 +99,9 @@ def debug(request):
 
 
 def filter_villages(request):
-    district_id = request.GET['district_id']
+    district_ids = request.GET['district_id']
     filter_args = {}
-    print district_id
-    x = []
-    x.append(district_id)
-    filter_args["district_id__in"] = x
+    filter_args["district_id__in"] = district_ids
     blocks_long = Block.objects.filter(**filter_args).values_list('id',flat=True)
     blocks_int = [int(item) for item in blocks_long]
     villages = Village.objects.filter(block__id__in=blocks_int).values('id','village_name','block__block_name')
