@@ -61,6 +61,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
+    print field_name
     if field_dict.get('online_id'):
         bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict.get('online_id')))
@@ -725,7 +726,7 @@ class DayTransportationResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = DayTransportation.objects.all()
-        detail_allowed_methods = ["get", "post", "put", "delete"]
+        detail_allowed_methods = ["get", "post", "put", "delete","patch"]
         resource_name = 'daytransportation'
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
@@ -743,22 +744,38 @@ class DayTransportationResource(BaseResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
-        transportationvehicle = TransportationVehicle.objects.get(
-            id=bundle.data["transportation_vehicle"]["online_id"])
 
-        user = LoopUser.objects.get(user__username=bundle.request.user)
+        if bundle.request.method != 'PATCH':
+            user = LoopUser.objects.get(user__username=bundle.request.user)
+            transportationvehicle = TransportationVehicle.objects.get(
+                id=bundle.data["transportation_vehicle"]["online_id"])
 
-        attempt = DayTransportation.objects.filter(date=bundle.data[
-            "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+            attempt = DayTransportation.objects.filter(date=bundle.data[
+                "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+        else:
+            attempt = DayTransportation.objects.filter(date=bundle.data[
+                "date"], user_created=bundle.data['user_created_id'], mandi = mandi)
+            
         if attempt.count() < 1:
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            raise DayTransportationNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            if bundle.request.method == 'PATCH':
+                bundle.request.method = 'PUT'
+                bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+                kwargs['pk'] = attempt[0].id
+                transportationVehicleId = {'online_id': str(attempt[0].transportation_vehicle.id)}
+                bundle.data['transportation_vehicle'] = transportationVehicleId
+                bundle = super(DayTransportationResource,self).obj_update(bundle, **kwargs)
+                bundle.request.method = 'PATCH'
+            else:
+                raise DayTransportationNotSaved(
+                    {"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
+        print bundle.data
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
