@@ -2796,7 +2796,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     gaddidar_data_set = [];
     transporter_data_set = [];
     var dates = [];
-    //TODO : make this a dictionary with date and mandi name/ mandi id
     var mandis = [];
     var quantites = [];
     var gaddidar_amount = [];
