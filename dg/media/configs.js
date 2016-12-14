@@ -643,6 +643,8 @@ function() {
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
+        'fetch_element': 'person',
+        'fetch_key_element': 'id',
         'fields_to_hide': 'input#age input#gender div#category_chosen',
         'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
         'parent_id_for_inline': 'row7',

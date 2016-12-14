@@ -548,7 +548,7 @@ class PersonResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
-    pma_direct_beneficiariescategory = fields.DictField(null=True)
+    pma_direct_beneficiariescategory = fields.CharField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     
     class Meta:

@@ -953,6 +953,8 @@ define([
             var element = this.expanded;
             var entity = this.element_entity_map[element];
             var desc = this.foreign_entities[entity][element]
+            var fetch_element = this.entity_config.fetch_element
+            var fetch_element_key = this.entity_config.fetch_key_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -981,6 +983,20 @@ define([
     				}
                 });
                 raw_json[element].push(inl_obj);
+                if (fetch_element != null){
+                   Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
+                    .done(function(model) {
+                        model.save({'age': inl_obj.age, 'pma_direct_beneficiariescategory': inl_obj.category, 'gender': inl_obj.gender});
+
+                    })
+                    .fail(function() {
+                        // edit object could not be fetched from offline db
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    }); 
+                }
+                
             });
 
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only

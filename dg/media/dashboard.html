@@ -726,14 +726,9 @@
                     <%
                         var category_label = "";
                         if(typeof(online_id)!="undefined"){
-                            if (pma_direct_beneficiariescategory.length > 0){
-                                category_label = pma_direct_beneficiariescategory[0].category
-                            }    
-                            else{
-                                category_label = category;
+                            if (pma_direct_beneficiariescategory != null){
+                                category_label = pma_direct_beneficiariescategory;
                             }
-                        }else{
-                            category_label = category
                         }
                     %>
                     <select required name="category<%=index%>" id="category_row7" class="chosen-select form-control">
