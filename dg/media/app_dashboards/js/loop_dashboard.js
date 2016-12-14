@@ -2908,6 +2908,9 @@ var rows_table2_farmer = {};
                 $('#aggregator_commission_row').val($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]);
                 $('#aggregator_share_row').val($this.parent()[0].childNodes[4].innerHTML);
                 $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+                $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
+                $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
+                $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);             
                 $('#farmer_aggregator_payment_row').val($this.parent()[0].childNodes[4].innerHTML);
                 $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[5].innerHTML);
                 $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[7].innerHTML);
@@ -3000,7 +3003,8 @@ var rows_table2_farmer = {};
                         //$this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
                         $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
                         $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
-                        $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+
                         var row_id =$this.context.parentNode.rowIndex;
                         rows_table2_farmer[row_id]=true;
                     }
