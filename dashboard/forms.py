@@ -55,9 +55,6 @@ class DistrictNameChoiceField(forms.ModelChoiceField):
 
 
 class CocoUserForm(forms.ModelForm):
-    class Media:
-        js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
-
     district=DistrictNameChoiceField(queryset=District.objects.all().prefetch_related('state'))
     # district = forms.ModelChoiceField(queryset=District.objects.all())
     villages = UserModelVillageMultipleChoiceField(
@@ -80,10 +77,8 @@ class CocoUserForm(forms.ModelForm):
     class Meta:
         model = CocoUser
         fields = ['user', 'partner', 'district', 'villages', 'videos']
-    # def __init__(self, *args, **kwargs):
-    #     super(CocoUserForm, self).__init__(*args, **kwargs)
-    #     self.fields.keyOrder = ['user', 'partner', 'district', 'villages', 'videos']
-
+    class Media:
+        js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
 
 class LanguageForm(CocoModelForm):
     class Meta:
