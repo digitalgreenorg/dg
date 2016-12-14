@@ -6,6 +6,7 @@ from django.conf import settings
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
+from coco.models import CocoUser
 from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
@@ -76,9 +77,12 @@ class CocoUserForm(forms.ModelForm):
         queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
         required=False
         )
-    def __init__(self,*args,**kwargs):
-        super(CocoUserForm,self).__init__(*args,**kwargs)
-        self.fields.KeyOrder=['user','partner','district','villages','videos']
+    class Meta:
+        model = CocoUser
+        fields = ['user', 'partner', 'district', 'villages', 'videos']
+    # def __init__(self, *args, **kwargs):
+    #     super(CocoUserForm, self).__init__(*args, **kwargs)
+    #     self.fields.keyOrder = ['user', 'partner', 'district', 'villages', 'videos']
 
 
 class LanguageForm(CocoModelForm):
