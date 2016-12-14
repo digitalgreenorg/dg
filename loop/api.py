@@ -806,37 +806,7 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
-class AggregatorShareOutliersResource(BaseResource):
-    mandi = fields.ForeignKey(MandiResource,'mandi')
-    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
-    class Meta:
-        queryset =AggregatorShareOutliers.objects.filter()
-        allowed_methods = ['post','patch','put','get']
-        resource_name = 'aggregatorshareoutliers'
-        always_return_data = True
-        excludes = ('time_created', 'time_modified')
-        include_resource_uri = False
 
-    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
-    dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
-    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
-    hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
-
-    def obj_create(self,bundle,request=None,**kwargs):
-        print bundle.data
-        mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
-        aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
-
-        attempt = AggregatorShareOutliers.objects.filter(date=bundle.data['date'],mandi=mandiObject,aggregator=aggregatorObject)
-        if attempt.count() < 1:
-            bundle = super(AggregatorShareOutliersResource,self).obj_create(bundle,**kwargs)
-        else:
-            bundle.request.method = 'PUT'
-            bundle.request.path = bundle.request.path + \
-                str(attempt[0].id) + "/"
-            kwargs['pk'] = attempt[0].id
-            bundle = super(AggregatorShareOutliersResource,self).obj_update(bundle, **kwargs)
-        return bundle
 
 class GaddidarShareOutliersResource(BaseResource):
     mandi = fields.ForeignKey(MandiResource,'mandi')
@@ -873,6 +843,40 @@ class GaddidarShareOutliersResource(BaseResource):
                 str(attempt[0].id) + "/"
             kwargs['pk'] = attempt[0].id
             bundle = super(GaddidarShareOutliersResource,self).obj_update(bundle, **kwargs)
+        return bundle
+
+class AggregatorShareOutliersResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+    class Meta:
+        queryset =AggregatorShareOutliers.objects.filter()
+        allowed_methods = ['post','patch','put','get']
+        resource_name = 'aggregatorshareoutliers'
+        authorization = Authorization()
+        authentication = Authentication()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
+
+    def obj_create(self,bundle,request=None,**kwargs):
+        print bundle.data
+        mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+        aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
+
+        attempt = AggregatorShareOutliers.objects.filter(date=bundle.data['date'],mandi=mandiObject,aggregator=aggregatorObject)
+        if attempt.count() < 1:
+            bundle = super(AggregatorShareOutliersResource,self).obj_create(bundle,**kwargs)
+        else:
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(AggregatorShareOutliersResource,self).obj_update(bundle, **kwargs)
         return bundle
 
 class CombinedTransactionResource(BaseResource):

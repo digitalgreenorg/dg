@@ -1,475 +1,467 @@
+
+
 {% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Loop{% endblock %} {% block extracss %}
-
 <style>
-	li.not-hoverable:hover,
-	li.not-hoverable:active {
-		background-color: transparent;
-	}
-
-	ul.collapsible>li.active {
-		background-color: transparent;
-	}
-
-	.no-margin {
-		margin: 0px;
-	}
+   li.not-hoverable:hover,
+   li.not-hoverable:active {
+   background-color: transparent;
+   }
+   ul.collapsible>li.active {
+   background-color: transparent;
+   }
+   .no-margin {
+   margin: 0px;
+   }
 </style>
 {% endblock %} {% block navbar %}
-
 <div class="navbar-fixed">
-	<nav class="top-nav" id="analytics_page_nav_bar">
-
-		<div class="nav-wrapper grey darken-3">
-			<a href="#" class="brand-logo center white-text">LOOP</a>
-			<a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
-			<div class="left col s5">
-				<ul class="hide-on-med-and-down grey lighten-2">
-					<li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
-					<li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
-					<li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
-					<li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
-				</ul>
-			</div>
-			<div class="col s2" class="initialized" style="float:right;">
-				<select id='languageID' onchange='change_language(this.value)'>
-					<option value='Regional'>Regional</option>
-					<option value='English' selected>English</option>
-				</select>
-			</div>
-			<ul class="side-nav" id="page-navigation">
-				<li><a onclick="hide_nav()">Home</a></li>
-				<li><a onclick="show_nav('analytics')">Analytics</a></li>
-				<li><a onclick="show_nav('time_series')">Time Series</a></li>
-				<li><a onclick="hide_nav('payments')">Payments</a></li>
-			</ul>
-		</div>
-
-		<div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
-			<a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
-			<ul class="hide-on-med-and-down">
-				<ul class="left">
-					<li>
-						<a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}" /></a>
-					</li>
-					<li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
-					<li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
-					<li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
-				</ul>
-
-				<ul class="right">
-					<div class="row">
-						<div class="input-field col s4">
-							<label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
-						</div>
-						<div class="input-field col s4">
-							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
-							<input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
-						</div>
-						<div class="input-field col s4">
-							<label class="to_label" id="to_label">To:&nbsp;&nbsp;</label>
-						</div>
-						<div class="input-field col s4">
-							<!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
-							<input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
-						</div>
-						<li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
-					</div>
-				</ul>
-			</ul>
-			<ul class="side-nav" id="mobile-demo1">
-				<ul class="left">
-					<li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
-					<li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
-					<li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
-					<li><a class="" onclick="change_tab('crop')">Crop</a></li>
-					<div class="input-field">
-						<i class="material-icons black-text text-lighten-2 prefix">today</i>
-						<input id="from_date" placeholder="Start Date" type="text" class="datepicker">
-					</div>
-					<div class="input-field">
-						<i class="material-icons black-text text-lighten-2 prefix">today</i>
-						<input id="to_date" placeholder="End Date" type="text" class="datepicker">
-					</div>
-					<ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
-				</ul>
-			</ul>
-		</div>
-	</nav>
+   <nav class="top-nav" id="analytics_page_nav_bar">
+      <div class="nav-wrapper grey darken-3">
+         <a href="#" class="brand-logo center white-text">LOOP</a>
+         <a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
+         <div class="left col s5">
+            <ul class="hide-on-med-and-down grey lighten-2">
+               <li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
+               <li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
+               <li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
+               <li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
+            </ul>
+         </div>
+         <div class="col s2" class="initialized" style="float:right;">
+            <select id='languageID' onchange='change_language(this.value)'>
+               <option value='Regional'>Regional</option>
+               <option value='English' selected>English</option>
+            </select>
+         </div>
+         <ul class="side-nav" id="page-navigation">
+            <li><a onclick="hide_nav()">Home</a></li>
+            <li><a onclick="show_nav('analytics')">Analytics</a></li>
+            <li><a onclick="show_nav('time_series')">Time Series</a></li>
+            <li><a onclick="hide_nav('payments')">Payments</a></li>
+         </ul>
+      </div>
+      <div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
+         <a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
+         <ul class="hide-on-med-and-down">
+            <ul class="left">
+               <li>
+                  <a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}" /></a>
+               </li>
+               <li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
+               <li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
+               <li class="analytics_tabs" id="crop_tab"><a class="black-text" onclick="change_tab('crop')">Crop</a></li>
+            </ul>
+            <ul class="right">
+               <div class="row">
+                  <div class="input-field col s4">
+                     <label class="from_label" id="from_label">From:&nbsp;&nbsp;</label>
+                  </div>
+                  <div class="input-field col s4">
+                     <!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+                     <input id="from_date" placeholder="Start Date" type="text" class="datepicker black-text">
+                  </div>
+                  <div class="input-field col s4">
+                     <label class="to_label" id="to_label">To:&nbsp;&nbsp;</label>
+                  </div>
+                  <div class="input-field col s4">
+                     <!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
+                     <input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
+                  </div>
+                  <li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
+               </div>
+            </ul>
+         </ul>
+         <ul class="side-nav" id="mobile-demo1">
+            <ul class="left">
+               <li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+               <li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
+               <li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
+               <li><a class="" onclick="change_tab('crop')">Crop</a></li>
+               <div class="input-field">
+                  <i class="material-icons black-text text-lighten-2 prefix">today</i>
+                  <input id="from_date" placeholder="Start Date" type="text" class="datepicker">
+               </div>
+               <div class="input-field">
+                  <i class="material-icons black-text text-lighten-2 prefix">today</i>
+                  <input id="to_date" placeholder="End Date" type="text" class="datepicker">
+               </div>
+               <ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+            </ul>
+         </ul>
+      </div>
+   </nav>
 </div>
-
-
 <ul class="side-nav" id="mobile-demo">
-	<!-- <ul id="nav-mobile" class="side-nav fixed"> -->
-	<li class="no-padding not-hoverable">
-		<ul class="collapsible collapsible-accordion">
-
-			<li class="bold not-hoverable"><a class="collapsible-header  waves-effect waves-black">Aggregators</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="aggregator_all" checked="checked" />
-									<label for="aggregator_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="aggregators">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Crops</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="crop_all" checked="checked" />
-									<label for="crop_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="crops">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Mandi</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="mandi_all" checked="checked" />
-									<label for="mandi_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="mandis">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li class="bold not-hoverable"><a class="collapsible-header waves-effect waves-black">Gaddidar</a>
-				<div class="collapsible-body container" style="display: none;">
-					<table class="filter-table centered">
-						<thead>
-							<tr>
-								<th class="center grey-text text-lighten-1">Select/Unselect</th>
-								<th>
-									<input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
-									<label for="gaddidar_all"></label>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="gaddidars">
-						</tbody>
-					</table>
-				</div>
-			</li>
-			<li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">APPLY FILTERS</a></li>
-		</ul>
-	</li>
+   <!-- <ul id="nav-mobile" class="side-nav fixed"> -->
+   <li class="no-padding not-hoverable">
+      <ul class="collapsible collapsible-accordion">
+         <li class="bold not-hoverable">
+            <a class="collapsible-header  waves-effect waves-black">Aggregators</a>
+            <div class="collapsible-body" style="display: none;">
+               <table class="filter-table centered">
+                  <thead>
+                     <tr>
+                        <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                        <th>
+                           <input type="checkbox" class="black" id="aggregator_all" checked="checked" />
+                           <label for="aggregator_all"></label>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody id="aggregators">
+                  </tbody>
+               </table>
+            </div>
+         </li>
+         <li class="bold not-hoverable">
+            <a class="collapsible-header waves-effect waves-black">Crops</a>
+            <div class="collapsible-body" style="display: none;">
+               <table class="filter-table centered">
+                  <thead>
+                     <tr>
+                        <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                        <th>
+                           <input type="checkbox" class="black" id="crop_all" checked="checked" />
+                           <label for="crop_all"></label>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody id="crops">
+                  </tbody>
+               </table>
+            </div>
+         </li>
+         <li class="bold not-hoverable">
+            <a class="collapsible-header waves-effect waves-black">Mandi</a>
+            <div class="collapsible-body" style="display: none;">
+               <table class="filter-table centered">
+                  <thead>
+                     <tr>
+                        <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                        <th>
+                           <input type="checkbox" class="black" id="mandi_all" checked="checked" />
+                           <label for="mandi_all"></label>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody id="mandis">
+                  </tbody>
+               </table>
+            </div>
+         </li>
+         <li class="bold not-hoverable">
+            <a class="collapsible-header waves-effect waves-black">Gaddidar</a>
+            <div class="collapsible-body" style="display: none;">
+               <table class="filter-table centered">
+                  <thead>
+                     <tr>
+                        <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                        <th>
+                           <input type="checkbox" class="black" id="gaddidar_all" checked="checked" />
+                           <label for="gaddidar_all"></label>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody id="gaddidars">
+                  </tbody>
+               </table>
+            </div>
+         </li>
+         <li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">APPLY FILTERS</a></li>
+      </ul>
+   </li>
 </ul>
-
 {% endblock %} {% block content %}
-
 <div id="loader" class="center">
-	<div class="preloader-wrapper active">
+   <div class="preloader-wrapper active">
       <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
+         <div class="circle-clipper left">
+            <div class="circle"></div>
+         </div>
+         <div class="gap-patch">
+            <div class="circle"></div>
+         </div>
+         <div class="circle-clipper right">
+            <div class="circle"></div>
+         </div>
       </div>
-
       <div class="spinner-layer spinner-red">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
+         <div class="circle-clipper left">
+            <div class="circle"></div>
+         </div>
+         <div class="gap-patch">
+            <div class="circle"></div>
+         </div>
+         <div class="circle-clipper right">
+            <div class="circle"></div>
+         </div>
       </div>
-
       <div class="spinner-layer spinner-yellow">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
+         <div class="circle-clipper left">
+            <div class="circle"></div>
+         </div>
+         <div class="gap-patch">
+            <div class="circle"></div>
+         </div>
+         <div class="circle-clipper right">
+            <div class="circle"></div>
+         </div>
       </div>
-
       <div class="spinner-layer spinner-green">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
+         <div class="circle-clipper left">
+            <div class="circle"></div>
+         </div>
+         <div class="gap-patch">
+            <div class="circle"></div>
+         </div>
+         <div class="circle-clipper right">
+            <div class="circle"></div>
+         </div>
       </div>
-    </div>
+   </div>
 </div>
-
 <div id="home_div">
-	<div class="row card white darken-1">
-		<h5>Overall</h5>
-		<hr/>
-		<div class="row">
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters
-						<div class="help-tip">
-			<p>Group of villages in close proximity served by one Loop aggregator.</p>
-		</div></span>
-					<!-- <h5 id="cluster_card"></h5> -->
-					<span id="cluster_bullet"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers
-						<div class="help-tip">
-			<p> Farmers who have used Loop service at least once.</p>
-		</div></span>
-					<!-- <h5 id="total_farmers_card"></h5> -->
-					<span id="total_farmers_bullet"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)
-						<div class="help-tip">
-			<p>Total weight of farmer produce in kg collected and sold at the market.​</p>
-		</div></span>
-					<!-- <h5 id="total_volume_card"></h5> -->
-					<span id="total_volume_bullet"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;Payments(₹)
-						<div class="help-tip">
-			<p>Total amount of payments made to farmers for their produce.</p>
-		</div></span>
-					<!-- <h5 id="revenue_card"></h5> -->
-					<span id="revenue_bullet"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg
-						<div class="help-tip">
-			<p> Total CPK of vegetables sold = Transport CPK + Aggregator CPK</p>
-		</div>
-					</span>
-					<!-- <h5 id="total_expenditure_card"></h5> -->
-					<span id="total_expenditure_bullet"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;Sustainability(%)
-						<div class="help-tip">
-			<p>Operational cost covered by local players = Sustainability Per Kg (SPK) / CPK where SPK = Trader discount per kg on commision + Farmers transport contribution per kg</p>
-		</div></span>
-					<!-- <h5 id="sustainability_card"></h5> -->
-					<span id="sustainability_bullet"></span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row card white darken-1">
-		<div id="recent_main" class="row" style="height:44px;margin-bottom:0px;">
-			<div class="col s10">
-				<h5>Recent</h5>
-			</div>
-			<div class="col s2" style="width:15%;height: 40px;">
-				<select id="recent_cards_data_frequency" class="initialized">
-					<option value="7">7</option>
-					<option value="15" selected>15</option>
-					<option value="30">30</option>
-					<option value="60">60</option>
-				</select>
-			</div>
-		</div>
-		<hr>
-		<div class="row">
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
-					<h5 id="recent_cluster_card"></h5>
-					<span id="recent_cluster_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
-					<h5 id="recent_active_farmers_card">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-					<span id="recent_active_farmers_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
-					<h5 id="recent_volume_card"></h5>
-					<span id="recent_volume_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
-					<h5 id="recent_revenue_card"></h5>
-					<span id="recent_revenue_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg</span>
-					<h5 id="cpk_card"></h5>
-					<span id="cpk_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-
-			<div class="col s6 m4 l2">
-				<div class="card-content white darken-1">
-					<span class="card-title">&nbsp;&nbsp;Sustainability(%)</span>
-					<h5 id="recent_sustainability_card"></h5>
-					<span id="recent_sustainability_sparkline" class="sparkline_graph"></span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div id="container2" class="col s12">
-			<div id="detail_container"></div>
-			<div id="master_container" style="height:100px;"></div>
-		</div>
-	</div>
+   <div class="row card white darken-1">
+      <h5>Overall</h5>
+      <hr/>
+      <div class="row">
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;&nbsp;#Clusters
+                  <div class="help-tip">
+                     <p>Group of villages in close proximity served by one Loop aggregator.</p>
+                  </div>
+               </span>
+               <!-- <h5 id="cluster_card"></h5> -->
+               <span id="cluster_bullet"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers
+                  <div class="help-tip">
+                     <p> Farmers who have used Loop service at least once.</p>
+                  </div>
+               </span>
+               <!-- <h5 id="total_farmers_card"></h5> -->
+               <span id="total_farmers_bullet"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)
+                  <div class="help-tip">
+                     <p>Total weight of farmer produce in kg collected and sold at the market.​</p>
+                  </div>
+               </span>
+               <!-- <h5 id="total_volume_card"></h5> -->
+               <span id="total_volume_bullet"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;&nbsp;Payments(₹)
+                  <div class="help-tip">
+                     <p>Total amount of payments made to farmers for their produce.</p>
+                  </div>
+               </span>
+               <!-- <h5 id="revenue_card"></h5> -->
+               <span id="revenue_bullet"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg
+                  <div class="help-tip">
+                     <p> Total CPK of vegetables sold = Transport CPK + Aggregator CPK</p>
+                  </div>
+               </span>
+               <!-- <h5 id="total_expenditure_card"></h5> -->
+               <span id="total_expenditure_bullet"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">
+                  &nbsp;&nbsp;Sustainability(%)
+                  <div class="help-tip">
+                     <p>Operational cost covered by local players = Sustainability Per Kg (SPK) / CPK where SPK = Trader discount per kg on commision + Farmers transport contribution per kg</p>
+                  </div>
+               </span>
+               <!-- <h5 id="sustainability_card"></h5> -->
+               <span id="sustainability_bullet"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row card white darken-1">
+      <div id="recent_main" class="row" style="height:44px;margin-bottom:0px;">
+         <div class="col s10">
+            <h5>Recent</h5>
+         </div>
+         <div class="col s2" style="width:15%;height: 40px;">
+            <select id="recent_cards_data_frequency" class="initialized">
+               <option value="7">7</option>
+               <option value="15" selected>15</option>
+               <option value="30">30</option>
+               <option value="60">60</option>
+            </select>
+         </div>
+      </div>
+      <hr>
+      <div class="row">
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;&nbsp;#Clusters</span>
+               <h5 id="recent_cluster_card"></h5>
+               <span id="recent_cluster_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Farmers</span>
+               <h5 id="recent_active_farmers_card">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+               <span id="recent_active_farmers_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Volume(Kg)</span>
+               <h5 id="recent_volume_card"></h5>
+               <span id="recent_volume_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
+               <h5 id="recent_revenue_card"></h5>
+               <span id="recent_revenue_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Cost per Kg</span>
+               <h5 id="cpk_card"></h5>
+               <span id="cpk_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+         <div class="col s6 m4 l2">
+            <div class="card-content white darken-1">
+               <span class="card-title">&nbsp;&nbsp;Sustainability(%)</span>
+               <h5 id="recent_sustainability_card"></h5>
+               <span id="recent_sustainability_sparkline" class="sparkline_graph"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div id="container2" class="col s12">
+         <div id="detail_container"></div>
+         <div id="master_container" style="height:100px;"></div>
+      </div>
+   </div>
 </div>
-
-	<div id="modal1" class="modal">
-		<div class="modal-content">
-			<h4>Invalid Date Range</h4>
-			<p>Please select a valid date range. <br> &lt;From&gt; cannot be greater than &lt;To&gt; date.</p>
-		</div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-action modal-close waves-effect waves-black btn-flat">OK</a>
-		</div>
-	</div>
-
+<div id="modal1" class="modal">
+   <div class="modal-content">
+      <h4>Invalid Date Range</h4>
+      <p>Please select a valid date range. <br> &lt;From&gt; cannot be greater than &lt;To&gt; date.</p>
+   </div>
+   <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-black btn-flat">OK</a>
+   </div>
+</div>
 <div id="analytics_div" hide>
-
-	<div class="container">
-		<div class="row">
-			<div class=" col s12 m6">
-				<div class="row">
-					<ul class="tabs">
-						<li class="tab col s4"><a class="a-customfont center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
-						<li class="tab col s4"><a class="a-customfont center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
-						<li class="tab col s4"><a class="a-customfont center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
-						<div class="indicator"></div>
-					</ul>
-				</div>
-				<hr>
-				<div id="aggregator_mandi" class="col s12"></div>
-			</div>
-
-			<div class="col s12 m6">
-				<div class="row" id="cpk_cost">
-					<ul class="tabs">
-						<li class="tab col s6"><a class="a-customfont center active blue-text" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
-						<li class="tab col s6"><a class="a-customfont center blue-text" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
-
-					</ul>
-				</div>
-				<div class="row" id="crop_prices_min_max">
-					<ul class="tabs">
-						<li class="tab col s12"><a class="a-customfont center blue-text" id="aggregator_cost">Crop Prices</a></li>
-
-					</ul>
-				</div>
-				<hr>
-				<div id="mandi_cost" class="col s12"></div>
-			</div>
-
-			<div class="col s12 m6" id="aggregator_farmer_count">
-				<ul class="tabs">
-					<li class="tab col s6"><a class="a-customfont center active blue-text" id="farmers_count_tab">Farmer Count</a></li>
-				</ul>
-				<hr>
-				<div id="farmers_count" class="col s12"></div>
-			</div>
-
-			<!-- Graphs for gaddidar in market page -->
-			<div class="col s12 l6" id="gaddidar_aggregator_graph">
-				<div class="row">
-
-					<ul class="tabs">
-						<li class="tab col s6"><a class="a-customfont center active blue-text" id="gaddidar_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
-						<li class="tab col s6"><a class="a-customfont center blue-text" id="gaddidar_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
-					</ul>
-				</div>
-				<hr>
-				<div id="aggregator_gaddidar" class="col s12"></div>
-			</div>
-		</div>
-	</div>
+   <div class="container">
+      <div class="row">
+         <div class=" col s12 m6">
+            <div class="row">
+               <ul class="tabs">
+                  <li class="tab col s4"><a class="a-customfont center active blue-text" id="aggregator_volume" onclick="change_graph('volume')"> Volume</a></li>
+                  <li class="tab col s4"><a class="a-customfont center blue-text" id="aggregator_amount" onclick="change_graph('amount')"> Amount</a></li>
+                  <li class="tab col s4"><a class="a-customfont center blue-text" id="aggregator_visits" onclick="change_graph('visits')"> Visits</a></li>
+                  <div class="indicator"></div>
+               </ul>
+            </div>
+            <hr>
+            <div id="aggregator_mandi" class="col s12"></div>
+         </div>
+         <div class="col s12 m6">
+            <div class="row" id="cpk_cost">
+               <ul class="tabs">
+                  <li class="tab col s6"><a class="a-customfont center active blue-text" id="aggregator_cpk" onclick="change_graph('cpk_spk')">Cpk_Spk</a></li>
+                  <li class="tab col s6"><a class="a-customfont center blue-text" id="aggregator_cost" onclick="change_graph('cost_recovered')">Total Cost and Recoverd</a></li>
+               </ul>
+            </div>
+            <div class="row" id="crop_prices_min_max">
+               <ul class="tabs">
+                  <li class="tab col s12"><a class="a-customfont center blue-text" id="aggregator_cost">Crop Prices</a></li>
+               </ul>
+            </div>
+            <hr>
+            <div id="mandi_cost" class="col s12"></div>
+         </div>
+         <div class="col s12 m6" id="aggregator_farmer_count">
+            <ul class="tabs">
+               <li class="tab col s6"><a class="a-customfont center active blue-text" id="farmers_count_tab">Farmer Count</a></li>
+            </ul>
+            <hr>
+            <div id="farmers_count" class="col s12"></div>
+         </div>
+         <!-- Graphs for gaddidar in market page -->
+         <div class="col s12 l6" id="gaddidar_aggregator_graph">
+            <div class="row">
+               <ul class="tabs">
+                  <li class="tab col s6"><a class="a-customfont center active blue-text" id="gaddidar_volume" onclick="update_graphs_gaddidar_wise('volume')">Volume</a></li>
+                  <li class="tab col s6"><a class="a-customfont center blue-text" id="gaddidar_amount" onclick="update_graphs_gaddidar_wise('amount')">Amount</a></li>
+               </ul>
+            </div>
+            <hr>
+            <div id="aggregator_gaddidar" class="col s12"></div>
+         </div>
+      </div>
+   </div>
 </div>
-
-
 <div id="time_series_div" hide>
-	<div id="container2">
-		<div class="row">
-			<p class="col s4"></p>
-			<div class="input-field col s4">
-				<select id="time_series_frequency" class="initialized">
-					<option value="1" selected>Daily</option>
-					<option value="7">7 Days</option>
-					<option value="15">15 Days</option>
-					<option value="30">30 Days</option>
-				</select>
-			</div>
-			<p class="col s4"></p>
-		</div>
-		<div class="row">
-			<div class="col s12 m6">
-				<div id="detail_container_time_series" style="height:350px"></div>
-				<div id="master_container_time_series" style="height:100px"></div>
-			</div>
-			<div class="col s12 m6">
-				<div id="detail_container_cpk" style="height:350px"></div>
-				<div id="master_container_cpk" style="height:100px"></div>
-			</div>
-		</div>
-		<div class="row">
-			<p class="col s4"></p>
-			<div class="input-field col s4">
-				<select id="crop_max_min_avg" class="initialized"></select>
-			</div>
-			<p class="col s4"></p>
-		</div>
-		<div id="container3" class="row">
-		</div>
-	</div>
+   <div id="container2">
+      <div class="row">
+         <p class="col s4"></p>
+         <div class="input-field col s4">
+            <select id="time_series_frequency" class="initialized">
+               <option value="1" selected>Daily</option>
+               <option value="7">7 Days</option>
+               <option value="15">15 Days</option>
+               <option value="30">30 Days</option>
+            </select>
+         </div>
+         <p class="col s4"></p>
+      </div>
+      <div class="row">
+         <div class="col s12 m6">
+            <div id="detail_container_time_series" style="height:350px"></div>
+            <div id="master_container_time_series" style="height:100px"></div>
+         </div>
+         <div class="col s12 m6">
+            <div id="detail_container_cpk" style="height:350px"></div>
+            <div id="master_container_cpk" style="height:100px"></div>
+         </div>
+      </div>
+      <div class="row">
+         <p class="col s4"></p>
+         <div class="input-field col s4">
+            <select id="crop_max_min_avg" class="initialized"></select>
+         </div>
+         <p class="col s4"></p>
+      </div>
+      <div id="container3" class="row">
+      </div>
+   </div>
 </div>
-
 <div id="payments_div" hide>
-
 	<div class="row center">
 		<p class="col s3"></p>
 		<div class="input-field col s2">
@@ -520,9 +512,29 @@
 		</div>
 	</div>
 </div>
+<div id="login_modal" class="modal">
+   <div class="modal-content">
+      <h4 class="row center">User Login</h4>
+      <div class="row">
+         <label for="username">Username:</label>
+         <input type="text" name="username" id="username" tabindex="1">
+      </div>
+      <div class="row">
+         <label for="password">Password:</label>
+         <input type="password" name="password" id="password" tabindex="2">
+      </div>
+      <div class="row center">
+         <a id="goto_home" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" tabindex="3">GO TO HOME</a>
+         <a id="loginbtn" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" tabindex="3">LOG IN</a>
+      </div>
+      <div class="row center" id="error_div" hide>
+         <p class="red-text" id="error_message"></p>
+      </div>
+   </div>
+</div>
 
 <!-- Modal Structure Aggregator Edit -->
-			<div id="modal5" class="modal">
+			<div id="farmer_modal" class="modal">
   				<div class="modal-content">
     				<h4>Farmer Share</h4>
     					<form >
@@ -530,20 +542,20 @@
             				<div class="col s4">
             				
             				<div class="input-field inline" >
-              				<input id="date_row" value="00-00-00" type="text" disabled>
-              				<label for="date_row">Date</label>
+              				<input id="farmer_date_row" value="00-00-00" type="text" disabled>
+              				<label for="farmer_date_row">Date</label>
                 			</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="mandi_row" value="mandi" type="text" disabled>
-              				<label for="mandi_row">Mandi</label>
+              				<input id="farmer_mandi_row" value="mandi" type="text" disabled>
+              				<label for="farmer_mandi_row">Mandi</label>
               				</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="volume_row" value="quantity" type="text" disabled>
-              				<label for="volume_row">Volume</label>
+              				<input id="farmer_volume_row" value="quantity" type="text" disabled>
+              				<label for="farmer_volume_row">Volume</label>
               				</div>
           				  	</div>
           					</div> 
@@ -551,20 +563,20 @@
             				<div class="col s4">
             				
             				<div class="input-field inline" >
-              				<input id="aggregator_payment_row" value="AP" type="text" disabled>
-              				<label for="aggregator_payment_row">Aggregator Payment</label>
+              				<input id="farmer_aggregator_payment_row" value="AP" type="text" disabled>
+              				<label for="farmer_aggregator_payment_row">Aggregator Payment</label>
                 			</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="transport_cost_row" value="cost" type="text" disabled>
-              				<label for="transport_cost_row">Transport Cost</label>
+              				<input id="farmer_transport_cost_row" value="cost" type="text" disabled>
+              				<label for="farmer_transport_cost_row">Transport Cost</label>
               				</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="gaddidar_commission_row_farmer" value="GC" type="text" disabled>
-              				<label for="gaddidar_commission_row_farmer">Gaddidar Commission</label>
+              				<input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" disabled>
+              				<label for="farmer_gaddidar_commission_row_farmer">Gaddidar Commission</label>
               				</div>
           				  	</div>
           					</div>               
@@ -597,13 +609,13 @@
         		</form>
   				</div>
   				<div class="modal-footer">
-    				<a id="submit_modal1" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="cancel_modal1" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+    				<a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    				<a id="farmer_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   				</div>
 			</div>
 
 <!-- Modal Structure Aggregator Edit -->
-			<div id="modal2" class="modal">
+			<div id="aggregator_modal" class="modal">
   				<div class="modal-content">
     				<h4>Aggregator Share</h4>
     					<form >
@@ -611,20 +623,20 @@
             				<div class="col s4">
             				
             				<div class="input-field inline" >
-              				<input id="date_row" value="00-00-00" type="text" disabled>
-              				<label for="date_row">Date</label>
+              				<input id="aggregator_date_row" value="00-00-00" type="text" disabled>
+              				<label for="aggregator_date_row">Date</label>
                 			</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="mandi_row" value="mandi" type="text" disabled>
-              				<label for="mandi_row">Mandi</label>
+              				<input id="aggregator_mandi_row" value="mandi" type="text" disabled>
+              				<label for="aggregator_mandi_row">Mandi</label>
               				</div>
             				</div>
             				<div class="col s4">
             				<div class="input-field inline" >
-              				<input id="volume_row" value="quantity" type="text" disabled>
-              				<label for="volume_row">Volume</label>
+              				<input id="aggregator_volume_row" value="quantity" type="text" disabled>
+              				<label for="aggregator_volume_row">Volume</label>
               				</div>
           				  	</div>
           					</div>             
@@ -657,13 +669,13 @@
         		</form>
   				</div>
   				<div class="modal-footer">
-    				<a id="submit_modal2" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="cancel_modal2" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+    				<a id="aggregator_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    				<a id="aggregator_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   				</div>
 			</div>
 
 <!-- Modal Structure -->
-			<div id="modal3" class="modal">
+			<div id="gaddidar_modal" class="modal">
   				<div class="modal-content">
     				<h4>Gaddidar Share Outlier</h4>
     					<form >
@@ -671,14 +683,14 @@
             				<div class="col s3">
             				
             				<div class="input-field inline" >
-              				<input id="date_row" value="00-00-00" type="text" disabled>
-              				<label for="date_row">Date</label>
+              				<input id="gaddidar_date_row" value="00-00-00" type="text" disabled>
+              				<label for="gaddidar_date_row">Date</label>
                 			</div>
             				</div>
             				<div class="col s3">
             				<div class="input-field inline" >
-              				<input id="mandi_row" value="mandi" type="text" disabled>
-              				<label for="mandi_row">Mandi</label>
+              				<input id="gaddidar_mandi_row" value="mandi" type="text" disabled>
+              				<label for="gaddidar_mandi_row">Mandi</label>
               				</div>
             				</div>
             				<div class="col s3">
@@ -689,8 +701,8 @@
           				  	</div>
             				<div class="col s3">
             				<div class="input-field inline" >
-              				<input id="quantity_row" value="quantity" type="text" disabled>
-              				<label for="quantity_row">Quantity</label>
+              				<input id="gaddidar_quantity_row" value="quantity" type="text" disabled>
+              				<label for="gaddidar_quantity_row">Quantity</label>
               				</div>
           				  	</div>
           					</div>             
@@ -706,16 +718,16 @@
           				  	</div>
             				<div class="col s5">
             				<div class="input-field inline">
-              				<input id="share_row" value="share" type="text" >
-              				<label id="share_label" for="share_row">Share</label>
+              				<input id="gaddidar_share_row" value="share" type="text" >
+              				<label id="gaddidar_share_label" for="share_row">Share</label>
               				</div>
           				  	</div>
           					</div>
           					<div class="row">
           					<div class="col s12">
           						<div class="input-field inline" >
-          							<input id="comment_row"  type="text">
-          							<label for="comment_row">Comment
+          							<input id="gaddidar_comment_row"  type="text">
+          							<label for="gaddidar_comment_row">Comment
           							</label>
           						</div>
           					</div>	
@@ -723,47 +735,47 @@
         		</form>
   				</div>
   				<div class="modal-footer">
-    				<a id="submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+    				<a id="gaddidar_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    				<a id="gaddidar_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   				</div>
 			</div>
 
 			<div id="modal4" class="modal">
   				<div class="modal-content">
-    				<h4>Gaddidar Share Outlier</h4>
+    				<h4>Transportation Share Outlier</h4>
     					<form >
           					<div class="row ">
             				<div class="col s3">
             				
             				<div class="input-field inline" >
-              				<input id="date_row" value="00-00-00" type="text" disabled>
-              				<label for="date_row">Date</label>
+              				<input id="transportation_date_row" value="00-00-00" type="text" disabled>
+              				<label for="transportation_date_row">Date</label>
                 			</div>
             				</div>
             				<div class="col s3">
             				<div class="input-field inline" >
-              				<input id="mandi_row" value="mandi" type="text" disabled>
-              				<label for="mandi_row">Mandi</label>
+              				<input id="transportation_mandi_row" value="mandi" type="text" disabled>
+              				<label for="transportation_mandi_row">Mandi</label>
               				</div>
             				</div>
             				<div class="col s3">
             				<div class="input-field inline" >
-              				<input id="gaddidar_row" value="gaddidar" type="text" disabled>
-              				<label for="gaddidar_row">Transporter</label>
+              				<input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
+              				<label for="transportation_transporter_row">Transporter</label>
               				</div>
           				  	</div>
             				<div class="col s3">
             				<div class="input-field inline" >
-              				<input id="quantity_row" value="quantity" type="text" disabled>
-              				<label for="quantity_row">Vehicle</label>
+              				<input id="transportation_vehicle_row" value="quantity" type="text" disabled>
+              				<label for="transportation_vehicle_row">Vehicle</label>
               				</div>
           				  	</div>
           					</div>             
           					<div class="row">
             				<div class="col s5">
             				<div class="input-field inline" >
-              				<input id="vehicle_transportation_row" value="commission" type="text" disabled>
-              				<label id="vehicle_transportation_label" for="vehicle_transportation_row">Vehicle Number</label>
+              				<input id="transportation_number_row" value="commission" type="text" disabled>
+              				<label for="transportation_number_label">Vehicle Number</label>
               				</div>
           				  	</div>
           				  	<div class="col s2">
@@ -771,16 +783,16 @@
           				  	</div>
             				<div class="col s5">
             				<div class="input-field inline">
-              				<input id="transport_cost_row" value="share" type="text" >
-              				<label id="transport_cost_label" for="transport_cost_row">Transport Cost</label>
+              				<input id="transportation_cost_row" value="share" type="text" >
+              				<label for="transportation_cost_label">Transport Cost</label>
               				</div>
           				  	</div>
           					</div>
           					<div class="row">
           					<div class="col s12">
           						<div class="input-field inline" >
-          							<input id="comment_row"  type="text">
-          							<label for="comment_row">Comment
+          							<input id="transportation_comment_row"  type="text">
+          							<label for="transportation_comment_row">Comment
           							</label>
           						</div>
           					</div>	
@@ -788,8 +800,8 @@
         		</form>
   				</div>
   				<div class="modal-footer">
-    				<a id="submit_modal4" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="cancel_modal4" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+    				<a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    				<a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
   				</div>
 			</div>
 
