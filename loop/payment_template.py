@@ -42,11 +42,12 @@ def merge_column_in_excel(ws_obj, first_cell, second_cell, heading, format_str):
     return ws_obj
 
 
-def write_headers_for_sheet(ws_obj, row_index, col_index, label, format_str):
+def write_headers_for_sheet(ws_obj, row_index, col_index, label, coloumn_width, format_str):
     """
     Writes headers in the Excel sheets
     """
-    ws_obj.set_column(col_index, col_index, 9)
+    col_width = coloumn_width if coloumn_width else DEFAULT_COLUMN_WIDTH
+    ws_obj.set_column(col_index, col_index, col_width)
     ws_obj.write(row_index, col_index, label, format_str)
     return
 
@@ -68,7 +69,9 @@ def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
                             write_headers_for_sheet(ws_obj=ws_obj,
                                                     row_index=CELL_ROW_VALUE,
                                                     col_index=c,
-                                                    label=j.get('label'), format_str=bold)
+                                                    label=j.get('label'),
+                                                    coloumn_width=j.get('coloumn_width'),
+                                                    format_str=bold)
                             cell_value = [CELL_ROW_VALUE, c]
                             if j.get('total') != False:
                                 total_value_in_column.append(c)
@@ -177,10 +180,10 @@ def excel_processing(workbook, name_of_sheets, heading_format, row_format, total
                                    heading_str=name_of_sheets[idx],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
-            write_header_in_excel = ws.set_header("&CLoop India Bihar")
+            write_header_in_excel = ws.set_header(HEADER_STRING)
             cell_value_from_headers = \
                 get_headers_from_template_dict(ws, idx, header_dict, header_format)
-            write_footer_in_excel = ws.set_footer("&CThis is an automated generated sheet")
+            write_footer_in_excel = ws.set_footer(FOOTER_STRING)
             # finally writing in process
             write_values = \
                 write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers.get('cell_value'), row_format)
