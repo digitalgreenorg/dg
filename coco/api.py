@@ -133,15 +133,26 @@ def get_user_partner_id(user_id):
 
 def get_user_videos(user_id):
     ###Videos produced by partner with in the same state
+    videos_seen = None
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
-    user_videos = coco_user.get_videos().values_list('id', flat = True)
-    ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
-    videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
-    ###Get videos screened to allow inter partner sharing of videos
-    videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
+    if coco_user.type_of_cocouser != 3:
+        user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
+        ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
+        videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
+        ###Get videos screened to allow inter partner sharing of videos
+        person_obj_list = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
+        videos_seen = Video.objects.filter(id__in=list(person_obj_list), category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat=True)
+    else:
+        user_videos = coco_user.get_videos().values_list('id', flat = True)
+        ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
+        videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
+
+        ###Get videos screened to allow inter partner sharing of videos
+        videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(videos_seen) + list(user_videos))
+
 
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
@@ -500,6 +511,10 @@ class ScreeningResource(BaseResource):
             screening_id  = getattr(bundle.obj,'id')
             for pma in pma_list:
                 try:
+                    person_obj = Person.objects.get(id=pma['person_id'])
+                    person_obj.age = int(pma.get('age'))
+                    person_obj.gender = pma.get('gender')
+                    person_obj.save()
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
                                                          user_created_id = user_id,
@@ -523,11 +538,17 @@ class ScreeningResource(BaseResource):
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
+            person_obj = Person.objects.get(id=pma['person_id'])
+            person_obj.age = int(pma.get('age'))
+            person_obj.gender = pma.get('gender')
+            person_obj.save()
             pma = PersonMeetingAttendance(screening_id=screening_id,
                                           person_id=pma['person_id'],
                                           user_created_id = user_id,
                                           category=pma['category'])
-            pma.save()    
+
+            pma.save() 
+
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
@@ -539,7 +560,7 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmers_attendance(self, bundle):
         return [{'person_id':pma.person.id, 
                  'person_name': pma.person.person_name, 
-                 'category': pma.category
+                 'pma_direct_beneficiariescategory': pma.category
                  }  
                  for pma in bundle.obj.personmeetingattendance_set.all()]
     
@@ -578,7 +599,10 @@ class PersonResource(BaseResource):
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
 
     def dehydrate_pma_direct_beneficiariescategory(self, bundle):
-        pma_cat = [{'id': pma.id, 'category': pma.category} for pma in bundle.obj.personmeetingattendance_set.all()]
+        try:
+            pma_cat = bundle.obj.personmeetingattendance_set.latest('id').category
+        except:
+            pma_cat = None
         return pma_cat
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013

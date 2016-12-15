@@ -38,6 +38,7 @@ define([
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
             var language = User.get('language');
+            this.type_of_cocouser = User.get('type_of_cocouser');
             this.entity_config = all_configs[this.entity_name];
             // HTML for form 
             //s_passed["form_template"] = this.form_template;
@@ -625,6 +626,18 @@ define([
             return filtered;
         },
 
+        // filter an array from attributes rather than array index itself
+        filter_array_with_specific_parameters: function(array, filter_attr, filter_val) {
+            filtered = [];
+            $.each(array, function(index, obj) {
+                
+                if (obj.attributes[filter_attr] == filter_val) {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+
         filter_dependent_model_array: function(model_array, filter) {
             if(model_array.length == 0) return model_array;
             var that = this;
@@ -683,6 +696,7 @@ define([
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
+            cocousertype = this.type_of_cocouser;
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
@@ -690,6 +704,13 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
+                if (element == "parentcategory" && cocousertype != 3){
+                   model_array = this.filter_array_with_specific_parameters(model_array, 'id', cocousertype); 
+                }
+                if (element == "parentcategory" && cocousertype == 3){
+                   model_array = this.filter_array_with_specific_parameters(model_array, 'id', 2); 
+                } 
+                
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
                 for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
@@ -808,6 +829,9 @@ define([
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
+                    if (element== "parentcategory" && isNaN(this.model_json[element])){
+                        this.$('form [name=' + element + ']').val(1);
+                    }
                     this.$('form [name=' + element + ']').val(this.model_json[element]).change();
                     this.$('form [name=' + element + ']').trigger("chosen:updated");
                     if (this.num_sources[element] <= 0)
