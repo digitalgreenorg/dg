@@ -52,7 +52,7 @@ def write_headers_for_sheet(ws_obj, row_index, col_index, label, coloumn_width, 
     return
 
 
-def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
+def get_headers_from_template_dict(ws_obj, sheet_index, header_dict, bold):
     """
     Fetch Headers from Variable Dict in the Excel sheets
     """
@@ -60,21 +60,21 @@ def get_headers_from_template_dict(ws_obj, idx, header_dict, bold):
     column_formula_list = []
     total_value_in_column = []
     header_dict = header_dict
-    for col_idx, col in enumerate(header_dict.values()[idx]):
+    for col_index, col in enumerate(header_dict.values()[sheet_index]):
         if not isinstance(col, list):
             try:
                 write_headers_for_sheet(ws_obj=ws_obj,
                                         row_index=CELL_ROW_VALUE,
-                                        col_index=col_idx,
+                                        col_index=col_index,
                                         label=col.get('label'),
                                         coloumn_width=col.get('coloumn_width'),
                                         format_str=bold)
-                cell_value = [CELL_ROW_VALUE, col_idx]
+                cell_value = [CELL_ROW_VALUE, col_index]
                 if col.get('total') != False:
-                    total_value_in_column.append(int(col_idx))
+                    total_value_in_column.append(int(col_index))
                 if col.get('formula') is not None:
                     column_formula_list.append({'formula': col.get('formula'),
-                                                'col_index': col_idx})
+                                                'col_index': col_index})
             except Exception as e:
                 print e
     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
@@ -170,26 +170,26 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
 def excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data):
     # for developing exceptions
     try:
-        for idx, item in enumerate(name_of_sheets):
-            ws = workbook.add_worksheet(NAME_OF_SHEETS[idx])
+        for sheet_index, item in enumerate(name_of_sheets):
+            ws = workbook.add_worksheet(NAME_OF_SHEETS[sheet_index])
             # setting the col width
             write_heading_in_sheet(ws_obj=ws,
-                                   heading_str=name_of_sheets[idx],
+                                   heading_str=name_of_sheets[sheet_index],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
             write_header_in_excel = ws.set_header(HEADER_STRING)
             cell_value_from_headers = \
-                get_headers_from_template_dict(ws, idx, header_dict, header_format)
+                get_headers_from_template_dict(ws, sheet_index, header_dict, header_format)
             write_footer_in_excel = ws.set_footer(FOOTER_STRING)
             # finally writing in process
             write_values = \
-                write_values_to_sheet(ws, combined_data[idx], cell_value_from_headers.get('cell_value'), row_format)
+                write_values_to_sheet(ws, combined_data[sheet_index], cell_value_from_headers.get('cell_value'), row_format)
             write_total_in_excel_sheet(ws, write_values.get('start'),
                                        write_values.get('end'),
                                        cell_value_from_headers.get('formulacolumn_dict'),
                                        total_cell_format)
             write_formula_in_values(ws,
-                                    combined_data[idx],
+                                    combined_data[sheet_index],
                                     cell_value_from_headers.get('cell_value'),
                                     cell_value_from_headers.get('formula_list'),
                                     row_format)
