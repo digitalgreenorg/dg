@@ -2968,7 +2968,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }, {
             title: "Quantity[Q] (in Kg)"
         }, {
-            title: "Commision Agent Discount[CAD] (in Rs/Kg)"
+            title: "Commission Agent Discount[CAD] (in Rs/Kg)"
         }, {
             title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
         }],
