@@ -3,6 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 from django.conf import settings
+from django.core.cache import cache
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
@@ -55,30 +56,36 @@ class DistrictNameChoiceField(forms.ModelChoiceField):
 
 
 class CocoUserForm(forms.ModelForm):
-    district=DistrictNameChoiceField(queryset=District.objects.all().prefetch_related('state'))
-    # district = forms.ModelChoiceField(queryset=District.objects.all())
+    # village_list = cache.get('village_list')
+    #
+    # if village_list is None:
+    #     village_list = Village.objects.prefetch_related('block', 'block__district')
+    #     cache.set('village_list',village_list,3600)
+
+    district = DistrictNameChoiceField(queryset = District.objects.prefetch_related('state'))
     villages = UserModelVillageMultipleChoiceField(
-        widget=FilteredSelectMultiple(
-                                      verbose_name='villages',
-                                      is_stacked=False
+        widget = FilteredSelectMultiple(
+                                      verbose_name = 'villages',
+                                      is_stacked = False
                                      ),
-        queryset=Village.objects.all().prefetch_related('block', 'block__district')
-        # queryset=Village.objects.filter(id__in=[1,2,3,4,5,6])
-        # queryset=Village.objects.all()
+        queryset = Village.objects.filter(id=123456).prefetch_related('block', 'block__district')
         )
     videos = UserModelVideoMultipleChoiceField(
-        widget=FilteredSelectMultiple(
-                                      verbose_name='videos',
-                                      is_stacked=False
+        widget = FilteredSelectMultiple(
+                                      verbose_name = 'videos',
+                                      is_stacked = False
                                      ),
-        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
-        required=False
+        queryset = Video.objects.prefetch_related('language', 'village__block__district'),
+        required = False
         )
     class Meta:
         model = CocoUser
         fields = ['user', 'partner', 'district', 'villages', 'videos']
     class Media:
         js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
+    def save(self, commit=True, *args, **kwargs):
+        # messages.info(request, "TEST PRINT")
+        print self
 
 class LanguageForm(CocoModelForm):
     class Meta:
