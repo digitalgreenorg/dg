@@ -9,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorShareOutliers
 
 from loop_data_log import get_latest_timestamp
 
@@ -460,9 +460,10 @@ def payments(request):
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share','id').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
+    aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id = F('aggregator__user_id'),mandi__name=F('mandi__mandi_name_en')).values("date","mandi__name","amount","comment","user_created__id")
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data), 'outlier_transport_data': list(
-        outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data), 'transportation_data': list(transportation_data)}
+        outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data), 'transportation_data': list(transportation_data), 'aggregator_outlier' : list(aggregator_outlier)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)

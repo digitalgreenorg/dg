@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('loop', '0004_auto_20160914_2154'),
+        ('loop', '0005_auto_20161202_1104'),
     ]
 
     operations = [
@@ -28,10 +28,10 @@ class Migration(migrations.Migration):
                 ('user_modified', models.ForeignKey(related_name='loop_aggregatorshareoutliers_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
-        migrations.AlterField(
-            model_name='gaddidar',
-            name='discount_criteria',
-            field=models.IntegerField(default=0, choices=[(0, b'Volume'), (1, b'Amount')]),
+        migrations.AddField(
+            model_name='gaddidarshareoutliers',
+            name='comment',
+            field=models.CharField(max_length=200, null=True, blank=True),
         ),
         migrations.AlterUniqueTogether(
             name='aggregatorshareoutliers',
