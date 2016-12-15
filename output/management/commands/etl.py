@@ -309,12 +309,6 @@ class AnalyticsSync():
             drop_create = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
             if drop_create != 0:
                 raise Exception("Could not create schema on main DB")
-            # print "Schema created on main DB"
-
-            # # Copy Data into main tables :
-            # copy_tables = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH,'copy_myisam_table.sql')), shell=True)
-            # if copy_tables != 0:
-            #     raise Exception("Could not copy tables to main DB")
             print "Tables copied to main DB"
             print "Total Time On Main DB = ", time.time() - start_time
         except MySQLdb.Error, e:
