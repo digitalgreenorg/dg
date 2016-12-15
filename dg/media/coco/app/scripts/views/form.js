@@ -269,7 +269,7 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
-                    if (this.$el.find('#id_parentcategory').val() == "2"){
+                    if (this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
                         // hide the headers
                         this.$el.find('th#id_age').addClass('hidden');
                         this.$el.find('th#id_gender').addClass('hidden');
@@ -704,12 +704,9 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-                if (element == "parentcategory" && cocousertype != 3){
-                   model_array = this.filter_array_with_specific_parameters(model_array, 'id', cocousertype); 
+                if (element == this.entity_config.fetch_element_that_manipulate && cocousertype != 3){
+                   model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
                 }
-                if (element == "parentcategory" && cocousertype == 3){
-                   model_array = this.filter_array_with_specific_parameters(model_array, 'id', 2); 
-                } 
                 
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
@@ -754,7 +751,7 @@ define([
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
-                if (this.$el.find('#id_parentcategory').val() == "2"){
+                if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == "2"){
                     this.$el.find('th#id_age').addClass('hidden');
                     this.$el.find('th#id_gender').addClass('hidden');
                     this.$el.find('th#id_category').addClass('hidden');
@@ -762,19 +759,11 @@ define([
                     this.$el.find('input#gender_row7').addClass('hidden');
                     this.$el.find('div#category_row7_chosen').addClass('hidden');
                 }
-                // if (this.$el.find('#id_parentcategory').val() != '1'|this.$el.find('#id_parentcategory').val() != '2'){
-                //     this.$el.find('th#id_age').addClass('hidden');
-                //     this.$el.find('th#id_gender').addClass('hidden');
-                //     this.$el.find('th#id_category').addClass('hidden');
-                //     this.$el.find('input#age_row7').addClass('hidden');
-                //     this.$el.find('input#gender_row7').addClass('hidden');
-                //     this.$el.find('div#category_row7_chosen').addClass('hidden');
-                // }
 
             } else {
                 console.log("NOT EXPANDED");
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
-                    $("#id_parentcategory").on('change', function(){
+                    $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
                     if ($('#id_group').val() != ''){
                             $('.search-choice-close').click();
                             $('#id_group').trigger("chosen:updated");
@@ -782,9 +771,9 @@ define([
                     })
                 }
                 if (this.edit_case && this.foreign_elements_rendered[element]){
-                    $("#id_parentcategory_chosen").on('click', function(){
-                            $('.search-choice-close').click();
-                            $('#id_group').trigger("chosen:updated");
+                    $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
+                        $('.search-choice-close').click();
+                        $('#id_group').trigger("chosen:updated");
                     })
                 }
                 $f_el = this.$('#' + f_entity_desc.placeholder);
@@ -829,11 +818,16 @@ define([
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
-                    if (element== "parentcategory" && isNaN(this.model_json[element])){
-                        this.$('form [name=' + element + ']').val(1);
+                    if (element == this.entity_config.fetch_element_that_manipulate && isNaN(this.model_json[element])){
+                        this.$('form [name=' + element + ']').val('2').change().trigger("chosen:updated");
+                        $("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').find("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }else{
+                        this.$('form [name=' + element + ']').val(this.model_json[element]).change();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
                     }
-                    this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }
