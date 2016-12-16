@@ -2919,7 +2919,7 @@ var rows_table2_farmer = {};
         $('#table2').on( 'click', 'tbody td', function (e) {
             $this = $(this);
             console.log($(this));
-          if(($this.context.cellIndex === 4 || $this.context.cellIndex === 6 || $this.context.cellIndex === 9 ||$this.context.cellIndex === 10)&&editTable2==1){
+          if(($this.context.cellIndex === 4 || $this.context.cellIndex === 6)&&editTable2==1){
 
                 $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
                 $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
@@ -3034,7 +3034,8 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
                         $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
                         if(($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML||parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5)
-                            $this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');
+                            {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                                                            $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');}
                         else
                             $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
 
@@ -3064,7 +3065,8 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
                         $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
                         if(parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5 || ($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML)
-                            {$this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');}
+                            {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                                $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');}
                         else
                         {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');}
                         var row_id =$this.context.parentNode.rowIndex;
@@ -3136,15 +3138,13 @@ var rows_table2_farmer = {};
                     editTable2=1;
                     $('#table2').find('tr :nth-child(5)').css('color','#3B7DB0');
                     $('#table2').find('tr :nth-child(7)').css('color','#3B7DB0');
-                    $('#table2').find('tr :nth-child(10)').css('color','#3B7DB0');
-                    $('#table2').find('tr :nth-child(11)').css('color','#3B7DB0');
                 }
             },
             {
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://localhost:8000/loop/api/v1/aggregatorshareoutliers/",
+                    "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/aggregatorshareoutliers/",
 
                     "fnClick": function( nButton, oConfig ) {
                     var finalData=[];
@@ -3214,7 +3214,7 @@ var rows_table2_farmer = {};
                     console.log(JSON.stringify(JObjFarmer));
                     if(Object.keys(rows_table2_farmer).length>0)
                     $.ajax({
-                        url: "http://localhost:8000/loop/api/v1/daytransportation/?format=json",
+                        url: "http://192.168.11.102:4001/loop/api/v1/daytransportation/?format=json",
                         type:'patch',
                         dataType:'json',
                         contentType: "application/json; charset=utf-8",
@@ -3240,7 +3240,7 @@ var rows_table2_farmer = {};
 
         $('#table3').on( 'click', 'tbody td', function (e) {
             $this = $(this);
-          if(editTable3==1&&($this.context.cellIndex === 4 || $this.context.cellIndex === 5 || $this.context.cellIndex === 6)){
+          if(editTable3==1&&($this.context.cellIndex === 4 || $this.context.cellIndex === 5 )){
                 $('#gaddidar_date_row').val($this.parent()[0].childNodes[0].innerHTML);
                 $('#gaddidar_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
                 $('#gaddidar_row').val($this.parent()[0].childNodes[1].innerHTML);
@@ -3307,7 +3307,9 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
                         $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
                         if(parseFloat($this.parent()[0].childNodes[4].innerHTML)>1)
-                        {$this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');}
+
+                        {$this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');
+                            $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');}
                         else
                         {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');}
                         var row_id =$this.context.parentNode.rowIndex;
@@ -3359,7 +3361,6 @@ var rows_table2_farmer = {};
                     editTable3=1;
                     $('#table3').find('tr :nth-child(5)').css('color','#3B7DB0');
                     $('#table3').find('tr :nth-child(6)').css('color','#3B7DB0');
-                    $('#table3').find('tr :nth-child(7)').css('color','#3B7DB0');
                 }
             },
 
@@ -3367,14 +3368,12 @@ var rows_table2_farmer = {};
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://localhost:8000/loop/api/v1/gaddidarshareoutliers?format=json",
+                    "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table3').find('th').removeAttr("style");
                         $('#table3').find('td').removeAttr("style");
                         $('#table3').find('tr').removeAttr("style");
-                        /*$('#table3').find('tr :nth-child(6)').removeAttr("style");
-                        $('#table3').find('tr :nth-child(7)').removeAttr("style");*/
                         for(var keys in rows_table3){
                             var row_data = {}
                             var mandi_idDict ={}
@@ -3506,6 +3505,7 @@ var rows_table2_farmer = {};
             "aButtons": [{
                 "sExtends":"text",
                 "sButtonText":"Edit",
+                "sButtonClass":"disable-button",
                 "fnClick":function(nButton,oConfig){
 
                     $('#ToolTables_table4_1').removeClass('disable-button');
