@@ -855,9 +855,9 @@ function() {
         'config_English': 'Adoptions',
         'config_हिन्दी': 'अपनाए हुए विधि',
         'config_Français': 'Adoptions',
-        'labels_हिन्दी': {adoption:"अपनाए हुए विधि", village: "गाँव", mediator: "मध्यस्थ", video: "वीडियो", groups_attended: "ग्राम संगठन जिन्होने भाग लिया ", person: "सदस्य", del: "हटाओ", sr_no: "क्रम संख्या", date_of_adoption: "अपनाने की तारीख", date_of_verification: "अपनाने के जाँच की तारीख"},
-        'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_adoption: "Date d'adoption", date_of_verification: "Date de vérification"},
-        'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification"},
+        'labels_हिन्दी': {adoption:"अपनाए हुए विधि", village: "गाँव", mediator: "मध्यस्थ", video: "वीडियो", groups_attended: "ग्राम संगठन जिन्होने भाग लिया ", person: "सदस्य", del: "हटाओ", sr_no: "क्रम संख्या", date_of_adoption: "अपनाने की तारीख", date_of_verification: "अपनाने के जाँच की तारीख", member_adopt: "क्या सदस्य ने क्रिया अपनाई", recall_nonnegotiable: "क्या सदस्य ने अति आवश्यक बातो को याद किया था", parentcategory: 'प्रपत्र प्रकार',},
+        'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_adoption: "Date d'adoption", date_of_verification: "Date de vérification", member_adopt: "membre at-il adopté la pratique", recall_nonnegotiable: "Le député at rappeler les points non négociables", parentcategory: 'Type de formulaire',},
+        'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification", member_adopt: "Did member adopt the practice", recall_nonnegotiable: "Did the member recall non-negotiable points", parentcategory: 'Form Type',},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'अपनाने की तारीख','element':'date_of_adoption'},{'header':'सदस्य कि आईडी','element':'person.online_id'},{'header':'सदस्य','element':'person.person_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'},{'header':'गाँव','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date d'adoption",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Adoption Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
@@ -865,6 +865,10 @@ function() {
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
         'entity_name': 'adoption',
+        'fetch_key_element': 'id',
+        'fetch_element_that_manipulate': 'parentcategory',
+        'fields_to_hide': 'th#id_age, th#id_gender, th#id_category, input#age, input#gender, div#category_chosen',
+        'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
@@ -928,12 +932,26 @@ function() {
                         'name_field': 'village_name'
                     },
                 },
+                
+                'parentcategory': {
+                    'parentcategory': {
+                        'placeholder': 'id_parentcategory',
+                        'name_field': 'parent_category_name'
+                        },
+                },
+
                 'video':{
                     'video':{
                         'placeholder': 'id_video',
-                        'name_field': 'title'
+                        'name_field': 'title',
+                        'dependency': [{
+                            'source_form_element': 'parentcategory',
+                            'dep_attr': 'parent_category',
+                            'parent_attr': 'category'
+                        }]
                     },
                 },
+
                 'group': {
                     'group': {
                         'placeholder': 'id_group',
@@ -1020,12 +1038,28 @@ function() {
         },
         edit: {
             'foreign_entities': {
+                
+                'village': {
+                    'village': {
+                        'placeholder': 'id_village',
+                        'name_field': 'village_name'
+                    },
+                },
+
                 'person': {
                     'person': {
                         'placeholder': 'id_person',
                         'name_field': 'person_name'
                     },
                 },
+                
+                'parentcategory': {
+                    'parentcategory': {
+                        'placeholder': 'id_parentcategory',
+                        'name_field': 'parent_category_name'
+                        },
+                },
+
                 'video': {
                     'video': {
                         'placeholder': 'id_video',

@@ -612,7 +612,9 @@ class PersonAdoptVideoResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     animator = fields.ForeignKey(MediatorResource, 'animator', null=True)
     group = fields.DictField(null = True)
-    village = fields.DictField(null = True)
+    village = fields.ForeignKey(VillageResource, 'village', null=True)
+    parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
+
     class Meta:
         max_limit = None
         queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video','animator','person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
@@ -623,12 +625,16 @@ class PersonAdoptVideoResource(BaseResource):
         always_return_data = True
         excludes = ['time_created', 'time_modified', 'verification_status', 'non_negotiable_check', 'verified_by']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_video = partial(dict_to_foreign_uri, field_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)
+    hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
 
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}

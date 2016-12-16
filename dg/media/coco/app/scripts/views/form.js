@@ -277,6 +277,7 @@ define([
                         this.$el.find('input#age_row7').addClass('hidden');
                         this.$el.find('input#gender_row7').addClass('hidden');
                         this.$el.find('div#category_row7_chosen').addClass('hidden');
+                        this.$el.find('th#id_member_adopt').addClass('hidden');
                     }
             }, this);
 

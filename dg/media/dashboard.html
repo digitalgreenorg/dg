@@ -754,6 +754,15 @@
         <fieldset class="form-horizontal">
                 <legend><%= adoption %></legend>
                 <div class="form-group">
+                <label class="control-label col-sm-2"><%= village %></label>
+                <div class="col-sm-4"> 
+                <select name="village" id="id_village" class="chosen-select form-control">
+                <option value="">---------- </option>
+                </select>
+                </div>
+            </div>
+
+                <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
                 	<div class="col-sm-4"> 
                         <select name="person" id="id_person" class="chosen-select form-control">
@@ -761,6 +770,16 @@
                         </select>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2"><%= parentcategory %></label>
+                    <div class="col-sm-4"> 
+                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
+                        <option value='0' selected='selected'>---------</option> 
+                        </select> 
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= video %></label>
                     <div class="col-sm-4">
@@ -787,6 +806,36 @@
                         <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_verification">  
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2"><%=member_adopt%>?</label>
+                    <div class="col-sm-4">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="adopt_practice" value="1" name="adopt_practice">Adopt Practice
+                    </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2"><%=recall_nonnegotiable%> ?</label>
+                    <div class="col-sm-4">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_one" value="1" name="krp_one">n1
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_two" value="1" name="krp_two">n2
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_three" value="1" name="krp_three">n3
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_four" value="1" name="krp_four">n4
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_five" value="1" name="krp_five">n5
+                        </label>
+                    </div>
+                </div>
         </fieldset>
     
 </script>
@@ -810,6 +859,17 @@
                 </select>
                 </div>
             </div>
+            
+
+            <div class="form-group">
+                    <label class="control-label col-sm-2"><%= parentcategory %></label>
+                    <div class="col-sm-4"> 
+                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
+                        <option value='0' selected='selected'>---------</option> 
+                        </select> 
+                    </div>
+                </div>
+
             <div class="form-group">
                 <label class="control-label col-sm-2"><%= video %></label>
                 <div class="col-sm-4"> 
@@ -851,6 +911,13 @@
                         <th>
                             <%=date_of_verification%>
                         </th>
+                        <th id="id_member_adopt" class = "notbold">
+                            <%=member_adopt%>?
+                        </th>
+                        <th id="id_recall_nonnegotiable" class = "notbold">
+                            <%=recall_nonnegotiable%> ?
+                        </th>
+                        
                     </tr>
                 </thead>
                 <tbody id="bulk">
@@ -860,7 +927,7 @@
 </script>
 
 <script type="text/template" id="adoption_inline_header">
-    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th> Date Of Adoption</th></tr>
+    <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th> Date Of Adoption</th><th>Did the member 'recall' non-negotiable points ?</th><th>Did member adopt the practice?</th></tr>
 </script>
 
 <script type="text/template" id="adoption_inline">
@@ -916,6 +983,34 @@
                 <div class="controls">
                     <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_verification<%=index%>" name="date_of_verification<%=index%>" required>
                 </div>
+            </div>
+        </td>
+        
+        <td style="text-align:center;">
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="adopt_practice<%=index%>" value="1" name="adopt_practice<%=index%>">
+                </label>
+            </div>
+        </td>
+
+        <td>
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="krp_one<%=index%>" value="1" name="krp_one<%=index%>">krp1
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="krp_two<%=index%>" value="1" name="krp_two<%=index%>">krp2
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="krp_three<%=index%>" value="1" name="krp_three<%=index%>">krp3
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="krp_four<%=index%>" value="1" name="krp_four<%=index%>">krp4
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="krp_five<%=index%>" value="1" name="krp_five<%=index%>">krp5
+                </label>
             </div>
         </td>
         
