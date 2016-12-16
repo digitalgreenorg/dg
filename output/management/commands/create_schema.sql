@@ -184,6 +184,9 @@ CREATE INDEX activities_screeningwisedata_animator_id ON activities_screeningwis
 CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id); 
 CREATE INDEX activities_screeningwisedata_video_id ON activities_screeningwisedata(video_id);
 
+INSERT INTO `activities_screeningwisedata`
+SELECT * FROM digitalgreen_clone.activities_screeningwisedata;
+
 -- Animatorwisedata for raw_data_analytics
 DROP TABLE IF EXISTS `people_animatorwisedata`;
 CREATE TABLE `people_animatorwisedata` ( 
@@ -208,6 +211,9 @@ CREATE TABLE `people_animatorwisedata` (
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
 
+INSERT INTO `people_animatorwisedata`
+SELECT * FROM digitalgreen_clone.people_animatorwisedata;
+
 -- Geographies-Partner Added for raw_data_analytics --
 DROP TABLE IF EXISTS `village_partner_myisam`;
 CREATE TABLE `village_partner_myisam` (
@@ -227,3 +233,6 @@ CREATE INDEX village_partner_myisam_block_partner ON village_partner_myisam(bloc
 CREATE INDEX village_partner_myisam_district_partner ON village_partner_myisam(district_id,partner_id);
 CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(state_id,partner_id);
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
+
+INSERT INTO `village_partner_myisam`
+SELECT * FROM digitalgreen_clone.village_partner_myisam;
