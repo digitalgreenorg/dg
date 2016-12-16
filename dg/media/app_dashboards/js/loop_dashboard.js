@@ -2831,7 +2831,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 gaddidar_amount[date_index].push(0);
                 // farmers[date_index].push(0);
                 transport_cost[date_index].push(0);
-                farmer_share[date_index].push(0);
+                farmer_share[date_index].push({
+                  farmer_share_amount: 0,
+                  farmer_share_comment: null
+                });
                 mandi_index = mandis[date_index].map(function(e) {
                     return e.mandi_name;
                 }).indexOf(aggregator_payment[i]['mandi__mandi_name']);
@@ -2865,7 +2868,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 return e.mandi_name;
             }).indexOf(transport_payment[i]['mandi__mandi_name']);
             transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
-            farmer_share[date_index][mandi_index] = transport_payment[i]['farmer_share'];
+            farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
+            farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['comment'];
 
             transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2)]);
         }
@@ -2875,9 +2879,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j];
+            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
 
-            data_set.push([sno, dates[i], mandis[i][j].mandi_name, (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j], 0, net_payment, agg_id, mandis[i][j].mandi_id]);
+            data_set.push([sno, dates[i], mandis[i][j].mandi_name, (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, net_payment, agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
             sno += 1;
         }
     }
