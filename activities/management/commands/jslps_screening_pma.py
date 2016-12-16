@@ -75,14 +75,20 @@ class Command(BaseCommand):
 
 			if (error==0):				
 				try:
-					scr = Screening(date = sd,
+					scr_already_exist = Screening.objects.filter(date = sd,
 									start_time = st,
 									village = village.Village,
 									animator = animator.animator,
 									partner = partner)
-					scr.save()
-					jslps.new_count += 1
-					print "Screening saved in old"
+					if len(scr_already_exist) == 0:
+						scr = Screening(date = sd,
+										start_time = st,
+										village = village.Village,
+										animator = animator.animator,
+										partner = partner)
+						scr.save()
+						jslps.new_count += 1
+						print "Screening saved in old"
 				except Exception as e:
 					print e
 					if "Duplicate entry" in str(e):
@@ -95,14 +101,20 @@ class Command(BaseCommand):
 					if len(screening) > 1:
 						screening = screening[0]
 					for i in groups:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
+						else:
+							jslps.duplicate_count += 1
 						screening.farmer_groups_targeted.add(i)
 						screening.save()
-						jslps.new_count += 1
 						print "Groups saved in old"
 					for i in videos:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
+						else:
+							jslps.duplicate_count += 1
 						screening.videoes_screened.add(i)
 						screening.save()
-						jslps.new_count += 1
 						print "Videos saved in old"
 				except Exception as e:
 					print e
@@ -162,11 +174,13 @@ class Command(BaseCommand):
 
 			if (error == 0):
 				try:
-					pma = PersonMeetingAttendance(screening = screening.screening,
+					pma_already_exist = PersonMeetingAttendance.objects.filter(screening_id = screening.screening.id,person_id=person.person.id)
+					if len(pma_already_exist) == 0:
+						pma = PersonMeetingAttendance(screening = screening.screening,
 												person = person.person)
-					pma.save()
-					jslps.new_count += 1
-					print "PMA saved in old"
+						pma.save()
+						jslps.new_count += 1
+						print "PMA saved in old"
 				except Exception as e:
 					if "Duplicate entry" in str(e):
 						jslps.duplicate_count += 1
