@@ -139,6 +139,9 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
 
+class AggregatorShareOutlierAdmin(admin.ModelAdmin):
+    list_display = ('date','__mandi__', '__aggregator__' , 'amount','comment')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -161,3 +164,4 @@ loop_admin.register(Language)
 loop_admin.register(GaddidarCommission,GaddidarCommisionAdmin)
 loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
 loop_admin.register(CropLanguage,CropLanguageAdmin)
+loop_admin.register(AggregatorShareOutliers,AggregatorShareOutlierAdmin)

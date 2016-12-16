@@ -414,8 +414,11 @@ class AggregatorShareOutliers(LoopModel):
     amount = models.FloatField()
     comment = models.CharField(max_length=200, null=True, blank=True)
 
-    def __unicode__(self):
-        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+    def __mandi__(self):
+        return "%s" % (self.mandi.mandi_name)
+    
+    def __aggregator__(self):
+        return "%s" % (self.aggregator.name)
 
     class Meta:
         unique_together =("date","aggregator","mandi")
