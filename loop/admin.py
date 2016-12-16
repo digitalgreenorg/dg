@@ -95,7 +95,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
-                    'transportation_cost', 'farmer_share')
+                    'transportation_cost', 'farmer_share', 'comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name')
     date_hierarchy = 'date'
