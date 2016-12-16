@@ -1,4 +1,7 @@
 import json
+import xlsxwriter
+from django.http import JsonResponse
+from io import BytesIO
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +15,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorShareOutliers
 
 from loop_data_log import get_latest_timestamp
-
+from loop.payment_template import *
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
 ROLE_AGGREGATOR = 2
@@ -50,6 +53,31 @@ def home(request):
 
 def dashboard(request):
     return render(request, 'app_dashboards/loop_dashboard.html')
+
+@csrf_exempt
+def download_data_workbook(request):
+    if request.method == 'POST':
+        # this will prepare the data
+        formatted_post_data = format_web_request(request)
+        # this will get combined web data and various formats
+        data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
+        # accessing basic variables
+        workbook = data_dict.get('workbook')
+        name_of_sheets = data_dict.get('name_of_sheets')
+        heading_format = data_dict.get('heading_format')
+        header_format = data_dict.get('header_format')
+        row_format = data_dict.get('row_format')
+        total_cell_format = data_dict.get('total_cell_format')
+        excel_output = data_dict.get('excel_output')
+        combined_data = data_dict.get('combined_data')
+        # now the sheet processes
+        workbook = excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data)
+        # final closing the working
+        workbook.close()
+        excel_output.seek(0)
+        response = HttpResponse(excel_output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        return response
+
 
 
 def filter_data(request):

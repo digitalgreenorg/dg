@@ -39,6 +39,9 @@ var QUANTITY__SUM = "quantity__sum",
     MANDI__ID = "mandi__id",
     GADDIDAR__ID = "gaddidar__id";
 
+var aggregator_sheet_name = "", gaddidar_sheet_name = "", transporter_sheet_name = "" ;
+
+
 
 function initialize() {
     // initialize any library here
@@ -657,6 +660,50 @@ function set_filterlistener() {
         crop_prices_graph(crop_id);
     });
 
+    $("#download-payment-sheet").click(function() {
+        if ($('#aggregator_payments :selected').val() == '') {
+                alert("Please select an aggregator to download the payment sheet");
+             }
+        else
+        {
+
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+            var a;
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+            a = document.createElement('a');
+            a.href = window.URL.createObjectURL(xhttp.response);
+            a.download = aggregator_sheet_name;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            return a.click();
+                }
+            };
+            xhttp.open("POST", "/loop/get_payment_sheet/", true);
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.responseType = 'blob';
+            var data_json = {
+                aggregator_data:{
+                    name: aggregator_sheet_name,
+                    data : aggregator_data_set     
+                },
+
+                gaddidar_data: {
+                    name : gaddidar_sheet_name,
+                    data : gaddidar_data_set    
+                },
+
+                transporter_data:{
+                    name : transporter_sheet_name,
+                    data : transporter_data_set
+                 }
+            };
+            xhttp.send(JSON.stringify(data_json));
+        }
+
+});
+
+
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
         var agg_id = $(this).children(":selected").attr("id");
@@ -668,6 +715,8 @@ function set_filterlistener() {
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
     });
+
+
 
     $("#time_series_frequency").change(function() {
         time_series_frequency = $('#time_series_frequency :selected').val();
@@ -2795,7 +2844,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
     globalUser = aggregator;
     var sno = 1;
-    data_set = [];
+    aggregator_data_set = [];
     gaddidar_data_set = [];
     transporter_data_set = [];
     var dates = [];
@@ -2842,8 +2891,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
 
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], aggregator_payment[i][QUANTITY__SUM], 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
         }
     }
 
@@ -2853,8 +2902,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             for (var j = 0; j < gaddidar_data_set.length; j++) {
                 if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 &&
                     gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
-                    gaddidar_data_set[j][4] = payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2);
-                    gaddidar_data_set[j][5] = payments_gaddidar_contribution[i]['amount'].toFixed(2);
+                    gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2));
+                    gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount'].toFixed(2));
                 }
             }
         }
@@ -2871,7 +2920,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
             farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['comment'];
 
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], transport_payment[i]['transportation_cost__sum'].toFixed(2)]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))]);
         }
     }
 
@@ -2879,19 +2928,20 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
 
-            data_set.push([sno, dates[i], mandis[i][j].mandi_name, (quantites[i][j]).toString().concat(KG), (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, net_payment, agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
+            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)),agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+
             sno += 1;
         }
     }
 
     for (var i = 0; i < gaddidar_contribution_data_length; i++) {
         if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
-            for (var j = 0; j < data_set.length; j++) {
-                if (data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-                    data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-                    data_set[j][8] = (data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2);
+            for (var j = 0; j < aggregator_data_set.length; j++) {
+                if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
+                    aggregator_data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+                    aggregator_data_set[j][8] = parseFloat((aggregator_data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
                     break;
                 }
             }
@@ -2900,17 +2950,19 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
     for (var i = 0; i < aggregator_outlier.length; i++) {
         if (aggregator == aggregator_outlier[i][USER_CREATED__ID].toString()) {
-            for (var j = 0; j < data_set.length; j++) {
-                if (data_set[j].indexOf(aggregator_outlier[i]['date']) != -1 && data_set[j].indexOf(aggregator_outlier[i]['mandi__name']) != -1) {
-                    data_set[j][8] = (data_set[j][8] - data_set[j][4]);
-                    data_set[j][4] = parseFloat(aggregator_outlier[i]['amount']);
-                    data_set[j][8] = (data_set[j][8] + parseFloat(aggregator_outlier[i]['amount'])).toFixed(2);
-                    data_set[j][11] = aggregator_outlier[i]['comment'];
+            for (var j = 0; j < aggregator_data_set.length; j++) {
+                if (aggregator_data_set[j].indexOf(aggregator_outlier[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_outlier[i]['mandi__name']) != -1) {
+                    aggregator_data_set[j][8] = (aggregator_data_set[j][8] - aggregator_data_set[j][4]);
+                    aggregator_data_set[j][4] = parseFloat(aggregator_outlier[i]['amount']);
+                    aggregator_data_set[j][8] = (aggregator_data_set[j][8] + parseFloat(aggregator_outlier[i]['amount'])).toFixed(2);
+                    aggregator_data_set[j][11] = aggregator_outlier[i]['comment'];
+
                     break;
                 }
             }
         }
     }
+
 
 var editTable2=0;
 var rows_table2 = {};
@@ -2918,7 +2970,6 @@ var rows_table2_farmer = {};
 
         $('#table2').on( 'click', 'tbody td', function (e) {
             $this = $(this);
-            console.log($(this));
           if(($this.context.cellIndex === 4 || $this.context.cellIndex === 6)&&editTable2==1){
 
                 $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
@@ -3033,7 +3084,7 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
                         $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
                         $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
-                        if(($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML||parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5)
+                        if(($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML)
                             {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
                                                             $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');}
                         else
@@ -3064,7 +3115,7 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
                         $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
                         $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
-                        if(parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5 || ($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML)
+                        if(parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5 )
                             {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
                                 $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');}
                         else
@@ -3077,164 +3128,196 @@ var rows_table2_farmer = {};
 
 
     var $this;
-    $('#table2').DataTable({
-        destroy: true,
-        data: data_set,
-        columns: [{
-            title: "S No"
-        },
-        {
-            title: "Date"
-        },
-        {
-            title: "Mandi"
-        },
-        {
-            title: "Volume"
-        },
-        {
-            title: "Aggregator Payment"
-        },
-        {
-            title: "Transport Cost"
-        },
-        {
-            title: "Farmer Share"
-        },
-        {
-            title: "Gaddidar Commission"
-        },
-        {
-            title: "Payment"
-        },
-        {
-            title: "Aggregator Id",
-            visible:false
-        },
-        {
-            title: "Mandi Id",
-            visible:false
-        },
-        {
-            title: "Aggregator Comment",
-            defaultContent:" "
-        },
-        {
-            title:"Farmer Comment",
-            defaultContent:" "
 
-        }
-        ],
-        "dom": 'T<"clear">rtip',
-        "pageLength": 10,
-        "oTableTools": {
-            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [{
-                "sExtends":"text",
-                "sButtonText":"Edit",
-                "fnClick":function(nButton,oConfig){
+    
 
-                    $('#ToolTables_table2_1').removeClass('disable-button');
-                    editTable2=1;
-                    $('#table2').find('tr :nth-child(5)').css('color','#3B7DB0');
-                    $('#table2').find('tr :nth-child(7)').css('color','#3B7DB0');
-                }
-            },
+    var formatVal = function (yourNumber) {
+    //Seperates the components of the number
+        var n= yourNumber.toString().split(".");
+    //Comma-fies the first part
+        if(n[0])
             {
-                    "sExtends":"ajax",
-                    "sButtonText":"Submit",
-                    "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/aggregatorshareoutliers/",
-
-                    "fnClick": function( nButton, oConfig ) {
-                    var finalData=[];
-                    var finalDataFarmer=[];
-                        $('#table2').find('th').removeAttr("style");
-                        $('#table2').find('tr').removeAttr("style");
-                        $('#table2').find('td').removeAttr("style");
-                        for(var keys in rows_table2){
-                            var row_data = {};
-                            var mandi_idDict ={};
-                            var gaddidar_idDict={};
-                            var aggregator_idDict={};
-                            row_data['date']=$('#table2').DataTable().cell(keys-1,1).data();
-                            row_data['amount']=$('#table2 tr').eq(keys)[0].childNodes[4].innerHTML;
-                            mandi_idDict['online_id']=$('#table2').DataTable().cell(keys-1,10).data();
-                            row_data['mandi']=mandi_idDict;
-                            aggregator_idDict['online_id']=$('#table2').DataTable().cell(keys-1,9).data();
-                            row_data['aggregator']=aggregator_idDict;
-                            row_data['comment']=$('#table2 tr').eq(keys)[0].childNodes[9].innerHTML;
-                            finalData.push(row_data);
-                        }
-
-                        for(var keys in rows_table2_farmer){
-
-                            var row_data = {};
-                            var mandi_idDict ={};
-                            var gaddidar_idDict={};
-                            var aggregator_idDict={};
-                            row_data['date']=$('#table2').DataTable().cell(keys-1,1).data();
-                            row_data['amount']=$('#table2 tr').eq(keys)[0].childNodes[6].innerHTML;
-                            mandi_idDict['online_id']=$('#table2').DataTable().cell(keys-1,10).data();
-                            row_data['mandi']=mandi_idDict;
-                            row_data['comment']=$('#table2 tr').eq(keys)[0].childNodes[10].innerHTML;
-                            aggregator_idDict['online_id']=$('#table2').DataTable().cell(keys-1,9).data();
-                            row_data['aggregator']=aggregator_idDict;
-                            row_data['user_created_id']=globalUser;
-                            finalDataFarmer.push(row_data);
-                        }
+                n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); //convert numbers of the form 1156 -> 1,156
+            }
+            if(n[1] != null)
+            {
+                var a = n[1].toString();
+                n[1] = parseInt(a.charAt(0));
+            }
+            return n.join(".");
+        }
 
 
-                    editTable2=0;
-                    $('#ToolTables_table2_1').addClass('disable-button');
-                    var sData = this.fnGetTableData(oConfig);
-                    var sData = this.fnGetTableData(oConfig);
-                    var JObj={
-                        "objects":finalData
-                    };
-                    var JObjFarmer={
-                        "objects":finalDataFarmer
-                    };
-                    if(Object.keys(rows_table2).length>0)
+    var finalFormat = function (value){
+        if(value.indexOf('.') === -1)
+            return parseFloat(value).toLocaleString() + '.00';
+        else
+            return parseFloat(parseFloat(value).toFixed(2)).toLocaleString();
+    }
+
+
+$('#table2').DataTable({
+
+    destroy: true,
+    data: aggregator_data_set,
+    columns: [{
+        title: "S No"
+    }, {
+        title: "Date"
+    }, {
+        title: "Market"
+    }, {
+        title: "Quantity[Q] (in Kg)"
+    }, {
+        title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
+    }, {
+        title: "Transport Cost[TC] (in Rs)"
+    }, {
+        title: "Farmers' Contribution[FC] (in Rs)"
+    }, {
+        title: "Commission Agent Contribution[CAC] (in Rs)"
+    }, {
+        title: "Total Payment(in Rs) (AP + TC - FC - CAC)"
+    }, {
+        title: "Aggregator Id",
+        visible: false
+    }, {
+        title: "Mandi Id",
+        visible: false
+    }, {
+        title: "Aggregator Comment",
+        defaultContent: " "
+    }, {
+        title: "Farmer Comment",
+        defaultContent: " "
+    }],
+    "dom": 'T<"clear">rtip',
+    "pageLength": 10,
+    "oTableTools": {
+        "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
+        "aButtons": [{
+
+            "sExtends": "text",
+            "sButtonText": "Edit",
+            "fnClick": function(nButton, oConfig) {
+
+                $('#ToolTables_table2_1').removeClass('disable-button');
+                editTable2 = 1;
+                $('#table2').find('tr :nth-child(5)').css('color', '#3B7DB0');
+                $('#table2').find('tr :nth-child(7)').css('color', '#3B7DB0');
+            }
+       } , {
+            "sExtends": "ajax",
+            "sButtonText": "Submit",
+            "sButtonClass": "disable-button",
+            "sAjaxUrl": "http://localhost:4001/loop/api/v1/aggregatorshareoutliers/",
+
+            "fnClick": function(nButton, oConfig) {
+                var finalData = [];
+                var finalDataFarmer = [];
+                $('#table2').find('th').removeAttr("style");
+                $('#table2').find('tr').removeAttr("style");
+                $('#table2').find('td').removeAttr("style");
+                console.log(rows_table2)
+                for (var keys in rows_table2) {
+                    var row_data = {};
+                    var mandi_idDict = {};
+                    var gaddidar_idDict = {};
+                    var aggregator_idDict = {};
+                    row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
+                    row_data['amount'] = $('#table2 tr').eq(parseInt(keys)+1)[0].childNodes[4].innerHTML;
+                    mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+                    row_data['mandi'] = mandi_idDict;
+                    aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+                    row_data['aggregator'] = aggregator_idDict;
+                    row_data['comment'] = $('#table2 tr').eq(parseInt(keys)+1)[0].childNodes[9].innerHTML;
+                    finalData.push(row_data);
+                }
+                console.log(rows_table2_farmer)
+                for (var keys in rows_table2_farmer) {
+
+                    var row_data = {};
+                    var mandi_idDict = {};
+                    var gaddidar_idDict = {};
+                    var aggregator_idDict = {};
+                    row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
+                    row_data['amount'] = $('#table2 tr').eq(parseInt(keys)+1)[0].childNodes[6].innerHTML;
+                    mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+                    row_data['mandi'] = mandi_idDict;
+                    row_data['comment'] = $('#table2 tr').eq(parseInt(keys)+1)[0].childNodes[10].innerHTML;
+                    aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+                    row_data['aggregator'] = aggregator_idDict;
+                    row_data['user_created_id'] = globalUser;
+                    finalDataFarmer.push(row_data);
+                }
+                editTable2 = 0;
+                $('#ToolTables_table2_1').addClass('disable-button');
+                var sData = this.fnGetTableData(oConfig);
+                var sData = this.fnGetTableData(oConfig);
+                var JObj = {
+                    "objects": finalData
+                };
+                var JObjFarmer = {
+                    "objects": finalDataFarmer
+                };
+                console.log(JSON.stringify(JObj));
+                if (Object.keys(rows_table2).length > 0){
                     $.ajax({
                         url: oConfig.sAjaxUrl,
-                        type:'patch',
-                        dataType:'json',
+                        type: 'patch',
+                        dataType: 'json',
                         contentType: "application/json; charset=utf-8",
-                        data:JSON.stringify(JObj),
-                        success:function () {
-                            alert( "success" );
+                        data: JSON.stringify(JObj),
+                        success: function() {
+                            alert("success");
                             rows_table2 = [];
                         },
-                        error: function () {
-                           alert( "Error" );
-                           rows_table2 = [];
+                        error: function() {
+                            alert("Error");
+                            rows_table2 = [];
                         }
-        });
-                    console.log(JSON.stringify(JObjFarmer));
-                    if(Object.keys(rows_table2_farmer).length>0)
+                    });
+                }
+                console.log(JSON.stringify(JObjFarmer));
+                if (Object.keys(rows_table2_farmer).length > 0){
                     $.ajax({
-                        url: "http://192.168.11.102:4001/loop/api/v1/daytransportation/?format=json",
-                        type:'patch',
-                        dataType:'json',
+                        url: "http://localhost:4001/loop/api/v1/daytransportation/?format=json",
+                        type: 'patch',
+                        dataType: 'json',
                         contentType: "application/json; charset=utf-8",
-                        data:JSON.stringify(JObjFarmer),
+                        data: JSON.stringify(JObjFarmer),
                         headers: {
-                          "Authorization":"ApiKey "+window.localStorage.name+":"+window.localStorage.akey
+                            "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
                         },
-                        success:function () {
-                            alert( "success" );
+                        success: function() {
+                            alert("success");
                             rows_table2_farmer = [];
                         },
-                        error: function () {
-                           alert( "Error" );
-                           rows_table2_farmer = [];
+                        error: function() {
+                            alert("Error");
+                            rows_table2_farmer = [];
                         }
-        });
-    }
-                }]
-        }
-    });
+                    });
+                }
+            }
+        } ]
+    },
+
+      "footerCallback": function ( row, data, start, end, display ) {
+          var api = this.api(), data;
+
+          //Total of every column    
+          column_set = [3,4,5,6,7,8];
+          for(var i=0; i<column_set.length; i++)
+          {
+              total = api.column( column_set[i]).data().reduce( function (a, b) {
+                          return a + b;
+                      }, 0 );
+              $( api.column( column_set[i]).footer() ).html(finalFormat(total+""));
+          }
+
+      }
+});
     var editTable3=0;
     var rows_table3={};
 
@@ -3318,21 +3401,23 @@ var rows_table2_farmer = {};
                 });
 
 
+    
+
     $('#table3').DataTable({
         destroy: true,
         data: gaddidar_data_set,
         columns: [{
             title: "Date"
         }, {
-            title: "Gaddidar"
+            title: "Commission Agent"
         }, {
             title: "Market"
         }, {
-            title: "Quantity"
+            title: "Quantity[Q] (in Kg)"
         }, {
-            title: "Gaddidar Commission"
+            title: "Commission Agent Discount[CAD] (in Rs/Kg)"
         }, {
-            title: "Share"
+            title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
         }, {
             title: "Mandi Id",
             visible:false
@@ -3344,6 +3429,7 @@ var rows_table2_farmer = {};
             visible:false
         }, {
             title: "Comment"
+
         }],
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
@@ -3353,6 +3439,7 @@ var rows_table2_farmer = {};
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
+
                 "sExtends":"text",
                 "sButtonText":"Edit",
                 "fnClick":function(nButton,oConfig){
@@ -3362,13 +3449,11 @@ var rows_table2_farmer = {};
                     $('#table3').find('tr :nth-child(5)').css('color','#3B7DB0');
                     $('#table3').find('tr :nth-child(6)').css('color','#3B7DB0');
                 }
-            },
-
-                {
+            },{
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/gaddidarshareoutliers?format=json",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table3').find('th').removeAttr("style");
@@ -3380,14 +3465,14 @@ var rows_table2_farmer = {};
                             var gaddidar_idDict={}
                             var aggregator_idDict={}
                             row_data['date']=$('#table3').DataTable().cell(keys-1,0).data();
-                            row_data['amount']=$('#table3 tr').eq(keys)[0].childNodes[5].innerHTML;
+                            row_data['amount']=$('#table3 tr').eq(parseInt(keys)+1)[0].childNodes[5].innerHTML;
                             mandi_idDict['online_id']=$('#table3').DataTable().cell(keys-1,6).data();
                             row_data['mandi']=mandi_idDict
                             gaddidar_idDict['online_id']=$('#table3').DataTable().cell(keys-1,7).data();
                             row_data['gaddidar']=gaddidar_idDict
                             aggregator_idDict['online_id']=$('#table3').DataTable().cell(keys-1,8).data();
                             row_data['aggregator']=aggregator_idDict
-                            row_data['comment']=$('#table3 tr').eq(keys)[0].childNodes[6].innerHTML;
+                            row_data['comment']=$('#table3 tr').eq(parseInt(keys)+1)[0].childNodes[6].innerHTML;
 
                             finalData.push(row_data);
                         }
@@ -3421,6 +3506,20 @@ var rows_table2_farmer = {};
                 }
 
             ]
+        },
+        
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+        
+            //Total of every column    
+            column_set = [3,5];
+            for(var i=0; i<column_set.length; i++)
+            {
+                total = api.column( column_set[i]).data().reduce( function (a, b) {
+                            return a + b;
+                        }, 0 );
+                $( api.column( column_set[i]).footer() ).html(finalFormat(total+""));
+            }
 
         }
     });
@@ -3488,15 +3587,17 @@ var rows_table2_farmer = {};
         }, {
             title: "Transporter"
         }, {
-            title: "Vehicle"
+            title: "Vehicle Type"
         }, {
             title: "Vehicle Number"
         }, {
-            title: "Transport Cost"
+
+            title: "Transport Cost (in Rs)"
         },
         {
             title:"Comment",
             defaultContent:" "
+
         }],
         "dom": 'T<"clear">rtip',
         "pageLength": 10,
@@ -3513,13 +3614,11 @@ var rows_table2_farmer = {};
                     $('#table4').find('tr :nth-child(5)').css('color','#3B7DB0');
                     $('#table4').find('tr :nth-child(6)').css('color','#3B7DB0');
                 }
-            },
-
-                {
+            },{
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/transportershare?format=json",
+                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/transportershare?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table4').find('tr :nth-child(5)').removeAttr("style");
@@ -3565,8 +3664,31 @@ var rows_table2_farmer = {};
                     });
                     }
                 }]
+        },
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+
+            // Total over all pages
+            total5 = api
+                .column( 5 )
+                .data()
+                .reduce( function (a, b) {
+                    return a + b;
+                }, 0 );
+           
+            // Update footer
+            $( api.column( 5 ).footer() ).html(
+                finalFormat(total5+"")
+            );
+
         }
+
     });
+
+    aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
+    gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
+    transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
+
 }
 
 function getFormattedDate(aggregator_id) {
@@ -3577,7 +3699,7 @@ function getFormattedDate(aggregator_id) {
     var name = aggregator_names[aggregator_index];
     var fromDate = new Date(payments_start_date);
     var toDate = new Date(payments_to_date);
-    var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + "_" + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+    var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
     return str;
 }
 
@@ -3890,3 +4012,5 @@ function change_language(lang) {
         show_nav(selected_page);
     }
 }
+
+

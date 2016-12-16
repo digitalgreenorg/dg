@@ -208,11 +208,15 @@ class Command(BaseCommand):
 				error = 1
 			if error == 0:
 				try:
-					nn = NonNegotiable(video_id = video.video_id,
+					nonnego_already_exist = NonNegotiable.objects.filter(video_id = video.video_id,
 									non_negotiable = nn_n,
 									physically_verifiable = vr)
-					nn.save()
-					jslps.new_count += 1
+					if len(nonnego_already_exist) == 0:
+						nn = NonNegotiable(video_id = video.video_id,
+									non_negotiable = nn_n,
+									physically_verifiable = vr)
+						nn.save()
+						jslps.new_count += 1
 				except Exception as e:
 					print e
 					if "Duplicate entry" in str(e):
