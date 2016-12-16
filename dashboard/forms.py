@@ -12,6 +12,7 @@ from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
 from videos.models import Language, Practice, Video, NonNegotiable, Category, SubCategory
+from django.core.paginator import Paginator
 
 # function for saving formsets with user information
 def save_all(instances, user, id):
@@ -62,13 +63,14 @@ class CocoUserForm(forms.ModelForm):
     #     village_list = Village.objects.prefetch_related('block', 'block__district')
     #     cache.set('village_list',village_list,3600)
 
-    district = DistrictNameChoiceField(queryset = District.objects.prefetch_related('state'))
+    district = DistrictNameChoiceField(queryset = District.objects.prefetch_related('state'), required = False)
     villages = UserModelVillageMultipleChoiceField(
         widget = FilteredSelectMultiple(
                                       verbose_name = 'villages',
-                                      is_stacked = False
+                                      is_stacked = False,
+                                      attrs={'rows':'10',}
                                      ),
-        queryset = Village.objects.filter(id=123456).prefetch_related('block', 'block__district')
+        queryset = Village.objects.prefetch_related('block', 'block__district')
         )
     videos = UserModelVideoMultipleChoiceField(
         widget = FilteredSelectMultiple(
@@ -83,9 +85,9 @@ class CocoUserForm(forms.ModelForm):
         fields = ['user', 'partner', 'district', 'villages', 'videos']
     class Media:
         js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
-    def save(self, commit=True, *args, **kwargs):
-        # messages.info(request, "TEST PRINT")
-        print self
+    # def save(self, commit=True, *args, **kwargs):
+    #     # messages.info(request, "TEST PRINT")
+    #     print self
 
 class LanguageForm(CocoModelForm):
     class Meta:

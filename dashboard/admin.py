@@ -259,6 +259,9 @@ class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('user', 'partner', 'get_villages')
     search_fields = ['user__username']
+    def save_model(self,request,obj,form,change):
+        print request
+        print form
 
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
