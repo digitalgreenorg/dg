@@ -271,7 +271,7 @@ class AnalyticsSync():
                                 adopt_count = adopt_count + 1
                             counts['tot_ado_by_act'] = counts[
                                 'tot_ado_by_act'] + adopt_count
-                        while video_seen_count < len(person_video_seen_date_dict[per]) 
+                        while video_seen_count < len(person_video_seen_date_dict[per]) \
                               and person_video_seen_date_dict[per][video_seen_count] <= cur_date:
                             video_seen_count = video_seen_count + 1
                         counts['tot_active_vid_seen'] = counts[
@@ -330,7 +330,7 @@ class AnalyticsSync():
 
                 self.db_connection.execute("INSERT INTO village_precalculation_copy \
                 (date, total_screening, total_videos_produced,total_adoption, \
-                total_male_adoptions, total_female_adoptions, total_attendance,\ 
+                total_male_adoptions, total_female_adoptions, total_attendance,\
                 total_male_attendance, total_female_attendance, total_expected_attendance, \
                 total_questions_asked,total_adopted_attendees, total_active_attendees, \
                 total_adoption_by_active,total_video_seen_by_active, VILLAGE_ID, \
