@@ -738,10 +738,10 @@ function set_filterlistener() {
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            if (from_date.getDate() >= 16 && daysInMonth[from_date.getMonth()] != (from_date.getDate() + 15)) {
+            if (from_date.getDate() >= 16) {
                 $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
             } else {
-                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 15));
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 14));
             }
         } else {
             $('#payments_to_date').val('');
@@ -2977,7 +2977,7 @@ var rows_table2_farmer = {};
                 $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
                 $('#aggregator_commission_row').val($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]);
                 $('#aggregator_share_row').val($this.parent()[0].childNodes[4].innerHTML);
-                $('#aggregator_comment_row').val($this.parent()[0].childNodes[9].innerHTML);
+                $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
                 $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
                 $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
                 $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
@@ -3031,7 +3031,7 @@ var rows_table2_farmer = {};
             }
         });
 
-        $('#aggregator_commission_row').keypress(function(event){
+        $('#aggregagtor_commission_row').keypress(function(event){
             if(event.keyCode===13){
                 $('#aggregator_comment_row').focus();
             }
@@ -3088,7 +3088,7 @@ var rows_table2_farmer = {};
                             {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
                                                             $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');}
                         else
-                            $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
 
                         var row_id =$this.context.parentNode.rowIndex;
                         rows_table2_farmer[row_id]=true;
@@ -3147,6 +3147,27 @@ var rows_table2_farmer = {};
             return n.join(".");
         }
 
+
+
+/*                    "fnClick": function( nButton, oConfig ) {
+                    var finalData=[];
+                    var finalDataFarmer=[];
+                        $('#table2').find('tr').removeAttr("style");
+                        for(var keys in rows_table2){
+                            var row_data = {};
+                            var mandi_idDict ={};
+                            var gaddidar_idDict={};
+                            var aggregator_idDict={};
+                            row_data['date']=$('#table2').DataTable().cell(keys-1,1).data();
+                            row_data['amount']=$('#table2 tr').eq(keys)[0].childNodes[4].innerHTML;
+                            mandi_idDict['online_id']=$('#table2').DataTable().cell(keys-1,10).data();
+                            row_data['mandi']=mandi_idDict;
+                            aggregator_idDict['online_id']=$('#table2').DataTable().cell(keys-1,9).data();
+                            row_data['aggregator']=aggregator_idDict;
+                            row_data['comment']=$('#table2 tr').eq(keys)[0].childNodes[9].innerHTML;
+                            finalData.push(row_data);
+                        }
+*/
 
     var finalFormat = function (value){
         if(value.indexOf('.') === -1)
@@ -3390,7 +3411,6 @@ $('#table2').DataTable({
                         $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
                         $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
                         if(parseFloat($this.parent()[0].childNodes[4].innerHTML)>1)
-
                         {$this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');
                             $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');}
                         else
@@ -3456,8 +3476,6 @@ $('#table2').DataTable({
                     "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
-                        $('#table3').find('th').removeAttr("style");
-                        $('#table3').find('td').removeAttr("style");
                         $('#table3').find('tr').removeAttr("style");
                         for(var keys in rows_table3){
                             var row_data = {}

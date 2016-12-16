@@ -563,7 +563,7 @@
          <input type="password" name="password" id="password" tabindex="2">
       </div>
       <div class="row center">
-         <a id="goto_home" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" tabindex="3">HOME</a>
+         <a id="goto_home" class="waves-effect waves-light red lighten-2 white-text btn modal-trigger">CANCEL</a>
          <a id="loginbtn" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" tabindex="3">LOG IN</a>
       </div>
       <div class="row center" id="error_div" hide>
@@ -579,7 +579,7 @@
     					<form >
           					<div class="row ">
             				<div class="col s4">
-            				
+
             				<div class="input-field inline" >
               				<input id="farmer_date_row" value="00-00-00" type="text" disabled>
               				<label for="farmer_date_row">Date</label>
@@ -597,10 +597,10 @@
               				<label for="farmer_volume_row">Volume</label>
               				</div>
           				  	</div>
-          					</div> 
+          					</div>
           					<div class="row ">
             				<div class="col s4">
-            				
+
             				<div class="input-field inline" >
               				<input id="farmer_aggregator_payment_row" value="AP" type="text" disabled>
               				<label for="farmer_aggregator_payment_row">Aggregator Payment</label>
@@ -618,7 +618,7 @@
               				<label for="farmer_gaddidar_commission_row_farmer">Gaddidar Commission</label>
               				</div>
           				  	</div>
-          					</div>               
+          					</div>
           					<div class="row">
             				<div class="col s5">
             				<div class="input-field inline" >
@@ -643,7 +643,7 @@
           							<label for="farmer_comment_row">Comment
           							</label>
           						</div>
-          					</div>	
+          					</div>
           					</div>
         		</form>
   				</div>
@@ -660,7 +660,7 @@
     					<form >
           					<div class="row ">
             				<div class="col s4">
-            				
+
             				<div class="input-field inline" >
               				<input id="aggregator_date_row" value="00-00-00" type="text" disabled>
               				<label for="aggregator_date_row">Date</label>
@@ -678,7 +678,7 @@
               				<label for="aggregator_volume_row">Volume</label>
               				</div>
           				  	</div>
-          					</div>             
+          					</div>
           					<div class="row">
             				<div class="col s5">
             				<div class="input-field inline" >
@@ -703,7 +703,7 @@
           							<label for="aggregator_comment_row">Comment
           							</label>
           						</div>
-          					</div>	
+          					</div>
           					</div>
         		</form>
   				</div>
@@ -720,7 +720,7 @@
     					<form >
           					<div class="row ">
             				<div class="col s3">
-            				
+
             				<div class="input-field inline" >
               				<input id="gaddidar_date_row" value="00-00-00" type="text" disabled>
               				<label for="gaddidar_date_row">Date</label>
@@ -744,7 +744,7 @@
               				<label for="gaddidar_quantity_row">Quantity</label>
               				</div>
           				  	</div>
-          					</div>             
+          					</div>
           					<div class="row">
             				<div class="col s5">
             				<div class="input-field inline" >
@@ -769,7 +769,7 @@
           							<label for="gaddidar_comment_row">Comment
           							</label>
           						</div>
-          					</div>	
+          					</div>
           					</div>
         		</form>
   				</div>
@@ -785,7 +785,7 @@
     					<form >
           					<div class="row ">
             				<div class="col s3">
-            				
+
             				<div class="input-field inline" >
               				<input id="transportation_date_row" value="00-00-00" type="text" disabled>
               				<label for="transportation_date_row">Date</label>
@@ -809,7 +809,7 @@
               				<label for="transportation_vehicle_row">Vehicle</label>
               				</div>
           				  	</div>
-          					</div>             
+          					</div>
           					<div class="row">
             				<div class="col s5">
             				<div class="input-field inline" >
@@ -834,7 +834,7 @@
           							<label for="transportation_comment_row">Comment
           							</label>
           						</div>
-          					</div>	
+          					</div>
           					</div>
         		</form>
   				</div>
@@ -845,5 +845,6 @@
 			</div>
 
 {% endblock %} {% block script %}
-<script src="{% static 'app_dashboards/js/loop_dashboard.js' %}"></script>
+<!-- ?1 after js represents js version for refreshing cached version of javascript-->
+<script src="{% static 'app_dashboards/js/loop_dashboard.js?1' %}"></script>
 {% endblock %}
