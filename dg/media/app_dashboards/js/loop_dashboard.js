@@ -2876,6 +2876,10 @@ function aggregator_payment_sheet(data_json, aggregator) {
         }
     }
 
+    transporter_data_set = transporter_data_set.sort(function(first,second){
+        return new Date(first[0]) - new Date(second[0]);
+    });
+
 
     
 
