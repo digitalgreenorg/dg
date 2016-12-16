@@ -286,6 +286,9 @@ class TransportationVehicle(LoopModel):
     vehicle_number = models.CharField(max_length=20)
     is_visible = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return "%s - %s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name, self.vehicle_number)
+
     def __transporter__(self):
         return "%s" % (self.transporter.transporter_name)
 
@@ -416,7 +419,7 @@ class AggregatorShareOutliers(LoopModel):
 
     def __mandi__(self):
         return "%s" % (self.mandi.mandi_name)
-    
+
     def __aggregator__(self):
         return "%s" % (self.aggregator.name)
 
