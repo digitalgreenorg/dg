@@ -3232,7 +3232,7 @@ $('#table2').DataTable({
             "sExtends": "ajax",
             "sButtonText": "Submit",
             "sButtonClass": "disable-button",
-            "sAjaxUrl": "http://localhost:4001/loop/api/v1/aggregatorshareoutliers/",
+            "sAjaxUrl": "http://test.digitalgreen.org/loop/api/v1/aggregatorshareoutliers/",
 
             "fnClick": function(nButton, oConfig) {
                 var finalData = [];
@@ -3303,7 +3303,7 @@ $('#table2').DataTable({
                 console.log(JSON.stringify(JObjFarmer));
                 if (Object.keys(rows_table2_farmer).length > 0){
                     $.ajax({
-                        url: "http://localhost:4001/loop/api/v1/daytransportation/?format=json",
+                        url: "http://test.digitalgreen.org/loop/api/v1/daytransportation/?format=json",
                         type: 'patch',
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
@@ -3474,7 +3474,7 @@ $('#table2').DataTable({
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/gaddidarshareoutliers?format=json",
+                    "sAjaxUrl":"http://test.digitalgreen.org/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table3').find('tr').removeAttr("style");
@@ -3637,7 +3637,7 @@ $('#table2').DataTable({
                     "sExtends":"ajax",
                     "sButtonText":"Submit",
                     "sButtonClass":"disable-button",
-                    "sAjaxUrl":"http://localhost:4001/loop/api/v1/transportershare?format=json",
+                    "sAjaxUrl":"http://test.digitalgreen.org/loop/api/v1/transportershare?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         $('#table4').find('tr :nth-child(5)').removeAttr("style");
