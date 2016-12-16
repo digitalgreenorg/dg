@@ -431,6 +431,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
     # gso_list = [gso.date for gso in gso_queryset]
     for CT in combined_ct_queryset:
         sum = 0
+        comment = ""
         gc_discount = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
         if CT['date'] not in [gso.date for gso in gso_queryset.filter(gaddidar=CT['gaddidar'], aggregator=user.id)]:
@@ -450,9 +451,10 @@ def calculate_gaddidar_share_payments(start_date, end_date):
         else:
             try:
                 gso_gaddidar_date_aggregator = gso_queryset.filter(
-                    date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
+                    date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values('amount', 'comment')
                 if gso_gaddidar_date_aggregator.count():
-                    sum += gso_gaddidar_date_aggregator[0]
+                    sum += gso_gaddidar_date_aggregator[0]['amount']
+                    comment = gso_gaddidar_date_aggregator[0]['comment']
                     if CT['gaddidar__discount_criteria'] == 0:
                         gc_discount = sum / CT['quantity__sum']
                     else:
@@ -460,7 +462,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
-                      'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': sum, 'gaddidar_discount': gc_discount})
+                      'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': sum, 'gaddidar_discount': gc_discount, 'comment':comment})
     return result
 
 
@@ -488,6 +490,7 @@ def payments(request):
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name', "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number', 'mandi__mandi_name', 'farmer_share', 'id', 'comment').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
+
     aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id = F('aggregator__user_id'),mandi__name=F('mandi__mandi_name_en')).values("date","mandi__name","amount","comment","user_created__id")
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data), 'outlier_transport_data': list(

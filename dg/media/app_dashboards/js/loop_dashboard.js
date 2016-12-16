@@ -685,12 +685,12 @@ function set_filterlistener() {
             var data_json = {
                 aggregator_data:{
                     name: aggregator_sheet_name,
-                    data : aggregator_data_set     
+                    data : aggregator_data_set
                 },
 
                 gaddidar_data: {
                     name : gaddidar_sheet_name,
-                    data : gaddidar_data_set    
+                    data : gaddidar_data_set
                 },
 
                 transporter_data:{
@@ -2904,6 +2904,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
                     gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2));
                     gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount'].toFixed(2));
+                    gaddidar_data_set[j][9] = payments_gaddidar_contribution[i]['comment'];
                 }
             }
         }
@@ -3129,7 +3130,7 @@ var rows_table2_farmer = {};
 
     var $this;
 
-    
+
 
     var formatVal = function (yourNumber) {
     //Seperates the components of the number
@@ -3327,7 +3328,7 @@ $('#table2').DataTable({
       "footerCallback": function ( row, data, start, end, display ) {
           var api = this.api(), data;
 
-          //Total of every column    
+          //Total of every column
           column_set = [3,4,5,6,7,8];
           for(var i=0; i<column_set.length; i++)
           {
@@ -3421,7 +3422,7 @@ $('#table2').DataTable({
                 });
 
 
-    
+
 
     $('#table3').DataTable({
         destroy: true,
@@ -3525,11 +3526,11 @@ $('#table2').DataTable({
 
             ]
         },
-        
+
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
-        
-            //Total of every column    
+
+            //Total of every column
             column_set = [3,5];
             for(var i=0; i<column_set.length; i++)
             {
@@ -3693,7 +3694,7 @@ $('#table2').DataTable({
                 .reduce( function (a, b) {
                     return a + b;
                 }, 0 );
-           
+
             // Update footer
             $( api.column( 5 ).footer() ).html(
                 finalFormat(total5+"")
@@ -4030,5 +4031,3 @@ function change_language(lang) {
         show_nav(selected_page);
     }
 }
-
-
