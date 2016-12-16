@@ -2900,6 +2900,7 @@ var rows_table2_farmer = {};
 
         $('#table2').on( 'click', 'tbody td', function (e) {
             $this = $(this);
+            console.log($(this));
           if(($this.context.cellIndex === 4 || $this.context.cellIndex === 6 || $this.context.cellIndex === 9 ||$this.context.cellIndex === 10)&&editTable2==1){
 
                 $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
@@ -2907,7 +2908,7 @@ var rows_table2_farmer = {};
                 $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);             
                 $('#aggregator_commission_row').val($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]);
                 $('#aggregator_share_row').val($this.parent()[0].childNodes[4].innerHTML);
-                $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+                $('#aggregator_comment_row').val($this.parent()[0].childNodes[9].innerHTML);
                 $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
                 $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
                 $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);             
@@ -2961,7 +2962,7 @@ var rows_table2_farmer = {};
             }
         });
 
-        $('#aggregagtor_commission_row').keypress(function(event){
+        $('#aggregator_commission_row').keypress(function(event){
             if(event.keyCode===13){
                 $('#aggregator_comment_row').focus();
             }
@@ -3013,11 +3014,11 @@ var rows_table2_farmer = {};
                         //$this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
                         $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
                         $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
-                        $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)+parseFloat($this.parent()[0].childNodes[6].innerHTML)
+                        $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
                         if(($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML||parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5)
                             $this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');
                         else
-                        $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                            $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
 
                         var row_id =$this.context.parentNode.rowIndex;
                         rows_table2_farmer[row_id]=true;
@@ -3043,7 +3044,7 @@ var rows_table2_farmer = {};
                         //$this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
                         $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
                         $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
-                        $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)+parseFloat($this.parent()[0].childNodes[6].innerHTML)
+                        $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML)+parseFloat($this.parent()[0].childNodes[4].innerHTML)-parseFloat($this.parent()[0].childNodes[7].innerHTML)-parseFloat($this.parent()[0].childNodes[6].innerHTML)
                         if(parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML.split('Kg')[0])>0.5 || ($this.parent()[0].childNodes[4].innerHTML+$this.parent()[0].childNodes[5].innerHTML)<$this.parent()[0].childNodes[6].innerHTML)
                             {$this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');}
                         else
@@ -3130,7 +3131,9 @@ var rows_table2_farmer = {};
                     "fnClick": function( nButton, oConfig ) {
                     var finalData=[];
                     var finalDataFarmer=[];
+                        $('#table2').find('th').removeAttr("style");
                         $('#table2').find('tr').removeAttr("style");
+                        $('#table2').find('td').removeAttr("style");
                         for(var keys in rows_table2){
                             var row_data = {};
                             var mandi_idDict ={};
@@ -3285,7 +3288,10 @@ var rows_table2_farmer = {};
                         $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
                         $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
                         $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
-                        $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                        if(parseFloat($this.parent()[0].childNodes[4].innerHTML)>1)
+                        {$this.parent().css('background-color', '#7DFF33').css('font-weight', 'bold').css('color', '#009');}
+                        else
+                        {$this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');}
                         var row_id =$this.context.parentNode.rowIndex;
                         rows_table3[row_id]=true;
                     }
@@ -3348,6 +3354,8 @@ var rows_table2_farmer = {};
                     "sAjaxUrl":"http://192.168.11.102:4001/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
+                        $('#table3').find('th').removeAttr("style");
+                        $('#table3').find('td').removeAttr("style");
                         $('#table3').find('tr').removeAttr("style");
                         /*$('#table3').find('tr :nth-child(6)').removeAttr("style");
                         $('#table3').find('tr :nth-child(7)').removeAttr("style");*/
