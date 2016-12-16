@@ -55,9 +55,9 @@ class AnalyticsSync():
 
         # Fill Data
         try:
-            self.db_connection = MySQLdb.connect(host='localhost', user=DATABASES['default']['USER'],
-                                                 passwd=DATABASES[
-                                                     'default']['PASSWORD'],
+            self.db_connection = MySQLdb.connect(host='localhost', 
+                                                 user=DATABASES['default']['USER'],
+                                                 passwd=DATABASES['default']['PASSWORD'],
                                                  db=database,
                                                  charset='utf8',
                                                  use_unicode=True).cursor()
