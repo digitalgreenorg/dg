@@ -79,7 +79,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, sc.partner_id
                                         FROM activities_screening sc
                                         JOIN activities_screening_videoes_screened svs on svs.screening_id = sc.id
-                                        and sc.date > DATE_ADD(Now(), Interval -1 year)
+                                        AND sc.date > DATE_ADD(Now(), Interval -1 year)
                                         JOIN activities_screening_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
                                         JOIN videos_video vid on vid.id = svs.video_id
                                         JOIN geographies_village v on v.id = sc.village_id
@@ -91,12 +91,12 @@ class AnalyticsSync():
             # video_myisam
             self.db_connection.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
                                         language_id, village_id, block_id, district_id, state_id, country_id, partner_id)
-                                        select vid.id, production_date, related_practice_id, video_type, 
+                                        SELECT vid.id, production_date, related_practice_id, video_type, 
                                         language_id, vid.village_id, block_id, district_id,
                                         state_id, country_id, vid.partner_id
                                         FROM videos_video vid
                                         JOIN geographies_village v on v.id = vid.village_id
-                                        and vid.production_date > DATE_ADD(Now(), Interval -1 year)
+                                        AND vid.production_date > DATE_ADD(Now(), Interval -1 year)
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id
@@ -110,7 +110,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, sc.partner_id
                                         FROM activities_personmeetingattendance pma 
                                         JOIN activities_screening sc on sc.id = pma.screening_id
-                                        and sc.date > DATE_ADD(Now(), Interval -1 year)
+                                        AND sc.date > DATE_ADD(Now(), Interval -1 year)
                                         JOIN people_person p on p.id = pma.person_id
                                         JOIN geographies_village v on v.id = sc.village_id
                                         JOIN geographies_block b on b.id = v.block_id
@@ -125,7 +125,7 @@ class AnalyticsSync():
                                         district_id, state_id, country_id, pap.partner_id
                                         FROM activities_personadoptpractice pap
                                         JOIN people_person p on p.id = pap.person_id
-                                        and pap.date_of_adoption > DATE_ADD(Now(), Interval -1 year)
+                                        AND pap.date_of_adoption > DATE_ADD(Now(), Interval -1 year)
                                         JOIN geographies_village v on v.id = p.village_id
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
@@ -139,11 +139,11 @@ class AnalyticsSync():
                                         SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
                                         A.old_coco_id, A.date, A.start_time, A.location, A.village_id, A.animator_id, A.partner_id, 
                                         B.video_id, D.title, C.PERSONGROUP_ID,D.youtubeid
-                                        from activities_screening A
-                                        join activities_screening_videoes_screened B on B.screening_id=A.id
-                                        and A.date > DATE_ADD(Now(), Interval -1 year)
-                                        join videos_video D on B.video_id=D.id 
-                                        join activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
+                                        FROM activities_screening A
+                                        JOIN activities_screening_videoes_screened B on B.screening_id=A.id
+                                        AND A.date > DATE_ADD(Now(), Interval -1 year)
+                                        JOIN videos_video D on B.video_id=D.id 
+                                        JOIN activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
             print "Finished insert into activities_screeningwisedata"
 
             # people_animatorwisedata
@@ -152,9 +152,9 @@ class AnalyticsSync():
                                         assignedvillage_id, start_date )
                                         SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date 
-                                        from people_animator A 
-                                        join people_animatorassignedvillage B on A.id=B.animator_id
-                                        and A.time_created > DATE_ADD(Now(), Interval -1 year)""")
+                                        FROM people_animator A 
+                                        JOIN people_animatorassignedvillage B on A.id=B.animator_id
+                                        AND A.time_created > DATE_ADD(Now(), Interval -1 year)""")
             print "Finished insert into people_animatorwisedata"
 
             # main_data_dst stores all the counts for every date , every
@@ -227,9 +227,8 @@ class AnalyticsSync():
             if min_date and max_date and cur_person:
                 person_att_dict[cur_person].append((min_date, max_date))
 
-            #del pmas_df
-            del pmas_df
             # Free memory
+            del pmas_df
             del scr
             print "Finished date calculations"
 
@@ -249,7 +248,6 @@ class AnalyticsSync():
                 else:
                     main_data_dst[dt][vil][partner]['tot_fem_ado'] = main_data_dst[
                         dt][vil][partner]['tot_fem_ado'] + 1
-
             del paps
             print "Finished adoption counts"
 
@@ -277,7 +275,7 @@ class AnalyticsSync():
                         counts['tot_active_vid_seen'] = counts[
                             'tot_active_vid_seen'] + video_seen_count
                         counts['tot_active'] = counts['tot_active'] + 1
-
+                        
             del person_att_dict, person_video_seen_date_dict, pap_dict
             print "Finished active attendance counts"
 
