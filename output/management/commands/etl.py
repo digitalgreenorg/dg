@@ -104,7 +104,7 @@ class AnalyticsSync():
             print "Finished insert into video_myisam"
 
             # person_meeting_attendance_myisam
-            self.db_connection.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
+            self.db_connection_clone.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date, 
                                         village_id, block_id, district_id, state_id, country_id, partner_id)
                                         SELECT pma.id, pma.person_id, sc.id, GENDER, date, sc.village_id, block_id,
                                         district_id, state_id, country_id, sc.partner_id
@@ -133,7 +133,7 @@ class AnalyticsSync():
             print "Finished insert into person_adopt_practice_myisam"
 
             # activities_screeningwisedata
-            self.db_connection.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
+            self.db_connection_clone.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
                                         screening_id, old_coco_id, screening_date, start_time, location, village_id, animator_id, 
                                         partner_id, video_id, video_title, persongroup_id,video_youtubeid) 
                                         SELECT  A.user_created_id, A.time_created, A.user_modified_id, A.time_modified,  A.id, 
@@ -326,7 +326,7 @@ class AnalyticsSync():
             print "To insert", str(len(values_list)), "rows"
             for i in range(1, (len(values_list) / 5000) + 2):
 
-                self.db_cursor.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
+                self.db_connection_clone.execute("INSERT INTO village_precalculation_copy(date, total_screening, total_videos_produced,\
                 total_adoption, total_male_adoptions, total_female_adoptions, total_attendance, total_male_attendance,\
                 total_female_attendance, total_expected_attendance, total_questions_asked,\
                 total_adopted_attendees, total_active_attendees, total_adoption_by_active,total_video_seen_by_active,\
