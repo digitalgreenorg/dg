@@ -212,3 +212,11 @@ CREATE INDEX village_partner_myisam_block_partner ON village_partner_myisam(bloc
 CREATE INDEX village_partner_myisam_district_partner ON village_partner_myisam(district_id,partner_id);
 CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(state_id,partner_id);
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
+
+INSERT INTO `screening_myisam` SELECT * FROM digitalgreen_clone.screening_myisam;
+INSERT INTO `person_meeting_attendance_myisam` SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
+INSERT INTO `person_adopt_practice_myisam` SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
+INSERT INTO `village_precalculation_copy` SELECT * FROM digitalgreen_clone.village_precalculation_copy;
+INSERT INTO `activities_screeningwisedata` SELECT * FROM digitalgreen_clone.activities_screeningwisedata;
+INSERT INTO `people_animatorwisedata` SELECT * FROM digitalgreen_clone.people_animatorwisedata;
+INSERT INTO `village_partner_myisam` SELECT * FROM digitalgreen_clone.village_partner_myisam;

@@ -345,44 +345,16 @@ class AnalyticsSync():
 
         try:
             # Create schema
-            drop_create = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH, 'create_schema.sql')), shell=True)
-            if drop_create != 0:
-                raise Exception("Could not create schema on main DB")
-
-            self.db_connection_main = MySQLdb.connect(host='localhost', 
-                                                 user=DATABASES['default']['USER'],
-                                                 passwd=DATABASES['default']['PASSWORD'],
-                                                 db=database,
-                                                 charset='utf8',
-                                                 use_unicode=True).cursor()
-            
-            self.db_connection_main.execute("""INSERT INTO `screening_myisam`
-                                            SELECT * FROM digitalgreen_clone.screening_myisam""")
-
-            self.db_connection_main.execute("""INSERT INTO `video_myisam`
-                                            SELECT * FROM digitalgreen_clone.video_myisam""")
-
-            self.db_connection_main.execute("""INSERT INTO `person_meeting_attendance_myisam`
-                                            SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam""")
-            
-            self.db_connection_main.execute("""INSERT INTO `person_adopt_practice_myisam`
-                                            SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam""")
-
-            self.db_connection_main.execute("""INSERT INTO `village_precalculation_copy`
-                                            SELECT * FROM digitalgreen_clone.village_precalculation_copy""")
-
-            self.db_connection_main.execute("""INSERT INTO `activities_screeningwisedata`
-                                            SELECT * FROM digitalgreen_clone.activities_screeningwisedata""")
-
-            self.db_connection_main.execute("""INSERT INTO `people_animatorwisedata`
-                                            SELECT * FROM digitalgreen_clone.people_animatorwisedata""")
-
-            self.db_connection_main.execute("""INSERT INTO `village_partner_myisam`
-                                            SELECT * FROM digitalgreen_clone.village_partner_myisam""")
-
+            with open( os.path.join(DIR_PATH, 'create_schema.sql'), 'r') as f: 
+                command = ['mysql', '-u%s' % self.db_root_user, '-p%s' % self.db_root_pass, database]
+                proc = subprocess.Popen(command, stdin = f)
+                stdout, stderr = proc.communicate()
+            # drop_create = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, database, os.path.join(DIR_PATH, 'create_schema.sql')), shell=True)
+            # if drop_create != 0:
+            #     raise Exception("Could not create schema on main DB")
             print "Tables copied to main DB"
             print "Total Time On Main DB = ", time.time() - start_time
-        except MySQLdb.Error, e:
+        except Exception as e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)
 
