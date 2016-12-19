@@ -702,12 +702,14 @@ function set_filterlistener() {
             var data_json = {
                 aggregator_data: {
                     name: aggregator_sheet_name,
+
                     data: aggregator_data_set
                 },
 
                 gaddidar_data: {
                     name: gaddidar_sheet_name,
                     data: gaddidar_data_set
+
                 },
 
                 transporter_data: {
@@ -2921,6 +2923,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
                     gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2));
                     gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount'].toFixed(2));
+                    gaddidar_data_set[j][9] = payments_gaddidar_contribution[i]['comment'];
                 }
             }
         }
@@ -3166,8 +3169,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         return n.join(".");
     }
 
-
-
     /*                    "fnClick": function( nButton, oConfig ) {
                         var finalData=[];
                         var finalDataFarmer=[];
@@ -3197,6 +3198,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
 
     $('#table2').DataTable({
+
 
         destroy: true,
         data: aggregator_data_set,
@@ -3338,6 +3340,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             }
                         });
                     }
+
                 }
             }]
         },
@@ -3354,6 +3357,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
             }
+
 
         }
     });
@@ -3380,6 +3384,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
             $('#gaddidar_commission_row').on('change', function() {
                 if (!($('#gaddidar_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+
                     $('#gaddidar_commission_row').focus();
                     alert('Please fill Gaddidar Commission Correctly');
                 }
@@ -3445,7 +3450,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
 
 
-
     $('#table3').DataTable({
         destroy: true,
         data: gaddidar_data_set,
@@ -3487,6 +3491,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "sButtonText": "Edit",
                     "fnClick": function(nButton, oConfig) {
 
+
                         $('#ToolTables_table3_1').removeClass('disable-button');
                         editTable3 = 1;
                         $('#table3').find('tr th:nth-child(5)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
@@ -3503,6 +3508,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                         $('#table3').find('th').removeAttr("style");
 
                         for (var keys in rows_table3) {
+
                             var row_data = {}
                             var mandi_idDict = {}
                             var gaddidar_idDict = {}
@@ -3550,6 +3556,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             ]
         },
 
+
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
                 data;
@@ -3561,6 +3568,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     return a + b;
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
+
             }
 
         }
@@ -3653,6 +3661,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#table4').find('tr :nth-child(5)').css('color', '#3B7DB0');
                     $('#table4').find('tr :nth-child(6)').css('color', '#3B7DB0');
                 }
+
             }, {
                 "sExtends": "ajax",
                 "sButtonText": "Submit",
@@ -3677,6 +3686,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                         finalData.push(row_data);
                     }
                     editTable3 = 0;
+
                     $('#ToolTables_table4_1').addClass('disable-button');
                     var sData = this.fnGetTableData(oConfig);
                     var JObj = {
@@ -3713,7 +3723,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 .data()
                 .reduce(function(a, b) {
                     return a + b;
+
                 }, 0);
+
 
             // Update footer
             $(api.column(5).footer()).html(
@@ -4055,4 +4067,6 @@ function change_language(lang) {
     if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
         show_nav(selected_page);
     }
+
 }
+
