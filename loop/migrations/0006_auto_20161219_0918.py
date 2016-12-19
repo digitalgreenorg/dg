@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('loop', '0006_auto_20161212_0823'),
+        ('loop', '0005_auto_20161202_1104'),
     ]
 
     operations = [
@@ -24,6 +24,21 @@ class Migration(migrations.Migration):
                 ('start_date', models.DateField()),
                 ('model_type', models.IntegerField(default=0, choices=[(0, b'Direct'), (1, b'Tax Based'), (2, b'Slab Based')])),
                 ('aggregator', models.ForeignKey(to='loop.LoopUser')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='AggregatorShareOutliers',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('date', models.DateField()),
+                ('amount', models.FloatField()),
+                ('comment', models.CharField(max_length=200, null=True, blank=True)),
+                ('aggregator', models.ForeignKey(to='loop.LoopUser')),
+                ('mandi', smart_selects.db_fields.ChainedForeignKey(chained_model_field=b'assigned_mandis', to='loop.Mandi', chained_field=b'aggregator')),
+                ('user_created', models.ForeignKey(related_name='loop_aggregatorshareoutliers_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='loop_aggregatorshareoutliers_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -41,6 +56,11 @@ class Migration(migrations.Migration):
                 ('parameter_name', models.CharField(max_length=25)),
             ],
         ),
+        migrations.AddField(
+            model_name='gaddidarshareoutliers',
+            name='comment',
+            field=models.CharField(max_length=200, null=True, blank=True),
+        ),
         migrations.AlterField(
             model_name='gaddidar',
             name='commission',
@@ -53,6 +73,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='gaddidarcommission',
+            name='gaddidar',
+            field=smart_selects.db_fields.ChainedForeignKey(chained_model_field=b'mandi', to='loop.Gaddidar', chained_field=b'mandi'),
+        ),
+        migrations.AlterField(
+            model_name='gaddidarshareoutliers',
             name='gaddidar',
             field=smart_selects.db_fields.ChainedForeignKey(chained_model_field=b'mandi', to='loop.Gaddidar', chained_field=b'mandi'),
         ),
@@ -79,6 +104,10 @@ class Migration(migrations.Migration):
             model_name='aggregatorincentive',
             name='user_modified',
             field=models.ForeignKey(related_name='loop_aggregatorincentive_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AlterUniqueTogether(
+            name='aggregatorshareoutliers',
+            unique_together=set([('date', 'aggregator', 'mandi')]),
         ),
         migrations.AlterUniqueTogether(
             name='aggregatorincentive',

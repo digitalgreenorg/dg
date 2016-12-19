@@ -288,6 +288,9 @@ class TransportationVehicle(LoopModel):
     vehicle_number = models.CharField(max_length=20)
     is_visible = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return "%s - %s (%s)" % (self.transporter.transporter_name, self.vehicle.vehicle_name, self.vehicle_number)
+
     def __transporter__(self):
         return "%s" % (self.transporter.transporter_name)
 
@@ -397,6 +400,7 @@ class GaddidarShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
+    comment = models.CharField(max_length=200, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (
@@ -433,6 +437,22 @@ class AggregatorIncentive(LoopModel):
 
     def __incentive_model__(self):
         return "%s" % (self.incentive_model.calculation_method)
+
+class AggregatorShareOutliers(LoopModel):
+    aggregator = models.ForeignKey(LoopUser)
+    mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
+    date = models.DateField(auto_now=False)
+    amount = models.FloatField()
+    comment = models.CharField(max_length=200, null=True, blank=True)
+
+    def __mandi__(self):
+        return "%s" % (self.mandi.mandi_name)
+
+    def __aggregator__(self):
+        return "%s" % (self.aggregator.name)
+
+    class Meta:
+        unique_together = ("date","aggregator","mandi")
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)

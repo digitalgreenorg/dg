@@ -269,6 +269,7 @@ hr {
     left: 0;
 }
 
+
 /* CSS animation */
 
 @-webkit-keyframes fadeIn {
@@ -295,4 +296,13 @@ hr {
 }
 .select-wrapper input.select-dropdown{
   border-bottom: none !important;
+}
+
+.disable-button {
+    pointer-events: none;
+    cursor: default;
+}
+
+.modal {
+  width: 30%;
 }

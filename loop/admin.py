@@ -85,7 +85,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
-                    'transportation_cost', 'farmer_share')
+                    'transportation_cost', 'farmer_share', 'comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name')
     date_hierarchy = 'date'
@@ -141,6 +141,9 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
 class IncentiveModelAdmin(admin.ModelAdmin):
     list_display = ['calculation_method']
 
+class AggregatorShareOutlierAdmin(admin.ModelAdmin):
+    list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -166,3 +169,4 @@ loop_admin.register(CropLanguage,CropLanguageAdmin)
 loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
 loop_admin.register(IncentiveModel,IncentiveModelAdmin)
 loop_admin.register(IncentiveParameter)
+loop_admin.register(AggregatorShareOutliers,AggregatorShareOutlierAdmin)
