@@ -774,7 +774,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= parentcategory %></label>
                     <div class="col-sm-4"> 
-                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
+                        <select name="parentcategory" id="id_parentcategory" class="chosen-select form-control">
                         <option value='0' selected='selected'>---------</option> 
                         </select> 
                     </div>
@@ -807,7 +807,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="id_adopt_practice">
                     <label class="control-label col-sm-2"><%=member_adopt%>?</label>
                     <div class="col-sm-4">
                     <label class="checkbox-inline">
@@ -816,7 +816,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="id_recall_nonnegotiable">
                     <label class="control-label col-sm-2"><%=recall_nonnegotiable%> ?</label>
                     <div class="col-sm-4">
                         <label class="checkbox-inline">
@@ -864,7 +864,7 @@
             <div class="form-group">
                     <label class="control-label col-sm-2"><%= parentcategory %></label>
                     <div class="col-sm-4"> 
-                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
+                        <select name="parentcategory" id="id_parentcategory" class="chosen-select form-control">
                         <option value='0' selected='selected'>---------</option> 
                         </select> 
                     </div>
@@ -986,7 +986,7 @@
             </div>
         </td>
         
-        <td style="text-align:center;">
+        <td style="text-align:center;" id="id_adopt_practice">
             <div class="form-group">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="adopt_practice<%=index%>" value="1" name="adopt_practice<%=index%>">
@@ -995,7 +995,7 @@
         </td>
 
         <td>
-            <div class="form-group">
+            <div class="form-group" id="id_recall_nonnegotiable">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="krp_one<%=index%>" value="1" name="krp_one<%=index%>">krp1
                 </label>

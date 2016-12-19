@@ -269,7 +269,8 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
-                    if (this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                    
+                    if (this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
                         // hide the headers
                         this.$el.find('th#id_age').addClass('hidden');
                         this.$el.find('th#id_gender').addClass('hidden');
@@ -277,7 +278,14 @@ define([
                         this.$el.find('input#age_row7').addClass('hidden');
                         this.$el.find('input#gender_row7').addClass('hidden');
                         this.$el.find('div#category_row7_chosen').addClass('hidden');
-                        this.$el.find('th#id_member_adopt').addClass('hidden');
+                        this.$el.find('select#category_row7').removeAttr('required');
+                    }else if (this.entity_config.entity_name == "adoption" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                        if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                            if (this.edit_case && this.foreign_elements_rendered[element]){
+                                $("#id_adopt_practice").addClass("hidden");
+                                $("#id_recall_nonnegotiable").addClass("hidden");
+                            } 
+                        }   
                     }
             }, this);
 
@@ -517,6 +525,19 @@ define([
             return $('[name=' + element + ']').val();
         },
 
+        action_after_render_foreign_element: function(parent_element, dep_element){
+            if (this.$el.find('#id_' + parent_element).val() == "2" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                // hide the headers
+                this.$el.find('th#id_member_adopt, th#id_recall_nonnegotiable, td#id_recall_nonnegotiable, td#id_member_adopt').addClass('hidden');
+                this.$el.find("td#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
+            }
+            if (this.$el.find('#id_' + parent_element).val() == "1" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                this.$el.find("th#id_member_adopt, th#id_recall_nonnegotiable").removeClass("hidden");
+            }
+
+
+        },
+
         // render dependent foreign elements - executes when a source element changes
         render_dep_for_elements: function(ev) {
             var source = $(ev.target).attr("name"); //source changed
@@ -525,6 +546,7 @@ define([
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
             _.each(this.source_filter_dependent_map[source], function(dep_el) {
@@ -759,13 +781,33 @@ define([
                     this.$el.find('input#age_row7').addClass('hidden');
                     this.$el.find('input#gender_row7').addClass('hidden');
                     this.$el.find('div#category_row7_chosen').addClass('hidden');
+                    this.$el.find('select#category_row7').removeAttr('required');
                 }
 
             } else {
                 console.log("NOT EXPANDED");
+                // if (!this.edit_case && !this.foreign_elements_rendered[element]){
+                //     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
+                //     if ($('#id_group').val() != ''){
+                //             $('.search-choice-close').click();
+                //             $('#id_group').trigger("chosen:updated");
+                //         }
+                //     })
+                // }
+                // if (this.edit_case && this.foreign_elements_rendered[element]){
+                //     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
+                //         $('.search-choice-close').click();
+                //         $('#id_group').trigger("chosen:updated");
+                //     })
+                // }
+                console.log(this.entity_config.entity_name);
+                console.log(this.entity_config.fetch_element_that_manipulate);
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
                     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
-                    if ($('#id_group').val() != ''){
+                        // if ($(this).val() == "2"){
+                        //     $('select#category_row7').removeAttr('required');
+                        // }
+                        if ($('#id_group').val() != ''){
                             $('.search-choice-close').click();
                             $('#id_group').trigger("chosen:updated");
                         }
@@ -775,8 +817,10 @@ define([
                     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
                         $('.search-choice-close').click();
                         $('#id_group').trigger("chosen:updated");
+
                     })
                 }
+
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if ($f_el.is('select[multiple]'))
                     $f_el.html('');
@@ -831,6 +875,13 @@ define([
                     
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+                        // if (this.entity_config.entity_name == "adoption"){
+                        //     if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                        //         if (this.edit_case && this.foreign_elements_rendered[element]){
+                        //             $("#id_adopt_practice").hide()
+                        //         } 
+                        //     }   
+                        // }
                 }
             }
         },

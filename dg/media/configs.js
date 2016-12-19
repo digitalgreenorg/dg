@@ -868,7 +868,7 @@ function() {
         'fetch_key_element': 'id',
         'fetch_element_that_manipulate': 'parentcategory',
         'fields_to_hide': 'th#id_age, th#id_gender, th#id_category, input#age, input#gender, div#category_chosen',
-        'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
+        'headers_to_hide': 'th#id_member_adopt, th#id_recall_nonnegotiable',
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         form_field_validation: {
@@ -1032,8 +1032,13 @@ function() {
                             'name_field': 'name'
                         }
                     },
+                    parentcategory:{
+                        parentcategory: {
+                            'name_field': 'parent_category_name'
+                        }
+                    },
                 },
-                borrow_fields: ['village', 'group','video','animator']
+                borrow_fields: ['village', 'group','video','animator', 'parentcategory']
             }
         },
         edit: {

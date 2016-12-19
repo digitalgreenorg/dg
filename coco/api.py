@@ -627,7 +627,7 @@ class PersonAdoptVideoResource(BaseResource):
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
-    dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
+    # dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
@@ -638,6 +638,9 @@ class PersonAdoptVideoResource(BaseResource):
 
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
+
+    def dehydrate_parentcategory(self, bundle):
+        return {'id': bundle.obj.parentcategory.id, 'group_name': bundle.obj.parentcategory.parent_category_name} if bundle.obj.parentcategory else {'id': None, 'parent_category_name': None}
 
     def dehydrate_village(self, bundle):
         return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}

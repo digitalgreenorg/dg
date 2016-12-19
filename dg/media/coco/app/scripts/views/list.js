@@ -107,6 +107,10 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             // fill the table with the relevant values.
             var self = this;
             var language = User.get('language');
+            
+            // var filtered_collection = new Backbone.Collection(entity_collection.filter(function(model) {
+            //     return model.get('parentcategory').id == User.get("type_of_cocouser");
+            // }));
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
