@@ -411,11 +411,13 @@ class GaddidarShareOutliers(LoopModel):
 class IncentiveParameter(models.Model):
     notation = models.CharField(max_length=3)
     parameter_name = models.CharField(max_length=25)
+    class Meta:
+        unique_together = ("notation", "parameter_name")
 
 class IncentiveModel(models.Model):
-    infix_expression = models.CharField(max_length=1000)
+    calculation_method = models.TextField(null=True, blank=True)
     def __unicode__(self):
-        return "%s" % (self.infix_expression)
+        return "%s" % (self.calculation_method)
 
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
@@ -430,7 +432,7 @@ class AggregatorIncentive(LoopModel):
         return "%s" % (self.aggregator.name)
 
     def __incentive_model__(self):
-        return "%s" % (self.incentive_model.infix_expression)
+        return "%s" % (self.incentive_model.calculation_method)
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)

@@ -139,7 +139,7 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
     list_display = ('start_date','__unicode__','__incentive_model__')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
-    list_display = ['infix_expression']
+    list_display = ['calculation_method']
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)

@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             name='IncentiveModel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('infix_expression', models.CharField(max_length=1000)),
+                ('calculation_method', models.TextField(null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -60,6 +60,10 @@ class Migration(migrations.Migration):
             model_name='gaddidarshareoutliers',
             name='mandi',
             field=smart_selects.db_fields.ChainedForeignKey(chained_model_field=b'assigned_mandis', to='loop.Mandi', chained_field=b'aggregator'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='incentiveparameter',
+            unique_together=set([('notation', 'parameter_name')]),
         ),
         migrations.AddField(
             model_name='aggregatorincentive',
