@@ -295,7 +295,7 @@ hr {
   top: 8px !important;
 }
 .select-wrapper input.select-dropdown{
-  border-bottom: none !important;
+  border-bottom: 1px solid;
 }
 
 .disable-button {
@@ -304,5 +304,6 @@ hr {
 }
 
 .modal {
-  width: 30%;
+  width: 40%;
 }
+

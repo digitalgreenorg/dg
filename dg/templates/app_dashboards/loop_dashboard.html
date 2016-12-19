@@ -1,5 +1,3 @@
-
-
 {% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Loop{% endblock %} {% block extracss %}
 <style>
    li.not-hoverable:hover,
@@ -462,94 +460,98 @@
    </div>
 </div>
 <div id="payments_div" hide>
-	<div class="row center">
-		<p class="col s3"></p>
-		<div class="input-field col s2">
-			<label for="payments_from_date">From Date</label>
-			<input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
-		</div>
-		<div class="input-field col s2">
-			<label for="payments_to_date">To Date</label>
-			<input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
-		</div>
-		<a class="col s2 waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+   <div class="row center">
+      <p class="col s3"></p>
+      <div class="input-field col s2">
+         <label for="payments_from_date">From Date</label>
+         <input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
+      </div>
+      <div class="input-field col s2">
+         <label for="payments_to_date">To Date</label>
+         <input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
+      </div>
+      <a class="col s2 waves-effect waves-light grey darken-3 white-text btn modal-trigger" onclick="get_payments_data()">GET DATA</a>
+      <p class="col s3"></p>
+   </div>
+   <div class="row" id="aggregator_payment_tab">
+      <p class="col s3"></p>
+      <div class="input-field col s3">
+         <select id="aggregator_payments" class="initialized"></select>
+      </div>
+      <div class="col s2" style="margin-top: 25px">
+         <a class="waves-effect waves-light btn" id="download-payment-sheet">Download</a>
+      </div>
+      <p class="col s4"></p>
+      <div id="aggregator_payment_details">
 
-		<p class="col s3"></p>
-	</div>
-
-	<div class="row" id="aggregator_payment_tab">
-		<p class="col s4"></p>
-		<div class="input-field col s4">
-			<select id="aggregator_payments" class="initialized"></select>
-		</div>
-		<div class="col s2" style="margin-top: 25px">
-			<a class="waves-effect waves-light btn" id="download-payment-sheet">Download</a>
-		</div>
-		<p class="col s4"></p>
-
-		<div id="aggregator_payment_details">
-			<table style="width:100%">
-				<tr id="outliers">
-				</tr>
-			</table>
-
-			<table id="outliers_data" class="highlight bordered centered"> </table>
-			<br><br><br>
-			<hr/>
-
-			<div class="row center">
-				<h3>Payment Sheets</h3>
-			</div>
-			<div class="row center">
-					<table id="table2" class="stripe">
-					<tfoot>
-            <tr>
-                <th align="left">Total:</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-               	<th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+         <table style="width:100%">
+            <tr id="outliers">
             </tr>
-        </tfoot>
-					</table>
-					<br>
-					<hr/>
-						<table id="table3" class="stripe">
-							<tfoot>
-            <tr>
-                <th colspan="3" align="left">Total:</th>
-                <th colspan="2"></th>
-                <th colspan="1"></th>
-                
-			</tr>
-        </tfoot>
-						</table>
-						<br>
-						<hr/>
-							<table id="table4" class="stripe">
-								<tfoot>
-            <tr>
-                <th colspan="5">Total:</th>
-                <th></th>
-
-            </tr>
-        </tfoot>
-							</table>
-							<br>
-							<hr/>
-			</div>
-
-		</div>		
-
-	</div>
+         </table>
+         <table id="outliers_data" class="highlight bordered centered"> </table>
+         <br><br><br>
+         <hr/>
+         <div class="row center">
+            <h3>Payment Sheets</h3>
+         </div>
+         <ul class="tabs">
+                  <li class="tab col s4"><a class="a-customfont center active blue-text" id="summary_payments" onclick="change_payment(this.id)"> Payment Summary</a></li>
+                  <li class="tab col s4"><a class="a-customfont center blue-text" id="gaddidar_payments" onclick="change_payment(this.id)"> Commission Agent Payment</a></li>
+                  <li class="tab col s4"><a class="a-customfont center blue-text" id="transportation_payments" onclick="change_payment(this.id)"> Transportation Payment</a></li>
+                  <div class="indicator"></div>
+         </ul>
+         <br>
+         <div class="row center">
+         <div>
+            <table id="table2" class="stripe">
+               <tfoot>
+                  <tr>
+                     <th align="left">Total:</th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                     <th></th>
+                  </tr>
+               </tfoot>
+            </table>
+            </div>
+            <br>
+            
+            <div style="display:none">
+            <table id="table3" class="stripe" >
+               <tfoot>
+                  <tr>
+                     <th colspan="3" align="left">Total:</th>
+                     <th colspan="2"></th>
+                     <th colspan="1"></th>
+                  </tr>
+               </tfoot>
+            </table>
+            </div>
+            <br>
+            <div style="display:none">
+            <table id="table4" class="stripe" >
+               <tfoot>
+                  <tr>
+                     <th colspan="5">Total:</th>
+                     <th></th>
+                  </tr>
+               </tfoot>
+            </table>
+            </div>
+            <br>
+            <hr/>
+         </div>
+      </div>
+   </div>
 </div>
 <div id="login_modal" class="modal">
    <div class="modal-content">
@@ -571,279 +573,271 @@
       </div>
    </div>
 </div>
-
 <!-- Modal Structure Aggregator Edit -->
-			<div id="farmer_modal" class="modal">
-  				<div class="modal-content">
-    				<h4>Farmer Share</h4>
-    					<form >
-          					<div class="row ">
-            				<div class="col s4">
-
-            				<div class="input-field inline" >
-              				<input id="farmer_date_row" value="00-00-00" type="text" disabled>
-              				<label for="farmer_date_row">Date</label>
-                			</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="farmer_mandi_row" value="mandi" type="text" disabled>
-              				<label for="farmer_mandi_row">Mandi</label>
-              				</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="farmer_volume_row" value="quantity" type="text" disabled>
-              				<label for="farmer_volume_row">Volume</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row ">
-            				<div class="col s4">
-
-            				<div class="input-field inline" >
-              				<input id="farmer_aggregator_payment_row" value="AP" type="text" disabled>
-              				<label for="farmer_aggregator_payment_row">Aggregator Payment</label>
-                			</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="farmer_transport_cost_row" value="cost" type="text" disabled>
-              				<label for="farmer_transport_cost_row">Transport Cost</label>
-              				</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" disabled>
-              				<label for="farmer_gaddidar_commission_row_farmer">Gaddidar Commission</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-            				<div class="col s5">
-            				<div class="input-field inline" >
-              				<input id="farmer_commission_row" value="commission" type="text">
-              				<label id="farmer_commission_label" for="farmer_commission_row">Farmer Contribution Per Kg</label>
-              				</div>
-          				  	</div>
-          				  	<div class="col s2">
-          				  	OR
-          				  	</div>
-            				<div class="col s5">
-            				<div class="input-field inline">
-              				<input id="farmer_share_row" value="share" type="text" >
-              				<label id="farmer_share_label" for="farmer_share_row">Farmer Share</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-          					<div class="col s12">
-          						<div class="input-field inline" >
-          							<input id="farmer_comment_row"  type="text">
-          							<label for="farmer_comment_row">Comment
-          							</label>
-          						</div>
-          					</div>
-          					</div>
-        		</form>
-  				</div>
-  				<div class="modal-footer">
-    				<a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="farmer_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-  				</div>
-			</div>
-
+<div id="farmer_modal" class="modal">
+   <div class="modal-content">
+      <h5>Change Farmers' Contribution</h5>
+      <form >
+         <div class="row ">
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
+                  <label for="farmer_date_row">Date</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_mandi_row" value="mandi" type="text" style="color:#000000" disabled>
+                  <label for="farmer_mandi_row">Mandi</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_volume_row" value="quantity" type="text" style="color:#000000" disabled>
+                  <label for="farmer_volume_row">Volume</label>
+               </div>
+            </div>
+         </div>
+         <div class="row ">
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_aggregator_payment_row" value="AP" type="text" style="color:#000000" disabled>
+                  <label for="farmer_aggregator_payment_row">Aggregator Payment</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_transport_cost_row" value="cost" type="text" style="color:#000000" disabled>
+                  <label for="farmer_transport_cost_row">Transport Cost</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" style="color:#000000" disabled>
+                  <label for="farmer_gaddidar_commission_row_farmer">Gaddidar Commission</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s5">
+               <div class="input-field inline" >
+                  <input id="farmer_commission_row" value="commission" type="text">
+                  <label id="farmer_commission_label" for="farmer_commission_row">Farmer Contribution Per Kg</label>
+               </div>
+            </div>
+            <div class="col s2">
+               OR
+            </div>
+            <div class="col s5">
+               <div class="input-field inline">
+                  <input id="farmer_share_row" value="share" type="text" >
+                  <label id="farmer_share_label" for="farmer_share_row">Farmer Share</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s12">
+               <div class="input-field inline" >
+                  <input id="farmer_comment_row"  type="text">
+                  <label for="farmer_comment_row">Comment
+                  </label>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   <div class="modal-footer">
+      <a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+      <a id="farmer_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+   </div>
+</div>
 <!-- Modal Structure Aggregator Edit -->
-			<div id="aggregator_modal" class="modal">
-  				<div class="modal-content">
-    				<h4>Aggregator Share</h4>
-    					<form >
-          					<div class="row ">
-            				<div class="col s4">
-
-            				<div class="input-field inline" >
-              				<input id="aggregator_date_row" value="00-00-00" type="text" disabled>
-              				<label for="aggregator_date_row">Date</label>
-                			</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="aggregator_mandi_row" value="mandi" type="text" disabled>
-              				<label for="aggregator_mandi_row">Mandi</label>
-              				</div>
-            				</div>
-            				<div class="col s4">
-            				<div class="input-field inline" >
-              				<input id="aggregator_volume_row" value="quantity" type="text" disabled>
-              				<label for="aggregator_volume_row">Volume</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-            				<div class="col s5">
-            				<div class="input-field inline" >
-              				<input id="aggregator_commission_row" value="commission" type="text">
-              				<label id="aggregagtor_commission_label" for="aggregator_commission_row">Aggregagtor Commission</label>
-              				</div>
-          				  	</div>
-          				  	<div class="col s2">
-          				  	OR
-          				  	</div>
-            				<div class="col s5">
-            				<div class="input-field inline">
-              				<input id="aggregator_share_row" value="share" type="text" >
-              				<label id="aggregator_share_label" for="aggregator_share_row">Aggregator Share</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-          					<div class="col s12">
-          						<div class="input-field inline" >
-          							<input id="aggregator_comment_row"  type="text">
-          							<label for="aggregator_comment_row">Comment
-          							</label>
-          						</div>
-          					</div>
-          					</div>
-        		</form>
-  				</div>
-  				<div class="modal-footer">
-    				<a id="aggregator_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="aggregator_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-  				</div>
-			</div>
-
+<div id="aggregator_modal" class="modal">
+   <div class="modal-content">
+      <h5>Change Aggregator Payment</h5>
+      <form >
+         <div class="row ">
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="aggregator_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
+                  <label for="aggregator_date_row">Date</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="aggregator_mandi_row" value="mandi" type="text" style="color:#000000"  disabled>
+                  <label for="aggregator_mandi_row">Mandi</label>
+               </div>
+            </div>
+            <div class="col s4">
+               <div class="input-field inline" >
+                  <input id="aggregator_volume_row" value="quantity" type="text" style="color:#000000" disabled>
+                  <label for="aggregator_volume_row">Volume</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s5">
+               <div class="input-field inline" >
+                  <input id="aggregator_commission_row" value="commission" type="text">
+                  <label id="aggregagtor_commission_label" for="aggregator_commission_row">Aggregagtor Commission</label>
+               </div>
+            </div>
+            <div class="col s2">
+               OR
+            </div>
+            <div class="col s5">
+               <div class="input-field inline">
+                  <input id="aggregator_share_row" value="share" type="text" >
+                  <label id="aggregator_share_label" for="aggregator_share_row">Aggregator Share</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s12">
+               <div class="input-field inline" >
+                  <input id="aggregator_comment_row"  type="text">
+                  <label for="aggregator_comment_row">Comment
+                  </label>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   <div class="modal-footer">
+      <a id="aggregator_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+      <a id="aggregator_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+   </div>
+</div>
 <!-- Modal Structure -->
-			<div id="gaddidar_modal" class="modal">
-  				<div class="modal-content">
-    				<h4>Gaddidar Share Outlier</h4>
-    					<form >
-          					<div class="row ">
-            				<div class="col s3">
-
-            				<div class="input-field inline" >
-              				<input id="gaddidar_date_row" value="00-00-00" type="text" disabled>
-              				<label for="gaddidar_date_row">Date</label>
-                			</div>
-            				</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="gaddidar_mandi_row" value="mandi" type="text" disabled>
-              				<label for="gaddidar_mandi_row">Mandi</label>
-              				</div>
-            				</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="gaddidar_row" value="gaddidar" type="text" disabled>
-              				<label for="gaddidar_row">Gaddidar</label>
-              				</div>
-          				  	</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="gaddidar_quantity_row" value="quantity" type="text" disabled>
-              				<label for="gaddidar_quantity_row">Quantity</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-            				<div class="col s5">
-            				<div class="input-field inline" >
-              				<input id="gaddidar_commission_row" value="commission" type="text">
-              				<label id="gaddidar_commission_label" for="gaddidar_commission_row">Gaddidar Commission</label>
-              				</div>
-          				  	</div>
-          				  	<div class="col s2">
-          				  	OR
-          				  	</div>
-            				<div class="col s5">
-            				<div class="input-field inline">
-              				<input id="gaddidar_share_row" value="share" type="text" >
-              				<label id="gaddidar_share_label" for="share_row">Share</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-          					<div class="col s12">
-          						<div class="input-field inline" >
-          							<input id="gaddidar_comment_row"  type="text">
-          							<label for="gaddidar_comment_row">Comment
-          							</label>
-          						</div>
-          					</div>
-          					</div>
-        		</form>
-  				</div>
-  				<div class="modal-footer">
-    				<a id="gaddidar_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="gaddidar_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-  				</div>
-			</div>
-
-			<div id="modal4" class="modal">
-  				<div class="modal-content">
-    				<h4>Transportation Share Outlier</h4>
-    					<form >
-          					<div class="row ">
-            				<div class="col s3">
-
-            				<div class="input-field inline" >
-              				<input id="transportation_date_row" value="00-00-00" type="text" disabled>
-              				<label for="transportation_date_row">Date</label>
-                			</div>
-            				</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="transportation_mandi_row" value="mandi" type="text" disabled>
-              				<label for="transportation_mandi_row">Mandi</label>
-              				</div>
-            				</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
-              				<label for="transportation_transporter_row">Transporter</label>
-              				</div>
-          				  	</div>
-            				<div class="col s3">
-            				<div class="input-field inline" >
-              				<input id="transportation_vehicle_row" value="quantity" type="text" disabled>
-              				<label for="transportation_vehicle_row">Vehicle</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-            				<div class="col s5">
-            				<div class="input-field inline" >
-              				<input id="transportation_number_row" value="commission" type="text" disabled>
-              				<label for="transportation_number_label">Vehicle Number</label>
-              				</div>
-          				  	</div>
-          				  	<div class="col s2">
-          				  	OR
-          				  	</div>
-            				<div class="col s5">
-            				<div class="input-field inline">
-              				<input id="transportation_cost_row" value="share" type="text" >
-              				<label for="transportation_cost_label">Transport Cost</label>
-              				</div>
-          				  	</div>
-          					</div>
-          					<div class="row">
-          					<div class="col s12">
-          						<div class="input-field inline" >
-          							<input id="transportation_comment_row"  type="text">
-          							<label for="transportation_comment_row">Comment
-          							</label>
-          						</div>
-          					</div>
-          					</div>
-        		</form>
-  				</div>
-  				<div class="modal-footer">
-    				<a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-    				<a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-  				</div>
-			</div>
-
+<div id="gaddidar_modal" class="modal" style="height:120%">
+   <div class="modal-content">
+      <h5>Change CA Contribution</h5>
+      <form >
+         <div class="row ">
+            <div class="col s6">
+               <div class="input-field inline" >
+                  <input id="gaddidar_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
+                  <label for="gaddidar_date_row">Date</label>
+               </div>
+            </div>
+            <div class="col s6">
+               <div class="input-field inline" >
+                  <input id="gaddidar_mandi_row" value="mandi" type="text" style="color:#000000"  disabled>
+                  <label for="gaddidar_mandi_row">Mandi</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s6">
+               <div class="input-field inline" >
+                  <input id="gaddidar_row" value="gaddidar" type="text" style="color:#000000"  disabled>
+                  <label for="gaddidar_row">Gaddidar</label>
+               </div>
+            </div>
+            <div class="col s6">
+               <div class="input-field inline" >
+                  <input id="gaddidar_quantity_row" value="quantity" type="text" style="color:#000000" disabled>
+                  <label for="gaddidar_quantity_row">Quantity</label>
+               </div>
+            </div>            
+         </div>
+         <div class="row">
+            <div class="col s5">
+               <div class="input-field inline" >
+                  <input id="gaddidar_commission_row" value="commission" type="text">
+                  <label id="gaddidar_commission_label" for="gaddidar_commission_row">Gaddidar Commission</label>
+               </div>
+            </div>
+            <div class="col s2">
+               OR
+            </div>
+            <div class="col s5">
+               <div class="input-field inline">
+                  <input id="gaddidar_share_row" value="share" type="text" >
+                  <label id="gaddidar_share_label" for="share_row">Share</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s12">
+               <div class="input-field inline" >
+                  <input id="gaddidar_comment_row"  type="text">
+                  <label for="gaddidar_comment_row">Comment
+                  </label>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   <div class="modal-footer">
+      <a id="gaddidar_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+      <a id="gaddidar_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+   </div>
+</div>
+<div id="modal4" class="modal">
+   <div class="modal-content">
+      <h5>Change Transport Cost</h5>
+      <form >
+         <div class="row ">
+            <div class="col s3">
+               <div class="input-field inline" >
+                  <input id="transportation_date_row" value="00-00-00" type="text" disabled>
+                  <label for="transportation_date_row">Date</label>
+               </div>
+            </div>
+            <div class="col s3">
+               <div class="input-field inline" >
+                  <input id="transportation_mandi_row" value="mandi" type="text" disabled>
+                  <label for="transportation_mandi_row">Mandi</label>
+               </div>
+            </div>
+            <div class="col s3">
+               <div class="input-field inline" >
+                  <input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
+                  <label for="transportation_transporter_row">Transporter</label>
+               </div>
+            </div>
+            <div class="col s3">
+               <div class="input-field inline" >
+                  <input id="transportation_vehicle_row" value="quantity" type="text" disabled>
+                  <label for="transportation_vehicle_row">Vehicle</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s5">
+               <div class="input-field inline" >
+                  <input id="transportation_number_row" value="commission" type="text" disabled>
+                  <label for="transportation_number_label">Vehicle Number</label>
+               </div>
+            </div>
+            <div class="col s2">
+               OR
+            </div>
+            <div class="col s5">
+               <div class="input-field inline">
+                  <input id="transportation_cost_row" value="share" type="text" >
+                  <label for="transportation_cost_label">Transport Cost</label>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col s12">
+               <div class="input-field inline" >
+                  <input id="transportation_comment_row"  type="text">
+                  <label for="transportation_comment_row">Comment
+                  </label>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+   <div class="modal-footer">
+      <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+      <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+   </div>
+</div>
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
 <script src="{% static 'app_dashboards/js/loop_dashboard.js?1' %}"></script>
