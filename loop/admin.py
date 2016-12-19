@@ -54,10 +54,6 @@ class LoopUserAdmin(admin.ModelAdmin):
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
     list_display = ('name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
-    # formfield_overrides = {
-    #     models.CharField: {'widget': TextInput(attrs={'size':'50'})},
-    # }
-
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
