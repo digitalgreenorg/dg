@@ -279,6 +279,13 @@ define([
                         this.$el.find('input#gender_row7').addClass('hidden');
                         this.$el.find('div#category_row7_chosen').addClass('hidden');
                         this.$el.find('select#category_row7').removeAttr('required');
+                    }else if(this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "1"){
+                        this.$el.find('th#id_age').removeClass('hidden');
+                        this.$el.find('th#id_gender').removeClass('hidden');
+                        this.$el.find('th#id_category').removeClass('hidden');
+                        this.$el.find('input#age_row7').removeClass('hidden');
+                        this.$el.find('input#gender_row7').removeClass('hidden');
+                        this.$el.find('div#category_row7_chosen').removeClass('hidden');
                     }else if (this.entity_config.entity_name == "adoption" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
                             if (this.edit_case && this.foreign_elements_rendered[element]){
@@ -786,22 +793,6 @@ define([
 
             } else {
                 console.log("NOT EXPANDED");
-                // if (!this.edit_case && !this.foreign_elements_rendered[element]){
-                //     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
-                //     if ($('#id_group').val() != ''){
-                //             $('.search-choice-close').click();
-                //             $('#id_group').trigger("chosen:updated");
-                //         }
-                //     })
-                // }
-                // if (this.edit_case && this.foreign_elements_rendered[element]){
-                //     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
-                //         $('.search-choice-close').click();
-                //         $('#id_group').trigger("chosen:updated");
-                //     })
-                // }
-                console.log(this.entity_config.entity_name);
-                console.log(this.entity_config.fetch_element_that_manipulate);
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
                     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
                         // if ($(this).val() == "2"){
