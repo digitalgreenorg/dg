@@ -4,10 +4,12 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
+from smart_selects.db_fields import ChainedForeignKey
 
 RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
 ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
+MODEL_TYPES = ((0, "Direct"), (1, "Tax Based"), (2, "Slab Based"))
 
 
 class LoopModel(models.Model):
@@ -174,7 +176,7 @@ class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
     gaddidar_name = models.CharField(max_length=100)
     gaddidar_phone = models.CharField(max_length=13)
-    commission = models.FloatField(default=1.0)
+    commission = models.FloatField("Discount",default=1.0)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
@@ -378,9 +380,9 @@ pre_delete.connect(delete_log, sender=CombinedTransaction)
 
 class GaddidarCommission(LoopModel):
     mandi = models.ForeignKey(Mandi)
-    gaddidar = models.ForeignKey(Gaddidar)
+    gaddidar = ChainedForeignKey(Gaddidar, chained_field="mandi", chained_model_field="mandi")
     start_date = models.DateField(auto_now=False)
-    discount_percent = models.FloatField(validators=[MinValueValidator(0.0),
+    discount_percent = models.FloatField(verbose_name="Discount",validators=[MinValueValidator(0.0),
                                                      MaxValueValidator(1.0)], default=0.0)
     def __unicode__(self):
         return "%s (%s)" % (
@@ -390,8 +392,8 @@ class GaddidarCommission(LoopModel):
         unique_together = ("start_date", "gaddidar", "mandi")
 
 class GaddidarShareOutliers(LoopModel):
-    mandi = models.ForeignKey(Mandi)
-    gaddidar = models.ForeignKey(Gaddidar)
+    mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
+    gaddidar = ChainedForeignKey(Gaddidar, chained_field="mandi", chained_model_field="mandi")
     aggregator = models.ForeignKey(LoopUser)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
@@ -401,10 +403,36 @@ class GaddidarShareOutliers(LoopModel):
             self.gaddidar.gaddidar_name, self.mandi.mandi_name)
 
     def __aggregator__(self):
-        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+        return "%s" % (self.aggregator.name)
 
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
+
+class IncentiveParameter(models.Model):
+    notation = models.CharField(max_length=3)
+    parameter_name = models.CharField(max_length=25)
+    class Meta:
+        unique_together = ("notation", "parameter_name")
+
+class IncentiveModel(models.Model):
+    calculation_method = models.TextField(null=True, blank=True)
+    def __unicode__(self):
+        return "%s" % (self.calculation_method)
+
+class AggregatorIncentive(LoopModel):
+    aggregator = models.ForeignKey(LoopUser)
+    start_date = models.DateField(auto_now=False)
+    model_type = models.IntegerField(choices=MODEL_TYPES, default=0)
+    incentive_model = models.ForeignKey(IncentiveModel)
+
+    class Meta:
+        unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
+
+    def __unicode__(self):
+        return "%s" % (self.aggregator.name)
+
+    def __incentive_model__(self):
+        return "%s" % (self.incentive_model.calculation_method)
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
