@@ -413,21 +413,15 @@ class IncentiveParameter(models.Model):
     parameter_name = models.CharField(max_length=25)
 
 class IncentiveModel(models.Model):
-    postfix_expression = models.CharField(max_length=100)
-    infix_expression = models.CharField(max_length=100)
+    infix_expression = models.CharField(max_length=1000)
     def __unicode__(self):
         return "%s" % (self.infix_expression)
-
-class Slab(models.Model):
-    lower_band = models.IntegerField()
-    upper_band = models.IntegerField()
 
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     start_date = models.DateField(auto_now=False)
     model_type = models.IntegerField(choices=MODEL_TYPES, default=0)
     incentive_model = models.ForeignKey(IncentiveModel)
-    slab = models.ForeignKey(Slab)
 
     class Meta:
         unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
@@ -437,9 +431,6 @@ class AggregatorIncentive(LoopModel):
 
     def __incentive_model__(self):
         return "%s" % (self.incentive_model.infix_expression)
-
-    def __slab__(self):
-        return "%s - %s" % (self.slab.lower_band, self.slab.upper_band)
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)

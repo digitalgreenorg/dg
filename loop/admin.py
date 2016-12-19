@@ -135,14 +135,11 @@ class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
-    fields = ('start_date','aggregator','model_type','incentive_model','slab')
-    list_display = ('start_date','__unicode__','__incentive_model__','__slab__')
+    fields = ('start_date','aggregator','model_type','incentive_model')
+    list_display = ('start_date','__unicode__','__incentive_model__')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
     list_display = ['infix_expression']
-
-class SlabAdmin(admin.ModelAdmin):
-    list_display = ['lower_band','upper_band']
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
@@ -168,5 +165,4 @@ loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
 loop_admin.register(CropLanguage,CropLanguageAdmin)
 loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
 loop_admin.register(IncentiveModel,IncentiveModelAdmin)
-loop_admin.register(Slab,SlabAdmin)
 loop_admin.register(IncentiveParameter)

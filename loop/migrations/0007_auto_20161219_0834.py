@@ -30,8 +30,7 @@ class Migration(migrations.Migration):
             name='IncentiveModel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('postfix_expression', models.CharField(max_length=100)),
-                ('infix_expression', models.CharField(max_length=100)),
+                ('infix_expression', models.CharField(max_length=1000)),
             ],
         ),
         migrations.CreateModel(
@@ -40,14 +39,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('notation', models.CharField(max_length=3)),
                 ('parameter_name', models.CharField(max_length=25)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Slab',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('lower_band', models.IntegerField()),
-                ('upper_band', models.IntegerField()),
             ],
         ),
         migrations.AlterField(
@@ -74,11 +65,6 @@ class Migration(migrations.Migration):
             model_name='aggregatorincentive',
             name='incentive_model',
             field=models.ForeignKey(to='loop.IncentiveModel'),
-        ),
-        migrations.AddField(
-            model_name='aggregatorincentive',
-            name='slab',
-            field=models.ForeignKey(to='loop.Slab'),
         ),
         migrations.AddField(
             model_name='aggregatorincentive',
