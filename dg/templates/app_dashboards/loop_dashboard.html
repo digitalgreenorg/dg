@@ -639,7 +639,7 @@
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
-                  <input id="farmer_comment_row"  type="text">
+                  <input id="farmer_comment_row"  type="text" maxlength="180">
                   <label for="farmer_comment_row">Comment
                   </label>
                </div>
@@ -650,6 +650,7 @@
    <div class="modal-footer">
       <a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
       <a id="farmer_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <a id="farmer_reset_modal" class="left modal-action modal-close waves-effect waves-green btn-flat " >Reset</a>
    </div>
 </div>
 <!-- Modal Structure Aggregator Edit -->
@@ -697,7 +698,7 @@
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
-                  <input id="aggregator_comment_row"  type="text">
+                  <input id="aggregator_comment_row"  type="text" maxlength="180">
                   <label for="aggregator_comment_row">Comment
                   </label>
                </div>
@@ -708,6 +709,7 @@
    <div class="modal-footer">
       <a id="aggregator_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
       <a id="aggregator_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <a id="aggregator_reset_modal" class="left modal-action modal-close waves-effect waves-green btn-flat">Reset</a>
    </div>
 </div>
 <!-- Modal Structure -->
@@ -763,7 +765,7 @@
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
-                  <input id="gaddidar_comment_row"  type="text">
+                  <input id="gaddidar_comment_row"  type="text" maxlength="180">
                   <label for="gaddidar_comment_row">Comment
                   </label>
                </div>
@@ -774,6 +776,7 @@
    <div class="modal-footer">
       <a id="gaddidar_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
       <a id="gaddidar_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <a id="gaddidar_reset_modal" class="left modal-action modal-close waves-effect waves-green btn-flat">Reset</a>
    </div>
 </div>
 <div id="modal4" class="modal">
@@ -809,7 +812,7 @@
          <div class="row">
             <div class="col s5">
                <div class="input-field inline" >
-                  <input id="transportation_number_row" value="commission" type="text" disabled>
+                  <input id="transportation_number_row" value="commission"  type="text" disabled>
                   <label for="transportation_number_label">Vehicle Number</label>
                </div>
             </div>
@@ -835,8 +838,9 @@
       </form>
    </div>
    <div class="modal-footer">
-      <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-      <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Submit</a>
+      <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Cancel</a>
+
    </div>
 </div>
 

@@ -744,38 +744,19 @@ class DayTransportationResource(BaseResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
-
-        if bundle.request.method != 'PATCH':
-            user = LoopUser.objects.get(user__username=bundle.request.user)
-            transportationvehicle = TransportationVehicle.objects.get(
-                id=bundle.data["transportation_vehicle"]["online_id"])
-
-            attempt = DayTransportation.objects.filter(date=bundle.data[
+        user = LoopUser.objects.get(user__username=bundle.request.user)
+        transportationvehicle = TransportationVehicle.objects.get(
+            id=bundle.data["transportation_vehicle"]["online_id"])
+        attempt = DayTransportation.objects.filter(date=bundle.data[
                 "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-        else:
-            attempt = DayTransportation.objects.filter(date=bundle.data[
-                "date"], user_created=bundle.data['user_created_id'], mandi = mandi)
-            
         if attempt.count() < 1:
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            if bundle.request.method == 'PATCH':
-                bundle.request.method = 'PUT'
-                bundle.request.path = bundle.request.path + \
-                str(attempt[0].id) + "/"
-                kwargs['pk'] = attempt[0].id
-                transportationVehicleId = {'online_id': str(attempt[0].transportation_vehicle.id)}
-                bundle.data['transportation_vehicle'] = transportationVehicleId
-                bundle = super(DayTransportationResource,self).obj_update(bundle, **kwargs)
-                bundle.request.method = 'PATCH'
-            else:
-                raise DayTransportationNotSaved(
-                    {"id": int(attempt[0].id), "error": "Duplicate"})
+            raise DayTransportationNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
-        print bundle.data
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])

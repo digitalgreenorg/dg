@@ -2982,83 +2982,84 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-
-
+    var $this;
     var editTable2 = 0;
     var rows_table2 = {};
     var rows_table2_farmer = {};
-
+    function initializeAggregatorModal(){
+        $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
+        $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
+        $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
+        $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
+        $('#aggregator_share_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
+        $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+    }
+    function initializeFarmerModal(){
+        $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
+        $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
+        $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
+        $('#farmer_aggregator_payment_row').val($this.parent()[0].childNodes[4].innerHTML);
+        $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[5].innerHTML);
+        $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[7].innerHTML);
+        $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
+        $('#farmer_share_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML).toFixed(2));
+        $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+    }
+    function inputValidation(field){
+       return field.val().toString().match(/^[0-9]*[.]?[0-9]+$/);
+    }
     $('#table2').on('click', 'tbody td', function(e) {
         $this = $(this);
-        if (($this.context.cellIndex === 4 || $this.context.cellIndex === 6) && editTable2 == 1) {
-
-            $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
-            $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
-            $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-            $('#aggregator_commission_row').val($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]);
-            $('#aggregator_share_row').val($this.parent()[0].childNodes[4].innerHTML);
-            $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
-            $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
-            $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
-            $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-            $('#farmer_aggregator_payment_row').val($this.parent()[0].childNodes[4].innerHTML);
-            $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[5].innerHTML);
-            $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[7].innerHTML);
-            $('#farmer_commission_row').val($this.parent()[0].childNodes[6].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]);
-            $('#farmer_share_row').val($this.parent()[0].childNodes[6].innerHTML);
-            $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
-
-            if ($this.context.cellIndex === 4) {
-                $('#aggregator_modal').openModal();
-                $('#aggregator_share_row').focus();
-            } else if ($this.context.cellIndex === 9) {
-                $('#aggregator_modal').openModal();
-                $('#aggregator_comment_row').focus();
-
-            } else if ($this.context.cellIndex === 6) {
-                $('#farmer_modal').openModal();
-                $('#farmer_share_row').focus();
-            } else if ($this.context.cellIndex === 10) {
-                $('#farmer_modal').openModal();
-                $('#farmer_comment_row').focus();
-            }
-            $('#aggregator_commission_row').on('change', function() {
-                if (!($('#aggregator_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                    $('#aggregator_commission_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#aggregator_commission_row').val()).toFixed(2));
-
-
-            });
-            $('#aggregator_share_row').on('change', function() {
-                if (!($('#aggregagtor_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                    $('#aggregator_share_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
-            });
-            $('#farmer_commission_row').on('change', function() {
-                if (!($('#farmer_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                    $('#farmer_commission_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#farmer_commission_row').val()).toFixed(2));
-            });
-            $('#farmer_share_row').on('change', function() {
-                if (!($('#farmer_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                    $('#farmer_share_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
-            });
+        //console.log(aggregator_data_set[$this.context.parentNode.rowIndex-1][$this.context.cellIndex]);
+        if($this.context.cellIndex === 4 && editTable2 == 1){
+            initializeAggregatorModal();
+            $('#aggregator_modal').openModal();
+            $('#aggregator_share_row').focus();
+        }
+        if ($this.context.cellIndex === 6 && editTable2 == 1) {
+            initializeFarmerModal();
+            $('#farmer_modal').openModal();
+            $('#farmer_share_row').focus();
+        }
+        
+        
+    });
+    $('#aggregator_commission_row').on('change', function() {
+        if (!inputValidation($('#aggregator_commission_row'))) {
+            $('#aggregator_commission_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+        }
+        else{
+            $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#aggregator_commission_row').val()).toFixed(2));
         }
     });
-
+    $('#aggregator_share_row').on('change', function() {
+        if (! inputValidation($('#aggregator_share_row'))) {
+            $('#aggregator_share_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+            }
+        else{
+            $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
+        }
+    });
+    $('#farmer_commission_row').on('change', function() {
+        if (!inputValidation($('#farmer_commission_row'))) {
+            $('#farmer_commission_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+        }
+        else{
+            $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#farmer_commission_row').val()).toFixed(2));
+        }
+    });
+    $('#farmer_share_row').on('change', function() {
+        if (!inputValidation($('#farmer_share_row'))) {
+            $('#farmer_share_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+            }
+        else{
+            $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
+        }
+    });
     $('#aggregator_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
             $('#aggregator_comment_row').focus();
@@ -3089,72 +3090,76 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_submit_modal').trigger('click');
         }
     });
-
+    $('#farmer_reset_modal').on('click',function(){
+        $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,6).data();
+        $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
+        delete rows_table2_farmer[$this.context.parentNode.rowIndex];
+        $this.parent().removeAttr('style');
+        $this.removeAttr('style');
+    });
     $('#farmer_submit_modal').on('click', function(ev) {
-
-        if (!($('#farmer_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        if (!inputValidation($('#farmer_commission_row'))) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             alert('Please fill Aggregator Commission Correctly');
-        } else if (!($('#farmer_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        } else if (!inputValidation($('#farmer_share_row'))) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             alert('Please fill Aggregator Share Correctly');
         } else {
-            //console.log($this.parent()[0]);
             $('#farmer_modal').closeModal();
-            //$this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
-            if (($this.parent()[0].childNodes[4].innerHTML + $this.parent()[0].childNodes[5].innerHTML) < $this.parent()[0].childNodes[6].innerHTML) {
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
-                $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');
+            if ((parseFloat($this.parent()[0].childNodes[4].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML)) < parseFloat($this.parent()[0].childNodes[6].innerHTML)) {
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
             } else
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
-
+            {
+                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+            }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2_farmer[row_id] = true;
         }
     });
+    $('#aggregator_reset_modal').on('click',function(){
+        $this.parent()[0].childNodes[4].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
+        $this.parent()[0].childNodes[9].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,11).data();
+        delete rows_table2[$this.context.parentNode.rowIndex];
+        $this.parent().removeAttr('style');
+        $this.removeAttr('style');
+    });
     $('#aggregator_submit_modal').on('click', function(ev) {
-
-        if (!($('#aggregator_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        if (!inputValidation($('#aggregator_commission_row'))) {
             ev.preventDefault();
             $('#aggregator_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregator_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Aggregator Commission Correctly');
-        } else if (!($('#aggregator_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        } else if (!inputValidation($('#aggregator_share_row'))) {
             ev.preventDefault();
             $('#aggregagtor_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Aggregator Share Correctly');
         } else {
-            //console.log($this.parent()[0]);
             $('#aggregator_modal').closeModal();
-            //$this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
             $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML / $this.parent()[0].childNodes[3].innerHTML.split('Kg')[0]) > 0.5) {
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
-                $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
             } else {
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2[row_id] = true;
         }
     });
-
-
-
-    var $this;
-
-
-
+    
     var formatVal = function(yourNumber) {
         //Seperates the components of the number
         var n = yourNumber.toString().split(".");
@@ -3169,26 +3174,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         return n.join(".");
     }
 
-    /*                    "fnClick": function( nButton, oConfig ) {
-                        var finalData=[];
-                        var finalDataFarmer=[];
-                            $('#table2').find('tr').removeAttr("style");
-                            for(var keys in rows_table2){
-                                var row_data = {};
-                                var mandi_idDict ={};
-                                var gaddidar_idDict={};
-                                var aggregator_idDict={};
-                                row_data['date']=$('#table2').DataTable().cell(keys-1,1).data();
-                                row_data['amount']=$('#table2 tr').eq(keys)[0].childNodes[4].innerHTML;
-                                mandi_idDict['online_id']=$('#table2').DataTable().cell(keys-1,10).data();
-                                row_data['mandi']=mandi_idDict;
-                                aggregator_idDict['online_id']=$('#table2').DataTable().cell(keys-1,9).data();
-                                row_data['aggregator']=aggregator_idDict;
-                                row_data['comment']=$('#table2 tr').eq(keys)[0].childNodes[9].innerHTML;
-                                finalData.push(row_data);
-                            }
-    */
-
     var finalFormat = function(value) {
         if (value.indexOf('.') === -1)
             return parseFloat(value).toLocaleString() + '.00';
@@ -3196,10 +3181,42 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             return parseFloat(parseFloat(value).toFixed(2)).toLocaleString();
     }
 
-
+    function processAggregatorRow(rows_table2,finalData){
+        for (var keys in rows_table2) {
+            var row_data = {};
+            var mandi_idDict = {};
+            var gaddidar_idDict = {};
+            var aggregator_idDict = {};
+            row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
+            row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+            mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+            row_data['mandi'] = mandi_idDict;
+            aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+            row_data['aggregator'] = aggregator_idDict;
+            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML + ' - '+globalUser;
+            finalData.push(row_data);
+        }
+        return finalData;
+    }
+    function processFarmerRow(rows_table2_farmer,finalDataFarmer){
+        for (var keys in rows_table2_farmer) {
+            var row_data = {};
+            var mandi_idDict = {};
+            var gaddidar_idDict = {};
+            var aggregator_idDict = {};
+            row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
+            row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+            mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+            row_data['mandi'] = mandi_idDict;
+            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML+ ' - '+globalUser;
+            aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+            row_data['aggregator'] = aggregator_idDict;
+            row_data['user_created_id'] = globalUser;
+            finalDataFarmer.push(row_data);
+        }
+        return finalDataFarmer;
+    }
     $('#table2').DataTable({
-
-
         destroy: true,
         data: aggregator_data_set,
         columns: [{
@@ -3242,7 +3259,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "sExtends": "text",
                 "sButtonText": "Edit",
                 "fnClick": function(nButton, oConfig) {
-
                     $('#ToolTables_table2_1').removeClass('disable-button');
                     editTable2 = 1;
                     $('#table2').find('tr th:nth-child(5)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
@@ -3258,59 +3274,33 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var finalData = [];
                     var finalDataFarmer = [];
                     $('#table2').find('th').removeAttr("style");
-                   
-                    console.log(rows_table2)
-                    for (var keys in rows_table2) {
-                        var row_data = {};
-                        var mandi_idDict = {};
-                        var gaddidar_idDict = {};
-                        var aggregator_idDict = {};
-                        row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
-                        row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
-                        mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
-                        row_data['mandi'] = mandi_idDict;
-                        aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
-                        row_data['aggregator'] = aggregator_idDict;
-                        row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
-                        finalData.push(row_data);
-                    }
-                    console.log(rows_table2_farmer)
-                    for (var keys in rows_table2_farmer) {
-
-                        var row_data = {};
-                        var mandi_idDict = {};
-                        var gaddidar_idDict = {};
-                        var aggregator_idDict = {};
-                        row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
-                        row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
-                        mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
-                        row_data['mandi'] = mandi_idDict;
-                        row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
-                        aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
-                        row_data['aggregator'] = aggregator_idDict;
-                        row_data['user_created_id'] = globalUser;
-                        finalDataFarmer.push(row_data);
-                    }
+                    $('#table2').find('tr').removeAttr("style");
+                    $('#table2').find('td').removeAttr("style");
                     editTable2 = 0;
                     $('#ToolTables_table2_1').addClass('disable-button');
+                    finalData = processAggregatorRow(rows_table2,finalData);
+                    finalDataFarmer = processFarmerRow(rows_table2_farmer,finalDataFarmer);
                     var sData = this.fnGetTableData(oConfig);
                     var sData = this.fnGetTableData(oConfig);
-                    var JObj = {
+                    var aggregatorObjects = {
                         "objects": finalData
                     };
-                    var JObjFarmer = {
+                    var farmerObjects = {
                         "objects": finalDataFarmer
                     };
-                    console.log(JSON.stringify(JObj));
                     if (Object.keys(rows_table2).length > 0) {
                         $.ajax({
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
                             contentType: "application/json; charset=utf-8",
-                            data: JSON.stringify(JObj),
+                            data: JSON.stringify(aggregatorObjects),
                             success: function() {
                                 alert("success");
+                                for (var keys in rows_table2) {
+                                    aggregator_data_set[keys-1][4]=$('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+                                    aggregator_data_set[keys-1][11]=$('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
+                                }
                                 rows_table2 = [];
                             },
                             error: function() {
@@ -3319,19 +3309,18 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             }
                         });
                     }
-                    console.log(JSON.stringify(JObjFarmer));
                     if (Object.keys(rows_table2_farmer).length > 0) {
                         $.ajax({
-                            url: "http://localhost:4001/loop/api/v1/daytransportation/?format=json",
-                            type: 'patch',
+                            url: "http://localhost:4001/loop/farmer_payments/",
+                            type: 'POST',
                             dataType: 'json',
-                            contentType: "application/json; charset=utf-8",
-                            data: JSON.stringify(JObjFarmer),
-                            headers: {
-                                "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
-                            },
+                            data:JSON.stringify(farmerObjects),
                             success: function() {
                                 alert("success");
+                                for (var keys in rows_table2_farmer) {
+                                    aggregator_data_set[keys-1][4]=$('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    aggregator_data_set[keys-1][12]=$('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
+                                }
                                 rows_table2_farmer = [];
                             },
                             error: function() {
@@ -3361,19 +3350,23 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
         }
     });
+
+    function initializeGaddidarModal(){
+        $('#gaddidar_date_row').val($this.parent()[0].childNodes[0].innerHTML);
+        $('#gaddidar_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
+        $('#gaddidar_row').val($this.parent()[0].childNodes[1].innerHTML);
+        $('#gaddidar_quantity_row').val($this.parent()[0].childNodes[3].innerHTML);
+        $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
+        $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[5].textContent).toFixed(2));
+        $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
+    }
     var editTable3 = 0;
     var rows_table3 = {};
 
     $('#table3').on('click', 'tbody td', function(e) {
         $this = $(this);
         if (editTable3 == 1 && ($this.context.cellIndex === 4 || $this.context.cellIndex === 5)) {
-            $('#gaddidar_date_row').val($this.parent()[0].childNodes[0].innerHTML);
-            $('#gaddidar_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
-            $('#gaddidar_row').val($this.parent()[0].childNodes[1].innerHTML);
-            $('#gaddidar_quantity_row').val($this.parent()[0].childNodes[3].innerHTML);
-            $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
-            $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
-            $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
+            initializeGaddidarModal();
             $('#gaddidar_modal').openModal();
             if ($this.context.cellIndex === 4) {
                 $('#gaddidar_commission_row').focus();
@@ -3382,74 +3375,99 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             } else if ($this.context.cellIndex === 6) {
                 $('#gaddidar_comment_row').focus();
             }
-            $('#gaddidar_commission_row').on('change', function() {
-                if (!($('#gaddidar_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-
-                    $('#gaddidar_commission_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
-
-            });
-            $('#gaddidar_share_row').on('change', function() {
-                if (!($('#gaddidar_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                    $('#gaddidar_share_row').focus();
-                    alert('Please fill Gaddidar Commission Correctly');
-                }
-                else
-                    $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
-            });
+        }
+    });
+    $('#gaddidar_commission_row').on('change', function() {
+        if (!inputValidation($('#gaddidar_commission_row'))) {
+            $('#gaddidar_commission_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+        }
+        else{
+            $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
         }
     });
 
+    $('#gaddidar_share_row').on('change', function() {
+        if (!inputValidation($('#gaddidar_share_row'))) {
+            $('#gaddidar_share_row').focus();
+            alert('Please fill Gaddidar Commission Correctly');
+        }
+        else{
+            $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
+        }
+    });
     $('#gaddidar_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
             $('#gaddidar_comment_row').focus();
         }
     });
+
     $('#gaddidar_share_row').keypress(function(event) {
         if (event.keyCode === 13) {
             $('#gaddidar_comment_row').focus();
         }
     });
+
     $('#gaddidar_comment_row').keypress(function(event) {
         if (event.keyCode === 13) {
             $('#gaddidar_submit_modal').trigger('click');
         }
     });
 
-    $('#gaddidar_submit_modal').on('click', function(ev) {
+    $('#gaddidar_reset_modal').on('click',function(){
 
-        if (!($('#gaddidar_commission_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
+        $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,5).data();
+        $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,9).data();
+        delete rows_table3[$this.context.parentNode.rowIndex];
+        $this.parent().removeAttr('style');
+        $this.removeAttr('style');
+    });
+    $('#gaddidar_submit_modal').on('click', function(ev) {
+        if (!inputValidation($('#gaddidar_commission_row'))) {
             ev.preventDefault();
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Gaddidar Commission Correctly');
-        } else if (!($('#gaddidar_share_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+        } else if (!inputValidation($('#gaddidar_share_row'))) {
             ev.preventDefault();
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Share Correctly');
         } else {
-            //console.log($this.parent()[0]);
             $('#gaddidar_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
-                $this.css('background-color', '#FF5252').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
             } else {
-                $this.parent().css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table3[row_id] = true;
         }
     });
-
-
-
+    function processGaddidarData(rows_table3,finalData){
+        for (var keys in rows_table3) {
+            var row_data = {}
+            var mandi_idDict = {}
+            var gaddidar_idDict = {}
+            var aggregator_idDict = {}
+            row_data['date'] = $('#table3').DataTable().cell(keys - 1, 0).data();
+            row_data['amount'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
+            mandi_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 6).data();
+            row_data['mandi'] = mandi_idDict
+            gaddidar_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 7).data();
+            row_data['gaddidar'] = gaddidar_idDict
+            aggregator_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 8).data();
+            row_data['aggregator'] = aggregator_idDict
+            row_data['comment'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML + ' - '+globalUser;
+            finalData.push(row_data);
+        }
+    }
     $('#table3').DataTable({
         destroy: true,
         data: gaddidar_data_set,
@@ -3506,43 +3524,28 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "fnClick": function(nButton, oConfig) {
                         var finalData = [];
                         $('#table3').find('th').removeAttr("style");
-
-                        for (var keys in rows_table3) {
-
-                            var row_data = {}
-                            var mandi_idDict = {}
-                            var gaddidar_idDict = {}
-                            var aggregator_idDict = {}
-                            row_data['date'] = $('#table3').DataTable().cell(keys - 1, 0).data();
-                            row_data['amount'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
-                            mandi_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 6).data();
-                            row_data['mandi'] = mandi_idDict
-                            gaddidar_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 7).data();
-                            row_data['gaddidar'] = gaddidar_idDict
-                            aggregator_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 8).data();
-                            row_data['aggregator'] = aggregator_idDict
-                            row_data['comment'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
-
-                            finalData.push(row_data);
-                        }
                         editTable3 = 0;
                         $('#ToolTables_table3_1').addClass('disable-button');
+                        finalData = processGaddidarRow(rows_table3,finalData);
                         var sData = this.fnGetTableData(oConfig);
-                        var JObj = {
+                        var gaddidarObjects = {
                             "objects": finalData
 
                         };
-
-                        //console.log(JSON.stringify(JObj));
                         if (Object.keys(rows_table3).length > 0)
                             $.ajax({
                                 url: oConfig.sAjaxUrl,
                                 type: 'patch',
                                 dataType: 'json',
                                 contentType: "application/json; charset=utf-8",
-                                data: JSON.stringify(JObj),
+                                data: JSON.stringify(gaddidarObjects),
                                 success: function() {
                                     alert("success");
+                                    for (var keys in rows_table3) {
+                                        gaddidar_data_set[keys-1][4]=$('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+                                        gaddidar_data_set[keys-1][5]=$('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
+                                        gaddidar_data_set[keys-1][6]=$('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    }
                                     rows_table3 = [];
                                 },
                                 error: function() {
@@ -3555,8 +3558,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
             ]
         },
-
-
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
                 data;
@@ -3650,68 +3651,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         "pageLength": 10,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [{
-                "sExtends": "text",
-                "sButtonText": "Edit",
-                "sButtonClass": "disable-button",
-                "fnClick": function(nButton, oConfig) {
-
-                    $('#ToolTables_table4_1').removeClass('disable-button');
-                    editTable4 = 1;
-                    $('#table4').find('tr :nth-child(5)').css('color', '#3B7DB0');
-                    $('#table4').find('tr :nth-child(6)').css('color', '#3B7DB0');
-                }
-
-            }, {
-                "sExtends": "ajax",
-                "sButtonText": "Submit",
-                "sButtonClass": "disable-button",
-                "sAjaxUrl": "http://localhost:4001/loop/api/v1/transportershare?format=json",
-                "fnClick": function(nButton, oConfig) {
-                    var finalData = [];
-                    $('#table4').find('tr :nth-child(5)').removeAttr("style");
-                    $('#table4').find('tr :nth-child(6)').removeAttr("style");
-                    for (var keys in rows_table4) {
-                        var row_data = {}
-                        var mandi_idDict = {}
-                        var gaddidar_idDict = {}
-                        var aggregator_idDict = {}
-                        row_data['date'] = $('#table4').DataTable().cell(keys - 1, 0).data();
-                        row_data['amount'] = $('#table4 tr').eq(keys)[0].childNodes[5].innerHTML;
-                        mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 6).data();
-                        row_data['mandi'] = mandi_idDict
-                        aggregator_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 8).data();
-                        row_data['aggregator'] = aggregator_idDict
-                        row_data['comment'] = $('#table4 tr').eq(keys)[0].childNodes[6].innerHTML;
-                        finalData.push(row_data);
-                    }
-                    editTable3 = 0;
-
-                    $('#ToolTables_table4_1').addClass('disable-button');
-                    var sData = this.fnGetTableData(oConfig);
-                    var JObj = {
-                        "objects": finalData
-
-                    };
-
-                    //console.log(JSON.stringify(JObj));
-                    $.ajax({
-                        url: oConfig.sAjaxUrl,
-                        type: 'patch',
-                        dataType: 'json',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(JObj),
-                        success: function() {
-                            alert("success");
-                            rows_table4 = [];
-                        },
-                        error: function() {
-                            alert("Error");
-                            rows_table4 = [];
-                        }
-                    });
-                }
-            }]
+            "aButtons": []
         },
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
