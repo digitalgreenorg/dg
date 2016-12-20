@@ -28,21 +28,4 @@ class Migration(migrations.Migration):
             name='trainingType',
             field=models.BooleanField(default=True),
         ),
-        migrations.AlterField(
-            model_name='training',
-            name='assessment',
-            field=models.ForeignKey(default=None, to='training.Assessment'),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='training',
-            name='language',
-            field=models.ForeignKey(default=None, to='videos.Language'),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='training',
-            name='trainer',
-            field=models.ManyToManyField(to='training.Trainer'),
-        ),
     ]
