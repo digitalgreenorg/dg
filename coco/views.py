@@ -7,9 +7,6 @@ from coco.models import FullDownloadStats
 from models import CocoUser
 
 import json
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-from django.core.serializers.json import DjangoJSONEncoder
 from geographies.models import Village, Block, District, State, Country
 
 

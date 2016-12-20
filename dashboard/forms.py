@@ -3,7 +3,6 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 from django.conf import settings
-from django.core.cache import cache
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
