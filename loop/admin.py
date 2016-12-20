@@ -52,7 +52,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
-    list_display = ('name', 'role', 'phone_number', 'village', 'name_en')
+    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 
 # class LoopUserInline(admin.TabularInline):
@@ -85,7 +85,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
-                    'transportation_cost', 'farmer_share')
+                    'transportation_cost', 'farmer_share', 'comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name')
     date_hierarchy = 'date'
@@ -128,8 +128,8 @@ class GaddidarCommisionAdmin(admin.ModelAdmin):
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
-    fields = ('date','aggregator','mandi','gaddidar','amount')
-    list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
+    fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
+    list_display = ('id', 'date','__aggregator__', '__unicode__','amount', 'comment')
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
@@ -140,6 +140,9 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
 
 class IncentiveModelAdmin(admin.ModelAdmin):
     list_display = ['calculation_method']
+
+class AggregatorShareOutlierAdmin(admin.ModelAdmin):
+    list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
@@ -166,3 +169,4 @@ loop_admin.register(CropLanguage,CropLanguageAdmin)
 loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
 loop_admin.register(IncentiveModel,IncentiveModelAdmin)
 loop_admin.register(IncentiveParameter)
+loop_admin.register(AggregatorShareOutliers,AggregatorShareOutlierAdmin)
