@@ -12,7 +12,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
-from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorShareOutliers
+from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, AggregatorShareOutliers,IncentiveParameter, IncentiveModel
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -208,11 +208,55 @@ def total_static_data(request):
 
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
+    aggregator_incentive = aggregator_incentive_for_total_static_data()
+
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def aggregator_incentive_for_total_static_data():
+    aggregator_incentive_list = calculate_aggregator_incentive()
+    total_aggregator_incentive = 0
+    for entry in aggregator_incentive_list:
+        total_aggregator_incentive += entry['amount']
+    return total_aggregator_incentive
+
+def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_list):
+    parameters_dictionary = {'mandi__in': mandi_list}
+    parameters_dictionary_for_outliers = {
+        'mandi__in': mandi_list, 'aggregator__user__in': aggregator_list}
+    parameters_dictionary_for_ct = {'date__gte': start_date, 'date__lte': end_date,
+                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list}
+
+    arguments_for_ct = {}
+    arguments_for_aggregator_incentive = {}
+    arguments_for_aggregator_incentive_outliers = {}
+
+    for k, v in parameters_dictionary.items():
+        if v:
+            arguments_for_aggregator_incentive[k] = v
+
+    for k, v in parameters_dictionary_for_ct.items():
+        if v:
+            arguments_for_ct[k] = v
+
+    for k, v in parameters_dictionary_for_outliers.items():
+        if v:
+            arguments_for_aggregator_incentive_outliers[k] = v
+
+    ai_queryset = AggregatorIncentive.objects.filter(
+        **arguments_for_aggregator_incentive)
+    aso_queryset = AggregatorShareOutliers.objects.filter(
+        **arguments_for_aggregator_incentive_outliers)
+    combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
+        'date', 'user_created_id', 'gaddidar', 'mandi', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
+    result = []
+    for CT in combined_ct_queryset:
+
+        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
+                      'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum, 'quantity__sum': CT['quantity__sum']})
+    return result
 
 def gaddidar_contribution_for_totat_static_data():
     gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
