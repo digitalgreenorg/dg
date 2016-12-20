@@ -1,9 +1,38 @@
-DROP TABLE IF EXISTS `screening_myisam`;
-DROP TABLE IF EXISTS `video_myisam`;
-DROP TABLE IF EXISTS `person_meeting_attendance_myisam`;
-DROP TABLE IF EXISTS `person_adopt_practice_myisam`;
-DROP TABLE IF EXISTS `village_precalculation_copy`;
-DROP TABLE IF EXISTS `activities_screeningwisedata`;
-DROP TABLE IF EXISTS `people_animatorwisedata`;
-DROP TABLE IF EXISTS `village_partner_myisam`;
+/* Deleting data from past one year from all myisam tables*/
+DELETE
+FROM
+	`village_partner_myisam`;
 
+DELETE 
+FROM 
+	`screening_myisam` 
+WHERE date > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`video_myisam`
+WHERE `video_production_date` > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`person_meeting_attendance_myisam`
+WHERE `date` > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`person_adopt_practice_myisam`
+WHERE  `date_of_adoption` > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`activities_screeningwisedata`
+WHERE `screening_date`  > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`people_animatorwisedata`
+WHERE `time_created`  > DATE_ADD(Now(), Interval -1 year);
+
+DELETE
+FROM
+	`village_precalculation_copy`;

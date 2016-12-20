@@ -1,4 +1,3 @@
--- Normalized version of digitalgreen.SCREENING
 DROP TABLE IF EXISTS `screening_myisam`;
 CREATE TABLE `screening_myisam` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -25,7 +24,6 @@ CREATE INDEX screening_myisam_block_id ON screening_myisam(block_id, date);
 CREATE INDEX screening_myisam_district_id ON screening_myisam(district_id, date);
 CREATE INDEX screening_myisam_country_id ON screening_myisam(country_id, date);
 
-
 -- Normalized version of digitalgreen.VIDEO
 DROP TABLE IF EXISTS `video_myisam`;
 CREATE TABLE `video_myisam` (
@@ -51,7 +49,6 @@ CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_productio
 CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_date);
 CREATE INDEX video_myisam_district_id ON video_myisam(district_id, video_production_date);
 CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_production_date);
-
 
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
 DROP TABLE IF EXISTS `person_meeting_attendance_myisam`;
@@ -164,7 +161,7 @@ CREATE TABLE `activities_screeningwisedata` (
   `persongroup_id` INT(11),
   `video_youtubeid` VARCHAR(20),
   PRIMARY KEY (`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX activities_screeningwisedata_screening_id ON activities_screeningwisedata(screening_id);
 CREATE INDEX activities_screeningwisedata_village_id ON activities_screeningwisedata(village_id); 
@@ -191,7 +188,7 @@ CREATE TABLE `people_animatorwisedata` (
   `assignedvillage_id` BIGINT(20),
   `start_date` date, 
   PRIMARY KEY (`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
@@ -207,7 +204,7 @@ CREATE TABLE `village_partner_myisam` (
   `country_id` int(11) DEFAULT NULL,
   `partner_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX village_partner_myisam_geographies_partner ON village_partner_myisam(village_id,block_id,district_id,state_id,country_id,partner_id);
 CREATE INDEX village_partner_myisam_village_partner ON village_partner_myisam(village_id,partner_id);
@@ -215,3 +212,11 @@ CREATE INDEX village_partner_myisam_block_partner ON village_partner_myisam(bloc
 CREATE INDEX village_partner_myisam_district_partner ON village_partner_myisam(district_id,partner_id);
 CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(state_id,partner_id);
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
+
+INSERT INTO `screening_myisam` SELECT * FROM digitalgreen_clone.screening_myisam;
+INSERT INTO `person_meeting_attendance_myisam` SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
+INSERT INTO `person_adopt_practice_myisam` SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
+INSERT INTO `village_precalculation_copy` SELECT * FROM digitalgreen_clone.village_precalculation_copy;
+INSERT INTO `activities_screeningwisedata` SELECT * FROM digitalgreen_clone.activities_screeningwisedata;
+INSERT INTO `people_animatorwisedata` SELECT * FROM digitalgreen_clone.people_animatorwisedata;
+INSERT INTO `village_partner_myisam` SELECT * FROM digitalgreen_clone.village_partner_myisam;
