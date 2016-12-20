@@ -52,7 +52,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
-    list_display = ('name', 'role', 'phone_number', 'village', 'name_en')
+    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 
 # class LoopUserInline(admin.TabularInline):
@@ -128,8 +128,8 @@ class GaddidarCommisionAdmin(admin.ModelAdmin):
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
-    fields = ('date','aggregator','mandi','gaddidar','amount')
-    list_display = ('id', 'date','__aggregator__', '__unicode__','amount')
+    fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
+    list_display = ('id', 'date','__aggregator__', '__unicode__','amount', 'comment')
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')

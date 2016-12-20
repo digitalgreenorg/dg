@@ -151,6 +151,9 @@ class LoopUser(LoopModel):
     def get_mandis(self):
         return self.assigned_mandis.all()
 
+    def __user__(self):
+        return "%s" % self.user.id
+
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
