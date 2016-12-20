@@ -22,9 +22,9 @@ function filter_villages_from_selected_district() {
   //         SelectBox.move("id_villages_from","id_villages_to");
   //         SelectFilter.refresh_icons("id_villages");
   //     });
-    // var options = [];
-    // jQuery('#id_villages_from').html(options.join(''));
-    // SelectBox.move("id_villages_from","id_villages_to");
+  //   // var options = [];
+  //   // jQuery('#id_villages_from').html(options.join(''));
+  //   // SelectBox.move("id_villages_from","id_villages_to");
     SelectFilter.refresh_icons("id_villages");
 
     jQuery("#id_district").change(function() {

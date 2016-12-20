@@ -57,12 +57,6 @@ class DistrictNameChoiceField(forms.ModelChoiceField):
 
 
 class CocoUserForm(forms.ModelForm):
-    # village_list = cache.get('village_list')
-    #
-    # if village_list is None:
-    #     village_list = Village.objects.prefetch_related('block', 'block__district')
-    #     cache.set('village_list',village_list,3600)
-
     district = DistrictNameChoiceField(queryset = District.objects.prefetch_related('state'), required = False)
     villages = UserModelVillageMultipleChoiceField(
         widget = FilteredSelectMultiple(
@@ -85,9 +79,6 @@ class CocoUserForm(forms.ModelForm):
         fields = ['user', 'partner', 'district', 'villages', 'videos']
     class Media:
         js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
-    # def save(self, commit=True, *args, **kwargs):
-    #     # messages.info(request, "TEST PRINT")
-    #     print self
 
 class LanguageForm(CocoModelForm):
     class Meta:
