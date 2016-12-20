@@ -75,8 +75,17 @@ class NonNegotiablesInline(admin.TabularInline):
 
 
 class ParentCategoryAdmin(admin.ModelAdmin):
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     list_display = ['id', 'parent_category_name']
     search_fields = ['parent_category_name']
+
+    readonly_fields = list_display
 
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline,]

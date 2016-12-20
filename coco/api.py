@@ -512,8 +512,8 @@ class ScreeningResource(BaseResource):
             for pma in pma_list:
                 try:
                     person_obj = Person.objects.get(id=pma['person_id'])
-                    person_obj.age = int(pma.get('age'))
-                    person_obj.gender = pma.get('gender')
+                    person_obj.age = int(pma.get('age')) if pma.get('age') else None
+                    person_obj.gender = pma.get('gender') if pma.get('gender') else None
                     person_obj.save()
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
@@ -539,8 +539,8 @@ class ScreeningResource(BaseResource):
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
             person_obj = Person.objects.get(id=pma['person_id'])
-            person_obj.age = int(pma.get('age'))
-            person_obj.gender = pma.get('gender')
+            person_obj.age = int(pma.get('age')) if pma.get('age') else None
+            person_obj.gender = pma.get('gender') if pma.get('gender') else None
             person_obj.save()
             pma = PersonMeetingAttendance(screening_id=screening_id,
                                           person_id=pma['person_id'],
