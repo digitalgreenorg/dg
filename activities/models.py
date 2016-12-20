@@ -13,16 +13,6 @@ from videos.models import Video, ParentCategory
 from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY, ATTENDED_PERSON_CATEGORY
 
 
-# class DirectBeneficiaries(models.Model):
-#     """
-#     Describes the direct beneficiaries
-#     """
-#     member_title = models.CharField(max_length=80, null=True)
-
-#     def __unicode__(self):
-#         return self.member_title
-
-
 class VRPpayment(models.Manager):
 
     "Custom manager filters standard query set with given args."
@@ -97,6 +87,7 @@ class Screening(CocoModel):
     observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
+    health_provider_present = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
