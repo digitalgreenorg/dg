@@ -815,7 +815,8 @@ class CombinedTransactionResource(BaseResource):
     gaddidar = fields.ForeignKey(GaddidarResource, 'gaddidar')
 
     class Meta:
-        max_limit = None
+        limit = 0
+        max_limit = 0
         detail_allowed_methods = ["get", "post", "put", "delete"]
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
