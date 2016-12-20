@@ -28,7 +28,7 @@ if(list_argument) :
 	custom_db_name = list_argument[0]
 else :
 	#create DB name according to date:
-	prev_day =  db_name[2] + '_' + datetime.date(1900, int(d[1]), 1).strftime('%b')
+	prev_day =  db_name[2] + '_' + datetime.date(1900, int(db_name[1]), 1).strftime('%b')
 	custom_db_name = 'dg_' + prev_day
 
 # Mysql Connection
