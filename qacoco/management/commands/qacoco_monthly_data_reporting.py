@@ -16,10 +16,11 @@ class Command(BaseCommand):
             dict_writer.writerows(csv_data)
 
     def send_mail(self,attached_files):
-        subject = "QA COCO: Data received till %s"%(datetime.datetime.now().strftime("%Y-%m-%d"))
+        till_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        subject = "QA COCO: Data received till %s"%(till_date)
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['system@digitalgreen.org', 'swati@digitalgreen.org', 'kaushik@digitalgreen.org', 'aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
-        body = "Dear Team,\n\nThis is a automated email for monitor data entry of QA COCO data in database.\nPlease contact system@digitalgreen.org for any clarification.\n\nThank You"
+        body = "Dear Team,\n\nPlease find the attached QA COCO data entered till %s.\nPlease contact system@digitalgreen.org for any question or clarification.\n\nThank you."%(till_date)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         for files in attached_files:
             msg.attach_file(files, 'text/csv' )
