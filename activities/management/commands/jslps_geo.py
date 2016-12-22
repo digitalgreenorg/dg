@@ -3,12 +3,12 @@ import unicodecsv as csv
 from django.core.management.base import BaseCommand
 from geographies.models import *
 import xml.etree.ElementTree as ET
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/geo.xml", 'w')
@@ -35,10 +35,15 @@ class Command(BaseCommand):
 					dist = District(district_name = dn,
 									state = state)
 					dist.save()
+					jslps.new_count += 1
 					print dc, " District saved in old"
 				except Exception as e:
 					print dc, e
-					wtr.writerow(['district',dc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['district',dc, e])
 			try:
 				district = District.objects.filter(state_id = 2).get(district_name = dn)
 				district_added = JSLPS_District.objects.values_list('district_code',flat=True)
@@ -52,7 +57,9 @@ class Command(BaseCommand):
 					print dc, "District Saved in new"
 			except Exception as e:
 				print dc, e
-				wtr.writerow(['JSLPS district',dc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['JSLPS district',dc, e])
 
 			#Block
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
@@ -61,10 +68,15 @@ class Command(BaseCommand):
 					blck = Block(block_name = bn,
 								district = district)
 					blck.save()
+					jslps.new_count += 1
 					print bc, "block saved in old"
 				except Exception as e:
 					print bc, e
-					wtr.writerow(['block',bc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['block',bc, e])
 			
 			try:
 				block = Block.objects.get(block_name = bn)
@@ -79,7 +91,9 @@ class Command(BaseCommand):
 					print bc, "block saved in new"
 			except Exception as e:
 				print bc, e
-				wtr.writerow(['JSLPS block',bc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['JSLPS block',bc, e])
 
 			#village
 			village_set = dict(Village.objects.filter(block_id = block.id).values_list('id', 'village_name'))
@@ -88,10 +102,15 @@ class Command(BaseCommand):
 					vil = Village(village_name = vn,
 								block = block)
 					vil.save()
+					jslps.new_count += 1
 					print vc, "village saved in old"
 				except Exception as e:
 					print vc, e
-					wtr.writerow(['village',vc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['village',vc, e])
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
@@ -105,4 +124,7 @@ class Command(BaseCommand):
 					jv.save()
 					print vc, "village saved in new"
 			except Exception as e:
-				wtr.writerow(['JSLPS village',vc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['JSLPS village',vc, e])
+

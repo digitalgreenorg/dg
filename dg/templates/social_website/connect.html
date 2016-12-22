@@ -57,7 +57,7 @@
 
                     <div class="grid">
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
-                            <a href="{% url 'usaid' %}">
+                            <a href="https://www.usaid.gov/" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
                                     <img src="{{STATIC_URL}}social_website/content/partners/usaid.png" alt=""/>
                                 </div>
@@ -70,15 +70,17 @@
                             </div>
                         </div>
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
-                            <a href="https://www.gov.uk/government/organisations/department-for-international-development" target="_blank">
+                            <a href="{% url 'dlec' %}" target="_blank">
                                 <div class="grid-pad-lt-md img-connect layout-vr-sm">
-                                    <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt=""/>
+                                    <img src="{{STATIC_URL}}social_website/content/partners/usaid.png" alt="usaid"/>
                                 </div>
                             </a>
                             <div class="grid-pad-lt-md grid-pad-rt layout-vr-sm">
-                                <p><a class="hdg-source-semibold">Department for International Development (DFID) </a> supported us in reaching over 60,000 households in 400 villages in India, and 200 villages in Ethiopia and Ghana. 
+                                <p class="js-intro line-clamp partner-line-clamp"><a class="hdg-source-semibold">USAID’s Bureau for Food Security </a>has launched the five-year Developing Local Extension Capacity (DLEC) project, led by Digital Green in partnership with the International Food Policy Research Institute (IFPRI), CARE International, and multiple resource partners. DLEC operates under a five-year Leader with Associates (LWA) Cooperative Agreement.
                                 <br>
-                                Timeline: Oct 2012 – March 2015 </p>
+                                DLEC will partner with USAID missions in Feed the Future (FTF) and aligned countries to raise incomes and increase resilience of smallholder farmers and their families by scaling and enhancing locally-relevant, cost-effective, and pluralistic agricultural extension systems that bring together information technologies and community-based organizations. By helping country-led agricultural extension and advisory services (EAS) to become more pluralistic, DLEC will help them become more effective, accountable, scalable, and sustainable.</p>
+                                
+                                <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
                         <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
@@ -164,6 +166,21 @@
                                 <a href="#" class="js-show-more hdg-green">Show More</a>
                             </div>
                         </div>
+                        
+                        <div class="grid-col grid-size1of3 img-size-partner layout-vr-md">
+                            <a href="https://www.gov.uk/government/organisations/department-for-international-development" target="_blank">
+                                <div class="grid-pad-lt-md img-connect layout-vr-sm">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt=""/>
+                                </div>
+                            </a>
+                            <div class="grid-pad-lt-md grid-pad-rt layout-vr-sm">
+                                <p><a class="hdg-source-semibold">Department for International Development (DFID) </a> supported us in reaching over 60,000 households in 400 villages in India, and 200 villages in Ethiopia and Ghana. 
+                                <br>
+                                Timeline: Oct 2012 – March 2015 </p>
+                            </div>
+                        </div>
+
+                        
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
@@ -389,6 +406,22 @@
                                 </div>
                             </a>
                             <a href="{% url 'partner' 'Bihan' %}" class="hdg-source-semibold">Bihan</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="http://www.apagrisnet.gov.in/" target=_blank>
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/AGRL.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="http://www.ap.gov.in/" target="_blank" class="hdg-source-semibold">Dept. of Agriculture, AP</a>
+                        </div>
+                        <div class="grid-col grid-pad-rt-connect grid-size1of7 img-size-partner layout-vr-md">
+                            <a href="http://www.ap.gov.in/" target=_blank>
+                                <div class="img-connect">
+                                    <img src="{{STATIC_URL}}social_website/content/partners/GovtofAP.png" alt="" />
+                                </div>
+                            </a>
+                            <a href="http://www.apagrisnet.gov.in/" target="_blank" class="hdg-source-semibold">Govt. of Andhra Pradesh</a>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->

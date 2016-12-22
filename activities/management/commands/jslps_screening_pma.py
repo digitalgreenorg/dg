@@ -8,6 +8,7 @@ from people.models import *
 from programs.models import *
 from videos.models import *
 from activities.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -34,6 +35,7 @@ class Command(BaseCommand):
 				vdc = map(int, c.find('Video').text.split(','))
 			except Exception as e:
 				vdc = []
+				jslps.other_error_count += 1
 				wtr.writerow(['scr id',sc,'Can not save screening without video'])
 				continue
 			try:
@@ -52,46 +54,75 @@ class Command(BaseCommand):
 						videos.append(vid.video)
 					except JSLPS_Video.DoesNotExist as e:
 						print v, e
-						wtr.writerow(['scr id',sc,'video not exist',v, e])
+						if "Duplicate entry" not in str(e):
+							jslps.other_error_count += 1
+							wtr.writerow(['scr id',sc,'video not exist',v, e])
 				for g in gc:
 					try:
 						grp = JSLPS_Persongroup.objects.get(group_code = g)
 						groups.append(grp.group)
 					except JSLPS_Persongroup.DoesNotExist as e:
 						print g, e
-						wtr.writerow(['scr id',sc,'group not exist',g, e])
+						if "Duplicate entry" not in str(e):
+							jslps.other_error_count += 1
+							wtr.writerow(['scr id',sc,'group not exist',g, e])
 			except (JSLPS_Village.DoesNotExist, JSLPS_Animator.DoesNotExist) as e:
 				print e
-				wtr.writerow(['village',vc,'akm',ac,'scr id',sc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['village',vc,'akm',ac,'scr id',sc, e])
 				error = 1
 
 			if (error==0):				
 				try:
-					scr = Screening(date = sd,
+					scr_already_exist = Screening.objects.filter(date = sd,
 									start_time = st,
 									village = village.Village,
 									animator = animator.animator,
 									partner = partner)
-					scr.save()
-					print "Screening saved in old"
+					if len(scr_already_exist) == 0:
+						scr = Screening(date = sd,
+										start_time = st,
+										village = village.Village,
+										animator = animator.animator,
+										partner = partner)
+						scr.save()
+						jslps.new_count += 1
+						print "Screening saved in old"
 				except Exception as e:
 					print e
-					wtr.writerow(['Screening save',sc,e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Screening save',sc,e])
 				try:
 					screening = Screening.objects.filter(date = sd,start_time = st, village_id = village.Village.id,animator_id = animator.animator.id,partner_id = partner.id)
 					if len(screening) > 1:
 						screening = screening[0]
 					for i in groups:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
+						else:
+							jslps.duplicate_count += 1
 						screening.farmer_groups_targeted.add(i)
 						screening.save()
 						print "Groups saved in old"
 					for i in videos:
+						if not i.screening_set.filter(id=screening.id).exists():
+							jslps.new_count += 1
+						else:
+							jslps.duplicate_count += 1
 						screening.videoes_screened.add(i)
 						screening.save()
 						print "Videos saved in old"
 				except Exception as e:
 					print e
-					wtr.writerow(['Groups save',gc,'video save',vc])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Groups save',gc,'video save',vc])
 
 				try:
 					screening = Screening.objects.filter(date = sd,start_time = st,village_id = village.Village.id,animator_id = animator.animator.id,partner = partner.id)
@@ -107,7 +138,9 @@ class Command(BaseCommand):
 							print "Screening saved in new"
 						except Exception as e:
 							print sc, e
-							wtr.writerow(['JSLPS screening save',sc])
+							if "Duplicate entry" not in str(e):
+								jslps.other_error_count += 1
+								wtr.writerow(['JSLPS screening save',sc])
 				except Screening.DoesNotExist as e:
 					print e
 
@@ -134,15 +167,24 @@ class Command(BaseCommand):
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
 				#print e
-				wtrr.writerow(['pma Screening', sc, 'pma Person', pc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtrr.writerow(['pma Screening', sc, 'pma Person', pc, e])
 				error = 1
 
 			if (error == 0):
 				try:
-					pma = PersonMeetingAttendance(screening = screening.screening,
+					pma_already_exist = PersonMeetingAttendance.objects.filter(screening_id = screening.screening.id,person_id=person.person.id)
+					if len(pma_already_exist) == 0:
+						pma = PersonMeetingAttendance(screening = screening.screening,
 												person = person.person)
-					pma.save()
-					print "PMA saved in old"
+						pma.save()
+						jslps.new_count += 1
+						print "PMA saved in old"
 				except Exception as e:
-					wtrr.writerow(['pma Attendence save', sc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtrr.writerow(['pma Attendence save', sc, e])
 					print e

@@ -7,6 +7,7 @@ from geographies.models import *
 from people.models import *
 from programs.models import *
 from videos.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -30,18 +31,21 @@ class Command(BaseCommand):
 				cg = int(c.find('Category').text)
 			else:
 				cg = None
+				jslps.other_error_count += 1
 				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
 				continue
 			if c.find('SubCategory') is not None: 
 				scg = int(c.find('SubCategory').text)
 			else:
 				scg = None
+				jslps.other_error_count += 1
 				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
 				continue
 			if c.find('Practice') is not None: 
 				vp = int(c.find('Practice').text)
 			else:
 				vp = None
+				jslps.other_error_count += 1
 				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
 				continue
 			if c.find('YouTubeID') is not None: 
@@ -83,24 +87,29 @@ class Command(BaseCommand):
 					category = Category.objects.get(id = cg)
 				except Category.DoesNotExist as e:
 					category = None
+					jslps.other_error_count += 1
 					wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
 					continue
 				try:
 					subcategory = SubCategory.objects.get(id = scg)
 				except SubCategory.DoesNotExist as e:
 					subcategory = None
+					jslps.other_error_count += 1
 					wtr.writerow(['Can not save video without subcategory',vdc,'title', vn, e])
 					continue
 				try:
 					videopractice = VideoPractice.objects.get(id = vp)
 				except VideoPractice.DoesNotExist as e:
 					videopractice = None
+					jslps.other_error_count += 1
 					wtr.writerow(['Can not save video without practice',vdc,'title', vn, e])
 					continue
 
 			except (JSLPS_Village.DoesNotExist, Language.DoesNotExist) as e:
 				print e
-				wtr.writerow(['village',vc,'title', vn, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['village',vc,'title', vn, e])
 				error = 1
 
 			if(error == 0):
@@ -126,21 +135,32 @@ class Command(BaseCommand):
 									videopractice=videopractice
 									)
 						vid.save()
+						jslps.new_count += 1
 						print "video saved"
 					except Exception as e:
 						print vdc, e
-						wtr.writerow(['video save', vdc, e])
+						if "Duplicate entry" in str(e):
+							jslps.duplicate_count += 1
+						else:
+							jslps.other_error_count += 1
+							wtr.writerow(['video save', vdc, e])
 
 					
 					try:
 						vid = Video.objects.get(title = vn, village_id=village.Village.id, partner_id=partner.id)
 						vid.production_team.add(facililator.animator)
 						vid.save()
+						jslps.new_count += 1
 						vid.production_team.add(camera_operator.animator)
 						vid.save()
+						jslps.new_count += 1
 						print "farmer shown saved"
 					except Exception as e:
-						wtr.writerow(['production team save', e])
+						if "Duplicate entry" in str(e):
+							jslps.duplicate_count += 1
+						else:
+							jslps.other_error_count += 1
+							wtr.writerow(['production team save', e])
 
 					video_added = []
 					video = None
@@ -157,7 +177,9 @@ class Command(BaseCommand):
 							vj.save()
 					except Exception as e:
 						print vdc, e
-						wtr.writerow(['JSLPS Video save', vdc, e])
+						if "Duplicate entry" not in str(e):
+							jslps.other_error_count += 1
+							wtr.writerow(['JSLPS Video save', vdc, e])
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
@@ -186,10 +208,19 @@ class Command(BaseCommand):
 				error = 1
 			if error == 0:
 				try:
-					nn = NonNegotiable(video_id = video.video_id,
+					nonnego_already_exist = NonNegotiable.objects.filter(video_id = video.video_id,
 									non_negotiable = nn_n,
 									physically_verifiable = vr)
-					nn.save()
+					if len(nonnego_already_exist) == 0:
+						nn = NonNegotiable(video_id = video.video_id,
+									non_negotiable = nn_n,
+									physically_verifiable = vr)
+						nn.save()
+						jslps.new_count += 1
 				except Exception as e:
 					print e
-					wtr.writerow(['Non nego', nn_c,'video',vdc, e])
+					if "Duplicate entry" in str(e):
+						jslps.duplicate_count += 1
+					else:
+						jslps.other_error_count += 1
+						wtr.writerow(['Non nego', nn_c,'video',vdc, e])

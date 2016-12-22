@@ -307,7 +307,7 @@ class MediatorResource(ModelResource):
 
     def obj_create(self, bundle, **kwargs):
         attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
-                                          'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'])
+                                          'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no=bundle.data['phone_no'])
         if attempt.count() < 1:
             bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
             vil_list = bundle.data.get('assigned_villages')
@@ -325,7 +325,7 @@ class MediatorResource(ModelResource):
             bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
-                                              'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'])
+                                              'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no = bundle.data['phone_no'])
             raise MediatorNotSaved(
                 {"online_id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
@@ -375,6 +375,11 @@ class TrainingResource(ModelResource):
     trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
     participants = fields.ToManyField(
         'training.api.MediatorResource', 'participants')
+    district = fields.ForeignKey(
+        'training.api.DistrictResource', 'district', null=True)
+    partner = fields.ForeignKey(
+        'training.api.PartnerResource', 'partner', null=True)
+
 
     class Meta:
         resource_name = 'training'
@@ -389,10 +394,17 @@ class TrainingResource(ModelResource):
                               field_name='trainer', resource_name='trainer')
     hydrate_participants = partial(
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
+    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
+    
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
     dehydrate_assessment = partial(
         foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+    dehydrate_partner = partial(
+        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
+    dehydrate_district = partial(
+        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
 
     def dehydrate_trainer(self, bundle):
         return [{'id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
@@ -500,8 +512,11 @@ class ScoreResource(ModelResource):
         if attempt.count() < 1:
             bundle = super(ScoreResource, self).obj_create(bundle, **kwargs)
         else:
-            raise ScoreNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = self.obj_update(bundle, **kwargs)
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
