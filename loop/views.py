@@ -63,6 +63,7 @@ def download_data_workbook(request):
         # accessing basic variables
         workbook = data_dict.get('workbook')
         name_of_sheets = data_dict.get('name_of_sheets')
+        heading_of_sheets = data_dict.get('heading_of_sheets')
         heading_format = data_dict.get('heading_format')
         header_format = data_dict.get('header_format')
         row_format = data_dict.get('row_format')
@@ -70,7 +71,7 @@ def download_data_workbook(request):
         excel_output = data_dict.get('excel_output')
         combined_data = data_dict.get('combined_data')
         # now the sheet processes
-        workbook = excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data)
+        workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets,  heading_format, row_format, total_cell_format, header_format, combined_data)
         # final closing the working
         workbook.close()
         excel_output.seek(0)

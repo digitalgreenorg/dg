@@ -8,25 +8,63 @@ from loop.models import *
 import csv
 from loop.config import *
 from loop.sendmail import *
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 import xlsxwriter
+import time
+from datetime import datetime, timedelta
 
 
 class Command(BaseCommand):
 
     #parse arguments from command line
     def add_arguments(self, parser):
-        parser.add_argument('aggregator')
+        #create mutually exclusive command line switches
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument('-fd',
+            dest='from_date',
+            default=20150701)
+
+        group.add_argument('-nd',
+            dest='num_days',
+            default=0)
+
+        parser.add_argument('-a',
+            dest='aggregator',
+            default='all')
+
+        parser.add_argument('-td',
+            dest='to_date',
+            default=time.strftime('%Y%m%d'))
+
 
     
-    #generate the csv for the given command line arguments
-    #LIMT----this function will not handle the case when no command line args are given    
+    #generate the excel for the given command line arguments
     def handle(self, *args, **options):
         generate_sheet_for = str(options.get('aggregator'))
-        print generate_sheet_for
+        from_date = str(options.get('from_date'))
+        to_date = str(options.get('to_date'))
+        num_days = int(options.get('num_days'))
+
+        if num_days < 0: 
+            raise CommandError('-nd flag should be > 0')
+        elif num_days != 0:
+            temp_date = datetime.strptime(to_date, '%Y%m%d')
+            from_date = (temp_date - timedelta(days=num_days)).strftime('%Y%m%d')
+
+        print from_date
+
+
+
+        if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
+            or type(to_date) != str or len(to_date) != 8:
+                raise CommandError('Invalid format for arguments')
+        elif from_date > to_date:
+                raise CommandError('Invalid date range given')
+        elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST:
+                raise CommandError('Aggregator not present in database')            
+
         query = None
         generate_sheet_for_all_flag = True 
-        csv_file = None
         mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
                                            passwd=DATABASES['default']['PASSWORD'],
                                            db=DATABASES['default']['NAME'],
@@ -37,12 +75,12 @@ class Command(BaseCommand):
 
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
-            query = query_for_all_aggregator % (DG_MEMBER_PHONE_LIST, AGGREGATOR_PHONE_LIST)
+            query = query_for_all_aggregator % (from_date, to_date, DG_MEMBER_PHONE_LIST, AGGREGATOR_PHONE_LIST)
         else:
             generate_sheet_for_all_flag = False
-            query = query_for_single_aggregator % (generate_sheet_for, DG_MEMBER_PHONE_LIST, AGGREGATOR_PHONE_LIST)
+            query = query_for_single_aggregator % (generate_sheet_for, from_date, to_date, DG_MEMBER_PHONE_LIST, 
+                                                    AGGREGATOR_PHONE_LIST)
 
-        print query
         cur.execute(query)
                 
         result = cur.fetchall()
@@ -53,12 +91,12 @@ class Command(BaseCommand):
 
         if generate_sheet_for_all_flag is True:
             #Write data for all aggregators in sheet
-            ws = workbook.add_worksheet('All Aggregators')
+            ws = workbook.add_worksheet('All Data')
             ws = set_columns_width(ws_obj=ws)
             ws = write_headers_in_sheet(ws_obj=ws, format_str=header_format)
             ws = write_data_in_sheet(ws_obj=ws, sheet_data=data)
 
-            #write data for every aggregator in the sheet
+            #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
                 ws = workbook.add_worksheet(aggregator_name)
                 ws = set_columns_width(ws_obj=ws)
@@ -76,45 +114,9 @@ class Command(BaseCommand):
             ws = write_data_in_sheet(ws_obj=ws, sheet_data=data)
 
         workbook.close()
-        #send email to concerned people with csv file attached    
+        #send email to concerned people with excel file attached    
         common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                         RECIPIENTS, EXCEL_WORKBOOK_NAME, [],EMAIL_HOST_USER)
-
-
-
-
-
-
-
-
-
-
-        # #write data to csv
-        # with open(generate_sheet_for+'.csv', 'wb') as file:
-        #     headers = ['Aggregator', 'Village', 'Farmer_ID','Farmer','Mobile Number','Farmer Frequency','Mobile Number Frequency']
-        #     wrt = csv.writer(file, delimiter=",")
-        #     wrt.writerow(headers)
-        #     data = [row for row in result]
-        #     for item in range(len(data)):
-        #         data[item] = list(data[item])
-        #         sheet_row = []
-        #         for row in range(len(data[item])):
-        #             if type(data[item][row]) is long:
-        #                 data[item][row] = str(data[item][row])
-        #             sheet_row.append(data[item][row].encode('utf-8'))
-        #         wrt.writerow(sheet_row)    
-
-        #         #wrt.writerow(data[item])    
-        #     file.close()
-        #     csv_file = file
-
-       
-
-
-           
-
-
-
+                        RECIPIENTS, EXCEL_WORKBOOK_NAME, [],EMAIL_HOST_USER)
 
 
 

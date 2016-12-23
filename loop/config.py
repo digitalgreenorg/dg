@@ -118,7 +118,7 @@ query_for_all_aggregator = '''SELECT
                                 FROM
                                     loop_combinedtransaction lct
                                 WHERE
-                                    lct.date >= 20150701
+                                    lct.date BETWEEN %s AND %s 
                                 GROUP BY farmer_id) t2 ON t1.Farmer_ID = t2.f_id
                                     JOIN
                                 (SELECT 
@@ -163,7 +163,7 @@ query_for_single_aggregator = '''SELECT
                                     FROM
                                         loop_combinedtransaction lct
                                     WHERE
-                                        lct.date >= 20150701
+                                        lct.date BETWEEN %s AND %s
                                     GROUP BY farmer_id) t2 ON t1.Farmer_ID = t2.f_id
                                         JOIN
                                     (SELECT 
@@ -179,7 +179,7 @@ query_for_single_aggregator = '''SELECT
                                 ORDER BY Aggregator'''
 
 
-EXCEL_WORKBOOK_NAME = 'Farmer Data.xlsx'
+EXCEL_WORKBOOK_NAME = 'Farmer Mobile Number.xlsx'
 
 AGGREGATOR_LIST = ['Ranjeet Singh', 'Devender Singh', 'Ram Nath Singh' , 'Shyam Kumar', 'Gautam Prasad', 'Santosh Kumar'
                     ,'Vineet Mahto', 'Arun', 'Suryanarayan Singh' , 'Mrityunjay', 'Suraj Kumar', 'Vikas Prasad'

@@ -656,7 +656,27 @@ function set_filterlistener() {
                     data : transporter_data_set
                  }
             };
-            xhttp.send(JSON.stringify(data_json));
+
+            var data_json_temp = {
+                aggregator_data:{
+                    sheet_heading: aggregator_sheet_name,
+                    sheet_name : 'Aggregator',
+                    data : aggregator_data_set     
+                },
+
+                gaddidar_data: {
+                    sheet_heading : gaddidar_sheet_name,
+                    sheet_name : 'Commission Agent',
+                    data : gaddidar_data_set    
+                },
+
+                transporter_data:{
+                    sheet_heading : transporter_sheet_name,
+                    sheet_name : 'Transporter',
+                    data : transporter_data_set
+                 }
+            };
+            xhttp.send(JSON.stringify(data_json_temp));
         }
 
 });

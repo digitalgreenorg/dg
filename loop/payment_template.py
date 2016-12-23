@@ -70,7 +70,7 @@ def get_headers_from_template_dict(ws_obj, sheet_index, header_dict, bold):
                                         coloumn_width=col.get('coloumn_width'),
                                         format_str=bold)
                 cell_value = [CELL_ROW_VALUE, col_index]
-                if col.get('total') != False:
+                if col.get('total') is not None and col.get('total') != False:
                     total_value_in_column.append(int(col_index))
                 if col.get('formula') is not None:
                     column_formula_list.append({'formula': col.get('formula'),
@@ -133,7 +133,7 @@ def write_total_in_excel_sheet(ws_obj, start, end, formulacolumn_dict, format_st
     return
 
 def format_web_request(request):
-    formatted_post_data = prepare_value_data(request.body)
+    formatted_post_data = prepare_value_data_generic(request.body)
     return formatted_post_data
 
 
@@ -159,22 +159,23 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
                                                           'text_wrap': True})
     name_of_sheets = formatted_post_data.get('name_of_sheets')
     combined_data = formatted_post_data.get('combined_data')
+    heading_of_sheets = formatted_post_data.get('heading_of_sheets')
     data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data,
-                 'workbook': workbook, 'heading_format': heading_format,
+                 'heading_of_sheets': heading_of_sheets, 'workbook': workbook, 'heading_format': heading_format,
                  'header_format': header_format, 'row_format': row_format,
                  'total_cell_format': total_cell_format, 
                  'excel_output': excel_output}
     return data_dict
 
 
-def excel_processing(workbook, name_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data):
+def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data):
     # for developing exceptions
     try:
         for sheet_index, item in enumerate(name_of_sheets):
-            ws = workbook.add_worksheet(NAME_OF_SHEETS[sheet_index])
+            ws = workbook.add_worksheet(name_of_sheets[sheet_index])
             # setting the col width
             write_heading_in_sheet(ws_obj=ws,
-                                   heading_str=name_of_sheets[sheet_index],
+                                   heading_str=heading_of_sheets[sheet_index],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
             write_header_in_excel = ws.set_header(HEADER_STRING)
@@ -221,5 +222,43 @@ def prepare_value_data(data):
     combined_dict =  {'combined_data': combined_data,
                       'name_of_sheets': name_of_sheets}
     return combined_dict
+
+
+def prepare_value_data_generic(data):
+    data = json.loads(data)
+    combined_data = []
+    name_of_sheets = []
+    heading_of_sheets = []
+    for sheet_index, sheet in enumerate(data.keys()):
+        sheet_data = data.get(sheet).get('data')
+        combined_data.append(sheet_data)
+        if data.get(sheet).get('sheet_name') is None or data.get(sheet).get('sheet_name') == '' :
+            name_of_sheets.append('Sheet '+str(sheet_index + 1))
+        else:
+            name_of_sheets.append(data.get(sheet).get('sheet_name'))
+
+        if data.get(sheet).get('sheet_heading') is None:
+            heading_of_sheets.append('')
+        else:
+            heading_of_sheets.append(data.get(sheet).get('sheet_heading'))
+
+    combined_dict = {'combined_data': combined_data, 'name_of_sheets' : name_of_sheets,
+                        'heading_of_sheets': heading_of_sheets}
+
+    return combined_dict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

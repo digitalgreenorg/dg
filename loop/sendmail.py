@@ -34,18 +34,20 @@ def set_columns_width(ws_obj):
     ws_obj.set_column('E:E',15)
     ws_obj.set_column('F:F',15)
     ws_obj.set_column('G:G',15)
+    ws_obj.set_column('H:H',15)
     return ws_obj
 
 
 
 def write_headers_in_sheet(ws_obj, format_str):
-        ws_obj.write('A1', 'Aggregator', format_str)
-        ws_obj.write('B1', 'Village', format_str)
-        ws_obj.write('C1', 'Farmer_ID', format_str)
-        ws_obj.write('D1', 'Farmer', format_str)
-        ws_obj.write('E1', 'Mobile Number', format_str)
-        ws_obj.write('F1', 'Farmer Frequency', format_str)
-        ws_obj.write('G1', 'Mobile Number Frequency', format_str)
+        ws_obj.write('A1', 'Sno', format_str)
+        ws_obj.write('B1', 'Aggregator', format_str)
+        ws_obj.write('C1', 'Village', format_str)
+        ws_obj.write('D1', 'Farmer_ID', format_str)
+        ws_obj.write('E1', 'Farmer', format_str)
+        ws_obj.write('F1', 'Mobile Number', format_str)
+        ws_obj.write('G1', 'Farmer Frequency', format_str)
+        ws_obj.write('H1', 'Mobile Number Frequency', format_str)
         return ws_obj
 
     
@@ -53,6 +55,8 @@ def write_data_in_sheet(ws_obj, sheet_data):
         row = 1
         for item in sheet_data:
             col = 0
+            item = list(item)
+            item.insert(0, row)
             for sub_item in item:
                 ws_obj.write(row, col, sub_item)
                 col += 1
