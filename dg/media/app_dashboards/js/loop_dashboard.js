@@ -2986,13 +2986,16 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var editTable2 = 0;
     var rows_table2 = {};
     var rows_table2_farmer = {};
+    var editedAggregator = 0;
+    var editedFarmer = 0;
     function initializeAggregatorModal(){
         $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
         $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
         $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
         $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         $('#aggregator_share_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
-        $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+        $('#aggregator_comment_row').val($this.parent()[0].childNodes[9].innerHTML);
+        $('#aggregator_error_div').hide();
     }
     function initializeFarmerModal(){
         $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
@@ -3004,6 +3007,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         $('#farmer_share_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML).toFixed(2));
         $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+        $('#farmer_error_div').hide();
     }
     function inputValidation(field){
        return field.val().toString().match(/^[0-9]*[.]?[0-9]+$/);
@@ -3027,67 +3031,140 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     $('#aggregator_commission_row').on('change', function() {
         if (!inputValidation($('#aggregator_commission_row'))) {
             $('#aggregator_commission_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#aggregator_error_div').show();
+            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
         }
         else{
+            if($('#aggregator_commission_row').val().trim(' ') !='')
+                editedAggregator=1;
             $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#aggregator_commission_row').val()).toFixed(2));
         }
     });
     $('#aggregator_share_row').on('change', function() {
         if (! inputValidation($('#aggregator_share_row'))) {
             $('#aggregator_share_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#aggregator_error_div').show();
+            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
             }
         else{
+            if($('#aggregator_share_row').val().trim() !='')
+                editedAggregator=1;
             $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         }
+    });
+    $('#aggregator_comment_row').on('change',function(){
+        if($('#aggregator_comment_row').val().trim() !='')
+                editedAggregator=1;
     });
     $('#farmer_commission_row').on('change', function() {
         if (!inputValidation($('#farmer_commission_row'))) {
             $('#farmer_commission_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#farmer_error_div').show();
+            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
         }
         else{
+            if($('#farmer_commission_row').val().trim() !='')
+                editedFarmer=1;
             $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#farmer_commission_row').val()).toFixed(2));
         }
     });
     $('#farmer_share_row').on('change', function() {
         if (!inputValidation($('#farmer_share_row'))) {
             $('#farmer_share_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#farmer_error_div').show();
+            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
             }
         else{
+            if($('#farmer_share_row').val().trim() !='')
+                editedFarmer=1;
             $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         }
     });
+    $('#farmer_comment_row').on('change',function(){
+        if($('#farmer_comment_row').val().trim() !='')
+                editedFarmer=1;
+    });
+
     $('#aggregator_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#aggregator_comment_row').focus();
+            if (!inputValidation($('#aggregator_commission_row'))) {
+                $('#aggregator_commission_row').focus();
+                $('#aggregator_error_div').show();
+                document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#aggregator_comment_row').focus();
+            }
         }
     });
     $('#aggregator_share_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#aggregator_comment_row').focus();
+            if (!inputValidation($('#aggregator_share_row'))) {
+            $('#aggregator_share_row').focus();
+            $('#aggregator_error_div').show();
+            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#aggregator_comment_row').focus();
+            }
         }
     });
     $('#aggregator_comment_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#aggregator_submit_modal').trigger('click');
+            if (!inputValidation($('#aggregator_share_row'))) {
+            $('#aggregator_share_row').focus();
+            $('#aggregator_error_div').show();
+            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else if (!inputValidation($('#aggregator_commission_row'))) {
+                $('#aggregator_share_row').focus();
+                $('#aggregator_error_div').show();
+                document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#aggregator_submit_modal').trigger('click');
+            }
         }
     });
     $('#farmer_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#farmer_comment_row').focus();
+            if (!inputValidation($('#farmer_commission_row'))) {
+                $('#farmer_commission_row').focus();
+                $('#farmer_error_div').show();
+                document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#farmer_comment_row').focus();
+            }
         }
     });
     $('#farmer_share_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#farmer_comment_row').focus();
+            if (!inputValidation($('#farmer_share_row'))) {
+                $('#farmer_share_row').focus();
+                $('#farmer_error_div').show();
+                document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#farmer_comment_row').focus();
+            }
         }
     });
     $('#farmer_comment_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#farmer_submit_modal').trigger('click');
+            if (!inputValidation($('#farmer_share_row'))) {
+                $('#farmer_share_row').focus();
+                $('#farmer_error_div').show();
+                document.getElementById('farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else if (!inputValidation($('#farmer_commission_row'))) {
+            $('#farmer_commission_row').focus();
+            $('#farmer_error_div').show();
+            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#farmer_submit_modal').trigger('click');
+            }
         }
     });
     $('#farmer_reset_modal').on('click',function(){
@@ -3102,13 +3179,13 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
-            alert('Please fill Aggregator Commission Correctly');
+            alert('Please fill Farmer Commission Correctly');
         } else if (!inputValidation($('#farmer_share_row'))) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
-            alert('Please fill Aggregator Share Correctly');
-        } else {
+            alert('Please fill Farmer Share Correctly');
+        } else if(editedFarmer==1){
             $('#farmer_modal').closeModal();
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
@@ -3123,6 +3200,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2_farmer[row_id] = true;
+            editedFarmer =0;
+            $('#farmer_error_div').hide();
         }
     });
     $('#aggregator_reset_modal').on('click',function(){
@@ -3143,7 +3222,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#aggregagtor_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Aggregator Share Correctly');
-        } else {
+        } else if(editedAggregator==1){
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
             $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
@@ -3157,6 +3236,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2[row_id] = true;
+            editedAggregator =0;
+            $('#aggregator_error_div').hide();
         }
     });
     
@@ -3359,10 +3440,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
         $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[5].textContent).toFixed(2));
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
+        $('#gaddidar_error_div').hide();
     }
     var editTable3 = 0;
     var rows_table3 = {};
-
+    var editedGaddidar = 0;
     $('#table3').on('click', 'tbody td', function(e) {
         $this = $(this);
         if (editTable3 == 1 && ($this.context.cellIndex === 4 || $this.context.cellIndex === 5)) {
@@ -3380,9 +3462,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     $('#gaddidar_commission_row').on('change', function() {
         if (!inputValidation($('#gaddidar_commission_row'))) {
             $('#gaddidar_commission_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#gaddidar_error_div').show();
+            document.getElementById('gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
         }
         else{
+            if($('#gaddidar_commission_row').val().trim()!='')
+                editedGaddidar=1;
             $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
         }
     });
@@ -3390,27 +3475,61 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     $('#gaddidar_share_row').on('change', function() {
         if (!inputValidation($('#gaddidar_share_row'))) {
             $('#gaddidar_share_row').focus();
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#gaddidar_error_div').show();
+            document.getElementById('gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
         }
         else{
+            if($('#gaddidar_commission_row').val().trim()!='')
+                editedGaddidar=1;
             $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
         }
     });
+
+    $('#gaddidar_comment_row').on('change',function(){
+        if($('#gaddidar_comment_row').val().trim()!='')
+            editedGaddidar=1;
+    });
     $('#gaddidar_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#gaddidar_comment_row').focus();
+            if (!inputValidation($('#gaddidar_commission_row'))) {
+                $('#gaddidar_commission_row').focus();
+                $('#gaddidar_error_div').show();
+                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#gaddidar_comment_row').focus();
+            }
         }
     });
 
     $('#gaddidar_share_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#gaddidar_comment_row').focus();
+            if (!inputValidation($('#gaddidar_share_row'))) {
+                $('#gaddidar_share_row').focus();
+                $('#gaddidar_error_div').show();
+                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#gaddidar_comment_row').focus();
+            }
         }
     });
 
     $('#gaddidar_comment_row').keypress(function(event) {
         if (event.keyCode === 13) {
-            $('#gaddidar_submit_modal').trigger('click');
+            if (!inputValidation($('#gaddidar_commission_row'))) {
+                $('#gaddidar_commission_row').focus();
+                $('#gaddidar_error_div').show();
+                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else if (!inputValidation($('#gaddidar_share_row'))) {
+                $('#gaddidar_share_row').focus();
+                $('#gaddidar_error_div').show();
+                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            }
+            else{
+                $('#gaddidar_submit_modal').trigger('click');
+            }
         }
     });
 
@@ -3434,20 +3553,21 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Share Correctly');
-        } else {
+        } else if(editedGaddidar==1){
             $('#gaddidar_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
-                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+                $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             } else {
                 $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
                 $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table3[row_id] = true;
+            editedGaddidar =0;
         }
     });
     function processGaddidarData(rows_table3,finalData){

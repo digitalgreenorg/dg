@@ -583,19 +583,19 @@
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
-                  <label for="farmer_date_row">Date</label>
+                  <label for="farmer_date_row" class="active">Date</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_mandi_row" value="mandi" type="text" style="color:#000000" disabled>
-                  <label for="farmer_mandi_row">Mandi</label>
+                  <label for="farmer_mandi_row" class="active">Market</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_volume_row" value="quantity" type="text" style="color:#000000" disabled>
-                  <label for="farmer_volume_row">Volume</label>
+                  <label for="farmer_volume_row" class="active">Quantity[Q] (in Kg)</label>
                </div>
             </div>
          </div>
@@ -603,19 +603,19 @@
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_aggregator_payment_row" value="AP" type="text" style="color:#000000" disabled>
-                  <label for="farmer_aggregator_payment_row">Aggregator Payment</label>
+                  <label for="farmer_aggregator_payment_row" class="active">Aggregator Payment[AP] (in Rs)</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_transport_cost_row" value="cost" type="text" style="color:#000000" disabled>
-                  <label for="farmer_transport_cost_row">Transport Cost</label>
+                  <label for="farmer_transport_cost_row" class="active">Transport Cost[TC] (in Rs)</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" style="color:#000000" disabled>
-                  <label for="farmer_gaddidar_commission_row_farmer">Gaddidar Commission</label>
+                  <label for="farmer_gaddidar_commission_row_farmer" class="active">Commission Agent Contribution[CAC] (in Rs)</label>
                </div>
             </div>
          </div>
@@ -623,7 +623,7 @@
             <div class="col s5">
                <div class="input-field inline" >
                   <input id="farmer_commission_row" value="commission" type="text">
-                  <label id="farmer_commission_label" for="farmer_commission_row">Farmer Contribution Per Kg</label>
+                  <label id="farmer_commission_label" for="farmer_commission_row" class="active">Farmer Contribution Per Kg</label>
                </div>
             </div>
             <div class="col s2">
@@ -632,15 +632,18 @@
             <div class="col s5">
                <div class="input-field inline">
                   <input id="farmer_share_row" value="share" type="text" >
-                  <label id="farmer_share_label" for="farmer_share_row">Farmer Share</label>
+                  <label id="farmer_share_label" for="farmer_share_row" class="active">Farmers' Contribution[FC] (in Rs)</label>
                </div>
             </div>
+         </div>
+         <div class="row center" id="farmer_error_div" hide>
+               <p class="red-text" id="farmer_error_message"></p>
          </div>
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
                   <input id="farmer_comment_row"  type="text" maxlength="180">
-                  <label for="farmer_comment_row">Comment
+                  <label class="active" for="farmer_comment_row" >Comment
                   </label>
                </div>
             </div>
@@ -662,19 +665,19 @@
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="aggregator_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
-                  <label for="aggregator_date_row">Date</label>
+                  <label for="aggregator_date_row" class="active">Date</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="aggregator_mandi_row" value="mandi" type="text" style="color:#000000"  disabled>
-                  <label for="aggregator_mandi_row">Mandi</label>
+                  <label for="aggregator_mandi_row" class="active">Market</label>
                </div>
             </div>
             <div class="col s4">
                <div class="input-field inline" >
                   <input id="aggregator_volume_row" value="quantity" type="text" style="color:#000000" disabled>
-                  <label for="aggregator_volume_row">Volume</label>
+                  <label for="aggregator_volume_row" class="active">Quantity[Q] (in Kg)</label>
                </div>
             </div>
          </div>
@@ -682,7 +685,7 @@
             <div class="col s5">
                <div class="input-field inline" >
                   <input id="aggregator_commission_row" value="commission" type="text">
-                  <label id="aggregagtor_commission_label" for="aggregator_commission_row">Aggregagtor Commission</label>
+                  <label class="active" for="aggregator_commission_row">Aggregagtor Commission</label>
                </div>
             </div>
             <div class="col s2">
@@ -691,15 +694,19 @@
             <div class="col s5">
                <div class="input-field inline">
                   <input id="aggregator_share_row" value="share" type="text" >
-                  <label id="aggregator_share_label" for="aggregator_share_row">Aggregator Share</label>
+                  <label for="aggregator_share_row" class="active">Aggregator Payment[AP] (in Rs)</label>
                </div>
             </div>
+            
+         </div>
+         <div class="row center" id="aggregator_error_div" hide>
+               <p class="red-text" id="aggregator_error_message"></p>
          </div>
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
                   <input id="aggregator_comment_row"  type="text" maxlength="180">
-                  <label for="aggregator_comment_row">Comment
+                  <label class="active" for="aggregator_comment_row">Comment
                   </label>
                </div>
             </div>
@@ -721,13 +728,13 @@
             <div class="col s6">
                <div class="input-field inline" >
                   <input id="gaddidar_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
-                  <label for="gaddidar_date_row">Date</label>
+                  <label for="gaddidar_date_row" class="active">Date</label>
                </div>
             </div>
             <div class="col s6">
                <div class="input-field inline" >
                   <input id="gaddidar_mandi_row" value="mandi" type="text" style="color:#000000"  disabled>
-                  <label for="gaddidar_mandi_row">Mandi</label>
+                  <label for="gaddidar_mandi_row" class="active">Market</label>
                </div>
             </div>
          </div>
@@ -735,13 +742,13 @@
             <div class="col s6">
                <div class="input-field inline" >
                   <input id="gaddidar_row" value="gaddidar" type="text" style="color:#000000"  disabled>
-                  <label for="gaddidar_row">Gaddidar</label>
+                  <label for="gaddidar_row" class="active">Commission Agent</label>
                </div>
             </div>
             <div class="col s6">
                <div class="input-field inline" >
                   <input id="gaddidar_quantity_row" value="quantity" type="text" style="color:#000000" disabled>
-                  <label for="gaddidar_quantity_row">Quantity</label>
+                  <label for="gaddidar_quantity_row" class="active">Quantity[Q] (in Kg)</label>
                </div>
             </div>            
          </div>
@@ -749,7 +756,7 @@
             <div class="col s5">
                <div class="input-field inline" >
                   <input id="gaddidar_commission_row" value="commission" type="text">
-                  <label id="gaddidar_commission_label" for="gaddidar_commission_row">Gaddidar Commission</label>
+                  <label id="gaddidar_commission_label" for="gaddidar_commission_row" class="active">Commission Agent Discount[CAD] (in Rs/Kg)</label>
                </div>
             </div>
             <div class="col s2">
@@ -758,15 +765,18 @@
             <div class="col s5">
                <div class="input-field inline">
                   <input id="gaddidar_share_row" value="share" type="text" >
-                  <label id="gaddidar_share_label" for="share_row">Share</label>
+                  <label id="gaddidar_share_label" for="share_row" class="active" >Commission Agent Contribution[CAC] (in Rs) (Q*CAD)</label>
                </div>
             </div>
+         </div>
+         <div class="row center" id="gaddidar_error_div" hide>
+               <p class="red-text" id="gaddidar_error_message"></p>
          </div>
          <div class="row">
             <div class="col s12">
                <div class="input-field inline" >
                   <input id="gaddidar_comment_row"  type="text" maxlength="180">
-                  <label for="gaddidar_comment_row">Comment
+                  <label class="active" for="gaddidar_comment_row" >Comment
                   </label>
                </div>
             </div>
