@@ -1,3 +1,4 @@
+import json, ast
 from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,7 +10,7 @@ from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
 
-from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
+from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance, DirectBeneficiaries
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
@@ -385,6 +386,16 @@ class DistrictResource(ModelResource):
         authorization = VillageAuthorization('block__village__id__in')
         max_limit = None
 
+
+class DirectBeneficiariesResource(BaseResource):
+
+    class Meta:
+        queryset = DirectBeneficiaries.objects.all()
+        resource_name = 'directbeneficiaries'
+        authentication = SessionAuthentication()
+        always_return_data = True
+
+
 class VideoResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     production_team = fields.ToManyField('coco.api.MediatorResource', 'production_team')
@@ -477,8 +488,9 @@ class ScreeningResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
-    farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
+    farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening', null=True)
     farmers_attendance = fields.ListField()
+    directbeneficiaries = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
@@ -515,10 +527,14 @@ class ScreeningResource(BaseResource):
                     person_obj.age = int(pma.get('age')) if pma.get('age') else None
                     person_obj.gender = pma.get('gender') if pma.get('gender') else None
                     person_obj.save()
+                    if pma.get('direct_beneficiaries'):
+                        direct_beneficiaries_category = json.dumps(pma.get('direct_beneficiaries'))
+                    else:
+                        direct_beneficiaries_category = None
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
                                                          user_created_id = user_id,
-                                                         category=pma['category'])
+                                                         direct_beneficiaries_category=direct_beneficiaries_category)
                     attendance.save()
                 except Exception, e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
@@ -542,13 +558,16 @@ class ScreeningResource(BaseResource):
             person_obj.age = int(pma.get('age')) if pma.get('age') else None
             person_obj.gender = pma.get('gender') if pma.get('gender') else None
             person_obj.save()
+            if pma.get('direct_beneficiaries'):
+                direct_beneficiaries_category = json.dumps(pma.get('direct_beneficiaries'))
+            else:
+                direct_beneficiaries_category = None
             pma = PersonMeetingAttendance(screening_id=screening_id,
                                           person_id=pma['person_id'],
                                           user_created_id = user_id,
-                                          category=pma['category'])
+                                          direct_beneficiaries_category=direct_beneficiaries_category)
 
             pma.save() 
-
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
@@ -557,19 +576,48 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
+    def dehydrate_directbeneficiaries(self, bundle):
+        data_list= []
+        db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
+        int_db_list = [int(item) for item in db_list]
+        for pma in bundle.obj.personmeetingattendance_set.all():
+            if pma.direct_beneficiaries_category is not None:
+                int_pma_db_list = [int(item) for item in ast.literal_eval(pma.direct_beneficiaries_category)]
+                for iterable in int_pma_db_list:
+                    data_list.append({'id': iterable, 
+                         'directbeneficiaries': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
+                         'person_id': pma.person.id,
+                         'person_name': pma.person.person_name
+                         })
+        return data_list
+
+                    
     def dehydrate_farmers_attendance(self, bundle):
-        return [{'person_id':pma.person.id, 
-                 'person_name': pma.person.person_name, 
-                 'pma_direct_beneficiariescategory': pma.category
-                 }  
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+        data_list = []
+        db_list = []
+        for pma in bundle.obj.personmeetingattendance_set.all():
+            print "nikhil-verma", pma.direct_beneficiaries_category
+            if pma.direct_beneficiaries_category:
+                pma_db_list = filter(None, ast.literal_eval(pma.direct_beneficiaries_category))
+                if len(pma_db_list):
+                    out_put = [int(iterable) for iterable in pma_db_list]
+                    for item in out_put:
+                        db_list.append({'id': item,
+                                        'directbeneficiaries': DirectBeneficiaries.objects.get(id=item).direct_beneficiaries_category,
+                                        'person_id': pma.person.id,
+                                        'person_name': pma.person.person_name
+                                        })
+            else:
+                data_list.append({'person_id': pma.person.id, 'person_name': pma.person.person_name})
+        return data_list
     
+
 class PersonResource(BaseResource):
     label = fields.CharField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
-    pma_direct_beneficiariescategory = fields.CharField(null=True)
+    directbeneficiaries = fields.ListField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     
     class Meta:
@@ -598,12 +646,18 @@ class PersonResource(BaseResource):
         videos_seen = [{'id': video.id, 'title': video.title, } for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
 
-    def dehydrate_pma_direct_beneficiariescategory(self, bundle):
-        try:
-            pma_cat = bundle.obj.personmeetingattendance_set.latest('id').category
-        except:
-            pma_cat = None
-        return pma_cat
+    # def dehydrate_directbeneficiaries(self, bundle):
+    #     data_list = []
+    #     if bundle.obj.personmeetingattendance_set.count() > 0:
+    #         import pdb;pdb.set_trace()
+    #         for item in bundle.obj.personmeetingattendance_set.all():
+    #             if item.direct_beneficiaries_category and item.direct_beneficiaries_category != 'null':
+    #                 db = ast.literal_eval(item.direct_beneficiaries_category)
+    #                 for iterable in db:
+    #                     data_list.append({'id': iterable,
+    #                                       'directbeneficiaries': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category})
+    #     return data_list
+
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
 class PersonAdoptVideoResource(BaseResource):

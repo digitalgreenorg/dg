@@ -663,7 +663,7 @@
                                 <%= gender %>
                             </th>
                             <th id="id_category" class="notbold">
-                                <%= category %>
+                                <%= direct_beneficiaries %>
                             </th>
                         </tr>
                     </thead>
@@ -729,28 +729,17 @@
             </div>
         </td>
         <td>
-            <div class="form-group">
-                <div class="controls">
-                    <%
-                        var category_label = "";
-                        if(typeof(online_id)!="undefined"){
-                            if (pma_direct_beneficiariescategory != null){
-                                category_label = pma_direct_beneficiariescategory;
-                            }
-                        }
-                    %>
-                    <select required name="category<%=index%>" id="category_row7" class="chosen-select form-control">
-                        <option value='' selected='selected'>-----------</option>
-
-
-                        <option value='0' <% if (category_label == "0") { %> selected='selected' <% }else{} %>>Pregnant Woman</option>
-                        <option value='1' <% if (category_label == "1") { %> selected='selected' <% } %>>Mother of a child up to 6 months</option>
-                        <option value='2' <% if (category_label == "2") { %> selected='selected' <% } %>>Mother of a child 6 months to 2 years</option>
-                        <option value='3' <% if (category_label == "3") { %> selected='selected' <% } %>>Mother of a child  2 to 5 years')</option>
-                        <option value='4' <% if (category_label == "4") { %> selected='selected' <% } %>>Adolescent girl (10-19 years)</option>
-                        <option value='5' <% if (category_label == "5") { %> selected='selected' <% } %>>Woman of reproductive age (15-49 years)</option>
-                    </select>
-                </div>
+            
+            <div class="col-sm-4" style="width:250px;"> 
+                <select multiple="multiple" name="direct_beneficiaries" id = "id_direct_beneficiaries" class="chosen-select form-control" style="display: none;">
+                
+                <option value="1">Pregnant Woman</option> 
+                <option value="2">Mother of a child up to 6 months</option> 
+                <option value="3">Mother of a child 6 months to 2 years</option> 
+                <option value="4">Mother of a child 2 to 5 years</option> 
+                <option value="5">Adolescent girl (10-19 years)</option> 
+                <option value="6">Woman of reproductive age (15-49 years)</option>
+                </select> 
             </div>
         </td>
     </tr>

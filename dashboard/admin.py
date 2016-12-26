@@ -56,6 +56,11 @@ class ScreeningForm(forms.ModelForm):
         model = Screening
         exclude = ()
 
+
+class DirectBeneficiariesAdmin(admin.ModelAdmin):
+    list_display = ['direct_beneficiaries_category']
+
+
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
     list_display = ('id', 'date', 'screening_location', 'observation_status', 'screening_grade', 'observer')

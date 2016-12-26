@@ -13,6 +13,16 @@ from videos.models import Video, ParentCategory
 from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY, ATTENDED_PERSON_CATEGORY
 
 
+class DirectBeneficiaries(models.Model):
+    """
+    Describes the direct beneficiaries
+    """
+    direct_beneficiaries_category = models.CharField(max_length=80, null=True)
+
+    def __unicode__(self):
+        return self.direct_beneficiaries_category
+
+
 class VRPpayment(models.Manager):
 
     "Custom manager filters standard query set with given args."
@@ -107,7 +117,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
-    category = models.CharField(max_length=1, choices=ATTENDED_PERSON_CATEGORY, null=True)
+    direct_beneficiaries_category = models.CharField(max_length=80, null=True, blank=True)
     
     def __unicode__(self):
         return  u'%s' % (self.id)
