@@ -304,12 +304,12 @@ hr {
 }
 
 .modal {
-  width: 40% !important;
+  width: 80% !important;
+  overflow-y: hidden;
 }
 
 .modal-close {
     position: absolute;
     cursor: pointer;
     top: 10px;
-    
 }

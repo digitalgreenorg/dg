@@ -3032,7 +3032,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#aggregator_commission_row'))) {
             $('#aggregator_commission_row').focus();
             $('#aggregator_error_div').show();
-            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
             if($('#aggregator_commission_row').val().trim(' ') !='')
@@ -3044,7 +3044,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (! inputValidation($('#aggregator_share_row'))) {
             $('#aggregator_share_row').focus();
             $('#aggregator_error_div').show();
-            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
         else{
             if($('#aggregator_share_row').val().trim() !='')
@@ -3060,7 +3060,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#farmer_commission_row'))) {
             $('#farmer_commission_row').focus();
             $('#farmer_error_div').show();
-            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
             if($('#farmer_commission_row').val().trim() !='')
@@ -3072,7 +3072,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#farmer_share_row'))) {
             $('#farmer_share_row').focus();
             $('#farmer_error_div').show();
-            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
         else{
             if($('#farmer_share_row').val().trim() !='')
@@ -3090,7 +3090,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#aggregator_commission_row'))) {
                 $('#aggregator_commission_row').focus();
                 $('#aggregator_error_div').show();
-                document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#aggregator_comment_row').focus();
@@ -3102,7 +3102,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#aggregator_share_row'))) {
             $('#aggregator_share_row').focus();
             $('#aggregator_error_div').show();
-            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#aggregator_comment_row').focus();
@@ -3114,12 +3114,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#aggregator_share_row'))) {
             $('#aggregator_share_row').focus();
             $('#aggregator_error_div').show();
-            document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else if (!inputValidation($('#aggregator_commission_row'))) {
                 $('#aggregator_share_row').focus();
                 $('#aggregator_error_div').show();
-                document.getElementById('#aggregator_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#aggregator_submit_modal').trigger('click');
@@ -3131,7 +3131,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#farmer_commission_row'))) {
                 $('#farmer_commission_row').focus();
                 $('#farmer_error_div').show();
-                document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#farmer_comment_row').focus();
@@ -3143,7 +3143,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#farmer_share_row'))) {
                 $('#farmer_share_row').focus();
                 $('#farmer_error_div').show();
-                document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#farmer_comment_row').focus();
@@ -3155,12 +3155,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#farmer_share_row'))) {
                 $('#farmer_share_row').focus();
                 $('#farmer_error_div').show();
-                document.getElementById('farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else if (!inputValidation($('#farmer_commission_row'))) {
             $('#farmer_commission_row').focus();
             $('#farmer_error_div').show();
-            document.getElementById('#farmer_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#farmer_submit_modal').trigger('click');
@@ -3175,7 +3175,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
         delete rows_table2_farmer[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
-        $this.removeAttr('style');
+        $this.css('background-color', '#E5FED6');
+        $("#farmer_modal").closeModal();
     });
     $('#farmer_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#farmer_commission_row'))) {
@@ -3189,7 +3190,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             alert('Please fill Farmer Share Correctly');
         } else if(editedFarmer==1){
-            $('#farmer_modal').closeModal();
+            
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
@@ -3204,15 +3205,21 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2_farmer[row_id] = true;
             editedFarmer =0;
+            
             $('#farmer_error_div').hide();
         }
+        $("#farmer_modal").closeModal();
     });
+    $('#aggregator_close').on('click',function(){
+        $('#aggregator_modal').closeModal();
+    })
     $('#aggregator_reset_modal').on('click',function(){
         $this.parent()[0].childNodes[4].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
         $this.parent()[0].childNodes[9].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,11).data();
         delete rows_table2[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
-        $this.removeAttr('style');
+        $this.css('background-color', '#E5FED6');
+        $('#aggregator_modal').closeModal();
     });
     $('#aggregator_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#aggregator_commission_row'))) {
@@ -3242,6 +3249,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             editedAggregator =0;
             $('#aggregator_error_div').hide();
         }
+        $('#aggregator_modal').closeModal();
     });
     
     var formatVal = function(yourNumber) {
@@ -3466,7 +3474,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
             $('#gaddidar_commission_row').focus();
             $('#gaddidar_error_div').show();
-            document.getElementById('gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
             if($('#gaddidar_commission_row').val().trim()!='')
@@ -3479,7 +3487,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#gaddidar_share_row'))) {
             $('#gaddidar_share_row').focus();
             $('#gaddidar_error_div').show();
-            document.getElementById('gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+            $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
             if($('#gaddidar_commission_row').val().trim()!='')
@@ -3497,7 +3505,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#gaddidar_commission_row'))) {
                 $('#gaddidar_commission_row').focus();
                 $('#gaddidar_error_div').show();
-                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#gaddidar_comment_row').focus();
@@ -3510,7 +3518,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#gaddidar_share_row'))) {
                 $('#gaddidar_share_row').focus();
                 $('#gaddidar_error_div').show();
-                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#gaddidar_comment_row').focus();
@@ -3523,19 +3531,21 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (!inputValidation($('#gaddidar_commission_row'))) {
                 $('#gaddidar_commission_row').focus();
                 $('#gaddidar_error_div').show();
-                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else if (!inputValidation($('#gaddidar_share_row'))) {
                 $('#gaddidar_share_row').focus();
                 $('#gaddidar_error_div').show();
-                document.getElementById('#gaddidar_error_message').innerHTML = "* Value you have entered is invalid.";
+                $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
             else{
                 $('#gaddidar_submit_modal').trigger('click');
             }
         }
     });
-
+    $('#gaddidar_close').on('click',function(){
+        $('#gaddidar_modal').closeModal();
+    })
     $('#gaddidar_reset_modal').on('click',function(){
 
         $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
@@ -3543,7 +3553,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,9).data();
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
-        $this.removeAttr('style');
+        $this.css('background-color', '#E5FED6');
+        $('#gaddidar_modal').closeModal();
     });
     $('#gaddidar_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
@@ -3572,6 +3583,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             rows_table3[row_id] = true;
             editedGaddidar =0;
         }
+        $('#gaddidar_mdoal').closeModal();
     });
     function processGaddidarData(rows_table3,finalData){
         for (var keys in rows_table3) {
