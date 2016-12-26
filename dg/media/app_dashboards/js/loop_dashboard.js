@@ -3035,7 +3035,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
-            if($('#aggregator_commission_row').val().trim(' ') !='')
+            if($('#aggregator_commission_row').val().trim() !='' && $('#aggregator_share_row').val().trim()!=$this.parent()[0].childNodes[4].innerHTML)
                 editedAggregator=1;
             $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#aggregator_commission_row').val()).toFixed(2));
         }
@@ -3047,14 +3047,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#aggregator_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
         else{
-            if($('#aggregator_share_row').val().trim() !='')
+            if($('#aggregator_share_row').val().trim() !='' && $('#aggregator_share_row').val().trim()!=$this.parent()[0].childNodes[4].innerHTML)
                 editedAggregator=1;
             $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         }
     });
     $('#aggregator_comment_row').on('change',function(){
-        if($('#aggregator_comment_row').val().trim() !='')
-                editedAggregator=1;
+        if($('#aggregator_comment_row').val().trim() !=''&& editedAggregator==0)
+                editedAggregator=2;
     });
     $('#farmer_commission_row').on('change', function() {
         if (!inputValidation($('#farmer_commission_row'))) {
@@ -3063,7 +3063,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
-            if($('#farmer_commission_row').val().trim() !='')
+            if($('#farmer_commission_row').val().trim() !=''&& $('#farmer_share_row').val().trim()!=$this.parent()[0].childNodes[6].innerHTML)
                 editedFarmer=1;
             $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0] * $('#farmer_commission_row').val()).toFixed(2));
         }
@@ -3075,14 +3075,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_error_message')[0].innerHTML = "* Value you have entered is invalid.";
             }
         else{
-            if($('#farmer_share_row').val().trim() !='')
+            if($('#farmer_share_row').val().trim() !='' && $('#farmer_share_row').val().trim()!=$this.parent()[0].childNodes[6].innerHTML)
                 editedFarmer=1;
             $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML).split('Kg')[0]).toFixed(2));
         }
     });
     $('#farmer_comment_row').on('change',function(){
-        if($('#farmer_comment_row').val().trim() !='')
-                editedFarmer=1;
+        if($('#farmer_comment_row').val().trim() !='' && editedFarmer==0)
+                editedFarmer=2;
     });
 
     $('#aggregator_commission_row').keypress(function(event) {
@@ -3174,9 +3174,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,6).data();
         $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
         delete rows_table2_farmer[$this.context.parentNode.rowIndex];
-        $this.parent().removeAttr('style');
         $this.css('background-color', '#E5FED6');
-        $("#farmer_modal").closeModal();
+        $this.parent()[0].childNodes[10].style.backgroundColor= '';
+        $this.parent()[0].childNodes[10].style.fontWeight ='';
+        $this.parent()[0].childNodes[10].style.color = '';
     });
     $('#farmer_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#farmer_commission_row'))) {
@@ -3189,18 +3190,31 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             alert('Please fill Farmer Share Correctly');
-        } else if(editedFarmer==1){
+        } else if(editedFarmer!=0){
             
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
             if ((parseFloat($this.parent()[0].childNodes[4].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML)) < parseFloat($this.parent()[0].childNodes[6].innerHTML)) {
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+              //  $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+              if(editedFarmer==1)
                 $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+              else{
+                $this.parent()[0].childNodes[10].style.backgroundColor= '#E5FEB5';
+                $this.parent()[0].childNodes[10].style.fontWeight ='bold';
+                $this.parent()[0].childNodes[10].style.color = '#009';
+
+              }
             } else
             {
+                if(editedFarmer==1)
                 $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                else{
+                    $this.parent()[0].childNodes[10].style.backgroundColor= '#E5FEB5';
+                    $this.parent()[0].childNodes[10].style.fontWeight ='bold';
+                    $this.parent()[0].childNodes[10].style.color = '#009';
+                }
+               // $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2_farmer[row_id] = true;
@@ -3219,7 +3233,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         delete rows_table2[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
         $this.css('background-color', '#E5FED6');
-        $('#aggregator_modal').closeModal();
+        $this.parent()[0].childNodes[9].style.backgroundColor= '';
+        $this.parent()[0].childNodes[9].style.fontWeight ='';
+        $this.parent()[0].childNodes[9].style.color = '';
     });
     $('#aggregator_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#aggregator_commission_row'))) {
@@ -3232,17 +3248,29 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#aggregagtor_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Aggregator Share Correctly');
-        } else if(editedAggregator==1){
+        } else if(editedAggregator!=0){
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
             $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML / $this.parent()[0].childNodes[3].innerHTML.split('Kg')[0]) > 0.5) {
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
-                $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                if(editedAggregator==1)
+                    $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+                else{
+                    $this.parent()[0].childNodes[9].style.backgroundColor= '#E5FEB5';
+                    $this.parent()[0].childNodes[9].style.fontWeight ='bold';
+                    $this.parent()[0].childNodes[9].style.color = '#009';
+                }
             } else {
-                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                if(editedAggregator==1)
+                    $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                else{
+                    $this.parent()[0].childNodes[9].style.backgroundColor= '#E5FEB5';
+                    $this.parent()[0].childNodes[9].style.fontWeight ='bold';
+                    $this.parent()[0].childNodes[9].style.color = '#009';
+                }
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2[row_id] = true;
@@ -3477,7 +3505,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
-            if($('#gaddidar_commission_row').val().trim()!='')
+            if($('#gaddidar_commission_row').val().trim()!='' && $('#gaddidar_commission_row').val().trim() != $this.parent()[0].childNodes[3].innerHTML)
                 editedGaddidar=1;
             $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
         }
@@ -3490,15 +3518,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#gaddidar_error_message')[0].innerHTML = "* Value you have entered is invalid.";
         }
         else{
-            if($('#gaddidar_commission_row').val().trim()!='')
+            if($('#gaddidar_commission_row').val().trim()!='' && $('#gaddidar_commission_row').val().trim() != $this.parent()[0].childNodes[4].innerHTML)
                 editedGaddidar=1;
             $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
         }
     });
 
     $('#gaddidar_comment_row').on('change',function(){
-        if($('#gaddidar_comment_row').val().trim()!='')
-            editedGaddidar=1;
+        if($('#gaddidar_comment_row').val().trim()!='' && editedGaddidar==0)
+            editedGaddidar=2;
     });
     $('#gaddidar_commission_row').keypress(function(event) {
         if (event.keyCode === 13) {
@@ -3554,7 +3582,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
         $this.css('background-color', '#E5FED6');
-        $('#gaddidar_modal').closeModal();
     });
     $('#gaddidar_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
@@ -3567,17 +3594,29 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
             alert('Please fill Share Correctly');
-        } else if(editedGaddidar==1){
+        } else if(editedGaddidar!=0){
             $('#gaddidar_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
-                $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                if(editedGaddidar==1)
+                    $this.css('background-color', '#F8C6B8').css('font-weight', 'bold').css('color', '#009');
+                else{
+                    $this.parent()[0].childNodes[6].style.backgroundColor= '#E5FEB5';
+                    $this.parent()[0].childNodes[6].style.fontWeight ='bold';
+                    $this.parent()[0].childNodes[6].style.color = '#009';
+                }
+                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             } else {
-                $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
-                $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                if(editedGaddidar==1)
+                    $this.css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                else{
+                    $this.parent()[0].childNodes[6].style.backgroundColor= '#E5FEB5';
+                    $this.parent()[0].childNodes[6].style.fontWeight ='bold';
+                    $this.parent()[0].childNodes[6].style.color = '#009';
+                }
+                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table3[row_id] = true;
@@ -3585,7 +3624,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }
         $('#gaddidar_mdoal').closeModal();
     });
-    function processGaddidarData(rows_table3,finalData){
+    function processGaddidarRow(rows_table3,finalData){
         for (var keys in rows_table3) {
             var row_data = {}
             var mandi_idDict = {}
