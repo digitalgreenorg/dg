@@ -1,6 +1,7 @@
 # Script to download and import database from S3
 import django
 import os, sys, glob, gzip, datetime, MySQLdb
+from datetime import date
 
 sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
@@ -28,7 +29,7 @@ if(list_argument) :
 	custom_db_name = list_argument[0]
 else :
 	#create DB name according to date:
-	prev_day =  db_name[2] + '_' + datetime.date(1900, int(d[1]), 1).strftime('%b')
+	prev_day =  db_name[2] + '_' + date(1900, int(db_name[1]), 1).strftime('%b')
 	custom_db_name = 'dg_' + prev_day
 
 # Mysql Connection
