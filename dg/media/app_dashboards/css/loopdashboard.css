@@ -307,3 +307,9 @@ hr {
   width: 40% !important;
 }
 
+.modal-close {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    
+}

@@ -3167,6 +3167,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     });
+    $('#farmer_close').on('click',function(){
+        $('#farmer_modal').closeModal();
+    });
     $('#farmer_reset_modal').on('click',function(){
         $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,6).data();
         $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
@@ -3342,8 +3345,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "fnClick": function(nButton, oConfig) {
                     $('#ToolTables_table2_1').removeClass('disable-button');
                     editTable2 = 1;
-                    $('#table2').find('tr th:nth-child(5)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
-                    $('#table2').find('tr th:nth-child(7)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
+                    $('#table2').find('tr td:nth-child(5)').css('background-color', '#E5FED6');
+                    $('#table2').find('tr td:nth-child(7)').css('background-color', '#E5FED6');
                 }
             }, {
                 "sExtends": "ajax",
@@ -3632,8 +3635,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
                         $('#ToolTables_table3_1').removeClass('disable-button');
                         editTable3 = 1;
-                        $('#table3').find('tr th:nth-child(5)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
-                        $('#table3').find('tr th:nth-child(6)').css('background-color', '#E5FED6').css('border-bottom','3px solid #B3FF85');
+                        $('#table3').find('tr td:nth-child(5)').css('background-color', '#E5FED6');
+                        $('#table3').find('tr td:nth-child(6)').css('background-color', '#E5FED6');
                         
                     }
                 }, {
@@ -3643,7 +3646,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "sAjaxUrl": "http://localhost:4001/loop/api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function(nButton, oConfig) {
                         var finalData = [];
-                        $('#table3').find('th').removeAttr("style");
+                        $('#table3').find('td').removeAttr("style");
                         editTable3 = 0;
                         $('#ToolTables_table3_1').addClass('disable-button');
                         finalData = processGaddidarRow(rows_table3,finalData);

@@ -576,49 +576,58 @@
 </div>
 <!-- Modal Structure Aggregator Edit -->
 <div id="farmer_modal" class="modal">
-   <div class="modal-content">
-      <h5>Change Farmers' Contribution</h5>
+   <div class="modal-content" >
+      <div class="row s12" style="background-color:#0E131C; padding:2px;margin-bottom:3px;margin-left:-22px;margin-right:-22px;margin-top:-22px;">
+      <div class="col s10">
+      <h5 style="color:#FFFFFF">Change Farmers' Contribution</h5>
+      </div>
+      <a href="#" id = "farmer_close"><img style="height:25px;width:25px;margin-top:16px;margin-left:40px;" src="/media/app_dashboards/images/cancel.png"></a>
+      </div>
       <form >
+         <div style="color:#3E4551">
          <div class="row ">
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_date_row" value="00-00-00" type="text" style="color:#000000" disabled>
-                  <label for="farmer_date_row" class="active">Date</label>
+               Date
+               <div >
+                  <input id="farmer_date_row" value="00-00-00" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_mandi_row" value="mandi" type="text" style="color:#000000" disabled>
-                  <label for="farmer_mandi_row" class="active">Market</label>
+               Market
+               <div>
+                  <input id="farmer_mandi_row" value="mandi" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_volume_row" value="quantity" type="text" style="color:#000000" disabled>
-                  <label for="farmer_volume_row" class="active">Quantity[Q] (in Kg)</label>
+               Quantity[Q] (in Kg)
+               <div>
+                  <input id="farmer_volume_row" value="quantity" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
          </div>
          <div class="row ">
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_aggregator_payment_row" value="AP" type="text" style="color:#000000" disabled>
-                  <label for="farmer_aggregator_payment_row" class="active">Aggregator Payment[AP] (in Rs)</label>
+            Aggregator Payment[AP] (in Rs)
+               <div>
+                  <input id="farmer_aggregator_payment_row" value="AP" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_transport_cost_row" value="cost" type="text" style="color:#000000" disabled>
-                  <label for="farmer_transport_cost_row" class="active">Transport Cost[TC] (in Rs)</label>
+            Transport Cost[TC] (in Rs)
+               <div>
+                  <input id="farmer_transport_cost_row" value="cost" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
             <div class="col s4">
-               <div class="input-field inline" >
-                  <input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" style="color:#000000" disabled>
-                  <label for="farmer_gaddidar_commission_row_farmer" class="active">Commission Agent Contribution[CAC] (in Rs)</label>
+            Commission Agent Contribution[CAC] (in Rs)
+               <div>
+                  <input id="farmer_gaddidar_commission_row_farmer" value="GC" type="text" style="border-bottom:none;" disabled>
                </div>
             </div>
+
          </div>
+         </div>
+         <hr>
          <div class="row">
             <div class="col s5">
                <div class="input-field inline" >
@@ -651,9 +660,8 @@
       </form>
    </div>
    <div class="modal-footer">
-      <a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
-      <a id="farmer_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-      <a id="farmer_reset_modal" class="left modal-action modal-close waves-effect waves-green btn-flat " >Reset</a>
+      <a id="farmer_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="background-color:#4EE8A6;margin:2px;">Submit</a>
+      <a id="farmer_reset_modal" class="modal-action modal-close waves-effect waves-green btn-flat " style="background-color:#DEDEDE;margin:2px;">Reset</a>
    </div>
 </div>
 <!-- Modal Structure Aggregator Edit -->
