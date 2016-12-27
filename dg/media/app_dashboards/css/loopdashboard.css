@@ -315,7 +315,7 @@ hr {
 }
 
 table.dataTable tr.odd td.sorting_1 {
-    background-color: #FFFFFF;
+    background-color: #f9f9f9;
 }
 table.dataTable tr.even td.sorting_1 {
     background-color: #FFFFFF;

@@ -2982,6 +2982,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
+
     var $this;
     var editTable2 = 0;
     var rows_table2 = {};
