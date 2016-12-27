@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 import json
 import os
 import sys
@@ -12,6 +12,7 @@ from django.core.management.base import BaseCommand, CommandError
 import xlsxwriter
 import time
 from datetime import datetime, timedelta
+import requests, copy, calendar
 
 
 class Command(BaseCommand):
@@ -44,6 +45,10 @@ class Command(BaseCommand):
         from_date = str(options.get('from_date'))
         to_date = str(options.get('to_date'))
         num_days = int(options.get('num_days'))
+        header_json = {}
+        data_json = {}
+        final_json_to_send = {}
+        excel_workbook_name = None
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
@@ -51,10 +56,12 @@ class Command(BaseCommand):
             temp_date = datetime.strptime(to_date, '%Y%m%d')
             from_date = (temp_date - timedelta(days=num_days)).strftime('%Y%m%d')
 
-        print from_date
+        #get time period in days and month
+        from_day = str(datetime.strptime(from_date, '%Y%m%d').day)
+        to_day = str(datetime.strptime(to_date, '%Y%m%d').day)
 
-
-
+        from_month = calendar.month_abbr[datetime.strptime(from_date, '%Y%m%d').month]
+        to_month = calendar.month_abbr[datetime.strptime(to_date, '%Y%m%d').month]
         if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
             or type(to_date) != str or len(to_date) != 8:
                 raise CommandError('Invalid format for arguments')
@@ -72,51 +79,74 @@ class Command(BaseCommand):
                                              use_unicode = True)
         
         cur = mysql_cn.cursor()
-
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_all_aggregator % (from_date, to_date, DG_MEMBER_PHONE_LIST, AGGREGATOR_PHONE_LIST)
+            excel_workbook_name = 'Incorrect Mobile Numbers_' + from_day + '-' + from_month + ' to ' + \
+                                    to_day + '-' + to_month
         else:
             generate_sheet_for_all_flag = False
             query = query_for_single_aggregator % (generate_sheet_for, from_date, to_date, DG_MEMBER_PHONE_LIST, 
                                                     AGGREGATOR_PHONE_LIST)
+            excel_workbook_name = 'Incorrect Mobile Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
+                                    from_month + ' to ' + to_day + '-' + to_month
 
         cur.execute(query)
-                
         result = cur.fetchall()
-        data = [row for row in result]
-
+        data = [list(row) for row in result]
+        #create list copy for filtering
+        temp_data = copy.deepcopy(data)
         workbook = xlsxwriter.Workbook(EXCEL_WORKBOOK_NAME)
         header_format = workbook.add_format({'bold':1, 'font_size': 10,'text_wrap': True})
-
         if generate_sheet_for_all_flag is True:
             #Write data for all aggregators in sheet
-            ws = workbook.add_worksheet('All Data')
-            ws = set_columns_width(ws_obj=ws)
-            ws = write_headers_in_sheet(ws_obj=ws, format_str=header_format)
-            ws = write_data_in_sheet(ws_obj=ws, sheet_data=data)
-
+            for sno in range(1,len(data) + 1):
+                data[sno - 1].insert(0, str(sno))
+            sheet_heading = 'Incorrect Mobile Numbers List_'+ from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+            data_json['all'] = {'sheet_heading': sheet_heading,
+                                    'sheet_name': 'All Data', 'data': data
+                                }
+                    
+            header_json['all'] = header_dict_for_loop_email_mobile_numbers
             #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
-                ws = workbook.add_worksheet(aggregator_name)
-                ws = set_columns_width(ws_obj=ws)
-                ws = write_headers_in_sheet(ws_obj=ws, format_str=header_format)
-
                 #filter data to get rows for the current aggregator
-                filtered_data = [row for row in data if row[0] == aggregator_name]
-                ws = write_data_in_sheet(ws_obj=ws, sheet_data=filtered_data)
-
+                filtered_data = [row for row in temp_data if row[0] == aggregator_name]
+                filtered_data_copy = copy.deepcopy(filtered_data)
+                for sno in range(1,len(filtered_data_copy) + 1):
+                    filtered_data_copy[sno - 1].insert(0, str(sno))
+                sheet_heading = aggregator_name + '_Incorrect Mobile Numbers List_' + \
+                from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+                data_json[aggregator_name] = {'sheet_heading': sheet_heading,
+                                    'sheet_name': aggregator_name, 'data': filtered_data_copy
+                                }
+                header_json[aggregator_name] = header_dict_for_loop_email_mobile_numbers
         else:
             #write data for a given aggregator from command line
-            ws = workbook.add_worksheet(generate_sheet_for)
-            ws = set_columns_width(ws_obj=ws)
-            ws = write_headers_in_sheet(ws_obj=ws, format_str=header_format)
-            ws = write_data_in_sheet(ws_obj=ws, sheet_data=data)
+            for sno in range(1,len(data) + 1):
+                data[sno - 1].insert(0, str(sno)) 
+            sheet_heading = generate_sheet_for +'_Incorrect Mobile Numbers List_' + \
+                                from_day + '-' + from_month + ' to ' + to_day + '-' + to_month 
+            data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
+                                    'sheet_name': generate_sheet_for, 'data': data
+                                }
+            
+            header_json[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
 
+        final_json_to_send['header'] = header_json
+        final_json_to_send['data'] = data_json
+        final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10,
+                                                    'text_wrap': True}
+
+        #post request to library for excel generation
+        r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+        excel_file = open(excel_workbook_name + '.xlsx', 'w')
+        excel_file.write(r.content)
+        excel_file.close()
         workbook.close()
         #send email to concerned people with excel file attached    
         common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                        RECIPIENTS, EXCEL_WORKBOOK_NAME, [],EMAIL_HOST_USER)
+                         RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
 
 
 

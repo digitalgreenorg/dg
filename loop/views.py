@@ -55,6 +55,7 @@ def dashboard(request):
 
 @csrf_exempt
 def download_data_workbook(request):
+    print request
     if request.method == 'POST':
         # this will prepare the data
         formatted_post_data = format_web_request(request)
@@ -70,8 +71,12 @@ def download_data_workbook(request):
         total_cell_format = data_dict.get('total_cell_format')
         excel_output = data_dict.get('excel_output')
         combined_data = data_dict.get('combined_data')
+        combined_header = data_dict.get('combined_header')
+        sheet_header = data_dict.get('sheet_header')
+        sheet_footer = data_dict.get('sheet_footer')
         # now the sheet processes
-        workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets,  heading_format, row_format, total_cell_format, header_format, combined_data)
+        workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format, 
+                row_format, total_cell_format, header_format, combined_data, combined_header, sheet_header, sheet_footer)
         # final closing the working
         workbook.close()
         excel_output.seek(0)

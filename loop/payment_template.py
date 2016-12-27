@@ -1,4 +1,5 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
+
 import json
 import xlsxwriter
 from django.http import JsonResponse
@@ -42,11 +43,11 @@ def merge_column_in_excel(ws_obj, first_cell, second_cell, heading, format_str):
     return ws_obj
 
 
-def write_headers_for_sheet(ws_obj, row_index, col_index, label, coloumn_width, format_str):
+def write_headers_for_sheet(ws_obj, row_index, col_index, label, column_width, format_str):
     """
     Writes headers in the Excel sheets
     """
-    col_width = coloumn_width if coloumn_width else DEFAULT_COLUMN_WIDTH
+    col_width = column_width if column_width else DEFAULT_COLUMN_WIDTH
     ws_obj.set_column(col_index, col_index, col_width)
     ws_obj.write(row_index, col_index, label, format_str)
     return
@@ -67,7 +68,7 @@ def get_headers_from_template_dict(ws_obj, sheet_index, header_dict, bold):
                                         row_index=CELL_ROW_VALUE,
                                         col_index=col_index,
                                         label=col.get('label'),
-                                        coloumn_width=col.get('coloumn_width'),
+                                        column_width=col.get('column_width'),
                                         format_str=bold)
                 cell_value = [CELL_ROW_VALUE, col_index]
                 if col.get('total') is not None and col.get('total') != False:
@@ -148,9 +149,7 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
                                            format_str={'bold':1, 'font_size': 10,
                                                        'text_wrap': True})
     row_format = set_format_for_heading(workbook=workbook,
-                                        format_str={'bold':0, 'font_size': 10,
-                                                    'num_format':'#,##0.00',
-                                                    'text_wrap': True})
+                                        format_str=formatted_post_data.get('cell_format'))
     total_cell_format = set_format_for_heading(workbook=workbook,
                                               format_str={'bold':1, 
                                                           'font_size': 10,
@@ -160,15 +159,19 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
     name_of_sheets = formatted_post_data.get('name_of_sheets')
     combined_data = formatted_post_data.get('combined_data')
     heading_of_sheets = formatted_post_data.get('heading_of_sheets')
-    data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data,
+    combined_header = formatted_post_data.get('combined_header')
+    sheet_header = formatted_post_data.get('sheet_header')
+    sheet_footer = formatted_post_data.get('sheet_footer')
+    data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data, 'combined_header': combined_header, 
                  'heading_of_sheets': heading_of_sheets, 'workbook': workbook, 'heading_format': heading_format,
                  'header_format': header_format, 'row_format': row_format,
-                 'total_cell_format': total_cell_format, 
+                 'total_cell_format': total_cell_format, 'sheet_header': sheet_header, 'sheet_footer': sheet_footer,
                  'excel_output': excel_output}
     return data_dict
 
 
-def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data):
+def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format, row_format, total_cell_format, header_format, combined_data,
+                        combined_header, sheet_header, sheet_footer):
     # for developing exceptions
     try:
         for sheet_index, item in enumerate(name_of_sheets):
@@ -178,10 +181,10 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                                    heading_str=heading_of_sheets[sheet_index],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
-            write_header_in_excel = ws.set_header(HEADER_STRING)
+            write_header_in_excel = ws.set_header('&C'+sheet_header if sheet_header is not None else '')
             cell_value_from_headers = \
-                get_headers_from_template_dict(ws, sheet_index, header_dict, header_format)
-            write_footer_in_excel = ws.set_footer(FOOTER_STRING)
+                get_headers_from_template_dict(ws, sheet_index, combined_header, header_format)
+            write_footer_in_excel = ws.set_footer('&C'+sheet_footer if sheet_footer is not None else '')
             # finally writing in process
             write_values = \
                 write_values_to_sheet(ws, combined_data[sheet_index], cell_value_from_headers.get('cell_value'), row_format)
@@ -227,23 +230,34 @@ def prepare_value_data(data):
 def prepare_value_data_generic(data):
     data = json.loads(data)
     combined_data = []
+    combined_header = {}
     name_of_sheets = []
     heading_of_sheets = []
-    for sheet_index, sheet in enumerate(data.keys()):
-        sheet_data = data.get(sheet).get('data')
+
+    combined_header = data.get('header')
+
+    data_dict = data.get('data')
+    cell_format = data.get('cell_format')
+    sheet_header = data.get('sheet_header')
+    sheet_footer = data.get('sheet_footer')
+    print data_dict
+
+    for sheet_index, sheet in enumerate(data_dict.keys()):
+        sheet_data = data_dict.get(sheet).get('data')
         combined_data.append(sheet_data)
-        if data.get(sheet).get('sheet_name') is None or data.get(sheet).get('sheet_name') == '' :
+        if data_dict.get(sheet).get('sheet_name') is None or data_dict.get(sheet).get('sheet_name') == '' :
             name_of_sheets.append('Sheet '+str(sheet_index + 1))
         else:
-            name_of_sheets.append(data.get(sheet).get('sheet_name'))
+            name_of_sheets.append(data_dict.get(sheet).get('sheet_name'))
 
-        if data.get(sheet).get('sheet_heading') is None:
+        if data_dict.get(sheet).get('sheet_heading') is None:
             heading_of_sheets.append('')
         else:
-            heading_of_sheets.append(data.get(sheet).get('sheet_heading'))
+            heading_of_sheets.append(data_dict.get(sheet).get('sheet_heading'))
 
-    combined_dict = {'combined_data': combined_data, 'name_of_sheets' : name_of_sheets,
-                        'heading_of_sheets': heading_of_sheets}
+    combined_dict = {'combined_data': combined_data, 'combined_header': combined_header, 'name_of_sheets' : name_of_sheets,
+                        'heading_of_sheets': heading_of_sheets, 'cell_format': cell_format,
+                        'sheet_header': sheet_header, 'sheet_footer': sheet_footer}
 
     return combined_dict
 

@@ -640,24 +640,24 @@ function set_filterlistener() {
             xhttp.open("POST", "/loop/get_payment_sheet/", true);
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
+            // var data_json = {
+            //     aggregator_data:{
+            //         name: aggregator_sheet_name,
+            //         data : aggregator_data_set     
+            //     },
+
+            //     gaddidar_data: {
+            //         name : gaddidar_sheet_name,
+            //         data : gaddidar_data_set    
+            //     },
+
+            //     transporter_data:{
+            //         name : transporter_sheet_name,
+            //         data : transporter_data_set
+            //      }
+            // };
+
             var data_json = {
-                aggregator_data:{
-                    name: aggregator_sheet_name,
-                    data : aggregator_data_set     
-                },
-
-                gaddidar_data: {
-                    name : gaddidar_sheet_name,
-                    data : gaddidar_data_set    
-                },
-
-                transporter_data:{
-                    name : transporter_sheet_name,
-                    data : transporter_data_set
-                 }
-            };
-
-            var data_json_temp = {
                 aggregator_data:{
                     sheet_heading: aggregator_sheet_name,
                     sheet_name : 'Aggregator',
@@ -676,7 +676,23 @@ function set_filterlistener() {
                     data : transporter_data_set
                  }
             };
-            xhttp.send(JSON.stringify(data_json_temp));
+
+            var header_json = header_dict;
+
+            var cell_format = {
+                bold:0, font_size: 10, num_format:'#,##0.00',text_wrap: true
+            }
+
+            var json_to_send = {
+                header: header_json,
+                data : data_json,
+                cell_format : cell_format,
+                sheet_header : 'Loop India Bihar',
+                sheet_footer : 'This is an automated generated sheet'
+
+            }
+
+            xhttp.send(JSON.stringify(json_to_send));
         }
 
 });
@@ -3074,7 +3090,101 @@ function aggregator_payment_sheet(data_json, aggregator) {
     aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
     gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
     transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
+    create_data_for_excel_download();
 
+}
+
+
+
+function create_data_for_excel_download()
+{
+    header_dict = {'aggregator':[{'coloumn_width': 3,
+                                          'formula': null,
+                                          'label': 'S No',
+                                          'total': false},
+                                         {'coloumn_width': 9,
+                                          'formula': null,
+                                          'label': 'Date',
+                                          'total': false},
+                                         {'coloumn_width': 10,
+                                         'formula': null,
+                                         'label': 'Market',
+                                         'total': false},
+                                         {'coloumn_width': 8,
+                                          'formula': null,
+                                          'label': 'Quantity [Q] (in Kg)',
+                                          'total': true},
+                                         {'coloumn_width': 12,
+                                          'formula': '0.25 * D',
+                                          'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
+                                          'total': true},
+                                         {'coloumn_width': 8,
+                                          'formula': null,
+                                          'label': 'Transport Cost [TC] (in Rs)',
+                                          'total': true},
+                                         {'coloumn_width': 10,
+                                          'formula': null,
+                                          'label': "Farmers' Contribution [FC] (in Rs)",
+                                          'total': true},
+                                         {'coloumn_width': 10,
+                                          'formula': null,
+                                          'label': 'Commission Agent Contribution [CAC] (in Rs)',
+                                          'total': true},
+                                         {'coloumn_width': 10.7,
+                                          'formula': 'E + F - G - H',
+                                          'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
+                                          'total': true}],
+              'gaddidar': [{'coloumn_width': 9.4,
+                                          'formula': null,
+                                          'label': 'Date',
+                                          'total': false},
+                                         {'coloumn_width': 18.3,
+                                          'formula': null,
+                                          'label': 'Commission Agent',
+                                          'total': false},
+                                         {'coloumn_width': 11,
+                                          'formula': null,
+                                          'label': 'Market',
+                                          'total': false},
+                                         {'coloumn_width': 10,
+                                          'formula': null,
+                                          'label': 'Quantity [Q] (in Kg)',
+                                          'total': true},
+                                         {'coloumn_width': 13,
+                                          'formula': null,
+                                          'label': 'Commission Agent Discount [CAD] (in Rs/Kg)',
+                                          'total': false},
+                                         {'coloumn_width': 16,
+                                          'formula': 'D * E',
+                                          'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
+                                          'total': true}],
+              'transporter': [{'coloumn_width': 9.4,
+                                          'formula': null,
+                                          'label': 'Date',
+                                          'total': false},
+                                         {'coloumn_width': 11,
+                                          'formula': null,
+                                          'label': 'Market',
+                                          'total': false},
+                                         {'coloumn_width': 18.3,
+                                          'formula': null,
+                                          'label': 'Transporter',
+                                          'total': false},
+                                         {'coloumn_width': 11,
+                                          'formula': null,
+                                          'label': 'Vehicle Type',
+                                          'total': false},
+                                         {'coloumn_width': 13,
+                                          'formula': null,
+                                          'label': 'Vehicle Number',
+                                          'total': false},
+                                         {'coloumn_width': 13,
+                                          'formula': null,
+                                          'label': 'Tranport Cost (in Rs)',
+                                          'total': true}]
+            };
+
+        console.log(JSON.stringify(header_dict));
 }
 
 function getFormattedDate(aggregator_id) {

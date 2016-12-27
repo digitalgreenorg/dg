@@ -14,7 +14,7 @@ def common_send_email(subject, recipients, file, bcc=[], from_email=None):
         from_email = EMAIL_HOST_USER
 
     #get templates from file system
-    attach_file_name = os.getcwd() + '/'+ file
+    attach_file_name = os.getcwd() + '/'+ file.name
     text_content = 'This is an important message.'
 
     #render the raw data in the template
