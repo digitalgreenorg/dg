@@ -81,13 +81,12 @@ class Command(BaseCommand):
         cur = mysql_cn.cursor()
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
-            query = query_for_all_aggregator % (from_date, to_date, DG_MEMBER_PHONE_LIST, AGGREGATOR_PHONE_LIST)
+            query = query_for_all_aggregator % (from_date, to_date)
             excel_workbook_name = 'Incorrect Mobile Numbers_' + from_day + '-' + from_month + ' to ' + \
                                     to_day + '-' + to_month
         else:
             generate_sheet_for_all_flag = False
-            query = query_for_single_aggregator % (generate_sheet_for, from_date, to_date, DG_MEMBER_PHONE_LIST, 
-                                                    AGGREGATOR_PHONE_LIST)
+            query = query_for_single_aggregator % (generate_sheet_for, from_date, to_date)
             excel_workbook_name = 'Incorrect Mobile Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
                                     from_month + ' to ' + to_day + '-' + to_month
 

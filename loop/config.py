@@ -116,49 +116,53 @@ header_dict_for_loop_email_mobile_numbers = [{'column_width': 15,
                                           }]
 
 
-
 query_for_all_aggregator = '''SELECT 
-                                Aggregator,
-                                Village,
-                                Farmer_ID,
-                                Farmer,
-                                Mobile_Number,
-                                t2.Farmer_Frequency,
-                                t3.Mobile_Frequency
+                              Aggregator,
+                              Village,
+                              Farmer_ID,
+                              Farmer,
+                              Mobile_Number,
+                              t1.Farmer_Frequency,
+                              t3.Mobile_Frequency
+                          FROM
+                              (SELECT 
+                              farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
                             FROM
-                                (SELECT 
-                                    ll.name_en Aggregator,
-                                        lv.village_name Village,
-                                        lf.id Farmer_ID,
-                                        lf.name Farmer,
-                                        lf.phone Mobile_Number
-                                FROM
-                                    loop_loopuser ll
-                                JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-                                JOIN loop_farmer lf ON lf.village_id = llv.village_id
-                                JOIN loop_village lv ON lf.village_id = lv.id
-                                WHERE
-                                    ll.name_en <> 'Loop Test') t1
-                                    JOIN
-                                (SELECT 
-                                    farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
-                                FROM
-                                    loop_combinedtransaction lct
-                                WHERE
-                                    lct.date BETWEEN %s AND %s 
-                                GROUP BY farmer_id) t2 ON t1.Farmer_ID = t2.f_id
-                                    JOIN
-                                (SELECT 
-                                    phone, COUNT(phone) Mobile_Frequency
-                                FROM
-                                    loop_farmer
-                                WHERE
-                                    phone <= 7000000000
-                                        OR phone >= 9999999999
-                                        OR phone IN %s OR phone in %s
-                                GROUP BY phone) t3 ON t1.Mobile_Number = t3.phone
-                            HAVING t3.Mobile_Frequency > 0
-                            ORDER BY Aggregator'''
+                              loop_combinedtransaction lct
+                            WHERE
+                              lct.date BETWEEN %s AND %s 
+                            GROUP BY farmer_id) t1
+                          JOIN
+                              (SELECT 
+                                  ll.name_en Aggregator,
+                                      lv.village_name Village,
+                                      lf.id Farmer_ID,
+                                      lf.name Farmer,
+                                      lf.phone Mobile_Number
+                              FROM
+                                  loop_loopuser ll
+                              JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
+                              JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                              JOIN loop_village lv ON lf.village_id = lv.id
+                              WHERE
+                                  ll.name_en <> 'Loop Test') t2 ON t1.f_id = t2.Farmer_ID
+                                  JOIN
+                              (SELECT 
+                                  llv.loop_user_id,
+                                      lf.phone Mobile,
+                                      COUNT(lf.phone) Mobile_Frequency
+                              FROM
+                                  loop_loopuserassignedvillage llv
+                              JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                              JOIN loop_village lv ON lf.village_id = lv.id
+                              WHERE
+                                  llv.loop_user_id <> 22
+                              GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Mobile
+                          HAVING (t3.Mobile_Frequency > 1)
+                              OR (t3.Mobile_Frequency = 1
+                              AND (Mobile_Number <= 7000000000
+                              OR Mobile_Number >= 9999999999))
+                          ORDER BY Aggregator'''
 
 
 
@@ -168,9 +172,17 @@ query_for_single_aggregator = '''SELECT
                                     Farmer_ID,
                                     Farmer,
                                     Mobile_Number,
-                                    t2.Farmer_Frequency,
+                                    t1.Farmer_Frequency,
                                     t3.Mobile_Frequency
                                 FROM
+                                    (SELECT 
+                                    farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
+                                  FROM
+                                    loop_combinedtransaction lct
+                                  WHERE
+                                    lct.date BETWEEN %s AND %s 
+                                  GROUP BY farmer_id) t1
+                                JOIN
                                     (SELECT 
                                         ll.name_en Aggregator,
                                             lv.village_name Village,
@@ -183,26 +195,23 @@ query_for_single_aggregator = '''SELECT
                                     JOIN loop_farmer lf ON lf.village_id = llv.village_id
                                     JOIN loop_village lv ON lf.village_id = lv.id
                                     WHERE
-                                        ll.name_en <> 'Loop Test' and ll.name_en = \'%s\') t1
+                                        ll.name_en <> 'Loop Test' and ll.name = \'%s\') t2 ON t1.f_id = t2.Farmer_ID
                                         JOIN
                                     (SELECT 
-                                        farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
+                                        llv.loop_user_id,
+                                            lf.phone Mobile,
+                                            COUNT(lf.phone) Mobile_Frequency
                                     FROM
-                                        loop_combinedtransaction lct
+                                        loop_loopuserassignedvillage llv
+                                    JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                                    JOIN loop_village lv ON lf.village_id = lv.id
                                     WHERE
-                                        lct.date BETWEEN %s AND %s
-                                    GROUP BY farmer_id) t2 ON t1.Farmer_ID = t2.f_id
-                                        JOIN
-                                    (SELECT 
-                                        phone, COUNT(phone) Mobile_Frequency
-                                    FROM
-                                        loop_farmer
-                                    WHERE
-                                        phone <= 7000000000
-                                            OR phone >= 9999999999
-                                            OR phone IN %s OR phone in %s
-                                    GROUP BY phone) t3 ON t1.Mobile_Number = t3.phone
-                                HAVING t3.Mobile_Frequency > 0
+                                        llv.loop_user_id <> 22
+                                    GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Mobile
+                                HAVING (t3.Mobile_Frequency > 1)
+                                    OR (t3.Mobile_Frequency = 1
+                                    AND (Mobile_Number <= 7000000000
+                                    OR Mobile_Number >= 9999999999))
                                 ORDER BY Aggregator'''
 
 
