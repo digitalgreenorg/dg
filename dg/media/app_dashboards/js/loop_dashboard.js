@@ -3174,7 +3174,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,6).data();
         $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
         $('#farmer_share_row').val($this.parent()[0].childNodes[6].innerHTML);
-        $('#farmer_commission_row').val($this.parent()[0].childNodes[6].innerHTML/$this.parent()[0].childNodes[3].innerHTML)
+        $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML/$this.parent()[0].childNodes[3].innerHTML).toFixed(2))
         $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
         delete rows_table2_farmer[$this.context.parentNode.rowIndex];
         $this.css('background-color', '#E5FED6');

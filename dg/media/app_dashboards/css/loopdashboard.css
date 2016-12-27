@@ -305,7 +305,7 @@ hr {
 
 .modal {
   width: 80% !important;
-  overflow-y: hidden;
+  overflow-y: hidden !important;
 }
 
 .modal-close {
