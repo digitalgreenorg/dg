@@ -3173,6 +3173,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     $('#farmer_reset_modal').on('click',function(){
         $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,6).data();
         $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,12).data();
+        $('#farmer_share_row').val($this.parent()[0].childNodes[6].innerHTML);
+        $('#farmer_commission_row').val($this.parent()[0].childNodes[6].innerHTML/$this.parent()[0].childNodes[3].innerHTML)
+        $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
         delete rows_table2_farmer[$this.context.parentNode.rowIndex];
         $this.css('background-color', '#E5FED6');
         $this.parent()[0].childNodes[10].style.backgroundColor= '';
@@ -3194,7 +3197,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
-            $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
+            $this.parent()[0].childNodes[8].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2);
             if ((parseFloat($this.parent()[0].childNodes[4].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML)) < parseFloat($this.parent()[0].childNodes[6].innerHTML)) {
               //  $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
               if(editedFarmer==1)
@@ -3230,6 +3233,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     $('#aggregator_reset_modal').on('click',function(){
         $this.parent()[0].childNodes[4].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
         $this.parent()[0].childNodes[9].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex-1,11).data();
+        $('#aggregator_share_row').val($this.parent()[0].childNodes[4].innerHTML);
+        $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML/$this.parent()[0].childNodes[3].innerHTML).toFixed(2))
+        $('#aggregator_comment_row').val($this.parent()[0].childNodes[9].innerHTML);
         delete rows_table2[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
         $this.css('background-color', '#E5FED6');
@@ -3252,7 +3258,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
             $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val();
-            $this.parent()[0].childNodes[8].innerHTML = parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)
+            $this.parent()[0].childNodes[8].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2)
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML / $this.parent()[0].childNodes[3].innerHTML.split('Kg')[0]) > 0.5) {
                 //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
                 if(editedAggregator==1)
@@ -3579,6 +3585,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,4).data();
         $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,5).data();
         $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,9).data();
+        $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].innerHTML);
+        $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML)
+        $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].innerHTML);
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.parent().removeAttr('style');
         $this.css('background-color', '#E5FED6');
@@ -3622,7 +3631,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             rows_table3[row_id] = true;
             editedGaddidar =0;
         }
-        $('#gaddidar_mdoal').closeModal();
+        $('#gaddidar_modal').closeModal();
     });
     function processGaddidarRow(rows_table3,finalData){
         for (var keys in rows_table3) {

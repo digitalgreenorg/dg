@@ -313,3 +313,10 @@ hr {
     cursor: pointer;
     top: 10px;
 }
+
+table.dataTable tr.odd td.sorting_1 {
+    background-color: #FFFFFF;
+}
+table.dataTable tr.even td.sorting_1 {
+    background-color: #FFFFFF;
+}
