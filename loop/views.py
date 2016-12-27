@@ -209,21 +209,21 @@ def total_static_data(request):
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
     aggregator_incentive = aggregator_incentive_for_total_static_data()
-
+    print aggregator_incentive
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost), 'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached, 'total_repeat_farmers': total_repeat_farmers}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 def aggregator_incentive_for_total_static_data():
-    aggregator_incentive_list = calculate_aggregator_incentive()
+    aggregator_incentive_list = calculate_aggregator_incentive(None, None, None, None)
     total_aggregator_incentive = 0
     for entry in aggregator_incentive_list:
         total_aggregator_incentive += entry['amount']
     return total_aggregator_incentive
 
 def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_list):
-    parameters_dictionary = {'mandi__in': mandi_list}
+    parameters_dictionary = {'aggregator__in': aggregator_list}
     parameters_dictionary_for_outliers = {
         'mandi__in': mandi_list, 'aggregator__user__in': aggregator_list}
     parameters_dictionary_for_ct = {'date__gte': start_date, 'date__lte': end_date,
@@ -250,12 +250,37 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'gaddidar', 'mandi', 'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
+        'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'), Count('farmer_id', distinct=True))
     result = []
     for CT in combined_ct_queryset:
-
-        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-                      'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum, 'quantity__sum': CT['quantity__sum']})
+        sum = 0
+        user = LoopUser.objects.get(user_id=CT['user_created_id'])
+        if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
+            try:
+                ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=CT[
+                                                 'user_created_id']).order_by('-start_date')
+                print ai_list_set['incentive_model__calculation_method']
+                exec(ai_list_set['incentive_model__calculation_method'])
+                sum+=1
+            except:
+                print "Ullu ka patha"
+        #         if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
+        #             sum += CT['quantity__sum'] * \
+        #                 gc_list_set[0].discount_percent
+        #         elif gc_list_set.count() > 0:
+        #             sum += CT['amount__sum'] * gc_list_set[0].discount_percent
+        #     except GaddidarCommission.DoesNotExist:
+        #         pass
+        # else:
+        #     try:
+        #         gso_gaddidar_date_aggregator = gso_queryset.filter(
+        #             date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
+        #         if gso_gaddidar_date_aggregator.count():
+        #             sum += gso_gaddidar_date_aggregator[0]
+        #     except GaddidarShareOutliers.DoesNotExist:
+        #         pass
+        # result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
+        #               'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum, 'quantity__sum': CT['quantity__sum']})
     return result
 
 def gaddidar_contribution_for_totat_static_data():

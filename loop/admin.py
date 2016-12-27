@@ -144,6 +144,9 @@ class IncentiveModelAdmin(admin.ModelAdmin):
 class AggregatorShareOutlierAdmin(admin.ModelAdmin):
     list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')
 
+class IncentiveParameterAdmin(admin.ModelAdmin):
+    list_display = ('notation','parameter_name')
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -168,5 +171,5 @@ loop_admin.register(GaddidarShareOutliers,GaddidarShareOutliersAdmin)
 loop_admin.register(CropLanguage,CropLanguageAdmin)
 loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
 loop_admin.register(IncentiveModel,IncentiveModelAdmin)
-loop_admin.register(IncentiveParameter)
+loop_admin.register(IncentiveParameter,IncentiveParameterAdmin)
 loop_admin.register(AggregatorShareOutliers,AggregatorShareOutlierAdmin)
