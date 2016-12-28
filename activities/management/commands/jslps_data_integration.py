@@ -45,4 +45,3 @@ class Command(BaseCommand):
         call_command('jslps_adoptions')
 
         self.send_mail()
-    
