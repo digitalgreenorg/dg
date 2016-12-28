@@ -320,3 +320,69 @@ table.dataTable tr.odd td.sorting_1 {
 table.dataTable tr.even td.sorting_1 {
     background-color: #FFFFFF;
 }
+
+#farmer_submit_modal,
+#aggregator_submit_modal,
+#gaddidar_submit_modal{
+    background-color:#169b8b;
+    color:#FFFFFF;
+    margin:2px;
+}
+
+#farmer_reset_modal,
+#aggregator_reset_modal,
+#gaddidar_reset_modal{
+    background-color:#d1d1d2;
+    color:#FFFFFF;
+    margin:2px;
+}
+
+#farmer_close img,
+#aggregator_close img,
+#gaddidar_close img{
+    height:18px;
+    width:18px;
+    margin-top:20px;
+    margin-left:140px;
+}
+
+#aggregator_modal input[disabled],
+#farmer_modal input[disabled],
+#gaddidar_modal input[disabled]
+{
+    border-bottom:none;
+    color:#169b8b;
+}
+
+#aggregator_modal form,
+#farmer_modal form,
+#gaddidar_modal form
+{
+    margin-bottom:-50px;
+}
+
+#aggregator_header,
+#farmer_header,
+#gaddidar_header
+{
+    background-color:#223237;
+    padding:2px;
+    margin-bottom:3px;
+    margin-left:-24px;
+    margin-right:-24px;
+    margin-top:-24px;
+}
+
+#aggregator_modal h5,
+#farmer_modal h5,
+#gaddidar_modal h5{
+    color:#FFFFFF;
+}
+
+#aggregator_disabled_elements,
+#farmer_disabled_elements,
+#gaddidar_disabled_elements{
+    color:#3E4551;
+    margin-bottom:-30px;
+    padding:5px;
+}
