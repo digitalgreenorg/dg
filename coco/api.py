@@ -1,23 +1,44 @@
+# python imports
 from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
+# tastypie imports
 from tastypie import fields
 from tastypie.authentication import SessionAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
-
-from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
-from geographies.models import Village, District, State
-from programs.models import Partner
-from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
-from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice, ParentCategory
+# app imports
 from models import CocoUser
-
+from activities.models import Screening
+from activities.models import PersonAdoptPractice
+from activities.models import PersonMeetingAttendance
+from geographies.models import Village
+from geographies.models import District
+from geographies.models import State
+from programs.models import Partner
+from people.models import Animator
+from people.models import AnimatorAssignedVillage
+from people.models import Person
+from people.models import PersonGroup
+from videos.models import Video
+from videos.models import Language
+from videos.models import NonNegotiable
+from videos.models import Category
+from videos.models import SubCategory
+from videos.models import VideoPractice
+from videos.models import ParentCategory
+from videos.models import DirectBeneficiaries
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, PersonGroupForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm
+from dashboard.forms import NonNegotiableForm
+from dashboard.forms import PersonAdoptPracticeForm
+from dashboard.forms import PersonForm
+from dashboard.forms import PersonGroupForm
+from dashboard.forms import ScreeningForm
+from dashboard.forms import VideoForm
 
 class PMANotSaved(Exception):
     pass
@@ -385,9 +406,11 @@ class DistrictResource(ModelResource):
         authorization = VillageAuthorization('block__village__id__in')
         max_limit = None
 
+
 class VideoResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     production_team = fields.ToManyField('coco.api.MediatorResource', 'production_team')
+    direct_beneficiaries = fields.ToManyField('coco.api.DirectBeneficiariesResource', 'direct_beneficiaries', null=True)
     language = fields.ForeignKey('coco.api.LanguageResource', 'language')
     partner = fields.ForeignKey(PartnerResource, 'partner')
     category = fields.ForeignKey('coco.api.CategoryResource', 'category', null=True)
@@ -400,13 +423,13 @@ class VideoResource(BaseResource):
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory', sub_field_names=['id','subcategory_name'])
     dehydrate_videopractice = partial(foreign_key_to_id, field_name='videopractice', sub_field_names=['id','videopractice_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
-    hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
     hydrate_language = partial(dict_to_foreign_uri, field_name='language')
     hydrate_category = partial(dict_to_foreign_uri, field_name='category')
     hydrate_subcategory = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
     hydrate_videopractice = partial(dict_to_foreign_uri, field_name='videopractice', resource_name='videopractice')
 
     hydrate_production_team = partial(dict_to_foreign_uri_m2m, field_name = 'production_team', resource_name = 'mediator')
+    hydrate_direct_beneficiaries = partial(dict_to_foreign_uri_m2m, field_name = 'direct_beneficiaries', resource_name = 'directbeneficiaries')
     hydrate_partner = partial(assign_partner)
     
     class Meta:
@@ -420,7 +443,10 @@ class VideoResource(BaseResource):
         excludes = ['duration', 'related_practice', 'time_created', 'time_modified', 'review_status', 'video_grade']
     
     def dehydrate_production_team(self, bundle):
-        return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all() ]
+        return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all()]
+
+    def dehydrate_direct_beneficiaries(self, bundle):
+        return [{'id': beneficiaries.id, 'name': beneficiaries.direct_beneficiaries_category} for beneficiaries in bundle.obj.direct_beneficiaries.all() ]
 
 
 class NonNegotiableResource(BaseResource):
@@ -687,3 +713,16 @@ class VideoPracticeResource(ModelResource):
         authorization = Authorization()
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory',sub_field_names=['id','subcategory_name'])
     hydrate_category = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
+
+
+class DirectBeneficiariesResource(BaseResource):
+    category = fields.ForeignKey(CategoryResource, 'category', null=True)
+
+    class Meta:
+        queryset = DirectBeneficiaries.objects.all()
+        resource_name = 'directbeneficiaries'
+        authentication = SessionAuthentication()
+        always_return_data = True
+
+    dehydrate_category = partial(foreign_key_to_id, field_name='category',sub_field_names=['id','category_name'])
+    hydrate_category = partial(dict_to_foreign_uri, field_name='category', resource_name='category')

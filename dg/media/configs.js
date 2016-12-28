@@ -229,13 +229,14 @@ function() {
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
                             village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
-                            youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
+                            youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य", direct_beneficiaries: "सीधा लाभार्थियों"},
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
                             village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
-                            youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
+                            youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID",
-                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID", 
+                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable",
+                            direct_beneficiaries: "DirectBeneficiaries"},
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'शीर्षक', 'element':'title'},{'header':'गाँव','element':'village.village_name'},{'header':'उत्पादन की तिथि','element':'production_date'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Titre', 'element':'title'},{'header':'Villages','element':'village.village_name'},{'header':'Date de production','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
@@ -252,6 +253,7 @@ function() {
                     'name_field': 'name'
                 },
             },
+
             'village': {
                 "village": {
                     'placeholder': 'id_village',
@@ -289,7 +291,17 @@ function() {
                         'dep_attr': 'subcategory'
                     }]
                 }
-            }
+            },
+            'directbeneficiaries': {
+                "direct_beneficiaries": {
+                    'placeholder': 'id_direct_beneficiaries',
+                    'name_field': 'direct_beneficiaries_category',
+                    'dependency': [{
+                        'source_form_element': 'category',
+                        'dep_attr': 'category'
+                    }]
+                },
+            },
         },
         'inline': {
             'entity': 'nonnegotiable',
@@ -437,6 +449,19 @@ function() {
         'rest_api_url': '/coco/api/v2/parentcategory/',
         'entity_name': 'parentcategory',
         'sort_field': 'parent_category_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var directbeneficiaries_configs = {
+        'config_English': 'DirectBeneficiaries',
+        'config_हिन्दी': 'सीधा लाभार्थियों',
+        'config_Français': 'Bénéficiaires directs',
+        'rest_api_url': '/coco/api/v2/directbeneficiaries/',
+        'entity_name': 'directbeneficiaries',
+        'sort_field': 'direct_beneficiaries_category',
         'dashboard_display': {
             listing: false,
             add: false
@@ -871,6 +896,8 @@ function() {
         'headers_to_hide': 'th#id_member_adopt, th#id_recall_nonnegotiable',
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        'text_to_select_display_hack': true,
+        'text_to_select_display_hack_field_id': 'adopt_practice' ,
         form_field_validation: {
             ignore: [],
 			rules: {
@@ -1298,6 +1325,7 @@ function() {
     return {
         village: village_configs,
         mediator: mediator_configs,
+        directbeneficiaries: directbeneficiaries_configs,
         video: video_configs,
         group: group_configs,
         person: person_configs,
@@ -1310,7 +1338,8 @@ function() {
         videopractice: videopractice_configs,
         district: district_configs,
         nonnegotiable: nonnegotiable_configs,
-        misc: misc
+        misc: misc,
+
     }
 
 });

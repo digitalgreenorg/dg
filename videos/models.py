@@ -1,12 +1,23 @@
+# django imports
 from django.db import models
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete 
+from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator
-
-from coco.data_log import delete_log, save_log
-from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY, PARENT_CATEGORY
+# app imports
+from coco.data_log import delete_log
+from coco.data_log import save_log
+from coco.base_models import CocoModel
+from coco.base_models import STORYBASE
+from coco.base_models import VIDEO_TYPE
+from coco.base_models import VIDEO_GRADE
+from coco.base_models import VIDEO_REVIEW
+from coco.base_models import REVIEW_BY
+from coco.base_models import PARENT_CATEGORY
 from geographies.models import Village
 from programs.models import Partner
-from people.models import Animator, Person
+from people.models import Animator
+from people.models import Person
+
 
 class PracticeSector(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -104,6 +115,17 @@ class Category(CocoModel):
     def __unicode__(self):
         return self.category_name
 
+
+class DirectBeneficiaries(models.Model):
+    """
+    Describes the direct beneficiaries of the video
+    """
+    direct_beneficiaries_category = models.CharField(max_length=80, null=True)
+    category = models.ForeignKey(Category, null=True)
+
+    def __unicode__(self):
+        return self.direct_beneficiaries_category
+
 class SubCategory(CocoModel):
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category)
@@ -164,6 +186,7 @@ class Video(CocoModel):
     village = models.ForeignKey(Village)
     production_team = models.ManyToManyField(Animator)
     category = models.ForeignKey(Category, null=True, blank=True)
+    direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
     approval_date = models.DateField(null=True, blank=True)

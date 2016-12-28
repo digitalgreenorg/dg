@@ -315,6 +315,11 @@ define([
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        var adopt_practice_val = that.model_json.adopt_practice;
+                        if (that.entity_config.text_to_select_display_hack){
+                            that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
+                            $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                        }
                         // put into form
                         that.fill_form();
                     })
