@@ -34,7 +34,7 @@ class Command(BaseCommand):
 				vdc = map(int, c.find('Video').text.split(','))
 			except Exception as e:
 				vdc = []
-				wtr.writerow(['scr id',sc,'Can not save screening without video'])
+				wtr.writerow(['Can not save screening without video', sc, "video not found"])
 				continue
 			try:
 				gc = map(int, c.find('GroupCode').text.split(','))
@@ -70,12 +70,20 @@ class Command(BaseCommand):
 					groups.append(grp[0].group)
 
 			try:
-				screening = Screening(date = sd,
+				scr_already_exist = Screening.objects.filter(date = sd,
 									start_time = st,
 									village = village.Village,
 									animator = animator.animator,
 									partner = partner)
-				screening.save()
+				if len(scr_already_exist) == 0:
+					screening = Screening(date = sd,
+										start_time = st,
+										village = village.Village,
+										animator = animator.animator,
+										partner = partner)
+					screening.save()
+				else:
+					screening = None
 			except Exception as e:
 				screening = None
 				wtr.writerow(['1 Screening save error', sc, e])
