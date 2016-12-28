@@ -7,6 +7,7 @@ from people.models import *
 from programs.models import *
 from videos.models import *
 from activities.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -47,5 +48,10 @@ class Command(BaseCommand):
 										  date_of_adoption = da,
 										  partner = partner)
 				pap.save()
+				jslps.new_count += 1
 			except Exception as e:
-				wtr.writerow(['Adoption not saved (video code %s)'%(str(vc)), pc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['Adoption not saved (video code %s)'%(str(vc)), pc, e])
+				else:
+					jslps.duplicate_count += 1

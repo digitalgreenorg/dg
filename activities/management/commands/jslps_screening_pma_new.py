@@ -8,6 +8,7 @@ from people.models import *
 from programs.models import *
 from videos.models import *
 from activities.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -82,11 +83,17 @@ class Command(BaseCommand):
 										animator = animator.animator,
 										partner = partner)
 					screening.save()
+					jslps.new_count += 1
 				else:
 					screening = None
+					jslps.duplicate_count += 1
 			except Exception as e:
 				screening = None
-				wtr.writerow(['1 Screening save error', sc, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['Screening save error', sc, e])
+				else:
+					jslps.duplicate_count += 1
 
 			if screening != None:
 				for i in groups:
@@ -127,7 +134,7 @@ class Command(BaseCommand):
 							jslps_screening.screening = screening
 							jslps_screening.save()
 				else:
-					wtr.writerow(['2 Screening not saved and duplicate also not exist',sc, "not saved"])
+					wtr.writerow(['Screening not saved and duplicate also not exist',sc, "not saved"])
 
 
 		#saving pma
@@ -166,6 +173,6 @@ class Command(BaseCommand):
 					pma = PersonMeetingAttendance(screening = screening.screening,
 													person = person.person)
 					pma.save()
+					jslps.new_count += 1
 				except Exception as e:
 					wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])
-

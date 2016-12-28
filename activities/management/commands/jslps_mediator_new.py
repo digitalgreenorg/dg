@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from geographies.models import *
 from people.models import *
 from programs.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -50,9 +51,14 @@ class Command(BaseCommand):
 									district = district.district,
 									phone_no = phone)
 				animator.save()
+				jslps.new_count += 1
 			except Exception as e:
 				animator = None
-				wtr.writerow(['1 Animator save error', ac, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['Animator save error', ac, e])
+				else:
+					jslps.duplicate_count += 1
 
 			if animator != None:
 				assigned_villages = AnimatorAssignedVillage.objects.filter(animator=animator).values_list('village_id', flat=True)
@@ -97,7 +103,7 @@ class Command(BaseCommand):
 							jslps_animator.animator = animator
 							jslps_animator.save()
 				else:
-					wtr.writerow(['2 Animator not saved and duplicate also not exist',ac, "not saved"])
+					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
 			
 
 		
@@ -131,9 +137,14 @@ class Command(BaseCommand):
 									partner = partner,
 									district = district.district)
 				animator.save()
+				jslps.new_count += 1
 			except Exception as e:
 				animator = None
-				wtrr.writerow(['1 Animator save error', ac, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtrr.writerow(['Animator save error', ac, e])
+				else:
+					jslps.duplicate_count += 1
 
 			if animator != None:
 				jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac)
@@ -161,4 +172,4 @@ class Command(BaseCommand):
 							jslps_animator.animator = animator
 							jslps_animator.save()
 				else:
-					wtr.writerow(['2 Animator not saved and duplicate also not exist',ac, "not saved"])
+					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])

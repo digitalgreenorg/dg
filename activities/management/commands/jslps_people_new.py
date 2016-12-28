@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from geographies.models import *
 from people.models import *
 from programs.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -64,9 +65,14 @@ class Command(BaseCommand):
 									village = village.Village,
 									partner = partner)
 					person.save()
+					jslps.new_count += 1
 				except Exception as e:
 					person = None
-					wtr.writerow(['1 Error in save person group: ',pc, e])
+					if "Duplicate entry" not in str(e):
+						jslps.other_error_count += 1
+						wtr.writerow(['Error in save person group: ',pc, e])
+					else:
+						jslps.duplicate_count += 1
 			else:
 				try:
 					person = Person(person_name = pn,
@@ -78,9 +84,14 @@ class Command(BaseCommand):
 										group = group.group,
 										partner = partner)
 					person.save()
+					jslps.new_count += 1
 				except Exception as e:
 					person = None
-					wtr.writerow(['1 Error in save person (group(%s)): '%(str(gc)),pc, e])
+					if "Duplicate entry" not in str(e):
+						jslps.other_error_count += 1
+						wtr.writerow(['Error in save person (group(%s)): '%(str(gc)),pc, e])
+					else:
+						jslps.duplicate_count += 1
 
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
@@ -105,5 +116,5 @@ class Command(BaseCommand):
 							jslps_person.person = person
 							jslps_person.save()
 				else:
-					wtr.writerow(['2 Person not saved and duplicate also not exist',pc, "not saved"])
+					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
 			
