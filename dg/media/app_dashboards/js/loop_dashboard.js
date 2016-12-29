@@ -3441,7 +3441,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     }
                     if (Object.keys(rows_table2_farmer).length > 0) {
                         $.ajax({
-                            url: "http://localhost:4001/loop/farmer_payments/",
+                            url: "http://localhost:4001/loop/farmer_payment_update/",
                             type: 'POST',
                             dataType: 'json',
                             data:JSON.stringify(farmerObjects),
