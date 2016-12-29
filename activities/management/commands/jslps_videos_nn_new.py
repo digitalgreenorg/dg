@@ -7,6 +7,7 @@ from geographies.models import *
 from people.models import *
 from programs.models import *
 from videos.models import *
+import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
@@ -125,9 +126,14 @@ class Command(BaseCommand):
 							videopractice=videopractice
 							)
 				vid.save()
+				jslps.new_count += 1
 			except Exception as e:
 				vid = None
-				wtr.writerow(['1 Video save error', vdc,'title', vn, e])
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtr.writerow(['Video save error', vdc,'title', vn, e])
+				else:
+					jslps.duplicate_count += 1
 
 			if vid != None:
 				vid.production_team.add(facililator.animator)
@@ -160,20 +166,20 @@ class Command(BaseCommand):
 							jslps_video.video = vid
 							jslps_video.save()
 				else:
-					wtr.writerow(['2 Video not saved and duplicate also not exist', vdc,'title', vn, e])		
+					wtr.writerow(['Video not saved and duplicate also not exist', vdc,'title', vn, e])		
 
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/nn.xml", 'w')
+		xml_file = open("jslps_data_integration_files/nonnego.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		csv_file = open('jslps_data_integration_files/nonnego.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/nonnego_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/nn.xml')
+		tree = ET.parse('jslps_data_integration_files/nonnego.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioNon_NegotiableMasterData'):
@@ -198,9 +204,11 @@ class Command(BaseCommand):
 								   non_negotiable = nn_n,
 								   physically_verifiable = vr)
 					nn.save()
+					jslps.new_count += 1
 				except Exception as e:
 					wtr.writerow(['NonNegotiable not saved',nn_c, e])
 			else:
+				jslps.duplicate_count += 1
 				nonnego_already = nonnego_already_list[0]
 				nonnego_already.physically_verifiable = vr
 				nonnego_already.save()
