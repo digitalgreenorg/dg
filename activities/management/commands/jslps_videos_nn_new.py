@@ -172,14 +172,14 @@ class Command(BaseCommand):
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/nn.xml", 'w')
+		xml_file = open("jslps_data_integration_files/nonnego.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
-		csv_file = open('jslps_data_integration_files/nonnego.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/nonnego_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/nn.xml')
+		tree = ET.parse('jslps_data_integration_files/nonnego.xml')
 		root = tree.getroot()
 
 		for c in root.findall('VedioNon_NegotiableMasterData'):
