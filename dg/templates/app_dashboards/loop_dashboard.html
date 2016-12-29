@@ -494,9 +494,9 @@
             <h3>Payment Sheets</h3>
          </div>
          <ul class="tabs">
-            <li class="tab col s4"><a class="a-customfont center active blue-text" id="summary_payments" onclick="change_payment(this.id)"> Payment Summary</a></li>
-            <li class="tab col s4"><a class="a-customfont center blue-text" id="gaddidar_payments" onclick="change_payment(this.id)"> Commission Agent Payment</a></li>
-            <li class="tab col s4"><a class="a-customfont center blue-text" id="transportation_payments" onclick="change_payment(this.id)"> Transportation Payment</a></li>
+            <li class="tab col s4"><a class="a-customfont center active blue-text" id="summary_payments" onclick="change_payment(this.id)">Payment Summary</a></li>
+            <li class="tab col s4"><a class="a-customfont center blue-text" id="gaddidar_payments" onclick="change_payment(this.id)"> Commission Agent Details</a></li>
+            <li class="tab col s4"><a class="a-customfont center blue-text" id="transportation_payments" onclick="change_payment(this.id)"> Transporter Details</a></li>
             <div class="indicator"></div>
          </ul>
          <br>
@@ -578,7 +578,7 @@
          <div class="col s10">
             <h5>Change Farmers' Contribution</h5>
          </div>
-         <a href="#" id = "farmer_close"><img src="/media/app_dashboards/images/cancel.png"></a>
+         <a id = "farmer_close"><img src="/media/app_dashboards/images/cancel.png"></a>
       </div>
       <form>
       <div id="farmer_disabled_elements">
@@ -665,7 +665,7 @@
          <div class="col s10">
             <h5>Change Aggregator Payment</h5>
          </div>
-         <a href="#" id = "aggregator_close"><img src="/media/app_dashboards/images/cancel.png"></a>
+         <a id = "aggregator_close"><img src="/media/app_dashboards/images/cancel.png"></a>
       </div>
       <form>
       <div id="aggregator_disabled_elements">
@@ -734,7 +734,7 @@
          <div class="col s10">
             <h5>Change CA Contribution</h5>
             </div>
-         <a href="#" id = "gaddidar_close"><img src="/media/app_dashboards/images/cancel.png"></a>
+         <a id = "gaddidar_close"><img src="/media/app_dashboards/images/cancel.png"></a>
       </div>
       <form>
       <div id="gaddidar_disabled_elements">
@@ -802,7 +802,7 @@
       <a id="gaddidar_reset_modal" class="modal-action waves-effect waves-green btn-flat">Reset</a>
    </div>
 </div>
-<div id="modal4" class="modal">
+<!-- <div id="modal4" class="modal">
    <div class="modal-content">
       <h5>Change Transport Cost</h5>
       <form >
@@ -864,7 +864,7 @@
       <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Submit</a>
       <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Cancel</a>
    </div>
-</div>
+</div> -->
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
 <script src="{% static 'app_dashboards/js/loop_dashboard.js?1' %}"></script>
