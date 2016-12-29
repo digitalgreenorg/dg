@@ -1,3 +1,6 @@
+ # -*- coding: utf-8 -*-
+
+
 HEADER_STRING = "&CLoop India Bihar"
 FOOTER_STRING = "&CThis is an automated generated sheet"
 DEFAULT_COLUMN_WIDTH = 9
@@ -90,134 +93,163 @@ header_dict = {'aggregator':[{'column_width': 3,
 
 
 header_dict_for_loop_email_mobile_numbers = [{'column_width': 15,
-                                          'label': 'Sno',
+                                          'label': 'क्रम संख्या',
                                           },
                                          {'column_width': 15,
                                           
-                                          'label': 'Aggregator',
+                                          'label': 'जमाकर्ता का नाम',
                                           },
                                          {'column_width': 15,
-                                          'label': 'Village',
+                                          'label': 'गांव का नाम',
                                           },
                                          {'column_width': 15,
-                                          'label': 'Farmer_ID',
+                                          'label': 'किसान ID',
                                           },
                                          {'column_width': 15,
-                                          'label': 'Farmer',
+                                          'label': 'किसान का नाम',
                                           },
                                          {'column_width': 15,
-                                          'label': 'Mobile Number',
+                                          'label': 'मोबाइल नं',
                                           },
                                           {'column_width': 15,
-                                          'label': 'Farmer Frequency ',
+                                          'label': 'सब्जी कितने दिन दी?',
                                           },
                                           {'column_width': 15,
-                                          'label': 'Mobile Number Frequency',
+                                          'label': 'कितने किसान में नंबर डला है?',
                                           }]
 
 
 query_for_all_aggregator = '''SELECT 
-                              Aggregator,
-                              Village,
-                              Farmer_ID,
-                              Farmer,
-                              Mobile_Number,
-                              t1.Farmer_Frequency,
-                              t3.Mobile_Frequency
-                          FROM
-                              (SELECT 
-                              farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
+                                Aggregator,
+                                Village,
+                                Farmer_ID,
+                                Farmer,
+                                Mobile_Number,
+                                t1.Farmer_Frequency,
+                                t3.Mobile_Frequency
                             FROM
-                              loop_combinedtransaction lct
-                            WHERE
-                              lct.date BETWEEN %s AND %s 
-                            GROUP BY farmer_id) t1
-                          JOIN
-                              (SELECT 
-                                  ll.name_en Aggregator,
-                                      lv.village_name Village,
-                                      lf.id Farmer_ID,
-                                      lf.name Farmer,
-                                      lf.phone Mobile_Number
-                              FROM
-                                  loop_loopuser ll
-                              JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-                              JOIN loop_farmer lf ON lf.village_id = llv.village_id
-                              JOIN loop_village lv ON lf.village_id = lv.id
-                              WHERE
-                                  ll.name_en <> 'Loop Test') t2 ON t1.f_id = t2.Farmer_ID
-                                  JOIN
-                              (SELECT 
-                                  llv.loop_user_id,
-                                      lf.phone Mobile,
-                                      COUNT(lf.phone) Mobile_Frequency
-                              FROM
-                                  loop_loopuserassignedvillage llv
-                              JOIN loop_farmer lf ON lf.village_id = llv.village_id
-                              JOIN loop_village lv ON lf.village_id = lv.id
-                              WHERE
-                                  llv.loop_user_id <> 22
-                              GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Mobile
-                          HAVING (t3.Mobile_Frequency > 1)
-                              OR (t3.Mobile_Frequency = 1
-                              AND (Mobile_Number <= 7000000000
-                              OR Mobile_Number >= 9999999999))
-                          ORDER BY Aggregator'''
+                                (SELECT 
+                                    user_created_id,
+                                        farmer_id f_id,
+                                        COUNT(distinct(date)) Farmer_Frequency
+                                FROM
+                                    loop_combinedtransaction lct
+                                WHERE
+                                    lct.date BETWEEN %s AND %s
+                                GROUP BY user_created_id , farmer_id
+                                HAVING Farmer_Frequency > 0) t1
+                                    JOIN
+                                (SELECT 
+                                    ll.name Aggregator,
+                                        ll.id Loop_user_id,
+                                        ll.user_id user_id,
+                                        lv.village_name Village,
+                                        lf.id Farmer_ID,
+                                        lf.name Farmer,
+                                        lf.phone Mobile_Number
+                                FROM
+                                    loop_loopuser ll
+                                JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
+                                JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                                JOIN loop_village lv ON lf.village_id = lv.id
+                                WHERE
+                                    ll.name <> 'Loop Test') t2 ON t1.f_id = t2.Farmer_ID
+                                    AND t1.user_created_id = t2.user_id
+                                    JOIN
+                                (SELECT 
+                                    llv.loop_user_id Loop_user,
+                                        lf.phone Phone_no,
+                                        COUNT(lf.phone) Mobile_Frequency
+                                FROM
+                                    loop_loopuserassignedvillage llv
+                                JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                                JOIN loop_village lv ON lf.village_id = lv.id
+                                WHERE
+                                    llv.loop_user_id <> 22
+                                GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Phone_no
+                                    AND t3.Loop_user = t2.Loop_user_id
+                            HAVING (t3.Mobile_Frequency > 1)
+                                OR (t3.Mobile_Frequency = 1
+                                AND (Mobile_Number <= 7000000000
+                                OR Mobile_Number >= 9999999999))
+                            ORDER BY Aggregator'''
 
 
 
 query_for_single_aggregator = '''SELECT 
-                                    Aggregator,
-                                    Village,
-                                    Farmer_ID,
-                                    Farmer,
-                                    Mobile_Number,
-                                    t1.Farmer_Frequency,
-                                    t3.Mobile_Frequency
-                                FROM
-                                    (SELECT 
-                                    farmer_id f_id, COUNT(farmer_id) Farmer_Frequency
+                                  Aggregator,
+                                  Village,
+                                  Farmer_ID,
+                                  Farmer,
+                                  Mobile_Number,
+                                  t1.Farmer_Frequency,
+                                  t3.Mobile_Frequency
+                              FROM
+                                  (SELECT 
+                                      user_created_id,
+                                          farmer_id f_id,
+                                          COUNT(distinct(date)) Farmer_Frequency
                                   FROM
-                                    loop_combinedtransaction lct
+                                      loop_combinedtransaction lct
                                   WHERE
-                                    lct.date BETWEEN %s AND %s 
-                                  GROUP BY farmer_id) t1
-                                JOIN
-                                    (SELECT 
-                                        ll.name_en Aggregator,
-                                            lv.village_name Village,
-                                            lf.id Farmer_ID,
-                                            lf.name Farmer,
-                                            lf.phone Mobile_Number
-                                    FROM
-                                        loop_loopuser ll
-                                    JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-                                    JOIN loop_farmer lf ON lf.village_id = llv.village_id
-                                    JOIN loop_village lv ON lf.village_id = lv.id
-                                    WHERE
-                                        ll.name_en <> 'Loop Test' and ll.name = \'%s\') t2 ON t1.f_id = t2.Farmer_ID
-                                        JOIN
-                                    (SELECT 
-                                        llv.loop_user_id,
-                                            lf.phone Mobile,
-                                            COUNT(lf.phone) Mobile_Frequency
-                                    FROM
-                                        loop_loopuserassignedvillage llv
-                                    JOIN loop_farmer lf ON lf.village_id = llv.village_id
-                                    JOIN loop_village lv ON lf.village_id = lv.id
-                                    WHERE
-                                        llv.loop_user_id <> 22
-                                    GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Mobile
-                                HAVING (t3.Mobile_Frequency > 1)
-                                    OR (t3.Mobile_Frequency = 1
-                                    AND (Mobile_Number <= 7000000000
-                                    OR Mobile_Number >= 9999999999))
-                                ORDER BY Aggregator'''
+                                      lct.date BETWEEN %s AND %s
+                                  GROUP BY user_created_id , farmer_id
+                                  HAVING Farmer_Frequency > 0) t1
+                                      JOIN
+                                  (SELECT 
+                                      ll.name Aggregator,
+                                          ll.id Loop_user_id,
+                                          ll.user_id user_id,
+                                          lv.village_name Village,
+                                          lf.id Farmer_ID,
+                                          lf.name Farmer,
+                                          lf.phone Mobile_Number
+                                  FROM
+                                      loop_loopuser ll
+                                  JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
+                                  JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                                  JOIN loop_village lv ON lf.village_id = lv.id
+                                  WHERE
+                                      ll.name <> 'Loop Test' and ll.name = \'%s\') t2 ON t1.f_id = t2.Farmer_ID
+                                      AND t1.user_created_id = t2.user_id
+                                      JOIN
+                                  (SELECT 
+                                      llv.loop_user_id Loop_user,
+                                          lf.phone Phone_no,
+                                          COUNT(lf.phone) Mobile_Frequency
+                                  FROM
+                                      loop_loopuserassignedvillage llv
+                                  JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                                  JOIN loop_village lv ON lf.village_id = lv.id
+                                  WHERE
+                                      llv.loop_user_id <> 22
+                                  GROUP BY llv.loop_user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Phone_no
+                                      AND t3.Loop_user = t2.Loop_user_id
+                              HAVING (t3.Mobile_Frequency > 1)
+                                  OR (t3.Mobile_Frequency = 1
+                                  AND (Mobile_Number <= 7000000000
+                                  OR Mobile_Number >= 9999999999))
+                              ORDER BY Aggregator'''
 
 
 EXCEL_WORKBOOK_NAME = 'Farmer Mobile Number.xlsx'
 
-AGGREGATOR_LIST = ['Ranjeet Singh', 'Devender Singh', 'Ram Nath Singh' , 'Shyam Kumar', 'Gautam Prasad', 'Santosh Kumar'
+AGGREGATOR_LIST = [  u'\u0930\u0902\u091c\u0940\u0924 \u0938\u093f\u0902\u0939', 
+                     u'\u0926\u0947\u0935\u0947\u0928\u094d\u0926\u094d\u0930 \u0938\u093f\u0902\u0939',
+                     u'\u0930\u093e\u092e \u0928\u093e\u0925 \u0938\u093f\u0902\u0939', 
+                     u'Shyam Kumar', u'\u0917\u094c\u0924\u092e \u092a\u094d\u0930\u0938\u093e\u0926', 
+                     u'\u0938\u0902\u0924\u094b\u0937 \u0915\u0941\u092e\u093e\u0930', 
+                     u'\u0935\u093f\u0928\u0940\u0924 \u092e\u0939\u0924\u094b', 
+                     u'\u0905\u0930\u0941\u0923', 
+                     u'\u0938\u0942\u0930\u094d\u092f\u093e \u0928\u093e\u0930\u093e\u092f\u0923 \u0938\u093f\u0902\u0918', 
+                     u'\u092e\u0943\u0924\u094d\u092f\u0941\u0902\u091c\u092f', 
+                     u'\u0938\u0942\u0930\u091c \u0915\u0941\u092e\u093e\u0930', 
+                     u'\u0935\u093f\u0915\u093e\u0938 \u092a\u094d\u0930\u0938\u093e\u0926', 
+                     u'Rajaram Singh', 
+                     u'\u0926\u093f\u0932\u0940\u092a'
+                     ]
+
+AGGREGATOR_LIST_EN = ['Ranjeet Singh', 'Devender Singh', 'Ram Nath Singh' , 'Shyam Kumar', 'Gautam Prasad', 'Santosh Kumar'
                     ,'Vineet Mahto', 'Arun', 'Suryanarayan Singh' , 'Mrityunjay', 'Suraj Kumar', 'Vikas Prasad'
                     , 'Rajaram Singh', 'Dileep']
 
@@ -227,5 +259,5 @@ AGGREGATOR_PHONE_LIST = '(7766885895, 9661416017, 7463892989, 7492963307, 829272
 
 DEFAULT_FROM_EMAIL = 'amandeep@digitalgreen.org'
 
-RECIPIENTS = ['amandeep@digitalgreen.org']
+RECIPIENTS = ['amandeep@digitalgreen.org', 'lokesh@digitalgreen.org']
 

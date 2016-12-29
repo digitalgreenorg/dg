@@ -67,7 +67,7 @@ class Command(BaseCommand):
                 raise CommandError('Invalid format for arguments')
         elif from_date > to_date:
                 raise CommandError('Invalid date range given')
-        elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST:
+        elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST_EN:
                 raise CommandError('Aggregator not present in database')            
 
         query = None
@@ -86,7 +86,8 @@ class Command(BaseCommand):
                                     to_day + '-' + to_month
         else:
             generate_sheet_for_all_flag = False
-            query = query_for_single_aggregator % (generate_sheet_for, from_date, to_date)
+            generate_sheet_for = AGGREGATOR_LIST[AGGREGATOR_LIST_EN.index(generate_sheet_for)]
+            query = query_for_single_aggregator % (from_date, to_date, generate_sheet_for)
             excel_workbook_name = 'Incorrect Mobile Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
                                     from_month + ' to ' + to_day + '-' + to_month
 
@@ -101,9 +102,12 @@ class Command(BaseCommand):
             #Write data for all aggregators in sheet
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
-            sheet_heading = 'Incorrect Mobile Numbers List_'+ from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+                if int(data[sno - 1][5]) <= 7000000000 or int(data[sno - 1][5]) >= 9999999999:
+                    data[sno - 1][5] = 'नंबर नहीं है'
+
+            sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
             data_json['all'] = {'sheet_heading': sheet_heading,
-                                    'sheet_name': 'All Data', 'data': data
+                                    'sheet_name': 'सारे किसान', 'data': data
                                 }
                     
             header_json['all'] = header_dict_for_loop_email_mobile_numbers
@@ -114,8 +118,8 @@ class Command(BaseCommand):
                 filtered_data_copy = copy.deepcopy(filtered_data)
                 for sno in range(1,len(filtered_data_copy) + 1):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
-                sheet_heading = aggregator_name + '_Incorrect Mobile Numbers List_' + \
-                from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+                    
+                sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
@@ -123,8 +127,13 @@ class Command(BaseCommand):
         else:
             #write data for a given aggregator from command line
             for sno in range(1,len(data) + 1):
-                data[sno - 1].insert(0, str(sno)) 
-            sheet_heading = generate_sheet_for +'_Incorrect Mobile Numbers List_' + \
+                data[sno - 1].insert(0, str(sno))
+                if data[sno - 1][5] <= 7000000000 or data[sno - 1][5] >= 9999999999:
+                    data[sno - 1][5] = 'नंबर नहीं है'
+                    if int(data[sno - 1][5]) <= 7000000000 or int(data[sno - 1][5]) >= 9999999999:
+                        data[sno - 1][5] = 'नंबर नहीं है'
+
+            sheet_heading = generate_sheet_for +'_गलत मोबाइल नंबर की लिस्ट_' + \
                                 from_day + '-' + from_month + ' to ' + to_day + '-' + to_month 
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
