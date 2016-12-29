@@ -43,6 +43,7 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
+var GLOBALURL = "http://localhost:4001/loop/";
 var globalApi;
 
 function initialize() {
@@ -145,6 +146,7 @@ function hide_nav(tab) {
                         var login_data = JSON.parse(data);
                         window.localStorage.name = login_data['phone_number']; //TODO: Use username and phone_number
                         window.localStorage.akey = login_data['key'];
+                        window.localStorage.user_id = login_data['user_id'];
                         globalApi = login_data['key'];
                         window.localStorage.login_timestamp = new Date();
                         if (localStorage.akey != null) {
@@ -3321,7 +3323,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             row_data['mandi'] = mandi_idDict;
             aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
             row_data['aggregator'] = aggregator_idDict;
-            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML + ' - '+globalUser;
+            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML + ' - '+window.localStorage.name;
             finalData.push(row_data);
         }
         return finalData;
@@ -3336,10 +3338,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
             mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
             row_data['mandi'] = mandi_idDict;
-            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML+ ' - '+globalUser;
+            row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML+ ' - '+window.localStorage.name;
             aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
             row_data['aggregator'] = aggregator_idDict;
             row_data['user_created_id'] = globalUser;
+            row_data['user_modified_id'] = window.localStorage.user_id;
             finalDataFarmer.push(row_data);
         }
         return finalDataFarmer;
@@ -3396,7 +3399,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "sExtends": "ajax",
                 "sButtonText": "Submit",
                 "sButtonClass": "disable-button",
-                "sAjaxUrl": "http://localhost:4001/loop/api/v1/aggregatorshareoutliers/",
+                "sAjaxUrl": GLOBALURL+"api/v1/aggregatorshareoutliers/",
 
                 "fnClick": function(nButton, oConfig) {
                     var finalData = [];
@@ -3441,8 +3444,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     }
                     if (Object.keys(rows_table2_farmer).length > 0) {
                         $.ajax({
-                            url: "http://localhost:4001/loop/farmer_payment_update/",
-                            type: 'POST',
+                            url: GLOBALURL+"farmer_payment_update/",
+                            type: 'PATCH',
                             dataType: 'json',
                             data:JSON.stringify(farmerObjects),
                             success: function() {
@@ -3651,7 +3654,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             row_data['gaddidar'] = gaddidar_idDict
             aggregator_idDict['online_id'] = $('#table3').DataTable().cell(keys - 1, 8).data();
             row_data['aggregator'] = aggregator_idDict
-            row_data['comment'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML + ' - '+globalUser;
+            row_data['comment'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML + ' - '+window.localStorage.name;
             finalData.push(row_data);
         }
         return finalData;
@@ -3708,7 +3711,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "sExtends": "ajax",
                     "sButtonText": "Submit",
                     "sButtonClass": "disable-button",
-                    "sAjaxUrl": "http://localhost:4001/loop/api/v1/gaddidarshareoutliers?format=json",
+                    "sAjaxUrl": GLOBALURL+"api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function(nButton, oConfig) {
                         var finalData = [];
                         $('#table3').find('td').removeAttr("style");

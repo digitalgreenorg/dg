@@ -37,7 +37,7 @@ def login(request):
                 api_key.save()
             log_object = get_latest_timestamp()
             return HttpResponse(json.dumps(
-                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
+                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name, 'user_id':loop_user[0].user_id,
                  'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,
                  'district': loop_user[0].village.block.district.id}))
         else:
@@ -81,14 +81,15 @@ def download_data_workbook(request):
 @csrf_exempt
 def farmer_payments(request):
     body = json.loads(request.body)
-    print body
-    if request.method == 'POST':
+    if request.method == 'PATCH':
         for bundle in body.get("objects"):
             try:
                 mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
-                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle['user_created_id'], mandi = mandi)
+                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle["user_created_id"], mandi=mandi)
                 attempt.farmer_share = bundle["amount"]
                 attempt.comment = bundle["comment"]
+                attempt.user_modified_id = bundle["user_modified_id"]
+                attempt.time_modified = get_latest_timestamp().timestamp
                 bundle = attempt.save()
             except:
                 return HttpResponse(json.dumps({'message':'error'}),status=500)

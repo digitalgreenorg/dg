@@ -810,7 +810,7 @@ class GaddidarShareOutliersResource(BaseResource):
     gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
     aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
     class Meta:
-        queryset =GaddidarShareOutliers.objects.filter()
+        queryset =GaddidarShareOutliers.objects.all()
         allowed_methods = ['post','patch','put','get']
         authorization = Authorization()
         authentication =ApiKeyAuthentication()
@@ -846,7 +846,7 @@ class AggregatorShareOutliersResource(BaseResource):
     mandi = fields.ForeignKey(MandiResource,'mandi')
     aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
     class Meta:
-        queryset =AggregatorShareOutliers.objects.filter()
+        queryset =AggregatorShareOutliers.objects.all()
         allowed_methods = ['post','patch','put','get']
         resource_name = 'aggregatorshareoutliers'
         authorization = Authorization()
