@@ -43,7 +43,7 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
-
+var globalApi;
 
 function initialize() {
     // initialize any library here
@@ -145,6 +145,7 @@ function hide_nav(tab) {
                         var login_data = JSON.parse(data);
                         window.localStorage.name = login_data['phone_number']; //TODO: Use username and phone_number
                         window.localStorage.akey = login_data['key'];
+                        globalApi = login_data['key'];
                         window.localStorage.login_timestamp = new Date();
                         if (localStorage.akey != null) {
                             $('#login_modal').closeModal();
@@ -3415,12 +3416,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var farmerObjects = {
                         "objects": finalDataFarmer
                     };
+                    
                     if (Object.keys(rows_table2).length > 0) {
                         $.ajax({
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
                             contentType: "application/json; charset=utf-8",
+                            headers:{"Authorization":"ApiKey "+window.localStorage.name+":"+window.localStorage.akey},
                             data: JSON.stringify(aggregatorObjects),
                             success: function() {
                                 alert("success");
@@ -3651,6 +3654,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             row_data['comment'] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML + ' - '+globalUser;
             finalData.push(row_data);
         }
+        return finalData;
     }
     $('#table3').DataTable({
         destroy: true,
@@ -3722,6 +3726,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 type: 'patch',
                                 dataType: 'json',
                                 contentType: "application/json; charset=utf-8",
+                                headers:{"Authorization":"ApiKey "+window.localStorage.name+":"+window.localStorage.akey},
                                 data: JSON.stringify(gaddidarObjects),
                                 success: function() {
                                     alert("success");

@@ -78,7 +78,21 @@ def download_data_workbook(request):
         response = HttpResponse(excel_output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
-
+@csrf_exempt
+def farmer_payments(request):
+    body = json.loads(request.body)
+    print body
+    if request.method == 'POST':
+        for bundle in body.get("objects"):
+            try:
+                mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
+                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle['user_created_id'], mandi = mandi)
+                attempt.farmer_share = bundle["amount"]
+                attempt.comment = bundle["comment"]
+                bundle = attempt.save()
+            except:
+                return HttpResponse(json.dumps({'message':'error'}),status=500)
+    return HttpResponse(json.dumps({'message':'successfully edited'}),status=200)
 
 def filter_data(request):
     language = request.GET.get('language')
@@ -499,17 +513,3 @@ def payments(request):
 
     return HttpResponse(data)
 
-@csrf_exempt
-def farmer_payments(request):
-    body = json.loads(request.body)
-    if request.method == 'POST':
-        for bundle in body.get("objects"):
-            try:
-                mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
-                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle['user_created_id'], mandi = mandi)
-                attempt.farmer_share = bundle["amount"]
-                attempt.comment = bundle["comment"]
-                bundle = attempt.save()
-            except:
-                return HttpResponse(json.dumps({'message':'error'}),status=500)
-    return HttpResponse(json.dumps({'message':'successfully edited'}),status=200)

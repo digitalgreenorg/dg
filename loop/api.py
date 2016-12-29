@@ -61,7 +61,6 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    print field_name
     if field_dict.get('online_id'):
         bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict.get('online_id')))
@@ -814,7 +813,7 @@ class GaddidarShareOutliersResource(BaseResource):
         queryset =GaddidarShareOutliers.objects.filter()
         allowed_methods = ['post','patch','put','get']
         authorization = Authorization()
-        authentication = Authentication()
+        authentication =ApiKeyAuthentication()
         resource_name = 'gaddidarshareoutliers'
         always_return_data = True
         excludes = ('time_created', 'time_modified')
@@ -851,7 +850,7 @@ class AggregatorShareOutliersResource(BaseResource):
         allowed_methods = ['post','patch','put','get']
         resource_name = 'aggregatorshareoutliers'
         authorization = Authorization()
-        authentication = Authentication()
+        authentication =ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -862,7 +861,6 @@ class AggregatorShareOutliersResource(BaseResource):
     hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
 
     def obj_create(self,bundle,request=None,**kwargs):
-        print bundle.data
         mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
         aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
 
