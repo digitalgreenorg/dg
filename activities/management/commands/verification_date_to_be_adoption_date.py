@@ -13,9 +13,9 @@ class Command(BaseCommand):
 					.filter(Q(date_of_adoption__isnull=False,
 							  date_of_verification__isnull=False) & ~Q(date_of_adoption=F('date_of_verification')))
 		if len(obj):
-			try:
-				for iterable in obj:
+			for iterable in obj:
+				try:
 					iterable.date_of_adoption = iterable.date_of_verification
 					iterable.save()
-			except IntegrityError as e:
-				print 'Error ::', e
+				except IntegrityError as e:
+					print 'Error ::', e
