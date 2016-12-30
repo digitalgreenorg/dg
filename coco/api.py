@@ -1,4 +1,6 @@
 # python imports
+import ast
+import json
 from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
@@ -505,6 +507,7 @@ class ScreeningResource(BaseResource):
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
     farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
+    category = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
@@ -541,10 +544,14 @@ class ScreeningResource(BaseResource):
                     person_obj.age = int(pma.get('age')) if pma.get('age') else None
                     person_obj.gender = pma.get('gender') if pma.get('gender') else None
                     person_obj.save()
+                    if pma.get('category'):
+                        category = json.dumps(pma.get('category'))
+                    else:
+                        category = None
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
                                                          user_created_id = user_id,
-                                                         category=pma['category'])
+                                                         category=category)
                     attendance.save()
                 except Exception, e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) + ' pma is not getting saved. pma details: '+ str(e))
@@ -568,10 +575,14 @@ class ScreeningResource(BaseResource):
             person_obj.age = int(pma.get('age')) if pma.get('age') else None
             person_obj.gender = pma.get('gender') if pma.get('gender') else None
             person_obj.save()
+            if pma.get('category'):
+                category = json.dumps(pma.get('category'))
+            else:
+                category = None
             pma = PersonMeetingAttendance(screening_id=screening_id,
                                           person_id=pma['person_id'],
                                           user_created_id = user_id,
-                                          category=pma['category'])
+                                          category=category)
 
             pma.save() 
 
@@ -583,19 +594,34 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
+    def dehydrate_category(self, bundle):
+        data_list= []
+        db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
+        int_db_list = [int(item) for item in db_list]
+        for pma in bundle.obj.personmeetingattendance_set.all():
+            if isinstance(pma.category, unicode):
+                int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
+                for iterable in int_pma_db_list:
+                    data_list.append({'id': iterable, 
+                                      'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
+                                      'person_id': pma.person.id,
+                                      'person_name': pma.person.person_name
+                                     })
+        return data_list
+
     def dehydrate_farmers_attendance(self, bundle):
         return [{'person_id':pma.person.id, 
-                 'person_name': pma.person.person_name, 
-                 'pma_direct_beneficiariescategory': pma.category
+                 'person_name': pma.person.person_name,
+                 'category': self.dehydrate_category(bundle)
                  }  
                  for pma in bundle.obj.personmeetingattendance_set.all()]
     
 class PersonResource(BaseResource):
     label = fields.CharField()
+    category = fields.ListField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
-    pma_direct_beneficiariescategory = fields.CharField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     
     class Meta:
@@ -624,12 +650,9 @@ class PersonResource(BaseResource):
         videos_seen = [{'id': video.id, 'title': video.title, } for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
 
-    def dehydrate_pma_direct_beneficiariescategory(self, bundle):
-        try:
-            pma_cat = bundle.obj.personmeetingattendance_set.latest('id').category
-        except:
-            pma_cat = None
-        return pma_cat
+    def dehydrate_category(self, bundle):
+        return [{'id': None, 'category': None}]
+
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
 class PersonAdoptVideoResource(BaseResource):

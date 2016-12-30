@@ -1021,6 +1021,7 @@ define([
             var desc = this.foreign_entities[entity][element]
             var fetch_element = this.entity_config.fetch_element
             var fetch_element_key = this.entity_config.fetch_key_element
+            var child_element = this.entity_config.fetch_child_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -1050,9 +1051,28 @@ define([
                 });
                 raw_json[element].push(inl_obj);
                 if (fetch_element != null){
+                   var category = []
                    Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
                     .done(function(model) {
-                        model.save({'age': inl_obj.age, 'pma_direct_beneficiariescategory': inl_obj.category, 'gender': inl_obj.gender});
+                        _.each(inl_obj.category, function(iterable){
+
+                                Offline.fetch_object(child_element, fetch_element_key, parseInt(iterable))
+                                .done(function(model_var) {
+                                    console.log("NIKHIL-VERMA", model_var.id);
+                                    category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                    model.save({'age': inl_obj.age, 'category': category, 'gender': inl_obj.gender});
+
+                                })
+                                .fail(function() {
+                                    // edit object could not be fetched from offline db
+                                    //TODO: error handling
+                                    console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                    alert("ERROR: EDIT: Edit model could not be fetched!");
+                                });
+
+
+                        })
+                        
 
                     })
                     .fail(function() {

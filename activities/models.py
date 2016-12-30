@@ -118,7 +118,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
-    category = models.CharField(max_length=1, choices=ATTENDED_PERSON_CATEGORY, null=True)
+    category = models.CharField(max_length=80, null=True)
     
     def __unicode__(self):
         return  u'%s' % (self.id)

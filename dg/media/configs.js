@@ -669,6 +669,7 @@ function() {
         'rest_api_url': '/coco/api/v2/screening/',
         'entity_name': 'screening',
         'fetch_element': 'person',
+        'fetch_child_element': 'directbeneficiaries',
         'fetch_key_element': 'id',
         'fetch_element_that_manipulate': 'parentcategory',
         'fields_to_hide': 'th#id_age, th#id_gender, th#id_category, input#age, input#gender, div#category_chosen',
