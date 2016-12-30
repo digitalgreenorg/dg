@@ -3034,8 +3034,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_modal').openModal();
             $('#farmer_share_row').focus();
         }
-        
-        
+
+
     });
     $('#aggregator_commission_row').on('change', function() {
         if (!inputValidation($('#aggregator_commission_row'))) {
@@ -3049,7 +3049,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     });
     $('#aggregator_share_row').on('change', function() {
         if (! inputValidation($('#aggregator_share_row'))) {
-            actionOnInvalidValidation($('#aggregator_share_row'),$('#aggregator_error_div'),$('#aggregator_error_message'))            
+            actionOnInvalidValidation($('#aggregator_share_row'),$('#aggregator_error_div'),$('#aggregator_error_message'))
             }
         else{
             if($('#aggregator_share_row').val().trim() !='' && $('#aggregator_share_row').val().trim()!=$this.parent()[0].childNodes[4].innerHTML)
@@ -3159,7 +3159,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             alert('Please fill Farmer Share Correctly');
         } else if(editedFarmer!=0){
-            
+
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val();
             $this.parent()[0].childNodes[8].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2);
@@ -3187,7 +3187,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             var row_id = $this.context.parentNode.rowIndex;
             rows_table2_farmer[row_id] = true;
             editedFarmer =0;
-            
+
             $('#farmer_error_div').hide();
         }
         $("#farmer_modal").closeModal();
@@ -3250,7 +3250,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }
         $('#aggregator_modal').closeModal();
     });
-    
+
     var formatVal = function(yourNumber) {
         //Seperates the components of the number
         var n = yourNumber.toString().split(".");
@@ -3379,7 +3379,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var farmerObjects = {
                         "objects": editedDataFarmer
                     };
-                    
+
                     if (Object.keys(rows_table2).length > 0) {
                         $.ajax({
                             url: oConfig.sAjaxUrl,
@@ -3431,7 +3431,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             var api = this.api(),
                 data;
 
-            //Total of every column    
+            //Total of every column
             column_set = [3, 4, 5, 6, 7, 8];
             for (var i = 0; i < column_set.length; i++) {
                 total = api.column(column_set[i]).data().reduce(function(a, b) {
@@ -3642,7 +3642,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                         flag_edit_Table3 = true;
                         $('#table3').find('tr td:nth-child(5)').css('background-color', '#E5FED6');
                         $('#table3').find('tr td:nth-child(6)').css('background-color', '#E5FED6');
-                        
+
                     }
                 }, {
                     "sExtends": "ajax",
@@ -3691,7 +3691,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             var api = this.api(),
                 data;
 
-            //Total of every column    
+            //Total of every column
             column_set = [3, 5];
             for (var i = 0; i < column_set.length; i++) {
                 total = api.column(column_set[i]).data().reduce(function(a, b) {
@@ -4135,4 +4135,3 @@ function change_language(lang) {
     }
 
 }
-
