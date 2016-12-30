@@ -36,7 +36,6 @@ var QUANTITY__SUM = "quantity__sum",
     AMOUNT__SUM = "amount__sum",
     MANDI__ID = "mandi__id",
     USER_CREATED__ID = "user_created__id",
-    MANDI__ID = "mandi__id",
     GADDIDAR__ID = "gaddidar__id";
 
 var aggregator_sheet_name = "",
@@ -705,14 +704,12 @@ function set_filterlistener() {
             var data_json = {
                 aggregator_data: {
                     name: aggregator_sheet_name,
-
                     data: aggregator_data_set
                 },
 
                 gaddidar_data: {
                     name: gaddidar_sheet_name,
                     data: gaddidar_data_set
-
                 },
 
                 transporter_data: {
@@ -724,7 +721,6 @@ function set_filterlistener() {
         }
 
     });
-
 
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();

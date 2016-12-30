@@ -43,5 +43,6 @@ urlpatterns = patterns('',
     url(r'^data_for_drilldown_graphs/',data_for_drilldown_graphs),
     url(r'^data_for_line_graph/',data_for_line_graph),
     url(r'^payments/',payments),
-    url(r'^farmer_payment_update/',farmer_payments)
+    url(r'^farmer_payment_update/',farmer_payments),
+    url(r'^chaining/', include('smart_selects.urls')),
     )
