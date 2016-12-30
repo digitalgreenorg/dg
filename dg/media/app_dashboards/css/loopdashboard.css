@@ -386,3 +386,20 @@ table.dataTable tr.even td.sorting_1 {
     margin-bottom:-30px;
     padding:5px;
 }
+
+
+.editedcell{
+    background-color:#E5FEB5;
+    font-weight:bold;
+    color: #009;
+}
+
+.editedcelledge{
+    background-color:#F8C6B8;
+    font-weight:bold;
+    color: #009;
+}
+
+.editcolumn{
+    background-color: #E5FED6;
+}
