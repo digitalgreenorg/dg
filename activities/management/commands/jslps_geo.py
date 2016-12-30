@@ -127,4 +127,3 @@ class Command(BaseCommand):
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['JSLPS village',vc, e])
-
