@@ -47,7 +47,7 @@ STATICFILES_DIRS = (
    # Put strings here, like "/home/html/static" or "C:/www/django/static".
    # Always use forward slashes, even on Windows.
    # Don't forget to use absolute paths, not relative paths.
-   os.path.join(PROJECT_PATH, 'media'),                 
+   os.path.join(PROJECT_PATH, 'media'),
 )
 
 STATICFILES_FINDERS = (
@@ -204,6 +204,7 @@ INSTALLED_APPS = (
     'loop',
     'qacoco',
     'mrppayment',
+    'smart_selects',
 )
 
 # Store these package names here as they may change in the future since
