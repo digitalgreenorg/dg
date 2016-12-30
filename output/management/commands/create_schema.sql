@@ -24,9 +24,6 @@ CREATE INDEX screening_myisam_block_id ON screening_myisam(block_id, date);
 CREATE INDEX screening_myisam_district_id ON screening_myisam(district_id, date);
 CREATE INDEX screening_myisam_country_id ON screening_myisam(country_id, date);
 
-INSERT INTO `screening_myisam`
-SELECT * FROM digitalgreen_clone.screening_myisam;
-
 -- Normalized version of digitalgreen.VIDEO
 DROP TABLE IF EXISTS `video_myisam`;
 CREATE TABLE `video_myisam` (
@@ -52,9 +49,6 @@ CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_productio
 CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_date);
 CREATE INDEX video_myisam_district_id ON video_myisam(district_id, video_production_date);
 CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_production_date);
-
-INSERT INTO `video_myisam`
-SELECT * FROM digitalgreen_clone.video_myisam;
 
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
 DROP TABLE IF EXISTS `person_meeting_attendance_myisam`;
@@ -83,9 +77,6 @@ CREATE INDEX person_meeting_attendance_myisam_block_id ON person_meeting_attenda
 CREATE INDEX person_meeting_attendance_myisam_district_id ON person_meeting_attendance_myisam(district_id, date);
 CREATE INDEX person_meeting_attendance_myisam_country_id ON person_meeting_attendance_myisam(country_id, date);
 
-INSERT INTO `person_meeting_attendance_myisam`
-SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
-
 -- Normalized version of digitalgreen.PERSON_ADOPT_PRACTICE
 DROP TABLE IF EXISTS `person_adopt_practice_myisam`;
 CREATE TABLE `person_adopt_practice_myisam` (
@@ -112,9 +103,6 @@ CREATE INDEX person_adopt_practice_myisam_village_id ON person_adopt_practice_my
 CREATE INDEX person_adopt_practice_myisam_block_id ON person_adopt_practice_myisam(block_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_district_id ON person_adopt_practice_myisam(district_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_country_id ON person_adopt_practice_myisam(country_id, date_of_adoption);
-
-INSERT INTO `person_adopt_practice_myisam`
-SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
 
 -- Aggregation of some statistics on a per day per village basis. The _copy derives from an existing table
 DROP TABLE IF EXISTS `village_precalculation_copy`;
@@ -152,9 +140,6 @@ CREATE INDEX village_precalculation_copy_block_id ON village_precalculation_copy
 CREATE INDEX village_precalculation_copy_district_id ON village_precalculation_copy(district_id, date);
 CREATE INDEX village_precalculation_copy_country_id ON village_precalculation_copy(country_id, date);
 
-INSERT INTO `village_precalculation_copy`
-SELECT * FROM digitalgreen_clone.village_precalculation_copy;
-
 -- Screeingwisedata table for raw_data_analytics
 DROP TABLE IF EXISTS `activities_screeningwisedata`;
 CREATE TABLE `activities_screeningwisedata` (
@@ -184,9 +169,6 @@ CREATE INDEX activities_screeningwisedata_animator_id ON activities_screeningwis
 CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id); 
 CREATE INDEX activities_screeningwisedata_video_id ON activities_screeningwisedata(video_id);
 
-INSERT INTO `activities_screeningwisedata`
-SELECT * FROM digitalgreen_clone.activities_screeningwisedata;
-
 -- Animatorwisedata for raw_data_analytics
 DROP TABLE IF EXISTS `people_animatorwisedata`;
 CREATE TABLE `people_animatorwisedata` ( 
@@ -211,9 +193,6 @@ CREATE TABLE `people_animatorwisedata` (
 CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
 
-INSERT INTO `people_animatorwisedata`
-SELECT * FROM digitalgreen_clone.people_animatorwisedata;
-
 -- Geographies-Partner Added for raw_data_analytics --
 DROP TABLE IF EXISTS `village_partner_myisam`;
 CREATE TABLE `village_partner_myisam` (
@@ -234,5 +213,10 @@ CREATE INDEX village_partner_myisam_district_partner ON village_partner_myisam(d
 CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(state_id,partner_id);
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
 
-INSERT INTO `village_partner_myisam`
-SELECT * FROM digitalgreen_clone.village_partner_myisam;
+INSERT INTO `screening_myisam` SELECT * FROM digitalgreen_clone.screening_myisam;
+INSERT INTO `person_meeting_attendance_myisam` SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
+INSERT INTO `person_adopt_practice_myisam` SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
+INSERT INTO `village_precalculation_copy` SELECT * FROM digitalgreen_clone.village_precalculation_copy;
+INSERT INTO `activities_screeningwisedata` SELECT * FROM digitalgreen_clone.activities_screeningwisedata;
+INSERT INTO `people_animatorwisedata` SELECT * FROM digitalgreen_clone.people_animatorwisedata;
+INSERT INTO `village_partner_myisam` SELECT * FROM digitalgreen_clone.village_partner_myisam;
