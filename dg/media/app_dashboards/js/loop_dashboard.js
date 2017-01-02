@@ -724,11 +724,11 @@ function set_filterlistener() {
 
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
-        //var agg_id = $(this).children(":selected").attr("id");
+        var agg_id = $(this).children(":selected").attr("id");
         if (table_created) {
             $('#outliers_data').html("");
         }
-        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id);
+        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id);
         $("#download_payment_sheets").show();
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
@@ -2852,7 +2852,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
     $('select').material_select();
 }
 //To compute aggregator, transporter, gaddidar payments table
-function aggregator_payment_sheet(data_json, aggregator) {
+function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
     var gaddidar_contribution_data = payments_data.gaddidar_data;
@@ -2907,7 +2907,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID],  ""]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
 
         }
     }
@@ -2947,7 +2947,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
         for (var j = 0; j < mandis[i].length; j++) {
 
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
-            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
             sno += 1;
         }
@@ -3214,7 +3214,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             ev.preventDefault();
             $('#aggregagtor_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
-            $('#aggregator_share_row').focus();
+            $('#aggregator_commission_row').focus();
             return false;
         } else if(editedAggregator!=0){
             $('#aggregator_modal').closeModal();
@@ -3362,9 +3362,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
                 "fnClick": function(nButton, oConfig) {
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
-                    $('#table2').find('th').removeClass("editcolumn");
-                    $('#table2').find('tr').removeClass("editcolumn");
-                    $('#table2').find('td').removeClass("editcolumn");
+                    $('#table2').find('th').removeAttr("class");
+                    $('#table2').find('tr').removeAttr("class");
+                    $('#table2').find('td').removeAttr("class");
                     /*$('#table2').find('th').removeAttr("style");
                     $('#table2').find('tr').removeAttr("style");
                     $('#table2').find('td').removeAttr("style");*/
@@ -3559,7 +3559,7 @@ function aggregator_payment_sheet(data_json, aggregator) {
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val();
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
                 if(editedGaddidar==1){
-                    $this.removeClass('class');
+                    $this.removeAttr('class');
                     $this.addClass('editedcelledge');
                 }
                 else if(editedGaddidar==3){
@@ -3664,7 +3664,9 @@ function aggregator_payment_sheet(data_json, aggregator) {
                     "sAjaxUrl": GLOBALURL+"api/v1/gaddidarshareoutliers?format=json",
                     "fnClick": function(nButton, oConfig) {
                         var editedDataGaddidar = [];
-                        $('#table3').find('td').removeClass("editcolumn");
+                        $('#table3').find('td').removeAttr("class");
+                        $('#table3').find('tr').removeAttr("class");
+                        $('#table3').find('th').removeAttr("class");
                         flag_edit_Table3 = false;
                         $('#ToolTables_table3_1').addClass('disable-button');
                         editedDataGaddidar = processGaddidarRow(rows_table3,editedDataGaddidar);
