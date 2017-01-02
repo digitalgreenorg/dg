@@ -79,6 +79,9 @@ class Command(BaseCommand):
                                              use_unicode = True)
         
         cur = mysql_cn.cursor()
+        AGGREGATOR_LIST = LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True)
+        AGGREGATOR_LIST_EN = LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True)
+
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_all_aggregator % (from_date, to_date)
@@ -96,8 +99,6 @@ class Command(BaseCommand):
         data = [list(row) for row in result]
         #create list copy for filtering
         temp_data = copy.deepcopy(data)
-        workbook = xlsxwriter.Workbook(EXCEL_WORKBOOK_NAME)
-        header_format = workbook.add_format({'bold':1, 'font_size': 10,'text_wrap': True})
         if generate_sheet_for_all_flag is True:
             #Write data for all aggregators in sheet
             for sno in range(1,len(data) + 1):
@@ -151,7 +152,6 @@ class Command(BaseCommand):
         excel_file = open(excel_workbook_name + '.xlsx', 'w')
         excel_file.write(r.content)
         excel_file.close()
-        workbook.close()
         #send email to concerned people with excel file attached    
         common_send_email('Farmers List with Incorrect Mobile Numbers', 
                          RECIPIENTS, excel_file, [],EMAIL_HOST_USER)

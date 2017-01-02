@@ -203,29 +203,6 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
         print e
     return workbook
 
-def prepare_value_data(data):
-    """
-    Process the post data request and breaking into individual sheet data
-    """
-    data = json.loads(data)
-    aggregator_data = data.get('aggregator_data')
-    commission_data = data.get('gaddidar_data')
-    transport_data = data.get('transporter_data')
-
-    sheet1_file_name = u''+aggregator_data.get('name')
-    sheet2_file_name = u''+commission_data.get('name')
-    sheet3_file_name = u''+transport_data.get('name')
-
-    aggregator_data = aggregator_data.get('data')
-    commission_data = commission_data.get('data')
-    transport_data = transport_data.get('data')
-
-    name_of_sheets=[sheet1_file_name, sheet2_file_name, sheet3_file_name]
-    combined_data = [aggregator_data, commission_data, transport_data]
-    combined_dict =  {'combined_data': combined_data,
-                      'name_of_sheets': name_of_sheets}
-    return combined_dict
-
 
 def prepare_value_data_generic(data):
     data = json.loads(data)

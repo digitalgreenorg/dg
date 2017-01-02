@@ -640,22 +640,6 @@ function set_filterlistener() {
             xhttp.open("POST", "/loop/get_payment_sheet/", true);
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
-            // var data_json = {
-            //     aggregator_data:{
-            //         name: aggregator_sheet_name,
-            //         data : aggregator_data_set     
-            //     },
-
-            //     gaddidar_data: {
-            //         name : gaddidar_sheet_name,
-            //         data : gaddidar_data_set    
-            //     },
-
-            //     transporter_data:{
-            //         name : transporter_sheet_name,
-            //         data : transporter_data_set
-            //      }
-            // };
 
             var data_json = {
                 aggregator_data:{
@@ -3183,8 +3167,6 @@ function create_data_for_excel_download()
                                           'label': 'Tranport Cost (in Rs)',
                                           'total': true}]
             };
-
-        console.log(JSON.stringify(header_dict));
 }
 
 function getFormattedDate(aggregator_id) {
