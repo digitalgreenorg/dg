@@ -3661,7 +3661,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "sExtends": "ajax",
                     "sButtonText": "Submit",
                     "sButtonClass": "disable-button",
-                    "sAjaxUrl": GLOBALURL+"api/v1/gaddidarshareoutliers/?format=json",
+                    "sAjaxUrl": GLOBALURL+"api/v1/gaddidarshareoutliers/",
                     "fnClick": function(nButton, oConfig) {
                         var editedDataGaddidar = [];
                         $('#table3').find('td').removeAttr("class");
