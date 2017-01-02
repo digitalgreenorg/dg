@@ -42,7 +42,7 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
-var GLOBALURL = "http://localhost:4001/loop/";
+var GLOBALURL = "http://sandbox.digitalgreen.org/loop/";
 var globalApi;
 
 function initialize() {
