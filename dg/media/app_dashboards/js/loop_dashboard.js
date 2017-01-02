@@ -3147,12 +3147,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
-            alert('Please fill Farmer Commission Correctly');
+            $('#farmer_commission_row').focus();
+            return false;
         } else if (!inputValidation($('#farmer_share_row'))) {
             ev.preventDefault();
             $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
-            alert('Please fill Farmer Share Correctly');
+            $('#farmer_share_row').focus();
+            return false;
         } else if(editedFarmer!=0){
 
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
@@ -3206,12 +3208,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             ev.preventDefault();
             $('#aggregator_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregator_share_row').val($this.parent()[0].childNodes[5].textContent);
-            alert('Please fill Aggregator Commission Correctly');
+            $('#aggregator_commission_row').focus();
+            return false;
         } else if (!inputValidation($('#aggregator_share_row'))) {
             ev.preventDefault();
             $('#aggregagtor_commission_row').val($this.parent()[0].childNodes[5].textContent / $this.parent()[0].childNodes[4].innerHTML);
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
-            alert('Please fill Aggregator Share Correctly');
+            $('#aggregator_share_row').focus();
+            return false;
         } else if(editedAggregator!=0){
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
@@ -3538,12 +3542,16 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             ev.preventDefault();
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
-            alert('Please fill Gaddidar Commission Correctly');
+            $('#gaddidar_commission_row').focus();
+            return false;
+
         } else if (!inputValidation($('#gaddidar_share_row'))) {
             ev.preventDefault();
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
-            alert('Please fill Share Correctly');
+            $('#gaddidar_share_row').focus();
+            return false;
+
         } else if(editedGaddidar!=0){
             $('#gaddidar_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
