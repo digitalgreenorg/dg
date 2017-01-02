@@ -62,6 +62,10 @@ class Command(BaseCommand):
 
         from_month = calendar.month_abbr[datetime.strptime(from_date, '%Y%m%d').month]
         to_month = calendar.month_abbr[datetime.strptime(to_date, '%Y%m%d').month]
+
+        AGGREGATOR_LIST = list(LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True))
+        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True))
+
         if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
             or type(to_date) != str or len(to_date) != 8:
                 raise CommandError('Invalid format for arguments')
@@ -79,9 +83,7 @@ class Command(BaseCommand):
                                              use_unicode = True)
         
         cur = mysql_cn.cursor()
-        AGGREGATOR_LIST = LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True)
-        AGGREGATOR_LIST_EN = LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True)
-
+        
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_all_aggregator % (from_date, to_date)
@@ -91,7 +93,7 @@ class Command(BaseCommand):
             generate_sheet_for_all_flag = False
             generate_sheet_for = AGGREGATOR_LIST[AGGREGATOR_LIST_EN.index(generate_sheet_for)]
             query = query_for_single_aggregator % (from_date, to_date, generate_sheet_for)
-            excel_workbook_name = 'Incorrect Mobile Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
+            excel_workbook_name = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
                                     from_month + ' to ' + to_day + '-' + to_month
 
         cur.execute(query)
@@ -103,7 +105,7 @@ class Command(BaseCommand):
             #Write data for all aggregators in sheet
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
-                if int(data[sno - 1][5]) <= 7000000000 or int(data[sno - 1][5]) >= 9999999999:
+                if int(data[sno - 1][5]) >= 9999999999:
                     data[sno - 1][5] = 'नंबर नहीं है'
 
             sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
@@ -119,6 +121,8 @@ class Command(BaseCommand):
                 filtered_data_copy = copy.deepcopy(filtered_data)
                 for sno in range(1,len(filtered_data_copy) + 1):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
+                    if int(filtered_data_copy[sno - 1][5]) >= 9999999999:
+                        filtered_data_copy[sno - 1][5] = 'नंबर नहीं है'
                     
                 sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
@@ -129,12 +133,10 @@ class Command(BaseCommand):
             #write data for a given aggregator from command line
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
-                if data[sno - 1][5] <= 7000000000 or data[sno - 1][5] >= 9999999999:
+                if int(data[sno - 1][5]) >= 9999999999:
                     data[sno - 1][5] = 'नंबर नहीं है'
-                    if int(data[sno - 1][5]) <= 7000000000 or int(data[sno - 1][5]) >= 9999999999:
-                        data[sno - 1][5] = 'नंबर नहीं है'
 
-            sheet_heading = generate_sheet_for +'_गलत मोबाइल नंबर की लिस्ट_' + \
+            sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
                                 from_day + '-' + from_month + ' to ' + to_day + '-' + to_month 
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
@@ -154,7 +156,7 @@ class Command(BaseCommand):
         excel_file.close()
         #send email to concerned people with excel file attached    
         common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                         RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
+                          RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
 
 
 

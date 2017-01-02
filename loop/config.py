@@ -1,5 +1,50 @@
  # -*- coding: utf-8 -*-
 
+#Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails 
+
+from django.template.context import Context
+from django.template.loader import get_template
+from django.core.mail.message import EmailMultiAlternatives
+import mimetypes
+from email import encoders
+from email.header import Header
+from email.mime.base import MIMEBase
+from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
+
+class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
+    def _create_attachment(self, filename, content, mimetype=None):
+        """
+        Converts the filename, content, mimetype triple into a MIME attachment
+        object. Use self.encoding when handling text attachments.
+        """
+        if mimetype is None:
+            mimetype, _ = mimetypes.guess_type(filename)
+            if mimetype is None:
+                mimetype = DEFAULT_ATTACHMENT_MIME_TYPE
+        basetype, subtype = mimetype.split('/', 1)
+        if basetype == 'text':
+            encoding = self.encoding or settings.DEFAULT_CHARSET
+            attachment = SafeMIMEText(smart_str(content,
+                settings.DEFAULT_CHARSET), subtype, encoding)
+        else:
+            # Encode non-text attachments with base64.
+            attachment = MIMEBase(basetype, subtype)
+            attachment.set_payload(content)
+            encoders.encode_base64(attachment)
+        if filename:
+            try:
+                filename = filename.encode('ascii')
+            except UnicodeEncodeError:
+                filename = Header(filename, 'utf-8').encode()
+            attachment.add_header('Content-Disposition', 'attachment',
+                                   filename=filename)
+        return attachment
+
+
+
+
+
+#Extra variables required in other files
 DEFAULT_COLUMN_WIDTH = 9
 
 header_dict_for_loop_email_mobile_numbers = [{'column_width': 15,
@@ -142,5 +187,5 @@ query_for_single_aggregator = '''SELECT
                               ORDER BY Aggregator'''
 
 
-RECIPIENTS = ['amandeep@digitalgreen.org', 'lokesh@digitalgreen.org']
+RECIPIENTS = ['amandeep@digitalgreen.org']
 
