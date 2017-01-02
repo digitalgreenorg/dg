@@ -17,8 +17,8 @@
 <div class="navbar-fixed">
    <nav class="top-nav" id="analytics_page_nav_bar">
       <div class="nav-wrapper grey darken-3">
-         <a href="#" class="brand-logo center white-text">LOOP</a>
-         <a href="#" data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
+         <a class="brand-logo center white-text">LOOP</a>
+         <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
          <div class="left col s5">
             <ul class="hide-on-med-and-down grey lighten-2">
                <li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
@@ -41,11 +41,11 @@
          </ul>
       </div>
       <div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
-         <a href="#" data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
+         <a data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
          <ul class="hide-on-med-and-down">
             <ul class="left">
                <li>
-                  <a href="#" data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}" /></a>
+                  <a data-activates="mobile-demo" class="button-collapse1 black-text"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}" /></a>
                </li>
                <li class="analytics_tabs" id="aggregator_tab"><a class="active black-text" onclick="change_tab('aggregator')">Agregators</a></li>
                <li class="analytics_tabs" id="mandi_tab"><a class="black-text" onclick="change_tab('mandi')">Mandi</a></li>
@@ -67,13 +67,13 @@
                      <!-- <i class="material-icons black-text text-lighten-2 prefix">today</i> -->
                      <input id="to_date" placeholder="End Date" type="text" class="datepicker black-text">
                   </div>
-                  <li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">GET DATA</a></li>
+                  <li class="col s4"><a id="get_data" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger">GET DATA</a></li>
                </div>
             </ul>
          </ul>
          <ul class="side-nav" id="mobile-demo1">
             <ul class="left">
-               <li><a href="#" data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
+               <li><a data-activates="mobile-demo" class="button-collapse1">Filters</a></li>
                <li><a class="active" onclick="change_tab('aggregator')">Agregators</a></li>
                <li><a class="" onclick="change_tab('mandi')">Mandi</a></li>
                <li><a class="" onclick="change_tab('crop')">Crop</a></li>
@@ -85,7 +85,7 @@
                   <i class="material-icons black-text text-lighten-2 prefix">today</i>
                   <input id="to_date" placeholder="End Date" type="text" class="datepicker">
                </div>
-               <ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger" href="#modal1">GET DATA</a></ul>
+               <ul class="right"><a id="get_data" class="waves-effect waves-light black lighten-2 white-text btn modal-trigger">GET DATA</a></ul>
             </ul>
          </ul>
       </div>
@@ -167,7 +167,7 @@
                </table>
             </div>
          </li>
-         <li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger" href="#modal1">APPLY FILTERS</a></li>
+         <li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger">APPLY FILTERS</a></li>
       </ul>
    </li>
 </ul>
@@ -372,7 +372,7 @@
       <p>Please select a valid date range. <br> &lt;From&gt; cannot be greater than &lt;To&gt; date.</p>
    </div>
    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-black btn-flat">OK</a>
+      <a class="modal-action modal-close waves-effect waves-black btn-flat">OK</a>
    </div>
 </div>
 <div id="analytics_div" hide>
