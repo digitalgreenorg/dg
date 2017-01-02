@@ -594,7 +594,7 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
-    def dehydrate_category(self, bundle):
+    def all_category(self, bundle):
         data_list= []
         db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
         int_db_list = [int(item) for item in db_list]
@@ -609,10 +609,17 @@ class ScreeningResource(BaseResource):
                                      })
         return data_list
 
+    def dehydrate_category(self, bundle):
+        return  [{'person_id':pma.person.id, 
+                  'person_name': pma.person.person_name,
+                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
+                 }  
+                 for pma in bundle.obj.personmeetingattendance_set.all()]
+
     def dehydrate_farmers_attendance(self, bundle):
         return [{'person_id':pma.person.id, 
                  'person_name': pma.person.person_name,
-                 'category': self.dehydrate_category(bundle)
+                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
                  }  
                  for pma in bundle.obj.personmeetingattendance_set.all()]
     

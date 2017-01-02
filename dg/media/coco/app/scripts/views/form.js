@@ -315,8 +315,9 @@ define([
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
-                        var adopt_practice_val = that.model_json.adopt_practice;
+                        // text to select
                         if (that.entity_config.text_to_select_display_hack){
+                            var adopt_practice_val = that.model_json.adopt_practice;
                             that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
                             $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
                         }
@@ -763,8 +764,26 @@ define([
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
+                    var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
+                        // fetch the directbenefeciaries model and save it in category
+                        // if (element == 'farmers_attendance'){
+                        //     f_json.category.filter(function(page_db_value){
+                        //     Offline.fetch_object(that.entity_config.fetch_child_element, that.entity_config.fetch_key_element, parseInt(page_db_value.id))
+                        //         .done(function(db_var) {
+                        //             cat.push({'id': db_var.attributes.id, 'category': db_var.attributes.direct_beneficiaries_category})
+                        //         })
+                        //         .fail(function() {
+                        //             // edit object could not be fetched from offline db
+                        //             //TODO: error handling
+                        //             console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        //             alert("ERROR: EDIT: Edit model could not be fetched!");
+                        //         });
+                        //     })
+                        //     model.set({'category': cat})
+                        //     model.save()
+                        // }
                         if (!model)
                             return;
                         var t_json = model.toJSON();
@@ -773,7 +792,13 @@ define([
                             t_json[field] = f_json[field];
                         });
                         $f_el.append(expanded_template(t_json));
-
+                        if (t_json.category.length >= 1){
+                            _.each(t_json.category, function(iterable, idx){    
+                                if (iterable.id != 'undefined'){
+                                    $f_el.find(".category_row7_" + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
+                                }
+                            })
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
@@ -1049,6 +1074,24 @@ define([
     						inl_obj[attr_name] = this.checked;
     				}
                 });
+                var c = []
+                _.each(inl_obj.category, function(index, iter){ 
+                    console.log(index)
+                    Offline.fetch_object(child_element, fetch_element_key, parseInt(index))
+                        .done(function(model_var) {
+                            console.log("NIKHIL-VERMA", model_var.id);
+                            c.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                            
+
+                        })
+                        .fail(function() {
+                            // edit object could not be fetched from offline db
+                            //TODO: error handling
+                            console.log("ERROR: EDIT: Edit model could not be fetched!");
+                            alert("ERROR: EDIT: Edit model could not be fetched!");
+                        });
+                })
+                inl_obj.category = c;
                 raw_json[element].push(inl_obj);
                 if (fetch_element != null){
                    var category = []

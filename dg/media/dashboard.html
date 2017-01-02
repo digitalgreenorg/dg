@@ -731,8 +731,7 @@
         <td>
             <div class="form-group">
                 <div class="controls">
-                    <select name="category<%=index%>" id="category_row7" class="chosen-select form-control" multiple="multiple">
-                        <%=category%>
+                    <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
                         <option value=''>-----------</option>
                         <option value='1'>Woman of reproductive age (15-49 years)</option>
                         <option value='2'>Adolescent girl (10-19 years)</option>
@@ -740,12 +739,8 @@
                         <option value='4'>Mother of a child 6 months to 2 years</option>
                         <option value='5'>Mother of a child up to 6 months</option>
                         <option value='6'>Pregnant Women</option>
-                        <% 
-                            _.each(category, function(item) { %>
-                                $("#category_row7 option[value=" + item +]").attr('selected', 'selected');
-                            <% }); 
-                        %>
                     </select>
+                    
                     
                 </div>
             </div>
