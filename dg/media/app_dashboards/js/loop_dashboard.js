@@ -17,6 +17,7 @@ var time_series_volume_amount_farmers, time_series_cpk_spk;
 var payments_start_date, payments_to_date;
 var payments_data, outliers_data, outliers_transport_data, outlier_daily_data, payments_gaddidar_contribution;
 //GENERAL CONSTANTS
+//TODO : TO be removed
 var AGGREGATOR_INCENTIVE_PERCENTAGE = 0.25;
 var ENGLISH_LANGUAGE = "English";
 var REGIONAL_LANGUAGE = "Regional";
@@ -239,6 +240,7 @@ function total_static_data() {
         }
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+        //TODO : remove this computattion from here and use data in json
         var total_aggregator_cost = total_volume * AGGREGATOR_INCENTIVE_PERCENTAGE;
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / (total_transportation_cost + total_aggregator_cost) * 100;
 
@@ -442,6 +444,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
                 sustainability_per_kg.push(0);
             } else {
                 var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
+                //TODO : use aggregator incentive from json data
                 var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
                 var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
                 var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
@@ -468,6 +471,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         sustainability_per_kg.push(0);
     } else {
         var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
+        //TODO : use A I from json data
         var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
         var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
         var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
@@ -1033,10 +1037,12 @@ function totals() {
         volume_without_crop_gaddidar_filter += gaddidar_contribution[i][QUANTITY__SUM];
     }
 
+    //TODO : use AI from json data
     var cpk = ((total_cost + volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE) / volume_without_crop_gaddidar_filter).toFixed(2);
     var spk = ((total_recovered + gaddidar_share) / volume_without_crop_gaddidar_filter).toFixed(2);
 
     total_recovered += gaddidar_share;
+    //TODO : use AI from json data
     total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " " + KG);
@@ -1164,6 +1170,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         var index = axis.indexOf(gaddidar_contribution[i][axis_parameter].toString());
         var drilldown_index = values.indexOf(gaddidar_contribution[i][values_parameter].toString());
+        //TODO : another for loop would be required to add AI
         values_cost[index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
         values_cost_recovered[index] += gaddidar_contribution[i]['amount'];
         values_cost_drilldown[index][drilldown_index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
@@ -1295,6 +1302,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
+            //TODO : another for loop would be required to add AI values in values_cost_cpk
             'cpk': values_vol[i] > 0 ? ((values_cost_cpk[i] + values_vol[i] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol[i]) : 0.0,
             'spk': values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0
         });
@@ -1314,6 +1322,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
         for (var j = 0; j < values.length; j++) {
             if (values_vol_drilldown[i][j] > 0) {
+              //TODO : another for loop would be required to add AI values in values_cost_cpk
                 drilldown['series'][i * 2]['data'].push([values_names[j], (values_cost_cpk_drilldown[i][j] + values_vol_drilldown[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol_drilldown[i][j]]);
                 drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j]]);
             }
@@ -1643,6 +1652,7 @@ function show_line_graphs() {
             farmer_share[index] += gaddidar_contribution[i]['amount'];
         }
         for (var i = 0; i < all_dates.length; i++) {
+          //TODO : another for loop would be required to add AI values in amount
             time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * AGGREGATOR_INCENTIVE_PERCENTAGE) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
 
             time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? (farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
@@ -2929,7 +2939,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-
+            //TODO : to be moved to below for loop where we are adding aggregator_outlier
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
             aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)),agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
