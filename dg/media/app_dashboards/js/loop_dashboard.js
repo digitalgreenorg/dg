@@ -3465,10 +3465,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $('#gaddidar_modal').openModal();
             if ($this.context.cellIndex === 4) {
                 $('#gaddidar_commission_row').focus();
-            } else if ($this.context.cellIndex === 5) {
+            } else{
                 $('#gaddidar_share_row').focus();
-            } else if ($this.context.cellIndex === 6) {
-                $('#gaddidar_comment_row').focus();
             }
         }
     });
