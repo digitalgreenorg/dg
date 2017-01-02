@@ -3347,7 +3347,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "sExtends": "ajax",
                 "sButtonText": "Submit",
                 "sButtonClass": "disable-button",
-                "sAjaxUrl": GLOBALURL + "api/v1/aggregatorshareoutliers/",
+                "sAjaxUrl": "/loop/api/v1/aggregatorshareoutliers/",
 
                 "fnClick": function(nButton, oConfig) {
                     var editedDataAggregator = [];
@@ -3396,7 +3396,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     }
                     if (Object.keys(rows_table2_farmer).length > 0) {
                         $.ajax({
-                            url: GLOBALURL + "farmer_payment_update/",
+                            url: "/loop/farmer_payment_update/",
                             type: 'PATCH',
                             dataType: 'json',
                             data: JSON.stringify(farmerObjects),
@@ -3645,7 +3645,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "sExtends": "ajax",
                     "sButtonText": "Submit",
                     "sButtonClass": "disable-button",
-                    "sAjaxUrl": GLOBALURL + "api/v1/gaddidarshareoutliers/",
+                    "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
                     "fnClick": function(nButton, oConfig) {
                         var editedDataGaddidar = [];
                         $('#table3').find('td').removeAttr("class");
