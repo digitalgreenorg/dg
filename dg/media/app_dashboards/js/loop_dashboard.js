@@ -240,8 +240,8 @@ function total_static_data() {
         }
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
-        //TODO : remove this computattion from here and use data in json
-        var total_aggregator_cost = total_volume * AGGREGATOR_INCENTIVE_PERCENTAGE;
+        //TODO - DONE : remove this computattion from here and use data in json
+        var total_aggregator_cost = json_data['total_aggregator_incentive'];
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / (total_transportation_cost + total_aggregator_cost) * 100;
 
         var clusters = json_data['total_cluster_reached'];
