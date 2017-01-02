@@ -3484,7 +3484,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }
         else{
             if($('#gaddidar_commission_row').val().trim()!='' && $('#gaddidar_commission_row').val().trim() != $this.parent()[0].childNodes[4].innerHTML)
-                editedGaddidar=1;
+                editedGaddidar=3;
             $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
         }
     });
@@ -3554,12 +3554,20 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $this.removeClass('class');
                     $this.addClass('editedcelledge');
                 }
+                else if(editedGaddidar==3){
+                    $this.removeAttr('class');
+                    $this.addClass('editedcelledge');
+                }
                 else{
                     $this.closest('tr').children('td:nth-child(7)')[0].className='editedcell';
                 }
                 //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
             } else {
                 if(editedGaddidar==1){
+                    $this.removeAttr('class');
+                    $this.addClass('editedcell');
+                }
+                else if(editedGaddidar==3){
                     $this.removeAttr('class');
                     $this.addClass('editedcell');
                 }
