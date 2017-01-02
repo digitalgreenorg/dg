@@ -63,6 +63,9 @@ class Command(BaseCommand):
         from_month = calendar.month_abbr[datetime.strptime(from_date, '%Y%m%d').month]
         to_month = calendar.month_abbr[datetime.strptime(to_date, '%Y%m%d').month]
 
+        from_year = str(datetime.strptime(from_date, '%Y%m%d').year)
+        to_year = str(datetime.strptime(to_date, '%Y%m%d').year)
+
         AGGREGATOR_LIST = list(LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True))
         AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True))
 
@@ -86,15 +89,15 @@ class Command(BaseCommand):
         
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
-            query = query_for_all_aggregator % (from_date, to_date)
-            excel_workbook_name = 'Incorrect Mobile Numbers_' + from_day + '-' + from_month + ' to ' + \
-                                    to_day + '-' + to_month
+            query = query_for_all_aggregator % (from_date, to_date, from_date, to_date)
+            excel_workbook_name = 'Incorrect Mobile Numbers_' + from_day + '-' + from_month + '-' + from_year + \
+                                                                ' to ' + to_day + '-' + to_month + '-' + to_year
         else:
             generate_sheet_for_all_flag = False
             generate_sheet_for = AGGREGATOR_LIST[AGGREGATOR_LIST_EN.index(generate_sheet_for)]
-            query = query_for_single_aggregator % (from_date, to_date, generate_sheet_for)
+            query = query_for_single_aggregator % (from_date, to_date, generate_sheet_for, from_date, to_date)
             excel_workbook_name = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
-                                    from_month + ' to ' + to_day + '-' + to_month
+                        from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
         cur.execute(query)
         result = cur.fetchall()
@@ -108,7 +111,8 @@ class Command(BaseCommand):
                 if int(data[sno - 1][5]) >= 9999999999:
                     data[sno - 1][5] = 'नंबर नहीं है'
 
-            sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+            sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + '-' + from_year + \
+                            ' to ' + to_day + '-' + to_month + '-' + to_year
             data_json['all'] = {'sheet_heading': sheet_heading,
                                     'sheet_name': 'सारे किसान', 'data': data
                                 }
@@ -124,7 +128,8 @@ class Command(BaseCommand):
                     if int(filtered_data_copy[sno - 1][5]) >= 9999999999:
                         filtered_data_copy[sno - 1][5] = 'नंबर नहीं है'
                     
-                sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + ' to ' + to_day + '-' + to_month
+                sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + \
+                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
@@ -137,7 +142,8 @@ class Command(BaseCommand):
                     data[sno - 1][5] = 'नंबर नहीं है'
 
             sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
-                                from_day + '-' + from_month + ' to ' + to_day + '-' + to_month 
+                                from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \
+                                to_month + '-' + to_year 
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
                                 }
@@ -146,7 +152,7 @@ class Command(BaseCommand):
 
         final_json_to_send['header'] = header_json
         final_json_to_send['data'] = data_json
-        final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10,
+        final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
                                                     'text_wrap': True}
 
         #post request to library for excel generation
