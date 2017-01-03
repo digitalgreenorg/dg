@@ -343,7 +343,6 @@ table.dataTable tr.even td.sorting_1 {
     height:18px;
     width:18px;
     margin-top:20px;
-    text-align: right !important;
 }
 
 #aggregator_modal input[disabled],
