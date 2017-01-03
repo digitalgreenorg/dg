@@ -42,7 +42,7 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
-var GLOBALURL = "http://sandbox.digitalgreen.org/loop/";
+var GLOBALURL = "http://sandbox.digitalgreen.org/lp/";
 var globalApi;
 
 function initialize() {
@@ -3399,6 +3399,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             },
                             error: function() {
                                 alert("Error");
+                                $('#table2').dataTable().fnClearTable();
+                                $('#table2').dataTable().fnAddData(aggregator_data_set);
                                 rows_table2 = [];
                             }
                         });
@@ -3419,6 +3421,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             },
                             error: function() {
                                 alert("Error");
+                                $('#table2').dataTable().fnClearTable();
+                                $('#table2').dataTable().fnAddData(aggregator_data_set);
                                 rows_table2_farmer = [];
                             }
                         });
@@ -3694,6 +3698,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 },
                                 error: function() {
                                     alert("Error");
+                                    $('#table3').dataTable().fnClearTable();
+                                    $('#table3').dataTable().fnAddData(gaddidar_data_set);
                                     rows_table3 = [];
                                 }
                             });
