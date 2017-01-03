@@ -3399,6 +3399,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             url: "/loop/farmer_payment_update/",
                             type: 'PATCH',
                             dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
                             data: JSON.stringify(farmerObjects),
                             success: function() {
                                 alert("success");
@@ -3422,7 +3423,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
                 data;
-
             //Total of every column
             column_set = [3, 4, 5, 6, 7, 8];
             for (var i = 0; i < column_set.length; i++) {
@@ -3431,8 +3431,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
             }
-
-
         }
     });
 
