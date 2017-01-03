@@ -2904,7 +2904,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
             gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
             // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
-            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, ""]);
+            gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, "", parseFloat(aggregator_payment[i][AMOUNT__SUM].toFixed(2)), aggregator_payment[i]['gaddidar__discount_criteria']]);
 
         }
     }
@@ -3621,6 +3621,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }, {
             title: "Comment"
 
+        },
+            {
+                title:"Amount",
+                visible:false
+        },
+            {
+                title:"Discount Criteria",
+                visible: false
         }],
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
