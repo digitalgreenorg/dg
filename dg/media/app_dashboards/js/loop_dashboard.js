@@ -42,7 +42,7 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
-var GLOBALURL = "http://sandbox.digitalgreen.org/loop/";
+var GLOBALURL = "http://sandbox.digitalgreen.org/lp/";
 var globalApi;
 
 function initialize() {
@@ -143,7 +143,7 @@ function hide_nav(tab) {
                         'password': password
                     }).done(function(data) {
                         var login_data = JSON.parse(data);
-                        window.localStorage.name = login_data['phone_number']; //TODO: Use username and phone_number
+                        window.localStorage.name = login_data['user_name']; //TODO: Use username and phone_number
                         window.localStorage.akey = login_data['key'];
                         window.localStorage.user_id = login_data['user_id'];
                         globalApi = login_data['key'];
@@ -3390,6 +3390,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             },
                             error: function() {
                                 alert("Error");
+                                $('#table2').dataTable().fnClearTable();
+                                $('#table2').dataTable().fnAddData(aggregator_data_set);
                                 rows_table2 = [];
                             }
                         });
@@ -3411,6 +3413,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             },
                             error: function() {
                                 alert("Error");
+                                $('#table2').dataTable().fnClearTable();
+                                $('#table2').dataTable().fnAddData(aggregator_data_set);
                                 rows_table2_farmer = [];
                             }
                         });
@@ -3678,6 +3682,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 },
                                 error: function() {
                                     alert("Error");
+                                    $('#table3').dataTable().fnClearTable();
+                                    $('#table3').dataTable().fnAddData(gaddidar_data_set);
                                     rows_table3 = [];
                                 }
                             });
