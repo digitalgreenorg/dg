@@ -214,6 +214,7 @@ CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(stat
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
 
 INSERT INTO `screening_myisam` SELECT * FROM digitalgreen_clone.screening_myisam;
+INSERT INTO `video_myisam` SELECT * FROM digitalgreen_clone.video_myisam;
 INSERT INTO `person_meeting_attendance_myisam` SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
 INSERT INTO `person_adopt_practice_myisam` SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
 INSERT INTO `village_precalculation_copy` SELECT * FROM digitalgreen_clone.village_precalculation_copy;
