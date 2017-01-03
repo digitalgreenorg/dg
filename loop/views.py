@@ -480,6 +480,8 @@ def data_for_drilldown_graphs(request):
     gaddidar_contribution = calculate_gaddidar_share(
         start_date, end_date, mandi_ids, aggregator_ids)
 
+    aggregator_incentive = calculate_aggregator_incentive(start_date,end_date,mandi_ids,aggregator_ids)
+
     transactions_details_without_crops = CombinedTransaction.objects.filter(**filter_args_no_crops).values(
         'user_created__id', 'mandi__id').annotate(Sum('quantity'), Sum('amount'),
                                                   mandi__id__count=Count('date', distinct=True))
@@ -490,6 +492,7 @@ def data_for_drilldown_graphs(request):
                       mandi_gaddidar), 'mandi_crop': list(mandi_crop),
                   'transportation_cost_mandi': list(transportation_cost_mandi),
                   "mandi_crop_prices": list(mandi_crop_prices), "gaddidar_contribution": gaddidar_contribution,
+                  "aggregator_incentive":aggregator_incentive,
                   "transactions_details_without_crops": list(transactions_details_without_crops)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 

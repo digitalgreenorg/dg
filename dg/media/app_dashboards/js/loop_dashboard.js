@@ -1031,9 +1031,11 @@ function totals() {
     var total_recovered = 0;
     var gaddidar_share = 0;
     var volume_without_crop_gaddidar_filter = 0;
+    var aggregator_cost = 0;
     var volume_amount_visits_data = bar_graphs_json_data.aggregator_mandi;
     var transport_data = bar_graphs_json_data.transportation_cost_mandi;
     var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
+    var aggregator_incentive = bar_graphs_json_data.aggregator_incentive;
 
     for (var i = 0; i < volume_amount_visits_data.length; i++) {
         total_volume += volume_amount_visits_data[i][QUANTITY__SUM];
@@ -1052,13 +1054,19 @@ function totals() {
         volume_without_crop_gaddidar_filter += gaddidar_contribution[i][QUANTITY__SUM];
     }
 
-    //TODO : use AI from json data
-    var cpk = ((total_cost + volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE) / volume_without_crop_gaddidar_filter).toFixed(2);
+    for(var i=0; i<aggregator_incentive.length;i++){
+        aggregator_cost += aggregator_incentive[i]['amount']
+    }
+
+    //TODO - DONE : use AI from json data
+    var cpk = ((total_cost + aggregator_cost) / volume_without_crop_gaddidar_filter).toFixed(2);
     var spk = ((total_recovered + gaddidar_share) / volume_without_crop_gaddidar_filter).toFixed(2);
 
     total_recovered += gaddidar_share;
-    //TODO : use AI from json data
-    total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
+    //TODO - DONE : use AI from json data
+    //
+    // total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
+    total_cost += aggregator_cost;
 
     $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " " + KG);
     $("#aggregator_amount").text("amount: " + RUPEE + parseFloat(total_amount).toFixed(0));
