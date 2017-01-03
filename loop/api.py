@@ -61,7 +61,6 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    print field_name
     if field_dict.get('online_id'):
         bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict.get('online_id')))
@@ -744,38 +743,19 @@ class DayTransportationResource(BaseResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
-
-        if bundle.request.method != 'PATCH':
-            user = LoopUser.objects.get(user__username=bundle.request.user)
-            transportationvehicle = TransportationVehicle.objects.get(
-                id=bundle.data["transportation_vehicle"]["online_id"])
-
-            attempt = DayTransportation.objects.filter(date=bundle.data[
+        user = LoopUser.objects.get(user__username=bundle.request.user)
+        transportationvehicle = TransportationVehicle.objects.get(
+            id=bundle.data["transportation_vehicle"]["online_id"])
+        attempt = DayTransportation.objects.filter(date=bundle.data[
                 "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-        else:
-            attempt = DayTransportation.objects.filter(date=bundle.data[
-                "date"], user_created=bundle.data['user_created_id'], mandi = mandi)
-            
         if attempt.count() < 1:
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            if bundle.request.method == 'PATCH':
-                bundle.request.method = 'PUT'
-                bundle.request.path = bundle.request.path + \
-                str(attempt[0].id) + "/"
-                kwargs['pk'] = attempt[0].id
-                transportationVehicleId = {'online_id': str(attempt[0].transportation_vehicle.id)}
-                bundle.data['transportation_vehicle'] = transportationVehicleId
-                bundle = super(DayTransportationResource,self).obj_update(bundle, **kwargs)
-                bundle.request.method = 'PATCH'
-            else:
-                raise DayTransportationNotSaved(
-                    {"id": int(attempt[0].id), "error": "Duplicate"})
+            raise DayTransportationNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
-        print bundle.data
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
@@ -830,10 +810,10 @@ class GaddidarShareOutliersResource(BaseResource):
     gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
     aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
     class Meta:
-        queryset =GaddidarShareOutliers.objects.filter()
+        queryset =GaddidarShareOutliers.objects.all()
         allowed_methods = ['post','patch','put','get']
         authorization = Authorization()
-        authentication = Authentication()
+        authentication =ApiKeyAuthentication()
         resource_name = 'gaddidarshareoutliers'
         always_return_data = True
         excludes = ('time_created', 'time_modified')
@@ -866,11 +846,11 @@ class AggregatorShareOutliersResource(BaseResource):
     mandi = fields.ForeignKey(MandiResource,'mandi')
     aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
     class Meta:
-        queryset =AggregatorShareOutliers.objects.filter()
+        queryset =AggregatorShareOutliers.objects.all()
         allowed_methods = ['post','patch','put','get']
         resource_name = 'aggregatorshareoutliers'
         authorization = Authorization()
-        authentication = Authentication()
+        authentication =ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -881,7 +861,6 @@ class AggregatorShareOutliersResource(BaseResource):
     hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
 
     def obj_create(self,bundle,request=None,**kwargs):
-        print bundle.data
         mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
         aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
 

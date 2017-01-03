@@ -41,7 +41,9 @@ def login(request):
             log_object = get_latest_timestamp()
             return HttpResponse(json.dumps(
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
+                 'user_id': loop_user[0].user_id,
                  'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,
+                 'user_name': username,
                  'district': loop_user[0].village.block.district.id}))
         else:
             return HttpResponse("0", status=401)
@@ -84,6 +86,23 @@ def download_data_workbook(request):
                                 content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
+@csrf_exempt
+def farmer_payments(request):
+    body = json.loads(request.body)
+    if request.method == 'PATCH':
+        for bundle in body.get("objects"):
+            try:
+                mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
+                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle["user_created_id"],
+                                                        mandi=mandi)
+                attempt.farmer_share = bundle["amount"]
+                attempt.comment = bundle["comment"]
+                attempt.user_modified_id = bundle["user_modified_id"]
+                # attempt.time_modified = get_latest_timestamp().timestamp
+                attempt.save()
+            except:
+                return HttpResponse(json.dumps({'message': 'error'}), status=500)
+    return HttpResponse(json.dumps({'message': 'successfully edited'}), status=200)
 
 def filter_data(request):
     language = request.GET.get('language')
@@ -287,7 +306,7 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_
             except Exception as e:
                 print e
         # if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
-        #             sum += CT['quantity__sum'] * \
+        # sum += CT['quantity__sum'] * \
         #                 gc_list_set[0].discount_percent
         #         elif gc_list_set.count() > 0:
         #             sum += CT['amount__sum'] * gc_list_set[0].discount_percent
@@ -584,30 +603,39 @@ def payments(request):
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
         'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'mandi__id',
-        'gaddidar__id').annotate(Sum('quantity'))
+        'gaddidar__id').order_by(
+        'date').annotate(Sum('quantity'))
 
     outlier_data = CombinedTransaction.objects.filter(
         **filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en')).values('date', 'user_created__id',
-                                                                                    'mandi__mandi_name').annotate(
-        Sum('quantity'), Count('farmer', distinct=True)).annotate(
+                                                                                    'mandi__mandi_name').order_by(
+        'date').annotate(Sum('quantity'), Count('farmer', distinct=True)).annotate(
         gaddidar__commission__sum=Sum(F('gaddidar__commission') * F("quantity")))
 
     outlier_transport_data = DayTransportation.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en')).values(
-        'date', 'mandi__id', 'mandi__mandi_name', 'user_created__id').annotate(Sum('transportation_cost'),
-                                                                               farmer_share__sum=Avg('farmer_share'))
-
+        'date', 'mandi__id', 'mandi__mandi_name', 'user_created__id').order_by('date').annotate(
+        Sum('transportation_cost'),
+        farmer_share__sum=Avg(
+            'farmer_share'))
     outlier_daily_data = CombinedTransaction.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
-        'date', 'user_created__id', 'mandi__mandi_name', 'farmer__name', 'crop__crop_name', 'gaddidar__commission',
-        'price', 'gaddidar__gaddidar_name').annotate(Sum('quantity'))
+        'date',
+        'user_created__id',
+        'mandi__mandi_name',
+        'farmer__name',
+        'crop__crop_name',
+        'gaddidar__commission',
+        'price',
+        'gaddidar__gaddidar_name').order_by(
+        'date').annotate(Sum('quantity'))
 
     transportation_data = DayTransportation.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'),
         transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name',
         "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number',
-        'mandi__mandi_name', 'farmer_share', 'id', 'comment').annotate(Sum('transportation_cost'))
+        'mandi__mandi_name', 'farmer_share', 'id', 'comment').order_by('date').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 

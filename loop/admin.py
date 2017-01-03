@@ -126,10 +126,12 @@ class CropAdmin(admin.ModelAdmin):
 class GaddidarCommisionAdmin(admin.ModelAdmin):
     fields = ('start_date','mandi','gaddidar','discount_percent')
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
+    list_filter = ('mandi','gaddidar')
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
     list_display = ('id', 'date','__aggregator__', '__unicode__','amount', 'comment')
+    list_filter = ('aggregator', 'mandi', 'gaddidar')
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')

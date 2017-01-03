@@ -418,12 +418,14 @@ class GaddidarShareOutliers(LoopModel):
 class IncentiveParameter(models.Model):
     notation = models.CharField(max_length=3)
     parameter_name = models.CharField(max_length=25)
-    notation_equivalent = models.CharField(max_length=25)
+    notation_equivalent = models.CharField(max_length=50)
+
     class Meta:
-        unique_together = ("notation", "parameter_name")
+        unique_together = ("notation", "parameter_name", "notation_equivalent")
 
 class IncentiveModel(models.Model):
     calculation_method = models.TextField(null=True, blank=True)
+    
     def __unicode__(self):
         return "%s" % (self.calculation_method)
 

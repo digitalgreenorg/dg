@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('notation', models.CharField(max_length=3)),
                 ('parameter_name', models.CharField(max_length=25)),
+                ('notation_equivalent', models.CharField(max_length=50)),
             ],
         ),
         migrations.AddField(
@@ -88,7 +89,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='incentiveparameter',
-            unique_together=set([('notation', 'parameter_name')]),
+            unique_together=set([('notation', 'parameter_name', 'notation_equivalent')]),
         ),
         migrations.AddField(
             model_name='aggregatorincentive',
