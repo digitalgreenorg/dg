@@ -295,7 +295,7 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
             try:
                 ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
-                if (len(ai_list_set) > 0):
+                if (ai_list_set.count() > 0):
                     exec (ai_list_set[0].incentive_model.calculation_method)
                     paramter_list = inspect.getargspec(calculate_inc)[0]
                     for param in paramter_list:
@@ -305,13 +305,6 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_
                     sum += x
             except Exception as e:
                 print e
-        # if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
-        # sum += CT['quantity__sum'] * \
-        #                 gc_list_set[0].discount_percent
-        #         elif gc_list_set.count() > 0:
-        #             sum += CT['amount__sum'] * gc_list_set[0].discount_percent
-        #     except GaddidarCommission.DoesNotExist:
-        #         pass
         else:
             try:
                 aso_share_date_aggregator = aso_queryset.filter(
@@ -533,8 +526,10 @@ def data_for_line_graph(request):
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
 
+    aggregator_incentive = calculate_aggregator_incentive(start_date,end_date,mandi_ids,aggregator_ids)
+
     chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(
-        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data)}
+        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data), "aggregator_incentive":aggregator_incentive}
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 

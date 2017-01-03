@@ -143,7 +143,7 @@ function hide_nav(tab) {
                         'password': password
                     }).done(function(data) {
                         var login_data = JSON.parse(data);
-                        window.localStorage.name = login_data['user_name']; //TODO: Use username and phone_number
+                        window.localStorage.name = login_data['user_name'];
                         window.localStorage.akey = login_data['key'];
                         window.localStorage.user_id = login_data['user_id'];
                         globalApi = login_data['key'];
@@ -243,7 +243,7 @@ function total_static_data() {
         }
 
         var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
-        //TODO - DONE : remove this computattion from here and use data in json
+        //TODO - DONE : remove this computation from here and use data in json
         var total_aggregator_cost = json_data['total_aggregator_incentive'];
         var sustainability = (total_farmer_share + total_gaddidar_contribution) / (total_transportation_cost + total_aggregator_cost) * 100;
 
@@ -253,7 +253,7 @@ function total_static_data() {
         plot_solid_guage($('#cluster_bullet'), 0, clusters, 25);
         plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 2000);
         plot_solid_guage($('#total_volume_bullet'), 0, parseInt(total_volume), 5000000);
-        plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 25000000);
+        plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 50000000);
         plot_solid_guage($('#total_expenditure_bullet'), -1, parseFloat(0 - total_cpk.toFixed(2)), 0);
         plot_solid_guage($('#sustainability_bullet'), 0, parseFloat(sustainability.toFixed(2)), 50);
     });
