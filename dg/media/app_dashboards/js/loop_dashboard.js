@@ -42,7 +42,6 @@ var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
     transporter_sheet_name = "";
 
-var GLOBALURL = "http://sandbox.digitalgreen.org/lp/";
 var globalApi;
 
 function initialize() {
@@ -3236,7 +3235,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#aggregator_modal').closeModal();
     });
 
-    var formatVal = function(yourNumber) {
+    /*var formatVal = function(yourNumber) {
         //Seperates the components of the number
         var n = yourNumber.toString().split(".");
         //Comma-fies the first part
@@ -3248,7 +3247,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             n[1] = parseInt(a.charAt(0));
         }
         return n.join(".");
-    }
+    }*/
 
     var finalFormat = function(value) {
         if (value.indexOf('.') === -1)
