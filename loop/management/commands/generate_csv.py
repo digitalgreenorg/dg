@@ -108,8 +108,8 @@ class Command(BaseCommand):
             #Write data for all aggregators in sheet
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
-                if int(data[sno - 1][5]) >= 9999999999:
-                    data[sno - 1][5] = 'नंबर नहीं है'
+                if int(data[sno - 1][6]) >= 9999999999:
+                    data[sno - 1][6] = 'नंबर नहीं है'
 
             sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + '-' + from_year + \
                             ' to ' + to_day + '-' + to_month + '-' + to_year
@@ -125,8 +125,8 @@ class Command(BaseCommand):
                 filtered_data_copy = copy.deepcopy(filtered_data)
                 for sno in range(1,len(filtered_data_copy) + 1):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
-                    if int(filtered_data_copy[sno - 1][5]) >= 9999999999:
-                        filtered_data_copy[sno - 1][5] = 'नंबर नहीं है'
+                    if int(filtered_data_copy[sno - 1][6]) >= 9999999999:
+                        filtered_data_copy[sno - 1][6] = 'नंबर नहीं है'
                     
                 sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + \
                                                 '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
@@ -138,8 +138,8 @@ class Command(BaseCommand):
             #write data for a given aggregator from command line
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
-                if int(data[sno - 1][5]) >= 9999999999:
-                    data[sno - 1][5] = 'नंबर नहीं है'
+                if int(data[sno - 1][6]) >= 9999999999:
+                    data[sno - 1][6] = 'नंबर नहीं है'
 
             sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
                                 from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \

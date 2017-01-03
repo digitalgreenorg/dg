@@ -47,29 +47,29 @@ class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
 #Extra variables required in other files
 DEFAULT_COLUMN_WIDTH = 9
 
-header_dict_for_loop_email_mobile_numbers = [{'column_width': 15,
+header_dict_for_loop_email_mobile_numbers = [{'column_width': 5,
                                           'label': 'क्रम संख्या',
                                           },
-                                         {'column_width': 15,
+                                         {'column_width': 13,
                                           
                                           'label': 'जमाकर्ता का नाम',
                                           },
-                                         {'column_width': 15,
+                                         {'column_width': 12,
                                           'label': 'गांव का नाम',
                                           },
-                                         {'column_width': 15,
+                                         {'column_width': 8,
                                           'label': 'किसान ID',
                                           },
                                          {'column_width': 15,
                                           'label': 'किसान का नाम',
                                           },
-                                          {'column_width': 15,
+                                          {'column_width': 8,
                                           'label': 'सब्जी कितने दिन दी?',
                                           },
-                                         {'column_width': 15,
+                                         {'column_width': 10,
                                           'label': 'मोबाइल नं',
                                           },
-                                         {'column_width': 15,
+                                         {'column_width': 10,
                                           'label': 'कितने किसान में नंबर डला है?',
                                           }]
 
