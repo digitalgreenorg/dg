@@ -143,7 +143,7 @@ function hide_nav(tab) {
                         'password': password
                     }).done(function(data) {
                         var login_data = JSON.parse(data);
-                        window.localStorage.name = login_data['phone_number']; //TODO: Use username and phone_number
+                        window.localStorage.name = login_data['user_name']; //TODO: Use username and phone_number
                         window.localStorage.akey = login_data['key'];
                         window.localStorage.user_id = login_data['user_id'];
                         globalApi = login_data['key'];
