@@ -38,7 +38,7 @@ def login(request):
             log_object = get_latest_timestamp()
             return HttpResponse(json.dumps(
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name, 'user_id':loop_user[0].user_id,
-                 'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,
+                 'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,'user_name':username,
                  'district': loop_user[0].village.block.district.id}))
         else:
             return HttpResponse("0", status=401)
