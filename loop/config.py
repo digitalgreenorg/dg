@@ -63,13 +63,13 @@ header_dict_for_loop_email_mobile_numbers = [{'column_width': 15,
                                          {'column_width': 15,
                                           'label': 'किसान का नाम',
                                           },
-                                         {'column_width': 15,
-                                          'label': 'मोबाइल नं',
-                                          },
                                           {'column_width': 15,
                                           'label': 'सब्जी कितने दिन दी?',
                                           },
-                                          {'column_width': 15,
+                                         {'column_width': 15,
+                                          'label': 'मोबाइल नं',
+                                          },
+                                         {'column_width': 15,
                                           'label': 'कितने किसान में नंबर डला है?',
                                           }]
 
@@ -79,8 +79,8 @@ query_for_all_aggregator = '''SELECT
                               Village,
                               Farmer_ID,
                               Farmer,
-                              Mobile_Number,
                               t1.Farmer_Frequency,
+                              Mobile_Number,
                               t3.Mobile_Frequency
                           FROM
                               (SELECT 
@@ -135,7 +135,7 @@ query_for_all_aggregator = '''SELECT
                               OR (t3.Mobile_Frequency = 1
                               AND (Mobile_Number <= 7000000000
                               OR Mobile_Number >= 9999999999))
-                          ORDER BY Aggregator ASC, Mobile_Number DESC'''
+                          ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
 
 
@@ -144,8 +144,8 @@ query_for_single_aggregator = '''SELECT
                                 Village,
                                 Farmer_ID,
                                 Farmer,
-                                Mobile_Number,
                                 t1.Farmer_Frequency,
+                                Mobile_Number,
                                 t3.Mobile_Frequency
                             FROM
                                 (SELECT 
@@ -200,7 +200,7 @@ query_for_single_aggregator = '''SELECT
                                 OR (t3.Mobile_Frequency = 1
                                 AND (Mobile_Number <= 7000000000
                                 OR Mobile_Number >= 9999999999))
-                            ORDER BY Aggregator ASC, Mobile_Number DESC'''
+                            ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
 
 RECIPIENTS = ['amandeep@digitalgreen.org']
