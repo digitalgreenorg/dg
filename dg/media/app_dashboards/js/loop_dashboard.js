@@ -447,7 +447,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
                 sustainability_per_kg.push(0);
             } else {
                 var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-                //TODO : use aggregator incentive from json data
+                //TODO : use aggregator incentive from json data for recent graph
                 var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
                 var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
                 var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
@@ -474,7 +474,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
         sustainability_per_kg.push(0);
     } else {
         var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-        //TODO : use A I from json data
+        //TODO : use A I from json data for recent graph
         var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
         var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
         var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
@@ -1044,18 +1044,18 @@ function totals() {
     }
 
     for (var i = 0; i < transport_data.length; i++) {
-        total_cost += transport_data[i]['transportation_cost__sum']
-        total_recovered += transport_data[i]['farmer_share__sum'];
+        total_cost += parseFloat(transport_data[i]['transportation_cost__sum']);
+        total_recovered += parseFloat(transport_data[i]['farmer_share__sum']);
     }
 
     var gaddidar_contribution_length = gaddidar_contribution.length;
     for (var i = 0; i < gaddidar_contribution_length; i++) {
-        gaddidar_share += gaddidar_contribution[i]['amount'];
-        volume_without_crop_gaddidar_filter += gaddidar_contribution[i][QUANTITY__SUM];
+        gaddidar_share += parseFloat(gaddidar_contribution[i]['amount']);
+        volume_without_crop_gaddidar_filter += parseFloat(gaddidar_contribution[i][QUANTITY__SUM]);
     }
 
     for(var i=0; i<aggregator_incentive.length;i++){
-        aggregator_cost += aggregator_incentive[i]['amount']
+        aggregator_cost += parseFloat(aggregator_incentive[i]['amount']);
     }
 
     //TODO - DONE : use AI from json data
@@ -1064,7 +1064,6 @@ function totals() {
 
     total_recovered += gaddidar_share;
     //TODO - DONE : use AI from json data
-    //
     // total_cost += volume_without_crop_gaddidar_filter * AGGREGATOR_INCENTIVE_PERCENTAGE;
     total_cost += aggregator_cost;
 
@@ -1603,6 +1602,7 @@ function show_line_graphs() {
     var transport_data = line_json_data.transport_data;
     var dates_and_farmer_count = line_json_data.dates;
     var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
+    var aggregator_incentive = bar_graphs_json_data.aggregator_incentive;
     var all_dates = [];
 
     try {
@@ -1660,6 +1660,14 @@ function show_line_graphs() {
             time_series_volume_amount_farmers[0]['data'][index][1] += json_data[i][QUANTITY__SUM];
             time_series_volume_amount_farmers[1]['data'][index][1] += json_data[i][AMOUNT__SUM];
         }
+
+        aggregator_incentive_amount = new Array(all_dates.length).fill(0.0);
+        var aggregator_incentive_length = aggregator_incentive.length;
+        for (var i = 0;i < aggregator_incentive_length; i++){
+          var date_index = all_dates.indexOf(new Date(aggregator_incentive[i]['date']).getTime());
+          aggregator_incentive_amount[date_index] += aggregator_incentive[i][AMOUNT];
+        }
+
         transport_cost = new Array(all_dates.length).fill(0);
         farmer_share = new Array(all_dates.length).fill(0);
 
@@ -1675,8 +1683,8 @@ function show_line_graphs() {
             farmer_share[index] += gaddidar_contribution[i]['amount'];
         }
         for (var i = 0; i < all_dates.length; i++) {
-          //TODO : another for loop would be required to add AI values in amount
-            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + time_series_volume_amount_farmers[0]['data'][i][1] * AGGREGATOR_INCENTIVE_PERCENTAGE) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
+          //TODO : DONE - another for loop would be required to add AI values in amount
+            time_series_cpk_spk[0]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? ((transport_cost[i] + aggregator_incentive_amount[i]) / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
 
             time_series_cpk_spk[1]['data'].push([all_dates[i], time_series_volume_amount_farmers[0]['data'][i][1] > 0 ? (farmer_share[i] / time_series_volume_amount_farmers[0]['data'][i][1]) : null]);
         }
@@ -2962,6 +2970,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         for (var j = 0; j < mandis[i].length; j++) {
             //TODO : to be moved to below for loop where we are adding aggregator_outlier
             var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
+
             aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
             sno += 1;

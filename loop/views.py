@@ -252,8 +252,11 @@ def aggregator_incentive_for_total_static_data():
     return total_aggregator_incentive
 
 
-def calculate_aggregator_incentive(start_date, end_date, mandi_list, aggregator_list):
-    user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
+def calculate_aggregator_incentive(start_date, end_date, mandi_list=None, aggregator_list=None):
+    if aggregator_list is not None:
+        user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
+    else:
+        user_qset = LoopUser.objects.values_list('id', flat=True)
 
     parameters_dictionary = {'aggregator__in': user_qset}
     parameters_dictionary_for_outliers = {
@@ -637,17 +640,18 @@ def payments(request):
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
+    aggregator_incentive = calculate_aggregator_incentive(start_date,end_date)
+
     aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id=F('aggregator__user_id'),
                                                                   mandi__name=F('mandi__mandi_name_en')).values("date",
                                                                                                                 "mandi__name",
                                                                                                                 "amount",
                                                                                                                 "comment",
                                                                                                                 "user_created__id")
-
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
                       outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data),
-                  'transportation_data': list(transportation_data), 'aggregator_outlier': list(aggregator_outlier)}
+                  'transportation_data': list(transportation_data), 'aggregator_outlier': list(aggregator_outlier), 'aggregator_incentive': aggregator_incentive}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
