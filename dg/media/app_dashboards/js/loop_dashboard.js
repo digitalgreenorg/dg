@@ -1270,6 +1270,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     var vol_stats = json_data.gaddidar_contribution;
     var cost_stats = json_data.transportation_cost_mandi;
     var gaddidar_share_stats = json_data.gaddidar_contribution;
+    var aggregator_incentive_cost = json_data.aggregator_incentive_cost;
+
     var series = [];
     var drilldown = {};
     drilldown['allowPointDrilldown'] = false;
@@ -1329,12 +1331,20 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         values_cost_spk_drilldown[index][drilldown_index] += gaddidar_share_stats[i]['amount'];
     }
 
+    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
+    for (var i = 0; i < aggregator_incentive_cost_length; i++){
+      var index = axis.indexOf(aggregator_incentive_cost[i][axis_parameter].toString());
+      var drilldown_index = values.indexOf(aggregator_incentive_cost[i][values_parameter].toString());
+      values_cost_cpk[index] += aggregator_incentive_cost[i][AMOUNT];
+      values_cost_cpk_drilldown[index][drilldown_index] += aggregator_incentive_cost[i][AMOUNT];
+    }
+
     var data_for_sorting = [];
     for (var i = 0; i < axis.length; i++) {
         data_for_sorting.push({
             'name': axis_names[i],
-            //TODO : another for loop would be required to add AI values in values_cost_cpk
-            'cpk': values_vol[i] > 0 ? ((values_cost_cpk[i] + values_vol[i] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol[i]) : 0.0,
+            //TODO : DONE another for loop would be required to add AI values in values_cost_cpk
+            'cpk': values_vol[i] > 0 ? (values_cost_cpk[i] / values_vol[i]) : 0.0,
             'spk': values_vol[i] > 0 ? values_cost_spk[i] / values_vol[i] : 0.0
         });
         drilldown['series'].push({
@@ -1353,8 +1363,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
         for (var j = 0; j < values.length; j++) {
             if (values_vol_drilldown[i][j] > 0) {
-              //TODO : another for loop would be required to add AI values in values_cost_cpk
-                drilldown['series'][i * 2]['data'].push([values_names[j], (values_cost_cpk_drilldown[i][j] + values_vol_drilldown[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) / values_vol_drilldown[i][j]]);
+              //TODO : DONE another for loop would be required to add AI values in values_cost_cpk
+                drilldown['series'][i * 2]['data'].push([values_names[j], (values_cost_cpk_drilldown[i][j] / values_vol_drilldown[i][j]]);
                 drilldown['series'][i * 2 + 1]['data'].push([values_names[j], values_cost_spk_drilldown[i][j] / values_vol_drilldown[i][j]]);
             }
         }
