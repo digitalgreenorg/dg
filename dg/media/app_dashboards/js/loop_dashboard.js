@@ -1624,7 +1624,7 @@ function show_line_graphs() {
     var transport_data = line_json_data.transport_data;
     var dates_and_farmer_count = line_json_data.dates;
     var gaddidar_contribution = bar_graphs_json_data.gaddidar_contribution;
-    var aggregator_incentive = bar_graphs_json_data.aggregator_incentive;
+    var aggregator_incentive_cost = bar_graphs_json_data.aggregator_incentive_cost;
     var all_dates = [];
 
     try {
@@ -1684,10 +1684,10 @@ function show_line_graphs() {
         }
 
         aggregator_incentive_amount = new Array(all_dates.length).fill(0.0);
-        var aggregator_incentive_length = aggregator_incentive.length;
-        for (var i = 0;i < aggregator_incentive_length; i++){
-          var date_index = all_dates.indexOf(new Date(aggregator_incentive[i]['date']).getTime());
-          aggregator_incentive_amount[date_index] += aggregator_incentive[i][AMOUNT];
+        var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
+        for (var i = 0;i < aggregator_incentive_cost_length; i++){
+          var date_index = all_dates.indexOf(new Date(aggregator_incentive_cost[i]['date']).getTime());
+          aggregator_incentive_amount[date_index] += aggregator_incentive_cost[i][AMOUNT];
         }
 
         transport_cost = new Array(all_dates.length).fill(0);
