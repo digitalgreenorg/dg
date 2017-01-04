@@ -1388,7 +1388,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
         });
     }
 
-    // for (var i = 0; i < drilldown['series'].length; i++) {
+    // for (var i = 0; i < drilldown['series'].length; i+=2) {
     //     drilldown['series'][i]['data'].sort(function(a, b) {
     //         return b[1] - a[1];
     //     });
@@ -1996,6 +1996,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
     } else {
         var max = dict[0]['data'].length - 1;
     }
+
     if (floats) {
         format = '{point.y:.2f}'
     } else {

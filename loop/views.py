@@ -304,11 +304,10 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                     paramter_list = inspect.getargspec(calculate_inc)[0]
                     for param in paramter_list:
                         param_to_apply = incentive_param_queryset.get(notation=param)
-                        print param_to_apply.notation_equivalent
                         x = calculate_inc(CT[param_to_apply.notation_equivalent])
                     sum += x
             except Exception as e:
-                print e
+                pass
         else:
             try:
                 aso_share_date_aggregator = aso_queryset.filter(
@@ -457,7 +456,7 @@ def data_for_drilldown_graphs(request):
 
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values('date',
                                                                                                  'mandi__id',
-                                                                                                 'user_created__id').order_by('-date').annotate(
+                                                                                                 'user_created__id').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = list(CombinedTransaction.objects.filter(
