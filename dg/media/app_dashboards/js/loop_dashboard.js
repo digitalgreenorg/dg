@@ -1146,6 +1146,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
 
     var transportation_cost_mandi = json_data.transportation_cost_mandi;
     var gaddidar_contribution = json_data.gaddidar_contribution;
+    var aggregator_incentive_cost = json_data.aggregator_incentive;
     var series = [];
     var drilldown = {};
     drilldown['allowPointDrilldown'] = false;
@@ -1192,11 +1193,19 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         var index = axis.indexOf(gaddidar_contribution[i][axis_parameter].toString());
         var drilldown_index = values.indexOf(gaddidar_contribution[i][values_parameter].toString());
-        //TODO : another for loop would be required to add AI
-        values_cost[index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
-        values_cost_recovered[index] += gaddidar_contribution[i]['amount'];
-        values_cost_drilldown[index][drilldown_index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
-        values_cost_recovered_drilldown[index][drilldown_index] += gaddidar_contribution[i]['amount'];
+        //TODO : DONE another for loop would be required to add AI
+        // values_cost[index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
+        values_cost_recovered[index] += gaddidar_contribution[i][AMOUNT];
+        // values_cost_drilldown[index][drilldown_index] += (gaddidar_contribution[i][QUANTITY__SUM] * AGGREGATOR_INCENTIVE_PERCENTAGE);
+        values_cost_recovered_drilldown[index][drilldown_index] += gaddidar_contribution[i][AMOUNT];
+    }
+
+    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
+    for (var i = 0; i < aggregator_incentive_cost_length; i++){
+      var index = axis.indexOf(aggregator_incentive_cost[i][axis_parameter].toString());
+      var drilldown_index = values.indexOf(aggregator_incentive_cost[i][values_parameter].toString());
+      values_cost[index] += aggregator_incentive_cost[i][AMOUNT];
+      values_cost_drilldown +=aggregator_incentive_cost[i][AMOUNT];
     }
 
     var data_for_sorting = [];
