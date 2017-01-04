@@ -457,7 +457,7 @@ def data_for_drilldown_graphs(request):
 
     transportation_cost_mandi = DayTransportation.objects.filter(**filter_transportation).values('date',
                                                                                                  'mandi__id',
-                                                                                                 'user_created__id').annotate(
+                                                                                                 'user_created__id').order_by('-date').annotate(
         Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
 
     crop_prices = list(CombinedTransaction.objects.filter(
