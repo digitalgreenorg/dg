@@ -2879,8 +2879,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
     var gaddidar_contribution_data = payments_data.gaddidar_data;
-    var aggregator_outlier = payments_data.aggregator_outlier;
-    // var gaddidar_payment = payments_data.gaddidar_data;
+    var aggregator_incentive = payments_data.aggregator_incentive;
 
     var sno = 1;
     aggregator_data_set = [];
@@ -2941,8 +2940,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             for (var j = 0; j < gaddidar_data_set.length; j++) {
                 if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 &&
                     gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
-                    gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount'].toFixed(2));
-                    gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount'].toFixed(2));
+                    gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount']);
+                    gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount']);
                     gaddidar_data_set[j][9] = payments_gaddidar_contribution[i]['comment'];
                 }
             }
@@ -2968,10 +2967,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
         for (var j = 0; j < mandis[i].length; j++) {
-            //TODO : to be moved to below for loop where we are adding aggregator_outlier
-            var net_payment = (quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE) + transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
+            //TODO : DONE to be moved to below for loop where we are adding aggregator_outlier
+            var net_payment = transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
 
-            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat((quantites[i][j] * AGGREGATOR_INCENTIVE_PERCENTAGE).toFixed(2)), transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+            aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
             sno += 1;
         }
@@ -2989,15 +2988,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }
     }
 
-    for (var i = 0; i < aggregator_outlier.length; i++) {
-        if (aggregator == aggregator_outlier[i][USER_CREATED__ID].toString()) {
+    var aggregator_incentive_length = aggregator_incentive.length;
+    for (var i = 0; i < aggregator_incentive_length; i++) {
+        if (aggregator == aggregator_incentive[i][USER_CREATED__ID].toString()) {
             for (var j = 0; j < aggregator_data_set.length; j++) {
-                if (aggregator_data_set[j].indexOf(aggregator_outlier[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_outlier[i]['mandi__name']) != -1) {
-                    aggregator_data_set[j][8] = (aggregator_data_set[j][8] - aggregator_data_set[j][4]);
-                    aggregator_data_set[j][4] = parseFloat(aggregator_outlier[i]['amount']);
-                    aggregator_data_set[j][8] = (aggregator_data_set[j][8] + parseFloat(aggregator_outlier[i]['amount'])).toFixed(2);
-                    aggregator_data_set[j][11] = aggregator_outlier[i]['comment'];
-
+                if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
+                    aggregator_data_set[j][4] = parseFloat(aggregator_incentive[i]['amount']);
+                    aggregator_data_set[j][8] = (parseFloat(aggregator_data_set[j][8]) + parseFloat(aggregator_data_set[j][4])).toFixed(2);
+                    aggregator_data_set[j][11] = aggregator_incentive[i]['comment'];
                     break;
                 }
             }
