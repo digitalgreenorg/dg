@@ -601,11 +601,8 @@ def payments(request):
     if (end_date != ""):
         filter_args["date__lte"] = end_date
 
-    aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(
-        mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
-        'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'mandi__id',
-        'gaddidar__id').order_by(
-        'date').annotate(Sum('quantity'))
+    aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
+        'date', 'user_created__id', 'mandi__mandi_name', 'gaddidar__gaddidar_name','mandi__id','gaddidar__id', 'gaddidar__discount_criteria').order_by('date').annotate(Sum('quantity'), Sum('amount'))
 
     outlier_data = CombinedTransaction.objects.filter(
         **filter_args).annotate(mandi__mandi_name=F('mandi__mandi_name_en')).values('date', 'user_created__id',
