@@ -3466,10 +3466,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
             actionOnInvalidValidation($('#gaddidar_commission_row'), $('#gaddidar_error_div'), $('#gaddidar_error_message'));
         } else {
-            $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
-            if ($('#gaddidar_commission_row').val().trim() != '' && $('#gaddidar_commission_row').val().trim() != $this.parent()[0].childNodes[3].innerHTML)
-                editedGaddidar = 1;
+            if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==0) {
+                $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[3].innerHTML * $('#gaddidar_commission_row').val()).toFixed(2));
+            }
+            else {
+                $('#gaddidar_share_row').val(parseFloat($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,10).data() * $('#gaddidar_commission_row').val()).toFixed(2));
+            }
 
+            if ($('#gaddidar_commission_row').val().trim() != '' && $('#gaddidar_commission_row').val().trim() != $this.parent()[0].childNodes[3].innerHTML)
+                    editedGaddidar = 1;
         }
     });
 
