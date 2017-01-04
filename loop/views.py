@@ -245,14 +245,14 @@ def total_static_data(request):
 
 
 def aggregator_incentive_for_total_static_data():
-    aggregator_incentive_list = calculate_aggregator_incentive('2016-06-01', '2016-10-31', None, [2286, ])
+    aggregator_incentive_list = calculate_aggregator_incentive()
     total_aggregator_incentive = 0
     for entry in aggregator_incentive_list:
         total_aggregator_incentive += entry['amount']
     return total_aggregator_incentive
 
 
-def calculate_aggregator_incentive(start_date, end_date, mandi_list=None, aggregator_list=None):
+def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
     if aggregator_list is not None:
         user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
     else:
@@ -286,7 +286,7 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list=None, aggreg
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
+        'date', 'user_created_id', 'mandi','mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                        Count('farmer_id', distinct=True))
     result = []
 
@@ -294,6 +294,7 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list=None, aggreg
 
     for CT in combined_ct_queryset:
         sum = 0.0
+        comment = ""
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
             try:
@@ -311,15 +312,14 @@ def calculate_aggregator_incentive(start_date, end_date, mandi_list=None, aggreg
         else:
             try:
                 aso_share_date_aggregator = aso_queryset.filter(
-                    date=CT['date'], aggregator=user.id, mandi=CT['mandi']).values_list('amount', flat=True)
+                    date=CT['date'], aggregator=user.id, mandi=CT['mandi']).values('amount', 'comment')
                 if aso_share_date_aggregator.count():
-                    sum += aso_share_date_aggregator[0]
+                    sum += aso_share_date_aggregator[0]['amount']
+                    comment = aso_share_date_aggregator[0]['comment']
             except AggregatorShareOutliers.DoesNotExist:
                 pass
         result.append(
-            {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'amount': sum,
-             'quantity__sum': CT['quantity__sum']})
-    print result
+            {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
     return result
 
 
@@ -385,7 +385,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-            'gaddidar'], 'mandi__id': CT['mandi'], 'amount': sum, 'quantity__sum': CT['quantity__sum']})
+            'gaddidar'], 'mandi__id': CT['mandi'], 'amount': round(sum,2), 'quantity__sum': round(CT['quantity__sum'],2)})
     return result
 
 
@@ -587,8 +587,8 @@ def calculate_gaddidar_share_payments(start_date, end_date):
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
-            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': sum,
-                       'gaddidar_discount': gc_discount, 'comment': comment})
+            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(sum,2),
+                       'gaddidar_discount': round(gc_discount,3), 'comment': comment})
     return result
 
 
