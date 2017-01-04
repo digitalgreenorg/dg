@@ -476,7 +476,7 @@ def data_for_drilldown_graphs(request):
     gaddidar_contribution = calculate_gaddidar_share(
         start_date, end_date, mandi_ids, aggregator_ids)
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date,end_date,mandi_ids,aggregator_ids)
+    aggregator_incentive_cost = calculate_aggregator_incentive(start_date,end_date,mandi_ids,aggregator_ids)
 
     transactions_details_without_crops = CombinedTransaction.objects.filter(**filter_args_no_crops).values(
         'user_created__id', 'mandi__id').annotate(Sum('quantity'), Sum('amount'),
@@ -488,7 +488,7 @@ def data_for_drilldown_graphs(request):
                       mandi_gaddidar), 'mandi_crop': list(mandi_crop),
                   'transportation_cost_mandi': list(transportation_cost_mandi),
                   "mandi_crop_prices": list(mandi_crop_prices), "gaddidar_contribution": gaddidar_contribution,
-                  "aggregator_incentive":aggregator_incentive,
+                  "aggregator_incentive_cost":aggregator_incentive_cost,
                   "transactions_details_without_crops": list(transactions_details_without_crops)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
@@ -529,10 +529,10 @@ def data_for_line_graph(request):
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date,end_date,mandi_ids,aggregator_ids)
+    aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
 
     chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(
-        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data), "aggregator_incentive":aggregator_incentive}
+        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data), 'aggregator_incentive_cost' : aggregator_incentive_cost}
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 

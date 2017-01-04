@@ -1146,7 +1146,7 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
 
     var transportation_cost_mandi = json_data.transportation_cost_mandi;
     var gaddidar_contribution = json_data.gaddidar_contribution;
-    var aggregator_incentive_cost = json_data.aggregator_incentive;
+    var aggregator_incentive_cost = json_data.aggregator_incentive_cost;
     var series = [];
     var drilldown = {};
     drilldown['allowPointDrilldown'] = false;
