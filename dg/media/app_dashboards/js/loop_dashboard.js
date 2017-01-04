@@ -123,7 +123,7 @@ function hide_nav(tab) {
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE) {
         selected_page = PAYMENTS_PAGE;
-        if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp + 1).getTime() >= new Date().getTime()) {
+        if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp).getTime()+86400 >= new Date().getTime()) {
             $("#payments_div").show();
             $("#payments_tab").addClass('active');
         } else {
