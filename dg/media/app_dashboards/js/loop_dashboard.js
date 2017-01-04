@@ -751,9 +751,7 @@ function set_filterlistener() {
     $('#payments_from_date').change(function() {
         var start_date = $('#payments_from_date').val();
         if (start_date != '') {
-            $("#aggregator_payment_tab").hide();
-            $("#download_payment_sheets").hide();
-            $('#aggregator_payment_details').hide();
+            hidePaymentDetails();
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -770,9 +768,7 @@ function set_filterlistener() {
     $('#payments_to_date').change(function() {
         var end_date = $('#payments_to_date').val();
         if (end_date != '') {
-            $("#aggregator_payment_tab").hide();
-            $("#download_payment_sheets").hide();
-            $('#aggregator_payment_details').hide();
+            hidePaymentDetails();
         } else {
             $('#payments_to_date').val('');
         }
@@ -782,6 +778,12 @@ function set_filterlistener() {
         gaddidar = true;
         get_data();
     });
+}
+
+function hidePaymentDetails(){
+  $("#aggregator_payment_tab").hide();
+  $("#download_payment_sheets").hide();
+  $('#aggregator_payment_details').hide();
 }
 
 
@@ -2156,10 +2158,10 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     });
 
     // create a detail chart referenced by a global variable
-    // width = detail_container.width();
+    width = detail_container.width();
     detailChart = detail_container.highcharts({
         chart: {
-            // width: width
+            width: width
         },
         title: {
             text: "Volume and Farmers Cummulative Count"
@@ -3880,6 +3882,7 @@ function getFormattedDate(aggregator_id) {
 
 //To get data for aggregator, transporter, gaddidar payment sheets from server for specified time period
 function get_payments_data() {
+    hidePaymentDetails();
     payments_start_date = $("#payments_from_date").val();
     payments_to_date = $("#payments_to_date").val();
     if (payments_start_date != "" && payments_to_date != "" && Date.parse(payments_start_date) < Date.parse(payments_to_date) && new Date(payments_start_date) < new Date(payments_to_date) && new Date(payments_to_date) - new Date(payments_start_date) <= 1296000000) {
