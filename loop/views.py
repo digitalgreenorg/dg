@@ -9,7 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Min, Sum, Avg, Max, F
+from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
@@ -223,14 +223,13 @@ def crop_wise_data(request):
 
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
-    ).aggregate(Sum('quantity'), Sum('amount'))
-    total_repeat_farmers = len(CombinedTransaction.objects.values(
-        'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1))
-    total_farmers_reached = len(
-        CombinedTransaction.objects.values('farmer').distinct())
-    total_cluster_reached = len(LoopUser.objects.filter(role=ROLE_AGGREGATOR))
+    ).aggregate(Sum('quantity',output_field=IntegerField()), Sum('amount',output_field=IntegerField()))
+    total_repeat_farmers = CombinedTransaction.objects.values(
+        'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1).count()
+    total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
+    total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
-        Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
+        Sum('transportation_cost',output_field=IntegerField()), farmer_share__sum=Avg('farmer_share',output_field=IntegerField()))
 
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
