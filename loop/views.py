@@ -249,7 +249,7 @@ def aggregator_incentive_for_total_static_data():
     total_aggregator_incentive = 0
     for entry in aggregator_incentive_list:
         total_aggregator_incentive += entry['amount']
-    return total_aggregator_incentive
+    return round(total_aggregator_incentive,2)
 
 
 def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
@@ -327,7 +327,7 @@ def gaddidar_contribution_for_totat_static_data():
     total_share = 0
     for entry in gaddidar_share_list:
         total_share += entry['amount']
-    return total_share
+    return round(total_share,2)
 
 
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):

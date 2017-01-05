@@ -46,8 +46,7 @@ var aggregator_sheet_name = "",
 var globalApi;
 
 function initialize() {
-    // initialize any library here
-    //console.log(window.localStorage)
+    initialLoadComplete = false;
     language = ENGLISH_LANGUAGE;
     $("select").material_select();
     $(".button-collapse").sideNav({
@@ -121,7 +120,7 @@ function hide_nav(tab) {
         $("#home_div").show();
         $("#home_tab").addClass('active');
         selected_page = HOME;
-    } else if (tab == PAYMENTS_PAGE) {
+    } else if (tab == PAYMENTS_PAGE && initialLoadComplete) {
         selected_page = PAYMENTS_PAGE;
         if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp).getTime() + 86400 >= new Date().getTime()) {
             $("#payments_div").show();
@@ -167,31 +166,33 @@ function hide_nav(tab) {
 }
 //To show the second navigation bar that comes on analytics and time series page only
 function show_nav(tab) {
-    $("#home_tab").removeClass('active');
-    $("#payments_tab").removeClass('active');
-    $("#analytics_tab").removeClass('active');
-    $("#time_series_tab").removeClass('active');
-    $("#filters_nav").removeClass('hide');
-    $("#filters_nav").addClass('show');
-    $("#home_div").hide();
-    $("#payments_div").hide();
-    //if login modal is being shown disable it.
-    $('#login_modal').closeModal();
+    if (initialLoadComplete) {
+        $("#home_tab").removeClass('active');
+        $("#payments_tab").removeClass('active');
+        $("#analytics_tab").removeClass('active');
+        $("#time_series_tab").removeClass('active');
+        $("#filters_nav").removeClass('hide');
+        $("#filters_nav").addClass('show');
+        $("#home_div").hide();
+        $("#payments_div").hide();
+        //if login modal is being shown disable it.
+        $('#login_modal').closeModal();
 
-    if (tab == ANALYTICS_PAGE) {
-        selected_page = ANALYTICS_PAGE;
-        $("#analytics_div").show();
-        $("#time_series_div").hide();
-        $(".analytics_tabs").show();
-        $("#analytics_tab").addClass('active');
-        PlotAnalyticsGraphs();
-    } else if (tab == TIME_SERIES_PAGE) {
-        selected_page = TIME_SERIES_PAGE;
-        $("#analytics_div").hide();
-        $("#time_series_div").show();
-        $(".analytics_tabs").hide();
-        $("#time_series_tab").addClass('active');
-        PlotTimeSeriesGraphs();
+        if (tab == ANALYTICS_PAGE) {
+            selected_page = ANALYTICS_PAGE;
+            $("#analytics_div").show();
+            $("#time_series_div").hide();
+            $(".analytics_tabs").show();
+            $("#analytics_tab").addClass('active');
+            PlotAnalyticsGraphs();
+        } else if (tab == TIME_SERIES_PAGE) {
+            selected_page = TIME_SERIES_PAGE;
+            $("#analytics_div").hide();
+            $("#time_series_div").show();
+            $(".analytics_tabs").hide();
+            $("#time_series_tab").addClass('active');
+            PlotTimeSeriesGraphs();
+        }
     }
 }
 
@@ -270,6 +271,7 @@ function recent_graphs_data(language) {
         aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         cummulative_farmer_and_volume();
         plot_cards_data();
+        initialLoadComplete = true;
     });
 }
 
@@ -3700,36 +3702,35 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         destroy: true,
         data: gaddidar_data_set,
         columns: [{
-                title: "Date"
-            }, {
-                title: "Commission Agent"
-            }, {
-                title: "Market"
-            }, {
-                title: "Quantity[Q] (in Kg)"
-            }, {
-                title: "Commission Agent Discount[CAD] (in Rs/Kg)"
-            }, {
-                title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
-            }, {
-                title: "Mandi Id",
-                visible: false
-            }, {
-                title: "Gaddidar Id",
-                visible: false
-            }, {
-                title: "Aggregator Id",
-                visible: false
-            }, {
-                title: "Comment"
-            },{
-                title: "Amount",
-                visible: false
-            },{
-                title: "Discount Criteria",
-                visible: false
-            }
-        ],
+            title: "Date"
+        }, {
+            title: "Commission Agent"
+        }, {
+            title: "Market"
+        }, {
+            title: "Quantity[Q] (in Kg)"
+        }, {
+            title: "Commission Agent Discount[CAD] (in Rs/Kg)"
+        }, {
+            title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
+        }, {
+            title: "Mandi Id",
+            visible: false
+        }, {
+            title: "Gaddidar Id",
+            visible: false
+        }, {
+            title: "Aggregator Id",
+            visible: false
+        }, {
+            title: "Comment"
+        }, {
+            title: "Amount",
+            visible: false
+        }, {
+            title: "Discount Criteria",
+            visible: false
+        }],
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
         "pageLength": 10,
@@ -3737,67 +3738,66 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
 
-                    "sExtends": "text",
-                    "sButtonText": "Edit",
-                    "fnClick": function(nButton, oConfig) {
-                        $('#ToolTables_table3_1').removeClass('disable-button');
-                        flag_edit_Table3 = true;
-                        $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
-                        $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
-                        var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                        for (var column = 0; column < colCount; column++)
-                            $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
-                    }
-                }, {
-                    "sExtends": "ajax",
-                    "sButtonText": "Submit",
-                    "sButtonClass": "disable-button",
-                    "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
-                    "fnClick": function(nButton, oConfig) {
-                        var editedDataGaddidar = [];
-                        var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                        for (var column = 0; column < colCount; column++)
-                            $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
-                        $('#table3').find('td').removeClass("editcolumn");
-                        $('#table3').find('td').removeClass("editedcell");
-                        $('#table3').find('td').removeClass("editedcelledge");
-                        flag_edit_Table3 = false;
-                        $('#ToolTables_table3_1').addClass('disable-button');
-                        editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
-                        var sData = this.fnGetTableData(oConfig);
-                        var gaddidarObjects = {
-                            "objects": editedDataGaddidar
-
-                        };
-                        if (Object.keys(rows_table3).length > 0)
-                            $.ajax({
-                                url: oConfig.sAjaxUrl,
-                                type: 'patch',
-                                dataType: 'json',
-                                contentType: "application/json; charset=utf-8",
-                                headers: {
-                                    "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
-                                },
-                                data: JSON.stringify(gaddidarObjects),
-                                success: function() {
-                                    alert("success");
-                                    for (var keys in rows_table3) {
-                                        gaddidar_data_set[keys - 1][4] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
-                                        gaddidar_data_set[keys - 1][5] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
-                                        gaddidar_data_set[keys - 1][6] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
-                                    }
-                                    rows_table3 = [];
-                                },
-                                error: function() {
-                                    alert("Error");
-                                    $('#table3').dataTable().fnClearTable();
-                                    $('#table3').dataTable().fnAddData(gaddidar_data_set);
-                                    rows_table3 = [];
-                                }
-                            });
-                    }
+                "sExtends": "text",
+                "sButtonText": "Edit",
+                "fnClick": function(nButton, oConfig) {
+                    $('#ToolTables_table3_1').removeClass('disable-button');
+                    flag_edit_Table3 = true;
+                    $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
+                    $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
+                    var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                    for (var column = 0; column < colCount; column++)
+                        $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
                 }
-            ]
+            }, {
+                "sExtends": "ajax",
+                "sButtonText": "Submit",
+                "sButtonClass": "disable-button",
+                "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
+                "fnClick": function(nButton, oConfig) {
+                    var editedDataGaddidar = [];
+                    var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                    for (var column = 0; column < colCount; column++)
+                        $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
+                    $('#table3').find('td').removeClass("editcolumn");
+                    $('#table3').find('td').removeClass("editedcell");
+                    $('#table3').find('td').removeClass("editedcelledge");
+                    flag_edit_Table3 = false;
+                    $('#ToolTables_table3_1').addClass('disable-button');
+                    editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
+                    var sData = this.fnGetTableData(oConfig);
+                    var gaddidarObjects = {
+                        "objects": editedDataGaddidar
+
+                    };
+                    if (Object.keys(rows_table3).length > 0)
+                        $.ajax({
+                            url: oConfig.sAjaxUrl,
+                            type: 'patch',
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            headers: {
+                                "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
+                            },
+                            data: JSON.stringify(gaddidarObjects),
+                            success: function() {
+                                alert("success");
+                                for (var keys in rows_table3) {
+                                    gaddidar_data_set[keys - 1][4] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+                                    gaddidar_data_set[keys - 1][5] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
+                                    gaddidar_data_set[keys - 1][6] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                }
+                                rows_table3 = [];
+                            },
+                            error: function() {
+                                alert("Error");
+                                $('#table3').dataTable().fnClearTable();
+                                $('#table3').dataTable().fnAddData(gaddidar_data_set);
+                                rows_table3 = [];
+                            }
+                        });
+                }
+            }]
         },
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
@@ -4237,5 +4237,4 @@ function change_language(lang) {
     if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
         show_nav(selected_page);
     }
-
 }
