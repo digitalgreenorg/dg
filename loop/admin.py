@@ -132,22 +132,25 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
     list_display = ('id', 'date','__aggregator__', '__unicode__','amount', 'comment')
     list_filter = ('aggregator', 'mandi', 'gaddidar')
+    date_hierarchy = 'date'
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
     fields = ('start_date','aggregator','model_type','incentive_model')
-    list_display = ('start_date','__unicode__','__incentive_model__')
+    list_display = ('start_date','__unicode__','__incentive_model__' ,'model_type')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
     list_display = ['calculation_method']
 
 class AggregatorShareOutlierAdmin(admin.ModelAdmin):
     list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')
+    list_filter = ('aggregator', 'mandi')
+    date_hierarchy = 'date'
 
 class IncentiveParameterAdmin(admin.ModelAdmin):
-    list_display = ('notation','parameter_name')
+    list_display = ('notation','parameter_name', 'notation_equivalent')
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
