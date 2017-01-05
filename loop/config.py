@@ -203,5 +203,5 @@ query_for_single_aggregator = '''SELECT
                             ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
 
-RECIPIENTS = ['amandeep@digitalgreen.org']
+RECIPIENTS = ['amandeep@digitalgreen.org', 'lokesh@digitalgreen.org','divish@digitalgreen.org','abhisheklodha@digitalgreen.org','sourabh@digitalgreen.org','vikas@digitalgreen.org']
 
