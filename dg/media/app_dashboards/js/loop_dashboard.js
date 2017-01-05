@@ -831,7 +831,6 @@ function hidePaymentDetails(){
   $('#aggregator_payment_details').hide();
 }
 
-
 //To make a call when filters are changed
 function get_filter_data(language) {
     $.get("/loop/filter_data/", {
@@ -1301,8 +1300,9 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
             'drilldown': data_for_sorting[i]['name'] + "recovered"
         });
     }
-    //Error in sorting if some value is 0 and hence it will not be inserted into the array
-    // for (var i = 0; i < drilldown['series'].length; i++) {
+
+    //Error in sorting as the array contains 2 types of data points and sorting can be done one 1 only
+    // for (var i = 0; i < drilldown['series'].length; i+=2) {
     //     drilldown['series'][i]['data'].sort(function(a, b) {
     //         return b[1] - a[1];
     //     });
@@ -1434,7 +1434,7 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
             'drilldown': data_for_sorting[i]['name'] + "spk"
         });
     }
-
+    //Error in sorting as the array contains 2 types of data points and sorting can be done one 1 only
     // for (var i = 0; i < drilldown['series'].length; i+=2) {
     //     drilldown['series'][i]['data'].sort(function(a, b) {
     //         return b[1] - a[1];
