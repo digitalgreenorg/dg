@@ -307,10 +307,8 @@ function plot_cards_data() {
 
 //Helper function to calculate average for 7,15,30,60 days for above function
 function get_average() {
-    var today;
-
-    var gaddidar_day = new Date();
-    gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+    var today = new Date();
+    today.setDate(today.getDate() - days_to_average);
 
     var avg_vol = [];
     var avg_amt = [];
@@ -336,6 +334,8 @@ function get_average() {
         gaddidar_share.push(0);
         aggregator_cost.push(0);
     }
+
+    // CALCUALTING GADDIDAR CONTRIBUTION FOR NUMBER OF DAYS
     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
     for (var i = 0; i < gaddidar_contribution_length; i++) {
         var index = dates.indexOf(gaddidar_contribution_recent_graph[i]['date']);
@@ -344,31 +344,30 @@ function get_average() {
         }
     }
 
-    while (gaddidar_day >= new Date(dates[k])) {
+    while (today >= new Date(dates[k])) {
         avg_gaddidar_share.push(0);
-        gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+        today.setDate(today.getDate() - days_to_average);
     }
 
     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
-    while (k < gaddidar_contribution_length && gaddidar_day < new Date(dates[k])) {
+    while (k < gaddidar_contribution_length && today < new Date(dates[k])) {
         temp_gaddidar_share += gaddidar_share[k];
         k++;
-        if (k < gaddidar_contribution_length && gaddidar_day >= new Date(dates[k])) {
+        if (k < gaddidar_contribution_length && today >= new Date(dates[k])) {
             avg_gaddidar_share.push(temp_gaddidar_share.toFixed(0));
             temp_gaddidar_share = 0;
-            gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+            today.setDate(today.getDate() - days_to_average);
 
             //If no data is present for a period of days_to_average
-            while (gaddidar_day >= new Date(dates[k])) {
+            while (today >= new Date(dates[k])) {
                 avg_gaddidar_share.push(0);
-                gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
+                today.setDate(today.getDate() - days_to_average);
             }
         }
     }
     avg_gaddidar_share.push(temp_gaddidar_share);
 
-
-
+    // CALCUALTING AGGREGATOR INCENTIVE COST FOR NUMBER OF DAYS
     k = 0;
     today = new Date();
     today.setDate(today.getDate() - days_to_average);
@@ -404,7 +403,7 @@ function get_average() {
     }
     avg_aggregator_cost.push(temp_aggregator_cost);
 
-
+    // CALCUALTING VOLUME,AMOUNT,#FARMERS,#CLUSTERS FOR NUMBER OF DAYS
     today = new Date();
     today.setDate(today.getDate() - days_to_average);
 
@@ -472,8 +471,9 @@ function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
     var sustainability_per_kg = [];
 
     console.log("AVG VOL LENGTH : " + avg_vol.length);
+    console.log(avg_vol);
     console.log("AVG AGGREGATOR COST LENGTH : " + avg_aggregator_cost.length);
-
+    console.log(avg_aggregator_cost);
     var j = 0, // To loop through transportation details
         transportation_cost = 0,
         k = 0, // keeping note of position in avg_vol
