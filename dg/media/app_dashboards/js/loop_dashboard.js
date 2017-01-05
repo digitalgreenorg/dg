@@ -470,10 +470,6 @@ function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
     var cpk = [];
     var sustainability_per_kg = [];
 
-    console.log("AVG VOL LENGTH : " + avg_vol.length);
-    console.log(avg_vol);
-    console.log("AVG AGGREGATOR COST LENGTH : " + avg_aggregator_cost.length);
-    console.log(avg_aggregator_cost);
     var j = 0, // To loop through transportation details
         transportation_cost = 0,
         k = 0, // keeping note of position in avg_vol
@@ -496,7 +492,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
                 sustainability_per_kg.push(0);
             } else {
                 var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-                //TODO : use aggregator incentive from json data for recent graph
+                //TODO : DONE use aggregator incentive from json data for recent graph
                 var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
                 var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
                 var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
