@@ -404,9 +404,10 @@ def recent_graphs_data(request):
         'date', flat=True).distinct().order_by('-date')
 
     gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)
+    aggregator_incentive_cost = calculate_aggregator_incentive()
 
     chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution}
+        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 

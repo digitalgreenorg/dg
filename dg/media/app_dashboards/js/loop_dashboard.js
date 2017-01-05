@@ -267,8 +267,9 @@ function recent_graphs_data(language) {
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
         gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
-        plot_cards_data();
+        aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         cummulative_farmer_and_volume();
+        plot_cards_data();
     });
 }
 
@@ -278,6 +279,7 @@ function plot_cards_data() {
     var avg_vol = avg[0];
     var avg_gaddidar_contribution = avg[4];
     var active_clusters = avg[3];
+    var avg_aggregator_cost = avg[5];
     document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + active_clusters[0];
     $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
 
@@ -292,7 +294,7 @@ function plot_cards_data() {
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
 
-    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution);
+    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution, avg_aggregator_cost);
     var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
@@ -305,14 +307,14 @@ function plot_cards_data() {
 
 //Helper function to calculate average for 7,15,30,60 days for above function
 function get_average() {
-    var today = new Date();
-    today.setDate(today.getDate() - days_to_average);
+    var today;
 
     var gaddidar_day = new Date();
     gaddidar_day.setDate(gaddidar_day.getDate() - days_to_average);
 
     var avg_vol = [];
     var avg_amt = [];
+    var avg_aggregator_cost = [];
 
     var active_farmers = [];
     var active_farmers_id = [];
@@ -324,12 +326,15 @@ function get_average() {
         k = 0,
         temp_vol = 0,
         temp_amt = 0,
-        temp_gaddidar_share = 0;
+        temp_gaddidar_share = 0,
+        temp_aggregator_cost = 0;
 
     var gaddidar_share = [];
+    var aggregator_cost = [];
     var dates_of_transaction = dates.length;
     for (var i = 0; i < dates_of_transaction; i++) {
         gaddidar_share.push(0);
+        aggregator_cost.push(0);
     }
     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
     for (var i = 0; i < gaddidar_contribution_length; i++) {
@@ -361,6 +366,47 @@ function get_average() {
         }
     }
     avg_gaddidar_share.push(temp_gaddidar_share);
+
+
+
+    k = 0;
+    today = new Date();
+    today.setDate(today.getDate() - days_to_average);
+
+    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
+    for (var i = 0; i < aggregator_incentive_cost_length; i++) {
+        var index = dates.indexOf(aggregator_incentive_cost[i]['date']);
+        if (index != -1) {
+            aggregator_cost[index] += aggregator_incentive_cost[i]['amount'];
+        }
+    }
+
+    while (today >= new Date(dates[k])) {
+        avg_aggregator_cost.push(0);
+        today.setDate(today.getDate() - days_to_average);
+    }
+
+    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
+    while (k < aggregator_incentive_cost_length && today < new Date(dates[k])) {
+        temp_aggregator_cost += aggregator_cost[k];
+        k++;
+        if (k < aggregator_incentive_cost_length && today >= new Date(dates[k])) {
+            avg_aggregator_cost.push(temp_aggregator_cost.toFixed(0));
+            temp_aggregator_cost = 0;
+            today.setDate(today.getDate() - days_to_average);
+
+            //If no data is present for a period of days_to_average
+            while (today >= new Date(dates[k])) {
+                avg_aggregator_cost.push(0);
+                today.setDate(today.getDate() - days_to_average);
+            }
+        }
+    }
+    avg_aggregator_cost.push(temp_aggregator_cost);
+
+
+    today = new Date();
+    today.setDate(today.getDate() - days_to_average);
 
     //If no data is present for a period of days_to_average initially
     while (today >= new Date(stats[j]['date'])) {
@@ -414,16 +460,19 @@ function get_average() {
     avg_amt.push(temp_amt);
     active_farmers.push(active_farmers_id.length);
     active_clusters.push(active_clusters_id.length);
-    return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share];
+    return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share, avg_aggregator_cost];
 }
 
 
 //Helper function to calculate average cpk for 7,15,30,60 days for above function
-function get_cpk(avg_vol, avg_gaddidar_contribution) {
+function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
     var today = new Date();
     today.setDate(today.getDate() - days_to_average);
     var cpk = [];
     var sustainability_per_kg = [];
+
+    console.log("AVG VOL LENGTH : " + avg_vol.length);
+    console.log("AVG AGGREGATOR COST LENGTH : " + avg_aggregator_cost.length);
 
     var j = 0, // To loop through transportation details
         transportation_cost = 0,
@@ -448,7 +497,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
             } else {
                 var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
                 //TODO : use aggregator incentive from json data for recent graph
-                var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
+                var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
                 var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
                 var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
                 cpk.push(cpk_value.toFixed(2));
@@ -475,7 +524,7 @@ function get_cpk(avg_vol, avg_gaddidar_contribution) {
     } else {
         var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
         //TODO : use A I from json data for recent graph
-        var cost = parseFloat(transportation_cost) + parseFloat(avg_vol[k]) * AGGREGATOR_INCENTIVE_PERCENTAGE;
+        var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
         var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
         var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
         cpk.push(cpk_value.toFixed(2));
