@@ -315,6 +315,12 @@ define([
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        // fields to hide
+                        if (that.entity_config.show_health_provider_present != that.model_json.parentcategory){
+                            
+                            that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
+                            that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
+                        }
                         // text to select
                         if (that.entity_config.text_to_select_display_hack){
                             var adopt_practice_val = that.model_json.adopt_practice;
@@ -542,10 +548,12 @@ define([
             if (this.$el.find('#id_' + parent_element).val() == "2" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 // hide the headers
                 this.$el.find('th#id_member_adopt, th#id_recall_nonnegotiable, td#id_recall_nonnegotiable, td#id_member_adopt').addClass('hidden');
-                this.$el.find("td#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
+                this.$el.find("div#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
+                this.$el.find("#label_health_provider_present, #id_health_provider_present").addClass('hidden');
             }
             if (this.$el.find('#id_' + parent_element).val() == "1" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 this.$el.find("th#id_member_adopt, th#id_recall_nonnegotiable").removeClass("hidden");
+                this.$el.find("#label_health_provider_present, #id_health_provider_present").removeClass('hidden');
             }
 
 
@@ -792,7 +800,7 @@ define([
                             t_json[field] = f_json[field];
                         });
                         $f_el.append(expanded_template(t_json));
-                        if (t_json.category.length >= 1){
+                        if (t_json.category && t_json.category.length >= 1){
                             _.each(t_json.category, function(iterable, idx){    
                                 if (iterable.id != 'undefined'){
                                     $f_el.find(".category_row7_" + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
@@ -1074,49 +1082,32 @@ define([
     						inl_obj[attr_name] = this.checked;
     				}
                 });
-                var c = []
-                _.each(inl_obj.category, function(index, iter){ 
-                    console.log(index)
-                    Offline.fetch_object(child_element, fetch_element_key, parseInt(index))
-                        .done(function(model_var) {
-                            console.log("NIKHIL-VERMA", model_var.id);
-                            c.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
-                            
-
-                        })
-                        .fail(function() {
-                            // edit object could not be fetched from offline db
-                            //TODO: error handling
-                            console.log("ERROR: EDIT: Edit model could not be fetched!");
-                            alert("ERROR: EDIT: Edit model could not be fetched!");
-                        });
-                })
-                inl_obj.category = c;
+                // checking category from inline and then converting inlines request ids to actual objects
+                if (inl_obj.category && inl_obj.category.length >= 0){
+                    var category = []
+                    _.each(inl_obj.category, function(idx, iter){ 
+                        Offline.fetch_object(child_element, fetch_element_key, parseInt(idx))
+                            .done(function(model_var) {
+                                category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                inl_obj.category = category;
+                            })
+                            .fail(function() {
+                                // edit object could not be fetched from offline db
+                                //TODO: error handling
+                                console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                alert("ERROR: EDIT:");
+                            });
+                    })
+                
+                    
+                }
                 raw_json[element].push(inl_obj);
                 if (fetch_element != null){
+                   // saving in fetch_element offline table
                    var category = []
                    Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
                     .done(function(model) {
-                        _.each(inl_obj.category, function(iterable){
-
-                                Offline.fetch_object(child_element, fetch_element_key, parseInt(iterable))
-                                .done(function(model_var) {
-                                    console.log("NIKHIL-VERMA", model_var.id);
-                                    category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
-                                    model.save({'age': inl_obj.age, 'category': category, 'gender': inl_obj.gender});
-
-                                })
-                                .fail(function() {
-                                    // edit object could not be fetched from offline db
-                                    //TODO: error handling
-                                    console.log("ERROR: EDIT: Edit model could not be fetched!");
-                                    alert("ERROR: EDIT: Edit model could not be fetched!");
-                                });
-
-
-                        })
-                        
-
+                        model.save({'age': inl_obj.age, 'category': inl_obj.category, 'gender': inl_obj.gender});
                     })
                     .fail(function() {
                         // edit object could not be fetched from offline db
