@@ -224,12 +224,12 @@ def crop_wise_data(request):
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
     ).aggregate(Sum('quantity',output_field=IntegerField()), Sum('amount',output_field=IntegerField()))
-    total_repeat_farmers = CombinedTransaction.objects.values(
-        'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1).count()
+    # total_repeat_farmers = CombinedTransaction.objects.values(
+    #     'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1).count()
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
-        Sum('transportation_cost'),farmer_share__sum=Avg('farmer_share'))
+        Sum('transportation_cost',output_field=IntegerField()), farmer_share__sum=Avg('farmer_share'))
 
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
@@ -238,7 +238,7 @@ def total_static_data(request):
     chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
                   'total_transportation_cost': list(total_transportation_cost),
                   'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached,
-                  'total_repeat_farmers': total_repeat_farmers, 'total_aggregator_incentive': aggregator_incentive}
+                  'total_aggregator_incentive': aggregator_incentive}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
