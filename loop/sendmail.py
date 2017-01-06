@@ -26,6 +26,7 @@ def common_send_email(subject, recipients, file, bcc=[], from_email=None):
     msg = EmailMultiAlternativesWithEncoding(subject, text_content, from_email, recipients)
     msg.attach_file(attach_file_name)
     msg.send()
+    return
 
 
 def set_columns_width(ws_obj):

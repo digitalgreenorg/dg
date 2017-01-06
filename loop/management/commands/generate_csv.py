@@ -156,13 +156,18 @@ class Command(BaseCommand):
                                                     'text_wrap': True}
 
         #post request to library for excel generation
-        r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
-        excel_file = open(excel_workbook_name + '.xlsx', 'w')
-        excel_file.write(r.content)
-        excel_file.close()
-        #send email to concerned people with excel file attached    
-        common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                          RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
+        try:
+            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            excel_file = open(excel_workbook_name + '.xlsx', 'w')
+            excel_file.write(r.content)
+            excel_file.close()
+            #send email to concerned people with excel file attached    
+            common_send_email('Farmers List with Incorrect Mobile Numbers', 
+                              RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
+            os.remove(excel_workbook_name + '.xlsx')
+        except Exception as e:
+            raise CommandError('There is some problem, please contact the administrator')
+        
 
 
 
