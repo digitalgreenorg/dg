@@ -229,7 +229,7 @@ def total_static_data(request):
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
     total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
-        Sum('transportation_cost',output_field=IntegerField()), farmer_share__sum=Avg('farmer_share',output_field=IntegerField()))
+        Sum('transportation_cost'),farmer_share__sum=Avg('farmer_share'))
 
     gaddidar_share = gaddidar_contribution_for_totat_static_data()
 
