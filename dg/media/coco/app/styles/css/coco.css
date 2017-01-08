@@ -622,20 +622,17 @@ h1 small{
     .adoptionadd_English td:nth-of-type(1):before { content: "Delete?"; }
 	.adoptionadd_English td:nth-of-type(2):before { content: "Sr. No."; }
 	.adoptionadd_English td:nth-of-type(3):before { content: "Person"; }
-	.adoptionadd_English td:nth-of-type(4):before { content: "Date of Adoption"; }
-    .adoptionadd_English td:nth-of-type(5):before { content: "Date of Verification"; }
+	.adoptionadd_English td:nth-of-type(4):before { content: "Date of Verification"; }
 
     .adoptionadd_हिन्दी  td:nth-of-type(1):before { content: "हटाओ"; }
     .adoptionadd_हिन्दी  td:nth-of-type(2):before { content: "क्रम संख्या"; }
     .adoptionadd_हिन्दी  td:nth-of-type(3):before { content: "सदस्य"; }
-    .adoptionadd_हिन्दी  td:nth-of-type(4):before { content: "अपनाने की तारीख"; }
-    .adoptionadd_हिन्दी  td:nth-of-type(5):before { content: "अपनाने के जाँच की तारीख"; }
+    .adoptionadd_हिन्दी  td:nth-of-type(4):before { content: "अपनाने के जाँच की तारीख"; }
 
     .adoptionadd_français td:nth-of-type(1):before { content: "effacer"; }
     .adoptionadd_français td:nth-of-type(2):before { content: "Serie de Numéro"; }
     .adoptionadd_français td:nth-of-type(3):before { content: "Personne"; }
-    .adoptionadd_français td:nth-of-type(4):before { content: "Date d'adoption"; }
-    .adoptionadd_français td:nth-of-type(5):before { content: "Date de vérification"; }
+    .adoptionadd_français td:nth-of-type(4):before { content: "Date de vérification"; }
 
     .videoadd_English td:nth-of-type(1):before { content: "Sr. No"; }
     .videoadd_English td:nth-of-type(2):before { content: "Non Negotiable"; }
