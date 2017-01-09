@@ -122,7 +122,7 @@ function hide_nav(tab) {
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE && initialLoadComplete) {
         selected_page = PAYMENTS_PAGE;
-        if (window.localStorage.login_timestamp != null && new Date(window.localStorage.login_timestamp).getTime() + 86400 >= new Date().getTime()) {
+        if (window.localStorage.login_timestamp != null && parseint(window.localStorage.login_timestamp) + 86400*1000 >= new Date().getTime()) {
             $("#payments_div").show();
             $("#payments_tab").addClass('active');
         } else {
@@ -146,7 +146,7 @@ function hide_nav(tab) {
                         window.localStorage.akey = login_data['key'];
                         window.localStorage.user_id = login_data['user_id'];
                         globalApi = login_data['key'];
-                        window.localStorage.login_timestamp = new Date();
+                        window.localStorage.login_timestamp = new Date().getTime();
                         if (localStorage.akey != null) {
                             $('#login_modal').closeModal();
                             $("#payments_div").show();
