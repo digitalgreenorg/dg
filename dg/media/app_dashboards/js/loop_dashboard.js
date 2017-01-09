@@ -2928,6 +2928,12 @@ function plot_area_range_graph(container, dict) {
             }
         },
         legend: {},
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
         series: dict
     });
 }
