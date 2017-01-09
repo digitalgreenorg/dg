@@ -49,7 +49,7 @@ class Command(BaseCommand):
 			except JSLPS_Village.DoesNotExist as e:
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
-					wtr.writerow(['JSLPS village not EXIST', gc, e])
+					wtr.writerow(['JSLPS village not EXIST: '+str(pc), vc, e])
 				error = 1
 			
 			#TODO: Code clean up
@@ -70,9 +70,10 @@ class Command(BaseCommand):
 				except Exception as e:
 					if "Duplicate entry" in str(e):
 						jslps.duplicate_count += 1
+						wtr.writerow(['duplicate entry: '+str(pc), gc, e])
 					else:
 						jslps.other_error_count += 1
-						wtr.writerow(['village group not exist', gc, e])
+						wtr.writerow(['village group not exist: '+str(pc), gc, e])
 				try:
 					person = Person.objects.filter(person_name = pn, father_name = pfn, village_id = village.Village.id).get()
 					person_added = JSLPS_Person.objects.values_list('person_code',flat=True)
