@@ -85,12 +85,12 @@ def farmer_payments(request):
         for bundle in body.get("objects"):
             try:
                 mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
-                attempt = DayTransportation.objects.get(date=bundle["date"], user_created=bundle["user_created_id"], mandi=mandi)
-                attempt.farmer_share = bundle["amount"]
-                attempt.comment = bundle["comment"]
-                attempt.user_modified_id = bundle["user_modified_id"]
+                user = User.objects.get(id = bundle["user_created_id"])
+                attempt = DayTransportation.objects.filter(date=bundle["date"], user_created=user, mandi=mandi)
+                attempt.update(farmer_share = bundle["amount"])
+                attempt.update(comment = bundle["comment"])
+                attempt.update(user_modified_id = bundle["user_modified_id"])
                 # attempt.time_modified = get_latest_timestamp().timestamp
-                attempt.save()
             except:
                 return HttpResponse(json.dumps({'message':'error'}),status=500)
     return HttpResponse(json.dumps({'message':'successfully edited'}),status=200)
