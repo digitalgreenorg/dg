@@ -122,7 +122,7 @@ function hide_nav(tab) {
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE && initialLoadComplete) {
         selected_page = PAYMENTS_PAGE;
-        if (window.localStorage.login_timestamp != null && parseint(window.localStorage.login_timestamp) + 86400*1000 >= new Date().getTime()) {
+        if (window.localStorage.login_timestamp != null && parseInt(window.localStorage.login_timestamp) + 86400*1000 >= new Date().getTime()) {
             $("#payments_div").show();
             $("#payments_tab").addClass('active');
         } else {
@@ -2933,7 +2933,7 @@ function plot_area_range_graph(container, dict) {
         },
         exporting: {
             enabled: false
-        },
+        },dg
         series: dict
     });
 }
