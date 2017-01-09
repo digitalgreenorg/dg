@@ -3408,7 +3408,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                // $('#table2').dataTable().fnClearTable();
                                // $('#table2').dataTable().fnAddData(aggregator_data_set);
                                // rows_table2 = [];
-                            }
+                            },
+                            timeout:10000
                         });
                     }
                     if (Object.keys(rows_table2_farmer).length > 0) {
@@ -3431,7 +3432,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             error: function() {
                                 farmerAjaxSuccess=-1;
                                 alert("Error While Syncing Farmer Data");
-                            }
+                            },
+                            timeout:10000
                         });
                     }
                     
@@ -3732,7 +3734,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                   /*  $('#table3').dataTable().fnClearTable();
                                     $('#table3').dataTable().fnAddData(gaddidar_data_set);
                                     rows_table3 = [];*/
-                                }
+                                },
+                            timeout:10000
                             });
                     }
                 }
