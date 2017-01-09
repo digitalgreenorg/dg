@@ -3368,15 +3368,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "sAjaxUrl": "/loop/api/v1/aggregatorshareoutliers/",
 
                 "fnClick": function(nButton, oConfig) {
-                    var aggregatorAjaxSuccess=false;
-                    var farmerAjaxSuccess=false;
+                    var aggregatorAjaxSuccess=0;
+                    var farmerAjaxSuccess=0;
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
-                    $('#table2').find('td').removeClass("editcolumn");
-                    $('#table2').find('td').removeClass("editedcell");
-                    $('#table2').find('td').removeClass("editedcelledge");
-                    $('#ToolTables_table2_1').addClass('disable-button');
-                    flag_edit_Table2 = false;
                     editedDataAggregator = processAggregatorRow(rows_table2, editedDataAggregator);
                     editedDataFarmer = processFarmerRow(rows_table2_farmer, editedDataFarmer);
                     var sData = this.fnGetTableData(oConfig);
@@ -3386,14 +3381,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var farmerObjects = {
                         "objects": editedDataFarmer
                     };
-                    var colCount = $('#table2').dataTable().fnSettings().aoColumns.length;
-                    for(var column =0;column<colCount;column++)
-                        $('#table2').dataTable().fnSettings().aoColumns[column].bSortable=true;
                     if (Object.keys(rows_table2).length > 0) {
                         $.ajax({
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
+                            async:false,
                             contentType: "application/json; charset=utf-8",
                             headers: {
                                 "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
@@ -3401,15 +3394,17 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             data: JSON.stringify(aggregatorObjects),
                             success: function() {
                                 alert("success");
-                                aggregatorAjaxSuccess=true;
+                                aggregatorAjaxSuccess=1;
                                 for (var keys in rows_table2) {
+
                                     aggregator_data_set[keys - 1][4] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
                                     aggregator_data_set[keys - 1][11] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
                                 }
                                 rows_table2 = [];
                             },
                             error: function() {
-                                alert("Error");
+                                aggregatorAjaxSuccess=-1;
+                                alert("Error While Syncing Aggregator Data");
                                // $('#table2').dataTable().fnClearTable();
                                // $('#table2').dataTable().fnAddData(aggregator_data_set);
                                // rows_table2 = [];
@@ -3422,33 +3417,34 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             type: 'PATCH',
                             dataType: 'json',
                             contentType: "application/json; charset=utf-8",
+                            async:false,
                             data: JSON.stringify(farmerObjects),
                             success: function() {
                                 alert("success");
-                                farmerAjaxSuccess=true;
+                                farmerAjaxSuccess=1;
                                 for (var keys in rows_table2_farmer) {
-                                    aggregator_data_set[keys - 1][4] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    aggregator_data_set[keys - 1][6] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
                                     aggregator_data_set[keys - 1][12] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
                                 }
                                 rows_table2_farmer = [];
                             },
                             error: function() {
-                                alert("Error");
-                                //$('#table2').dataTable().fnClearTable();
-                                //$('#table2').dataTable().fnAddData(aggregator_data_set);
-                                //rows_table2_farmer = [];
+                                farmerAjaxSuccess=-1;
+                                alert("Error While Syncing Farmer Data");
                             }
                         });
                     }
-                    /*if(aggregatorAjaxSuccess){
-
+                    
+                    if(aggregatorAjaxSuccess!=-1 && farmerAjaxSuccess!=-1){
+                        $('#table2').find('td').removeClass("editcolumn");
+                        $('#table2').find('td').removeClass("editedcell");
+                        $('#table2').find('td').removeClass("editedcelledge");
+                        $('#ToolTables_table2_1').addClass('disable-button');
+                        flag_edit_Table2 = false;
+                        var colCount = $('#table2').dataTable().fnSettings().aoColumns.length;
+                        for(var column =0;column<colCount;column++)
+                            $('#table2').dataTable().fnSettings().aoColumns[column].bSortable=true;
                     }
-                    if(farmerAjaxSuccess){
-
-                    }
-                    if(aggregatorAjaxSuccess&&farmerAjaxSuccess){
-
-                    }*/
 
                 }
             }]
@@ -3733,9 +3729,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 },
                                 error: function() {
                                     alert("Error");
-                                    $('#table3').dataTable().fnClearTable();
+                                  /*  $('#table3').dataTable().fnClearTable();
                                     $('#table3').dataTable().fnAddData(gaddidar_data_set);
-                                    rows_table3 = [];
+                                    rows_table3 = [];*/
                                 }
                             });
                     }
