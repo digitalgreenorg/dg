@@ -795,20 +795,14 @@
                     </div>
                 </div>
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2"><%=date_of_adoption%></label>
+                    <label class="control-label col-sm-2"><%=date_of_verification%></label>
                 	<div class="col-sm-4">
                         <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_adoption">  
                  	</div>
                 </div>
-                <div class="form-group"> 
-                    <label class="control-label col-sm-2"><%=date_of_verification%></label>
-                    <div class="col-sm-4">
-                        <input class="date-picker inl_date form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date_of_verification">  
-                    </div>
-                </div>
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2"><%=member_adopt%></label>
+                    <label class="control-label col-sm-2" id="label_id_member_adopt"><%=member_adopt%></label>
                     <div class="col-sm-4">
                         <select name="adopt_practice" id="id_adopt_practice" class="chosen-select form-control">
                             <option value='1'>Yes</option>
@@ -908,9 +902,6 @@
                             <%=person%>
                         </th>
                         <th>
-                            <%=date_of_adoption%>
-                        </th>
-                        <th>
                             <%=date_of_verification%>
                         </th>
                         <th id="id_member_adopt" class = "notbold">
@@ -919,7 +910,6 @@
                         <th id="id_recall_nonnegotiable" class = "notbold">
                             <%=recall_nonnegotiable%> ?
                         </th>
-                        
                     </tr>
                 </thead>
                 <tbody id="bulk">
@@ -977,13 +967,6 @@
             <div class="form-group">
                 <div class="controls">
                     <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required>
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="form-group">
-                <div class="controls">
-                    <input type="text" class="date-picker input-sm inl_date form-control" id="date_of_verification<%=index%>" name="date_of_verification<%=index%>" required>
                 </div>
             </div>
         </td>
