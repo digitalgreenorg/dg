@@ -2933,7 +2933,7 @@ function plot_area_range_graph(container, dict) {
         },
         exporting: {
             enabled: false
-        },dg
+        },
         series: dict
     });
 }
