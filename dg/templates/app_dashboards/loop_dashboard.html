@@ -27,7 +27,7 @@
                <li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
             </ul>
          </div>
-         <div class="col s2" class="initialized" style="float:right;">
+         <div id="language" class="col s2" class="initialized" style="float:right;">
             <select id='languageID' onchange='change_language(this.value)'>
                <option value='Regional'>Regional</option>
                <option value='English' selected>English</option>
@@ -304,7 +304,7 @@
          <div class="col s10">
             <h5>Recent</h5>
          </div>
-         <div class="col s2" style="width:15%;height: 40px;">
+         <div class="col s2" style="width:15%;height: 40px;" id="recent_graphs">
             <select id="recent_cards_data_frequency" class="initialized">
                <option value="7">7 Days</option>
                <option value="15" selected>15 Days</option>
