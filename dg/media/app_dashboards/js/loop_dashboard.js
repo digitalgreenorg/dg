@@ -2671,13 +2671,10 @@ function plot_area_range_graph(container, dict) {
     if (container_width == 0) {
         container_width = $("#container2").width();
     }
-    container.highcharts({
+    container.highcharts(Highcharts.merge(generalOptions, {
         chart: {
             zoomType: 'x',
             width: container_width
-        },
-        title: {
-            text: null
         },
         xAxis: {
             type: 'datetime'
@@ -2702,15 +2699,8 @@ function plot_area_range_graph(container, dict) {
                 whiskerColor: '#000000'
             }
         },
-        legend: {},
-        credits: {
-            enabled: false
-        },
-        exporting: {
-            enabled: false
-        },
         series: dict
-    });
+    }));
 }
 
 
