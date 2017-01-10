@@ -2324,15 +2324,14 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    detailChart = detail_container.highcharts({
+    // detailChart = detail_container.highcharts({
+    detailChart = new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
         chart: {
+          renderTo:'detail_container',
             width: width
         },
         title: {
             text: "Volume and Farmers Cummulative Count"
-        },
-        credits: {
-            enabled: false
         },
         xAxis: {
             type: 'datetime'
@@ -2359,43 +2358,10 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
             shared: true
         },
         legend: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            },
-            series: {
-                marker: {
-                    enabled: true,
-                    radius: 2.5,
-                    states: {
-                        hover: {
-                            enabled: true,
-                            radius: 3
-                        }
-                    }
-                }
-            }
-        },
-        legend: {
-            align: 'right',
-            x: 0,
-            verticalAlign: 'top',
-            y: 0,
-            floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: true
         },
         series: myDict,
-
-        exporting: {
-            enabled: false
-        }
-
-    }).highcharts(); // return chart
+    })); // return chart
 }
 
 // create the master chart
@@ -2471,23 +2437,11 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
             plotOptions: {
                 series: {
                     fillColor: {
-                        linearGradient: [0, 0, 0, 70],
                         stops: [
                             [0, Highcharts.getOptions().colors[0]],
                             [1, 'rgba(255,255,255,0)']
                         ]
                     },
-                    lineWidth: 1,
-                    marker: {
-                        enabled: false
-                    },
-                    shadow: false,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    enableMouseTracking: false
                 }
             },
             series: dict
