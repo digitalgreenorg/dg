@@ -2100,15 +2100,9 @@ function plot_stacked_chart(container_obj, dict) {
     } else {
         var max = dict[0]['data'].length - 1;
     }
-    container_obj.highcharts({
+    container_obj.highcharts(Highcharts.merge(generalOptions,{
         chart: {
             height: 300
-        },
-        credits: {
-            enabled: false
-        },
-        title: {
-            text: null
         },
         xAxis: {
             type: 'category',
@@ -2144,17 +2138,12 @@ function plot_stacked_chart(container_obj, dict) {
                 grouping: false,
                 showCheckbox: true,
                 dataLabels: {
-                    enabled: true,
-                    format: ' ',
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black'
-                    }
+                    enabled: true
                 }
             }
         },
         series: dict
-    });
+    }));
 }
 
 function plot_drilldown(container_obj, dict, drilldown, floats) {
