@@ -2317,6 +2317,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
             shared: true
         },
         legend: {
+            align: 'right',
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
         },
         series: myDict,
