@@ -2484,14 +2484,12 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
 }
 
 timeSeriesDetailOptions = {
-
   credits: {
       enabled: false
   },
   title: {
       text: null
   },
-
   xAxis: {
       type: 'datetime'
   },
@@ -2510,9 +2508,6 @@ timeSeriesDetailOptions = {
   tooltip: {
     valueDecimals: 2,
       shared: true
-  },
-  legend: {
-      enabled: false
   },
   plotOptions: {
       areaspline: {
@@ -2535,12 +2530,12 @@ timeSeriesDetailOptions = {
       }
   },
   legend: {
+      enabled: true,
       align: 'center',
       x: 0,
       verticalAlign: 'top',
       y: 0,
       floating: true,
-      // backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
       borderColor: '#CCC',
       borderWidth: 1,
       shadow: false
