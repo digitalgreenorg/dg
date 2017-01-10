@@ -32,15 +32,15 @@ def add_cocouser(request):
         template_variables['title'] = "Add coco user"
         if coco_user_id != '':
             change_form_flag = 1
-            coco_user_obj = CocoUser.objects.filter(id=coco_user_id)
-            if len(coco_user_obj) == 0:
+            try:
+                coco_user_obj = CocoUser.objects.get(id=coco_user_id)
+            except Exception as e:
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
-            coco_user_detail = coco_user_obj.values('user','partner')
-            current_user_videos = coco_user_obj.values_list('videos', flat=True)
-            current_user_villages = coco_user_obj[0].villages.values('id','village_name')
-            current_auth_user_id = coco_user_detail[0]['user']
-            current_partner_id = coco_user_detail[0]['partner']
+            current_user_videos = coco_user_obj.videos.values_list('id', flat=True)
+            current_user_villages = coco_user_obj.villages.values('id','village_name')
+            current_auth_user_id = coco_user_obj.user_id
+            current_partner_id = coco_user_obj.partner_id
             template_variables['current_auth_user_id'] = current_auth_user_id
             template_variables['current_partner_id'] = current_partner_id
             template_variables['current_user_videos'] = current_user_videos
@@ -69,30 +69,33 @@ def add_cocouser(request):
             videos = []
         if coco_user_id != '':
             change_form_flag = 1
-            coco_user_obj = CocoUser.objects.filter(id=coco_user_id)
-            if len(coco_user_obj) == 0:
+            try:
+                coco_user_obj = CocoUser.objects.get(id=coco_user_id)
+            except Exception as e:
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
-            if user != coco_user_obj[0].user_id:
-                coco_user_obj.update(user_id=user)
-            if partner != coco_user_obj[0].partner_id:
-                coco_user_obj.update(partner_id=partner)
+            if user != coco_user_obj.user_id:
+                coco_user_obj.user_id = user
+                coco_user_obj.save()
+            if partner != coco_user_obj.partner_id:
+                coco_user_obj.partner_id = partner
+                coco_user_obj.save()
             new_village_set = set(map(int,villages))
             new_video_set = set(map(int,videos))
-            old_village_set = set(coco_user_obj[0].villages.values_list('id',flat=True))
-            old_video_set = set(coco_user_obj[0].videos.values_list('id',flat=True))
-            coco_user_obj[0].villages.remove(*list(old_village_set-new_village_set))
-            coco_user_obj[0].villages.add(*list(new_village_set-old_village_set))
-            coco_user_obj[0].videos.remove(*list(old_video_set-new_video_set))
-            coco_user_obj[0].videos.add(*list(new_video_set-old_video_set))
+            old_village_set = set(coco_user_obj.villages.values_list('id',flat=True))
+            old_video_set = set(coco_user_obj.videos.values_list('id',flat=True))
+            coco_user_obj.villages.remove(*list(old_village_set-new_village_set))
+            coco_user_obj.villages.add(*list(new_village_set-old_village_set))
+            coco_user_obj.videos.remove(*list(old_video_set-new_video_set))
+            coco_user_obj.videos.add(*list(new_video_set-old_video_set))
             if '_save' in request.POST:
-                message = "The coco user \"%s\" was changed successfully."%(coco_user_obj[0].user.username)
+                message = "The coco user \"%s\" was changed successfully."%(coco_user_obj.user.username)
                 redirect_to = '/admin/coco/cocouser/'
             elif '_addanother' in request.POST:
-                message = "The coco user \"%s\" was changed successfully. You may add another qa coco user below."%(coco_user_obj[0].user.username)
+                message = "The coco user \"%s\" was changed successfully. You may add another qa coco user below."%(coco_user_obj.user.username)
                 redirect_to = '/admin/coco/cocouser/add/'
             elif '_continue' in request.POST:
-                message = "The coco user \"%s\" was changed successfully. You may edit it again below."%(coco_user_obj[0].user.username)
+                message = "The coco user \"%s\" was changed successfully. You may edit it again below."%(coco_user_obj.user.username)
                 redirect_to = '/admin/coco/cocouser/%s/'%(coco_user_id)
             else:
                 return HttpResponseBadRequest("BAD REQUEST")
