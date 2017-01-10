@@ -1,0 +1,267 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+		<script src="https://code.jquery.com/jquery-1.12.3.js"></script>
+		<link rel="stylesheet" href="/media/mezzanine/css/admin/global.css">		
+		<script src="/admin/jsi18n/"></script>
+	    <script type="text/javascript" src="/media/admin/js/core.js"></script>
+		<script type="text/javascript" src="/media/admin/js/jquery.js"></script>
+		<script type="text/javascript" src="/media/admin/js/jquery.init.js"></script>
+		<script type="text/javascript" src="/media/admin/js/admin/RelatedObjectLookups.js"></script>
+		<script type="text/javascript" src="/media/admin/js/actions.js"></script>
+		<script type="text/javascript" src="/media/admin/js/related-widget-wrapper.js"></script>
+		<script type="text/javascript" src="/media/admin/js/SelectBox.js"></script>
+		<script type="text/javascript" src="/media/admin/js/SelectFilter2.js"></script>
+		
+		<script type="text/javascript">
+			function addEvent(obj, evType, fn) {
+			 if (obj.addEventListener) {
+			     obj.addEventListener(evType, fn, false);
+			     return true;
+			 } else if (obj.attachEvent) {
+			     var r = obj.attachEvent("on" + evType, fn);
+			     return r;
+			 } else {
+			     return false;
+			 }
+			}
+			function clear_villages()
+			{
+				$("#village_from")
+				.find("option")
+				.remove();
+			}
+			function clear_district()
+			{
+				$("#id_district")
+				.find("option")
+				.remove();
+			}
+
+			function get_villages()
+			{
+				district_id = $("#id_district").val();
+				var selected_villages = [];
+				$("#village_to")
+				.find('option')
+				.each(function(index,obj){
+				selected_villages.push(obj.value);
+				});
+				$.get("/admin/coco/cocouser/add/district_wise_village",{district_id:district_id,selected_villages:selected_villages}).done(function(village_list){
+	            	village_list = JSON.parse(village_list);           	
+	            	clear_villages();
+	            	$.each(village_list, function (index) {
+	            		$('#village_from').append($("<option></option>")
+	                    .attr("value",village_list[index]['id'])
+	                    .text(village_list[index]['village_name']));
+					});
+					SelectBox.init("village_from");
+	            });
+			}
+			function get_district()
+			{
+				state_id = $("#id_state").val();
+				$.get("/admin/coco/cocouser/add/state_wise_district",{state_id:state_id}).done(function(district_list){
+	            	district_list = JSON.parse(district_list);           	
+	            	clear_district();
+	            	$('#id_district').append("<option selected disabled> -- select an option -- </option>");
+	            	$.each(district_list, function (index) {
+	            		$('#id_district').append($("<option></option>")
+	                    .attr("value",district_list[index]['id'])
+	                    .text(district_list[index]['district_name']));
+					});
+	            });
+			}
+			function check_validation(element_id)
+			{
+				if(!($(element_id).val()))
+				{
+					$(element_id).parent().parent().parent().addClass("errors");
+					$(element_id).parent().parent().parent().children('ul').show();
+					$("#errornote").show();
+					return true;
+				}
+				else
+					return false;
+			}
+			$(document).ready(function() {
+				$("form").submit(function(e){
+					if(check_validation("#id_user"))
+					{
+						e.preventDefault(e);
+					}
+					if(check_validation("#id_partner"))
+					{
+						e.preventDefault(e);
+					}
+					if($("#village_to").has('option').length == 0)
+					{
+						e.preventDefault(e);
+						$("#village_to").parent().parent().parent().addClass("errors");
+						$("#village_to").parent().parent().parent().parent().children('ul').show();
+						$("#errornote").show();
+					}
+				/*
+				if(!($("#id_user").val()))
+				{
+					$("#id_user").parent().parent().parent().addClass("errors");
+					$("#id_user").parent().parent().parent().children('ul').show();
+					$("#errornote").show();
+					e.preventDefault(e);
+				};
+				if(!($("#id_partner").val()))
+				{
+					$("#id_partner").parent().parent().parent().addClass("errors");
+					$("#id_user").parent().parent().parent().children('ul').show();
+					$("#errornote").show();
+					e.preventDefault(e);
+			    };
+			    */
+			    });
+			});				
+		</script>
+		<style type="text/css">
+			.fix-submit-row{
+				 	position: fixed;
+				    bottom: 0;
+				    right: 0;
+				    height: 6%;
+				    width: 82%;
+				    border: 3px;
+				    background-color: #e0e0e0;
+
+				}
+			.submit-button{
+				    float: right;
+			}
+		</style>
+	<div id="content-main">
+		<form id="_form" method="POST" action=".">
+			{% csrf_token %}
+			<div>
+				<p id="errornote" class="errornote" hidden>Please correct the errors below.</p>
+				<fieldset class="module aligned ">
+        			<div class="form-row field-user">
+        				<ul class="errorlist" hidden>
+							<li>This field is required.</li>
+						</ul>
+                		<div>
+                			<label class="required" for="id_user">User:</label>
+                			<div class="related-widget-wrapper">
+                				<select id="id_user" name="user">
+									<option selected disabled> -- select an option -- </option>
+									{% for user in auth_user_list %}
+										{% if change_form_flag == 1 and current_auth_user_id == user.id %}
+											<option value="{{ user.id }}" selected>{{ user.username }}</option>
+										{% else %}
+											<option value="{{ user.id }}">{{ user.username }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div> 
+                		</div>
+        			</div>
+        			<div class="form-row field-partner">
+        				<ul class="errorlist" hidden>
+							<li>This field is required.</li>
+						</ul>
+                		<div>
+                			<label class="required" for="id_partner">Partner:</label>
+                			<div class="related-widget-wrapper">
+                				<select id="id_partner" name="partner">
+									<option value="" selected disabled> -- select an option -- </option>
+									{% for partner in partner_list %}
+										{% if change_form_flag == 1 and current_partner_id == partner.id %}
+											<option value="{{ partner.id }}" selected>{{ partner.partner_name }}</option>
+										{% else %}
+											<option value="{{ partner.id }}">{{ partner.partner_name }}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div> 
+                		</div>
+        			</div>
+        			<div class="form-row field-state">
+                		<div>
+                			<label for="id_state">State:</label>
+                			<div class="related-widget-wrapper">
+                				<select id="id_state" name="state" onchange="get_district()">
+									<option selected disabled> -- select an option -- </option>
+									{% for state in state_list %}
+										<option value="{{ state.id }}">{{ state.state_name }}</option>
+									{% endfor %}
+								</select>
+							</div> 
+                		</div>
+        			</div>
+        			<div class="form-row field-district">
+                		<div>
+                			<label for="id_district">District:</label>
+                			<div class="related-widget-wrapper">
+                				<select id="id_district" name="district" onchange="get_villages()">
+									<option selected disabled> -- select an option -- </option>
+									<!--
+									{% for district in district_list %}
+										<option value="{{ district.id }}">{{ district.district_name }}</option>
+									{% endfor %}
+									-->
+								</select>
+							</div> 
+                		</div>
+        			</div>
+        			<div class="form-row field-villages">
+        				<ul class="errorlist" hidden>
+							<li>This field is required.</li>
+						</ul>
+                		<div>
+                			<label class="required" for="village">Villages:</label>
+                			<select name="village" id="village" multiple="multiple" class="selectfilter">
+								{% if change_form_flag == 1 %}
+									{% for village in current_user_villages %}
+										<option value="{{ village.id }}" selected>{{ village.village_name }}</option>
+									{% endfor %}
+								{% endif %}
+							</select>
+							<script type="text/javascript">
+								addEvent(window, "load", function(e) {
+									SelectFilter.init("village", "Villages", 0, ""); 
+								});
+							</script>
+                		</div>
+        			</div>
+        			<div class="form-row field-videos">
+                		<div>
+                			<label for="id_video">Videos:</label>
+                			<select name="video" id="id_video" multiple="multiple" class="selectfilter">
+								{% if change_form_flag == 1 %}
+									{% for video in video_list %}
+										{% if video.id in current_user_videos %}
+											<option value="{{ video.id }}" selected>{{ video.title }}</option>
+										{% else %}
+											<option value="{{ video.id }}">{{ video.title }}</option>
+										{% endif %}
+									{% endfor %}
+								{% else %}
+									{% for video in video_list %}
+										<option value="{{ video.id }}">{{ video.title }}</option>
+									{% endfor %}
+								{% endif %}
+							</select>
+							<script type="text/javascript">
+								addEvent(window, "load", function(e) {
+									SelectFilter.init("id_video", "Videos", 0, ""); 
+								});
+							</script>
+                		</div>
+        			</div>
+        		</fieldset>
+        		<div class="submit-row fix-submit-row">
+        			<div class="submit-button">
+				    	<input type="submit" value="Save" class="default" name="_save"/>
+				    	<input class="change-view-save-another" type="submit" value="Save and add another" name="_addanother"  />
+				    	<input class="change-view-save-continue" type="submit" value="Save and continue editing" name="_continue" />
+					</div>
+				</div>
+			</div>
+    	</form>
+	</div>
+{% endblock %}
