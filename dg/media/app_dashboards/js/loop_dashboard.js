@@ -2285,10 +2285,8 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    // detailChart = detail_container.highcharts({
-    detailChart = new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
+    detailChart = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
-          renderTo:'detail_container',
             width: width
         },
         title: {
@@ -2322,14 +2320,13 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
         },
         series: myDict,
-    })); // return chart
+    })).highcharts(); // return chart
 }
 
 // create the master chart
 function createMasterForCummulativeVolumeAndFarmer(detail_container, master_container, dict) {
-    new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
+    master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
             chart: {
-              renderTo:'master_container',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
@@ -2443,23 +2440,21 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    detailChart1 = new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
+    detailChart1 = detail_container.highcharts(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
       chart: {
-        renderTo:'detail_container_time_series',
           width: width
       },
         series: myDict,
         legend: {
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
         }
-    })); // return chart
+    })).highcharts(); // return chart
 }
 
 // create the master chart
 function createMasterForVolAmtTimeSeries(detail_container, master_container, dict) {
-    new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
+    master_container.highcharts(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
             chart: {
-              renderTo:'master_container_time_series',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
@@ -2573,23 +2568,21 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart2 = new Highcharts.Chart(Highcharts.merge(generalOptions, timeSeriesDetailOptions,{
+    detailChart2 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions,{
         chart: {
-          renderTo:'detail_container_cpk',
             width: width
         },
         legend: {
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
         },
         series: myDict
-    })); // return chart
+    })).highcharts(); // return chart
 }
 
 // create the master chart
 function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
-new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
+master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
             chart: {
-              renderTo:'master_container_cpk',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
