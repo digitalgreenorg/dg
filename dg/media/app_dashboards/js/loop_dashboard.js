@@ -230,6 +230,9 @@ generalOptions = {
   title: {
       text: null
   },
+  subtitle: {
+        text: null
+    },
   legend: {
       enabled: false
   },
@@ -2146,6 +2149,26 @@ function plot_stacked_chart(container_obj, dict) {
     }));
 }
 
+drilldownGraphOptions = {
+  chart: {
+      height: 300,
+      zoomType: 'x'
+  },
+  yAxis: {
+      title: {
+          text: null
+      },
+      min: 0,
+      gridLineColor: 'transparent'
+  },
+  scrollbar: {
+      enabled: true
+  },
+  tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+  }
+}
+
 function plot_drilldown(container_obj, dict, drilldown, floats) {
     if (dict[0]['data'].length >= 6) {
         var max = 5;
@@ -2159,24 +2182,10 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
         format = '{point.y:.0f}'
     }
 
-    var chart1 = container_obj.highcharts({
+    var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
         chart: {
             type: 'bar',
-            height: 300,
-            zoomType: 'x'
-        },
-        credits: {
-            enabled: false
-        },
-        exporting: {
-            enabled: false
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
+            },
         xAxis: [{
             type: 'category',
             max: max
@@ -2185,18 +2194,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
             max: null
         }],
         yAxis: {
-            title: {
-                text: null
-            },
-            min: 0,
-            max: dict[0]['data'][0]['y'],
-            gridLineColor: 'transparent'
-        },
-        scrollbar: {
-            enabled: true
-        },
-        legend: {
-            enabled: false
+                max: dict[0]['data'][0]['y']
         },
         plotOptions: {
             series: {
@@ -2208,14 +2206,12 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
                 }
             }
         },
-
         tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>' + format + '</b> <br/>'
         },
         series: dict,
         drilldown: drilldown
-    });
+    }));
 }
 
 function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
@@ -2230,23 +2226,10 @@ function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
         format = '{point.y:.0f}'
     }
 
-    var chart1 = container_obj.highcharts({
+    var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
         chart: {
             type: 'columnrange',
-            height: 300,
             inverted: true
-        },
-        exporting: {
-            enabled: false
-        },
-        credits: {
-            enabled: false
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
         },
         xAxis: [{
             type: 'category',
@@ -2256,18 +2239,7 @@ function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
             max: null
         }],
         yAxis: {
-            title: {
-                text: null
-            },
-            min: 0,
-            max: max_scale,
-            gridLineColor: 'transparent'
-        },
-        scrollbar: {
-            enabled: true
-        },
-        legend: {
-            enabled: false
+            max: max_scale
         },
         plotOptions: {
             columnrange: {
@@ -2280,7 +2252,7 @@ function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
         },
         series: dict,
         drilldown: drilldown
-    });
+    }));
 }
 
 function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict) {
