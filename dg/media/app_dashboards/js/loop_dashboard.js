@@ -2482,7 +2482,6 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    // detailChart1 = detail_container.highcharts({
     detailChart1 = new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
       chart: {
         renderTo:'detail_container_time_series',
@@ -2497,7 +2496,6 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
 // create the master chart
 function createMasterForVolAmtTimeSeries(detail_container, master_container, dict) {
-    // master_container.highcharts
     new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
             chart: {
               renderTo:'master_container_time_series',
@@ -3979,10 +3977,6 @@ function plot_solid_guage(container, minimum, present, target) {
             plotShadow: false,
             margin: [-10, 0, 0, 0]
         },
-        exporting: {
-            enabled: false
-        },
-        title: null,
         pane: {
             center: ['50%', '85%'],
             size: '140%',
@@ -4029,13 +4023,10 @@ function plot_solid_guage(container, minimum, present, target) {
         }
     };
     // The speed gauge
-    container.highcharts(Highcharts.merge(gaugeOptions, {
+    container.highcharts(Highcharts.merge(generalOptions, gaugeOptions, {
         yAxis: {
             min: minimum,
             max: target
-        },
-        credits: {
-            enabled: false
         },
         series: [{
             name: 'Present',
