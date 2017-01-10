@@ -21,12 +21,8 @@ def is_change_from(full_path):
 @login_required
 def add_cocouser(request):
     context = RequestContext(request)
-    print request.get_full_path()
-    print request.method
     change_form_flag = 0
     template_variables = dict()
-    error_messages = dict()
-    error_messages['abc'] = 12
     if request.method == 'GET':
         auth_user_list = User.objects.values('id','username')
         partner_list = Partner.objects.values('id','partner_name')
@@ -55,10 +51,8 @@ def add_cocouser(request):
         template_variables['state_list'] = state_list
         template_variables['video_list'] = video_list
         template_variables['change_form_flag'] = change_form_flag
-        template_variables['error_messages'] = error_messages
         return render_to_response('admin/coco/cocouser/change_form.html',template_variables,context)
     elif request.method == 'POST':
-        print request.POST
         if not all(objects in request.POST for objects in ['user', 'partner', 'village']):
             return HttpResponseBadRequest("User, partner and village is required")
         coco_user_id = is_change_from(request.get_full_path())
@@ -144,7 +138,6 @@ def state_wise_district(request):
     district_list = json.dumps(district_list)
     return HttpResponse(district_list)
 
-
 @login_required
 def district_wise_village(request):
     district_id = request.GET.getlist('district_id')[0]
@@ -152,4 +145,3 @@ def district_wise_village(request):
     village_list = list(Village.objects.filter(block__district_id=district_id).exclude(id__in=exclude_villages).values('id','village_name'))
     village_list = json.dumps(village_list)
     return HttpResponse(village_list)
-

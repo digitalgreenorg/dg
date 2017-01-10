@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% block content %}
-		<script src="https://code.jquery.com/jquery-1.12.3.js"></script>
+		<script type="text/javascript" src="/media/admin/js/jquery-1.12.3.js"></script>
 		<link rel="stylesheet" href="/media/mezzanine/css/admin/global.css">		
 		<script src="/admin/jsi18n/"></script>
 	    <script type="text/javascript" src="/media/admin/js/core.js"></script>
@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/media/admin/js/SelectFilter2.js"></script>
 		
 		<script type="text/javascript">
+			window.__admin_url = '/admin/';
 			function addEvent(obj, evType, fn) {
 			 if (obj.addEventListener) {
 			     obj.addEventListener(evType, fn, false);
@@ -100,22 +101,6 @@
 						$("#village_to").parent().parent().parent().parent().children('ul').show();
 						$("#errornote").show();
 					}
-				/*
-				if(!($("#id_user").val()))
-				{
-					$("#id_user").parent().parent().parent().addClass("errors");
-					$("#id_user").parent().parent().parent().children('ul').show();
-					$("#errornote").show();
-					e.preventDefault(e);
-				};
-				if(!($("#id_partner").val()))
-				{
-					$("#id_partner").parent().parent().parent().addClass("errors");
-					$("#id_user").parent().parent().parent().children('ul').show();
-					$("#errornote").show();
-					e.preventDefault(e);
-			    };
-			    */
 			    });
 			});				
 		</script>
@@ -199,11 +184,6 @@
                 			<div class="related-widget-wrapper">
                 				<select id="id_district" name="district" onchange="get_villages()">
 									<option selected disabled> -- select an option -- </option>
-									<!--
-									{% for district in district_list %}
-										<option value="{{ district.id }}">{{ district.district_name }}</option>
-									{% endfor %}
-									-->
 								</select>
 							</div> 
                 		</div>
