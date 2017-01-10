@@ -244,6 +244,9 @@ function() {
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
         'entity_name': 'video',
+        'dependent_element_div_hide': 'label_direct_beneficiaries',
+        'parent_element_to_hide': 'direct_beneficiaries',
+        'parent_element_label_to_hide': 'label_direct_beneficiaries',
         'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {

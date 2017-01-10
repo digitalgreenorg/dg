@@ -567,6 +567,12 @@ define([
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                }
                 this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
@@ -775,23 +781,6 @@ define([
                     var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
-                        // fetch the directbenefeciaries model and save it in category
-                        // if (element == 'farmers_attendance'){
-                        //     f_json.category.filter(function(page_db_value){
-                        //     Offline.fetch_object(that.entity_config.fetch_child_element, that.entity_config.fetch_key_element, parseInt(page_db_value.id))
-                        //         .done(function(db_var) {
-                        //             cat.push({'id': db_var.attributes.id, 'category': db_var.attributes.direct_beneficiaries_category})
-                        //         })
-                        //         .fail(function() {
-                        //             // edit object could not be fetched from offline db
-                        //             //TODO: error handling
-                        //             console.log("ERROR: EDIT: Edit model could not be fetched!");
-                        //             alert("ERROR: EDIT: Edit model could not be fetched!");
-                        //         });
-                        //     })
-                        //     model.set({'category': cat})
-                        //     model.save()
-                        // }
                         if (!model)
                             return;
                         var t_json = model.toJSON();
