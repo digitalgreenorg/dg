@@ -2484,12 +2484,6 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
 }
 
 timeSeriesDetailOptions = {
-  credits: {
-      enabled: false
-  },
-  title: {
-      text: null
-  },
   xAxis: {
       type: 'datetime'
   },
@@ -2539,9 +2533,6 @@ timeSeriesDetailOptions = {
       borderColor: '#CCC',
       borderWidth: 1,
       shadow: false
-  },
-  exporting: {
-      enabled: false
   }
 }
 
@@ -2578,7 +2569,7 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     // create a detail chart referenced by a global variable
     width = detail_container.width();
     // detailChart1 = detail_container.highcharts({
-    detailChart1 = new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
+    detailChart1 = new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
       chart: {
         renderTo:'detail_container_time_series',
           width: width
@@ -2709,7 +2700,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart2 = new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
+    detailChart2 = new Highcharts.Chart(Highcharts.merge(generalOptions, timeSeriesDetailOptions,{
         chart: {
           renderTo:'detail_container_cpk',
             width: width
