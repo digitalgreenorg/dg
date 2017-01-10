@@ -291,7 +291,58 @@ timeSeriesMasterOptions = {
       }
   }
 }
+timeSeriesDetailOptions = {
+  xAxis: {
+      type: 'datetime'
+  },
+  yAxis: [{
+      title: {
+          text: null
+      },
+      maxZoom: 0.1
 
+  }, {
+      title: {
+          text: null
+      },
+      opposite: true
+  }],
+  tooltip: {
+    valueDecimals: 2,
+      shared: true
+  },
+  plotOptions: {
+      areaspline: {
+          fillOpacity: 0.3
+      },
+      column: {
+          fillOpacity: 0.3
+      },
+      series: {
+          marker: {
+              enabled: true,
+              radius: 2.5,
+              states: {
+                  hover: {
+                      enabled: true,
+                      radius: 3
+                  }
+              }
+          }
+      }
+  },
+  legend: {
+      enabled: true,
+      align: 'center',
+      x: 0,
+      verticalAlign: 'top',
+      y: 0,
+      floating: true,
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
+  }
+}
 
 //To compute data for home page overall cards
 function total_static_data() {
@@ -2481,59 +2532,6 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
             createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
         })
         .highcharts(); // return chart instance
-}
-
-timeSeriesDetailOptions = {
-  xAxis: {
-      type: 'datetime'
-  },
-  yAxis: [{
-      title: {
-          text: null
-      },
-      maxZoom: 0.1
-
-  }, {
-      title: {
-          text: null
-      },
-      opposite: true
-  }],
-  tooltip: {
-    valueDecimals: 2,
-      shared: true
-  },
-  plotOptions: {
-      areaspline: {
-          fillOpacity: 0.3
-      },
-      column: {
-          fillOpacity: 0.3
-      },
-      series: {
-          marker: {
-              enabled: true,
-              radius: 2.5,
-              states: {
-                  hover: {
-                      enabled: true,
-                      radius: 3
-                  }
-              }
-          }
-      }
-  },
-  legend: {
-      enabled: true,
-      align: 'center',
-      x: 0,
-      verticalAlign: 'top',
-      y: 0,
-      floating: true,
-      borderColor: '#CCC',
-      borderWidth: 1,
-      shadow: false
-  }
 }
 
 function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
