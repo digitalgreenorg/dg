@@ -2400,8 +2400,9 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
 
 // create the master chart
 function createMasterForCummulativeVolumeAndFarmer(detail_container, master_container, dict) {
-    master_container.highcharts({
+    new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
             chart: {
+              renderTo:'master_container',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
@@ -2453,9 +2454,6 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
                     }
                 }
             },
-            title: {
-                text: null
-            },
             xAxis: {
                 type: 'datetime',
                 showLastTickLabel: true,
@@ -2469,38 +2467,6 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
                 title: {
                     text: null
                 }
-            },
-            yAxis: [{
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }, {
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }],
-            tooltip: {
-                formatter: function() {
-                    return false;
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
             },
             plotOptions: {
                 series: {
@@ -2524,14 +2490,10 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
                     enableMouseTracking: false
                 }
             },
-            series: dict,
-            exporting: {
-                enabled: false
-            }
-        }, function(masterChart) {
+            series: dict
+        }), function(masterChart) {
             createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
-        })
-        .highcharts(); // return chart instance
+        }); // return chart instance
 }
 
 function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
