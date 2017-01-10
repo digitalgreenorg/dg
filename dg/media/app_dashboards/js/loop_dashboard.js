@@ -226,6 +226,73 @@ sparkline_option = {
     lineWidth: 2
 }
 
+generalOptions = {
+  title: {
+      text: null
+  },
+  legend: {
+      enabled: false
+  },
+  credits: {
+      enabled: false
+  },
+  exporting: {
+      enabled: false
+  }
+}
+
+timeSeriesMasterOptions = {
+  yAxis: [{
+      gridLineWidth: 0,
+      labels: {
+          enabled: false
+      },
+      title: {
+          text: null
+      },
+      min: 0.6,
+      showFirstLabel: false
+  }, {
+      gridLineWidth: 0,
+      labels: {
+          enabled: false
+      },
+      title: {
+          text: null
+      },
+      min: 0.6,
+      showFirstLabel: false
+  }],
+  tooltip: {
+      formatter: function() {
+          return false;
+      }
+  },
+  plotOptions: {
+      series: {
+          fillColor: {
+              linearGradient: [0, 0, 0, 70],
+              stops: [
+                  // [0, Highcharts.getOptions().colors[0]],
+                  [1, 'rgba(255,255,255,0)']
+              ]
+          },
+          lineWidth: 1,
+          marker: {
+              enabled: false
+          },
+          shadow: false,
+          states: {
+              hover: {
+                  lineWidth: 1
+              }
+          },
+          enableMouseTracking: false
+      }
+  }
+}
+
+
 //To compute data for home page overall cards
 function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
@@ -2416,8 +2483,74 @@ function createMasterForCummulativeVolumeAndFarmer(detail_container, master_cont
         .highcharts(); // return chart instance
 }
 
-function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
+timeSeriesDetailOptions = {
 
+  credits: {
+      enabled: false
+  },
+  title: {
+      text: null
+  },
+
+  xAxis: {
+      type: 'datetime'
+  },
+  yAxis: [{
+      title: {
+          text: null
+      },
+      maxZoom: 0.1
+
+  }, {
+      title: {
+          text: null
+      },
+      opposite: true
+  }],
+  tooltip: {
+    valueDecimals: 2,
+      shared: true
+  },
+  legend: {
+      enabled: false
+  },
+  plotOptions: {
+      areaspline: {
+          fillOpacity: 0.3
+      },
+      column: {
+          fillOpacity: 0.3
+      },
+      series: {
+          marker: {
+              enabled: true,
+              radius: 2.5,
+              states: {
+                  hover: {
+                      enabled: true,
+                      radius: 3
+                  }
+              }
+          }
+      }
+  },
+  legend: {
+      align: 'center',
+      x: 0,
+      verticalAlign: 'top',
+      y: 0,
+      floating: true,
+      // backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
+  },
+  exporting: {
+      enabled: false
+  }
+}
+
+function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     // prepare the detail chart
     var myDict = [];
     var detailData = [],
@@ -2449,82 +2582,25 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    detailChart1 = detail_container.highcharts({
-        chart: {
-            width: width
-        },
-        credits: {
-            enabled: false
-        },
-        title: {
-            text: null
-        },
-
-        xAxis: {
-            type: 'datetime'
-        },
-        yAxis: [{
-            title: {
-                text: null
-            },
-            maxZoom: 0.1
-
-        }, {
-            title: {
-                text: null
-            },
-            opposite: true
-        }],
-        tooltip: {
-            shared: true
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.3
-            },
-            column: {
-                fillOpacity: 0.3
-            },
-            series: {
-                marker: {
-                    enabled: true,
-                    radius: 2.5,
-                    states: {
-                        hover: {
-                            enabled: true,
-                            radius: 3
-                        }
-                    }
-                }
-            }
-        },
-        legend: {
-            align: 'center',
-            x: 0,
-            verticalAlign: 'top',
-            y: 0,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-        },
+    // detailChart1 = detail_container.highcharts({
+    new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
+      chart: {
+        renderTo:'detail_container_time_series',
+          width: width
+      },
         series: myDict,
-
-        exporting: {
-            enabled: false
+        legend: {
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
         }
-
-    }).highcharts(); // return chart
+    })); // return chart
 }
 
 // create the master chart
 function createMasterForVolAmtTimeSeries(detail_container, master_container, dict) {
-    master_container.highcharts({
+    // master_container.highcharts
+    new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
             chart: {
+              renderTo:'master_container_time_series',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
@@ -2577,9 +2653,7 @@ function createMasterForVolAmtTimeSeries(detail_container, master_container, dic
                     }
                 }
             },
-            title: {
-                text: null
-            },
+
             xAxis: {
                 type: 'datetime',
                 showLastTickLabel: true,
@@ -2594,68 +2668,20 @@ function createMasterForVolAmtTimeSeries(detail_container, master_container, dic
                     text: null
                 }
             },
-            yAxis: [{
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }, {
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }],
-            tooltip: {
-                formatter: function() {
-                    return false;
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
-            },
+            series: dict,
             plotOptions: {
                 series: {
                     fillColor: {
-                        linearGradient: [0, 0, 0, 70],
                         stops: [
                             [0, Highcharts.getOptions().colors[0]],
                             [1, 'rgba(255,255,255,0)']
                         ]
-                    },
-                    lineWidth: 1,
-                    marker: {
-                        enabled: false
-                    },
-                    shadow: false,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    enableMouseTracking: false
+                    }
                 }
-            },
-            series: dict,
-            exporting: {
-                enabled: false
             }
-        }, function(masterChart) {
+        }), function(masterChart) {
             createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
-        })
-        .highcharts(); // return chart instance
+        }); // return chart instance
 }
 
 function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
@@ -2688,76 +2714,23 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart2 = detail_container.highcharts({
+    new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
         chart: {
+          renderTo:'detail_container_cpk',
             width: width
         },
-        credits: {
-            enabled: false
-        },
-        xAxis: {
-            type: 'datetime'
-        },
-        title: {
-            text: null
-        },
-        yAxis: [{
-            title: {
-                text: null
-            },
-            maxZoom: 0.1
-        }, {
-            title: {
-                text: null
-            },
-            opposite: true
-        }],
-        tooltip: {
-            valueDecimals: 2,
-            shared: true
-        },
         legend: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            },
-            series: {
-                marker: {
-                    enabled: true,
-                    radius: 2.5,
-                    states: {
-                        hover: {
-                            enabled: true,
-                            radius: 3
-                        }
-                    }
-                }
-            }
-        },
-        legend: {
-            align: 'center',
-            x: 0,
-            verticalAlign: 'top',
-            y: 0,
-            floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
         },
-        series: myDict,
-        exporting: {
-            enabled: false
-        }
-    }).highcharts(); // return chart
+        series: myDict
+    })); // return chart
 }
 
 // create the master chart
 function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
-    master_container.highcharts({
+new Highcharts.Chart(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
             chart: {
+              renderTo:'master_container_cpk',
                 zoomType: 'x',
                 events: {
                     // listen to the selection event on the master chart to update the
@@ -2808,9 +2781,6 @@ function createMasterForCpkSpkTimeSeries(detail_container, master_container, dic
                     }
                 }
             },
-            title: {
-                text: null
-            },
             xAxis: {
                 type: 'datetime',
                 showLastTickLabel: true,
@@ -2825,68 +2795,20 @@ function createMasterForCpkSpkTimeSeries(detail_container, master_container, dic
                     text: null
                 }
             },
-            yAxis: [{
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }, {
-                gridLineWidth: 0,
-                labels: {
-                    enabled: false
-                },
-                title: {
-                    text: null
-                },
-                min: 0.6,
-                showFirstLabel: false
-            }],
-            tooltip: {
-                formatter: function() {
-                    return false;
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
-            },
+            series: dict,
             plotOptions: {
                 series: {
                     fillColor: {
-                        linearGradient: [0, 0, 0, 70],
                         stops: [
                             [0, Highcharts.getOptions().colors[0]],
                             [1, 'rgba(255,255,255,0)']
                         ]
-                    },
-                    lineWidth: 1,
-                    marker: {
-                        enabled: false
-                    },
-                    shadow: false,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    enableMouseTracking: false
+                    }
                 }
-            },
-            series: dict,
-            exporting: {
-                enabled: false
             }
-        }, function(masterChart) {
+        }), function(masterChart) {
             createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
-        })
-        .highcharts(); // return chart instance
+        }); // return chart instance
 }
 
 
