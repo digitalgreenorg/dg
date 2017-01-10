@@ -2583,7 +2583,7 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     // create a detail chart referenced by a global variable
     width = detail_container.width();
     // detailChart1 = detail_container.highcharts({
-    new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
+    detailChart1 = new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
       chart: {
         renderTo:'detail_container_time_series',
           width: width
@@ -2714,7 +2714,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
+    detailChart2 = new Highcharts.Chart(Highcharts.merge(timeSeriesDetailOptions,{
         chart: {
           renderTo:'detail_container_cpk',
             width: width
