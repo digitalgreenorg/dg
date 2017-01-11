@@ -2037,7 +2037,7 @@ function get_frequency_data(start_date, end_date, series, frequency, averaged) {
             }
             temp_series['data'][index][1] += series[i]['data'][k][1];
             count += 1;
-            var temp = index;
+            temp = index;
         }
         if (averaged) {
             temp_series['data'][temp][1] /= count;
@@ -2577,91 +2577,6 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
         }]
     })).highcharts(); // return chart
 }
-
-// // create the master chart
-// function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
-//     master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
-//         chart: {
-//             zoomType: 'x',
-//             events: {
-//                 // listen to the selection event on the master chart to update the
-//                 // extremes of the detail chart
-//                 selection: function(event) {
-//                     var extremesObject = event.xAxis[0],
-//                         min = extremesObject.min,
-//                         max = extremesObject.max,
-//                         detailData = [],
-//                         xAxis = this.xAxis[0],
-//                         myDict = [];
-//
-//                     $.each(this.series, function() {
-//                         var temp = {};
-//                         temp['name'] = this.name;
-//                         temp['data'] = new Array();
-//                         temp['pointStart'] = this.pointStart;
-//                         temp['pointInterval'] = this.pointInterval;
-//                         $.each(this.data, function() {
-//                             if (this.x > min && this.x < max) {
-//                                 temp['data'].push([this.x, this.y]);
-//                             }
-//                         });
-//                         myDict.push(temp);
-//                     });
-//                     // reverse engineer the last part of the data
-//                     // move the plot bands to reflect the new detail span
-//                     xAxis.removePlotBand('mask-before');
-//                     xAxis.addPlotBand({
-//                         id: 'mask-before',
-//                         from: dict[0]['data'][0][0], //data[0][0],
-//                         to: min,
-//                         color: 'rgba(0, 0, 0, 0.2)'
-//                     });
-//                     xAxis.removePlotBand('mask-after');
-//                     xAxis.addPlotBand({
-//                         id: 'mask-after',
-//                         from: max,
-//                         to: dict[0]['data'][dict[0]['data'].length - 1][0],
-//                         color: 'rgba(0, 0, 0, 0.2)'
-//                     });
-//                     var pos = 0;
-//                     $.each(this.series, function() {
-//                         detailChart2.series[pos].setData(myDict[pos].data);
-//                         pos++;
-//                     });
-//                     return false;
-//                 }
-//             }
-//         },
-//         xAxis: {
-//             type: 'datetime',
-//             showLastTickLabel: true,
-//             maxZoom: 14 * 24 * 3600000, // fourteen days
-//             plotBands: [{
-//                 id: 'mask-before',
-//                 from: dict[0]['data'][0][0],
-//                 to: dict[0]['data'][dict[0]['data'].length - 1][0],
-//                 color: 'rgba(0, 0, 0, 0.2)'
-//             }],
-//             title: {
-//                 text: null
-//             }
-//         },
-//         series: dict,
-//         plotOptions: {
-//             series: {
-//                 fillColor: {
-//                     stops: [
-//                         [0, Highcharts.getOptions().colors[0]],
-//                         [1, 'rgba(255,255,255,0)']
-//                     ]
-//                 }
-//             }
-//         }
-//     }), function(masterChart) {
-//         createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
-//     }); // return chart instance
-// }
-
 
 function plot_area_range_graph(container, dict) {
     //Initially width of container3 is 0
