@@ -313,3 +313,15 @@ td, th, th a, label, .help, p.help {
 .related-widget-wrapper .selector {
     margin-right: 10px;
 }
+.fix-submit-row{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 6%;
+    width: 82%;
+    border: 3px;
+    background-color: #e0e0e0;
+}
+.submit-button{
+    float: right;
+}
