@@ -122,7 +122,7 @@ function hide_nav(tab) {
         selected_page = HOME;
     } else if (tab == PAYMENTS_PAGE && initialLoadComplete) {
         selected_page = PAYMENTS_PAGE;
-        if (window.localStorage.login_timestamp != null && parseInt(window.localStorage.login_timestamp) + 86400*1000 >= new Date().getTime()) {
+        if (window.localStorage.login_timestamp != null && parseInt(window.localStorage.login_timestamp) + 86400 * 1000 >= new Date().getTime()) {
             $("#payments_div").show();
             $("#payments_tab").addClass('active');
         } else {
@@ -227,125 +227,146 @@ sparkline_option = {
 }
 
 generalOptions = {
-  title: {
-      text: null
-  },
-  subtitle: {
+    title: {
         text: null
     },
-  legend: {
-      enabled: false
-  },
-  credits: {
-      enabled: false
-  },
-  exporting: {
-      enabled: false
-  }
+    subtitle: {
+        text: null
+    },
+    legend: {
+        enabled: false
+    },
+    credits: {
+        enabled: false
+    },
+    exporting: {
+        enabled: false
+    }
 }
 
 timeSeriesMasterOptions = {
-  yAxis: [{
-      gridLineWidth: 0,
-      labels: {
-          enabled: false
-      },
-      title: {
-          text: null
-      },
-      min: 0.6,
-      showFirstLabel: false
-  }, {
-      gridLineWidth: 0,
-      labels: {
-          enabled: false
-      },
-      title: {
-          text: null
-      },
-      min: 0.6,
-      showFirstLabel: false
-  }],
-  tooltip: {
-      formatter: function() {
-          return false;
-      }
-  },
-  plotOptions: {
-      series: {
-          fillColor: {
-              linearGradient: [0, 0, 0, 70],
-              stops: [
-                  // [0, Highcharts.getOptions().colors[0]],
-                  [1, 'rgba(255,255,255,0)']
-              ]
-          },
-          lineWidth: 1,
-          marker: {
-              enabled: false
-          },
-          shadow: false,
-          states: {
-              hover: {
-                  lineWidth: 1
-              }
-          },
-          enableMouseTracking: false
-      }
-  }
+    yAxis: [{
+        gridLineWidth: 0,
+        labels: {
+            enabled: false
+        },
+        title: {
+            text: null
+        },
+        min: 0.6,
+        showFirstLabel: false
+    }, {
+        gridLineWidth: 0,
+        labels: {
+            enabled: false
+        },
+        title: {
+            text: null
+        },
+        min: 0.6,
+        showFirstLabel: false
+    }],
+    tooltip: {
+        formatter: function() {
+            return false;
+        }
+    },
+    plotOptions: {
+        series: {
+            fillColor: {
+                linearGradient: [0, 0, 0, 70],
+                stops: [
+                    // [0, Highcharts.getOptions().colors[0]],
+                    [1, 'rgba(255,255,255,0)']
+                ]
+            },
+            lineWidth: 1,
+            marker: {
+                enabled: false
+            },
+            shadow: false,
+            states: {
+                hover: {
+                    lineWidth: 1
+                }
+            },
+            enableMouseTracking: false
+        }
+    }
 }
 timeSeriesDetailOptions = {
-  xAxis: {
-      type: 'datetime'
-  },
-  yAxis: [{
-      title: {
-          text: null
-      },
-      maxZoom: 0.1
+    xAxis: {
+        type: 'datetime'
+    },
+    yAxis: [{
+        title: {
+            text: null
+        },
+        maxZoom: 0.1
 
-  }, {
-      title: {
-          text: null
-      },
-      opposite: true
-  }],
-  tooltip: {
-    valueDecimals: 2,
-      shared: true
-  },
-  plotOptions: {
-      areaspline: {
-          fillOpacity: 0.3
-      },
-      column: {
-          fillOpacity: 0.3
-      },
-      series: {
-          marker: {
-              enabled: true,
-              radius: 2.5,
-              states: {
-                  hover: {
-                      enabled: true,
-                      radius: 3
-                  }
-              }
-          }
-      }
-  },
-  legend: {
-      enabled: true,
-      align: 'center',
-      x: 0,
-      verticalAlign: 'top',
-      y: 0,
-      floating: true,
-      borderColor: '#CCC',
-      borderWidth: 1,
-      shadow: false
-  }
+    }, {
+        title: {
+            text: null
+        },
+        opposite: true
+    }],
+    tooltip: {
+        valueDecimals: 2,
+        shared: true
+    },
+    plotOptions: {
+        areaspline: {
+            fillOpacity: 0.3
+        },
+        column: {
+            fillOpacity: 0.3
+        },
+        series: {
+            marker: {
+                enabled: true,
+                radius: 2.5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        radius: 3
+                    }
+                }
+            }
+        }
+    },
+    legend: {
+        enabled: true,
+        align: 'center',
+        x: 0,
+        verticalAlign: 'top',
+        y: 0,
+        floating: true,
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    }
 }
+
+drilldownGraphOptions = {
+    chart: {
+        height: 300,
+        zoomType: 'x'
+    },
+    yAxis: {
+        title: {
+            text: null
+        },
+        min: 0,
+        gridLineColor: 'transparent'
+    },
+    scrollbar: {
+        enabled: true
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+    }
+}
+
 
 //To compute data for home page overall cards
 function total_static_data() {
@@ -2106,7 +2127,7 @@ function plot_stacked_chart(container_obj, dict) {
     } else {
         var max = dict[0]['data'].length - 1;
     }
-    container_obj.highcharts(Highcharts.merge(generalOptions,{
+    container_obj.highcharts(Highcharts.merge(generalOptions, {
         chart: {
             height: 300
         },
@@ -2152,26 +2173,6 @@ function plot_stacked_chart(container_obj, dict) {
     }));
 }
 
-drilldownGraphOptions = {
-  chart: {
-      height: 300,
-      zoomType: 'x'
-  },
-  yAxis: {
-      title: {
-          text: null
-      },
-      min: 0,
-      gridLineColor: 'transparent'
-  },
-  scrollbar: {
-      enabled: true
-  },
-  tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-  }
-}
-
 function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart_type) {
     if (dict[0]['data'].length >= 6) {
         var max = 5;
@@ -2189,7 +2190,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
         chart: {
             type: chart_type,
             inverted: true
-            },
+        },
         xAxis: [{
             type: 'category',
             max: max
@@ -2198,7 +2199,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
             max: null
         }],
         yAxis: {
-                max: max_scale
+            max: max_scale
         },
         plotOptions: {
             series: {
@@ -2217,47 +2218,6 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
         drilldown: drilldown
     }));
 }
-
-// function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
-//     if (dict[0]['data'].length >= 6) {
-//         var max = 5;
-//     } else {
-//         var max = dict[0]['data'].length - 1;
-//     }
-//     if (floats) {
-//         format = '{point.y:.2f}';
-//     } else {
-//         format = '{point.y:.0f}';
-//     }
-//
-//     var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
-//         chart: {
-//             type: 'columnrange',
-//             inverted: true
-//         },
-//         xAxis: [{
-//             type: 'category',
-//             max: max
-//         }, {
-//             type: 'category',
-//             max: null
-//         }],
-//         yAxis: {
-//             max: max_scale
-//         },
-//         plotOptions: {
-//             columnrange: {
-//                 grouping: false,
-//                 dataLabels: {
-//                     enabled: true,
-//                     format: format
-//                 }
-//             }
-//         },
-//         series: dict,
-//         drilldown: drilldown
-//     }));
-// }
 
 function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict) {
     // prepare the detail chart
@@ -2331,86 +2291,86 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
 // create the master chart
 function createMasterForCummulativeVolumeAndFarmer(detail_container, master_container, dict) {
     master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
-            chart: {
-                zoomType: 'x',
-                events: {
-                    // listen to the selection event on the master chart to update the
-                    // extremes of the detail chart
-                    selection: function(event) {
-                        var extremesObject = event.xAxis[0],
-                            min = extremesObject.min,
-                            max = extremesObject.max,
-                            detailData = [],
-                            xAxis = this.xAxis[0],
-                            myDict = [];
+        chart: {
+            zoomType: 'x',
+            events: {
+                // listen to the selection event on the master chart to update the
+                // extremes of the detail chart
+                selection: function(event) {
+                    var extremesObject = event.xAxis[0],
+                        min = extremesObject.min,
+                        max = extremesObject.max,
+                        detailData = [],
+                        xAxis = this.xAxis[0],
+                        myDict = [];
 
-                        $.each(this.series, function() {
-                            var temp = {};
-                            temp['name'] = this.name;
-                            temp['data'] = new Array();
-                            temp['pointStart'] = dict[0]['data'][0][0];
-                            temp['pointInterval'] = 24 * 3600 * 1000;
-                            $.each(this.data, function() {
-                                if (this.x > min && this.x < max) {
-                                    temp['data'].push([this.x, this.y]);
-                                }
-                            });
-                            myDict.push(temp);
+                    $.each(this.series, function() {
+                        var temp = {};
+                        temp['name'] = this.name;
+                        temp['data'] = new Array();
+                        temp['pointStart'] = dict[0]['data'][0][0];
+                        temp['pointInterval'] = 24 * 3600 * 1000;
+                        $.each(this.data, function() {
+                            if (this.x > min && this.x < max) {
+                                temp['data'].push([this.x, this.y]);
+                            }
                         });
-                        // reverse engineer the last part of the data
-                        // move the plot bands to reflect the new detail span
-                        xAxis.removePlotBand('mask-before');
-                        xAxis.addPlotBand({
-                            id: 'mask-before',
-                            from: dict[0]['data'][0][0], //data[0][0],
-                            to: min,
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
+                        myDict.push(temp);
+                    });
+                    // reverse engineer the last part of the data
+                    // move the plot bands to reflect the new detail span
+                    xAxis.removePlotBand('mask-before');
+                    xAxis.addPlotBand({
+                        id: 'mask-before',
+                        from: dict[0]['data'][0][0], //data[0][0],
+                        to: min,
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
 
-                        xAxis.removePlotBand('mask-after');
-                        xAxis.addPlotBand({
-                            id: 'mask-after',
-                            from: max,
-                            to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
-                        var pos = 0;
-                        $.each(this.series, function() {
-                            detailChart.series[pos].setData(myDict[pos].data);
-                            pos++;
-                        });
-                        return false;
-                    }
+                    xAxis.removePlotBand('mask-after');
+                    xAxis.addPlotBand({
+                        id: 'mask-after',
+                        from: max,
+                        to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
+                    var pos = 0;
+                    $.each(this.series, function() {
+                        detailChart.series[pos].setData(myDict[pos].data);
+                        pos++;
+                    });
+                    return false;
                 }
-            },
-            xAxis: {
-                type: 'datetime',
-                showLastTickLabel: true,
-                maxZoom: 14 * 24 * 3600000, // fourteen days
-                plotBands: [{
-                    id: 'mask-before',
-                    from: dict[0]['data'][0][0],
-                    to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                    color: 'rgba(0, 0, 0, 0.2)'
-                }],
-                title: {
-                    text: null
-                }
-            },
-            plotOptions: {
-                series: {
-                    fillColor: {
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, 'rgba(255,255,255,0)']
-                        ]
-                    },
-                }
-            },
-            series: dict
-        }), function(masterChart) {
-            createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
-        }); // return chart instance
+            }
+        },
+        xAxis: {
+            type: 'datetime',
+            showLastTickLabel: true,
+            maxZoom: 14 * 24 * 3600000, // fourteen days
+            plotBands: [{
+                id: 'mask-before',
+                from: dict[0]['data'][0][0],
+                to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                color: 'rgba(0, 0, 0, 0.2)'
+            }],
+            title: {
+                text: null
+            }
+        },
+        plotOptions: {
+            series: {
+                fillColor: {
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, 'rgba(255,255,255,0)']
+                    ]
+                },
+            }
+        },
+        series: dict
+    }), function(masterChart) {
+        createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
+    }); // return chart instance
 }
 
 function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
@@ -2445,10 +2405,10 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     width = detail_container.width();
-    detailChart1 = detail_container.highcharts(Highcharts.merge(generalOptions,timeSeriesDetailOptions,{
-      chart: {
-          width: width
-      },
+    detailChart1 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
+        chart: {
+            width: width
+        },
         series: myDict,
         legend: {
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
@@ -2458,89 +2418,89 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
 // create the master chart
 function createMasterForVolAmtTimeSeries(detail_container, master_container, dict) {
-    master_container.highcharts(Highcharts.merge(generalOptions,timeSeriesMasterOptions,{
-            chart: {
-                zoomType: 'x',
-                events: {
-                    // listen to the selection event on the master chart to update the
-                    // extremes of the detail chart
-                    selection: function(event) {
-                        var extremesObject = event.xAxis[0],
-                            min = extremesObject.min,
-                            max = extremesObject.max,
-                            detailData = [],
-                            xAxis = this.xAxis[0],
-                            myDict = [];
+    master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
+        chart: {
+            zoomType: 'x',
+            events: {
+                // listen to the selection event on the master chart to update the
+                // extremes of the detail chart
+                selection: function(event) {
+                    var extremesObject = event.xAxis[0],
+                        min = extremesObject.min,
+                        max = extremesObject.max,
+                        detailData = [],
+                        xAxis = this.xAxis[0],
+                        myDict = [];
 
-                        $.each(this.series, function() {
-                            var temp = {};
-                            temp['name'] = this.name;
-                            temp['data'] = new Array();
-                            temp['pointStart'] = this.pointStart;
-                            temp['pointInterval'] = this.pointInterval;
-                            temp['color'] = this.color;
-                            $.each(this.data, function() {
-                                if (this.x > min && this.x < max) {
-                                    temp['data'].push([this.x, this.y]);
-                                }
-                            });
-                            myDict.push(temp);
+                    $.each(this.series, function() {
+                        var temp = {};
+                        temp['name'] = this.name;
+                        temp['data'] = new Array();
+                        temp['pointStart'] = this.pointStart;
+                        temp['pointInterval'] = this.pointInterval;
+                        temp['color'] = this.color;
+                        $.each(this.data, function() {
+                            if (this.x > min && this.x < max) {
+                                temp['data'].push([this.x, this.y]);
+                            }
                         });
-                        // reverse engineer the last part of the data
-                        // move the plot bands to reflect the new detail span
-                        xAxis.removePlotBand('mask-before');
-                        xAxis.addPlotBand({
-                            id: 'mask-before',
-                            from: dict[0]['data'][0][0], //data[0][0],
-                            to: min,
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
+                        myDict.push(temp);
+                    });
+                    // reverse engineer the last part of the data
+                    // move the plot bands to reflect the new detail span
+                    xAxis.removePlotBand('mask-before');
+                    xAxis.addPlotBand({
+                        id: 'mask-before',
+                        from: dict[0]['data'][0][0], //data[0][0],
+                        to: min,
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
 
-                        xAxis.removePlotBand('mask-after');
-                        xAxis.addPlotBand({
-                            id: 'mask-after',
-                            from: max,
-                            to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
-                        var pos = 0;
-                        $.each(this.series, function() {
-                            detailChart1.series[pos].setData(myDict[pos].data);
-                            pos++;
-                        });
-                        return false;
-                    }
-                }
-            },
-
-            xAxis: {
-                type: 'datetime',
-                showLastTickLabel: true,
-                maxZoom: 14 * 24 * 3600000, // fourteen days
-                plotBands: [{
-                    id: 'mask-before',
-                    from: dict[0]['data'][0][0],
-                    to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                    color: 'rgba(0, 0, 0, 0.2)'
-                }],
-                title: {
-                    text: null
-                }
-            },
-            series: dict,
-            plotOptions: {
-                series: {
-                    fillColor: {
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, 'rgba(255,255,255,0)']
-                        ]
-                    }
+                    xAxis.removePlotBand('mask-after');
+                    xAxis.addPlotBand({
+                        id: 'mask-after',
+                        from: max,
+                        to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
+                    var pos = 0;
+                    $.each(this.series, function() {
+                        detailChart1.series[pos].setData(myDict[pos].data);
+                        pos++;
+                    });
+                    return false;
                 }
             }
-        }), function(masterChart) {
-            createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
-        }); // return chart instance
+        },
+
+        xAxis: {
+            type: 'datetime',
+            showLastTickLabel: true,
+            maxZoom: 14 * 24 * 3600000, // fourteen days
+            plotBands: [{
+                id: 'mask-before',
+                from: dict[0]['data'][0][0],
+                to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                color: 'rgba(0, 0, 0, 0.2)'
+            }],
+            title: {
+                text: null
+            }
+        },
+        series: dict,
+        plotOptions: {
+            series: {
+                fillColor: {
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, 'rgba(255,255,255,0)']
+                    ]
+                }
+            }
+        }
+    }), function(masterChart) {
+        createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
+    }); // return chart instance
 }
 
 function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
@@ -2573,7 +2533,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart2 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions,{
+    detailChart2 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
         },
@@ -2586,86 +2546,86 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
 // create the master chart
 function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
-master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
-            chart: {
-                zoomType: 'x',
-                events: {
-                    // listen to the selection event on the master chart to update the
-                    // extremes of the detail chart
-                    selection: function(event) {
-                        var extremesObject = event.xAxis[0],
-                            min = extremesObject.min,
-                            max = extremesObject.max,
-                            detailData = [],
-                            xAxis = this.xAxis[0],
-                            myDict = [];
+    master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
+        chart: {
+            zoomType: 'x',
+            events: {
+                // listen to the selection event on the master chart to update the
+                // extremes of the detail chart
+                selection: function(event) {
+                    var extremesObject = event.xAxis[0],
+                        min = extremesObject.min,
+                        max = extremesObject.max,
+                        detailData = [],
+                        xAxis = this.xAxis[0],
+                        myDict = [];
 
-                        $.each(this.series, function() {
-                            var temp = {};
-                            temp['name'] = this.name;
-                            temp['data'] = new Array();
-                            temp['pointStart'] = this.pointStart;
-                            temp['pointInterval'] = this.pointInterval;
-                            $.each(this.data, function() {
-                                if (this.x > min && this.x < max) {
-                                    temp['data'].push([this.x, this.y]);
-                                }
-                            });
-                            myDict.push(temp);
+                    $.each(this.series, function() {
+                        var temp = {};
+                        temp['name'] = this.name;
+                        temp['data'] = new Array();
+                        temp['pointStart'] = this.pointStart;
+                        temp['pointInterval'] = this.pointInterval;
+                        $.each(this.data, function() {
+                            if (this.x > min && this.x < max) {
+                                temp['data'].push([this.x, this.y]);
+                            }
                         });
-                        // reverse engineer the last part of the data
-                        // move the plot bands to reflect the new detail span
-                        xAxis.removePlotBand('mask-before');
-                        xAxis.addPlotBand({
-                            id: 'mask-before',
-                            from: dict[0]['data'][0][0], //data[0][0],
-                            to: min,
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
-                        xAxis.removePlotBand('mask-after');
-                        xAxis.addPlotBand({
-                            id: 'mask-after',
-                            from: max,
-                            to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                            color: 'rgba(0, 0, 0, 0.2)'
-                        });
-                        var pos = 0;
-                        $.each(this.series, function() {
-                            detailChart2.series[pos].setData(myDict[pos].data);
-                            pos++;
-                        });
-                        return false;
-                    }
-                }
-            },
-            xAxis: {
-                type: 'datetime',
-                showLastTickLabel: true,
-                maxZoom: 14 * 24 * 3600000, // fourteen days
-                plotBands: [{
-                    id: 'mask-before',
-                    from: dict[0]['data'][0][0],
-                    to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                    color: 'rgba(0, 0, 0, 0.2)'
-                }],
-                title: {
-                    text: null
-                }
-            },
-            series: dict,
-            plotOptions: {
-                series: {
-                    fillColor: {
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, 'rgba(255,255,255,0)']
-                        ]
-                    }
+                        myDict.push(temp);
+                    });
+                    // reverse engineer the last part of the data
+                    // move the plot bands to reflect the new detail span
+                    xAxis.removePlotBand('mask-before');
+                    xAxis.addPlotBand({
+                        id: 'mask-before',
+                        from: dict[0]['data'][0][0], //data[0][0],
+                        to: min,
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
+                    xAxis.removePlotBand('mask-after');
+                    xAxis.addPlotBand({
+                        id: 'mask-after',
+                        from: max,
+                        to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                        color: 'rgba(0, 0, 0, 0.2)'
+                    });
+                    var pos = 0;
+                    $.each(this.series, function() {
+                        detailChart2.series[pos].setData(myDict[pos].data);
+                        pos++;
+                    });
+                    return false;
                 }
             }
-        }), function(masterChart) {
-            createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
-        }); // return chart instance
+        },
+        xAxis: {
+            type: 'datetime',
+            showLastTickLabel: true,
+            maxZoom: 14 * 24 * 3600000, // fourteen days
+            plotBands: [{
+                id: 'mask-before',
+                from: dict[0]['data'][0][0],
+                to: dict[0]['data'][dict[0]['data'].length - 1][0],
+                color: 'rgba(0, 0, 0, 0.2)'
+            }],
+            title: {
+                text: null
+            }
+        },
+        series: dict,
+        plotOptions: {
+            series: {
+                fillColor: {
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, 'rgba(255,255,255,0)']
+                    ]
+                }
+            }
+        }
+    }), function(masterChart) {
+        createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
+    }); // return chart instance
 }
 
 
