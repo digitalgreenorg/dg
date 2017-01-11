@@ -388,7 +388,7 @@ table.dataTable tr.even td.sorting_1 {
 
 
 .editedcell{
-    background-color:#81E250;
+    background-color:#B8E986;
     font-weight:bold;
     color: #009;
 }
@@ -400,5 +400,5 @@ table.dataTable tr.even td.sorting_1 {
 }
 
 .editcolumn{
-    background-color: #C0F1A7;
+    background-color: #E2E2E2;
 }
