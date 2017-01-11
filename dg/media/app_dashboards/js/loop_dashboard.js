@@ -1307,7 +1307,8 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
             return b['y'] - a['y'];
         });
     }
-    plot_drilldown(container, series, drilldown, false);
+    var max_scale = series[0]['data'][0]['y'];
+    plot_drilldown(container, series, drilldown, false, max_scale, 'bar');
 }
 
 //Recovered total graph on analytics page is being plotted from this
@@ -1430,7 +1431,8 @@ function transport_cost_graph(container, axis, axis_names, axis_parameter, value
     //         return b[1] - a[1];
     //     });
     // }
-    plot_drilldown(container, series, drilldown, false);
+    var max_scale = series[0]['data'][0]['y'];
+    plot_drilldown(container, series, drilldown, false, max_scale, 'bar');
 }
 
 //Cpk and Spk on analytics page is being plotted from this
@@ -1563,8 +1565,8 @@ function cpk_spk_graph(container, axis, axis_names, axis_parameter, values, valu
     //         return b[1] - a[1];
     //     });
     // }
-
-    plot_drilldown(container, series, drilldown, true);
+    var max_scale = series[0]['data'][0]['y'];
+    plot_drilldown(container, series, drilldown, true, max_scale, 'bar');
 }
 
 //Analytocs Aggregator tab to caluclate farmers count is being calculated from this
@@ -1643,7 +1645,8 @@ function repeat_farmers(container, axis, axis_names, axis_parameter, values, val
             'drilldown': data_for_sorting[i]['name']
         });
     }
-    plot_drilldown(container, series, drilldown, false);
+    var max_scale = series[0]['data'][0]['y'];
+    plot_drilldown(container, series, drilldown, false, max_scale, 'bar');
 }
 
 //Analytics Crops tab  Max Min graph is being plotted here
@@ -1722,7 +1725,7 @@ function max_min_graph(container, crop_ids, crop_names, crop_parameter, mandi_id
     series[0]['data'].sort(function(a, b) {
         return (b['high'] - b['low']) - (a['high'] - a["low"]);
     });
-    plot_drilldown1(container, series, drilldown, false, max_crop_price);
+    plot_drilldown(container, series, drilldown, false, max_crop_price, 'columnrange');
 }
 
 // Computing data to display how many farmers brought a particular crop - Analytics Crops tab
@@ -2169,7 +2172,7 @@ drilldownGraphOptions = {
   }
 }
 
-function plot_drilldown(container_obj, dict, drilldown, floats) {
+function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart_type) {
     if (dict[0]['data'].length >= 6) {
         var max = 5;
     } else {
@@ -2184,7 +2187,8 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
 
     var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
         chart: {
-            type: 'bar',
+            type: chart_type,
+            inverted: true
             },
         xAxis: [{
             type: 'category',
@@ -2194,7 +2198,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
             max: null
         }],
         yAxis: {
-                max: dict[0]['data'][0]['y']
+                max: max_scale
         },
         plotOptions: {
             series: {
@@ -2207,53 +2211,53 @@ function plot_drilldown(container_obj, dict, drilldown, floats) {
             }
         },
         tooltip: {
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>' + format + '</b> <br/>'
+            pointFormat: '<span>{point.name}</span>: <b>' + format + '</b> <br/>'
         },
         series: dict,
         drilldown: drilldown
     }));
 }
 
-function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
-    if (dict[0]['data'].length >= 6) {
-        var max = 5;
-    } else {
-        var max = dict[0]['data'].length - 1;
-    }
-    if (floats) {
-        format = '{point.y:.2f}'
-    } else {
-        format = '{point.y:.0f}'
-    }
-
-    var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
-        chart: {
-            type: 'columnrange',
-            inverted: true
-        },
-        xAxis: [{
-            type: 'category',
-            max: max
-        }, {
-            type: 'category',
-            max: null
-        }],
-        yAxis: {
-            max: max_scale
-        },
-        plotOptions: {
-            columnrange: {
-                grouping: false,
-                dataLabels: {
-                    enabled: true,
-                    format: format
-                }
-            }
-        },
-        series: dict,
-        drilldown: drilldown
-    }));
-}
+// function plot_drilldown1(container_obj, dict, drilldown, floats, max_scale) {
+//     if (dict[0]['data'].length >= 6) {
+//         var max = 5;
+//     } else {
+//         var max = dict[0]['data'].length - 1;
+//     }
+//     if (floats) {
+//         format = '{point.y:.2f}';
+//     } else {
+//         format = '{point.y:.0f}';
+//     }
+//
+//     var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
+//         chart: {
+//             type: 'columnrange',
+//             inverted: true
+//         },
+//         xAxis: [{
+//             type: 'category',
+//             max: max
+//         }, {
+//             type: 'category',
+//             max: null
+//         }],
+//         yAxis: {
+//             max: max_scale
+//         },
+//         plotOptions: {
+//             columnrange: {
+//                 grouping: false,
+//                 dataLabels: {
+//                     enabled: true,
+//                     format: format
+//                 }
+//             }
+//         },
+//         series: dict,
+//         drilldown: drilldown
+//     }));
+// }
 
 function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict) {
     // prepare the detail chart
