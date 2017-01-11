@@ -2383,7 +2383,7 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     $.each(masterChart.series, function() {
         if (this.name == "Volume") {
             axis = 0;
-        } else if(this.name == "Amount") {
+        } else if (this.name == "Amount") {
             axis = 1;
         } else {
             axis = 2;
@@ -2483,10 +2483,10 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
                     });
                     var pos = 0;
                     $.each(this.series, function() {
-                      if(chart==1){
-                        detailChart1.series[pos].setData(myDict[pos].data);}
-                        else if(chart==2){
-                          detailChart2.series[pos].setData(myDict[pos].data);
+                        if (chart == 1) {
+                            detailChart1.series[pos].setData(myDict[pos].data);
+                        } else if (chart == 2) {
+                            detailChart2.series[pos].setData(myDict[pos].data);
                         }
                         pos++;
                     });
@@ -2521,10 +2521,10 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
             }
         }
     }), function(masterChart) {
-      if(chart==1){
-        createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);}
-        else if(chart==2){
-          createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
+        if (chart == 1) {
+            createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
+        } else if (chart == 2) {
+            createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
         }
     }); // return chart instance
 }
