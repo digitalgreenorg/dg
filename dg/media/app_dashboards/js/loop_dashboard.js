@@ -3588,24 +3588,30 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
         } else if (editedGaddidar != 0) {
             $('#gaddidar_modal').closeModal();
-            //if(($this.parent()[0].childNodes[4]).toString().indexOf('%')>=0)
-            //    $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val()+'%';
-            //else
             $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val() + ' - ' + window.localStorage.name;
-            if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
-                    $this.closest('tr').children('td:nth-child(5)')[0].className='editedcelledge';
-                    $this.closest('tr').children('td:nth-child(6)')[0].className='editedcelledge';
-                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
-                
-                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+            if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==0) {
+                if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 0.1) {
+                $this.closest('tr').children('td:nth-child(5)')[0].className='editedcelledge';
+                $this.closest('tr').children('td:nth-child(6)')[0].className='editedcelledge';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
             } else {
-                    $this.closest('tr').children('td:nth-child(5)')[0].className='editedcell';
-                    $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcell';
-                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
-
-                //$this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
+                $this.closest('tr').children('td:nth-child(5)')[0].className='editedcell';
+                $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+            }
+            }            
+            else{
+            if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
+                $this.closest('tr').children('td:nth-child(5)')[0].className='editedcelledge';
+                $this.closest('tr').children('td:nth-child(6)')[0].className='editedcelledge';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+            } else {
+                $this.closest('tr').children('td:nth-child(5)')[0].className='editedcell';
+                $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+            }
             }
             var row_id = $this.context.parentNode.rowIndex;
             rows_table3[row_id] = true;
@@ -3661,14 +3667,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }, {
             title: "Comment"
 
-        },
-            {
-                title:"Amount",
-                visible:false
-        },
-            {
-                title:"Discount Criteria",
-                visible: false
+        },{
+            title:"Amount",
+            visible:false
+        },{
+            title:"Discount Criteria",
+            visible: false
         }],
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
