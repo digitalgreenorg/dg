@@ -309,6 +309,11 @@ timeSeriesDetailOptions = {
             text: null
         },
         opposite: true
+    }, {
+        title: {
+            text: null
+        },
+        opposite: true
     }],
     tooltip: {
         valueDecimals: 2,
@@ -875,7 +880,6 @@ function set_filterlistener() {
         if ($('#aggregator_payments :selected').val() == '') {
             alert("Please select an aggregator to download the payment sheet");
         } else {
-
             xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 var a;
@@ -909,7 +913,6 @@ function set_filterlistener() {
             };
             xhttp.send(JSON.stringify(data_json));
         }
-
     });
 
     $("#aggregator_payments").change(function() {
@@ -924,16 +927,14 @@ function set_filterlistener() {
         outliers_summary(aggregator_id);
     });
 
-
-
     $("#time_series_frequency").change(function() {
         time_series_frequency = $('#time_series_frequency :selected').val();
         if (time_series_frequency == 1) {
-            createMasterForVolAmtTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers);
-            createMasterForCpkSpkTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk);
+            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, 1);
+            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, 2);
         } else {
-            createMasterForVolAmtTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false));
-            createMasterForCpkSpkTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false));
+            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false), 1);
+            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false), 2);
         }
     });
 
@@ -999,7 +1000,6 @@ function get_filter_data(language) {
             get_data();
         });
 }
-
 
 //To make aggregators list for filter page
 function fill_aggregator_filter(data_json, language) {
@@ -1907,8 +1907,8 @@ function show_line_graphs() {
             var index = all_dates.indexOf(new Date(dates_and_farmer_count[i]['date']).getTime());
             time_series_volume_amount_farmers[2]['data'][index][1] += dates_and_farmer_count[i]['farmer__count'];
         }
-        createMasterForVolAmtTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers)
-        createMasterForCpkSpkTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk);
+        createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, 1);
+        createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, 2);
     } catch (err) {
         alert("No Data is available for the current time period and filters applied.");
     }
@@ -2378,12 +2378,15 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     var myDict = [];
     var detailData = [],
         detailStart = dict[0]['data'][0][0];
+    var axis;
 
     $.each(masterChart.series, function() {
         if (this.name == "Volume") {
             axis = 0;
-        } else {
+        } else if(this.name == "Amount") {
             axis = 1;
+        } else {
+            axis = 2;
         }
         var temp = {};
         temp['name'] = this.name;
@@ -2404,20 +2407,35 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     });
 
     // create a detail chart referenced by a global variable
-    width = detail_container.width();
+    var width = detail_container.width();
     detailChart1 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
         },
         series: myDict,
         legend: {
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-        }
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white'
+        },
+        yAxis: [{
+            title: {
+                text: 'Volume'
+            }
+        }, {
+            title: {
+                text: 'Amount'
+            },
+            opposite: true
+        }, {
+            title: {
+                text: 'No. of Farmers'
+            },
+            opposite: true
+        }]
     })).highcharts(); // return chart
 }
 
 // create the master chart
-function createMasterForVolAmtTimeSeries(detail_container, master_container, dict) {
+function createMasterForTimeSeries(detail_container, master_container, dict, chart) {
     master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
         chart: {
             zoomType: 'x',
@@ -2465,7 +2483,11 @@ function createMasterForVolAmtTimeSeries(detail_container, master_container, dic
                     });
                     var pos = 0;
                     $.each(this.series, function() {
-                        detailChart1.series[pos].setData(myDict[pos].data);
+                      if(chart==1){
+                        detailChart1.series[pos].setData(myDict[pos].data);}
+                        else if(chart==2){
+                          detailChart2.series[pos].setData(myDict[pos].data);
+                        }
                         pos++;
                     });
                     return false;
@@ -2499,13 +2521,17 @@ function createMasterForVolAmtTimeSeries(detail_container, master_container, dic
             }
         }
     }), function(masterChart) {
-        createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
+      if(chart==1){
+        createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);}
+        else if(chart==2){
+          createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
+        }
     }); // return chart instance
 }
 
 function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
     // prepare the detail chart
-    var myDict = []
+    var myDict = [];
     var detailData = [],
         detailStart = dict[0]['data'][0][0];
 
@@ -2528,7 +2554,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
                 temp['data'].push(this.y);
             }
         });
-        myDict.push(temp)
+        myDict.push(temp);
     });
 
     // create a detail chart referenced by a global variable
@@ -2538,95 +2564,103 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
             width: width
         },
         legend: {
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white'
         },
-        series: myDict
+        series: myDict,
+        yAxis: [{
+            title: null
+        }, {
+            title: {
+                text: 'CPK / SPK'
+            },
+            opposite: true
+        }]
     })).highcharts(); // return chart
 }
 
-// create the master chart
-function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
-    master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
-        chart: {
-            zoomType: 'x',
-            events: {
-                // listen to the selection event on the master chart to update the
-                // extremes of the detail chart
-                selection: function(event) {
-                    var extremesObject = event.xAxis[0],
-                        min = extremesObject.min,
-                        max = extremesObject.max,
-                        detailData = [],
-                        xAxis = this.xAxis[0],
-                        myDict = [];
-
-                    $.each(this.series, function() {
-                        var temp = {};
-                        temp['name'] = this.name;
-                        temp['data'] = new Array();
-                        temp['pointStart'] = this.pointStart;
-                        temp['pointInterval'] = this.pointInterval;
-                        $.each(this.data, function() {
-                            if (this.x > min && this.x < max) {
-                                temp['data'].push([this.x, this.y]);
-                            }
-                        });
-                        myDict.push(temp);
-                    });
-                    // reverse engineer the last part of the data
-                    // move the plot bands to reflect the new detail span
-                    xAxis.removePlotBand('mask-before');
-                    xAxis.addPlotBand({
-                        id: 'mask-before',
-                        from: dict[0]['data'][0][0], //data[0][0],
-                        to: min,
-                        color: 'rgba(0, 0, 0, 0.2)'
-                    });
-                    xAxis.removePlotBand('mask-after');
-                    xAxis.addPlotBand({
-                        id: 'mask-after',
-                        from: max,
-                        to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                        color: 'rgba(0, 0, 0, 0.2)'
-                    });
-                    var pos = 0;
-                    $.each(this.series, function() {
-                        detailChart2.series[pos].setData(myDict[pos].data);
-                        pos++;
-                    });
-                    return false;
-                }
-            }
-        },
-        xAxis: {
-            type: 'datetime',
-            showLastTickLabel: true,
-            maxZoom: 14 * 24 * 3600000, // fourteen days
-            plotBands: [{
-                id: 'mask-before',
-                from: dict[0]['data'][0][0],
-                to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                color: 'rgba(0, 0, 0, 0.2)'
-            }],
-            title: {
-                text: null
-            }
-        },
-        series: dict,
-        plotOptions: {
-            series: {
-                fillColor: {
-                    stops: [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, 'rgba(255,255,255,0)']
-                    ]
-                }
-            }
-        }
-    }), function(masterChart) {
-        createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
-    }); // return chart instance
-}
+// // create the master chart
+// function createMasterForCpkSpkTimeSeries(detail_container, master_container, dict) {
+//     master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
+//         chart: {
+//             zoomType: 'x',
+//             events: {
+//                 // listen to the selection event on the master chart to update the
+//                 // extremes of the detail chart
+//                 selection: function(event) {
+//                     var extremesObject = event.xAxis[0],
+//                         min = extremesObject.min,
+//                         max = extremesObject.max,
+//                         detailData = [],
+//                         xAxis = this.xAxis[0],
+//                         myDict = [];
+//
+//                     $.each(this.series, function() {
+//                         var temp = {};
+//                         temp['name'] = this.name;
+//                         temp['data'] = new Array();
+//                         temp['pointStart'] = this.pointStart;
+//                         temp['pointInterval'] = this.pointInterval;
+//                         $.each(this.data, function() {
+//                             if (this.x > min && this.x < max) {
+//                                 temp['data'].push([this.x, this.y]);
+//                             }
+//                         });
+//                         myDict.push(temp);
+//                     });
+//                     // reverse engineer the last part of the data
+//                     // move the plot bands to reflect the new detail span
+//                     xAxis.removePlotBand('mask-before');
+//                     xAxis.addPlotBand({
+//                         id: 'mask-before',
+//                         from: dict[0]['data'][0][0], //data[0][0],
+//                         to: min,
+//                         color: 'rgba(0, 0, 0, 0.2)'
+//                     });
+//                     xAxis.removePlotBand('mask-after');
+//                     xAxis.addPlotBand({
+//                         id: 'mask-after',
+//                         from: max,
+//                         to: dict[0]['data'][dict[0]['data'].length - 1][0],
+//                         color: 'rgba(0, 0, 0, 0.2)'
+//                     });
+//                     var pos = 0;
+//                     $.each(this.series, function() {
+//                         detailChart2.series[pos].setData(myDict[pos].data);
+//                         pos++;
+//                     });
+//                     return false;
+//                 }
+//             }
+//         },
+//         xAxis: {
+//             type: 'datetime',
+//             showLastTickLabel: true,
+//             maxZoom: 14 * 24 * 3600000, // fourteen days
+//             plotBands: [{
+//                 id: 'mask-before',
+//                 from: dict[0]['data'][0][0],
+//                 to: dict[0]['data'][dict[0]['data'].length - 1][0],
+//                 color: 'rgba(0, 0, 0, 0.2)'
+//             }],
+//             title: {
+//                 text: null
+//             }
+//         },
+//         series: dict,
+//         plotOptions: {
+//             series: {
+//                 fillColor: {
+//                     stops: [
+//                         [0, Highcharts.getOptions().colors[0]],
+//                         [1, 'rgba(255,255,255,0)']
+//                     ]
+//                 }
+//             }
+//         }
+//     }), function(masterChart) {
+//         createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
+//     }); // return chart instance
+// }
 
 
 function plot_area_range_graph(container, dict) {
