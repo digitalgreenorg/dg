@@ -22,6 +22,7 @@ CREATE INDEX screening_myisam_date ON screening_myisam(date);
 CREATE INDEX screening_myisam_village_id ON screening_myisam(village_id, date);
 CREATE INDEX screening_myisam_block_id ON screening_myisam(block_id, date);
 CREATE INDEX screening_myisam_district_id ON screening_myisam(district_id, date);
+CREATE INDEX screening_myisam_state_id ON screening_myisam(state_id, date);
 CREATE INDEX screening_myisam_country_id ON screening_myisam(country_id, date);
 
 -- Normalized version of digitalgreen.VIDEO
@@ -48,6 +49,7 @@ CREATE INDEX video_myisam_date ON video_myisam(video_production_date);
 CREATE INDEX video_myisam_village_id ON video_myisam(village_id, video_production_date);
 CREATE INDEX video_myisam_block_id ON video_myisam(block_id, video_production_date);
 CREATE INDEX video_myisam_district_id ON video_myisam(district_id, video_production_date);
+CREATE INDEX video_myisam_state_id ON video_myisam(state_id, video_production_date);
 CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_production_date);
 
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
@@ -75,6 +77,7 @@ CREATE INDEX person_meeting_attendance_myisam_date ON person_meeting_attendance_
 CREATE INDEX person_meeting_attendance_myisam_village_id ON person_meeting_attendance_myisam(village_id, date);
 CREATE INDEX person_meeting_attendance_myisam_block_id ON person_meeting_attendance_myisam(block_id, date);
 CREATE INDEX person_meeting_attendance_myisam_district_id ON person_meeting_attendance_myisam(district_id, date);
+CREATE INDEX person_meeting_attendance_myisam_state_id ON person_meeting_attendance_myisam(state_id, date);
 CREATE INDEX person_meeting_attendance_myisam_country_id ON person_meeting_attendance_myisam(country_id, date);
 
 -- Normalized version of digitalgreen.PERSON_ADOPT_PRACTICE
@@ -102,6 +105,7 @@ CREATE INDEX person_adopt_practice_myisam_date ON person_adopt_practice_myisam(d
 CREATE INDEX person_adopt_practice_myisam_village_id ON person_adopt_practice_myisam(village_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_block_id ON person_adopt_practice_myisam(block_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_district_id ON person_adopt_practice_myisam(district_id, date_of_adoption);
+CREATE INDEX person_adopt_practice_myisam_state_id ON person_adopt_practice_myisam(state_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_country_id ON person_adopt_practice_myisam(country_id, date_of_adoption);
 
 -- Aggregation of some statistics on a per day per village basis. The _copy derives from an existing table
@@ -138,6 +142,7 @@ CREATE INDEX village_precalculation_copy_date ON village_precalculation_copy(dat
 CREATE INDEX village_precalculation_copy_village_id ON village_precalculation_copy(village_id, date);
 CREATE INDEX village_precalculation_copy_block_id ON village_precalculation_copy(block_id, date);
 CREATE INDEX village_precalculation_copy_district_id ON village_precalculation_copy(district_id, date);
+CREATE INDEX village_precalculation_copy_state_id ON village_precalculation_copy(state_id, date);
 CREATE INDEX village_precalculation_copy_country_id ON village_precalculation_copy(country_id, date);
 
 -- Screeingwisedata table for raw_data_analytics
@@ -214,6 +219,7 @@ CREATE INDEX village_partner_myisam_state_partner ON village_partner_myisam(stat
 CREATE INDEX village_partner_myisam_country_partner ON village_partner_myisam(country_id,partner_id);
 
 INSERT INTO `screening_myisam` SELECT * FROM digitalgreen_clone.screening_myisam;
+INSERT INTO `video_myisam` SELECT * FROM digitalgreen_clone.video_myisam;
 INSERT INTO `person_meeting_attendance_myisam` SELECT * FROM digitalgreen_clone.person_meeting_attendance_myisam;
 INSERT INTO `person_adopt_practice_myisam` SELECT * FROM digitalgreen_clone.person_adopt_practice_myisam;
 INSERT INTO `village_precalculation_copy` SELECT * FROM digitalgreen_clone.village_precalculation_copy;
