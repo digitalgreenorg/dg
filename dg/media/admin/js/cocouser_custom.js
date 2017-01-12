@@ -13,15 +13,9 @@ function addEvent(obj, evType, fn) {
 	}
 }
 
-function clear_villages(){
-	$("#village_from")
-	.find("option")
-	.remove();
-}
-
-function clear_district()
+function clear_list(id)
 {
-	$("#id_district")
+	$(id)
 	.find("option")
 	.remove();
 }
@@ -37,7 +31,7 @@ function get_villages()
 	});
 	$.get("/admin/coco/cocouser/add/district_wise_village",{district_id:district_id}).done(function(village_list){
 		village_list = JSON.parse(village_list);           	
-		clear_villages();
+		clear_list("#village_from");
 		village_list = village_list.filter(function(village) { 
 			return selected_villages.indexOf(village['id']) < 0;
 			});
@@ -53,16 +47,40 @@ function get_villages()
 function get_district()
 {
 	state_id = $("#id_state").val();
-	clear_villages();
+	clear_list("#village_from");
 	$.get("/admin/coco/cocouser/add/state_wise_district",{state_id:state_id}).done(function(district_list){
 		district_list = JSON.parse(district_list);           	
-		clear_district();
+		clear_list("#id_district");
 		$('#id_district').append("<option selected disabled> -- select an option -- </option>");
 		$.each(district_list, function (index) {
 			$('#id_district').append($("<option></option>")
 			.attr("value",district_list[index]['id'])
 			.text(district_list[index]['district_name']));
 		});
+	});
+}
+
+function get_video()
+{
+	partner_id = $("#id_video_partner").val();
+	var selected_videos = [];
+	$("#id_video_to")
+	.find('option')
+	.each(function(index,obj){
+		selected_videos.push(parseInt(obj.value));
+	});
+	$.get("/admin/coco/cocouser/add/partner_wise_video",{partner_id:partner_id}).done(function(video_list){
+		video_list = JSON.parse(video_list);           	
+		clear_list("#id_video_from");
+		video_list = video_list.filter(function(video) { 
+			return selected_videos.indexOf(video['id']) < 0;
+			});
+		$.each(video_list, function (index) {
+			$('#id_video_from').append($("<option></option>")
+			.attr("value",video_list[index]['id'])
+			.text(video_list[index]['title']));
+		});
+		SelectBox.init("id_video_from");
 	});
 }
 

@@ -100,21 +100,29 @@
 							</script>
                 		</div>
         			</div>
-        			<div class="form-row field-videos">
+					<div class="form-row field-video_partner" style="border-bottom:0px;border-top:6px solid #fff">
+                		<div>
+                			<ul>
+								<li class="listbox-message">Select a Partner to assign Videos</li>
+							</ul>
+                			<label for="id_video_partner">Video Partner:</label>
+                			<div class="related-widget-wrapper">
+                				<select id="id_video_partner" name="video_partner" onchange="get_video()">
+									<option value="" selected disabled> -- select an option -- </option>
+									{% for partner in partner_list %}
+										<option value="{{ partner.id }}">{{ partner.partner_name }}</option>
+									{% endfor %}
+								</select>
+							</div> 
+                		</div>
+        			</div>
+        			<div class="form-row field-videos" style="border-top:0px">
                 		<div>
                 			<label for="id_video">Videos:</label>
                 			<select name="video" id="id_video" multiple="multiple" class="selectfilter">
 								{% if change_form_flag == 1 %}
-									{% for video in video_list %}
-										{% if video.id in current_user_videos %}
-											<option value="{{ video.id }}" selected>{{ video.title }}</option>
-										{% else %}
-											<option value="{{ video.id }}">{{ video.title }}</option>
-										{% endif %}
-									{% endfor %}
-								{% else %}
-									{% for video in video_list %}
-										<option value="{{ video.id }}">{{ video.title }}</option>
+									{% for video in current_user_videos %}
+										<option value="{{ video.id }}" selected>{{ video.title }}</option>
 									{% endfor %}
 								{% endif %}
 							</select>

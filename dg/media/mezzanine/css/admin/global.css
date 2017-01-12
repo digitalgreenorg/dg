@@ -325,3 +325,6 @@ td, th, th a, label, .help, p.help {
 .submit-button{
     float: right;
 }
+.listbox-message{
+    padding: 0 5px 0 130px;
+}

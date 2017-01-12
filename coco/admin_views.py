@@ -29,7 +29,6 @@ def add_cocouser(request):
         auth_user_list = User.objects.values('id','username')
         partner_list = Partner.objects.values('id','partner_name')
         state_list = State.objects.values('id','state_name')
-        video_list = Video.objects.values('id','title')
         coco_user_id = is_change_from(request.get_full_path())
         template_variables['title'] = "Add coco user"
         if coco_user_id != '':
@@ -39,12 +38,11 @@ def add_cocouser(request):
             except Exception as e:
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
-            current_user_videos = coco_user_obj.videos.values_list('id', flat=True)
+            current_user_videos = coco_user_obj.videos.values('id', 'title')
             current_villages = coco_user_obj.villages.values('id','village_name','block__district__district_name','block__district__state__state_name')
             current_user_villages = []
             for village in current_villages:
                 current_user_villages.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
-            #current_user_villages = coco_user_obj.villages.values('id','village_name')
             current_auth_user_id = coco_user_obj.user_id
             current_partner_id = coco_user_obj.partner_id
             template_variables['current_auth_user_id'] = current_auth_user_id
@@ -55,7 +53,6 @@ def add_cocouser(request):
         template_variables['auth_user_list'] = auth_user_list
         template_variables['partner_list'] = partner_list
         template_variables['state_list'] = state_list
-        template_variables['video_list'] = video_list
         template_variables['change_form_flag'] = change_form_flag
         return render_to_response('admin/coco/cocouser/change_form.html',template_variables,context)
     elif request.method == 'POST':
@@ -161,3 +158,10 @@ def district_wise_village(request):
         village_list.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
     village_list = json.dumps(village_list)
     return HttpResponse(village_list)
+
+@login_required
+def partner_wise_video(request):
+    partner_id = request.GET.getlist('partner_id')[0]
+    video_list = list(Video.objects.filter(partner_id=partner_id).values('id','title'))
+    video_list = json.dumps(video_list)
+    return HttpResponse(video_list)

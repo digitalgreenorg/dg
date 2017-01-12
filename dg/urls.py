@@ -74,6 +74,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
     (r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
+    (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
     (r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
     (r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
     (r'^admin/', include(coco_admin.urls)),
