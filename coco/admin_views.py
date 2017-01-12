@@ -24,6 +24,8 @@ def add_cocouser(request):
     change_form_flag = 0
     template_variables = dict()
     if request.method == 'GET':
+        print "hererer"
+        print request.method
         auth_user_list = User.objects.values('id','username')
         partner_list = Partner.objects.values('id','partner_name')
         state_list = State.objects.values('id','state_name')
@@ -38,7 +40,11 @@ def add_cocouser(request):
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
             current_user_videos = coco_user_obj.videos.values_list('id', flat=True)
-            current_user_villages = coco_user_obj.villages.values('id','village_name')
+            current_villages = coco_user_obj.villages.values('id','village_name','block__district__district_name','block__district__state__state_name')
+            current_user_villages = []
+            for village in current_villages:
+                current_user_villages.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
+            #current_user_villages = coco_user_obj.villages.values('id','village_name')
             current_auth_user_id = coco_user_obj.user_id
             current_partner_id = coco_user_obj.partner_id
             template_variables['current_auth_user_id'] = current_auth_user_id
@@ -53,6 +59,7 @@ def add_cocouser(request):
         template_variables['change_form_flag'] = change_form_flag
         return render_to_response('admin/coco/cocouser/change_form.html',template_variables,context)
     elif request.method == 'POST':
+        print request.method
         if not all(objects in request.POST for objects in ['user', 'partner', 'village']):
             return HttpResponseBadRequest("User, partner and village is required")
         coco_user_id = is_change_from(request.get_full_path())
@@ -74,7 +81,11 @@ def add_cocouser(request):
             except Exception as e:
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
-            if user != coco_user_obj.user_id:
+            if int(user) != coco_user_obj.user_id:
+                if CocoUser.objects.filter(user_id=user).exists():
+                    message = "coco user with \"%s\" User already exists. Select different User."%(CocoUser.objects.get(user_id=user).user.username)
+                    messages.add_message(request, messages.ERROR, message)
+                    return HttpResponseRedirect(".")
                 coco_user_obj.user_id = user
                 coco_user_obj.save()
             if partner != coco_user_obj.partner_id:
@@ -144,7 +155,9 @@ def state_wise_district(request):
 @login_required
 def district_wise_village(request):
     district_id = request.GET.getlist('district_id')[0]
-    exclude_villages = request.GET.getlist('selected_villages[]')
-    village_list = list(Village.objects.filter(block__district_id=district_id).exclude(id__in=exclude_villages).values('id','village_name'))
+    all_villages = Village.objects.filter(block__district_id=district_id).values('id','village_name','block__district__district_name','block__district__state__state_name')
+    village_list = []
+    for village in all_villages:
+        village_list.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
     village_list = json.dumps(village_list)
     return HttpResponse(village_list)

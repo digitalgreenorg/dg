@@ -33,11 +33,14 @@ function get_villages()
 	$("#village_to")
 	.find('option')
 	.each(function(index,obj){
-		selected_villages.push(obj.value);
+		selected_villages.push(parseInt(obj.value));
 	});
-	$.get("/admin/coco/cocouser/add/district_wise_village",{district_id:district_id,selected_villages:selected_villages}).done(function(village_list){
+	$.get("/admin/coco/cocouser/add/district_wise_village",{district_id:district_id}).done(function(village_list){
 		village_list = JSON.parse(village_list);           	
 		clear_villages();
+		village_list = village_list.filter(function(village) { 
+			return selected_villages.indexOf(village['id']) < 0;
+			});
 		$.each(village_list, function (index) {
 			$('#village_from').append($("<option></option>")
 			.attr("value",village_list[index]['id'])
@@ -50,6 +53,7 @@ function get_villages()
 function get_district()
 {
 	state_id = $("#id_state").val();
+	clear_villages();
 	$.get("/admin/coco/cocouser/add/state_wise_district",{state_id:state_id}).done(function(district_list){
 		district_list = JSON.parse(district_list);           	
 		clear_district();
@@ -81,9 +85,20 @@ $(document).ready(function() {
 		{
 			e.preventDefault(e);
 		}
+		else
+		{
+			$("#id_user").parent().parent().parent().removeClass("errors");
+			$("#id_user").parent().parent().parent().children('ul').hide();
+			$("#errornote").hide();
+		}
 		if(check_validation("#id_partner"))
 		{
 			e.preventDefault(e);
+		}
+		else
+		{
+			$("#id_partner").parent().parent().parent().removeClass("errors");
+			$("#id_partner").parent().parent().parent().children('ul').hide();
 		}
 		if($("#village_to").has('option').length == 0)
 		{
@@ -91,6 +106,11 @@ $(document).ready(function() {
 			$("#village_to").parent().parent().parent().addClass("errors");
 			$("#village_to").parent().parent().parent().parent().children('ul').show();
 			$("#errornote").show();
+		}
+		else
+		{
+			$("#village_to").parent().parent().parent().removeClass("errors");
+			$("#village_to").parent().parent().parent().parent().children('ul').hide();
 		}
 	});
 });
