@@ -3471,14 +3471,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_amount_row').val(parseFloat($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,10).data()));
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
         if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1) {
-            if(($this.parent()[0].childNodes[4]).toString().indexOf('%')>=0){
                 $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML.split('%')[0]).toFixed(2));
-                $('#gaddidar_commission_label').innerHTML = 'Commission Agent Discount[CAD]' + ' (%)'
+                $('#gaddidar_commission_label')[0].innerHTML = 'Commission Agent Discount[CAD] (%)'
             }
-           else{
-                $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
+        else{
+            $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
             }
-        }
         $('#gaddidar_error_div').hide();
     }
     var flag_edit_Table3 = false;
@@ -3588,7 +3586,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
         } else if (editedGaddidar != 0) {
             $('#gaddidar_modal').closeModal();
-            $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
+            if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1)
+                $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val() + '%';
+            else
+                $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val();
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val() + ' - ' + window.localStorage.name;
             if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==0) {
