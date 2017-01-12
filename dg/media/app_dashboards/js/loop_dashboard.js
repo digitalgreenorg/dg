@@ -3472,9 +3472,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
         if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1) {
                 $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML.split('%')[0]).toFixed(2));
-                $('#gaddidar_commission_label')[0].innerHTML = 'Commission Agent Discount[CAD] (%)'
+                $('#gaddidar_commission_label')[0].innerHTML = 'Commission Agent Discount[CAD] (%)';
             }
         else{
+            $('#gaddidar_commission_label')[0].innerHTML = 'Commission Agent Discount[CAD] (in Rs/Kg)';
             $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
             }
         $('#gaddidar_error_div').hide();
