@@ -3470,7 +3470,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_share_row').val(parseFloat($this.parent()[0].childNodes[5].textContent).toFixed(2));
         $('#gaddidar_amount_row').val(parseFloat($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,10).data()));
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].textContent);
-        if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==0) {
+        if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1) {
             if(($this.parent()[0].childNodes[4]).toString().indexOf('%')>=0){
                 $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML.split('%')[0]).toFixed(2));
                 $('#gaddidar_commission_label').innerHTML = 'Commission Agent Discount[CAD]' + ' (%)'
