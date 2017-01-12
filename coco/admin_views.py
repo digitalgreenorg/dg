@@ -24,8 +24,6 @@ def add_cocouser(request):
     change_form_flag = 0
     template_variables = dict()
     if request.method == 'GET':
-        print "hererer"
-        print request.method
         auth_user_list = User.objects.values('id','username')
         partner_list = Partner.objects.values('id','partner_name')
         state_list = State.objects.values('id','state_name')
@@ -56,7 +54,6 @@ def add_cocouser(request):
         template_variables['change_form_flag'] = change_form_flag
         return render_to_response('admin/coco/cocouser/change_form.html',template_variables,context)
     elif request.method == 'POST':
-        print request.method
         if not all(objects in request.POST for objects in ['user', 'partner', 'village']):
             return HttpResponseBadRequest("User, partner and village is required")
         coco_user_id = is_change_from(request.get_full_path())
