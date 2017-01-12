@@ -3339,7 +3339,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             defaultContent: " "
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 10,
+        "pageLength": 1000,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
@@ -3679,7 +3679,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         "dom": 'T<"clear">rtip',
         //"dom":'Bfrtip',
 
-        "pageLength": 10,
+        "pageLength": 1000,
 
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
@@ -3849,7 +3849,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
         }],
         "dom": 'T<"clear">rtip',
-        "pageLength": 10,
+        "pageLength": 1000,
         "oTableTools": {
             "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
             "aButtons": []
