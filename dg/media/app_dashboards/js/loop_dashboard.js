@@ -3593,7 +3593,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $this.parent()[0].childNodes[5].innerHTML = $('#gaddidar_share_row').val();
             $this.parent()[0].childNodes[6].innerHTML = $('#gaddidar_comment_row').val() + ' - ' + window.localStorage.name;
             if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==0) {
-                if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 0.1) {
+                if (parseFloat($this.parent()[0].childNodes[4].innerHTML)/100 > 0.1) {
                 $this.closest('tr').children('td:nth-child(5)')[0].className='editedcelledge';
                 $this.closest('tr').children('td:nth-child(6)')[0].className='editedcelledge';
                 $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
