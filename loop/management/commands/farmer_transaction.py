@@ -45,10 +45,12 @@ class Command(BaseCommand):
         from_date = str(options.get('from_date'))
         to_date = str(options.get('to_date'))
         num_days = int(options.get('num_days'))
+        id_map = {}
         header_json = {}
         data_json = {}
         final_json_to_send = {}
         excel_workbook_name = None
+
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
@@ -75,7 +77,12 @@ class Command(BaseCommand):
         elif from_date > to_date:
                 raise CommandError('Invalid date range given')
         elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST_EN:
-                raise CommandError('Aggregator not present in database')            
+                raise CommandError('Aggregator not present in database')
+
+
+        obj = LoopUser.objects.exclude(name_en='Loop Test').values_list('name', 'user_id')
+        for item in obj:
+            id_map[item[0]] = item[1]            
 
         query = None
         generate_sheet_for_all_flag = True 
@@ -89,84 +96,77 @@ class Command(BaseCommand):
         
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
-            query = query_for_incorrect_phone_no_all_aggregator % (from_date, to_date, from_date, to_date)
-            excel_workbook_name = 'Incorrect Mobile Numbers_' + from_day + '-' + from_month + '-' + from_year + \
+            query = query_for_farmer_transaction_all_aggregator % (from_date, to_date)
+            excel_workbook_name = 'Farmer Transactions_All_' + from_day + '-' + from_month + '-' + from_year + \
                                                                 ' to ' + to_day + '-' + to_month + '-' + to_year
         else:
             generate_sheet_for_all_flag = False
             generate_sheet_for = AGGREGATOR_LIST[AGGREGATOR_LIST_EN.index(generate_sheet_for)]
-            query = query_for_incorrect_phone_no_single_aggregator % (from_date, to_date, generate_sheet_for, from_date, to_date)
-            excel_workbook_name = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
+            generate_sheet_for_id = id_map[generate_sheet_for]
+            query = query_for_farmer_transaction_single_aggregator % (from_date, to_date, generate_sheet_for_id)
+            excel_workbook_name = 'Farmer Transactions_All_' + generate_sheet_for + '_ ' + from_day + '-' + \
                         from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
         cur.execute(query)
         result = cur.fetchall()
+
+        #Append 2 columns at the end
+        for row in result:
+            row = list(row)
+            row.append('')
+            row.append('')
+
         data = [list(row) for row in result]
         #create list copy for filtering
         temp_data = copy.deepcopy(data)
         if generate_sheet_for_all_flag is True:
-            #Write data for all aggregators in sheet
-            for sno in range(1,len(data) + 1):
-                data[sno - 1].insert(0, str(sno))
-                if int(data[sno - 1][6]) >= 9999999999:
-                    data[sno - 1][6] = 'नंबर नहीं है'
-
-            sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + '-' + from_year + \
-                            ' to ' + to_day + '-' + to_month + '-' + to_year
-            data_json['all'] = {'sheet_heading': sheet_heading,
-                                    'sheet_name': 'सारे किसान', 'data': data
-                                }
-                    
-            header_json['all'] = header_dict_for_loop_email_mobile_numbers
             #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
                 #filter data to get rows for the current aggregator
-                filtered_data = [row for row in temp_data if row[0] == aggregator_name]
+                filtered_data = [row for row in temp_data if row[0] == id_map[aggregator_name]]
                 filtered_data_copy = copy.deepcopy(filtered_data)
                 for sno in range(1,len(filtered_data_copy) + 1):
-                    filtered_data_copy[sno - 1].insert(0, str(sno))
-                    if int(filtered_data_copy[sno - 1][6]) >= 9999999999:
-                        filtered_data_copy[sno - 1][6] = 'नंबर नहीं है'
+                    filtered_data_copy[sno - 1][0] = str(sno)
                     
-                sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + \
-                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
+                sheet_heading = 'बिक्री का रिकॉर्ड_' + aggregator_name.encode('utf-8') + '_' + from_day + '-' + \
+                                from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
-                header_json[aggregator_name] = header_dict_for_loop_email_mobile_numbers
+                header_json[aggregator_name] = header_dict_for_farmer_transaction
         else:
             #write data for a given aggregator from command line
             for sno in range(1,len(data) + 1):
-                data[sno - 1].insert(0, str(sno))
-                if int(data[sno - 1][6]) >= 9999999999:
-                    data[sno - 1][6] = 'नंबर नहीं है'
+                data[sno - 1][0] = str(sno)
 
-            sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
+            sheet_heading = 'बिक्री का रिकॉर्ड_' + generate_sheet_for.encode('utf-8') + '_' + \
                                 from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \
                                 to_month + '-' + to_year 
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
                                 }
             
-            header_json[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
+            header_json[generate_sheet_for] = header_dict_for_farmer_transaction
 
         final_json_to_send['header'] = header_json
         final_json_to_send['data'] = data_json
-        final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
+        final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10, 'num_format': '#,##0.0',
                                                     'text_wrap': True}
+
 
         #post request to library for excel generation
         try:
-            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send, 
+                                                                                    default=lambda x:str(x)))
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
             #send email to concerned people with excel file attached    
-            common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                              RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
-            os.remove(excel_workbook_name + '.xlsx')
+            #common_send_email('Farmers List with Incorrect Mobile Numbers', 
+            #                  RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
+            #os.remove(excel_workbook_name + '.xlsx')
         except Exception as e:
-            raise CommandError('There is some problem, please contact the administrator')
+            raise CommandError(e)
         
 
 
