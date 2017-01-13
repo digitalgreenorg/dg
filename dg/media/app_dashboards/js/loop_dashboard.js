@@ -3005,7 +3005,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     }
     var gaddidar_data_set_clone =[];
     for (var i = 0; i < gaddidar_data_set.length; i++) {
-        gaddididar_data_set_clone.push(gaddidar_data_set[i].slice());
+        gaddidar_data_set_clone.push(gaddidar_data_set[i].slice());
         if (gaddidar_data_set[i][11] == 1)
             gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
     }
