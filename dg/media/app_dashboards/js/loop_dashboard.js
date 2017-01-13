@@ -3003,12 +3003,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-    /*gaddidar_data_set_clone = gaddidar_data_set.slice();
-    console.log(gaddidar_data_set);
-    for (var i = 0; i < gaddidar_data_set_clone.length; i++) {
-        if (gaddidar_data_set_clone[i][11] == 1)
+    gaddidar_data_set_clone =[];
+    for (var i = 0; i < gaddidar_data_set.length; i++) {
+        gaddididar_data_set_clone.push(gaddidar_data_set[i].slice());
+        if (gaddidar_data_set[i][11] == 1)
             gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
-    }*/
+    }
     $(window).on('beforeunload', function() {
         if (!$('#ToolTables_table2_1').hasClass('disable-button') || !$('#ToolTables_table3_1').hasClass('disable-button'))
             return "You have Unsaved Changes";
