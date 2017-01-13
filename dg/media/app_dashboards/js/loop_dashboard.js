@@ -2001,36 +2001,14 @@ function crop_prices_graph(crop_id) {
 
 //To change frequency of time series graphs
 function get_frequency_data(start_date, end_date, series, frequency, averaged) {
-    var first_date = new Date(start_date);
-    var final_date = new Date(end_date);
+    var first_date = new Date(start_date).getTime();
+    var final_date = new Date(end_date).getTime();
     var new_series = [];
+    var new_x_axis = [];
 
-    if (frequency == 7) {
-        var new_x_axis = [];
-        while (first_date < final_date) {
-            new_x_axis.push(first_date.getTime());
-            first_date.setDate(first_date.getDate() + 7);
-        }
-    } else if (frequency == 15) {
-        var new_x_axis = [];
-        while (first_date < final_date) {
-            if (first_date.getDate() <= 15) {
-                new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "01").getTime());
-            } else {
-                new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "16").getTime());
-            }
-            first_date.setDate(first_date.getDate() + 15);
-            if (first_date.getDate() == 31) {
-                first_date.setDate(first_date.getDate() + 1);
-            }
-        };
-    } else if (frequency == 30) {
-        var new_x_axis = [];
-        first_date.setDate(1)
-        while (first_date <= final_date) {
-            new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "01").getTime());
-            first_date.setMonth(first_date.getMonth() + 1);
-        }
+    while (first_date <= final_date) {
+        new_x_axis.push(first_date);
+        first_date += frequency * 86400 * 1000;
     }
 
     for (var i = 0; i < series.length; i++) {
@@ -2040,16 +2018,16 @@ function get_frequency_data(start_date, end_date, series, frequency, averaged) {
         temp_series['color'] = series[i]['color'];
         temp_series['type'] = series[i]['type'];
         for (var j = 0; j < new_x_axis.length; j++) {
-            temp_series['data'][j] = [new_x_axis[j], 0]
+            temp_series['data'][j] = [new_x_axis[j], 0];
         }
         temp_series['pointStart'] = new_x_axis[0];
         temp_series['pointInterval'] = time_series_frequency * 24 * 3600 * 1000;
         var count = 0;
-        var temp = 0;
         var index = 0;
+        var temp = index;
         for (k = 0; k < series[i]['data'].length; k++) {
 
-            var temp_date = new Date(series[i]['data'][k][0]);
+            // var temp_date = new Date(series[i]['data'][k][0]);
             if (new Date(new_x_axis[index + 1]) <= new Date(series[i]['data'][k][0])) {
                 index += 1;
             }
@@ -2073,36 +2051,13 @@ function get_frequency_data(start_date, end_date, series, frequency, averaged) {
 
 
 function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
-    var first_date = new Date(start_date);
-    var final_date = new Date(end_date);
+    var first_date = new Date(start_date).getTime();
+    var final_date = new Date(end_date).getTime();
     var new_series = [];
-
-    if (frequency == 7) {
-        var new_x_axis = [];
-        while (first_date < final_date) {
-            new_x_axis.push(first_date.getTime());
-            first_date.setDate(first_date.getDate() + 7);
-        }
-    } else if (frequency == 15) {
-        var new_x_axis = [];
-        while (first_date < final_date) {
-            if (first_date.getDate() <= 15) {
-                new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "01").getTime());
-            } else {
-                new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "16").getTime());
-            }
-            first_date.setDate(first_date.getDate() + 15);
-            if (first_date.getDate() == 31) {
-                first_date.setDate(first_date.getDate() + 1);
-            }
-        };
-    } else if (frequency == 30) {
-        var new_x_axis = [];
-        first_date.setDate(1)
-        while (first_date <= final_date) {
-            new_x_axis.push(new Date(first_date.getFullYear() + "-" + (first_date.getMonth() + 1) + "-" + "01").getTime());
-            first_date.setMonth(first_date.getMonth() + 1);
-        }
+    var new_x_axis = [];
+    while (first_date <= final_date) {
+        new_x_axis.push(first_date);
+        first_date += frequency * 86400 * 1000;
     }
 
     var temp_series_cpk = {};
@@ -2125,6 +2080,7 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
     var new_transport_cost = new Array(new_x_axis.length).fill(0);
     var new_farmer_share = new Array(new_x_axis.length).fill(0);
     var new_volume = new Array(new_x_axis.length).fill(0);
+    var new_aggregator_cost = new Array(new_x_axis.length).fill(0);
     for (var k = 0; k < series[0]['data'].length; k++) {
         if (new Date(new_x_axis[index + 1]) <= new Date(series[0]['data'][k][0])) {
             index += 1;
@@ -2132,10 +2088,11 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
         new_volume[index] += time_series_volume_amount_farmers[0]['data'][k][1];
         new_transport_cost[index] += transport_cost[k];
         new_farmer_share[index] += farmer_share[k];
+        new_aggregator_cost[index] += aggregator_incentive_amount[k];
     }
 
     for (var i = 0; i < new_x_axis.length; i++) {
-        temp_series_cpk['data'].push([new_x_axis[i], new_volume[i] > 0 ? new_transport_cost[i] / new_volume[i] : null]);
+        temp_series_cpk['data'].push([new_x_axis[i], new_volume[i] > 0 ? (new_transport_cost[i] + new_aggregator_cost[i]) / new_volume[i] : null]);
         temp_series_spk['data'].push([new_x_axis[i], new_volume[i] > 0 ? new_farmer_share[i] / new_volume[i] : null]);
     }
     new_series.push(temp_series_cpk);
