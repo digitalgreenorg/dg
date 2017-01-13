@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=time.strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=44)).strftime('%Y%m%d'))
 
 
     
