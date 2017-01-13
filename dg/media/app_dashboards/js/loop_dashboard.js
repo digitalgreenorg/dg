@@ -3003,8 +3003,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-    var gaddidar_data_set_clone = gaddidar_data_set.slice();
-    console.log(gaddidar_data_set_clone)
+    gaddidar_data_set_clone = gaddidar_data_set.slice();
+    console.log(gaddidar_data_set,gaddidar_data_set_clone);
     for (var i = 0; i < gaddidar_data_set.length; i++) {
         if (gaddidar_data_set[i][11] == 1)
             gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set[i][4]) * 100 + '%';
