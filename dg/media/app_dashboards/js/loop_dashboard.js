@@ -38,6 +38,7 @@ var QUANTITY__SUM = "quantity__sum",
     MANDI__ID = "mandi__id",
     USER_CREATED__ID = "user_created__id",
     GADDIDAR__ID = "gaddidar__id";
+var MASTER_HOME = 3, MASTER_TIME_SERIES_VOL_AMT = 1, MASTER_TIME_SERIES_CPK_SPK = 2;
 
 var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
@@ -747,7 +748,7 @@ function cummulative_farmer_and_volume() {
     series.push(temp_volume);
     series.push(temp_farmers);
 
-    createMasterForCummulativeVolumeAndFarmer($('#detail_container'), $('#master_container'), series);
+    createMasterForTimeSeries($('#detail_container'), $('#master_container'), series, MASTER_HOME);
 }
 
 
@@ -952,11 +953,11 @@ function set_filterlistener() {
     $("#time_series_frequency").change(function() {
         time_series_frequency = $('#time_series_frequency :selected').val();
         if (time_series_frequency == 1) {
-            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, 1);
-            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, 2);
+            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, MASTER_TIME_SERIES_VOL_AMT);
+            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, MASTER_TIME_SERIES_CPK_SPK);
         } else {
-            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false), 1);
-            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false), 2);
+            createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false), MASTER_TIME_SERIES_VOL_AMT);
+            createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false), MASTER_TIME_SERIES_CPK_SPK);
         }
     });
 
@@ -1929,8 +1930,8 @@ function show_line_graphs() {
             var index = all_dates.indexOf(new Date(dates_and_farmer_count[i]['date']).getTime());
             time_series_volume_amount_farmers[2]['data'][index][1] += dates_and_farmer_count[i]['farmer__count'];
         }
-        createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, 1);
-        createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, 2);
+        createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, MASTER_TIME_SERIES_VOL_AMT);
+        createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, MASTER_TIME_SERIES_CPK_SPK);
     } catch (err) {
         alert("No Data is available for the current time period and filters applied.");
     }
@@ -2227,7 +2228,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     });
 
     // create a detail chart referenced by a global variable
-    width = detail_container.width();
+    var width = detail_container.width();
     detailChart = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
@@ -2265,91 +2266,6 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
         },
         series: myDict,
     })).highcharts(); // return chart
-}
-
-// create the master chart
-function createMasterForCummulativeVolumeAndFarmer(detail_container, master_container, dict) {
-    master_container.highcharts(Highcharts.merge(generalOptions, timeSeriesMasterOptions, {
-        chart: {
-            zoomType: 'x',
-            events: {
-                // listen to the selection event on the master chart to update the
-                // extremes of the detail chart
-                selection: function(event) {
-                    var extremesObject = event.xAxis[0],
-                        min = extremesObject.min,
-                        max = extremesObject.max,
-                        detailData = [],
-                        xAxis = this.xAxis[0],
-                        myDict = [];
-
-                    $.each(this.series, function() {
-                        var temp = {};
-                        temp['name'] = this.name;
-                        temp['data'] = new Array();
-                        temp['pointStart'] = dict[0]['data'][0][0];
-                        temp['pointInterval'] = 24 * 3600 * 1000;
-                        $.each(this.data, function() {
-                            if (this.x > min && this.x < max) {
-                                temp['data'].push([this.x, this.y]);
-                            }
-                        });
-                        myDict.push(temp);
-                    });
-                    // reverse engineer the last part of the data
-                    // move the plot bands to reflect the new detail span
-                    xAxis.removePlotBand('mask-before');
-                    xAxis.addPlotBand({
-                        id: 'mask-before',
-                        from: dict[0]['data'][0][0], //data[0][0],
-                        to: min,
-                        color: 'rgba(0, 0, 0, 0.2)'
-                    });
-
-                    xAxis.removePlotBand('mask-after');
-                    xAxis.addPlotBand({
-                        id: 'mask-after',
-                        from: max,
-                        to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                        color: 'rgba(0, 0, 0, 0.2)'
-                    });
-                    var pos = 0;
-                    $.each(this.series, function() {
-                        detailChart.series[pos].setData(myDict[pos].data);
-                        pos++;
-                    });
-                    return false;
-                }
-            }
-        },
-        xAxis: {
-            type: 'datetime',
-            showLastTickLabel: true,
-            maxZoom: 14 * 24 * 3600000, // fourteen days
-            plotBands: [{
-                id: 'mask-before',
-                from: dict[0]['data'][0][0],
-                to: dict[0]['data'][dict[0]['data'].length - 1][0],
-                color: 'rgba(0, 0, 0, 0.2)'
-            }],
-            title: {
-                text: null
-            }
-        },
-        plotOptions: {
-            series: {
-                fillColor: {
-                    stops: [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, 'rgba(255,255,255,0)']
-                    ]
-                },
-            }
-        },
-        series: dict
-    }), function(masterChart) {
-        createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
-    }); // return chart instance
 }
 
 function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
@@ -2462,10 +2378,12 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
                     });
                     var pos = 0;
                     $.each(this.series, function() {
-                        if (chart == 1) {
+                        if (chart == MASTER_TIME_SERIES_VOL_AMT) {
                             detailChart1.series[pos].setData(myDict[pos].data);
-                        } else if (chart == 2) {
+                        } else if (chart == MASTER_TIME_SERIES_CPK_SPK) {
                             detailChart2.series[pos].setData(myDict[pos].data);
+                        } else if (chart == MASTER_HOME) {
+                            detailChart.series[pos].setData(myDict[pos].data);
                         }
                         pos++;
                     });
@@ -2500,10 +2418,12 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
             }
         }
     }), function(masterChart) {
-        if (chart == 1) {
+        if (chart == MASTER_TIME_SERIES_VOL_AMT) {
             createDetailForVolAmtTimeSeries(detail_container, masterChart, dict);
-        } else if (chart == 2) {
+        } else if (chart == MASTER_TIME_SERIES_CPK_SPK) {
             createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict);
+        } else if (chart == MASTER_HOME) {
+            createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart, dict);
         }
     }); // return chart instance
 }
@@ -2515,7 +2435,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
         detailStart = dict[0]['data'][0][0];
 
     $.each(masterChart.series, function() {
-        if (this.name == "Volume") {
+        if (this.name == "Cost per Kg") {
             axis = 0;
         } else {
             axis = 1;
@@ -2547,10 +2467,12 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
         },
         series: myDict,
         yAxis: [{
-            title: null
+            title: {
+                text: 'CPK'
+            }
         }, {
             title: {
-                text: 'CPK / SPK'
+                text: 'SPK'
             },
             opposite: true
         }]
@@ -2994,20 +2916,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         }
         $('#aggregator_modal').closeModal();
     });
-
-    /*var formatVal = function(yourNumber) {
-        //Seperates the components of the number
-        var n = yourNumber.toString().split(".");
-        //Comma-fies the first part
-        if (n[0]) {
-            n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); //convert numbers of the form 1156 -> 1,156
-        }
-        if (n[1] != null) {
-            var a = n[1].toString();
-            n[1] = parseInt(a.charAt(0));
-        }
-        return n.join(".");
-    }*/
 
     var finalFormat = function(value) {
         if (value.indexOf('.') === -1)
