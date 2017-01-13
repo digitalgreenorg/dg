@@ -3578,7 +3578,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
         $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();
         $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].innerHTML);
-        $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML)
+        if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1) {
+            $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML.split('%')[0]).toFixed(2));
+                else
+            $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML)
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].innerHTML);
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.removeAttr('class');
@@ -3587,7 +3590,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     });
     $('#gaddidar_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
-            ev.preventDefault();
+            ev.preventDefault(); 
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML);
             $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].textContent);
             $('#gaddidar_commission_row').focus();
@@ -3741,9 +3744,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                     alert("success");
                                     gaddidarAjaxSuccess=1;
                                     for (var keys in rows_table3) {
-                                        console.log($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML)
                                         if(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%')>=0)
-                                            gaddidar_data_set[keys - 1][4] = (parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0])/100;
+                                            gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0])/100;
                                         else
                                             gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
                                         gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
