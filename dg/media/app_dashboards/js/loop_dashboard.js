@@ -3003,10 +3003,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-    var gaddidar_data_set_clone=$.extend(true,{},gaddidar_data_set);
-    for( var i=0;i<gaddidar_data_set_clone.length;i++){
-        if(gaddidar_data_set_clone[i][11]==1)
-        gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
+    var gaddidar_data_set_clone;
+
+    for( var i=0;i<gaddidar_data_set.length;i++){
+        for(var j=0;j<gaddidar_data_set[i].length;j++){
+            gaddidar_data_set_clone[i][j] = gaddidar_data_set[i][j];
+        }
+        if(gaddidar_data_set[i][11]==1)
+            gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set[i][4]) * 100 + '%';
     }
     $(window).on('beforeunload',function(){
         if(!$('#ToolTables_table2_1').hasClass('disable-button')||!$('#ToolTables_table3_1').hasClass('disable-button'))
