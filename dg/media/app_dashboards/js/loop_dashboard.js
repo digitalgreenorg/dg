@@ -3659,7 +3659,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
 
     $('#table3').DataTable({
         destroy: true,
-        data: gaddidar_data_set,
+        data: gaddidar_data_set_clone,
         columns: [{
             title: "Date"
         }, {
