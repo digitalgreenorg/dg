@@ -3578,9 +3578,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
         $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();
         $('#gaddidar_share_row').val($this.parent()[0].childNodes[5].innerHTML);
-        if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1) {
+        if($('#table3').DataTable().cell($this.context.parentNode.rowIndex-1,11).data()==1)
             $('#gaddidar_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML.split('%')[0]).toFixed(2));
-                else
+        else
             $('#gaddidar_commission_row').val($this.parent()[0].childNodes[4].innerHTML)
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].innerHTML);
         delete rows_table3[$this.context.parentNode.rowIndex];
