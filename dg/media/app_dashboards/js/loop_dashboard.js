@@ -3003,7 +3003,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-    var gaddidar_data_set_clone= gaddidar_data_set.slice();
+    var gaddidar_data_set_clone=$.extend(true,{},gaddidar_data_set);
     for( var i=0;i<gaddidar_data_set_clone.length;i++){
         if(gaddidar_data_set_clone[i][11]==1)
         gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
